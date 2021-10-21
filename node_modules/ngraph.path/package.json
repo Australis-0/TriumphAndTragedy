@@ -1,0 +1,31 @@
+{
+  "name": "ngraph.path",
+  "version": "1.3.1",
+  "description": "Path finding in a graph",
+  "main": "index.js",
+  "scripts": {
+    "build": "browserify index.js -s ngraphPath -o dist/ngraph.path.js && uglifyjs dist/ngraph.path.js -o dist/ngraph.path.min.js",
+    "test": "tap test/*.js"
+  },
+  "keywords": [
+    "ngraph",
+    "path",
+    "find",
+    "astar",
+    "a-star",
+    "pathfinding"
+  ],
+  "author": "Andrei Kashcha",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/anvaka/ngraph.path"
+  },
+  "devDependencies": {
+    "browserify": "^16.2.3",
+    "ngraph.fromdot": "^0.4.0",
+    "ngraph.graph": "18.0.0",
+    "tap": "^13.1.8",
+    "uglify-js": "^3.4.9"
+  }
+}
