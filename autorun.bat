@@ -1,8 +1,8 @@
 @echo off
-title Triumph & Tragedy I
-echo [Triumph & Tragedy I] is starting ..
+title Ampersand RP5 - RPEngine Build
+echo Ampersand auto-run is starting ...
 :main
-node main.js
+node --max-old-space-size=12192 main.js
 timeout /t 30
-echo [Triumph & Tragedy I] crashed! Restarting ..
+echo Ampersand crashed! Restarting ...
 goto main

@@ -15,12 +15,6 @@ class MessageComponentInteraction extends Interaction {
     super(client, data);
 
     /**
-     * The id of the channel this interaction was sent in
-     * @type {Snowflake}
-     * @name MessageComponentInteraction#channelId
-     */
-
-    /**
      * The message to which the component was attached
      * @type {Message|APIMessage}
      */

@@ -1,24 +1,172 @@
-//Import libraries
+//Node.js imports
 global._ = require("underscore");
+global.bn_graph = require("ngraph.graph");
+global.bn_path = require("ngraph.path");
 global.Canvas = require("canvas");
+global.diacriticless = require("diacriticless"); //TODO: install
 global.Discord = require("discord.js");
 global.fs = require("fs");
-global.Graph = require("ngraph.graph");
-global.Path = require("ngraph.path");
-global.Settings = require("settings");
+global.opus = require("opusscript");
+global.path = require("path");
+global.voice = require("@discordjs/voice");
 
-//Import Core framework
+//Import Core Framework
 const FileManager = require("./core/file_manager");
 
-//Import Core functions and settings
-FileManager.import("./settings");
+//Import Core Functions
+FileManager.import("./ABRS");
 
-//Initialise Discord client
-global.client = new Discord.Client({
-  intents: [
-    1, 4, 8, 16, 32, 64, 128, 512, 1024, 2048, 4096, 8192, 16384
+FileManager.import("./framework/arrays");
+FileManager.import("./framework/colors");
+FileManager.import("./framework/log");
+FileManager.import("./framework/numbers");
+FileManager.import("./framework/strings");
+
+FileManager.import("./framework/data/base_guild_initialisation");
+FileManager.import("./framework/data/base_user_initialisation");
+FileManager.import("./framework/data/games");
+FileManager.import("./framework/data/global_initialisation");
+
+FileManager.import("./framework/discord/channels");
+FileManager.import("./framework/discord/button_handler");
+FileManager.import("./framework/discord/command_handler");
+FileManager.import("./framework/discord/inactivity_clearer");
+FileManager.import("./framework/discord/permissions_handler");
+FileManager.import("./framework/discord/reaction_framework");
+FileManager.import("./framework/discord/select_handler");
+FileManager.import("./framework/discord/users");
+
+FileManager.import("./framework/ui/games");
+FileManager.import("./framework/ui/ui_framework");
+
+//Declare config loading order
+global.config = {};
+global.load_order = {
+  load_directories: [
+    "common",
+    "events",
+    "interface",
+    "localisation"
+  ],
+  load_files: [
+    ".config_backend.js",
+    "icons.js"
   ]
-});
+};
+FileManager.loadConfig();
+FileManager.loadFile("settings.js");
+
+//Initialise Discord.js client and related instance variables
+global.client = new Discord.Client({ intents: [1, 4, 8, 16, 32, 64, 128, 512, 1024, 2048, 4096, 8192, 16384] });
+global.backup_loaded = false;
+global.interfaces = {};
+
 client.login(settings.bot_token);
 
+//Load DB from JSON
+loadBackupArray();
+loadMostRecentSave();
+
 //Global error handling
+process.on("unhandledRejection", (error) => {
+  log.error(`Unhandled promise rejection. ${error.toString()}`);
+  console.log(error);
+});
+
+//Reaction/interaction framework
+client.on("interactionCreate", (interaction) => {
+  buttonHandler(interaction);
+  selectHandler(interaction);
+});
+client.on("messageReactionAdd", async (reaction, user) => {
+  reactionHandler(reaction, user);
+});
+
+//Command handling
+client.on("messageCreate", async (message) => {
+  //Fetch local parameters
+  username = message.author.username;
+  user_id = message.author.id;
+  input = message.content;
+
+  //Parse arguments
+  if (settings.no_space) input = input.replace(settings.prefix, `${settings.prefix} `);
+  var arg = splitCommandLine(input);
+
+  //Check output
+  log.info(`
+    Author: ${username}
+    Arguments: ${arg.join(", ")}
+
+    Original Content: ${input}
+  `);
+
+  if (!message.author.bot) {
+    //Debug commands (these ones have a prefix)
+    {
+      if (equalsIgnoreCase(arg[0], settings.prefix)) {
+        if (equalsIgnoreCase(arg[1], "console")) {
+          var full_code = [];
+          for (var i = 2; i < arg.length; i++) full_code.push(arg[i]);
+
+          eval(full_code.join(" "));
+
+          //Send back prompt
+          message.channel.send("Console command executed. Warning! This command can be highly unstable if not used correctly.").then((msg) => {
+						//Delete console command output after 10 seconds
+						setTimeout(function() { msg.delete(); }, 10000);
+					});
+        }
+      }
+    }
+
+    //Main Menu commands (these also have a prefix, with the exception of visual prompts)
+    {
+      if (equalsIgnoreCase(arg[0], settings.prefix)) {
+        if (equalsIgnoreCase(arg[1], "play")) {
+          //createMainMenu(user_id, message);
+          createGameMenu(user_id, message);
+        }
+      }
+    }
+
+    //Main Menu input commands
+    {
+      if (getHub(user_id)) {
+        var hub_obj = interfaces[getHub(user_id)];
+
+        if (hub_obj.channel == message.channel.id) {
+          menuInput(getHub(user_id), arg.join(" ").toLowerCase());
+          message.delete();
+        }
+      }
+    }
+  }
+});
+
+
+//Logic loops, 1-second logic loop
+setInterval(function(){
+  //Cache interfaces
+  main.interfaces = interfaces;
+
+  //Initialise variables before anything else!
+	initGlobal();
+
+  //Delete inactive channels
+  clearInactiveGames();
+
+  //ABRS - Save backups!
+	var current_date = new Date().getTime();
+	var time_difference = current_date - main.last_backup;
+
+	if (time_difference > config.backup_timer*1000) {
+		main.last_backup = current_date;
+		writeSave({ file_limit: settings.backup_limit });
+	}
+
+  //Write to database.js
+	fs.writeFile('database.js', JSON.stringify(main), function (err,data) {
+		if (err) return log.info(err);
+	});
+}, 1000);

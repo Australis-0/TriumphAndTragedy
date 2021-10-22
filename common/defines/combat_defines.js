@@ -1,0 +1,36 @@
+config.defines.combat = {
+  anti_aircraft_effectiveness: 1, //How effective should ack-ack be by default? This modifies total AP damage outputted by ack-ack gun buildings
+  base_attrition_rate: 0.90, //What should the base attrition rate be? (percentage)
+  base_mobilisation_impact: {
+    production_efficiency: -0.30,
+    tax_efficiency: -0.25,
+    rgo_throughput: -0.10
+  }, //Hits to [production_efficiency, tax_efficiency, rgo_throughput]
+  base_mobilisation_time: 8, //Amount of turns it should take to fully mobilise
+  base_mobilisation_size: 0.05, //Default percentage of worker pops mobilised
+  base_supply_limit: 40, //How many thousands of soldiers can a colonised province support by default?
+  blockade_challenge_limit: 5, //How many times can a fleet challenge a blockade on the same turn?
+  infrastructure_range: 5, //What is the radius of provinces that should be affected by constructed infrastructure?
+  interception_range: 5, //From how many provinces away should air wings be allowed to intercept other air wings?
+  max_army_creation_limit: 100, //How many armies should users be able to create with a single command? Set to 0 to disable
+  max_army_limit: 1000, //What is the maximum amount of armies that a user should be allowed to have? Set to 0 to disable
+  mobilisation_cooldown: 3, //Amount of turns before a person can mobilise/demobilise again
+  mobilise_unit: "none", //Default unit for mobilisation
+  peacetime_mobilisation_penalty: 0.5, //What should the penalty for peacetime mobilisation be (in infamy)?
+  war_exhaustion_blockade_limit: 0.20, //What should be the maximum warscore penalty for being blockaded?
+  war_exhaustion_blockade_rate: 0.05, //How fast should war exhaustion tick up if user is blockaded?
+  war_exhaustion_mobilisation_rate: 0.03, //How fast should war exhaustion tick up if user is mobilised?
+  war_exhaustion_tickdown_rate: 0.10, //How fast should war exhaustion tick down if user is not at war?
+
+  //Movement Speed
+  army_speed: 2, //Base provinces per turn for armies
+  colonisation_speed: 2, //Base provinces per turn for colonists
+  max_colonisation_speed: 25, //Set to 0 to disable, in provinces per turn
+  shipment_time: 10, //Transfer speed for shipping goods
+  base_transfer_time: 3, //Base turns for all shipments
+
+  //Supply Limit
+  access_territory_modifier: 1.5, //(Counts if allied, vassalised, or has military access)
+  friendly_territory_modifier: 2, //(Counts only if culture in province is friendly)
+  hostile_territory_modifier: 0.5, //Uncolonised territory and enemy land
+};
