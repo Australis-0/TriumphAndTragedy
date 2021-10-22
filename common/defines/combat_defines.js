@@ -1,5 +1,7 @@
 config.defines.combat = {
-  anti_aircraft_effectiveness: 1, //How effective should ack-ack be by default? This modifies total AP damage outputted by ack-ack gun buildings
+	anti_aircraft_base_damage: 10000, //How much AP should each AA gun be worth at the start?
+	anti_aircraft_effectiveness: 1, //How effective should ack-ack be by default? This modifies total AP damage outputted by ack-ack gun buildings
+	anti_aircraft_fixed_damage: true, //Should ack-ack damage be fixed or scale with the bomber force?
   base_attrition_rate: 0.90, //What should the base attrition rate be? (percentage)
   base_mobilisation_impact: {
     production_efficiency: -0.30,
@@ -10,6 +12,8 @@ config.defines.combat = {
   base_mobilisation_size: 0.05, //Default percentage of worker pops mobilised
   base_supply_limit: 40, //How many thousands of soldiers can a colonised province support by default?
   blockade_challenge_limit: 5, //How many times can a fleet challenge a blockade on the same turn?
+  combat_order: ["ap", "dp"], //What should the combat order be by default?
+	combat_order_switch_tech: "war_of_movement", //What tech should switch the combat order back around?
   infrastructure_range: 5, //What is the radius of provinces that should be affected by constructed infrastructure?
   interception_range: 5, //From how many provinces away should air wings be allowed to intercept other air wings?
   max_army_creation_limit: 100, //How many armies should users be able to create with a single command? Set to 0 to disable
