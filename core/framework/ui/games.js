@@ -56,13 +56,41 @@ module.exports = {
 
     var usr = main.users[game_obj.user];
 
+    //Initialise message objects
+    returnChannel(game_obj.channel).send(config.localisation.blank).then((message) => {
+      game_obj.collectors.push(message.id);
+      game_obj.top_embed = message;
+    });
+
+    //Main embed displaying stats screen
+    returnChannel(game_obj.channel).send(config.localisation.blank).then((message)) => {
+      game_obj.collectors.push(message.id);
+      game_obj.main_embed_obj = message;
+    });
+
+    //Extra control panel elements
+    returnChannel(game_obj.channel).send(config.localisation.blank).then((message)) => {
+      game_obj.collectors.push(message.id);
+      game_obj.middle_control_panel = message;
+    });
+    returnChannel(game_obj.channel).send(config.localisation.blank).then((message)) => {
+      game_obj.collectors.push(message.id);
+      game_obj.bottom_control_panel = message;
+    });
+
+    //Bottom embed displaying alerts
+    returnChannel(game_obj.channel).send(config.localisation.blank).then((message)) => {
+      game_obj.collectors.push(message.id);
+      game_obj.bottom_embed = message;
+    });
+
     //Load up either the starting map viewer or country interface depending on the starting page
     switch (game_obj.page) {
       case "country_interface":
         
-
         break;
       case "founding_map":
+
         break;
     }
   },

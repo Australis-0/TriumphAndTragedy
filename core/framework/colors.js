@@ -4,6 +4,7 @@ module.exports = {
     var hex = c.toString(16);
 
     //Return statement
+
     return hex.length == 1 ? "0" + hex : hex;
   },
 
