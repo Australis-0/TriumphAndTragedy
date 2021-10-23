@@ -218,6 +218,7 @@ module.exports = {
       if (!usr.political.instability_modifier) usr.political_instability_modifier = 0;
       if (!usr.political_reform_desire_modifier) usr.political_reform_desire_modifier = 0;
       if (!usr.previous_option_id) usr.previous_option_id = 0;
+      if (!usr.provinces) usr.provinces = 0;
       if (!usr.recent_military_casualties) usr.recent_military_casualties = [];
       if (!usr.recent_civilian_casualties) usr.recent_civilian_casualties = [];
       if (!usr.researched_technologies) usr.researched_technologies = [];

@@ -29,6 +29,14 @@ module.exports = {
       global[map_name] = fs.readFileSync("./map/" + config.defines.map.map_definition, "utf8");
       fs.closeSync(fs.openSync("./map/" + map_file, "w"));
     }
+
+    //Try parsing map file
+    try {
+      global[`${map_name}_file`] = map_file;
+      global[`${map_name}_parsed`] = HTML.parse(global[map_name].toString());
+    } catch (e) {
+      log.error(`Could not parse map file ${map_file}: ${e}.`);
+    }
   },
 
   loadMostRecentSave: function () {
@@ -83,7 +91,7 @@ module.exports = {
 
     //Load maps
   	loadMap("colonial_map.svg", "colonial_svg");
-    loadMap("political_map.svg", "original_svg");
+    loadMap("political_map.svg", "political_svg");
     loadMap("supply_limit_map.svg", "supply_svg");
   },
 

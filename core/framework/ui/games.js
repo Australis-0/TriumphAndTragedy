@@ -1,12 +1,37 @@
 //Initialise Games/Lobbies UI
 module.exports = {
+  clearGames: function () {
+    //Declare local instance variables
+    var all_interfaces = Object.keys(interfaces);
+
+    //Delete all game objects and associated channels
+    for (var i = 0; i < all_interfaces.length; i++) {
+      var local_game_obj = interfaces[all_interfaces[i]];
+
+      if (local_game_obj.type == "game") {
+        //Error trapping just in case channel doesn't exist
+        try {
+          returnChannel(local_game_obj.channel).delete();
+        } catch (e) {
+          log.warn(`Game channel for Game ID ${all_interfaces[i]} could not be found: ${e}.`);
+        }
+
+        //Remove game object
+        delete interfaces[all_interfaces[i]];
+      }
+    }
+  },
+
   createNewGame: function (arg0_user, arg1_message) {
     //Convert from parameters
     var user_id = arg0_user;
-    var msg = message;
+    var msg = arg1_message;
+
+    //Declare local instance variables
+    var server = msg.guild;
 
     //Create new game channel
-    if (!getGame(usr)) {
+    if (!getGame(user_id)) {
       var game_id = generateRandomID();
 
       //Create new game interface object
@@ -38,11 +63,12 @@ module.exports = {
         ]);
 
         interfaces[game_id].channel = channel.id;
+        interfaces[game_id].map = {};
         interfaces[game_id].page = (main.users[user_id]) ? "country_interface" : "founding_map";
 
         //Send confirmation message and initialise main menu embeds
         sendPlainEmbed(msg, `<@${user_id}> - Click <#${channel.id}> to begin playing.`);
-        intiialiseGameEmbeds(game_id);
+        initialiseGameEmbeds(game_id);
       });
     } else {
       sendPlainEmbed(msg, "You are already playing a concurrent game of **Triumph & Tragedy**!");

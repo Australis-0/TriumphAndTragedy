@@ -6,6 +6,7 @@ global.Canvas = require("canvas");
 global.diacriticless = require("diacriticless"); //TODO: install
 global.Discord = require("discord.js");
 global.fs = require("fs");
+global.HTML = require("node-html-parser");
 global.opus = require("opusscript");
 global.path = require("path");
 global.voice = require("@discordjs/voice");
@@ -35,6 +36,9 @@ FileManager.import("./framework/discord/permissions_handler");
 FileManager.import("./framework/discord/reaction_framework");
 FileManager.import("./framework/discord/select_handler");
 FileManager.import("./framework/discord/users");
+
+FileManager.import("./framework/map/map_renderer");
+FileManager.import("./framework/map/province_renderer");
 
 FileManager.import("./framework/ui/games");
 FileManager.import("./framework/ui/map_viewer");
@@ -127,18 +131,18 @@ client.on("messageCreate", async (message) => {
       if (equalsIgnoreCase(arg[0], settings.prefix)) {
         if (equalsIgnoreCase(arg[1], "play")) {
           //createMainMenu(user_id, message);
-          createGameMenu(user_id, message);
+          createNewGame(user_id, message);
         }
       }
     }
 
     //Main Menu input commands
     {
-      if (getHub(user_id)) {
-        var hub_obj = interfaces[getHub(user_id)];
+      if (getGame(user_id)) {
+        var hub_obj = interfaces[getGame(user_id)];
 
         if (hub_obj.channel == message.channel.id) {
-          menuInput(getHub(user_id), arg.join(" ").toLowerCase());
+          commandHandler(getGame(user_id), arg.join(" ").toLowerCase());
           message.delete();
         }
       }
