@@ -54,45 +54,106 @@ module.exports = {
     var game_id = arg0_game_id;
     var game_obj = interfaces[game_id];
 
+    game_obj.alert_array = [];
     var usr = main.users[game_obj.user];
 
-    //Initialise message objects
-    returnChannel(game_obj.channel).send(config.localisation.blank).then((message) => {
-      game_obj.collectors.push(message.id);
-      game_obj.top_embed = message;
-    });
+    //Initialise embeds
+    const middle_embed = new Discord.MessageEmbed()
+      .setColor(settings.bot_colour)
+      .setImage("https://cdn.discordapp.com/attachments/722997700391338046/736141424315203634/margin.png")
+      .setDescription("Nothing to see here.");
+    const bottom_embed = new Discord.MessageEmbed()
+      .setColor(settings.bot_colour)
+      .setDescription("No recent alerts.")
+      .setImage("https://cdn.discordapp.com/attachments/722997700391338046/736141424315203634/margin.png");
 
-    //Main embed displaying stats screen
-    returnChannel(game_obj.channel).send(config.localisation.blank).then((message)) => {
-      game_obj.collectors.push(message.id);
-      game_obj.main_embed_obj = message;
-    });
+    //Send out the embeds!
+    try {
+      //Initialise message objects
+      returnChannel(game_obj.channel).send(config.localisation.blank).then((message) => {
+        game_obj.header = message;
 
-    //Extra control panel elements
-    returnChannel(game_obj.channel).send(config.localisation.blank).then((message)) => {
-      game_obj.collectors.push(message.id);
-      game_obj.middle_control_panel = message;
-    });
-    returnChannel(game_obj.channel).send(config.localisation.blank).then((message)) => {
-      game_obj.collectors.push(message.id);
-      game_obj.bottom_control_panel = message;
-    });
+        setInterval(function(){
+          if (game_obj.header_change) {
+            message.edit({ embeds: [game_obj.new_header] });
+            delete game_obj.header_change;
+          }
+        }, 100);
+      });
 
-    //Bottom embed displaying alerts
-    returnChannel(game_obj.channel).send(config.localisation.blank).then((message)) => {
-      game_obj.collectors.push(message.id);
-      game_obj.bottom_embed = message;
-    });
+      //Main embed displaying stats screen
+      returnChannel(game_obj.channel).send({ embeds: [middle_embed] }).then((message) => {
+        game_obj.collectors.push(message.id);
+        game_obj.middle_embed = message;
 
-    //Load up either the starting map viewer or country interface depending on the starting page
-    switch (game_obj.page) {
-      case "country_interface":
-        
-        break;
-      case "founding_map":
+        setInterval(function(){
+          if (game_obj.main_change) {
+            message.edit({ embeds: [game_obj.main_embed] });
+            message.reactions.removeAll().catch(error => log.error(`Failed to clear reactions: ${error}.`));
+            game_obj.main_change = false;
+          }
+        }, 100);
+      });
+      //Extra control panel elements
+      returnChannel(game_obj.channel).send(config.localisation.blank).then((message) => {
+        game_obj.collectors.push(message.id);
+        game_obj.middle_control_panel = message;
+      });
+      returnChannel(game_obj.channel).send(config.localisation.blank).then((message) => {
+        game_obj.collectors.push(message.id);
+        game_obj.bottom_control_panel = message;
+      });
 
-        break;
-    }
+      //Bottom embed displaying alerts
+      returnChannel(game_obj.channel).send({ embeds: [bottom_embed] }).then((message) => {
+        game_obj.alert_embed = message;
+
+        setInterval(function(){
+            var message_is_prompt = false;
+            var all_visual_prompts = Object.keys(visual_prompts);
+
+            //Check if message is subject to a current command prompt
+            for (var i = 0; i < all_visual_prompts.length; i++) {
+              var local_prompt = visual_prompts[all_visual_prompts[i]];
+              if (local_prompt.message.id == message.id) {
+                message_is_prompt = true;
+              }
+            }
+
+            //Only edit the message if the message is not a prompt.
+            if (!message_is_prompt) {
+              if (game_obj.alert_change) {
+                if (game_obj.alert_array.length == 0) {
+                  const new_alert_embed = new Discord.MessageEmbed()
+                    .setColor(settings.bot_colour)
+                    .setDescription("No new alerts.")
+                    .setImage("https://cdn.discordapp.com/attachments/722997700391338046/736141424315203634/margin.png");
+
+                  message.edit({ embeds: [new_alert_embed] });
+                } else {
+                  const new_alert_embed = new Discord.MessageEmbed()
+                    .setColor(settings.bot_colour)
+                    .setDescription(game_obj.alert_array.join("\n"))
+                    .setImage("https://cdn.discordapp.com/attachments/722997700391338046/736141424315203634/margin.png");
+
+                  message.edit({ embeds: [new_alert_embed] });
+                }
+                game_obj.alert_change = false;
+              }
+            }
+          }, 100);
+      });
+
+      //Load up either the starting map viewer or country interface depending on the starting page
+      switch (game_obj.page) {
+        case "country_interface":
+
+          break;
+        case "founding_map":
+
+          break;
+      }
+    } catch {}
   },
 
   reinitialiseGameEmbeds: function () {

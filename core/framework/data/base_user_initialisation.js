@@ -26,7 +26,7 @@ module.exports = {
 
     //Define subobjects
     if (!usr.diplomacy) usr.diplomacy = {};
-      if (!usr.diplomacy.used_diplomatic_slots) = 0;
+      if (!usr.diplomacy.used_diplomatic_slots) usr.diplomacy.used_diplomatic_slots = 0;
       if (!usr.diplomacy.rival_slots) usr.diplomacy.rival_slots = config.rival_slots;
 
       if (!usr.diplomacy.allies) usr.diplomacy.allies = {};
@@ -130,7 +130,7 @@ module.exports = {
       if (!usr.modifiers.prestige_gain) usr.modifiers.prestige_gain = 0;
       if (!usr.modifiers.reform_desire) usr.modifiers.reform_desire = 0;
       if (!usr.modifiers.reform_desire_gain) usr.modifiers.reform_desire_gain = 0.02;
-      if (!usr.modifiers.republicanism) usr.modifiers.republicanism  0;
+      if (!usr.modifiers.republicanism) usr.modifiers.republicanism = 0;
       if (!usr.modifiers.ruling_party_support) usr.modifiers.ruling_party_support = 0;
       if (!usr.modifiers.stability) usr.modifiers.stability = 0.75;
       if (!usr.modifiers.stability_modifier) usr.modifiers.stability_modifier = 0;
@@ -213,7 +213,7 @@ module.exports = {
       if (!usr.infamy_production_efficiency) usr.infamy_production_efficiency = 0;
       if (!usr.last_active_turn) usr.last_active_turn = 0;
       if (!usr.last_election) usr.last_election = 0;
-      if (!usr.news) = {};
+      if (!usr.news) usr.news = {};
       if (!usr.political_capital_gain_modifier) usr.political_capital_gain_modifier = 0;
       if (!usr.political.instability_modifier) usr.political_instability_modifier = 0;
       if (!usr.political_reform_desire_modifier) usr.political_reform_desire_modifier = 0;

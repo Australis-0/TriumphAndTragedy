@@ -37,6 +37,7 @@ FileManager.import("./framework/discord/select_handler");
 FileManager.import("./framework/discord/users");
 
 FileManager.import("./framework/ui/games");
+FileManager.import("./framework/ui/map_viewer");
 FileManager.import("./framework/ui/ui_framework");
 
 //Declare config loading order
@@ -60,6 +61,7 @@ FileManager.loadFile("settings.js");
 global.client = new Discord.Client({ intents: [1, 4, 8, 16, 32, 64, 128, 512, 1024, 2048, 4096, 8192, 16384] });
 global.backup_loaded = false;
 global.interfaces = {};
+global.visual_prompts = {};
 
 client.login(settings.bot_token);
 
