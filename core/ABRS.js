@@ -90,9 +90,9 @@ module.exports = {
   	}
 
     //Load maps
-  	loadMap("colonial_map.svg", "colonial_svg");
-    loadMap("political_map.svg", "political_svg");
-    loadMap("supply_limit_map.svg", "supply_svg");
+  	loadMap("colonial_map.svg", "colonial");
+    loadMap("political_map.svg", "political");
+    loadMap("supply_limit_map.svg", "supply");
   },
 
   returnABRSDateString: function () {

@@ -79,7 +79,7 @@ module.exports = {
 
               //JPEG compression
               var main_cache = Canvas.toBuffer("image/jpeg");
-              fs.writeFileSync(`./maps/cache/${map_name}.jpg`);
+              fs.writeFileSync(`./map/cache/${map_name}.jpg`);
             }
 
             break;

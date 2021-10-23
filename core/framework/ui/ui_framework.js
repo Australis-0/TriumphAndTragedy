@@ -149,6 +149,30 @@ module.exports = {
     return (already_in_game[0]) ? already_in_game[1] : undefined;
   },
 
+  initialiseControlPanel: function (arg0_game_id) {
+    //Convert from parameters
+    var game_id = arg0_game_id;
+    var game_obj = interfaces[game_id];
+
+    //Remove all reactions if they exist
+    try {
+      game_obj.middle_embed.removeAll();
+      game_obj.middle_control_panel.removeAll();
+      game_obj.bottom_control_panel.removeAll();
+    } catch {}
+
+    //Add collector reactions
+    game_obj.middle_embed.react("778437227276402688")
+      .then(() => { sent.react("⬆️"); })
+      .then(() => { sent.react("785931430215155754"); });
+    game_obj.middle_control_panel.react("⬅️")
+      .then(() => { sent.react("🔘")}; )
+      .then(() => { sent.react("➡️")}; );
+    game_obj.bottom_control_panel.react("778437227276402688")
+      .then(() => { sent.react("⬇️")}; )
+      .then(() => { sent.react("785931430407700482")}; );
+  },
+
   selectMenu: function (arg0_message_obj, arg1_options) { //WIP
     //Convert from parameters
     var msg = arg0_message_obj;

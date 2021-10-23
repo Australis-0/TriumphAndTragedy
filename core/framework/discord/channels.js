@@ -24,6 +24,10 @@ module.exports = {
     }
   },
 
+  returnCacheChannel: function () {
+    return module.exports.returnChannel(randomElement(settings.cache_channels));
+  },
+
   returnChannel: function (arg0_channel_id) {
     //Convert from parameters
     var channel_id = arg0_channel_id;
