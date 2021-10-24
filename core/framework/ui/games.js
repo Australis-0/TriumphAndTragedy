@@ -137,11 +137,11 @@ module.exports = {
         }, 100);
       });
       //Extra control panel elements
-      returnChannel(game_obj.channel).send(config.localisation.blank).then((message) => {
+      returnChannel(game_obj.channel).send("https://cdn.discordapp.com/attachments/722997700391338046/736141424315203634/margin.png").then((message) => {
         game_obj.collectors.push(message.id);
         game_obj.middle_control_panel = message;
       });
-      returnChannel(game_obj.channel).send(config.localisation.blank).then((message) => {
+      returnChannel(game_obj.channel).send("https://cdn.discordapp.com/attachments/722997700391338046/736141424315203634/margin.png").then((message) => {
         game_obj.collectors.push(message.id);
         game_obj.bottom_control_panel = message;
       });
