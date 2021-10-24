@@ -102,8 +102,8 @@ module.exports = {
 
       //If detected as being a collector message, begin processing any control_function found
       var actions = {
-        zoom_in: (reaction.emoji.name == "785931430215155754"),
-        zoom_out: (reaction.emoji.name == "785931430407700482"),
+        zoom_in: (reaction.emoji.name == "zoom_in"),
+        zoom_out: (reaction.emoji.name == "zoom_out"),
 
         up_arrow: (reaction.emoji.name == "⬆️"),
         down_arrow: (reaction.emoji.name == "⬇️"),
@@ -111,7 +111,7 @@ module.exports = {
         right_arrow: (reaction.emoji.name == "➡️"),
         interact_button: (reaction.emoji.name == "🔘")
       };
-      
+
       if (is_collector[0]) {
         var local_menu_obj = interfaces[is_collector[1]];
 

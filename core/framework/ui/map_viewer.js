@@ -81,7 +81,7 @@ module.exports = {
 
             //Controls
             if (map_obj.zoom_in) map_obj.zoom++;
-            if (map_obj.zoom_out) map_obj.zoom = (map_obj.zoom < 1) ? 1 : map_obj.zoom - 1;
+            if (map_obj.zoom_out) map_obj.zoom = (map_obj.zoom > 1) ? map_obj.zoom-- : 1;
 
             if (map_obj.decrease_pan_speed) map_obj.speed = map_obj.speed*0.9;
             if (map_obj.increase_pan_speed) map_obj.speed = map_obj.speed*1.1;
@@ -144,18 +144,19 @@ module.exports = {
       game_obj.middle_embed.edit({ embeds: [embed_obj] });
   },
 
-  reloadMap: async function (arg0_game_id, arg1_do_not_reload_image) {
+  reloadMap: async function (arg0_game_id, arg1_do_not_reload_image, arg2_force_reload) {
     //Convert from parameters
     var game_id = arg0_game_id;
     var game_obj = interfaces[game_id];
     var do_not_reload_image = arg1_do_not_reload_image;
+    var force_reload = arg2_force_reload;
 
     //Declare local instance variables
     try {
       var map_obj = game_obj.map;
 
       //Check if anything new has to be rendered first
-      var render_new = (map_obj.left_arrow || map_obj.right_arrow || map_obj.up_arrow || map_obj.down_arrow || map_obj.zoom_in || map_obj.zoom_out || map_obj.increase_pan_speed || map_obj.decrease_pan_speed || do_not_reload_image);
+      var render_new = (map_obj.left_arrow || map_obj.right_arrow || map_obj.up_arrow || map_obj.down_arrow || map_obj.zoom_in || map_obj.zoom_out || map_obj.increase_pan_speed || map_obj.decrease_pan_speed || do_not_reload_image || force_reload);
 
       //If a new map has to be rendered, apply the zoom algorithm
       if (render_new) {
@@ -163,7 +164,7 @@ module.exports = {
         map_obj.title = "Map Viewer:" //Temporary, rename to 'Map of the World, ${getDateString()} later' [WIP]
         map_obj.interface_string = [
           `You are now viewing the **${map_obj.mapmode}** mapmode.`,
-          `Zoom: ${map_obj.zoom} ¦ Speed: ${map_obj.speed/1000} ¦ X: ${map_obj.x} ¦ Y: ${map_obj.y}`,
+          `Zoom: ${map_obj.zoom} ¦ Speed: ${map_obj.speed/1000} ¦ X: ${Math.round(map_obj.x)} ¦ Y: ${Math.round(map_obj.y)}`,
           "",
           "Use the arrow keys and magnifying icons at the bottom to navigate around the map."
         ];
@@ -182,16 +183,29 @@ module.exports = {
           }
 
           //Draw image on ctx
-          ctx.drawImage(img, offset_x + (map_obj.x*map_obj.zoom), offset_y + (map_obj.y*map_obj.zoom), Math.ceil(config.defines.map.map_resolution[0]/4)*map_obj.zoom, Math.ceil(config.defines.map.map_resolution[1]/4)*map_obj.zoom);
+          ctx.drawImage(img,
+            offset_x + (map_obj.x*map_obj.zoom),
+            offset_y + (map_obj.y*map_obj.zoom),
 
+            Math.ceil(config.defines.map.map_resolution[0]/4)*map_obj.zoom, Math.ceil(config.defines.map.map_resolution[1]/4)*map_obj.zoom
+          );
+
+          console.log(`
+            Offset X: ${offset_x + (map_obj.x*map_obj.zoom)},
+            Offset Y: ${offset_y + (map_obj.y*map_obj.zoom)},
+
+            Scale X: ${Math.ceil(config.defines.map.map_resolution[0]/4)*map_obj.zoom},
+            Scale Y: ${Math.ceil(config.defines.map.map_resolution[1]/4)*map_obj.zoom}
+          `);
           var attachment = new Discord.MessageAttachment(local_canvas.toBuffer(), "map_viewer.jpg");
-          returnCacheChannel().send(`${generateRandomID()}_${game_id}`, {
-            files: [`./map/cache/${map_obj.mapmode}.jpg`]
+
+          returnCacheChannel().send({
+            content: `${generateRandomID()}_${game_id}`,
+            files: [attachment]
           }).then((message) => {
             var Attachment = Array.from(message.attachments);
 
             Attachment.forEach(function(attachment) {
-              map_obj.original_img = attachment[1].url.toString();
               map_obj.image_url = attachment[1].url.toString();
             });
           });
