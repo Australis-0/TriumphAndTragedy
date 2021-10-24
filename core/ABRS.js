@@ -81,7 +81,7 @@ module.exports = {
                 //Restore interfaces
                 interfaces = main.interfaces;
 
-                setTimeout(reinitialiseMainMenuEmbeds, 1000);
+                setTimeout(reinitialiseGameEmbeds, 1000);
   						}, 1000);
   					}
   				}

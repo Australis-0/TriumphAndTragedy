@@ -151,50 +151,55 @@ module.exports = {
         game_obj.alert_embed = message;
 
         setInterval(function(){
-            var message_is_prompt = false;
-            var all_visual_prompts = Object.keys(visual_prompts);
+          var message_is_prompt = false;
+          var all_visual_prompts = Object.keys(visual_prompts);
 
-            //Check if message is subject to a current command prompt
-            for (var i = 0; i < all_visual_prompts.length; i++) {
-              var local_prompt = visual_prompts[all_visual_prompts[i]];
-              if (local_prompt.message.id == message.id) {
-                message_is_prompt = true;
-              }
+          //Check if message is subject to a current command prompt
+          for (var i = 0; i < all_visual_prompts.length; i++) {
+            var local_prompt = visual_prompts[all_visual_prompts[i]];
+            if (local_prompt.message.id == message.id) {
+              message_is_prompt = true;
             }
+          }
 
-            //Only edit the message if the message is not a prompt.
-            if (!message_is_prompt) {
-              if (game_obj.alert_change) {
-                if (game_obj.alert_array.length == 0) {
-                  const new_alert_embed = new Discord.MessageEmbed()
-                    .setColor(settings.bot_colour)
-                    .setDescription("No new alerts.")
-                    .setImage("https://cdn.discordapp.com/attachments/722997700391338046/736141424315203634/margin.png");
+          //Only edit the message if the message is not a prompt.
+          if (!message_is_prompt) {
+            if (game_obj.alert_change) {
+              if (game_obj.alert_array.length == 0) {
+                const new_alert_embed = new Discord.MessageEmbed()
+                  .setColor(settings.bot_colour)
+                  .setDescription("No new alerts.")
+                  .setImage("https://cdn.discordapp.com/attachments/722997700391338046/736141424315203634/margin.png");
 
-                  message.edit({ embeds: [new_alert_embed] });
-                } else {
-                  const new_alert_embed = new Discord.MessageEmbed()
-                    .setColor(settings.bot_colour)
-                    .setDescription(game_obj.alert_array.join("\n"))
-                    .setImage("https://cdn.discordapp.com/attachments/722997700391338046/736141424315203634/margin.png");
+                message.edit({ embeds: [new_alert_embed] });
+              } else {
+                const new_alert_embed = new Discord.MessageEmbed()
+                  .setColor(settings.bot_colour)
+                  .setDescription(game_obj.alert_array.join("\n"))
+                  .setImage("https://cdn.discordapp.com/attachments/722997700391338046/736141424315203634/margin.png");
 
-                  message.edit({ embeds: [new_alert_embed] });
-                }
-                game_obj.alert_change = false;
+                message.edit({ embeds: [new_alert_embed] });
               }
+              game_obj.alert_change = false;
             }
-          }, 100);
+          }
+        }, 100);
+
+        //Begin processing page
+
+
+        //Load up either the starting map viewer or country interface depending on the starting page
+        switch (game_obj.page) {
+          case "country_interface":
+
+            break;
+          case "founding_map":
+            //Initialise map viewer
+            initialiseMapViewer(game_id);
+
+            break;
+        }
       });
-
-      //Load up either the starting map viewer or country interface depending on the starting page
-      switch (game_obj.page) {
-        case "country_interface":
-
-          break;
-        case "founding_map":
-
-          break;
-      }
     } catch {}
   },
 

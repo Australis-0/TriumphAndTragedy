@@ -11,14 +11,17 @@ module.exports = {
     var label_placement = config.map_label_placement;
     var labels = [];
 
-    log.info("cacheSVG() called!");
+    log.info(`cacheSVG() called for ${map_file}!`);
 
+    //Write to file first before pulling any more shenanigans
+    fs.writeFileSync(`./map/${map_file}`, global[`${map_name}_parsed`].toString())
+
+    //Check to make sure that map file is valid
     if (fs.readFileSync(`./map/${map_file}`, "utf8").toString().length > 0) {
       //Regular error trapping just in case
-
       try {
         switch (map_name) {
-          case "political_svg":
+          case "political":
             //Political map rendering
             var current_element = 0;
             var counter = 0;
@@ -35,7 +38,7 @@ module.exports = {
             //Initialise canvas and draw key for political map
             {
               var canvas = Canvas.createCanvas(config.defines.map.map_resolution[0], config.defines.map.map_resolution[1]);
-              var ctx = Canvas.getContext("2d");
+              var ctx = canvas.getContext("2d");
 
               //Load map
               var background_layer = new Canvas.Image();
@@ -78,8 +81,8 @@ module.exports = {
                 }
 
               //JPEG compression
-              var main_cache = Canvas.toBuffer("image/jpeg");
-              fs.writeFileSync(`./map/cache/${map_name}.jpg`);
+              var main_cache = canvas.toBuffer("image/jpeg");
+              fs.writeFileSync(`./map/cache/${map_name}.jpg`, main_cache);
             }
 
             break;

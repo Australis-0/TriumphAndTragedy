@@ -2,7 +2,7 @@
 module.exports = {
   randomElement: function (arg0_array) {
     //Convert from parameters
-    var array = arg0_element;
+    var array = arg0_array;
 
     //Return statement
     return array[Math.floor(Math.random()*array.length)];

@@ -171,7 +171,11 @@ setInterval(function(){
 	}
 
   //Write to database.js
-	fs.writeFile('database.js', JSON.stringify(main), function (err,data) {
-		if (err) return log.info(err);
-	});
+  try {
+  	fs.writeFile('database.js', JSON.stringify(main), function (err,data) {
+  		if (err) return log.info(err);
+  	});
+  } catch (e) {
+    log.error(`Ran into an error whilst attempting to save to database.js! ${e}.`);
+  }
 }, 1000);

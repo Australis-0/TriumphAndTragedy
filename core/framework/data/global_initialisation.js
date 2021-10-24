@@ -2,6 +2,9 @@
 module.exports = {
   initGlobal: function () {
     //Declare objects
+    if (!main.interfaces) main.interfaces = {};
+    if (!main.users) main.users = {};
+
     //Date trackers
     if (!main.date) main.date = {};
       if (!main.date.year) main.date.year = (config.defines.common.starting_year) ? config.defines.common.starting_year : 1500;

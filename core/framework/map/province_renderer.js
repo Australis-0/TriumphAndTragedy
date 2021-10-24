@@ -8,8 +8,8 @@ module.exports = {
     //Convert from parameters
     var local_map = global[`${arg0_file}_parsed`];
     var province_id = arg1_province_id;
-    var colour = arg3_colour; //Provided as [r, g, b] array
+    var colour = arg2_colour; //Provided as [r, g, b] array
 
-    HTML.querySelector(`#${province_id}`).setAttribute("style", `fill:${RGBToHex(colour[0], colour[1], colour[2])}${getDefaultProvinceStyling()}`);
+    local_map.querySelector(`#${province_id}`).setAttribute("style", `fill:${RGBToHex(colour[0], colour[1], colour[2])}${getDefaultProvinceStyling()}`);
   }
 };
