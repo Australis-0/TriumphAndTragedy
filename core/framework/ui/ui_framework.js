@@ -166,11 +166,11 @@ module.exports = {
       .then(() => { sent.react("⬆️"); })
       .then(() => { sent.react("785931430215155754"); });
     game_obj.middle_control_panel.react("⬅️")
-      .then(() => { sent.react("🔘")}; )
-      .then(() => { sent.react("➡️")}; );
+      .then(() => { sent.react("🔘"); } )
+      .then(() => { sent.react("➡️"); } );
     game_obj.bottom_control_panel.react("778437227276402688")
-      .then(() => { sent.react("⬇️")}; )
-      .then(() => { sent.react("785931430407700482")}; );
+      .then(() => { sent.react("⬇️"); } )
+      .then(() => { sent.react("785931430407700482"); } );
   },
 
   selectMenu: function (arg0_message_obj, arg1_options) { //WIP

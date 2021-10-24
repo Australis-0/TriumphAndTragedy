@@ -1,5 +1,21 @@
 //Initialise Games/Lobbies UI
 module.exports = {
+  clearGame: function (arg0_game_id) {
+    //Convert from parameters
+    var game_id = arg0_game_id;
+    var game_obj = interfaces[arg0_game_id];
+
+    //Delete game channel first
+    try {
+      returnChannel(game_obj.channel).delete();
+    } catch (e) {
+      log.warn(`clearGame() - Game channel for Game ID ${game_id} could not be found: ${e}`);
+    }
+
+    //Delete game object
+    delete interfaces[game_id];
+  },
+
   clearGames: function () {
     //Declare local instance variables
     var all_interfaces = Object.keys(interfaces);

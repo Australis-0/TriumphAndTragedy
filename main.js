@@ -23,7 +23,6 @@ FileManager.import("./framework/log");
 FileManager.import("./framework/numbers");
 FileManager.import("./framework/strings");
 
-FileManager.import("./framework/data/base_guild_initialisation");
 FileManager.import("./framework/data/base_user_initialisation");
 FileManager.import("./framework/data/games");
 FileManager.import("./framework/data/global_initialisation");

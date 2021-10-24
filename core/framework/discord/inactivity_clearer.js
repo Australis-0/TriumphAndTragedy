@@ -16,9 +16,9 @@ module.exports = {
         var local_ui = interfaces[all_interfaces[i]];
 
         //Check if type is compatible with inactivity_timer
-        if (local_ui.type == "main_menu")
+        if (local_ui.type == "game")
           if (current_date - local_ui.last_active > settings.inactivity_timer*1000)
-            deleteMainMenu(all_interfaces[i]);
+            clearGame(all_interfaces[i]);
       }
     } catch (e) {
       log.error(`clearInactiveGames() ran into an error: ${e}`);
