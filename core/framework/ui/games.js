@@ -214,7 +214,7 @@ module.exports = {
        for (var i = 0; i < all_interfaces.length; i++) if (interfaces[all_interfaces[i]].type == "game") {
          try {
            var local_ui = interfaces[all_interfaces[i]];
-           var local_messages = returnChannel(local_ui.channel).messages.fetch({ limit: 10 }).then(messages => {
+           var local_messages = returnChannel(local_ui.channel).messages.fetch({ limit: 10 }).then((messages) => {
              messages.forEach(msg => msg.delete());
            });
            initialiseGameEmbeds(all_interfaces[i]);

@@ -32,7 +32,7 @@ module.exports = {
         var ui_obj = interfaces[msg_id];
 
         if (ui_obj.user) {
-          //Confirmation dialogue type
+          //Page menu
           switch (ui_obj.type) {
             case "page_menu":
               var current_page = ui_obj.page;
@@ -96,33 +96,36 @@ module.exports = {
         for (var i = 0; i < all_interfaces.length; i++) {
           var local_interface = interfaces[all_interfaces[i]];
 
-          if (local_interface.type = "main_menu") is_collector =  (local_interface.collectors.includes(msg_id)) ? [true, all_interfaces[i]] : is_collector;
+          if (local_interface.type = "game") is_collector =  (local_interface.collectors.includes(msg_id)) ? [true, all_interfaces[i]] : is_collector;
         }
       } catch {}
 
       //If detected as being a collector message, begin processing any control_function found
       var actions = {
+        zoom_in: (reaction.emoji.name == "785931430215155754"),
+        zoom_out: (reaction.emoji.name == "785931430407700482"),
+
         up_arrow: (reaction.emoji.name == "⬆️"),
         down_arrow: (reaction.emoji.name == "⬇️"),
         left_arrow: (reaction.emoji.name == "⬅️"),
         right_arrow: (reaction.emoji.name == "➡️"),
         interact_button: (reaction.emoji.name == "🔘")
       };
-
+      
       if (is_collector[0]) {
         var local_menu_obj = interfaces[is_collector[1]];
 
         if (local_menu_obj.control_function) local_menu_obj.control_function(actions);
 
         //Remove any remaining user reactions
-  			const user_reactions = msg_obj.reactions.cache.filter(reaction => reaction.users.cache.has(user.id));
-  			try {
-  				for (const reaction of user_reactions.values()) {
-  					await reaction.users.remove(user.id);
-  				}
-  			} catch (error) {
-  				log.error("Failed to remove reactions.");
-  			}
+        const user_reactions = msg_obj.reactions.cache.filter(reaction => reaction.users.cache.has(user.id));
+				try {
+					for (const reaction of user_reactions.values()) {
+						await reaction.users.remove(user.id);
+					}
+				} catch (error) {
+					log.error("Failed to remove reactions.");
+				}
       }
     }
   },

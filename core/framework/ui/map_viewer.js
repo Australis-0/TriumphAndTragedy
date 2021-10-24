@@ -35,7 +35,7 @@ module.exports = {
     map_obj.speed = 1000;
     map_obj.x = 0;
     map_obj.y = 0;
-    map_obj.zoom = 0;
+    map_obj.zoom = 1;
 
     //Add collector reactions
     initialiseControlPanel(game_id);
@@ -51,7 +51,6 @@ module.exports = {
       Attachment.forEach(function(attachment) {
         //Reload map
         reloadMap(game_id, true);
-        console.log(attachment);
 
         //Initialise map
         map_obj.original_img = attachment[1].url;
@@ -95,7 +94,6 @@ module.exports = {
             //Reset map data states
             reloadMap(game_id);
             reloadMapInterface(map_interface_embed, game_id);
-            initialiseControlPanel(game_id);
 
             map_obj.increase_pan_speed = false;
             map_obj.decrease_pan_speed = false;
@@ -109,8 +107,26 @@ module.exports = {
             map_obj.down_arrow = false;
           } catch (e) {
             log.warn(`logic_loop under initialiseMapViewer() was unable to proceed! ${e}.`);
+            clearInterval(logic_loop);
           }
         }, 100);
+
+        //Initialise control panel outside of loop
+        initialiseControlPanel(game_id);
+
+        //Set control function of interface
+        game_obj.control_function = function (arg0_actions) {
+          //Convert from parameters
+          var actions = arg0_actions;
+
+          if (actions.zoom_in) map_obj.zoom_in = true;
+          if (actions.zoom_out) map_obj.zoom_out = true;
+
+          if (actions.up_arrow) map_obj.up_arrow = true;
+          if (actions.down_arrow) map_obj.down_arrow = true;
+          if (actions.left_arrow) map_obj.left_arrow = true;
+          if (actions.right_arrow) map_obj.right_arrow = true;
+        };
       });
     });
   },
@@ -172,7 +188,7 @@ module.exports = {
           returnCacheChannel().send(`${generateRandomID()}_${game_id}`, {
             files: [`./map/cache/${map_obj.mapmode}.jpg`]
           }).then((message) => {
-            var Attachment = (message.attachments).array();
+            var Attachment = Array.from(message.attachments);
 
             Attachment.forEach(function(attachment) {
               map_obj.original_img = attachment[1].url.toString();
