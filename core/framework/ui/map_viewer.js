@@ -81,7 +81,7 @@ module.exports = {
 
             //Controls
             if (map_obj.zoom_in) map_obj.zoom++;
-            if (map_obj.zoom_out) map_obj.zoom = (map_obj.zoom > 1) ? map_obj.zoom-- : 1;
+            if (map_obj.zoom_out) map_obj.zoom = (map_obj.zoom > 1) ? map_obj.zoom - 1 : 1;
 
             if (map_obj.decrease_pan_speed) map_obj.speed = map_obj.speed*0.9;
             if (map_obj.increase_pan_speed) map_obj.speed = map_obj.speed*1.1;
@@ -189,14 +189,7 @@ module.exports = {
 
             Math.ceil(config.defines.map.map_resolution[0]/4)*map_obj.zoom, Math.ceil(config.defines.map.map_resolution[1]/4)*map_obj.zoom
           );
-
-          console.log(`
-            Offset X: ${offset_x + (map_obj.x*map_obj.zoom)},
-            Offset Y: ${offset_y + (map_obj.y*map_obj.zoom)},
-
-            Scale X: ${Math.ceil(config.defines.map.map_resolution[0]/4)*map_obj.zoom},
-            Scale Y: ${Math.ceil(config.defines.map.map_resolution[1]/4)*map_obj.zoom}
-          `);
+          
           var attachment = new Discord.MessageAttachment(local_canvas.toBuffer(), "map_viewer.jpg");
 
           returnCacheChannel().send({
