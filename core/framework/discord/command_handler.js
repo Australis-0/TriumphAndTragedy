@@ -1,4 +1,98 @@
 module.exports = {
+  clearPrompt: function (arg0_user, arg1_game_id) {
+    //Convert from parameters
+    var user_id = arg0_user;
+    var game_id = arg1_game_id;
+
+    delete interfaces[user_id];
+    interfaces[game_id].alert_change = true;
+  },
+
+  commandHandler: function (arg0_game_id, arg1_input) {
+    //Convert from parameters
+    var game_id = arg0_game_id;
+    var input = arg1_input;
+
+    //Traditional commands
+    {
+
+    }
+
+    //Visual prompt processing
+    try {
+      if (interfaces[interfaces[game_id].user].type == "visual_prompt") {
+        try {
+          //Declare local instance variables
+          var game_obj = interfaces[game_id];
+          var local_prompt = interfaces[interfaces[game_id].user];
+          var current_step = local_prompt.answers.length;
+
+          //Check if prompt has been cancelled
+          if (input == "back") {
+            (current_step > 0) ? local_prompt.answers.pop() : clearPrompt(game_obj.user, game_id);
+          } else if (input == "cancel") {
+            clearPrompt(game_obj.user, game_id);
+          } else {
+            //Check if new answer is valid or not for the current prompt
+            if (local_prompt.prompts[current_step][1] == "number") {
+              //Check to make sure that the input is actually a number
+              if (!isNaN(parseInt(input))) {
+                var satisfies_requirements = [true, ""];
+
+                //Minimum check
+                if (local_prompt.prompts[current_step][2].min)
+                  if (parseInt(input) < local_prompt.prompts[current_step][2].min)
+                    satisfies_requirements = [false, `The lowest number you can specify for this command is ${local_prompt.prompts[current_step][2].min}!`];
+                //Maximum check
+                if (local_prompt.prompts[current_step][2].max)
+                  if (parseInt(input) > local_prompt.prompts[current_step][2].max)
+                    satisfies_requirements = [false, `The highest number you can specify for this command is ${local_prompt.prompts[current_step][2].max}!`];
+
+                if (satisfies_requirements[0]) local_prompt.answers.push(parseInt(input));
+              } else {
+                satisfies_requirements = [false, `You must input a valid number for this command! ${input} is not a valid number.`];
+              }
+            } else if (local_prompt.prompts[current_step][1] == "string") {
+              local_prompt.answers.push(input);
+            } else {
+              log.error(`The argument type ${local_prompt.prompts[current_step][1]} specified with the visual prompt at User ID ${user_id} does not exist!`);
+            }
+          }
+
+          //Keep at end, execute the function and delete the key only if all prompts have been filled out so far.
+          if (local_prompt.answers.length == local_prompt.prompts.length) {
+            local_prompt.evaluate_function(local_prompt.answers);
+
+            //Print final text or reset alert array to what it was before
+            if (local_prompt.final_text) {
+              printAlert(game_id, local_prompt.final_text);
+            } else {
+              game_obj.alert_change = true;
+            }
+
+            //Clear it from the interface!
+            delete interfaces[interfaces[game_id].user];
+          }
+
+          //Update visual prompt
+          if (interfaces[interfaces[game_id].user]) local_prompt.message.edit({
+            embeds: [
+              updateVisualPrompt({
+                title: local_prompt.title,
+                show_steps: local_prompt.show_steps,
+                answers: local_prompt.answers,
+                prompts: local_prompt.prompts,
+                satisfies_requirements: satisfies_requirements
+              });
+            ]
+          });
+        } catch (e) {
+          log.error(`commandHandler() - visual_prompt ran into an error: ${e}`);
+        }
+      }
+    } catch {}
+  },
+
   splitCommandLine: function (commandLine) {
 		var spaceMarker = '<SP>';
 

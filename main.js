@@ -125,7 +125,7 @@ client.on("messageCreate", async (message) => {
       }
     }
 
-    //Main Menu commands (these also have a prefix, with the exception of visual prompts)
+    //Lobby commands (these also have a prefix, with the exception of visual prompts)
     {
       if (equalsIgnoreCase(arg[0], settings.prefix)) {
         if (equalsIgnoreCase(arg[1], "play")) {
@@ -135,14 +135,18 @@ client.on("messageCreate", async (message) => {
       }
     }
 
-    //Main Menu input commands
+    //Game input commands
     {
       if (getGame(user_id)) {
-        var hub_obj = interfaces[getGame(user_id)];
+        var game_obj = interfaces[getGame(user_id)];
 
-        if (hub_obj.channel == message.channel.id) {
+        if (game_obj.channel == message.channel.id) {
           commandHandler(getGame(user_id), arg.join(" ").toLowerCase());
           message.delete();
+
+          //Check if game is still active
+          if (returnGameFromChannelID(message.channel.id))
+            interfaces[returnGameFromChannelID(message.channel.id)].last_active = new Date().getTime();
         }
       }
     }
