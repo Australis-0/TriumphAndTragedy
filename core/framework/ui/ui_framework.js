@@ -175,6 +175,38 @@ module.exports = {
     } catch {}
   },
 
+  printAlert: function (arg0_game_id, arg1_message, arg2_clear) {
+    //Convert from parameters
+    var game_id = arg0_game_id;
+    var msg = arg1_message;
+    var clear_array = arg2_clear;
+
+    //Declare local instance variables
+    var game_obj = interfaces[game_id];
+
+    //Clear alert array if prompted to do so
+    game_obj.alert_array = (clear_array) ? [] : game_obj.alert_array;
+
+    game_obj.alert_array.push(msg);
+    game_obj.alert_change = true;
+
+    setTimeout(function(){
+      for (var i = 0; i < game_obj.alert_array.length; i++)
+        if (game_obj.alert_array[i] == msg)
+          game_obj.alert_array.splice(i, 1);
+
+      game_obj.alert_change = true;
+    }, 15000);
+  },
+
+  printError: function (arg0_game_id, arg1_message) {
+    //Convert from parameters
+    var game_id = arg0_game_id;
+    var msg = arg1_message;
+
+    printAlert(game_id, ":warning: " + msg);
+  },
+
   selectMenu: function (arg0_message_obj, arg1_options) { //WIP
     //Convert from parameters
     var msg = arg0_message_obj;
