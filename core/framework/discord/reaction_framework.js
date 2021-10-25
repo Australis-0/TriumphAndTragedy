@@ -105,6 +105,9 @@ module.exports = {
         zoom_in: (reaction.emoji.name == "zoom_in"),
         zoom_out: (reaction.emoji.name == "zoom_out"),
 
+        increase_pan_speed: (reaction.emoji.name == "⏫"),
+        decrease_pan_speed: (reaction.emoji.name == "⏬"),
+
         up_arrow: (reaction.emoji.name == "⬆️"),
         down_arrow: (reaction.emoji.name == "⬇️"),
         left_arrow: (reaction.emoji.name == "⬅️"),

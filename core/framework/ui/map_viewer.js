@@ -38,7 +38,7 @@ module.exports = {
     map_obj.zoom = 1;
 
     //Add collector reactions
-    initialiseControlPanel(game_id);
+    initialiseControlPanel(game_id, "map");
 
     //Initialise map and upload it to a separate cache channel
     cacheSVG("political");
@@ -189,7 +189,7 @@ module.exports = {
 
             Math.ceil(config.defines.map.map_resolution[0]/4)*map_obj.zoom, Math.ceil(config.defines.map.map_resolution[1]/4)*map_obj.zoom
           );
-          
+
           var attachment = new Discord.MessageAttachment(local_canvas.toBuffer(), "map_viewer.jpg");
 
           returnCacheChannel().send({

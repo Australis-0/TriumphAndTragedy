@@ -149,9 +149,12 @@ module.exports = {
     return (already_in_game[0]) ? already_in_game[1] : undefined;
   },
 
-  initialiseControlPanel: function (arg0_game_id) {
+  initialiseControlPanel: function (arg0_game_id, arg1_type) {
     //Convert from parameters
     var game_id = arg0_game_id;
+    var panel_type = arg1_type;
+
+    //Declare local instance variables
     var game_obj = interfaces[game_id];
 
     //Remove all reactions if they exist
@@ -163,13 +166,13 @@ module.exports = {
 
     //Add collector reactions
     try {
-      game_obj.middle_embed.react("778437227276402688")
+      game_obj.middle_embed.react((panel_type == "map") ? "778437227276402688" : "⏫")
         .then(() => { game_obj.middle_embed.react("⬆️"); })
         .then(() => { game_obj.middle_embed.react("785931430215155754"); });
       game_obj.middle_control_panel.react("⬅️")
         .then(() => { game_obj.middle_control_panel.react("🔘"); } )
         .then(() => { game_obj.middle_control_panel.react("➡️"); } );
-      game_obj.bottom_control_panel.react("778437227276402688")
+      game_obj.bottom_control_panel.react((panel_type == "map") ? "778437227276402688" : "⏬")
         .then(() => { game_obj.bottom_control_panel.react("⬇️"); } )
         .then(() => { game_obj.bottom_control_panel.react("785931430407700482"); } );
     } catch {}
