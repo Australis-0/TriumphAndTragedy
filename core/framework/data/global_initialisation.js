@@ -6,6 +6,7 @@ module.exports = {
       if (!main.global.user_map) main.global.user_map = {};
     if (!main.interfaces) main.interfaces = {};
     if (!main.users) main.users = {};
+    if (!main.provinces) main.provinces = JSON.parse(fs.readFileSync(`./map/provinces.js`, "utf8").toString());
 
     //Date trackers
     if (!main.date) main.date = {};

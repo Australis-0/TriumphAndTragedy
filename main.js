@@ -22,6 +22,7 @@ FileManager.import("./framework/colors");
 FileManager.import("./framework/log");
 FileManager.import("./framework/numbers");
 FileManager.import("./framework/strings");
+FileManager.import("./framework/users");
 
 FileManager.import("./framework/data/base_user_initialisation");
 FileManager.import("./framework/data/games");
