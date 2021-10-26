@@ -44,6 +44,8 @@ FileManager.import("./framework/ui/games");
 FileManager.import("./framework/ui/map_viewer");
 FileManager.import("./framework/ui/ui_framework");
 
+FileManager.import("./game/province/generate_province");
+
 //Declare config loading order
 global.config = {};
 global.load_order = {
