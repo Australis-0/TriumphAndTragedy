@@ -133,7 +133,7 @@ module.exports = {
                 //Check to make sure mapmode is indeed compatible
                 if (map_obj.mapmode == map_name) {
                   map_obj.original_img = attachment[1].url.toString();
-                  reloadMap(all_interfaces[i]);
+                  reloadMap(all_interfaces[i], false, true);
                 }
               }
           } catch {}

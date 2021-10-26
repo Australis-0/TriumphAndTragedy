@@ -42,93 +42,97 @@ module.exports = {
 
     //Initialise map and upload it to a separate cache channel
     cacheSVG("political");
-    returnCacheChannel().send({
-      content: `${generateRandomID()}_${game_id}`,
-      files: [`./map/cache/${map_obj.mapmode}.jpg`]
-    }).then((message) => {
-      var Attachment = Array.from(message.attachments);
 
-      Attachment.forEach(function(attachment) {
-        //Reload map
-        reloadMap(game_id, true);
+    //setTimeout() just for safety
+    setTimeout(function(){
+      returnCacheChannel().send({
+        content: `${generateRandomID()}_${game_id}`,
+        files: [`./map/cache/${map_obj.mapmode}.jpg`]
+      }).then((message) => {
+        var Attachment = Array.from(message.attachments);
 
-        //Initialise map
-        map_obj.original_img = attachment[1].url;
-        map_obj.image_url = attachment[1].url;
+        Attachment.forEach(function(attachment) {
+          //Reload map
+          reloadMap(game_id, true);
 
-        //Establish logic loop
-        var logic_loop = setInterval(function(){
-          try {
-            const map_interface_embed = {
-              title: map_obj.title,
-              color: 9686188,
-              thumbnail: {
-                url: map_obj.thumbnail_url
-              },
-              description: map_obj.interface_string.join("\n"),
-              image: {
-                url: map_obj.image_url
-              }
-            };
+          //Initialise map
+          map_obj.original_img = attachment[1].url;
+          map_obj.image_url = attachment[1].url;
 
-            //Keep track of embed_history (interface string), and objects (map image)
-            map_obj.embed_history.push(map_obj.interface_string.join("\n"));
-            map_obj.objects.push(map_obj.image_url);
+          //Establish logic loop
+          var logic_loop = setInterval(function(){
+            try {
+              const map_interface_embed = {
+                title: map_obj.title,
+                color: 9686188,
+                thumbnail: {
+                  url: map_obj.thumbnail_url
+                },
+                description: map_obj.interface_string.join("\n"),
+                image: {
+                  url: map_obj.image_url
+                }
+              };
 
-            //End of loop
-            if (map_obj.embed_history.length > 3) map_obj.embed_history.splice(0, 1);
-            if (map_obj.objects.length > 3) map_obj.objects.splice(0, 1);
+              //Keep track of embed_history (interface string), and objects (map image)
+              map_obj.embed_history.push(map_obj.interface_string.join("\n"));
+              map_obj.objects.push(map_obj.image_url);
 
-            //Controls
-            if (map_obj.zoom_in) map_obj.zoom++;
-            if (map_obj.zoom_out) map_obj.zoom = (map_obj.zoom > 1) ? map_obj.zoom - 1 : 1;
+              //End of loop
+              if (map_obj.embed_history.length > 3) map_obj.embed_history.splice(0, 1);
+              if (map_obj.objects.length > 3) map_obj.objects.splice(0, 1);
 
-            if (map_obj.decrease_pan_speed) map_obj.speed = map_obj.speed*0.9;
-            if (map_obj.increase_pan_speed) map_obj.speed = map_obj.speed*1.1;
+              //Controls
+              if (map_obj.zoom_in) map_obj.zoom++;
+              if (map_obj.zoom_out) map_obj.zoom = (map_obj.zoom > 1) ? map_obj.zoom - 1 : 1;
 
-            if (map_obj.left_arrow) map_obj.x += (map_obj.speed/map_obj.zoom);
-            if (map_obj.right_arrow) map_obj.x -= (map_obj.speed/map_obj.zoom);
-            if (map_obj.up_arrow) map_obj.y += (map_obj.speed/map_obj.zoom);
-            if (map_obj.down_arrow) map_obj.y -= (map_obj.speed/map_obj.zoom);
+              if (map_obj.decrease_pan_speed) map_obj.speed = map_obj.speed*0.9;
+              if (map_obj.increase_pan_speed) map_obj.speed = map_obj.speed*1.1;
 
-            //Reset map data states
-            reloadMap(game_id);
-            reloadMapInterface(map_interface_embed, game_id);
+              if (map_obj.left_arrow) map_obj.x += (map_obj.speed/map_obj.zoom);
+              if (map_obj.right_arrow) map_obj.x -= (map_obj.speed/map_obj.zoom);
+              if (map_obj.up_arrow) map_obj.y += (map_obj.speed/map_obj.zoom);
+              if (map_obj.down_arrow) map_obj.y -= (map_obj.speed/map_obj.zoom);
 
-            map_obj.increase_pan_speed = false;
-            map_obj.decrease_pan_speed = false;
+              //Reset map data states
+              reloadMap(game_id);
+              reloadMapInterface(map_interface_embed, game_id);
 
-            map_obj.zoom_in = false;
-            map_obj.zoom_out = false;
+              map_obj.increase_pan_speed = false;
+              map_obj.decrease_pan_speed = false;
 
-            map_obj.left_arrow = false;
-            map_obj.right_arrow = false;
-            map_obj.up_arrow = false;
-            map_obj.down_arrow = false;
-          } catch (e) {
-            log.warn(`logic_loop under initialiseMapViewer() was unable to proceed! ${e}.`);
-            clearInterval(logic_loop);
-          }
-        }, 100);
+              map_obj.zoom_in = false;
+              map_obj.zoom_out = false;
 
-        //Initialise control panel outside of loop
-        initialiseControlPanel(game_id, "map");
+              map_obj.left_arrow = false;
+              map_obj.right_arrow = false;
+              map_obj.up_arrow = false;
+              map_obj.down_arrow = false;
+            } catch (e) {
+              log.warn(`logic_loop under initialiseMapViewer() was unable to proceed! ${e}.`);
+              clearInterval(logic_loop);
+            }
+          }, 100);
 
-        //Set control function of interface
-        game_obj.control_function = function (arg0_actions) {
-          //Convert from parameters
-          var actions = arg0_actions;
+          //Initialise control panel outside of loop
+          initialiseControlPanel(game_id, "map");
 
-          if (actions.zoom_in) map_obj.zoom_in = true;
-          if (actions.zoom_out) map_obj.zoom_out = true;
+          //Set control function of interface
+          game_obj.control_function = function (arg0_actions) {
+            //Convert from parameters
+            var actions = arg0_actions;
 
-          if (actions.up_arrow) map_obj.up_arrow = true;
-          if (actions.down_arrow) map_obj.down_arrow = true;
-          if (actions.left_arrow) map_obj.left_arrow = true;
-          if (actions.right_arrow) map_obj.right_arrow = true;
-        };
+            if (actions.zoom_in) map_obj.zoom_in = true;
+            if (actions.zoom_out) map_obj.zoom_out = true;
+
+            if (actions.up_arrow) map_obj.up_arrow = true;
+            if (actions.down_arrow) map_obj.down_arrow = true;
+            if (actions.left_arrow) map_obj.left_arrow = true;
+            if (actions.right_arrow) map_obj.right_arrow = true;
+          };
+        });
       });
-    });
+    }, 3000);
   },
 
   reloadMapInterface: function (arg0_embed_obj, arg1_game_id, arg2_message) {
