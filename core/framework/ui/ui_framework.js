@@ -194,11 +194,12 @@ module.exports = {
     } catch {}
   },
 
-  printAlert: function (arg0_game_id, arg1_message, arg2_clear) {
+  printAlert: function (arg0_game_id, arg1_message, arg2_clear, arg3_never_clear) {
     //Convert from parameters
     var game_id = arg0_game_id;
     var msg = arg1_message;
     var clear_array = arg2_clear;
+    var never_clear = arg3_never_clear;
 
     //Declare local instance variables
     var game_obj = interfaces[game_id];
@@ -211,7 +212,7 @@ module.exports = {
 
     setTimeout(function(){
       for (var i = 0; i < game_obj.alert_array.length; i++)
-        if (game_obj.alert_array[i] == msg)
+        if (game_obj.alert_array[i] == msg && !never_clear)
           game_obj.alert_array.splice(i, 1);
 
       game_obj.alert_change = true;

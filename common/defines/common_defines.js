@@ -1,4 +1,5 @@
 config.defines.common = {
+  starting_provinces: 1,
   starting_year: 1815,
 
   starting_kit: {

@@ -52,6 +52,7 @@ module.exports = {
 
       //Create new game interface object
       interfaces[game_id] = {
+        id: game_id,
         type: "game",
         user: user_id,
 

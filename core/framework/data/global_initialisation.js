@@ -2,6 +2,8 @@
 module.exports = {
   initGlobal: function () {
     //Declare objects
+    if (!main.global) main.global = {};
+      if (!main.global.user_map) main.global.user_map = {};
     if (!main.interfaces) main.interfaces = {};
     if (!main.users) main.users = {};
 
