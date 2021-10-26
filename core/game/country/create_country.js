@@ -23,5 +23,15 @@ module.exports = {
       //Set valid user map (this can be used later on for co-op and AI tags):
       main.global.user_map[user_id] = local_id;
     }
+  },
+
+  initCountry: function (arg0_user, arg1_name) {
+    //Convert from parameters
+    var user_id = arg0_user;
+    var country_name = arg1_name;
+
+    //Declare local instance variables
+    var country_name_taken = false;
+    var processed_country_name = formaliseString(country_name);
   }
 };

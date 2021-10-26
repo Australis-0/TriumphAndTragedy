@@ -22,6 +22,14 @@ module.exports = {
     return (arg0.toLowerCase() == arg1.toLowerCase());
   },
 
+  formaliseString: function (arg0_string) {
+    //Convert from parameters
+    var string = arg0_string;
+
+    //Return statement
+    return string.replace(/_/g, " ").replace(/(^\w{1})|(\s{1}\w{1})/g, match => match.toUpperCase());
+  },
+
   parseDate: function (arg0_timestamp) {
     var a = new Date(arg0_timestamp);
     var year = a.getFullYear();
