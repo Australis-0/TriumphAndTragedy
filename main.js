@@ -150,7 +150,7 @@ client.on("messageCreate", async (message) => {
         var game_obj = interfaces[getGame(user_id)];
 
         if (game_obj.channel == message.channel.id) {
-          commandHandler(getGame(user_id), arg.join(" ").toLowerCase());
+          commandHandler(getGame(user_id), arg.join(" "));
           message.delete();
 
           //Check if game is still active

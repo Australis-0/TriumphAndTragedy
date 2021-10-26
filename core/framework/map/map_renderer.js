@@ -14,7 +14,7 @@ module.exports = {
     log.info(`cacheSVG() called for ${map_file}!`);
 
     //Write to file first before pulling any more shenanigans
-    var cache_write_stream = fs.createWriteStream(`./map/${map_file}`);
+    let cache_write_stream = fs.createWriteStream(`./map/${map_file}`);
 
     cache_write_stream.write(global[`${map_name}_parsed`].toString(), "utf8");
 
@@ -95,6 +95,12 @@ module.exports = {
         }
       }
     });
+
+    cache_write_stream.on("error", (err) => {
+      log.error(`cacheSVG() ran into a cache_write_stream error: ${err}.`);
+    });
+
+    cache_write_stream.end();
   },
 
   reloadAllMaps: function (arg0_map_name) {
@@ -113,13 +119,13 @@ module.exports = {
       //Upload newest map to cache channel
       returnCacheChannel().send({
         content: `${generateRandomID()}_reload`,
-        files: [`./map/cache/${map_file}`]
+        files: [`./map/cache/${map_name}.jpg`]
       }).then((message) => {
         var Attachment = Array.from(message.attachments);
 
         Attachment.forEach(function(attachment) {
           //Iterate through all interfaces, checking for open maps and reloading their respective maps
-          for (var i = 0; i < all_interfaces.length; i++)
+          for (var i = 0; i < all_interfaces.length; i++) try {
             if (interfaces[all_interfaces[i]].type == "game")
               if (["founding_map"].includes(interfaces[all_interfaces[i]].page)) {
                 var map_obj = interfaces[all_interfaces[i]].map;
@@ -130,6 +136,7 @@ module.exports = {
                   reloadMap(all_interfaces[i]);
                 }
               }
+          } catch {}
         });
       });
     }, 3000);

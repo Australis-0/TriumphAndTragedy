@@ -8,6 +8,8 @@ module.exports = {
     var usr = main.users[arg0_user];
 
     //Reinitialise visual prompt
+    console.log(game_obj.alert_embed);
+
     visualPrompt(game_obj.alert_embed, user_id, {
       title: "Choose Your Starting Province(s):",
       prompts: [
@@ -42,9 +44,9 @@ module.exports = {
       //Instantly settle target provinces if all of them are valid
       var local_checks = 0;
       for (var i = 0; i < provinces.length; i++)
-        if (!main.provinces[provinces[i]]) //Check to make sure that province can be found
-          if (findDuplicates(provinces).length > 0) //Check for any duplicates
-            if (main.provinces[provinces[i]].owner) //Check to make sure province is not settled
+        if (main.provinces[provinces[i]]) //Check to make sure that province can be found
+          if (findDuplicates(provinces).length == 0) //Check for any duplicates
+            if (!main.provinces[provinces[i]].owner) //Check to make sure province is not settled
               local_checks++;
             else
               colonised_provinces.push(`**${provinces[i]}**`);
@@ -83,6 +85,8 @@ module.exports = {
       reinitialise_command = true;
     }
 
-    if (reinitialise_command) module.exports.initialiseSettleStartingProvinces(game_obj, user_id);
+    if (reinitialise_command) setTimeout(function(){
+      module.exports.initialiseSettleStartingProvinces(user_id);
+    }, settings.visual_prompt_delay);
   }
 };

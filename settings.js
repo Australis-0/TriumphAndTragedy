@@ -3,6 +3,7 @@ global.settings = {
   bot_token: "NDAwNDQ4MDIzNDQ2MTU5MzYx.WlVgSA._CQbdQlFb8nYtYPIx2zpCCG-1NM",
   prefix: "+",
   no_space: true,
+  visual_prompt_delay: 5000, //How many milliseconds should the bot wait before moving onto the next visual prompt?
 
   bot_colour: "#a98ac7", //What is the main default colour that should appear on bot embeds?
   cache_channels: [

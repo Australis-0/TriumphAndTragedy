@@ -6,7 +6,7 @@ module.exports = {
     var owner_id = arg1_owner;
 
     //Declare local instance variables
-    var province_obj = main.provinces[province_obj];
+    var province_obj = main.provinces[province_id];
     var usr = main.users[arg1_owner];
 
     try {
@@ -19,7 +19,7 @@ module.exports = {
         province_obj.culture = usr.culture;
 
         //Generate pops
-        var all_pop_types = Object.keys(pops);
+        var all_pop_types = Object.keys(config.pops);
         var current_iterations = 0;
         var population_cache = randomNumber(
           (config.defines.initial_rural_population_minimum) ?
@@ -52,12 +52,15 @@ module.exports = {
               province_obj.pops[all_pop_types[i]] = Math.ceil(population_cache*config.pops[all_pop_types[i]].chance);
             } catch (e) {
               log.warn(`settleProvince() - ran into an error whilst generating pops of type ${all_pop_types[i]} in Province ID ${province_id}: ${e}.`);
+              console.log(e);
             }
       } else {
         log.warn(`settleProvince() - ran into an error whilst generating Province ID ${province_id}: Province already had a province type.`);
+        console.log(e);
       }
     } catch (e) {
       log.warn(`Could not generate Province ID ${province_id}: ${e}.`);
+      console.log(e);
     }
   }
 };

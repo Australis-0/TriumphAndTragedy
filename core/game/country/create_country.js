@@ -13,11 +13,18 @@ module.exports = {
       var usr = initCountry(user_id, country_name);
 
       //Send message affirming successful registration if in game
-      if (usr && game_obj)
-        initialiseSettleStartingProvinces(user_id);
-      else {
+      if (usr && game_obj) {
+        printAlert(game_obj.id, `You have successfully founded the nation of **${country_name}**!`);
+
+        setTimeout(function(){
+          initialiseSettleStartingProvinces(user_id);
+        }, settings.visual_prompt_delay);
+      } else {
         printError(game_obj.alert_embed, `The previous country name you tried to name your people, **${country_name}**, was already taken by another player!`);
-        module.exports.initialiseFoundCountry(user_id);
+
+        setTimeout(function(){
+          module.exports.initialiseFoundCountry(user_id);
+        }, settings.visual_prompt_delay);
       }
 
       //Set valid user map (this can be used later on for co-op and AI tags):
