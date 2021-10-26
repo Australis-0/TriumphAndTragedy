@@ -112,7 +112,7 @@ module.exports = {
         }, 100);
 
         //Initialise control panel outside of loop
-        initialiseControlPanel(game_id);
+        initialiseControlPanel(game_id, "map");
 
         //Set control function of interface
         game_obj.control_function = function (arg0_actions) {

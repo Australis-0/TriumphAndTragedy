@@ -121,14 +121,13 @@ module.exports = {
   getGame: function (arg0_user) {
     //Convert from parameters
     var user_id = arg0_user;
-    var usr = main.users[arg0_user];
 
     //Declare local instance variables
     var all_interfaces = Object.keys(interfaces);
     var already_in_game = [false, ""];
 
     //Check if user already has a game open
-    if (usr) for (var i = 0; i < all_interfaces.length; i++) already_in_game = (interfaces[all_interfaces[i]].type == "game" && interfaces[all_interfaces[i]].user == user_id) ? [true, all_interfaces[i]] : already_in_game;
+    for (var i = 0; i < all_interfaces.length; i++) already_in_game = (interfaces[all_interfaces[i]].type == "game" && interfaces[all_interfaces[i]].user == user_id) ? [true, all_interfaces[i]] : already_in_game;
 
     //Return statement
     return (already_in_game[0]) ? already_in_game[1] : undefined;
@@ -166,15 +165,32 @@ module.exports = {
 
     //Add collector reactions
     try {
-      game_obj.middle_embed.react((panel_type == "map") ? "778437227276402688" : "⏫")
-        .then(() => { game_obj.middle_embed.react("⬆️"); })
-        .then(() => { game_obj.middle_embed.react("785931430215155754"); });
-      game_obj.middle_control_panel.react("⬅️")
-        .then(() => { game_obj.middle_control_panel.react("🔘"); } )
-        .then(() => { game_obj.middle_control_panel.react("➡️"); } );
-      game_obj.bottom_control_panel.react((panel_type == "map") ? "778437227276402688" : "⏬")
-        .then(() => { game_obj.bottom_control_panel.react("⬇️"); } )
-        .then(() => { game_obj.bottom_control_panel.react("785931430407700482"); } );
+      switch (panel_type) {
+        case "map":
+          game_obj.middle_embed.react("⏫")
+            .then(() => { game_obj.middle_embed.react("⬆️"); })
+            .then(() => { game_obj.middle_embed.react("785931430215155754"); });
+          game_obj.middle_control_panel.react("⬅️")
+            .then(() => { game_obj.middle_control_panel.react("🔘"); } )
+            .then(() => { game_obj.middle_control_panel.react("➡️"); } );
+          game_obj.bottom_control_panel.react("⏬")
+            .then(() => { game_obj.bottom_control_panel.react("⬇️"); } )
+            .then(() => { game_obj.bottom_control_panel.react("785931430407700482"); } );
+
+          break;
+        default:
+          game_obj.middle_embed.react("778437227276402688")
+            .then(() => { game_obj.middle_embed.react("⬆️"); })
+            .then(() => { game_obj.middle_embed.react("785931430215155754"); });
+          game_obj.middle_control_panel.react("⬅️")
+            .then(() => { game_obj.middle_control_panel.react("🔘"); } )
+            .then(() => { game_obj.middle_control_panel.react("➡️"); } );
+          game_obj.bottom_control_panel.react("778437227276402688")
+            .then(() => { game_obj.bottom_control_panel.react("⬇️"); } )
+            .then(() => { game_obj.bottom_control_panel.react("785931430407700482"); } );
+
+          break;
+      }
     } catch {}
   },
 

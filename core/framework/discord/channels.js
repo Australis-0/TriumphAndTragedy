@@ -51,7 +51,7 @@ module.exports = {
     //Iterate over all interfaces
     for (var i = 0; i < all_interfaces.length; i++)
       if (interfaces[all_interfaces[i]].type == "game")
-        channel_found = (interfaces[all_interfaces[i]].channel) ? [true, interfaces[all_interfaces[i]].channel] : channel_found;
+        channel_found = (interfaces[all_interfaces[i]].channel) ? [true, all_interfaces[i]] : channel_found;
 
     //Return statement
     return (channel_found[0]) ? channel_found[1] : undefined;

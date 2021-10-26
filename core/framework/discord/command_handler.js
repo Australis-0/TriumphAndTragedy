@@ -83,7 +83,7 @@ module.exports = {
                 answers: local_prompt.answers,
                 prompts: local_prompt.prompts,
                 satisfies_requirements: satisfies_requirements
-              });
+              })
             ]
           });
         } catch (e) {
@@ -163,8 +163,8 @@ module.exports = {
     var all_games = Object.keys(interfaces);
 
     //Fetch game object
-    for (var i = 0; i < all_games.length; i++) {
-      if (interfaces[all_games[i]].alert_embed) {
+    for (var i = 0; i < all_games.length; i++)
+      if (interfaces[all_games[i]].alert_embed)
         if (interfaces[all_games[i]].alert_embed.id == message_obj.id) {
           game_id = all_games[i];
           game_obj = interfaces[all_games[i]];
@@ -183,12 +183,14 @@ module.exports = {
 
     //Update visual prompt message
     message_obj.edit({
-      embed: updateVisualPrompt({
-        title: options.title,
-        answers: [],
-        prompts: options.prompts,
-        satisfies_requirements: [true, ""]
-      })
+      embeds: [
+        updateVisualPrompt({
+          title: options.title,
+          answers: [],
+          prompts: options.prompts,
+          satisfies_requirements: [true, ""]
+        })
+      ]
     });
   }
 };

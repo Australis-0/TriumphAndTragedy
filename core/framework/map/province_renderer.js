@@ -10,6 +10,8 @@ module.exports = {
     var province_id = arg1_province_id;
     var colour = arg2_colour; //Provided as [r, g, b] array
 
-    local_map.querySelector(`#${province_id}`).setAttribute("style", `fill:${RGBToHex(colour[0], colour[1], colour[2])}${getDefaultProvinceStyling()}`);
+    try {
+      local_map.querySelector(`#${province_id}`).setAttribute("style", `fill:${RGBToHex(colour[0], colour[1], colour[2])};${getDefaultProvinceStyling()}`);
+    } catch {}
   }
 };
