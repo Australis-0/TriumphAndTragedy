@@ -1,6 +1,6 @@
 module.exports = {
   //Generates a new rural province based on province ID and parsed owner tag
-  generateProvince: function (arg0_province, arg1_owner) {
+  settleProvince: function (arg0_province, arg1_owner) {
     //Convert from parameters
     var province_id = arg0_province;
     var owner_id = arg1_owner;
@@ -51,10 +51,10 @@ module.exports = {
             try {
               province_obj.pops[all_pop_types[i]] = Math.ceil(population_cache*config.pops[all_pop_types[i]].chance);
             } catch (e) {
-              log.warn(`generateProvince() - ran into an error whilst generating pops of type ${all_pop_types[i]} in Province ID ${province_id}: ${e}.`);
+              log.warn(`settleProvince() - ran into an error whilst generating pops of type ${all_pop_types[i]} in Province ID ${province_id}: ${e}.`);
             }
       } else {
-        log.warn(`generateProvince() - ran into an error whilst generating Province ID ${province_id}: Province already had a province type.`);
+        log.warn(`settleProvince() - ran into an error whilst generating Province ID ${province_id}: Province already had a province type.`);
       }
     } catch (e) {
       log.warn(`Could not generate Province ID ${province_id}: ${e}.`);

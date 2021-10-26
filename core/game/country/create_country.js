@@ -1,37 +1,73 @@
 module.exports = {
-  foundCountry: function (arg0_user, arg1_name, arg2_actual_id) { //[WIP]
+  foundCountry: function (arg0_user, arg1_name) { //[WIP]
     //Convert from parameters
     var user_id = arg0_user;
     var country_name = arg1_name;
-    var actual_id = arg2_actual_id;
 
     //Declare local instance variables
-    var game_obj = getGame(user_id);
+    var game_obj = getGameObject(user_id);
     var just_registered = (!main.users[user_id]);
 
     if (just_registered) {
-      //Declare local_id. This is used for mapping users and distinguishing the actual declared ID from other processed ID's
-      var local_id = (actual_id) ? actual_id : user_id;
-
       //Initialise user data
-      initUser(local_id);
-      var usr = main.users[local_id];
+      var usr = initCountry(user_id, country_name);
 
       //Send message affirming successful registration if in game
-      if (game_obj) printAlert(game_obj.id, `Please choose a starting province on which the peoples of ${country_name} may settle:`, true, true);
+      if (usr && game_obj)
+        initialiseSettleStartingProvinces(user_id);
+      else {
+        printError(game_obj.alert_embed, `The previous country name you tried to name your people, **${country_name}**, was already taken by another player!`);
+        module.exports.initialiseFoundCountry(user_id);
+      }
 
       //Set valid user map (this can be used later on for co-op and AI tags):
-      main.global.user_map[user_id] = local_id;
+      main.global.user_map[user_id] = user_id;
     }
   },
 
-  initCountry: function (arg0_user, arg1_name) { //[WIP]
+  initCountry: function (arg0_user, arg1_name) {
     //Convert from parameters
     var user_id = arg0_user;
     var country_name = arg1_name;
 
     //Declare local instance variables
+    var all_users = Object.keys(main.users);
     var country_name_taken = false;
     var processed_country_name = formaliseString(country_name);
+
+    //Check to see if country name is already taken
+    for (var i = 0; i < all_users.length; i++)
+      country_name_taken = (processed_country_name == main.users[all_users[i]].name) ? true : country_name_taken;
+
+    //Initialise user data
+    if (!country_name_taken) {
+      initUser(user_id);
+      var usr = main.users[user_id];
+
+      //Set name of country
+      usr.name = processed_country_name;
+
+      return usr;
+    }
+  },
+
+  initialiseFoundCountry: function (arg0_user) {
+    //Convert from parameters
+    var user_id = arg0_user;
+
+    //Declare local instance variables
+    var game_obj = getGameObject(user_id);
+
+    //Reinitialise visual prompt
+    visualPrompt(game_obj.alert_embed, user_id, {
+      title: "Creating A New Nation ..",
+      prompts: [
+        [`What would you like to name your country?`, "string"]
+      ]
+    },
+    function (arg) {
+      console.log(arg);
+      foundCountry(user_id, arg[0]);
+    });
   }
 };

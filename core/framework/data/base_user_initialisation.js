@@ -106,9 +106,9 @@ module.exports = {
       if (!usr.modifiers.war_exhaustion_rate) usr.modifiers.war_exhaustion_rate = 0.01;
       var all_unit_categories = Object.keys(config.units);
       for (var i = 0; i < all_unit_categories.length; i++) {
-        if (!usr.modifiers[`${config.unit_categories[i]}_attack`]) usr.modifiers[`${config.unit_categories[i]}_attack`] = 1;
-        if (!usr.modifiers[`${config.unit_categories[i]}_cp`]) usr.modifiers[`${config.unit_categories[i]}_cp`] = 0;
-        if (!usr.modifiers[`${config.unit_categories[i]}_defence`]) usr.modifiers[`${config.unit_categories[i]}_defence`] = 1;
+        if (!usr.modifiers[`${all_unit_categories[i]}_attack`]) usr.modifiers[`${all_unit_categories[i]}_attack`] = 1;
+        if (!usr.modifiers[`${all_unit_categories[i]}_cp`]) usr.modifiers[`${all_unit_categories[i]}_cp`] = 0;
+        if (!usr.modifiers[`${all_unit_categories[i]}_defence`]) usr.modifiers[`${all_unit_categories[i]}_defence`] = 1;
       }
 
       //Political; includes diplomacy
@@ -215,7 +215,7 @@ module.exports = {
       if (!usr.last_election) usr.last_election = 0;
       if (!usr.news) usr.news = {};
       if (!usr.political_capital_gain_modifier) usr.political_capital_gain_modifier = 0;
-      if (!usr.political.instability_modifier) usr.political_instability_modifier = 0;
+      if (!usr.political_instability_modifier) usr.political_instability_modifier = 0;
       if (!usr.political_reform_desire_modifier) usr.political_reform_desire_modifier = 0;
       if (!usr.previous_option_id) usr.previous_option_id = 0;
       if (!usr.provinces) usr.provinces = 0;
@@ -227,7 +227,7 @@ module.exports = {
       if (!usr.triggered_events) usr.triggered_events = {};
       if (!usr.vassal_years) usr.vassal_years = 0;
 
-    //Apply starting kit if not registered
-    if (!already_registered) config.starting_kit(user_id);
+    //Apply starting kit if not registered [WIP]
+    //if (!already_registered) config.starting_kit(user_id);
   }
 };

@@ -95,5 +95,43 @@ module.exports = {
         }
       }
     });
+  },
+
+  reloadAllMaps: function (arg0_map_name) {
+    //Convert from parameters
+    var map_name = arg0_map_name;
+
+    //Declare local instance variables
+    var all_interfaces = Object.keys(interfaces);
+    var map_file = global[`${map_name}_file`];
+
+    //Cache SVG first
+    cacheSVG(map_name);
+
+    //setTimeout() for good measure since cacheSVG() is de facto asynchronous
+    setTimeout(function(){
+      //Upload newest map to cache channel
+      returnCacheChannel().send({
+        content: `${generateRandomID()}_reload`,
+        files: [`./map/cache/${map_file}`]
+      }).then((message) => {
+        var Attachment = Array.from(message.attachments);
+
+        Attachment.forEach(function(attachment) {
+          //Iterate through all interfaces, checking for open maps and reloading their respective maps
+          for (var i = 0; i < all_interfaces.length; i++)
+            if (interfaces[all_interfaces[i]].type == "game")
+              if (["founding_map"].includes(interfaces[all_interfaces[i]].page)) {
+                var map_obj = interfaces[all_interfaces[i]].map;
+
+                //Check to make sure mapmode is indeed compatible
+                if (map_obj.mapmode == map_name) {
+                  map_obj.original_img = attachment[1].url.toString();
+                  reloadMap(all_interfaces[i]);
+                }
+              }
+        });
+      });
+    }, 3000);
   }
 };

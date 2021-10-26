@@ -44,7 +44,13 @@ FileManager.import("./framework/ui/games");
 FileManager.import("./framework/ui/map_viewer");
 FileManager.import("./framework/ui/ui_framework");
 
-FileManager.import("./game/province/generate_province");
+//Game command files
+
+FileManager.import("./game/colonisation/settle");
+
+FileManager.import("./game/country/create_country");
+
+FileManager.import("./game/province/settle_province");
 
 //Declare config loading order
 global.config = {};

@@ -97,8 +97,12 @@ module.exports = {
     var game_id = arg0_game_id;
     var game_obj = interfaces[game_id];
 
-    game_obj.alert_array = [];
+    //Declare local instance variables
     var usr = main.users[game_obj.user];
+
+    //Reset alert_array and collectors
+    game_obj.alert_array = [];
+    game_obj.collectors = [];
 
     //Initialise embeds
     const middle_embed = new Discord.MessageEmbed()
@@ -153,14 +157,14 @@ module.exports = {
 
         setInterval(function(){
           var message_is_prompt = false;
-          var all_visual_prompts = Object.keys(visual_prompts);
+          var all_visual_prompts = Object.keys(interfaces);
 
           //Check if message is subject to a current command prompt
           for (var i = 0; i < all_visual_prompts.length; i++) {
-            var local_prompt = visual_prompts[all_visual_prompts[i]];
-            if (local_prompt.message.id == message.id) {
-              message_is_prompt = true;
-            }
+            var local_prompt = interfaces[all_visual_prompts[i]];
+            if (local_prompt.type == "visual_prompt")
+              if (local_prompt.message.id == message.id)
+                message_is_prompt = true;
           }
 
           //Only edit the message if the message is not a prompt.
@@ -195,8 +199,9 @@ module.exports = {
 
             break;
           case "founding_map":
-            //Initialise map viewer
+            //Initialise map viewer and found country dialogue prompt
             initialiseMapViewer(game_id);
+            initialiseFoundCountry(game_obj.user);
 
             break;
         }

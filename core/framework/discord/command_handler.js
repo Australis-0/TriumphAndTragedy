@@ -88,6 +88,7 @@ module.exports = {
           });
         } catch (e) {
           log.error(`commandHandler() - visual_prompt ran into an error: ${e}`);
+          console.log(e);
         }
       }
     } catch {}

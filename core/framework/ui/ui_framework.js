@@ -148,6 +148,14 @@ module.exports = {
     return (already_in_game[0]) ? already_in_game[1] : undefined;
   },
 
+  getGameObject: function (arg0_user) {
+    //Convert from parameters
+    var user_id = arg0_user;
+
+    //Return statement
+    return interfaces[module.exports.getGame(user_id)];
+  },
+
   initialiseControlPanel: function (arg0_game_id, arg1_type) {
     //Convert from parameters
     var game_id = arg0_game_id;
