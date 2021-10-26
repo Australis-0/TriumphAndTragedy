@@ -28,7 +28,7 @@ module.exports = {
           (config.defines.initial_rural_population_maximum) ?
             config.defines.initial_rural_population_maximum :
             50000
-        )
+        );
         province_obj.pops = {};
 
         //Add pops to province object
@@ -51,8 +51,10 @@ module.exports = {
             try {
               province_obj.pops[all_pop_types[i]] = Math.ceil(population_cache*config.pops[all_pop_types[i]].chance);
             } catch (e) {
-              log.warn(`generateProvince() - ran into an error whilst generating pops of type ${all_pop_types[i]}: ${e}.`);
+              log.warn(`generateProvince() - ran into an error whilst generating pops of type ${all_pop_types[i]} in Province ID ${province_id}: ${e}.`);
             }
+      } else {
+        log.warn(`generateProvince() - ran into an error whilst generating Province ID ${province_id}: Province already had a province type.`);
       }
     } catch (e) {
       log.warn(`Could not generate Province ID ${province_id}: ${e}.`);
