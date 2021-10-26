@@ -47,11 +47,12 @@ module.exports = {
 
         //Partition the remaining pops in the cache between the non-specialised pops
         for (var i = 0; i < all_pop_types.length; i++)
-          if (!config.pops[all_pop_types[i]].specialised_pop) try {
-            province_obj.pops[all_pop_types[i]] = Math.ceil(population_cache*config.pops[all_pop_types[i]].chance);
-          } catch (e) {
-            log.warn(`generateProvince() - ran into an error whilst generating pops of type ${all_pop_types[i]}: ${e}.`);
-          }
+          if (!config.pops[all_pop_types[i]].specialised_pop)
+            try {
+              province_obj.pops[all_pop_types[i]] = Math.ceil(population_cache*config.pops[all_pop_types[i]].chance);
+            } catch (e) {
+              log.warn(`generateProvince() - ran into an error whilst generating pops of type ${all_pop_types[i]}: ${e}.`);
+            }
       }
     } catch (e) {
       log.warn(`Could not generate Province ID ${province_id}: ${e}.`);
