@@ -1,6 +1,6 @@
 module.exports = {
   //Used for instantly settling provinces when a new country is founded
-  settleStartingProvinces: function (arg0_user, arg1_provinces) {
+  settleStartingProvinces: function (arg0_user, arg1_provinces) { //[WIP]
     //Convert from parameters
     var user_id = arg0_user;
     var provinces = arg1_provinces;

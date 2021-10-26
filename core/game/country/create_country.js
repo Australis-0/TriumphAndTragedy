@@ -1,5 +1,5 @@
 module.exports = {
-  foundCountry: function (arg0_user, arg1_name, arg2_actual_id) {
+  foundCountry: function (arg0_user, arg1_name, arg2_actual_id) { //[WIP]
     //Convert from parameters
     var user_id = arg0_user;
     var country_name = arg1_name;
@@ -25,7 +25,7 @@ module.exports = {
     }
   },
 
-  initCountry: function (arg0_user, arg1_name) {
+  initCountry: function (arg0_user, arg1_name) { //[WIP]
     //Convert from parameters
     var user_id = arg0_user;
     var country_name = arg1_name;
