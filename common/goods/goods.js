@@ -183,16 +183,14 @@ config.goods = { //WIP, REFACTOR
 
       buy_price: 850,
 
-      //At least 1 food per million is required by the population
-      pop_demand: {
-        required_by: "all",
-        type: "basic_need",
-
-        if_shortage: {
-          limit: {
-            good_required_per_population: 1000000
-          },
-          decrease_population_by: "FAMINE_IMPACT"
+      special_effect: function (usr) {
+        //At least 1 food per million is required by the population
+        if (usr.food < Math.ceil(usr.population/1000000)) {
+          usr.food = 0;
+          killPops(usr.id, {
+            type: "all",
+            amount: getFaminePenalty(usr.id)
+          });
         }
       }
     },

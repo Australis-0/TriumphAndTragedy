@@ -26,6 +26,14 @@ module.exports = {
     return (element_count > 0);
   },
 
+  getList: function (arg0_array) {
+    //Convert from parameters
+    var list = arg0_array;
+
+    //Return statement
+    return (Array.isArray(list)) ? list : [list];
+  }
+
   randomElement: function (arg0_array) {
     //Convert from parameters
     var array = arg0_array;
