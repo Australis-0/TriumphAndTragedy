@@ -104,9 +104,9 @@ module.exports = {
     stats_string.push(`**Actions:**`);
     stats_string.push(`Your actions may be used up to give you raw resources, or kept for taxable income. Each action is worth ${config.icons.money} **${parseNumber(config.defines.economy.money_per_action)}** at **100%** tax.`);
     stats_string.push(`- **${Math.ceil(usr.modifiers.civilian_actions*100)}%** of your actions will be used up by civilians next turn.`);
-    stats_string.push("");
-    stats_string.push(`${config.icons.actions} Actions: **${parseNumber(usr.actions)}**`)
     stats_string.push(`**[Mine]** ¦ **[Quarry]** ¦ **[Chop]**`);
+    stats_string.push("");
+    stats_string.push(`${config.icons.actions} Actions: **${parseNumber(usr.actions)}**`);
 
     //Remove control panel if one exists
     removeControlPanel(game_obj.id);
@@ -116,6 +116,7 @@ module.exports = {
       .setColor(settings.bot_colour)
       .setTitle(`**National Overview:**`)
       .setThumbnail(usr.flag)
+      .setImage("https://cdn.discordapp.com/attachments/722997700391338046/736141424315203634/margin.png")
       .setDescription(stats_string.join("\n"));
 
     game_obj.main_embed = stats_embed;
