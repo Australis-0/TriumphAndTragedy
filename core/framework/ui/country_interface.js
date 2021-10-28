@@ -89,7 +89,7 @@ module.exports = {
     stats_string.push("**Economy:**");
     stats_string.push("");
     stats_string.push(`${config.icons.technology} Techs Researched: (**${parseNumber(usr.researched_technologies.length)}**/**${parseNumber(getAllTechnologies().length)}**)`);
-    stats_string.push(`${config.icons.money} Money: ${parseNumber(usr.money)}`);
+    stats_string.push(`${config.icons.money} Money: **${parseNumber(usr.money)}**`);
     stats_string.push(config.localisation.divider);
     stats_string.push("");
     stats_string.push(`**Internal Politics:**`);
@@ -102,8 +102,8 @@ module.exports = {
 
     stats_string.push(config.localisation.divider);
     stats_string.push(`**Actions:**`);
-    stats_string.push(`Your actions may be used up to give you raw resources, or kept for taxable income. Each action is worth ${config.icons.money} ${parseNumber(config.defines.economy.money_per_action)} at 100% tax.`);
-    stats_string.push(`**${Math.ceil(usr.modifiers.civilian_actions*100)}%** of your actions will be used up by civilians next turn.`);
+    stats_string.push(`Your actions may be used up to give you raw resources, or kept for taxable income. Each action is worth ${config.icons.money} **${parseNumber(config.defines.economy.money_per_action)}** at **100%** tax.`);
+    stats_string.push(`- **${Math.ceil(usr.modifiers.civilian_actions*100)}%** of your actions will be used up by civilians next turn.`);
     stats_string.push("");
     stats_string.push(`${config.icons.actions} Actions: **${parseNumber(usr.actions)}**`)
     stats_string.push(`**[Mine]** ¦ **[Quarry]** ¦ **[Chop]**`);

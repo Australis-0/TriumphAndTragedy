@@ -244,13 +244,13 @@ module.exports = {
 
     //Remove all reactions
     try {
-      game_obj.middle_embed.removeAll();
+      game_obj.middle_embed.reactions.removeAll();
     } catch {}
     try {
-      game_obj.middle_control_panel.removeAll();
+      game_obj.middle_control_panel.reactions.removeAll();
     } catch {}
     try {
-      game_obj.bottom_control_panel.removeAll();
+      game_obj.bottom_control_panel.reactions.removeAll();
     } catch {}
   },
 
