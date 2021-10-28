@@ -2,7 +2,7 @@ config.pops = {
   aristocrats: {
     name: "Aristocrats",
     singular: "Aristocrat",
-    icon: config.icons.aristocrats,
+    icon: "aristocrats",
 
     chance: 0.02,
     max_modifier_limit: {
@@ -18,7 +18,7 @@ config.pops = {
   faculty: {
     name: "Faculty",
     singular: "Faculty",
-    icon: config.icons.faculty,
+    icon: "faculty",
 
     chance: 0.10,
     max_modifier_limit: {
@@ -33,18 +33,20 @@ config.pops = {
   workers: {
     name: "Workers",
     singular: "Worker",
-    icon: config.icons.workers,
+    icon: "workers",
 
     chance: 0.73,
-    specialised_pop: false
+    specialised_pop: false,
+    stats_display: true
   },
   soldiers: {
     name: "Soldiers",
     singular: "Soldier",
-    icon: config.icons.soldiers,
+    icon: "soldiers",
 
     chance: 0.15,
     military_pop: true,
-    specialised_pop: false
+    specialised_pop: false,
+    stats_display: true
   }
 };

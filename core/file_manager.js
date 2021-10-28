@@ -62,6 +62,9 @@ module.exports = {
     }
 
     log.info(`Loaded ${loaded_files.length} files from ${load_order.load_directories.length} directories.`);
+
+    //Parse files
+    parsePops();
   },
 
   loadFile: function (arg0_file) {

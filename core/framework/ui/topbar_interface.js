@@ -113,11 +113,21 @@ module.exports = {
     //Convert from parameters
     var interaction = arg0_interaction;
 
-    console.log(interaction);
+    //Declare local instance variables
+    var game_obj = getGameObject(interaction.user);
+    var user_id = interaction.user.id;
+
     switch (interaction.customId) {
       case "map_btn":
         //Initialise map viewer if map button is pressed
+        game_obj.page = "map";
         initialiseMapViewer(getGame(interaction.user.id));
+
+        break;
+      case "country_btn":
+        //Print out stats menu
+        game_obj.page = "country_interface";
+        printStats(user_id);
 
         break;
     }

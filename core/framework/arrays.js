@@ -32,7 +32,7 @@ module.exports = {
 
     //Return statement
     return (Array.isArray(list)) ? list : [list];
-  }
+  },
 
   randomElement: function (arg0_array) {
     //Convert from parameters

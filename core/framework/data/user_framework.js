@@ -10,8 +10,8 @@ module.exports = {
 
     try {
       for (var i = 0; i < all_provinces.length; i++)
-        if (provinces[all_provinces[i]].owner == user_id && provinces[all_provinces[i]].controller == user_id)
-          all_owned_provinces.push(provinces[all_provinces[i]]);
+        if (main.provinces[all_provinces[i]].owner == user_id && main.provinces[all_provinces[i]].controller == user_id)
+          all_owned_provinces.push(main.provinces[all_provinces[i]]);
 
       //Return statement
       return all_owned_provinces;

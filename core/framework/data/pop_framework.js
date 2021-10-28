@@ -25,6 +25,40 @@ module.exports = {
     return military_pop_types;
   },
 
+  getTotalPopManpower: function (arg0_user, arg1_type, arg2_raw_modifier) { //WIP
+    //Convert from parameters
+    var user_id = arg0_user;
+    var usr = main.users[user_id];
+    var pop_type = arg1_type;
+    var raw_modifier = arg2_raw_modifier;
+
+    //Declare local instance variables
+    var pop_obj = config.pops[pop_type];
+    var availability_modifier = (pop_obj.military_pop) ?
+      usr.modifiers.national_manpower
+      : 1;
+
+    //Return statement
+    return (!raw_modifier) ? Math.ceil(usr.pops[pop_type]*availability_modifier) : availability_modifier;
+  },
+
+  getPopulation: function (arg0_user) {
+    //Convert from parameters
+    var user_id = arg0_user;
+    var usr = main.users[user_id];
+
+    //Declare local instance variables
+    var all_pops = Object.keys(config.pops);
+    var total_population = 0;
+
+    //Fetch total population
+    for (var i = 0; i < all_pops.length; i++)
+      total_population += usr.pops[all_pops[i]];
+
+    //Return statement
+    return total_population;
+  },
+
   killPops: function (arg0_user, arg1_options) {
     //Convert from parameters
     var user_id = arg0_user;
@@ -36,7 +70,7 @@ module.exports = {
     var remaining_population = options.amount;
 
     //Parse 'all' argument as well
-    pop_types = (pop_types.includes("all")) ? Object.keys(config.pops);
+    pop_types = (pop_types.includes("all")) ? Object.keys(config.pops) : pop_types;
 
     //Assign decimation_array to decimation_obj
     var decimation_array = splitNumberParts(1, pop_types.length);
@@ -47,6 +81,19 @@ module.exports = {
     //Begin subtracting pops
     for (var i = 0; i < pop_types.length; i++)
       removePops(user_id, Math.ceil(decimation_obj[pop_types[i]]*remaining_population), pop_types[i]);
+  },
+
+  parsePops: function () {
+    //Declare local instance variables
+    var all_pops = Object.keys(config.pops);
+
+    //Process pop objects
+    for (var i = 0; i < all_pops.length; i++) {
+      var local_pop = config.pops[all_pops[i]];
+
+      //Set icon values
+      if (local_pop.icon) local_pop.icon = config.icons[local_pop.icon];
+    }
   },
 
   removePops: function (arg0_user, arg1_amount, arg2_type) {

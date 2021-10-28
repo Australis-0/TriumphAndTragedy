@@ -8,8 +8,6 @@ module.exports = {
     var usr = main.users[arg0_user];
 
     //Reinitialise visual prompt
-    console.log(game_obj.alert_embed);
-
     visualPrompt(game_obj.alert_embed, user_id, {
       title: "Choose Your Starting Province(s):",
       prompts: [
@@ -81,6 +79,7 @@ module.exports = {
         reloadAllMaps("political");
         game_obj.page = "country_interface";
         initialiseTopbar(user_id);
+        printStats(user_id);
       }
     } else {
       printError(game_obj.id, `You may only settle up to **${parseNumber(config.defines.common.starting_provinces)}** province(s) at once!`);

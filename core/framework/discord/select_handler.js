@@ -10,9 +10,7 @@ module.exports = {
       var interaction = options.interaction;
       var menu_obj = options.menu_obj;
       var role_display = guild_obj.settings[options.display_key];
-
-      console.log(guild_obj);
-
+      
       role_display = (!role_display) ? [] : role_display;
 
       for (var i = 0; i < interaction.values.length; i++) {

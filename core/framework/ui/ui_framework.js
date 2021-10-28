@@ -235,6 +235,25 @@ module.exports = {
     printAlert(game_id, ":warning: " + msg);
   },
 
+  removeControlPanel: function (arg0_game_id) {
+    //Convert from parameters
+    var game_id = arg0_game_id;
+
+    //Declare local instance variables
+    var game_obj = interfaces[game_id];
+
+    //Remove all reactions
+    try {
+      game_obj.middle_embed.removeAll();
+    } catch {}
+    try {
+      game_obj.middle_control_panel.removeAll();
+    } catch {}
+    try {
+      game_obj.bottom_control_panel.removeAll();
+    } catch {}
+  },
+
   selectMenu: function (arg0_message_obj, arg1_options) { //WIP
     //Convert from parameters
     var msg = arg0_message_obj;

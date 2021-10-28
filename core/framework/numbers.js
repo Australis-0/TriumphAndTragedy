@@ -11,7 +11,7 @@ module.exports = {
     var parts = arg1_parts;
 
     //Return statement
-    return ...module.exports.splitNumberParts(number, parts);
+    return [...module.exports.splitNumberParts(number, parts)];
   },
 
   splitNumberParts: function* (arg0_number, arg1_parts) {
