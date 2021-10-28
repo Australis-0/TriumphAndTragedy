@@ -75,12 +75,12 @@ module.exports = {
     stats_string.push(`**Population**`);
     stats_string.push("");
     stats_string.push(`${config.icons.development} Cities: (**${usr.city_count}**/**${usr.city_cap}**): ${name_string}${ending_string}`);
-    stats_string.push(`${config.icons.population} Population: **${parseNumber(usr.population)}** (Requires **${Math.ceil(usr.population/config.defines.economy.food_required_per_million)}** food per turn)`);
+    stats_string.push(`${config.icons.population} Population: **${parseNumber(getPopulation(usr.id))}** (Requires **${Math.ceil(usr.population/config.defines.economy.food_required_per_million)}** food per turn)`);
 
     //Push all pops to stats menu if set to visible
     for (var i = 0; i < all_pops.length; i++) {
       var local_pop = config.pops[all_pops[i]];
-      
+
       if (local_pop.stats_display)
         stats_string.push(`${(local_pop.icon) ? local_pop.icon : ""} ${(local_pop.name) ? local_pop.name : all_pops[i]}: (**${parseNumber(usr.pops["used_" + all_pops[i]])}**/**${parseNumber(getTotalPopManpower(user_id, all_pops[i]))}**)${(local_pop.military_pop) ? "¦ (**" + Math.ceil(getTotalPopManpower(user_id, all_pops[i], true)*100) + "%** Recruitable Population)" : ""}`);
     }
