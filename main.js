@@ -27,6 +27,7 @@ FileManager.import("./framework/users");
 FileManager.import("./framework/data/base_user_initialisation");
 FileManager.import("./framework/data/games");
 FileManager.import("./framework/data/global_initialisation");
+FileManager.import("./framework/data/user_framework");
 
 FileManager.import("./framework/discord/channels");
 FileManager.import("./framework/discord/button_handler");
@@ -40,8 +41,10 @@ FileManager.import("./framework/discord/users");
 FileManager.import("./framework/map/map_renderer");
 FileManager.import("./framework/map/province_renderer");
 
+FileManager.import("./framework/ui/country_interface");
 FileManager.import("./framework/ui/games");
 FileManager.import("./framework/ui/map_viewer");
+FileManager.import("./framework/ui/topbar_interface");
 FileManager.import("./framework/ui/ui_framework");
 
 //Game command files
@@ -138,7 +141,6 @@ client.on("messageCreate", async (message) => {
     {
       if (equalsIgnoreCase(arg[0], settings.prefix)) {
         if (equalsIgnoreCase(arg[1], "play")) {
-          //createMainMenu(user_id, message);
           createNewGame(user_id, message);
         }
       }

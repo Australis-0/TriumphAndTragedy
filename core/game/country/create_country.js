@@ -73,7 +73,6 @@ module.exports = {
       ]
     },
     function (arg) {
-      console.log(arg);
       foundCountry(user_id, arg[0]);
     });
   }

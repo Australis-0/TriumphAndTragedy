@@ -1,3 +1,3 @@
 config.localisation.blank = "​";
-config.localisation.divider = "\n------------------";
+config.localisation.divider = "------------------";
 config.localisation.header = "--===- oOo -===--";

@@ -14,7 +14,7 @@ module.exports = {
     if (interaction.isButton()) {
       var ui_obj;
       try {
-        ui_obj = (interfaces[msg_id]) ? interfaces[msg_id] : interfaces[getHub(user_id)];
+        ui_obj = (interfaces[msg_id]) ? interfaces[msg_id] : interfaces[getGame(user.id)];
       } catch {}
 
       if (ui_obj) {
@@ -45,42 +45,10 @@ module.exports = {
                 deleteCheck(msg_obj);
               }
               break;
-            case "main_menu":
-              var guild_obj = main.guilds[getChannelGuildObject(ui_obj.msg_obj.channel.id).id];
+            case "game":
+              //Topbar button handler
+              topbarButtonHandler(interaction);
 
-              //Main menu button functionality
-              switch (interaction.customId) {
-                //Game Settings [WIP]
-                //Guild Settings
-                case "toggle_game_creator_roles_confirm_btn":
-                  guild_obj.settings.actual_game_creator_roles = guild_obj.settings.game_creator_roles;
-                  delete ui_obj.options.currently_editing_game_creator_roles;
-
-                  menuInput(getHub(user_id), "");
-                  clear_components = true;
-                  break;
-                case "toggle_game_creator_roles_cancel_btn":
-                  delete guild_obj.settings.game_creator_roles;
-                  delete ui_obj.options.currently_editing_game_creator_roles;
-
-                  menuInput(getHub(user_id), "");
-                  clear_components = true;
-                  break;
-                case "toggle_game_master_roles_confirm_btn":
-                  guild_obj.settings.actual_game_master_roles = guild_obj.settings.game_master_roles;
-                  delete ui_obj.options.currently_editing_game_master_roles;
-
-                  menuInput(getHub(user_id), "");
-                  clear_components = true;
-                  break;
-                case "toggle_game_master_roles_cancel_btn":
-                  delete guild_obj.settings.game_master_roles;
-                  delete ui_obj.options.currently_editing_game_master_roles;
-
-                  menuInput(getHub(user_id), "");
-                  clear_components = true;
-                  break;
-              }
               break;
           }
 

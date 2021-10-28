@@ -54,6 +54,17 @@ module.exports = {
               log.warn(`settleProvince() - ran into an error whilst generating pops of type ${all_pop_types[i]} in Province ID ${province_id}: ${e}.`);
               console.log(e);
             }
+
+        //Calculate total population of province
+        var total_population = 0;
+        for (var i = 0; i < all_pop_types.length; i++) {
+          total_population += province_obj.pops[all_pop_types[i]];
+          usr.pops[all_pop_types[i]] += province_obj.pops[all_pop_types[i]];
+        }
+
+        province_obj.pops.population = total_population;
+        usr.population += total_population;
+        usr.provinces++;
       } else {
         log.warn(`settleProvince() - ran into an error whilst generating Province ID ${province_id}: Province already had a province type.`);
         console.log(e);

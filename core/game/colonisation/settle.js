@@ -77,8 +77,10 @@ module.exports = {
         //Output successful feedback
         printAlert(game_obj.id, `Your peoples have successfully settled the lands of ${display_provinces.join(", ")} and have claimed it for the fledgling country of **${usr.name}**!`);
 
-        //Reload all maps
+        //Reload all maps, initialise user topbar
         reloadAllMaps("political");
+        game_obj.page = "country_interface";
+        initialiseTopbar(user_id);
       }
     } else {
       printError(game_obj.id, `You may only settle up to **${parseNumber(config.defines.common.starting_provinces)}** province(s) at once!`);

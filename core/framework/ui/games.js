@@ -196,13 +196,14 @@ module.exports = {
         //Load up either the starting map viewer or country interface depending on the starting page
         switch (game_obj.page) {
           case "country_interface":
+            initialiseTopbar(game_obj.user);
 
             break;
           case "founding_map":
             //Initialise map viewer and found country dialogue prompt
             initialiseMapViewer(game_id);
             initialiseFoundCountry(game_obj.user);
-
+            
             break;
         }
       });
