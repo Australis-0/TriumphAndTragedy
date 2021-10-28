@@ -1,10 +1,47 @@
 //Functional numbers framework
 module.exports = {
   generateRandomID: function () {
+    //Return statement
     return randomNumber(0, 100000000000).toString();
   },
 
+  splitNumber: function (arg0_number, arg1_parts) {
+    //Convert from parameters
+    var number = arg0_number;
+    var parts = arg1_parts;
+
+    //Return statement
+    return ...module.exports.splitNumberParts(number, parts);
+  },
+
+  splitNumberParts: function* (arg0_number, arg1_parts) {
+    //Convert from parameters
+    var number = arg0_number;
+    var parts = arg1_parts;
+
+    //Declare local instance variables
+    var sum_parts = 0;
+
+    //Split number randomly
+    for (var i = 0; i < parts-1; i++) {
+      var part_number = Math.random()*(number-sum_parts);
+      yield part_number;
+      sum_parts += part_number;
+      yield number - sum_parts;
+    }
+  },
+
   randomNumber: function (min, max) {
+    //Return statement
   	return Math.round(Math.random() * (max - min) + min);
+  },
+
+  returnSafeNumber: function (arg0_operation, arg1_default) {
+    //Convert from parameters
+    var operation = arg0_operation;
+    var default_number = (arg1_default) ? arg1_default : 0;
+
+    //Return statement
+    return (!isNaN(operation) && isFinite(operation)) ? operation : default_number;
   }
 };

@@ -60,6 +60,7 @@ config.defines.economy = {
     2000
   ], //Levels of provinces at which a new city is unlocked. Leave empty for unlimited cities
   construction_turns: 3, //Default number of construction turns per city
+  food_required_per_million: 1, //Note that food requirements in goods/goods.js should also be changed to reflect this number when modding
   money_per_action: 2500, //Assuming taxes were 100%, this is how much a country would earn per action
   resource_base_stock: 100, //How much stock should be set as the default amount in the world market
   rgo_modifier: 0.1, //Amplifier for RGO modifier effects

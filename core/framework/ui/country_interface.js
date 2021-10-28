@@ -74,7 +74,7 @@ module.exports = {
     stats_string.push(`**Population**`);
     stats_string.push("");
     stats_string.push(`${config.icons.development} Cities: (**${usr.city_count}**/**${usr.city_cap}): ${name_string}${ending_string}`);
-    stats_string.push(`${config.icons.population} Population: **${parseNumber(usr.population)}** (Requires **${Math.ceil(usr.population/1000000)}** food per turn)`);
-    
+    stats_string.push(`${config.icons.population} Population: **${parseNumber(usr.population)}** (Requires **${Math.ceil(usr.population/config.defines.economy.food_required_per_million)}** food per turn)`);
+
   }
 };

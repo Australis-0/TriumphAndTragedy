@@ -44,6 +44,7 @@ config.pops = {
     icon: config.icons.soldiers,
 
     chance: 0.15,
+    military_pop: true,
     specialised_pop: false
   }
 };

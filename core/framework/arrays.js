@@ -55,5 +55,28 @@ module.exports = {
 
     //Return statement
     return array;
+  },
+
+  shuffleArray: function (arg0_array) {
+    //Convert from parameters
+    var array = arg0_array;
+
+    //Declare local instance variables
+    var shuffled_array = array;
+    var current_index = array.length,
+      temporary_value,
+      random_index;
+
+    //Shufle array (Fisher-Yates)
+    while (0 != current_index) {
+      random_index = Math.floor(Math.random()*current_index);
+      current_index--;
+      temporary_value = shuffled_array[current_index];
+      shuffled_array[current_index] = shuffled_array[random_index];
+      shuffled_array[random_index] = temporary_value;
+    }
+
+    //Return statement
+    return shuffled_array;
   }
 };
