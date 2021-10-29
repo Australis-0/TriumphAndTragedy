@@ -146,8 +146,10 @@ module.exports = {
     switch (interaction.customId) {
       case "map_btn":
         //Initialise map viewer if map button is pressed
-        game_obj.page = "map";
-        initialiseMapViewer(getGame(user_id));
+        if (!["founding_map", "map"].includes(game_obj.page)) {
+          game_obj.page = "map";
+          initialiseMapViewer(getGame(user_id));
+        }
         module.exports.initialiseTopbar(user_id);
 
         break;
