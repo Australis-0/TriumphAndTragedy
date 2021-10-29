@@ -22,7 +22,11 @@ module.exports = {
           .setEmoji("716829986266546187"),
         new Discord.MessageButton()
           .setCustomId("map_btn")
-          .setLabel("𝗠𝗔𝗣")
+          .setLabel(
+            (!["founding_map", "map"].includes(game_obj.page)) ?
+            "𝗠𝗔𝗣" :
+            " ͟𝗠͟𝗔͟𝗣͟"
+          )
           .setStyle("SUCCESS")
           .setEmoji("716821884867444746"),
         new Discord.MessageButton()
@@ -45,13 +49,28 @@ module.exports = {
       .addComponents(
         new Discord.MessageButton()
           .setCustomId("country_btn")
-          .setLabel("𝐂𝐨𝐮𝐧𝐭𝐫𝐲")
-          .setStyle("SECONDARY")
+          .setLabel(
+            (!["country_interface"].includes(game_obj.page)) ?
+              "𝐂𝐨𝐮𝐧𝐭𝐫𝐲" :
+              " ͟𝐂͟𝐨͟𝐮͟𝐧͟𝐭͟𝐫͟𝐲͟"
+          )
+          .setStyle(
+            (!["country_interface"].includes(game_obj.page)) ?
+              "SECONDARY" :
+              "PRIMARY"
+          )
           .setEmoji("716811246556545035"),
         new Discord.MessageButton()
           .setCustomId("budget_btn")
-          .setLabel("𝐁𝐮𝐝𝐠𝐞𝐭")
-          .setStyle("SECONDARY")
+          .setLabel(
+            (!["budget"].includes(game_obj.page)) ?
+            "𝐁𝐮𝐝𝐠𝐞𝐭" :
+            " ͟𝐁͟𝐮͟𝐝͟𝐠͟𝐞͟𝐭͟"
+          )
+          .setStyle((!["budget"].includes(game_obj.page)) ?
+            "SECONDARY" :
+            "PRIMARY"
+          )
           .setEmoji("716817688718213192"),
         new Discord.MessageButton()
           .setCustomId("economy_btn")
@@ -100,12 +119,19 @@ module.exports = {
 
     //Edit message to include new top row buttons
     game_obj.header.edit({
-      components: [
-        main_menu_row,
-        country_row_1,
-        country_row_2
-      ]
+      content: config.localisation.blank,
+      components: []
+    }).then(() => {
+      game_obj.header.edit({
+        content: config.localisation.blank,
+        components: [
+          main_menu_row,
+          country_row_1,
+          country_row_2
+        ]
+      });
     });
+
     game_obj.header_change = true;
   },
 
@@ -121,12 +147,16 @@ module.exports = {
       case "map_btn":
         //Initialise map viewer if map button is pressed
         game_obj.page = "map";
-        initialiseMapViewer(getGame(interaction.user.id));
+        initialiseMapViewer(getGame(user_id));
+        module.exports.initialiseTopbar(user_id);
 
         break;
       case "country_btn":
         //Print out stats menu
-        game_obj.page = "country_interface";
+        if (game_obj.page != "country_interface") {
+          game_obj.page = "country_interface";
+          module.exports.initialiseTopbar(user_id);
+        }
         printStats(user_id);
 
         break;

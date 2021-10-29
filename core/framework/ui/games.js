@@ -200,10 +200,12 @@ module.exports = {
             printStats(game_obj.user);
 
             break;
+          case "map":
           case "founding_map":
             //Initialise map viewer and found country dialogue prompt
             initialiseMapViewer(game_id);
-            initialiseFoundCountry(game_obj.user);
+            if (game_obj.page == "founding_map") initialiseFoundCountry(game_obj.user);
+            if (["map"].includes(game_obj.page)) initialiseTopbar(game_obj.user);
 
             break;
         }
