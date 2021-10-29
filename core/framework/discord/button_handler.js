@@ -48,6 +48,7 @@ module.exports = {
             case "game":
               //Topbar button handler
               topbarButtonHandler(interaction);
+              ui_obj.last_active = new Date().getTime();
 
               break;
           }
