@@ -212,19 +212,22 @@ module.exports = {
     //Declare local instance variables
     var game_obj = interfaces[game_id];
 
-    //Clear alert array if prompted to do so
-    game_obj.alert_array = (clear_array) ? [] : game_obj.alert_array;
+    //Error trapping
+    try {
+      //Clear alert array if prompted to do so
+      game_obj.alert_array = (clear_array) ? [] : game_obj.alert_array;
 
-    game_obj.alert_array.push(msg);
-    game_obj.alert_change = true;
-
-    setTimeout(function(){
-      for (var i = 0; i < game_obj.alert_array.length; i++)
-        if (game_obj.alert_array[i] == msg && !never_clear)
-          game_obj.alert_array.splice(i, 1);
-
+      game_obj.alert_array.push(msg);
       game_obj.alert_change = true;
-    }, 15000);
+
+      setTimeout(function(){
+        for (var i = 0; i < game_obj.alert_array.length; i++)
+          if (game_obj.alert_array[i] == msg && !never_clear)
+            game_obj.alert_array.splice(i, 1);
+
+        game_obj.alert_change = true;
+      }, 15000);
+    } catch {}
   },
 
   printError: function (arg0_game_id, arg1_message) {

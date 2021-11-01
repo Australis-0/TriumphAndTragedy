@@ -31,19 +31,26 @@ module.exports = {
 
     var all_resource_shortages = Object.keys(resource_shortages);
     if (all_resource_shortages.length == 0) {
-
+      
     } else {
       //Resource shortages encountered, print them out
       var shortage_array = [];
 
       for (var i = 0; i < all_resource_shortages.length; i++) {
+        var local_good = getGood(all_resource_shortages[i]);
         var local_icon = "";
+        var local_shortage = resource_shortages[all_resource_shortages[i]];
 
+        //Determine icon
         if (!usr.inventory[all_resource_shortages[i]]) {
           if (all_resource_shortages[i] == "money") local_icon = config.icons.money;
         } else {
-          
+          local_icon = (local_good.icon) ? config.icons[local_good.icon] : "";
         }
+
+        shortage_array.push(`- ${local_icon} ${parseNumber(local_shortage)} ${(local_good.name) ? local_good.name : all_resource_shortages[i]}`);
+
+        printError(getGame(user_id), `You don't have resources to found a city! Gather the following resources first:\n\n${shortage_array.join("\n")}`);
       }
     }
   }
