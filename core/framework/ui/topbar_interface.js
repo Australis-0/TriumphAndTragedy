@@ -19,7 +19,10 @@ module.exports = {
     var map_pages = [
       "founding_map",
       "map"
-    ]
+    ];
+    var population_pages = [
+      "population"
+    ];
 
     //Add buttons to top row
     const main_menu_row = new Discord.MessageActionRow()
@@ -107,8 +110,14 @@ module.exports = {
       .addComponents(
         new Discord.MessageButton()
           .setCustomId("population_btn")
-          .setLabel("𝐏𝐨𝐩𝐮𝐥𝐚𝐭𝐢𝐨𝐧")
-          .setStyle("SECONDARY")
+          .setLabel((!population_pages.includes(game_obj.page)) ?
+            "𝐏𝐨𝐩𝐮𝐥𝐚𝐭𝐢𝐨𝐧" :
+            " ͟𝐏͟𝐨͟𝐩͟𝐮͟𝐥͟𝐚͟𝐭͟𝐢͟𝐨͟𝐧͟"
+          )
+          .setStyle((!population_pages.includes(game_obj.page)) ?
+            "SECONDARY" :
+            "PRIMARY"
+          )
           .setEmoji("758424911852470293"),
         new Discord.MessageButton()
           .setCustomId("trade_btn")
@@ -185,6 +194,15 @@ module.exports = {
         }
         printEconomy(user_id);
 
+        break;
+      case "population_btn":
+        //Print out population menu
+        if (game_obj.page != "population") {
+          game_obj.page = "population";
+          module.exports.initialiseTopbar(user_id);
+        }
+        printPops(user_id);
+        
         break;
     }
   }
