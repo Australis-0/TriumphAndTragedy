@@ -147,8 +147,8 @@ config.goods = { //WIP, REFACTOR
   },
   processed_goods: {
     name: "Processed Goods",
-    icon: "building",
-    
+    icon: "construction_time",
+
     aluminium: {
       name: "Aluminium",
       aliases: ["aluminum"],
