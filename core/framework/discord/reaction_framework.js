@@ -96,7 +96,9 @@ module.exports = {
         for (var i = 0; i < all_interfaces.length; i++) {
           var local_interface = interfaces[all_interfaces[i]];
 
-          if (local_interface.type = "game") is_collector =  (local_interface.collectors.includes(msg_id)) ? [true, all_interfaces[i]] : is_collector;
+          try {
+            if (local_interface.type = "game") is_collector =  (local_interface.collectors.includes(msg_id)) ? [true, all_interfaces[i]] : is_collector;
+          } catch {}
         }
       } catch {}
 

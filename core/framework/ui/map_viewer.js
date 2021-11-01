@@ -144,8 +144,10 @@ module.exports = {
     var game_obj = interfaces[game_id];
     var map_obj = game_obj.map;
 
-    if (map_obj.embed_history[map_obj.embed_history.length-2] != map_obj.embed_history[map_obj.embed_history.length-1] || map_obj.objects[map_obj.objects.length-2] != map_obj.objects[map_obj.objects.length-1])
+    if (map_obj.embed_history[map_obj.embed_history.length-2] != map_obj.embed_history[map_obj.embed_history.length-1] || map_obj.objects[map_obj.objects.length-2] != map_obj.objects[map_obj.objects.length-1]) {
+      game_obj.main_embed = embed_obj;
       game_obj.middle_embed.edit({ embeds: [embed_obj] });
+    }
   },
 
   reloadMap: async function (arg0_game_id, arg1_do_not_reload_image, arg2_force_reload) {
