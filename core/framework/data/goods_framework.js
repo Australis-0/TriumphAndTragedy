@@ -46,7 +46,7 @@ module.exports = {
 
     //Declare local instance variables
     var all_good_categories = Object.keys(config.goods);
-    var good_exists = [false, ""]; //[good_exists, good_obj]
+    var good_exists = [false, "", ""]; //[good_exists, good_obj, good_id]
 
     for (var i = 0; i < all_good_categories.length; i++) {
       var local_category = config.goods[all_good_categories[i]];
@@ -54,7 +54,7 @@ module.exports = {
 
       //Check if argument provided is a raw name
       if (local_category[good_name]) {
-        good_exists = [true, local_category[good_name]];
+        good_exists = [true, local_category[good_name], good_name];
       } else {
         //Search by name matches - Soft match first
         for (var x = 0; x < local_goods.length; x++) {
@@ -62,7 +62,7 @@ module.exports = {
 
           if (!["name", "icon"].includes(local_goods[x]))
             if (local_goods[x].name.toLowerCase().indexOf(good_name) != -1)
-              good_exists = [true, local_good];
+              good_exists = [true, local_good, local_goods[x]];
         }
 
         //Search by name matches - Hard match second
@@ -71,7 +71,7 @@ module.exports = {
 
           if (!["name", "icon"].includes(local_goods[x]))
             if (local_goods[x].name.toLowerCase() == good_name)
-              good_exists = [true, local_good];
+              good_exists = [true, local_good, local_goods[x]];
         }
 
         //Move onto alias searching if good still does not exist based on the name
@@ -86,12 +86,12 @@ module.exports = {
               //Soft match first
               for (var y = 0; y < local_good.aliases.length; y++)
                 if (local_good.aliases[y].toLowerCase().indexOf(good_name) != -1)
-                  good_exists = [true, local_good];
+                  good_exists = [true, local_good, local_goods[x]];
 
               //Hard match second
               for (var y = 0; y < local_good.aliases.length; y++)
                 if (local_good.aliases[y].toLowerCase() == good_name) {
-                  good_exists = [true, local_good];
+                  good_exists = [true, local_good, local_goods[x]];
                   hard_alias_found = true;
                 }
             }
@@ -100,7 +100,23 @@ module.exports = {
       }
     }
 
+    //Assign JSON key to .id for ease-of-use
+    if (good_exists[0]) good_exists[1].id = good_exists[2];
+
     //Return statement
     return (good_exists[0]) ? good_exists[1] : undefined;
+  },
+
+  getRawGoods: function (arg0_options) {
+    //Declare local instance variables
+    var all_goods = module.exports.getGoods(arg0_options);
+    var raw_goods = [];
+
+    for (var i = 0; i < all_goods.length; i++)
+      if (all_goods[i].mine_action_chance || all_goods[i].quarry_action_chance || all_goods[i].chop_action_chance)
+        raw_goods.push(all_goods[i]);
+
+    //Return statement
+    return raw_goods;
   }
 };

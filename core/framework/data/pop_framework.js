@@ -82,7 +82,8 @@ module.exports = {
           total_population += local_pop;
         }
 
-      //Add total_population back to usr.population
+      //Add total_population back to usr.population and province tracker
+      province_obj.pops.population = total_population;
       usr.population += total_population;
     } catch (e) {
       log.error(`generatePops() ran into an error: ${e}.`);

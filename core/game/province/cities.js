@@ -7,6 +7,7 @@ module.exports = {
     var city_name = arg2_name;
 
     //Declare local instance variables
+    var all_building_categories = Object.keys(config.buildings);
     var all_provinces = getProvinces(user_id);
     var usr = main.users[user_id];
 
@@ -40,8 +41,32 @@ module.exports = {
           //If user has no other cities, set it to their capital
 
           local_province.city_type = (getCities(user_id).length == 0) ? "capital" : "city";
+          var population_amount = (local_province.city_type == "capital") ?
+            randomNumber(250000, 1000000) :
+            randomNumber(250000, 800000);
 
-          //
+          //Generate city pop object
+          generatePops(province_id, {
+            type: "all",
+            amount: population_amount
+          });
+
+          //Set city RGO
+          local_province.resource = randomElement(getRawGoods({ return_names: true })).id;
+
+          //Set building objects
+          local_province.buildings = {};
+          local_province.development = 0;
+          local_province.housing = 0;
+
+          //Set building slot capacity per category
+          for (var i = 0; i < all_building_categories.length; i++)
+            local_province[`${all_building_categories[i]}_building_slots`] = usr.modifiers[`${all_building_categories[i]}_building_slots`];
+
+          printAlert(getGame(user_id), (local_province.city_type == "capital") ?
+            `Capital city founded as **${city_name}** in Province **${province_id}**! Over **${parseNumber(local_province.pops.population)}** are now legally residents of the capital city of **${usr.name}**!` :
+            `A new city was founded as **${city_name}** in Province **${province_id}**! Over **${parseNumber(local_province.pops.population)}** are now legally residents of the city of **${city_name}** in Province **${province_id}**.`
+          );
         } else {
           printError(getGame(user_id), `Province **${province_id}** is already an urban province belonging to **${local_province.name}**!`);
         }
