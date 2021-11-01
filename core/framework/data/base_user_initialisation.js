@@ -188,7 +188,7 @@ module.exports = {
           var local_good = local_category[local_goods[x]];
 
           if (!["name", "icon"].includes(local_goods[x])) {
-            if (!usr.inventory[local_goods[x]]) usr.inventory[local_goods[x]] = 1;
+            if (!usr.inventory[local_goods[x]]) usr.inventory[local_goods[x]] = 0;
             if (!usr.modifiers[`${local_goods[x]}_gain`]) usr.modifiers[`${local_goods[x]}_gain`] = 1;
           }
         }

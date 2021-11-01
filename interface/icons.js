@@ -59,7 +59,7 @@ config.icons = {
   prestige: "<:prestige:762428452636721202>",
 
   //Good icons - Dynamic set
-  aluminimum: "<:aluminium:771635236235640842>",
+  aluminium: "<:aluminium:771635236235640842>",
   ammunition: "<:ammunition:771635236118462465>",
   artillery: "<:artillery:771635236127506453>",
   bauxite: "<:bauxite:771635236089102357>",

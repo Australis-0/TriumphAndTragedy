@@ -74,6 +74,7 @@ module.exports = {
     },
     function (arg) {
       foundCountry(user_id, arg[0]);
+      console.log(arg);
     });
   }
 };

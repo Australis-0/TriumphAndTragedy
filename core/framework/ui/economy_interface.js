@@ -47,7 +47,9 @@ module.exports = {
     var all_material_categories = Object.keys(config.goods);
 
     //Format embed
-    inventory_string.push(`**[Back]** ¦ ${config.icons.trade} **Current Goods:**`);
+    inventory_string.push(`**[Back]**`);
+    inventory_string.push("");
+    inventory_string.push(`${config.icons.trade} **Current Goods:**`);
     inventory_string.push(`${config.localisation.divider}`);
     inventory_string.push("");
 
@@ -80,8 +82,6 @@ module.exports = {
           inline: true
         });
       }
-
-    console.log(inventory_fields);
 
     //Create embed and edit to message
     var inventory_embed = new Discord.MessageEmbed()
