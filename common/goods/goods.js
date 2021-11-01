@@ -12,6 +12,8 @@ config.goods = { //WIP, REFACTOR
 
   crafting_points: {
     name: "Crafting Points",
+    icon: "workers",
+
     ground_units_cp: {
       name: "Army CP",
       icon: "active_personnel",
@@ -46,6 +48,8 @@ config.goods = { //WIP, REFACTOR
 
   raw_resources: {
     name: "Raw Materials",
+    icon: "government",
+
     bauxite: {
       name: "Bauxite",
       icon: "bauxite",
@@ -143,6 +147,8 @@ config.goods = { //WIP, REFACTOR
   },
   processed_goods: {
     name: "Processed Goods",
+    icon: "building",
+    
     aluminium: {
       name: "Aluminium",
       aliases: ["aluminum"],
