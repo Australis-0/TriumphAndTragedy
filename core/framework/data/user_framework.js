@@ -45,6 +45,12 @@ module.exports = {
     }
   },
 
+  /*
+    getCity() - Returns a city object from a set of selected users. All by default.
+    options: {
+      users: ["user_id_1", "user_id_2"] - Find a city from this set of users
+    }
+  */
   getCity: function (arg0_name, arg1_options) {
     //Convert from parameters; initialise options
     var city_name = arg0_name.toLowerCase();
