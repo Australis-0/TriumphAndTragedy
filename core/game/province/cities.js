@@ -11,6 +11,40 @@ module.exports = {
     var usr = main.users[user_id];
 
     //Check whether user has enough resources to found a city
+    var all_resource_requirements = Object.keys(config.defines.economy.city_resources);
+    var city_resources = config.defines.economy.city_resources;
     var resource_shortages = {};
+
+    for (var i = 0; i < all_resource_requirements.length; i++) {
+      var resource_amount = (usr.inventory[all_resource_requirements[i]]) ?
+        usr.inventory[all_resource_requirements[i]] :
+        usr[all_resource_requirements[i]];
+
+      if (resource_amount) {
+        //Check for user shortage
+        if (resource_amount < city_resources[all_resource_requirements[i]])
+          resource_shortages[all_resource_requirements[i]] = city_resources[all_resource_requirements[i]] - resource_amount;
+      } else {
+        log.error(`foundCity() - resource_amount at config.defines.economy - ${all_resource_requirements[i]} returned undefined.`);
+      }
+    }
+
+    var all_resource_shortages = Object.keys(resource_shortages);
+    if (all_resource_shortages.length == 0) {
+
+    } else {
+      //Resource shortages encountered, print them out
+      var shortage_array = [];
+
+      for (var i = 0; i < all_resource_shortages.length; i++) {
+        var local_icon = "";
+
+        if (!usr.inventory[all_resource_shortages[i]]) {
+          if (all_resource_shortages[i] == "money") local_icon = config.icons.money;
+        } else {
+          
+        }
+      }
+    }
   }
 };

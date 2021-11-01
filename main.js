@@ -27,6 +27,7 @@ FileManager.import("./framework/users");
 FileManager.import("./framework/data/base_user_initialisation");
 FileManager.import("./framework/data/games");
 FileManager.import("./framework/data/global_initialisation");
+FileManager.import("./framework/data/goods_framework");
 FileManager.import("./framework/data/pop_framework");
 FileManager.import("./framework/data/tech_framework");
 FileManager.import("./framework/data/user_framework");
