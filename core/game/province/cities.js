@@ -1,5 +1,4 @@
 module.exports = {
-  //Founds a new city
   foundCity: function (arg0_user, arg1_province, arg2_name) {
     //Convert from parameters
     var user_id = arg0_user;
@@ -97,5 +96,17 @@ module.exports = {
         printError(getGame(user_id), `You don't have resources to found a city! Gather the following resources first:\n\n${shortage_array.join("\n")}`);
       }
     }
+  },
+
+  renameCity: function (arg0_user, arg1_old_name, arg2_new_name) {
+    //Convert from parameters
+    var user_id = arg0_user;
+    var old_name = arg1_old_name;
+    var new_name = arg2_new_name;
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var usr = main.users[actual_id];
+
   }
 };

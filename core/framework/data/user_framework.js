@@ -1,4 +1,11 @@
 module.exports = {
+  /*
+    getCities() - Returns an array list of urban province objects from selected users.
+    options: {
+      include_hostile_occupations: true/false, - Includes occupations by other users of the target user
+      include_occupations: true/false - Includes occupations by the target user
+    }
+  */
   getCities: function (arg0_user, arg1_options) {
     //Convert from parameters
     var user_id = arg0_user;
@@ -36,6 +43,38 @@ module.exports = {
     } catch (e) {
       log.error(`getCities() - ran into an error with User ID ${user_id}: ${e}`);
     }
+  },
+
+  getCity: function (arg0_name, arg1_options) {
+    //Convert from parameters; initialise options
+    var city_name = arg0_name.toLowerCase();
+    var options = (arg1_options) ? arg1_options : {};
+    options.users = (options.users) ? getList(options.users) : ["all"];
+
+    //Declare local instance variables
+    var all_users = (options.users.includes("all")) ? Object.keys(main.users) : options.users;
+    var city_exists = [false, ""]; //[city_exists, city_obj];
+
+    //Iterate over all users and their respective cities - Soft match first
+    for (var i = 0; i < all_users.length; i++) {
+      var local_cities = getCities(all_users[i]);
+
+      for (var x = 0; x < local_cities.length; x++)
+        if (local_cities[x].name.toLowerCase().indexOf(city_name) != -1)
+          city_exists = [true, local_cities[x]];
+    }
+
+    //iterate over all users and their respective cities - Hard match second
+    for (var i = 0; i < all_users.length; i++) {
+      var local_cities = getCities(all_users[i]);
+
+      for (var x = 0; x < local_cities.length; x++)
+        if (local_cities[x].name.toLowerCase() == city_name)
+          city_exists = [true, local_cities[x]];
+    }
+
+    //Return statement if city is found
+    return (city_exists[0]) ? city_exists[1] : undefined;
   },
 
   getProvince: function (arg0_province) {
