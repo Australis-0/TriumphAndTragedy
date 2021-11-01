@@ -19,7 +19,7 @@ module.exports = {
     };
 
     for (var i = 0; i < all_provinces.length; i++)
-      for (var x = 0; x < all_pops.length; x++) {
+      for (var x = 0; x < all_pops.length; x++)
         switch (all_provinces[i].type) {
           case "rural":
               rural_pops[all_pops[x]] = (rural_pops[all_pops[x]]) ?
