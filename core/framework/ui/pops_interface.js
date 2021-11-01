@@ -10,7 +10,7 @@ module.exports = {
 
     //Declare local tracker variables
     var all_pops = Object.keys(config.pops);
-    var all_provinces = getCountryProvinces(user_id);
+    var all_provinces = getProvinces(user_id);
     var rural_pops = {
       population: 0
     };

@@ -57,6 +57,7 @@ FileManager.import("./game/colonisation/settle");
 
 FileManager.import("./game/country/create_country");
 
+FileManager.import("./game/province/cities");
 FileManager.import("./game/province/settle_province");
 
 //Declare config loading order

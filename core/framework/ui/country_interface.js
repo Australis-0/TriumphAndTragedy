@@ -21,7 +21,7 @@ module.exports = {
     var ending_string = "";
     var name_array = [];
     var name_string = "";
-    var usr_provinces = getCountryProvinces(actual_id);
+    var usr_provinces = getProvinces(actual_id);
 
     //Append cities to list
     for (var i = 0; i < usr_provinces.length; i++)

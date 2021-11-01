@@ -105,7 +105,7 @@ module.exports = {
     var pop_type = arg2_type;
 
     //Declare local instance variables
-    var shuffled_provinces = shuffleArray(getCountryProvinces(user_id));
+    var shuffled_provinces = shuffleArray(getProvinces(user_id));
 
     //Begin subtracting
     for (var i = 0; i < shuffled_provinces.length; i++)
