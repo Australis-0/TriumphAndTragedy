@@ -20,7 +20,6 @@ module.exports = {
 
         //Generate pops
         var all_pop_types = Object.keys(config.pops);
-        var current_iterations = 0;
         var population_cache = randomNumber(
           (config.defines.initial_rural_population_minimum) ?
             config.defines.initial_rural_population_minimum :
@@ -42,7 +41,7 @@ module.exports = {
             province_obj.pops[all_pop_types[i]] = population_change;
 
             //Deduct from cache
-            population_cache -= Math.ceil(population_change);
+            population_cache -= population_change;
           }
 
         //Partition the remaining pops in the cache between the non-specialised pops

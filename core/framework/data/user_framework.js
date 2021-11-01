@@ -38,6 +38,20 @@ module.exports = {
     }
   },
 
+  getProvince: function (arg0_province) {
+    //Convert from parameters
+    var province_id = arg0_province;
+
+    //Declare local instance variables
+    var all_provinces = Object.keys(main.provinces);
+
+    for (var i = 0; i < all_provinces.length; i++)
+      if (all_provinces[i] == province_id)
+
+        //Return statement if province is found
+        return main.provinces[all_provinces[i]];
+  },
+
   getProvinces: function (arg0_user, arg1_options) {
     //Convert from parameters
     var user_id = arg0_user;

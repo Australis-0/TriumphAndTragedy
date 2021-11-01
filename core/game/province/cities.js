@@ -31,7 +31,26 @@ module.exports = {
 
     var all_resource_shortages = Object.keys(resource_shortages);
     if (all_resource_shortages.length == 0) {
-      
+      var local_province = getProvince(province_id);
+
+      //Check if province is valid, province has to be owned
+      if (local_province.owner == user_id && local_province.controller == user_id) {
+        if (local_province.type == "rural") {
+          //Initialise city object, determine capital status first
+          //If user has no other cities, set it to their capital
+
+          local_province.city_type = (getCities(user_id).length == 0) ? "capital" : "city";
+
+          //
+        } else {
+          printError(getGame(user_id), `Province **${province_id}** is already an urban province belonging to **${local_province.name}**!`);
+        }
+      } else {
+        var is_occupied = (local_province.owner != local_province.controller);
+
+        //Print actual province controller/occupation status
+        printError(getGame(user_id), `You don't own Province **${province_id}**!\n\nProvince **${province_id}** is a${(is_occupied) ? "n occupied" : ""} province of the ${main.users[local_province.controller].name} of ${local_province.culture} culture${(is_occupied) ? " that rightfully belongs to " + main.users[local_province.owner].name : ""}.`);
+      }
     } else {
       //Resource shortages encountered, print them out
       var shortage_array = [];

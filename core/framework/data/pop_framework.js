@@ -1,4 +1,87 @@
 module.exports = {
+  generatePops: function (arg0_province, arg1_options) {
+    //Convert from parameters
+    var province_obj = getProvince(arg0_province);
+    var options = arg1_options;
+
+    //Initialise default options values
+    options.type = (options.type) ? ["all"] : getList(options.type);
+
+    //Declare local instance variables
+    var all_pops = (options.type.includes("all")) ?
+      Object.keys(config.pops) :
+      options.type;
+    var old_population = (province_obj.pops) ? JSON.parse(JSON.stringify(province_obj.pops)) : {};
+    var usr = (province_obj) ? main.users[province_obj.controller] : undefined;
+
+    //Regular error trapping
+    try {
+      //Remove old_population from user pop trackers
+      var all_old_pops = Object.keys(old_population);
+      var total_old_population = 0;
+
+      for (var i = 0; i < all_old_pops.length; i++)
+        if (all_old_pops[i] != "population") {
+          var local_old_pop = old_population[all_old_pops[i]];
+          usr.pops[all_old_pops[i]] -= local_old_pop;
+          total_old_population += local_old_pop;
+        }
+
+      //Remove old user population so that it can be 'reset' to accomodate the new one
+      usr.population -= total_old_population;
+
+      //Generate pops similar to settle_province.js
+      var population_cache = options.amount;
+      if (!province_obj.pops) province_obj.pops = {};
+
+      //Generate specialised pops first
+      for (var i = 0; i < all_pops.length; i++)
+        if (config.pops[all_pops[i]].specialised_pop) {
+          //Roll the dice for the local pop type
+          var local_pop = config.pops[all_pops[i]];
+          var random_percentage = randomNumber((local_pop.chance*100)/2, (local_pop.chance*100)*2);
+          var population_change = Math.ceil(population_cache*(random_percentage/100));
+
+          //Undefined pops save space in the database
+          province_obj.pops[all_pops[i]] = (province_obj.pops[all_pops[i]]) ?
+            province_obj.pops[all_pops[i]] + population_change :
+            population_change;
+
+          //Deduct from cache
+          population_cache -= population_change;
+        }
+
+      //Partition the remaining pops in the cache between the non-specialised pops
+      for (var i = 0; i < all_pops.length; i++)
+        if (!config.pops[all_pops[i]].specialised_pop)
+          try {
+            var population_change = Math.ceil(population_cache*config.pops[all_pops[i]].chance);
+
+            province_obj.pops[all_pops[i]] = (province_obj.pops[all_pops[i]]) ?
+              province_obj.pops[all_pops[i]] + population_change :
+              population_change;
+          } catch (e) {
+            log.warn(`generatePops() - ran into an error whilst generating pops of type ${all_pops[i]} in Province ID ${province_id}: ${e}.`)
+          }
+
+      //Calculate new total population of province and add it to user tracker variables
+      var all_local_pops = Object.keys(province_obj.pops);
+      var total_population = 0;
+
+      for (var i = 0; i < all_local_pops.length; i++)
+        if (all_local_pops[i] != "population") {
+          var local_pop = province_obj.pops[all_local_pops[i]];
+          usr.pops[all_local_pops[i]] += local_pop;
+          total_population += local_pop;
+        }
+
+      //Add total_population back to usr.population
+      usr.population += total_population;
+    } catch (e) {
+      log.error(`generatePops() ran into an error: ${e}.`);
+    }
+  },
+
   getFaminePenalty: function (arg0_user) {
     //Convert from parameters
     var user_id = arg0_user;
