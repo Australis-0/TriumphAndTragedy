@@ -42,25 +42,6 @@ module.exports = {
       if (!usr.diplomacy.justifications) usr.diplomacy.justifications = {};
       if (!usr.diplomacy.wargoals) usr.diplomacy.wargoals = {};
 
-    if (!usr.inventory) usr.inventory = {};
-      var all_good_categories = Object.keys(config.goods);
-      for (var i = 0; i < all_good_categories.length; i++) {
-        var local_category = config.goods[all_good_categories[i]];
-
-        if (all_good_categories[i] != "name") {
-          var local_goods = Object.keys(local_category);
-
-          for (var x = 0; x < local_goods.length; x++) {
-            var local_good = local_category[local_goods[x]];
-
-            if (!["name", "icon"].includes(local_goods[x])) {
-              if (!usr.inventory[local_goods[x]]) usr.inventory[local_goods[x]] = 1;
-              if (!usr.modifiers[`${local_goods[x]}_gain`]) usr.modifiers[`${local_goods[x]}_gain`] = 1;
-            }
-          }
-        }
-      }
-
     if (!usr.modifiers) usr.modifiers = {};
       //Colonisation
       if (!usr.modifiers.colonial_immigration_rate) usr.modifiers.colonial_immigration_rate = 1;
@@ -186,6 +167,7 @@ module.exports = {
     if (!usr.blockaded) usr.blockaded = {};
     if (!usr.events) usr.events = {};
     if (!usr.expeditions) usr.expeditions = {};
+    if (!usr.inventory) usr.inventory = {};
     if (!usr.mobilisation) usr.mobilisation = {};
     if (!usr.national_modifiers) usr.national_modifiers = {};
     if (!usr.researching) usr.researching = {};
@@ -193,6 +175,25 @@ module.exports = {
     if (!usr.temporary_modifiers) usr.temporary_modifiers = {};
     if (!usr.trades) usr.trades = {};
     if (!usr.under_construction) usr.under_construction = {};
+
+    //Post-object processing (Goods):
+    var all_good_categories = Object.keys(config.goods);
+    for (var i = 0; i < all_good_categories.length; i++) {
+      var local_category = config.goods[all_good_categories[i]];
+
+      if (all_good_categories[i] != "name") {
+        var local_goods = Object.keys(local_category);
+
+        for (var x = 0; x < local_goods.length; x++) {
+          var local_good = local_category[local_goods[x]];
+
+          if (!["name", "icon"].includes(local_goods[x])) {
+            if (!usr.inventory[local_goods[x]]) usr.inventory[local_goods[x]] = 1;
+            if (!usr.modifiers[`${local_goods[x]}_gain`]) usr.modifiers[`${local_goods[x]}_gain`] = 1;
+          }
+        }
+      }
+    }
 
     //Obsoletion variables
     if (!usr.available_buildings) usr.available_buildings = [];
