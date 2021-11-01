@@ -10,7 +10,16 @@ module.exports = {
 
     //Declare local tracker variables
     var total_alerts = Object.keys(usr.alerts).length;
-    var total_events = Object.keys(usr.events).length
+    var total_events = Object.keys(usr.events).length;
+
+    var economy_pages = [
+      "economy",
+      "inventory"
+    ];
+    var map_pages = [
+      "founding_map",
+      "map"
+    ]
 
     //Add buttons to top row
     const main_menu_row = new Discord.MessageActionRow()
@@ -23,7 +32,7 @@ module.exports = {
         new Discord.MessageButton()
           .setCustomId("map_btn")
           .setLabel(
-            (!["founding_map", "map"].includes(game_obj.page)) ?
+            (!map_pages.includes(game_obj.page)) ?
             "𝗠𝗔𝗣" :
             " ͟𝗠͟𝗔͟𝗣͟"
           )
@@ -74,8 +83,14 @@ module.exports = {
           .setEmoji("716817688718213192"),
         new Discord.MessageButton()
           .setCustomId("economy_btn")
-          .setLabel("𝐄𝐜𝐨𝐧𝐨𝐦𝐲")
-          .setStyle("SECONDARY")
+          .setLabel((!economy_pages.includes(game_obj.page)) ?
+            "𝐄𝐜𝐨𝐧𝐨𝐦𝐲" :
+            " ͟𝐄͟𝐜͟𝐨͟𝐧͟𝐨͟𝐦͟𝐲͟"
+          )
+          .setStyle((!economy_pages.includes(game_obj.page)) ?
+            "SECONDARY" :
+            "PRIMARY"
+          )
           .setEmoji("716811992421367869"),
         new Discord.MessageButton()
           .setCustomId("technology_btn")
@@ -160,6 +175,15 @@ module.exports = {
           module.exports.initialiseTopbar(user_id);
         }
         printStats(user_id);
+
+        break;
+      case "economy_btn":
+        //Print out economy menu
+        if (game_obj.page != "economy") {
+          game_obj.page = "economy";
+          module.exports.initialiseTopbar(user_id);
+        }
+        printEconomy(user_id);
 
         break;
     }

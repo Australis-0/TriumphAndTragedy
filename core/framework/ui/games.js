@@ -98,7 +98,7 @@ module.exports = {
     var game_obj = interfaces[game_id];
 
     //Declare local instance variables
-    var usr = main.users[game_obj.user];
+    var actual_id = main.global.user_map[game_obj.user];
 
     //Reset alert_array and collectors
     game_obj.alert_array = [];
@@ -191,7 +191,8 @@ module.exports = {
         }, 100);
 
         //Begin processing page
-
+        if (!["country_interface", "map", "founding_map"].includes(game_obj.page))
+          game_obj.page = (actual_id) ? "country_interface" : "founding_map";
 
         //Load up either the starting map viewer or country interface depending on the starting page
         switch (game_obj.page) {

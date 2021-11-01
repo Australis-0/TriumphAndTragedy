@@ -13,9 +13,24 @@ module.exports = {
     var game_id = arg0_game_id;
     var input = arg1_input;
 
+    //Declare local instance variables
+    var game_obj = interfaces[game_id];
+    var local_input = input.toLowerCase();
+
     //Traditional commands
     {
-
+      switch (game_obj.page) {
+        case "economy":
+          if (local_input == "inventory") {
+            game_obj.page = "inventory";
+            printInventory(game_obj.user);
+          }
+        case "inventory":
+          if (local_input == "back") {
+            game_obj.page = "economy";
+            printEconomy(game_obj.user);
+          }
+      }
     }
 
     //Visual prompt processing
@@ -23,7 +38,6 @@ module.exports = {
       if (interfaces[interfaces[game_id].user].type == "visual_prompt") {
         try {
           //Declare local instance variables
-          var game_obj = interfaces[game_id];
           var local_prompt = interfaces[interfaces[game_id].user];
           var current_step = local_prompt.answers.length;
 

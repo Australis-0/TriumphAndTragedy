@@ -43,9 +43,22 @@ module.exports = {
       if (!usr.diplomacy.wargoals) usr.diplomacy.wargoals = {};
 
     if (!usr.inventory) usr.inventory = {};
-      var all_goods = Object.keys(config.goods);
-      for (var i = 0; i < all_goods.length; i++) {
-        if (!usr.inventory[all_goods[i]]) usr.inventory[all_goods[i]] = 0;
+      var all_good_categories = Object.keys(config.goods);
+      for (var i = 0; i < all_good_categories.length; i++) {
+        var local_category = config.goods[all_good_categories[i]];
+
+        if (all_good_categories[i] != "name") {
+          var local_goods = Object.keys(local_category);
+
+          for (var x = 0; x < local_goods.length; x++) {
+            var local_good = local_category[local_goods[x]];
+
+            if (!["name", "icon"].includes(local_goods[x])) {
+              if (!usr.inventory[local_goods[x]]) usr.inventory[local_goods[x]] = 1;
+              if (!usr.modifiers[`${local_goods[x]}_gain`]) usr.modifiers[`${local_goods[x]}_gain`] = 1;
+            }
+          }
+        }
       }
 
     if (!usr.modifiers) usr.modifiers = {};
@@ -74,10 +87,6 @@ module.exports = {
       var all_building_categories = Object.keys(config.buildings);
       for (var i = 0; i < all_building_categories.length; i++) {
         if (!usr.modifiers[`${all_building_categories[i]}_building_slots`]) usr.modifiers[`${all_building_categories[i]}_building_slots`] = 1;
-      }
-      var all_goods = Object.keys(config.goods);
-      for (var i = 0; i < all_goods.length; i++) {
-        if (!usr.modifiers[`${all_goods[i]}_gain`]) usr.modifiers[`${all_goods[i]}_gain`] = 1;
       }
 
       //Military; includes colonisation travel time
