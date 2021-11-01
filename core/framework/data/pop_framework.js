@@ -1,4 +1,11 @@
 module.exports = {
+  /*
+    generatePops() - Generates a certain number of pops for a given province with standard rolling.
+    options: {
+      type: "all"/["workers", "soldiers"] - Chooses the types of pops to generate
+      amount: 100000 - How many pops should be generated in the given province
+    }
+  */
   generatePops: function (arg0_province, arg1_options) {
     //Convert from parameters
     var province_obj = getProvince(arg0_province);
