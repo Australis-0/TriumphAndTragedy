@@ -91,10 +91,14 @@ module.exports = {
     var all_provinces = Object.keys(main.provinces);
 
     for (var i = 0; i < all_provinces.length; i++)
-      if (all_provinces[i] == province_id)
+      if (all_provinces[i] == province_id) {
+        //Set ID tracker variable just in case
+        var local_province = main.provinces[all_provinces[i]];
+        local_province.id = all_provinces[i];
 
         //Return statement if province is found
-        return main.provinces[all_provinces[i]];
+        return local_province;
+      }
   },
 
   getProvinces: function (arg0_user, arg1_options) {
