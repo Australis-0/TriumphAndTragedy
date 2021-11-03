@@ -86,7 +86,7 @@ module.exports = {
           city_exists = [true, local_cities[x]];
     }
 
-    //iterate over all users and their respective cities - Hard match second
+    //Iterate over all users and their respective cities - Hard match second
     for (var i = 0; i < all_users.length; i++) {
       var local_cities = getCities(all_users[i]);
 
@@ -97,6 +97,23 @@ module.exports = {
 
     //Return statement if city is found
     return (city_exists[0]) ? city_exists[1] : undefined;
+  },
+
+  getDevelopmentCost: function (arg0_user, arg1_name) {
+    //Convert from parameters
+    var user_id = arg0_user;
+    var city_name = arg1_name.toLowerCase();
+
+    //Declare local instance variables
+    var city_obj = getCity(city_name, options);
+    var usr = main.users[user_id];
+
+    //Declare local tracker variables
+    var average_cities = Math.ceil(usr.total_cities/usr.country_age);
+    var development_cost = Math.floor(config.defines.economy.urbanisation_cost*Math.pow(config.defines.economy.urbanurbanisation_cost_percentile_growth, city_obj.development)*average_cities);
+
+    //Return statement
+    return development_cost;
   },
 
   getProvince: function (arg0_province) {
