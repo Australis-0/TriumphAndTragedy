@@ -54,8 +54,8 @@ module.exports = {
 
     starting_page = (options.starting_page) ? options.starting_page : starting_page;
 
-    if (contents.embed_pages) {
-      if (contents.user) {
+    if (options.embed_pages) {
+      if (options.user) {
         //Add to interface
         interfaces[msg.id] = {};
         var ui_obj = interfaces[msg.id];

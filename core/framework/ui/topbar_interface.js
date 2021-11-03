@@ -1,4 +1,16 @@
 module.exports = {
+  economy_pages: [
+    "economy",
+    "inventory"
+  ],
+  map_pages: [
+    "founding_map",
+    "map"
+  ],
+  population_pages: [
+    "population"
+  ],
+
   initialiseTopbar: function (arg0_user_id) {
     //Convert from parameters
     var user_id = arg0_user_id;
@@ -11,18 +23,6 @@ module.exports = {
     //Declare local tracker variables
     var total_alerts = Object.keys(usr.alerts).length;
     var total_events = Object.keys(usr.events).length;
-
-    var economy_pages = [
-      "economy",
-      "inventory"
-    ];
-    var map_pages = [
-      "founding_map",
-      "map"
-    ];
-    var population_pages = [
-      "population"
-    ];
 
     //Add buttons to top row
     const main_menu_row = new Discord.MessageActionRow()
@@ -202,7 +202,7 @@ module.exports = {
           module.exports.initialiseTopbar(user_id);
         }
         printPops(user_id);
-        
+
         break;
     }
   }
