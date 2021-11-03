@@ -25,6 +25,7 @@ FileManager.import("./framework/strings");
 FileManager.import("./framework/users");
 
 FileManager.import("./framework/data/base_user_initialisation");
+FileManager.import("./framework/data/buildings_framework");
 FileManager.import("./framework/data/games");
 FileManager.import("./framework/data/global_initialisation");
 FileManager.import("./framework/data/goods_framework");

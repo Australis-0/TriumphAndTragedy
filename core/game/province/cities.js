@@ -1,4 +1,48 @@
 module.exports = {
+  developCity: function (arg0_user, arg1_city_name, arg2_amount, arg3_building_category) {
+    //Convert from parameters
+    var user_id = arg0_user;
+    var city_name = arg1_city_name;
+    var amount = parseInt(arg2_amount);
+    var raw_building_category = arg3_building_category;
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var building_category = getBuildingCategory(raw_building_category, { return_key: true });
+    var city_obj = getCity(city_name, { users: actual_id });
+
+    //Check if city exists in the first place
+    if (city_obj) {
+      //Calculate development_cost
+      var development_cost = getDevelopmentCost(actual_id, city_name, amount);
+
+      if (usr.country_age != 0) {
+        if (usr.modifiers.political_capital >= development_cost) {
+          if (amount > 0) {
+            //[WIP]
+            if (building_category)
+            //Effect changes to political_capital and building category development
+            usr.modifiers.political_capital -= development_cost;
+            city_obj.development += amount;
+            city_obj[`${building_category}_development`] += amount;
+
+            printAlert(`You have issued **${parseNumber(amount)}** urbanisation edicts for the **${parseNumber(development_cost)}** Political Capital! People have begun flocking to **${city_obj.name}** to start working and constructing new buildings, thereby expanding the overall building cap in the city for **${parseString(building_category).toLowerCase()}**.`);
+          } else {
+            (amount == 0) ?
+              printError(getGame(user_id), `You can't issue zero urbanisation edicts!`) :
+              printError(getGame(user_id), `You can't issue negative urbanisation edicts! Who are you anyway, Pol Pot?`);
+          }
+        } else {
+          printError(getGame(user_id), `You do not currently have enough ${config.icons.political_capital} Political Ccapital to issue `)
+        }
+      } else {
+        printError(getGame(user_id), `You must wait until next turn for your new government to start issuing edicts!`);
+      }
+    } else {
+      printError(getGame(user_id), `The city you have specified, **${truncateString(city_name)}**, could not be found anywhere inside of your controlled territories!`);
+    }
+  },
+
   foundCity: function (arg0_user, arg1_province, arg2_name) {
     //Convert from parameters
     var user_id = arg0_user;
@@ -6,9 +50,10 @@ module.exports = {
     var city_name = arg2_name;
 
     //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
     var all_building_categories = Object.keys(config.buildings);
     var all_provinces = getProvinces(user_id);
-    var usr = main.users[user_id];
+    var usr = main.users[actual_id];
 
     //Check whether user has enough resources to found a city
     var all_resource_requirements = Object.keys(config.defines.economy.city_resources);

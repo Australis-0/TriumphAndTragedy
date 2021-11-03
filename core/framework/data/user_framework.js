@@ -99,21 +99,30 @@ module.exports = {
     return (city_exists[0]) ? city_exists[1] : undefined;
   },
 
-  getDevelopmentCost: function (arg0_user, arg1_name) {
+  getDevelopmentCost: function (arg0_user, arg1_name, arg2_amount) {
     //Convert from parameters
     var user_id = arg0_user;
     var city_name = arg1_name.toLowerCase();
+    var amount = (arg2_amount) ? parseInt(arg2_amount) : 1;
 
     //Declare local instance variables
+    var cached_amount = 0;
     var city_obj = getCity(city_name, options);
     var usr = main.users[user_id];
 
     //Declare local tracker variables
     var average_cities = Math.ceil(usr.total_cities/usr.country_age);
-    var development_cost = Math.floor(config.defines.economy.urbanisation_cost*Math.pow(config.defines.economy.urbanurbanisation_cost_percentile_growth, city_obj.development)*average_cities);
+    var pc_price = 0;
+
+    for (var i = 0; i < amount; i++) {
+      //Increment cached_amount to ensure recursion
+      cached_amount++;
+
+      pc_price += Math.floor(config.defines.economy.urbanisation_cost*Math.pow(config.defines.economy.urbanurbanisation_cost_percentile_growth, city_obj.development + cached_amount)*average_cities);
+    }
 
     //Return statement
-    return development_cost;
+    return pc_price;
   },
 
   getProvince: function (arg0_province) {
