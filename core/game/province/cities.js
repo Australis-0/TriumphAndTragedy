@@ -33,13 +33,15 @@ module.exports = {
               printError(getGame(user_id), `You can't issue negative urbanisation edicts! Who are you anyway, Pol Pot?`);
           }
         } else {
-          printError(getGame(user_id), `You do not currently have enough ${config.icons.political_capital} Political Ccapital to issue `)
+          total_pc_price.toString().indexOf("e") != -1) ?
+            printError(getGame(user_id), `You do not currently have enough Political Capital to issue this many urbanisation edicts! You need **infinite** ${config.icons.political_capital} Political Capital before being able to develop your city further to the extent that you have requested.`) :
+            printError(getGame(user_id), `You don't have enough Political Capital to issue this many urbanisation edicts! You need another **${parseNumber(development_cost)}** ${config.icons.political_capital} Political Capital before being able to develop your city further to the extent that you have requested.`);
         }
       } else {
         printError(getGame(user_id), `You must wait until next turn for your new government to start issuing edicts!`);
       }
     } else {
-      printError(getGame(user_id), `The city you have specified, **${truncateString(city_name)}**, could not be found anywhere inside of your controlled territories!`);
+      printError(getGame(user_id), `The city you have specified, **${truncateString(city_name, )}**, could not be found anywhere inside of your controlled territories!`);
     }
   },
 
