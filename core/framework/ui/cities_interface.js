@@ -9,7 +9,7 @@ module.exports = {
     var usr = main.users[actual_id];
 
     //Declare local tracker variables
-    var cities = getCities(usr.cities, {
+    var cities = getCities(actual_id, {
       include_hostile_occupations: true,
       include_occupations: true
     });

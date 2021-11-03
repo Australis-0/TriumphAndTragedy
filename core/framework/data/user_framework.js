@@ -1,4 +1,20 @@
 module.exports = {
+  getCapital: function (arg0_user) {
+    //Convert from parameters
+    var user_id = arg0_user;
+
+    //Declare local instance variables
+    var all_cities = module.exports.getCities(user_id, {
+      include_hostile_occupations: true
+    });
+
+    for (var i = 0; i < all_cities.length; i++)
+      if (all_cities[i].city_type == "capital")
+
+        //Return statement
+        return all_cities[i];
+  },
+
   /*
     getCities() - Returns an array list of urban province objects from selected users.
     options: {

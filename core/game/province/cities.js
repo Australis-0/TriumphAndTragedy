@@ -98,6 +98,46 @@ module.exports = {
     }
   },
 
+  moveCapital: function (arg0_user, arg1_city_name) {
+    //Convert from parameters
+    var user_id = arg0_user;
+    var city_name = arg1_city_name;
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var usr = main.users[actual_id];
+
+    var city_obj = getCity(city_name, { users: actual_id });
+
+    if (city_obj) {
+      if (usr.modifiers.political_capital >= config.defines.politics.move_capital_cost) {
+        if (usr.pops.accepted_cultures.includes(city_obj.culture)) {
+          //Get rid of old capital
+          var all_cities = getCities(actual_id, {
+            include_hostile_occupations: true
+          });
+
+          for (var i = 0; i < all_cities.length; i++)
+            if (all_cities[i].city_type == "capital") all_cities[i].city_type = "city";
+
+          //Remove political capital
+          usr.modifiers.political_capital -= config.defines.politics.move_capital_cost;
+
+          //Set new capital and print feedback
+          city_obj.city_type = "capital";
+
+          printAlert(getGame(user_id), `You have successfully moved your capital to **${city_obj.name}** for **${config.defines.politics.move_capital_cost}** ${config.icons.political_capital} Political Capital.`)
+        } else {
+          printError(getGame(user_id), `**${city_obj.name}** must at least be of one of your accepted cultures before you can consider moving your capital there!`);
+        }
+      } else {
+        printError(getGame(user_id), `You don't have enough ${config.icons.political_capital} Political Capital to move your capital city yet! You need **${parseNumber(config.defines.politics.move_capital_cost - usr.modifiers.political_capital)}** more.`);
+      }
+    } else {
+      printError(getGame(user_id), `You cannot move your capital to a city that doesn't exist!`);
+    }
+  },
+
   renameCity: function (arg0_user, arg1_old_name, arg2_new_name) {
     //Convert from parameters
     var user_id = arg0_user;
