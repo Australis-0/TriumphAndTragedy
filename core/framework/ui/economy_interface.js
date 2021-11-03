@@ -5,6 +5,7 @@ module.exports = {
 
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
+    var all_pops = Object.keys(config.pops);
     var game_obj = getGameObject(user_id);
     var usr = main.users[actual_id];
 
@@ -12,6 +13,22 @@ module.exports = {
     var economy_string = [];
 
     //Format embed
+    economy_string.push(`**Population:**`);
+    economy_string.push("");
+
+    //Push the availability of dynamically displayed non-military pops to screen
+    for (var i = 0; i < all_pops.length; i++)
+      if (config.pops[all_pops[i]].stats_display && !config.pops[all_pops[i]].military_pop) {
+        var local_pop = config.pops[all_pops[i]];
+        var pop_icon = (local_pop.icon) ? config.icons[local_pop.icon] + " " : "";
+        var pop_name = (local_pop.name) ? local_pop.name : all_pops[i];
+
+        economy_string.push(`${pop_icon}Available ${pop_name}: **${parseNumber(usr.pops[all_pops[i]] - usr.pops["used_" + all_pops[i]])}**`);
+      }
+    economy_string.push(`- ${config.icons.population} Population Growth Rate: **${printPercentage(usr.modifiers.pop_growth_modifier-1)}**`);
+    economy_string.push(`You have **${parseNumber(getCities(actual_id, { include_hostile_occupations: true, include_occupations: true }).length)} cities in total throughout your country.`);
+    economy_string.push(`**[View Cities]**`);
+    economy_string.push("");
     economy_string.push(`Type **[Inventory]** to view your **current resources**.`);
 
     //Remove control panel if one exists
