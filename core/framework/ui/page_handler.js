@@ -43,6 +43,7 @@ module.exports = {
           },
           function (arg) {
             printCity(game_obj.user, arg[0]);
+            game_obj.page = `view_city_${city_name}`;
           });
         }
       }
