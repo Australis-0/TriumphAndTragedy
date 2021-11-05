@@ -61,6 +61,31 @@ module.exports = {
     }
   },
 
+  getCitiesCap: function (arg0_user) {
+    //Convert from parameters
+    var user_id = arg0_user;
+
+    //Declare local instance variables
+    var calculated_cap = 0;
+    var city_caps = config.defines.economy.city_unlock_caps;
+    var usr = main.users[user_id];
+
+    //Iterate over city_unlock_caps to check for certain province bounds
+    for (var i = 0; i < city_caps.length; i++) {
+      var next_bound = city_caps[i+1];
+
+      if (next_bound)
+        if (usr.provinces >= city_caps[i] && usr.provinces < next_bound)
+          calculated_cap = i+1;
+      if (!next_bound)
+        if (usr.provinces >= city_caps[i])
+          calculated_cap = i+1;
+    }
+
+    //Return statement
+    return (city_caps.length > 0) ? calculated_cap : usr.provinces;
+  },
+
   /*
     getCity() - Returns a city object from a set of selected users. All by default.
     options: {
