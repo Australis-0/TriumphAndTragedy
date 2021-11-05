@@ -1,5 +1,5 @@
 module.exports = {
-  printCities: function (arg0_user) {
+  printCities: function (arg0_user) { //[WIP] - Add found cities button later if option is available for user
     //Convert from parameters
     var user_id = arg0_user;
 
