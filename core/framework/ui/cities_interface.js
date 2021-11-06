@@ -1,7 +1,6 @@
 module.exports = {
   printCities: function (arg0_user) { //[WIP]
-    //TODO: Display occupied status for provinces/cities
-    //TODO: Finish Province UI
+    //TODO: Display occupied status for cities
     //Convert from parameters
     var user_id = arg0_user;
 
@@ -23,10 +22,10 @@ module.exports = {
     city_string.push(`**[Back]** ¦ **[Jump To Page]**`);
     city_string.push("");
     city_string.push(`${config.icons.globe} Country: **${usr.name}**`);
+    city_string.push("");
 
     //Check if user can found new cities, and if so push dynamic buttons to city_string
     if (usr.city_count < usr.city_cap) {
-      city_string.push("");
       city_string.push(`You can found up to **${parseNumber(usr.city_cap-usr.city_count)}** new citie(s) in your territories!`);
       city_string.push(`**[Found City]**`);
       city_string.push("");
@@ -49,11 +48,8 @@ module.exports = {
       city_string.push(`_Consider founding a new city to start building up your country._`);
     }
 
-    //Provinces
-
-
     return splitEmbed(city_string, {
-      title: "Provinces:",
+      title: "City List:",
       title_pages: true,
       fixed_width: true
     });

@@ -168,6 +168,13 @@ module.exports = {
       }
   },
 
+  /*
+    getProvinces() - Returns an array of provinces for a certain user based on certain options.
+    options: {
+      include_hostile_occupations: true/false, - Includes occupations by other users of the target user
+      include_occupations: true/false - Includes occupations by the target user
+    }
+  */
   getProvinces: function (arg0_user, arg1_options) {
     //Convert from parameters
     var user_id = arg0_user;
