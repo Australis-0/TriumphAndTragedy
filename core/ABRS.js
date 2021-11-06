@@ -129,10 +129,10 @@ module.exports = {
     //Make sure amount of files in ./backups/ complies with current file limit
     if (file_limit != 0) {
       loadBackupArray();
-      var total_backups = backup_array.length;
+      var total_backups = backup_array;
 
       //Delete oldest file from backup_array if limit is exceeded
-      if (total_backups > file_limit) try {
+      if (total_backups.length > file_limit) try {
         log.info(`Deleted ${total_backups[total_backups.length-1]} as it exceeded the set limit of ${file_limit} simultaneous backups.`);
         fs.unlinkSync(`./backups/${total_backups[total_backups.length-1]}`);
       } catch {}

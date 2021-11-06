@@ -231,6 +231,7 @@ module.exports = {
            initialiseGameEmbeds(all_interfaces[i]);
          } catch (e) {
            log.error(`Could not delete messages and reinitialise game embeds: ${e}.`);
+           setTimeout(module.exports.reinitialiseGameEmbeds, 3000);
          }
        }
     } catch (e) {

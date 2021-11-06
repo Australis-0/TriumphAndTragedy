@@ -27,6 +27,7 @@ module.exports = {
       city_string.push("");
       city_string.push(`You can found up to **${parseNumber(usr.city_cap-usr.city_count)}** new citie(s) in your territories!`);
       city_string.push(`**[Found City]**`);
+      city_string.push("");
     }
 
     city_string.push(config.localisation.divider);

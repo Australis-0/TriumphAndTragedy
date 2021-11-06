@@ -68,17 +68,17 @@ module.exports = {
         //Create first embed
         if (starting_page == 0) {
           ui_obj.current_emoji_type = "first_page";
-          message_id.edit(config.localisation.blank, { embed: [options.embed_pages[starting_page]] }).then((message) => {
+          msg.edit({ embeds: [options.embed_pages[starting_page]] }).then((message) => {
             if (options.embed_pages.length > 1) message.react("➡️");
           });
         } else if (starting_page == options.embed_pages[options.embed_pages.length-1]) {
           ui_obj.current_emoji_type = "in_between";
-          message_id.edit(config.localisation.blank, { embed: [options.embed_pages[starting_page]] }).then((message) => {
+          msg.edit({ embeds: [options.embed_pages[starting_page]] }).then((message) => {
             if (options.embed_pages.length > 1) message.react("⬅️");
           });
         } else {
           ui_obj.current_emoji_type = "last_page";
-          message_id.edit(config.localisation.blank, { embed: [options.embed_pages[starting_page]] }).then((message) => {
+          msg.edit({ embeds: [options.embed_pages[starting_page]] }).then((message) => {
             if (options.embed_pages.length > 1) message.react("⬅️")
               .then(() => message.react("➡️"));
           });
@@ -110,12 +110,12 @@ module.exports = {
         local_embed.setThumbnail(options.thumbnail);
     if (options.title)
       (Array.isArray(options.title)) ?
-        local_embed.setTitle(`**${options.title[all_embeds.length]} ${page_ending}** ${config.localisation.divider}`) :
-        local_embed.setTitle(`**${options.title} ${page_ending}** ${config.localisation.divider}`);
+        local_embed.setTitle(`**${options.title[all_embeds.length]} ${page_ending}**\n ${config.localisation.divider}`) :
+        local_embed.setTitle(`**${options.title} ${page_ending}**\n ${config.localisation.divider}`);
 
     if (options.fixed_width) local_embed.setImage("https://cdn.discordapp.com/attachments/722997700391338046/736141424315203634/margin.png");
 
-    all_embeds.push(embed_obj);
+    all_embeds.push(local_embed);
   },
 
   getGame: function (arg0_user) {
@@ -321,7 +321,7 @@ module.exports = {
           local_array_string.push(array_string[i]);
           current_character_count += array_string[i].length;
 
-          if (i != 0 || array_string.length == 1) if (current_character_count >= maximum_characters_per_embed || i == array.length-1) {
+          if (i != 0 || array_string.length == 1) if (current_character_count >= maximum_characters_per_embed || i == array_string.length-1) {
             total_page_count++;
             local_array_string = [];
           }
@@ -337,7 +337,7 @@ module.exports = {
           current_character_count += array_string[i].length;
 
           if (i != 0 || array_string.length == 1)
-            if (current_character_count >= maximum_characters_per_embed || i == array.length-1) {
+            if (current_character_count >= maximum_characters_per_embed || i == array_string.length-1) {
               //Initialise page embed
               var local_embed = new Discord.MessageEmbed()
                 .setColor("#a98ac7")
@@ -375,6 +375,7 @@ module.exports = {
       return all_embeds;
     } catch (e) {
       log.error(`Ran into an error whilst parsing embed at splitEmbed(): ${e}`);
+      console.log(e);
     }
   }
 };

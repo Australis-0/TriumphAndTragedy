@@ -53,7 +53,7 @@ module.exports = {
             game_obj.page = "cities_list";
             createPageMenu(game_obj.middle_embed, {
               embed_pages: printCities(game_obj.user),
-              user: game_obj.contents
+              user: game_obj.user
             });
 
             break;
@@ -101,7 +101,7 @@ module.exports = {
           game_obj.page = "cities_list";
           createPageMenu(game_obj.middle_embed, {
             embed_pages: printCities(game_obj.user),
-            user: game_obj.contents
+            user: game_obj.user
           });
 
           break;
