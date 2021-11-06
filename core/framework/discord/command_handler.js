@@ -20,13 +20,17 @@ module.exports = {
     //Traditional commands
     {
       switch (game_obj.page) {
-        case "economy":
-          pageHandler(game_obj.user, local_input);
         case "inventory":
           if (local_input == "back") {
             game_obj.page = "economy";
             printEconomy(game_obj.user);
           }
+
+          break;
+        default:
+          pageHandler(game_obj.user, local_input);
+
+          break;
       }
     }
 
@@ -40,9 +44,13 @@ module.exports = {
 
           //Check if prompt has been cancelled
           if (input == "back") {
-            (current_step > 0) ? local_prompt.answers.pop() : clearPrompt(game_obj.user, game_id);
+            (current_step > 0) ?
+              local_prompt.answers.pop() :
+                module.exports.clearPrompt(game_obj.user, game_id),
+                printAlert(game_id, `${config.icons.cancel} You have cancelled the current command.`);
           } else if (input == "cancel") {
-            clearPrompt(game_obj.user, game_id);
+            module.exports.clearPrompt(game_obj.user, game_id);
+            printAlert(game_id, `${config.icons.cancel} You have cancelled the current command.`);
           } else {
             //Check if new answer is valid or not for the current prompt
             if (local_prompt.prompts[current_step][1] == "number") {

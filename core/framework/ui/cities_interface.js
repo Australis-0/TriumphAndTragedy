@@ -1,5 +1,5 @@
 module.exports = {
-  printCities: function (arg0_user) { //[WIP] - Add found cities button later if option is available for user
+  printCities: function (arg0_user) { //[WIP] - Display no cities localisation if target user has no cities
     //Convert from parameters
     var user_id = arg0_user;
 
@@ -43,7 +43,8 @@ module.exports = {
 
     return splitEmbed(city_string, {
       title: "City List:",
-      title_pages: true
+      title_pages: true,
+      fixed_width: true
     });
   },
 
