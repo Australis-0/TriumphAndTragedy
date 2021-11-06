@@ -1,5 +1,7 @@
 module.exports = {
-  printCities: function (arg0_user) { //[WIP] - Display no cities localisation if target user has no cities
+  printCities: function (arg0_user) { //[WIP]
+    //TODO: Display occupied status for provinces/cities
+    //TODO: Finish Province UI
     //Convert from parameters
     var user_id = arg0_user;
 
@@ -34,15 +36,24 @@ module.exports = {
     city_string.push("");
     city_string.push(`**Cities:**`);
 
-    for (var i = 0; i < cities.length; i++) {
-      city_string.push(`[View **${cities[i].name}**] - ${(cities[i].city_type == "capital") ? " - Capital City" : ""}`)
-      city_string.push(`- ${config.icons.provinces} Province: ${cities[i].id}`);
-      city_string.push(`- ${config.icons.population} Population: ${cities[i].pops.population}/${cities[i].housing}`);
-      city_string.push(`- RGO: ${(getGood(cities[i].resource).icon) ? config.icons[getGood(cities[i].resource).icon] + " " : ""} ${(getGood(cities[i].resource).name) ? getGood(cities[i].resource).name : cities[i].resource}`);
+    if (cities.length != 0) {
+      for (var i = 0; i < cities.length; i++) {
+        city_string.push(`[View **${cities[i].name}**] - ${(cities[i].city_type == "capital") ? " - Capital City" : ""}`)
+        city_string.push(`- ${config.icons.provinces} Province: ${cities[i].id}`);
+        city_string.push(`- ${config.icons.population} Population: ${cities[i].pops.population}/${cities[i].housing}`);
+        city_string.push(`- RGO: ${(getGood(cities[i].resource).icon) ? config.icons[getGood(cities[i].resource).icon] + " " : ""} ${(getGood(cities[i].resource).name) ? getGood(cities[i].resource).name : cities[i].resource}`);
+      }
+    } else {
+      city_string.push(`_You currently don't have any cities in your possession!_`);
+      city_string.push("");
+      city_string.push(`_Consider founding a new city to start building up your country._`);
     }
 
+    //Provinces
+
+
     return splitEmbed(city_string, {
-      title: "City List:",
+      title: "Provinces:",
       title_pages: true,
       fixed_width: true
     });
