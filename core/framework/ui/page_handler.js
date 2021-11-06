@@ -29,6 +29,22 @@ module.exports = {
             });
           }
         }
+
+        switch (input) {
+          case "found city":
+            visualPrompt(game_obj.alert_embed, user_id, {
+              title: `Found A New City:`,
+              prompts: [
+                [`Please choose a province in which to found a new city.`, "string"],
+                [`What would you like to name your new city?`, "string"]
+              ]
+            },
+            function (arg) {
+              foundCity(game_obj.user, arg[0], arg[1]);
+            });
+
+            break;
+        }
       } else if (game_obj.page.startsWith("view_city")) {
         var city_name = game_obj.page.replace("view_city_", "");
 
