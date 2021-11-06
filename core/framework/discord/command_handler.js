@@ -21,7 +21,7 @@ module.exports = {
     {
       switch (game_obj.page) {
         case "economy":
-          pageHandler(local_input);
+          pageHandler(game_obj.user, local_input);
         case "inventory":
           if (local_input == "back") {
             game_obj.page = "economy";

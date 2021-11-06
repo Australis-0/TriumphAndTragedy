@@ -22,11 +22,11 @@ module.exports = {
         var local_pop = config.pops[all_pops[i]];
         var pop_icon = (local_pop.icon) ? local_pop.icon + " " : "";
         var pop_name = (local_pop.name) ? local_pop.name : all_pops[i];
-        
+
         economy_string.push(`${pop_icon}Available ${pop_name}: **${parseNumber(usr.pops[all_pops[i]] - usr.pops["used_" + all_pops[i]])}**`);
       }
     economy_string.push(`- ${config.icons.population} Population Growth Rate: **${printPercentage(usr.modifiers.pop_growth_modifier-1)}**`);
-    economy_string.push(`You have **${parseNumber(getCities(actual_id, { include_hostile_occupations: true, include_occupations: true }).length)} cities in total throughout your country.`);
+    economy_string.push(`You have **${parseNumber(getCities(actual_id, { include_hostile_occupations: true, include_occupations: true }).length)}** cities in total throughout your country.`);
     economy_string.push(`**[View Cities]**`);
     economy_string.push("");
     economy_string.push(`Type **[Inventory]** to view your **current resources**.`);

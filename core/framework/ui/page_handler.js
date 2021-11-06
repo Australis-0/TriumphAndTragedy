@@ -1,12 +1,12 @@
 module.exports = {
-  pageHandler: function (arg0_input) {
+  pageHandler: function (arg0_user, arg1_input) {
     //Convert from parameters
-    var arg = arg0_input.split(" ");
-    var input = arg0_input;
+    var arg = arg1_input.split(" ");
+    var input = arg1_input;
 
     //Declare local instance variables
-    var game_obj = getGameObject(interaction.user);
-    var user_id = interaction.user.id;
+    var game_obj = getGameObject(arg0_user);
+    var user_id = arg0_user;
 
     //Cities page handler
     {
