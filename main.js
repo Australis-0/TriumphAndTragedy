@@ -31,6 +31,7 @@ FileManager.import("./framework/data/global_initialisation");
 FileManager.import("./framework/data/goods_framework");
 FileManager.import("./framework/data/pop_framework");
 FileManager.import("./framework/data/tech_framework");
+FileManager.import("./framework/data/turn_framework");
 FileManager.import("./framework/data/user_framework");
 
 FileManager.import("./framework/discord/channels");
@@ -188,11 +189,25 @@ setInterval(function(){
   //ABRS - Save backups!
 	var current_date = new Date().getTime();
 	var time_difference = current_date - main.last_backup;
+  var turn_time_difference = current_date - main.last_turn;
 
-	if (time_difference > config.backup_timer*1000) {
+	if (time_difference > settings.backup_timer*1000) {
 		main.last_backup = current_date;
 		writeSave({ file_limit: settings.backup_limit });
 	}
+
+  //Turn processing for all users
+  if (turn_time_difference > settings.turn_time*1000) {
+    main.last_backup = current_date;
+    main.last_turn = current_date;
+    writeSave({ file_limit: settings.backup_limit });
+
+    //Iterate over all users and process their turns
+    var all_users = Object.keys(main.users);
+
+    for (var i = 0; i < all_users.length; i++)
+      nextTurn(all_users[i]);
+  }
 
   //Write to database.js
   try {

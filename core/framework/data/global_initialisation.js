@@ -17,5 +17,6 @@ module.exports = {
 
     //Declare tracker variables
     if (!main.last_backup) main.last_backup = new Date().getTime();
+    if (!main.last_turn) main.last_turn = new Date().getTime();
   }
 };

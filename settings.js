@@ -33,4 +33,5 @@ global.settings = {
   backup_limit: 15, //How many concurrent backups should be saved before old ones are purged?
   backup_timer: 600, //Save every 10 minutes
   inactivity_timer: 600, //How much time should pass in seconds before a game is considered inactive?
+  turn_timer: 10800 //How much time should pass in seconds before a new turn passes?
 };

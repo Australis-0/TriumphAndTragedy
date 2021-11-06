@@ -234,7 +234,7 @@ module.exports = {
       if (!usr.recent_civilian_casualties) usr.recent_civilian_casualties = [];
       if (!usr.researched_technologies) usr.researched_technologies = [];
       if (!usr.research_queue) usr.research_queue = [];
-      if (!usr.total_cities) usr.total_cities = [];
+      if (!usr.total_cities) usr.total_cities = 0;
       if (!usr.triggered_events) usr.triggered_events = {};
       if (!usr.vassal_years) usr.vassal_years = 0;
 

@@ -109,6 +109,9 @@ module.exports = {
           for (var i = 0; i < all_building_categories.length; i++)
             local_province[`${all_building_categories[i]}_building_slots`] = usr.modifiers[`${all_building_categories[i]}_building_slots`];
 
+          //Increase city_count tracker variable
+          usr.city_count++;
+
           printAlert(getGame(user_id), (local_province.city_type == "capital") ?
             `Capital city founded as **${city_name}** in Province **${province_id}**! Over **${parseNumber(local_province.pops.population)}** are now legally residents of the capital city of **${usr.name}**!` :
             `A new city was founded as **${city_name}** in Province **${province_id}**! Over **${parseNumber(local_province.pops.population)}** are now legally residents of the city of **${city_name}** in Province **${province_id}**.`
