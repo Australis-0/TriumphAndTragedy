@@ -20,9 +20,9 @@ module.exports = {
     for (var i = 0; i < all_pops.length; i++)
       if (config.pops[all_pops[i]].stats_display && !config.pops[all_pops[i]].military_pop) {
         var local_pop = config.pops[all_pops[i]];
-        var pop_icon = (local_pop.icon) ? config.icons[local_pop.icon] + " " : "";
+        var pop_icon = (local_pop.icon) ? local_pop.icon + " " : "";
         var pop_name = (local_pop.name) ? local_pop.name : all_pops[i];
-
+        
         economy_string.push(`${pop_icon}Available ${pop_name}: **${parseNumber(usr.pops[all_pops[i]] - usr.pops["used_" + all_pops[i]])}**`);
       }
     economy_string.push(`- ${config.icons.population} Population Growth Rate: **${printPercentage(usr.modifiers.pop_growth_modifier-1)}**`);
