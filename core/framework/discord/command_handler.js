@@ -88,7 +88,12 @@ module.exports = {
 
           //Keep at end, execute the function and delete the key only if all prompts have been filled out so far.
           if (local_prompt.answers.length == local_prompt.prompts.length) {
-            local_prompt.evaluate_function(local_prompt.answers);
+            if (local_prompt.evaluate_function) {
+              local_prompt.evaluate_function(local_prompt.answers);
+            } else {
+              log.error(`local_prompt.evaluate_function() turned out to be nonexistent! See below for a full log of the local_prompt object:`);
+              console.log(local_prompt);
+            }
 
             //Print final text or reset alert array to what it was before
             if (local_prompt.final_text) {

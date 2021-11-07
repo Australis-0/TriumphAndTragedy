@@ -240,6 +240,12 @@ module.exports = {
           (
             options.exclude_cities && main.provinces[all_provinces[i]].type != "urban" ||
             !options.exclude_cities
+          ) &&
+
+          //Make sure uncolonised provinces don't get in
+          (
+            main.provinces[all_provinces[i]].owner &&
+            main.provinces[all_provinces[i]].controller
           )
 
           //Push if any of these options are valid

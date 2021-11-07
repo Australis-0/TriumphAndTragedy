@@ -112,16 +112,17 @@ module.exports = {
 
           //Print individual pop statistics
           for (var x = 0; x < all_pops.length; x++)
-            province_string.push(`- ${(config.pops[all_pops[i]].icon) ? config.pops[all_pops[i]].icon : ""} ${(config.pops[all_pops[i]].name) ? config.pops[all_pops[i]].name : all_pops[i]}: ${parseNumber(cities[i].pops[all_pops[i]])}`);
-        }
+            province_string.push(`- ${(config.pops[all_pops[x]].icon) ? config.pops[all_pops[x]].icon : ""} ${(config.pops[all_pops[x]].name) ? config.pops[all_pops[x]].name : all_pops[x]}: ${parseNumber(cities[i].pops[all_pops[x]])}`);
 
-        //Print culture
-        province_string.push(`- ${config.icons.culture} Culture: ${cities[i].culture}`);
+          //Print culture
+          province_string.push(`- ${config.icons.culture} Culture: ${cities[i].culture}`);
+        }
       } else {
         (provinces.length > 0) ?
           province_string.push(`_We currently have no cities to speak of! Consider founding a new city by typing **[Found City]**._`) :
           province_string.push(`_We are currently without cities or provinces, rendering us nonexistent in all but name._`);
       }
+      
       province_string.push("");
       province_string.push(`${config.localisation.divider}`);
 
@@ -129,17 +130,19 @@ module.exports = {
       province_string.push("");
       if (provinces.length != 0) {
         for (var i = 0; i < provinces.length; i++) {
-          province_string.push(`**Province ${provinces[i].id}**:`);
-          province_string.push(`**[View Province ${provinces[i].id}]**`);
-          province_string.push(`- ${config.icons.population} Population: **${parseNumber(cities[i].pops.population)}**`);
+          try {
+            province_string.push(`**Province ${provinces[i].id}**:`);
+            province_string.push(`**[View Province ${provinces[i].id}]**`);
+            province_string.push(`- ${config.icons.population} Population: **${parseNumber(provinces[i].pops.population)}**`);
 
-          //Print individual pop statistics again
-          for (var x = 0; x < all_pops.length; x++)
-            province_string.push(`- ${(config.pops[all_pops[i]].icon) ? config.pops[all_pops[i]].icon : ""} ${(config.pops[all_pops[i]].name) ? config.pops[all_pops[i]].name : all_pops[i]}: ${parseNumber(cities[i].pops[all_pops[i]])}`);
+            //Print individual pop statistics again
+            for (var x = 0; x < all_pops.length; x++)
+              province_string.push(`- ${(config.pops[all_pops[x]].icon) ? config.pops[all_pops[x]].icon : ""} ${(config.pops[all_pops[x]].name) ? config.pops[all_pops[x]].name : all_pops[x]}: ${parseNumber(provinces[i].pops[all_pops[x]])}`);
+
+            //Print culture
+            province_string.push(`- ${config.icons.culture} Culture: ${provinces[i].culture}`);
+          } catch {}
         }
-
-        //Print culture
-        province_string.push(`- ${config.icons.culture} Culture: ${cities[i].culture}`);
       } else {
         province_string.push(`_We do not have any rural provinces in our possession._`);
       }

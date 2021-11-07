@@ -39,7 +39,7 @@ module.exports = {
           case "found city":
             visualPrompt(game_obj.alert_embed, user_id, {
               title: `Found A New City:`,
-              description: `Type [View Provinces] to view a complete list of your current provinces`,
+              description: `Type **[View Provinces]** to view a complete list of your current provinces.`,
               prompts: [
                 [`Please choose a province in which to found a new city.`, "string"],
                 [`What would you like to name your new city?`, "string"]

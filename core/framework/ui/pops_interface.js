@@ -37,14 +37,16 @@ module.exports = {
 
     //Calculate total rural population
     for (var i = 0; i < all_pops.length; i++)
-      rural_pops.population += rural_pops[all_pops[i]];
+      rural_pops.population += returnSafeNumber(rural_pops[all_pops[i]]);
 
     //Calculate total urban population
     for (var i = 0; i < all_pops.length; i++)
-      urban_pops.population += urban_pops[all_pops[i]];
+      urban_pops.population += returnSafeNumber(urban_pops[all_pops[i]]);
 
     //Initialise pops_string
     var pops_string = [];
+
+    console.log(rural_pops);
 
     //Format embed
     pops_string.push(`**[Back]**`);
@@ -53,49 +55,58 @@ module.exports = {
     pops_string.push("");
     pops_string.push("**Urban Population:**");
     pops_string.push("");
-    pops_string.push(`${config.icons.development} Urban Population: **${printPercentage(urban_pops.population/usr.population)}**`);
 
-    //Print dynamic rural pops
+    console.log(`rural_pops.population ${rural_pops.population}, usr.pops.population: ${usr.pops.population}, printPercentage() dummy test: ${printPercentage(1)}`)
+
+    pops_string.push(`${config.icons.development} Urban Population: **${printPercentage(urban_pops.population/getPopulation(actual_id))}**`);
+
+    //Print dynamic urban pops
     for (var i = 0; i < all_pops.length; i++) {
       var local_pop = config.pops[all_pops[i]];
 
-      pops_string.push(`- ${(local_pop.icon) ? config.icons[local_pop.icon] + " " : ""}${(local_pop.name) ? local_pop.name : all_pops[i]}: **${parseNumber(rural_pops[all_pops[i]])}`);
+      pops_string.push(`- ${(local_pop.icon) ? local_pop.icon + " " : ""}${(local_pop.name) ? local_pop.name : all_pops[i]}: **${parseNumber(returnSafeNumber(urban_pops[all_pops[i]]))}**`);
     }
 
     pops_string.push("");
     pops_string.push(config.localisation.divider);
     pops_string.push(`**Rural Population:**`);
     pops_string.push("");
-    pops_string.push(`${config.icons.provinces} Rural Population: **${printPercentage(rural_pops.population/usr.population)}**`);
+    pops_string.push(`${config.icons.provinces} Rural Population: **${printPercentage(rural_pops.population/getPopulation(actual_id))}**`);
+    pops_string.push("");
 
-    //Print dynamic urban pops
+    //Print dynamic rural pops
     for (var i = 0; i < all_pops.length; i++) {
       var local_pop = config.pops[all_pops[i]];
 
-      pops_string.push(`- ${(local_pop.icon) ? config.icons[local_pop.icon] + " " : ""}${(local_pop.name) ? local_pop.name : all_pops[i]}: **${parseNumber(urban_pops[all_pops[i]])}`);
+      pops_string.push(`- ${(local_pop.icon) ? local_pop.icon + " " : ""}${(local_pop.name) ? local_pop.name : all_pops[i]}: **${parseNumber(rural_pops[all_pops[i]])}**`);
     }
 
     pops_string.push("");
     pops_string.push(config.localisation.divider);
     pops_string.push(`**Total Population:**`);
-    pops_string.push("");
 
     //Print dynamic total pops - Total
     for (var i = 0; i < all_pops.length; i++) {
       var local_pop = config.pops[all_pops[i]];
 
-      pops_string.push(`- ${(local_pop.icon) ? config.icons[local_pop.icon] + " " : ""}Total ${(local_pop.name) ? local_pop.name : all_pops[i]}: **${parseNumber(usr.pops[all_pops[i]])}`);
+      pops_string.push(`- ${(local_pop.icon) ? local_pop.icon + " " : ""}Total ${(local_pop.name) ? local_pop.name : all_pops[i]}: **${parseNumber(usr.pops[all_pops[i]])}**`);
     }
 
     //Print dynamic total pops - Availability
     for (var i = 0; i < all_pops.length; i++) {
       var local_pop = config.pops[all_pops[i]];
 
+      //Print linebreak if at least one pop's availability is shown in the UI
+      if (local_pop && i == 0)
+        pops_string.push("");
+
       if (local_pop.stats_display)
-        pops_string.push(`- ${(local_pop.icon) ? config.icons[local_pop.icon] + " " : ""}Available ${(local_pop.name) ? local_pop.name : all_pops[i]}: **${parseNumber(usr.pops[all_pops[i]] - usr.pops["used_" + all_pops[i]])}`);
+        pops_string.push(`- ${(local_pop.icon) ? local_pop.icon + " " : ""}Available ${(local_pop.name) ? local_pop.name : all_pops[i]}: **${parseNumber(returnSafeNumber(usr.pops[all_pops[i]] - usr.pops["used_" + all_pops[i]]))}**`);
     }
 
+    pops_string.push("");
     pops_string.push(`**Population Modifiers:**`);
+    pops_string.push(config.localisation.divider);
     pops_string.push("");
 
     //Print dynamic population modifiers - WIP

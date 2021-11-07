@@ -12,6 +12,9 @@ module.exports = {
       //City modifiers/trackers
       usr.city_cap = getCitiesCap(actual_id);
       usr.total_cities += getCities(actual_id, { include_hostile_occupations: true });
+
+      //Population modifiers/trackers
+      usr.population = getPopulation(actual_id);
     }
 
     //Budget processing
