@@ -91,7 +91,7 @@ module.exports = {
             visualPrompt(game_obj.alert_embed, user_id, {
               title: `Jump To Page:`,
               prompts: [
-                [`Which page would you like to jump to?`, "number", { min: 1, max: printCity(game_obj.user, city_name).length }];
+                [`Which page would you like to jump to?`, "number", { min: 1, max: printCity(game_obj.user, city_name).length }]
               ]
             },
             function (arg) {
