@@ -173,6 +173,12 @@ module.exports = {
             });
           } else {
             //Province view handler [WIP]
+            var province_name = input.replace("view", "").trim()
+              .replace("province", "").trim();
+            createPageMenu(game_obj.middle_embed, {
+              embed_pages: printProvince(game_obj.user, province_name),
+              user: game_obj.user
+            });
           }
         }
 
@@ -182,6 +188,33 @@ module.exports = {
             printPops(user_id);
 
             break;
+        }
+      } else if (game_obj.page.startsWith("view_province_")) {
+        var province_name = game_obj.page.replace("view_province_", "");
+
+        switch (input) {
+          case "back":
+            game_obj.page = "provinces_list";
+            createPageMenu(game_obj.middle_embed, {
+              embed_pages: printProvinces(game_obj.user),
+              user: game_obj.user
+            });
+
+            break;
+          case "jump to page":
+          visualPrompt(game_obj.alert_embed, user_id, {
+            title: `Jump To Page:`,
+            prompts: [
+              [`Which page would you like to jump to?`, "number", { min: 1, max: printProvince(game_obj.user, province_name).length }]
+            ]
+          },
+          function (arg) {
+            createPageMenu(game_obj.middle_embed, {
+              embed_pages: printProvince(game_obj.user, province_name),
+              page: arg[0] - 1,
+              user: game_obj.user
+            })
+          });
         }
       }
     }
