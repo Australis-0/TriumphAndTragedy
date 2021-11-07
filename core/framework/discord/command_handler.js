@@ -109,7 +109,10 @@ module.exports = {
                 show_steps: local_prompt.show_steps,
                 answers: local_prompt.answers,
                 prompts: local_prompt.prompts,
-                satisfies_requirements: satisfies_requirements
+                satisfies_requirements: satisfies_requirements,
+
+                colour: local_prompt.colour,
+                description: local_prompt.description
               })
             ]
           });
@@ -158,7 +161,10 @@ module.exports = {
     var local_fields = [];
 
     var local_desc = (options.description) ? options.description : "";
-    var show_error = (!options.satisfies_requirements[0]) ? ":warning: " + options.satisfies_requirements[1] : "";
+    var show_error;
+
+    if (options.satisfies_requirements)
+      show_error = (!options.satisfies_requirements[0]) ? ":warning: " + options.satisfies_requirements[1] : "";
 
     var information_prompt_suffix = !(show_error.length == 0 && local_desc.length == 0) ? "\n\n" : "";
     var information_prompt = information_prompt_suffix + "To go back, type `back`. To cancel the command entirely, type `cancel`.";
@@ -211,6 +217,10 @@ module.exports = {
     visual_prompt.command_function = cmd_function;
     visual_prompt.prompt_embed = {};
 
+    //Other parameters
+    visual_prompt.colour = options.colour;
+    visual_prompt.description = options.description;
+
     //Update visual prompt message
     message_obj.edit({
       embeds: [
@@ -218,7 +228,10 @@ module.exports = {
           title: options.title,
           answers: [],
           prompts: options.prompts,
-          satisfies_requirements: [true, ""]
+          satisfies_requirements: [true, ""],
+
+          colour: options.colour,
+          description: options.description
         })
       ]
     });

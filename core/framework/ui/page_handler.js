@@ -39,6 +39,7 @@ module.exports = {
           case "found city":
             visualPrompt(game_obj.alert_embed, user_id, {
               title: `Found A New City:`,
+              description: `Type [View Provinces] to view a complete list of your current provinces`,
               prompts: [
                 [`Please choose a province in which to found a new city.`, "string"],
                 [`What would you like to name your new city?`, "string"]
@@ -46,6 +47,24 @@ module.exports = {
             },
             function (arg) {
               foundCity(game_obj.user, arg[0], arg[1]);
+            },
+
+            //Command handling
+            function (input) {
+              var is_command = false;
+
+              switch (input) {
+                case "view provinces":
+                  createPageMenu(game_obj.middle_embed, {
+                    embed_pages: printProvinces(game_obj.user),
+                    user: game_obj.user
+                  });
+                  is_command = true;
+
+                  break;
+              }
+
+              return is_command;
             });
 
             break;
