@@ -61,7 +61,7 @@ module.exports = {
           var local_good = local_category[local_goods[x]];
 
           if (!["name", "icon"].includes(local_goods[x]))
-            if (local_goods[x].name.toLowerCase().indexOf(good_name) != -1)
+            if (local_good.name.toLowerCase().indexOf(good_name) != -1)
               good_exists = [true, local_good, local_goods[x]];
         }
 
@@ -70,7 +70,7 @@ module.exports = {
           var local_good = local_category[local_goods[x]];
 
           if (!["name", "icon"].includes(local_goods[x]))
-            if (local_goods[x].name.toLowerCase() == good_name)
+            if (local_good.name.toLowerCase() == good_name)
               good_exists = [true, local_good, local_goods[x]];
         }
 

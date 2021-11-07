@@ -27,6 +27,7 @@ module.exports = {
       }
     economy_string.push(`- ${config.icons.population} Population Growth Rate: **${printPercentage(usr.modifiers.pop_growth_modifier-1)}**`);
     economy_string.push(`You have **${parseNumber(getCities(actual_id, { include_hostile_occupations: true, include_occupations: true }).length)}** cities in total throughout your country.`);
+    economy_string.push("");
     economy_string.push(`**[View Cities]**`);
     economy_string.push("");
     economy_string.push(`Type **[Inventory]** to view your **current resources**.`);

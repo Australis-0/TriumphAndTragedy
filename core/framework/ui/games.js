@@ -222,18 +222,24 @@ module.exports = {
        var open_channels = [];
 
        //Reinitialise all game embeds
-       for (var i = 0; i < all_interfaces.length; i++) if (interfaces[all_interfaces[i]].type == "game") {
-         try {
-           var local_ui = interfaces[all_interfaces[i]];
-           var local_messages = returnChannel(local_ui.channel).messages.fetch({ limit: 10 }).then((messages) => {
-             messages.forEach(msg => msg.delete());
-           });
-           initialiseGameEmbeds(all_interfaces[i]);
-         } catch (e) {
-           log.error(`Could not delete messages and reinitialise game embeds: ${e}.`);
-           setTimeout(module.exports.reinitialiseGameEmbeds, 3000);
+       for (var i = 0; i < all_interfaces.length; i++)
+        if (interfaces[all_interfaces[i]].type == "game") {
+           try {
+             var local_ui = interfaces[all_interfaces[i]];
+             var local_messages = returnChannel(local_ui.channel).messages.fetch({ limit: 10 }).then((messages) => {
+               messages.forEach(msg => msg.delete());
+             });
+             initialiseGameEmbeds(all_interfaces[i]);
+           } catch (e) {
+             log.error(`Could not delete messages and reinitialise game embeds: ${e}.`);
+             setTimeout(module.exports.reinitialiseGameEmbeds, 3000);
+           }
          }
-       }
+
+       //Clear all menus of type page_menu, visual_prompt
+       for (var i = 0; i < all_interfaces.length; i++)
+         if (["page_menu", "visual_prompt"].includes(interfaces[all_interfaces[i]].type))
+          delete interfaces[all_interfaces[i]];
     } catch (e) {
       log.error(`reinitialiseGameEmbeds() ran into an error: ${e}.`);
     }

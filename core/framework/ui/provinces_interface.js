@@ -15,6 +15,9 @@ module.exports = {
 
     if (province_obj) {
       //Initialise province_string
+      var province_string = [];
+
+      //Format embed
       province_string.push(`**[Back]** ¦ **[Jump To Page]**`);
       province_string.push("");
       province_string.push(`**Ownership:**`);
@@ -44,7 +47,7 @@ module.exports = {
         province_string.push(`- ${(config.pops[all_pops[i]].icon) ? config.pops[all_pops[i]].icon + " " : ""}${(config.pops[all_pops[i]].name) ? config.pops[all_pops[i]].name : all_pops[i]}: ${parseNumber(province_obj.pops[all_pops[i]])}`);
 
       //Display total population, culture
-      province_string.push(`- ${config.icons.population} Population: ${province_obj.pops.population}`);
+      province_string.push(`- ${config.icons.population} Population: ${parseNumbre(province_obj.pops.population)}`);
       province_string.push(`- ${config.icons.culture} Culture: ${province_obj.culture}`);
 
       //Change game_obj.page
@@ -119,10 +122,10 @@ module.exports = {
         }
       } else {
         (provinces.length > 0) ?
-          province_string.push(`_We currently have no cities to speak of! Consider founding a new city by typing **[Found City]**._`) :
+          province_string.push(`_We currently have no cities to speak of! Consider founding a new city by typing _**[Found City]**_._`) :
           province_string.push(`_We are currently without cities or provinces, rendering us nonexistent in all but name._`);
       }
-      
+
       province_string.push("");
       province_string.push(`${config.localisation.divider}`);
 
@@ -133,6 +136,7 @@ module.exports = {
           try {
             province_string.push(`**Province ${provinces[i].id}**:`);
             province_string.push(`**[View Province ${provinces[i].id}]**`);
+            province_string.push("");
             province_string.push(`- ${config.icons.population} Population: **${parseNumber(provinces[i].pops.population)}**`);
 
             //Print individual pop statistics again

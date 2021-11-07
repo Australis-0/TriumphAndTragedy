@@ -17,23 +17,6 @@ module.exports = {
     var game_obj = interfaces[game_id];
     var local_input = input.toLowerCase();
 
-    //Traditional commands
-    {
-      switch (game_obj.page) {
-        case "inventory":
-          if (local_input == "back") {
-            game_obj.page = "economy";
-            printEconomy(game_obj.user);
-          }
-
-          break;
-        default:
-          pageHandler(game_obj.user, local_input);
-
-          break;
-      }
-    }
-
     //Visual prompt processing
     try {
       if (interfaces[interfaces[game_id].user].type == "visual_prompt") {
@@ -127,6 +110,23 @@ module.exports = {
         }
       }
     } catch {}
+
+    //Traditional commands - Make sure this goes after visual prompt processing!
+    {
+      switch (game_obj.page) {
+        case "inventory":
+          if (local_input == "back") {
+            game_obj.page = "economy";
+            printEconomy(game_obj.user);
+          }
+
+          break;
+        default:
+          pageHandler(game_obj.user, local_input);
+
+          break;
+      }
+    }
   },
 
   splitCommandLine: function (commandLine) {
@@ -171,7 +171,13 @@ module.exports = {
     if (options.satisfies_requirements)
       show_error = (!options.satisfies_requirements[0]) ? ":warning: " + options.satisfies_requirements[1] : "";
 
-    var information_prompt_suffix = !(show_error.length == 0 && local_desc.length == 0) ? "\n\n" : "";
+    var information_prompt_suffix = "";
+
+    //Regular error trapping
+    try {
+      information_prompt_suffix = !(show_error.length == 0 && local_desc.length == 0) ? "\n\n" : "";
+    } catch {}
+
     var information_prompt = information_prompt_suffix + "To go back, type `back`. To cancel the command entirely, type `cancel`.";
 
     for (var i = 0; i < options.prompts.length; i++) local_fields.push({
