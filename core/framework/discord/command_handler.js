@@ -166,7 +166,7 @@ module.exports = {
     var local_fields = [];
 
     var local_desc = (options.description) ? options.description : "";
-    var show_error;
+    var show_error = "";
 
     if (options.satisfies_requirements)
       show_error = (!options.satisfies_requirements[0]) ? ":warning: " + options.satisfies_requirements[1] : "";
@@ -187,9 +187,11 @@ module.exports = {
 
     var visual_prompt_embed = {
       color: embed_colour,
-      title: embed_title,
+      title: `${embed_title} ${(options.show_steps) ? step_suffix : ""}`,
       description: `${local_desc} ${show_error} ${information_prompt}`,
-      image: (options.image) ? options.image : "https://cdn.discordapp.com/attachments/722997700391338046/736141424315203634/margin.png",
+      image: {
+        url: (options.image) ? options.image : "https://cdn.discordapp.com/attachments/722997700391338046/736141424315203634/margin.png",
+      },
       fields: local_fields
     };
 
@@ -232,6 +234,8 @@ module.exports = {
     //Other parameters
     visual_prompt.colour = options.colour;
     visual_prompt.description = options.description;
+    visual_prompt.title = options.title;
+    visual_prompt.show_steps = (options.show_steps == false) ? false : true;
 
     //Update visual prompt message
     message_obj.edit({
@@ -241,6 +245,7 @@ module.exports = {
           answers: [],
           prompts: options.prompts,
           satisfies_requirements: [true, ""],
+          show_steps: visual_prompt.show_steps,
 
           colour: options.colour,
           description: options.description,
