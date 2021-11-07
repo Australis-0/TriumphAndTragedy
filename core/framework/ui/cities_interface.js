@@ -50,6 +50,7 @@ module.exports = {
         city_string.push(`- RGO: ${(getGood(cities[i].resource).icon) ? config.icons[getGood(cities[i].resource).icon] + " " : ""} ${(getGood(cities[i].resource).name) ? getGood(cities[i].resource).name : cities[i].resource}`);
       }
     } else {
+      city_string.push("");
       city_string.push(`_You currently don't have any cities in your possession!_`);
       city_string.push("");
       city_string.push(`_Consider founding a new city to start building up your country._`);

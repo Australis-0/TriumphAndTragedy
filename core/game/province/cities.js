@@ -155,6 +155,63 @@ module.exports = {
     }
   },
 
+  initialiseFoundCity: function (arg0_user, arg1_game_id) {
+    //Convert from parameters
+    var user_id = arg0_user;
+    var game_obj = interfaces[arg1_game_id];
+
+    //Initialise visual prompt
+    visualPrompt(game_obj.alert_embed, user_id, {
+      title: `Found A New City:`,
+      description: `Type **[View Provinces]** to view a complete list of your current provinces.`,
+      prompts: [
+        [`Please choose a province in which to found a new city.`, "string"],
+        [`What would you like to name your new city?`, "string"]
+      ]
+    },
+    function (arg) {
+      foundCity(game_obj.user, arg[0], arg[1]);
+    },
+
+    //Command handling
+    function (input) {
+      var is_command = false;
+
+      switch (input) {
+        case "view provinces":
+          createPageMenu(game_obj.middle_embed, {
+            embed_pages: printProvinces(game_obj.user),
+            user: game_obj.user
+          });
+          is_command = true;
+
+          break;
+      }
+
+      return is_command;
+    });
+  },
+
+  initialisePrintCity: function (arg0_user, arg1_game_id) {
+    //Convert from parameters
+    var user_id = arg0_user;
+    var game_obj = interfaces[arg1_game_id];
+
+    //Initialise visual prompt
+    visualPrompt(game_obj.alert_embed, user_id, {
+      title: "View A City:",
+      prompts: [
+        [`What is the name of the city you would like to view?`, "string"]
+      ]
+    },
+    function (arg) {
+      createPageMenu(game_obj.middle_embed, {
+        embed_pages: printCity(game_obj.user, arg[0]),
+        user: game_obj.user
+      })
+    });
+  },
+
   moveCapital: function (arg0_user, arg1_city_name) {
     //Convert from parameters
     var user_id = arg0_user;

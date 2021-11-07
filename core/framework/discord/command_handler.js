@@ -189,6 +189,7 @@ module.exports = {
       color: embed_colour,
       title: embed_title,
       description: `${local_desc} ${show_error} ${information_prompt}`,
+      image: (options.image) ? options.image : "https://cdn.discordapp.com/attachments/722997700391338046/736141424315203634/margin.png",
       fields: local_fields
     };
 
@@ -242,7 +243,8 @@ module.exports = {
           satisfies_requirements: [true, ""],
 
           colour: options.colour,
-          description: options.description
+          description: options.description,
+          image: options.image
         })
       ]
     });

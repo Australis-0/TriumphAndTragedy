@@ -1,4 +1,24 @@
 module.exports = {
+  initialisePrintProvince: function (arg0_user, arg1_game_id) {
+    //Convert from parameters
+    var user_id = arg0_user;
+    var game_obj = interfaces[arg1_game_id];
+
+    //Initialise visual prompt
+    visualPrompt(game_obj.alert_embed, user_id, {
+      title: `View A Province:`,
+      prompts: [
+        [`Which province in would you like to view?`, "string"]
+      ]
+    },
+    function (arg) {
+      createPageMenu(game_obj.middle_embed, {
+        embed_pages: printProvince(game_obj.user, arg[0]),
+        user: game_obj.user
+      });
+    });
+  },
+
   printProvince: function (arg0_user, arg1_province) { //[WIP] - Work on supply limit calculation during diplomacy update
     //Convert from parameters
     var user_id = arg0_user;
