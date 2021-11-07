@@ -39,42 +39,50 @@ module.exports = {
       if (interfaces[interfaces[game_id].user].type == "visual_prompt") {
         try {
           //Declare local instance variables
+          var is_command = false;
           var local_prompt = interfaces[interfaces[game_id].user];
           var current_step = local_prompt.answers.length;
 
-          //Check if prompt has been cancelled
-          if (input == "back") {
-            (current_step > 0) ?
-              local_prompt.answers.pop() :
-                module.exports.clearPrompt(game_obj.user, game_id),
-                printAlert(game_id, `${config.icons.cancel} You have cancelled the current command.`);
-          } else if (input == "cancel") {
-            module.exports.clearPrompt(game_obj.user, game_id);
-            printAlert(game_id, `${config.icons.cancel} You have cancelled the current command.`);
-          } else {
-            //Check if new answer is valid or not for the current prompt
-            if (local_prompt.prompts[current_step][1] == "number") {
-              //Check to make sure that the input is actually a number
-              if (!isNaN(parseInt(input))) {
-                var satisfies_requirements = [true, ""];
+          //Check for command function first
+          if (local_prompt.command_function)
+            is_command = local_prompt.command_function(input);
 
-                //Minimum check
-                if (local_prompt.prompts[current_step][2].min)
-                  if (parseInt(input) < local_prompt.prompts[current_step][2].min)
-                    satisfies_requirements = [false, `The lowest number you can specify for this command is ${local_prompt.prompts[current_step][2].min}!`];
-                //Maximum check
-                if (local_prompt.prompts[current_step][2].max)
-                  if (parseInt(input) > local_prompt.prompts[current_step][2].max)
-                    satisfies_requirements = [false, `The highest number you can specify for this command is ${local_prompt.prompts[current_step][2].max}!`];
-
-                if (satisfies_requirements[0]) local_prompt.answers.push(parseInt(input));
-              } else {
-                satisfies_requirements = [false, `You must input a valid number for this command! ${input} is not a valid number.`];
-              }
-            } else if (local_prompt.prompts[current_step][1] == "string") {
-              local_prompt.answers.push(input);
+          //If the phrase typed in is not a valid command, continue on
+          if (!is_command) {
+            //Check if prompt has been cancelled
+            if (input == "back") {
+              (current_step > 0) ?
+                local_prompt.answers.pop() :
+                  module.exports.clearPrompt(game_obj.user, game_id),
+                  printAlert(game_id, `${config.icons.cancel} You have cancelled the current command.`);
+            } else if (input == "cancel") {
+              module.exports.clearPrompt(game_obj.user, game_id);
+              printAlert(game_id, `${config.icons.cancel} You have cancelled the current command.`);
             } else {
-              log.error(`The argument type ${local_prompt.prompts[current_step][1]} specified with the visual prompt at User ID ${user_id} does not exist!`);
+              //Check if new answer is valid or not for the current prompt
+              if (local_prompt.prompts[current_step][1] == "number") {
+                //Check to make sure that the input is actually a number
+                if (!isNaN(parseInt(input))) {
+                  var satisfies_requirements = [true, ""];
+
+                  //Minimum check
+                  if (local_prompt.prompts[current_step][2].min)
+                    if (parseInt(input) < local_prompt.prompts[current_step][2].min)
+                      satisfies_requirements = [false, `The lowest number you can specify for this command is ${local_prompt.prompts[current_step][2].min}!`];
+                  //Maximum check
+                  if (local_prompt.prompts[current_step][2].max)
+                    if (parseInt(input) > local_prompt.prompts[current_step][2].max)
+                      satisfies_requirements = [false, `The highest number you can specify for this command is ${local_prompt.prompts[current_step][2].max}!`];
+
+                  if (satisfies_requirements[0]) local_prompt.answers.push(parseInt(input));
+                } else {
+                  satisfies_requirements = [false, `You must input a valid number for this command! ${input} is not a valid number.`];
+                }
+              } else if (local_prompt.prompts[current_step][1] == "string") {
+                local_prompt.answers.push(input);
+              } else {
+                log.error(`The argument type ${local_prompt.prompts[current_step][1]} specified with the visual prompt at User ID ${user_id} does not exist!`);
+              }
             }
           }
 
@@ -170,12 +178,13 @@ module.exports = {
     return visual_prompt_embed;
   },
 
-  visualPrompt: function (arg0_message_obj, arg1_user, arg2_options, arg3_function) {
+  visualPrompt: function (arg0_message_obj, arg1_user, arg2_options, arg3_function, arg4_function) {
     //Convert from parameters
     var message_obj = arg0_message_obj;
     var usr = arg1_user;
     var options = arg2_options;
     var exec_function = arg3_function;
+    var cmd_function = arg4_function;
 
     //Declare local isntance variables
     var game_id;
@@ -199,6 +208,7 @@ module.exports = {
     visual_prompt.answers = [];
     visual_prompt.prompts = options.prompts;
     visual_prompt.evaluate_function = exec_function;
+    visual_prompt.command_function = cmd_function;
     visual_prompt.prompt_embed = {};
 
     //Update visual prompt message
