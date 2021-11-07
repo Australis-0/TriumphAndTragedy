@@ -5,8 +5,10 @@ module.exports = {
     var input = arg1_input;
 
     //Declare local instance variables
+    var actual_id = main.global.user_map[arg0_user];
     var game_obj = getGameObject(arg0_user);
     var user_id = arg0_user;
+    var usr = main.users[actual_id];
 
     //Cities page handler
     {
@@ -112,6 +114,13 @@ module.exports = {
     {
       if (economy_pages.includes(game_obj.page)) {
       switch (input) {
+        case "found_city":
+          //Make sure that user is actually able to found a city before authorising the command, otherwise print an error
+          (usr.city_cap-usr.city_count > 0) ?
+            initialiseFoundCity(user_id, game_obj.id) :
+            printError(game_obj.id, `You don't have enough city slots remaining to found a new city!`);
+
+          break;
         case "inventory":
           game_obj.page = "inventory";
           printInventory(user_id);
