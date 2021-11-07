@@ -135,6 +135,14 @@ module.exports = {
             //Province view handler [WIP]
           }
         }
+
+        switch (input) {
+          case "back":
+            game_obj.page = "population";
+            printPops(user_id);
+
+            break;
+        }
       }
     }
   }
