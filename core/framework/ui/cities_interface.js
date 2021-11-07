@@ -55,6 +55,7 @@ module.exports = {
       city_string.push(`_Consider founding a new city to start building up your country._`);
     }
 
+    //Return statement
     return splitEmbed(city_string, {
       title: "City List:",
       title_pages: true,
@@ -74,38 +75,47 @@ module.exports = {
 
     //Declare local tracker variables
     var city_obj = getCity(city_name);
-    var rgo_name = (getGood(city_obj.resource).name) ? getGood(city_obj.resource).name : city_obj.resource;
-    var rgo_icon = (getGood(city_obj.resource).icon) ? config.icons[getGood(city_obj.resource).icon] + " " : "";
 
-    //Initialise city_string
-    var city_string = [];
+    if (city_obj) {
+      var rgo_name = (getGood(city_obj.resource).name) ? getGood(city_obj.resource).name : city_obj.resource;
+      var rgo_icon = (getGood(city_obj.resource).icon) ? config.icons[getGood(city_obj.resource).icon] + " " : "";
 
-    //Format string
-    city_string.push(`**[Back]** ¦ **[Jump To Page]**`);
-    city_string.push("");
-    city_string.push(`${config.icons.globe} Country: **${usr.name}**`);
-    city_string.push(`Type **[Cities]** to view a full list of all your cities.`);
-    city_string.push("");
-    city_string.push(config.localisation.divider);
-    city_string.push("");
-    city_string.push(`City Options: ${(city_obj.city_type != "capital") ? "**[Move Capital]** ¦ " : ""}**[Rename City]**`);
-    city_string.push(`Manage Buildings: **[Build]** ¦ **[Demolish]**`);
-    city_string.push(`Promote Urbanisation: **[Develop]** - Gain an extra building slot in this city for **${parseNumber(getDevelopmentCost(actual_id, city_name))}** ${config.icons.political_capital} Political Capital.`);
-    city_string.push(config.localisation.divider);
+      //Initialise city_string
+      var city_string = [];
 
-    //Print city information
-    city_string.push(`**${city_obj.name}:**`);
-    city_string.push("");
-    city_string.push(`**Province:** ${config.icons.provinces} ${city_obj.id}`);
-    city_string.push(`**Population:** ${config.icons.population} ${parseNumber(city_obj.pops.population)}`);
-    city_string.push(`**RGO:** ${rgo_icon}${rgo_name}`);
-    city_string.push(`- **${(usr.modifiers.rgo_throughput-1 >= 0) ? "+" : ""}${printPercentage(usr.modifiers.rgo_throughput-1)}** modifier to ${rgo_icon}${rgo_name} production in this province.`);
-    city_string.push(`**Development:** ${config.icons.development} ${parseNumber(city_obj.development)}`);
+      //Format string
+      city_string.push(`**[Back]** ¦ **[Jump To Page]**`);
+      city_string.push("");
+      city_string.push(`${config.icons.globe} Country: **${usr.name}**`);
+      city_string.push(`Type **[Cities]** to view a full list of all your cities.`);
+      city_string.push("");
+      city_string.push(config.localisation.divider);
+      city_string.push("");
+      city_string.push(`City Options: ${(city_obj.city_type != "capital") ? "**[Move Capital]** ¦ " : ""}**[Rename City]**`);
+      city_string.push(`Manage Buildings: **[Build]** ¦ **[Demolish]**`);
+      city_string.push(`Promote Urbanisation: **[Develop]** - Gain an extra building slot in this city for **${parseNumber(getDevelopmentCost(actual_id, city_name))}** ${config.icons.political_capital} Political Capital.`);
+      city_string.push(config.localisation.divider);
 
-    return splitEmbed(city_string, {
-      title: `**${city_obj.name}**:`,
-      title_pages: true,
-      fixed_width: true
-    });
+      //Print city information
+      city_string.push(`**${city_obj.name}:**`);
+      city_string.push("");
+      city_string.push(`**Province:** ${config.icons.provinces} ${city_obj.id}`);
+      city_string.push(`**Population:** ${config.icons.population} ${parseNumber(city_obj.pops.population)}`);
+      city_string.push(`**RGO:** ${rgo_icon}${rgo_name}`);
+      city_string.push(`- **${(usr.modifiers.rgo_throughput-1 >= 0) ? "+" : ""}${printPercentage(usr.modifiers.rgo_throughput-1)}** modifier to ${rgo_icon}${rgo_name} production in this province.`);
+      city_string.push(`**Development:** ${config.icons.development} ${parseNumber(city_obj.development)}`);
+
+      //Change game_obj.page
+      game_obj.page = `view_city_${city_obj.name}`;
+
+      //Return statement
+      return splitEmbed(city_string, {
+        title: `**${city_obj.name}**:`,
+        title_pages: true,
+        fixed_width: true
+      });
+    } else {
+      printError(game_obj.id, `The city of ${city_name} couldn't be found anywhere in your territory!`);
+    }
   }
 };

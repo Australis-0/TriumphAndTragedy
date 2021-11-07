@@ -19,7 +19,6 @@ module.exports = {
               embed_pages: printCity(game_obj.user, city_name),
               user: game_obj.user
             });
-            game_obj.page = `view_city_${city_name}`;
           } else {
             visualPrompt(game_obj.alert_embed, user_id, {
               title: "View A City:",
@@ -32,7 +31,6 @@ module.exports = {
                 embed_pages: printCity(game_obj.user, arg[0]),
                 user: game_obj.user
               })
-              game_obj.page = `view_city_${arg[0]}`;
             });
           }
         }
@@ -173,7 +171,6 @@ module.exports = {
               embed_pages: printCity(game_obj.user, city_name),
               user: game_obj.user
             });
-            game_obj.page = `view_city_${city_name}`;
           } else {
             //Province view handler [WIP]
           }

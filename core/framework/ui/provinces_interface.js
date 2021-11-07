@@ -1,4 +1,10 @@
 module.exports = {
+  printProvince: function (arg0_province) {
+    //Convert from parameters
+    var user_id = arg0_user;
+
+  },
+
   printProvinces: function (arg0_user) { //[WIP]
     //TODO: Print cities first before rural provinces
     //TODO: Print provinces
