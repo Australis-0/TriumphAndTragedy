@@ -24,7 +24,10 @@ module.exports = {
               ]
             },
             function (arg) {
-              printCity(game_obj.user, arg[0]);
+              createPageMenu(game_obj.middle_embed, {
+                embed_pages: printCity(game_obj.user, arg[0]),
+                user: game_obj.user
+              })
               game_obj.page = `view_city_${arg[0]}`;
             });
           }
@@ -44,6 +47,20 @@ module.exports = {
             });
 
             break;
+          case "jump to page":
+            visualPrompt(game_obj.alert_embed, user_id, {
+              title: `Jump To Page:`,
+              prompts: [
+                [`Which page would you like to jump to?`, "number", { min: 1, max: printCities(game_obj.user).length }]
+              ]
+            },
+            function (arg) {
+              createPageMenu(game_obj.middle_embed, {
+                embed_pages: printCities(game_obj.user),
+                page: arg[0] - 1,
+                user: game_obj.user
+              });
+            });
         }
       } else if (game_obj.page.startsWith("view_city")) {
         var city_name = game_obj.page.replace("view_city_", "");
@@ -67,6 +84,22 @@ module.exports = {
             },
             function (arg) {
               developCity(game_obj.user, city_name, arg[1], arg[0]);
+            });
+
+            break;
+          case "jump to page":
+            visualPrompt(game_obj.alert_embed, user_id, {
+              title: `Jump To Page:`,
+              prompts: [
+                [`Which page would you like to jump to?`, "number", { min: 1, max: printCity(game_obj.user, city_name).length }];
+              ]
+            },
+            function (arg) {
+              createPageMenu(game_obj.middle_embed, {
+                embed_pages: printCity(game_obj.user, city_name),
+                page: arg[0] - 1,
+                user: game_obj.user
+              })
             });
 
             break;

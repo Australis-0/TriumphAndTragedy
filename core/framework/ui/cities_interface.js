@@ -62,7 +62,7 @@ module.exports = {
     });
   },
 
-  printCity: function (arg0_user, arg1_name) {
+  printCity: function (arg0_user, arg1_name) { //[WIP] - Print out buildings and housing somehow
     //Convert from parameters
     var user_id = arg0_user;
     var city_name = arg1_name;
@@ -101,5 +101,11 @@ module.exports = {
     city_string.push(`**RGO:** ${rgo_icon}${rgo_name}`);
     city_string.push(`- **${(usr.modifiers.rgo_throughput-1 >= 0) ? "+" : ""}${printPercentage(usr.modifiers.rgo_throughput-1)}** modifier to ${rgo_icon}${rgo_name} production in this province.`);
     city_string.push(`**Development:** ${config.icons.development} ${parseNumber(city_obj.development)}`);
+
+    return splitEmbed(city_string, {
+      title: `**${city_obj.name}**:`,
+      title_pages: true,
+      fixed_width: true
+    });
   }
 };
