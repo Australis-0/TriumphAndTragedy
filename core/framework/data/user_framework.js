@@ -160,6 +160,34 @@ module.exports = {
     return pc_price;
   },
 
+  //Fetches user income before production costs
+  getIncome: function (arg0_user) {
+    //Convert from parameters
+    var user_id = arg0_user;
+
+    //Declare local instance variables
+    var calculated_income = 0;
+    var usr = main.users[user_id];
+
+    //Declare local tracker variables
+    var civilian_actions = Math.ceil(usr.actions*usr.modifiers.civilian_actions);
+
+    //Regular error trapping just in case!
+    try {
+      calculated_income = Math.ceil(
+          (usr.actions - civilian_actions)
+        *config.defines.economy.money_per_action
+        *usr.tax_rate
+        *usr.modifiers.tax_efficiency
+      );
+
+      return calculated_income;
+    } catch (e) {
+      log.error(`getIncome() ran into an error whilst processing User ID: ${user_id}: ${e}.`);
+      console.log(e);
+    }
+  },
+
   getProvince: function (arg0_province) {
     //Convert from parameters
     var province_id = arg0_province;

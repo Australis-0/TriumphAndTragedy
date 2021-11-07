@@ -13,5 +13,11 @@ module.exports = {
       usr.city_cap = getCitiesCap(actual_id);
       usr.total_cities += getCities(actual_id, { include_hostile_occupations: true });
     }
+
+    //Budget processing
+    {
+      //Add money based on calculated user income
+      usr.money += getIncome(actual_id);
+    }
   }
 }
