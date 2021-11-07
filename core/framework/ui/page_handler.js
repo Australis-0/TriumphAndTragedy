@@ -108,5 +108,34 @@ module.exports = {
         }
       }
     }
+
+    //Pops page handler
+    {
+      if (population_pages.includes(game_obj.page)) {
+        switch (input) {
+          case "view provinces":
+            game_obj.page = "provinces_list";
+            createPageMenu(game_obj.middle_embed, {
+              embed_pages: printProvinces(game_obj.user),
+              user: game_obj.user
+            });
+
+            break;
+        }
+      }
+    }
+
+    //Province page handlers
+    {
+      if (game_obj.page == "provinces_list") {
+        if (arg[0] == "view") {
+          if (arg[1] != "province") {
+            //City view handler
+          } else {
+            //Province view handler [WIP]
+          }
+        }
+      }
+    }
   }
 };

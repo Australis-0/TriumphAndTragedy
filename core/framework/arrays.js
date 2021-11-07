@@ -34,6 +34,24 @@ module.exports = {
     return (Array.isArray(list)) ? list : [list];
   },
 
+  moveElement: function (arg0_array, arg1_old_index, arg2_new_index) {
+    //Convert from parameters
+    var array = arg0_array;
+    var old_index = arg1_old_index;
+    var new_index = arg2_new_index;
+
+    //Move element in array
+    if (new_index >= array.length) {
+      var local_index = new_index - array.length + 1;
+      while (k--)
+        array.push(undefined);
+    }
+    array.splice(new_index, 0, array.splice(old_index, 1)[0]);
+
+    //Return statement
+    return array;
+  },
+
   randomElement: function (arg0_array) {
     //Convert from parameters
     var array = arg0_array;

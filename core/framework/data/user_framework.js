@@ -49,10 +49,20 @@ module.exports = {
             //Push if any of these options are valid. Geez. This is messy
           ) all_owned_cities.push(main.provinces[all_provinces[i]]);
 
-      //Sort cities by population
+      //Sort cities by capital; population
+      var capital_index;
+
       all_owned_cities.sort(function (a, b) {
         return b.population - a.population;
       });
+
+      //Look for core capital and move it to the zeroth index if possible
+      for (var i = 0; i < all_owned_cities.length; i++)
+        if (all_owned_cities[i].city_type == "capital" && all_owned_cities[i].owner == user_id)
+          capital_index = i;
+
+      if (capital_index)
+        moveElement(all_owned_cities, i, 0);
 
       //Return statement
       return all_owned_cities;
@@ -188,13 +198,21 @@ module.exports = {
     try {
       for (var i = 0; i < all_provinces.length; i++)
         if (
-          //Complex boolean to parse options field; core provinces
-          (main.provinces[all_provinces[i]].owner == user_id && main.provinces[all_provinces[i]].controller == user_id ||
-              options.include_hostile_occupations
-          ) ||
+          (
+            //Complex boolean to parse options field; core provinces
+            (main.provinces[all_provinces[i]].owner == user_id && main.provinces[all_provinces[i]].controller == user_id ||
+                options.include_hostile_occupations
+            ) ||
 
-          //Complex boolean to parse options field; provinces occupied by user
-          (main.provinces[all_provinces[i]].controller == user_id && options.include_occupations)
+            //Complex boolean to parse options field; provinces occupied by user
+            (main.provinces[all_provinces[i]].controller == user_id && options.include_occupations)
+          ) &&
+
+          //Exclude cities if exclude_cities is set to true
+          (
+            options.exclude_cities && main.provinces[all_provinces[i]].type != "urban" ||
+            !options.exclude_cities
+          )
 
           //Push if any of these options are valid
         ) all_owned_provinces.push(main.provinces[all_provinces[i]]);

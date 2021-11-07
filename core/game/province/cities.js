@@ -83,39 +83,45 @@ module.exports = {
       //Check if province is valid, province has to be owned
       if (local_province.owner == user_id && local_province.controller == user_id) {
         if (local_province.type == "rural") {
-          //Initialise city object, determine capital status first
-          //If user has no other cities, set it to their capital
+          if (!city_name.toLowerCase().startsWith("province")) {
+            //Initialise city object, determine capital status first
+            //If user has no other cities, set it to their capital
 
-          local_province.city_type = (getCities(user_id).length == 0) ? "capital" : "city";
-          var population_amount = (local_province.city_type == "capital") ?
-            randomNumber(250000, 1000000) :
-            randomNumber(250000, 800000);
+            local_province.city_type = (getCities(user_id).length == 0) ? "capital" : "city";
+            local_province.type = "urban";
 
-          //Generate city pop object
-          generatePops(province_id, {
-            type: "all",
-            amount: population_amount
-          });
+            var population_amount = (local_province.city_type == "capital") ?
+              randomNumber(250000, 1000000) :
+              randomNumber(250000, 800000);
 
-          //Set city RGO
-          local_province.resource = randomElement(getRawGoods({ return_names: true })).id;
+            //Generate city pop object
+            generatePops(province_id, {
+              type: "all",
+              amount: population_amount
+            });
 
-          //Set building objects
-          local_province.buildings = {};
-          local_province.development = 0;
-          local_province.housing = 0;
+            //Set city RGO
+            local_province.resource = randomElement(getRawGoods({ return_names: true })).id;
 
-          //Set building slot capacity per category
-          for (var i = 0; i < all_building_categories.length; i++)
-            local_province[`${all_building_categories[i]}_building_slots`] = usr.modifiers[`${all_building_categories[i]}_building_slots`];
+            //Set building objects
+            local_province.buildings = {};
+            local_province.development = 0;
+            local_province.housing = 0;
 
-          //Increase city_count tracker variable
-          usr.city_count++;
+            //Set building slot capacity per category
+            for (var i = 0; i < all_building_categories.length; i++)
+              local_province[`${all_building_categories[i]}_building_slots`] = usr.modifiers[`${all_building_categories[i]}_building_slots`];
 
-          printAlert(getGame(user_id), (local_province.city_type == "capital") ?
-            `Capital city founded as **${city_name}** in Province **${province_id}**! Over **${parseNumber(local_province.pops.population)}** are now legally residents of the capital city of **${usr.name}**!` :
-            `A new city was founded as **${city_name}** in Province **${province_id}**! Over **${parseNumber(local_province.pops.population)}** are now legally residents of the city of **${city_name}** in Province **${province_id}**.`
-          );
+            //Increase city_count tracker variable
+            usr.city_count++;
+
+            printAlert(getGame(user_id), (local_province.city_type == "capital") ?
+              `Capital city founded as **${city_name}** in Province **${province_id}**! Over **${parseNumber(local_province.pops.population)}** are now legally residents of the capital city of **${usr.name}**!` :
+              `A new city was founded as **${city_name}** in Province **${province_id}**! Over **${parseNumber(local_province.pops.population)}** are now legally residents of the city of **${city_name}** in Province **${province_id}**.`
+            );
+          } else {
+            printError(getGame(user_id, `You cannot have a city name that overlaps with the name of an existing province!`));
+          }
         } else {
           printError(getGame(user_id), `Province **${province_id}** is already an urban province belonging to **${local_province.name}**!`);
         }
