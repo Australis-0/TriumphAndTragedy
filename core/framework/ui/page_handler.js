@@ -15,7 +15,11 @@ module.exports = {
           if (arg.length > 1) {
             //Process city_name by removing initial argument and print city
             var city_name = input.replace("view", "").trim();
-            printCity(game_obj.user, city_name);
+            createPageMenu(game_obj.middle_embed, {
+              embed_pages: printCity(game_obj.user, city_name),
+              user: game_obj.user
+            });
+            game_obj.page = `view_city_${city_name}`;
           } else {
             visualPrompt(game_obj.alert_embed, user_id, {
               title: "View A City:",
@@ -164,6 +168,12 @@ module.exports = {
         if (arg[0] == "view") {
           if (arg[1] != "province") {
             //City view handler
+            var city_name = input.replace("view", "").trim();
+            createPageMenu(game_obj.middle_embed, {
+              embed_pages: printCity(game_obj.user, city_name),
+              user: game_obj.user
+            });
+            game_obj.page = `view_city_${city_name}`;
           } else {
             //Province view handler [WIP]
           }
