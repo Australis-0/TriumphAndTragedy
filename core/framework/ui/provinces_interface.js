@@ -1,8 +1,57 @@
 module.exports = {
-  printProvince: function (arg0_province) {
+  printProvince: function (arg0_user, arg1_province) { //[WIP] - Work on supply limit calculation during diplomacy update
     //Convert from parameters
     var user_id = arg0_user;
+    var province_id = arg1_province;
 
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var all_pops = Object.keys(config.pops);
+    var game_obj = getGameObject(user_id);
+    var usr = main.users[actual_id];
+
+    //Declare local tracker variables
+    var province_obj = getProvince(province_id);
+
+    //Initialise province_string
+    province_string.push(`**[Back]** ¦ **[Jump To Page]**`);
+    province_string.push("");
+    province_string.push(`**Ownership:**`);
+    province_string.push("");
+    province_string.push(`Owned by **${main.users[province_obj.owner].name}**.`);
+
+    //Display occupation status
+    if (province_obj.owner != province_obj.controller)
+      province_string.push(`- Currently occupied by **${main.users[province_obj.controller].name}** in a war! This province will not be able to produce anything of value until it is either liberated, or the war is over.`);
+
+    province_string.push("");
+
+    //Display supply limit
+    (province_obj.supply_limit) ?
+      province_string.push(`- ${config.icons.railways} Supply Limit: ${province_obj.supply_limit}`) :
+      province_string.push(`- ${config.icons.railways} Supply Limit: ${config.defines.combat.base_supply_limit}`);
+
+    //Display population statistics
+    province_string.push("");
+    province_string.push(config.localisation.divider);
+    province_string.push("");
+    province_string.push(`**Population Statistics:**`);
+    province_string.push("");
+
+    //Dynamically display all pops
+    for (var i = 0; i < all_pops.length; i++)
+      province_string.push(`- ${(config.pops[all_pops[i]].icon) ? config.pops[all_pops[i]].icon + " " : ""}${(config.pops[all_pops[i]].name) ? config.pops[all_pops[i]].name : all_pops[i]}: ${parseNumber(province_obj.pops[all_pops[i]])}`);
+
+    //Display total population, culture
+    province_string.push(`- ${config.icons.population} Population: ${province_obj.pops.population}`);
+    province_string.push(`- ${config.icons.culture} Culture: ${province_obj.culture}`);
+
+    //Return statement
+    return splitEmbed(province_string, {
+      title: `Viewing ${parseString(province_obj.type)} Province ${province_id}:`,
+      title_pages: true,
+      fixed_width: true
+    });
   },
 
   printProvinces: function (arg0_user) { //[WIP]
