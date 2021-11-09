@@ -173,6 +173,10 @@ module.exports = {
     }
   },
 
+  getBuildingConsumption: function (arg0_user, arg1_building) { //[WIP]
+
+  },
+
   /*
     getBuildingCost() - Returns the cost of a building for the specified user as a JSON object/integer.
     options: {
@@ -180,7 +184,7 @@ module.exports = {
 
     }
   */
-  getBuildingCost: function (arg0_user, arg1_building, arg2_options) {
+  getBuildingCost: function (arg0_user, arg1_building, arg2_options) { //[WIP] - Add functionality to pop argument
     //Convert from parameters
     var user_id = arg0_user;
     var building_name = arg1_building;
@@ -194,6 +198,7 @@ module.exports = {
     var costs_obj = {};
     var usr = main.users[user_id];
 
+    //Only start appending if the .costs object exists at all
     if (building_obj.costs) {
       var all_costs = Object.keys(building_obj.costs);
 
@@ -205,16 +210,12 @@ module.exports = {
         //Fetch resource_type
         var resource_type = {
           is_money: (all_costs[i] == "money"),
-          is_pop: Object.keys(config.pops).includes(all_costs[i]),
           is_resource: getGoods({ return_names: true }).includes(all_costs[i])
         };
         var valid_resource = false;
 
         if (resource_type.is_money) {
           if (["all", "money"].includes(options.type))
-            valid_resource = true;
-        } else if (resource_type.is_pop) {
-          if (["all", "pops"].includes(options.type))
             valid_resource = true;
         } else if (resource_type.is_resource) {
           if (["all", "goods"].includes(options.type))
@@ -234,5 +235,19 @@ module.exports = {
 
     //Return object
     return (options.type != "money") ? costs_obj : returnSafeNumber(costs_obj.money, 0);
+  },
+
+  //This method only gets building production, not maintenance. See getBuildingConsumption() for maintenance costs instead.
+  getBuildingProduction: function (arg0_user, arg1_building) { //[WIP]
+    //Convert from parameters
+    var user_id = arg0_user;
+    var building_name = arg1_building;
+
+    //Declare local instance variables
+    var building_obj = module.exports.getBuilding(building_name);
+    var production_obj = {};
+    var usr = main.users[user_id];
+
+    //Only start appending if the
   }
 };
