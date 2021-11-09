@@ -19,6 +19,14 @@ module.exports = {
       var local_buildings = Object.keys(local_building_category);
 
       //Iterate over all buildings in category and push them to the list based on availability
+      for (var x = 0; x < local_buildings.length; x++) {
+        var local_building = local_building_category[local_buildings[x]];
+
+        //Only push building to category if user has the building unlocked
+        if (usr.available_buildings.includes(local_building)) {
+          
+        }
+      }
     }
   }
 };
