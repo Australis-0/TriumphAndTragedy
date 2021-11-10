@@ -16,7 +16,7 @@ config.defines.common = {
     machine_parts: 50,
     food: 50,
 
-    magnates: "RANDOM_3,15",
+    magnates: [3, 15],
     unlock_building: [
       "guilds",
       "farms",

@@ -1,5 +1,84 @@
 //Framework for initialising base user objects. For country objects, please see elsewhere
 module.exports = {
+  initStartingKit: function (arg0_user) {
+    //Convert from parameters
+    var user_id = arg0_user;
+    var usr = main.users[arg0_user];
+
+    //Declare local instance variables
+    var all_starting_keys = Object.keys(config.defines.common.starting_kit);
+    var starting_kit = config.defines.common.starting_kit;
+
+    //Loop over all keys in starting kit and parse them
+    for (var i = 0; i < all_starting_keys.length; i++) {
+      var local_name = all_starting_keys[i];
+      var local_value = starting_kit[all_starting_keys[i]];
+
+      var local_good = getGood(local_name);
+      var local_list = getList(local_value);
+
+      //Effects handler
+      {
+        switch (local_name) {
+          case "actions":
+            usr.actions += (local_list.length >= 2) ?
+              randomNumber(local_list[0], local_list[1]) :
+              local_list[0];
+
+            break;
+          case "set_government": //[WIP] - Add government effects and set reforms for available fields in future
+            usr.government = randomElement(local_list);
+
+            break;
+          case "set_mobilisation_unit":
+            usr.mobilisation.unit_type = local_value;
+
+            break;
+          case "set_party_popularity":
+            try {
+              var government_types = getList(local_value.type);
+              var government_popularities = getList(local_value.value);
+
+              for (var x = 0; x < government_types.length; x++)
+                usr.politics[government_types[x]].popularity = government_popularities[x];
+            } catch {}
+
+            break;
+          case "unlock_building":
+            for (var x = 0; x < local_list.length; x++)
+              usr.available_buildings.push(local_list[x]);
+
+            break;
+          case "unlock_government":
+            for (var x = 0; x < local_list.length; x++)
+              usr.available_buildings.push(local_list[x]);
+
+            break;
+          case "unlock_unit":
+            for (var x = 0; x < local_list.length; x++)
+              usr.available_buildings.push(local_list[x]);
+
+            break;
+        }
+      }
+
+      //Goods handler
+      {
+        //Check if local_name is of type good or "money"
+        if (local_good)
+          //Check to see if good has random range or not
+          usr.inventory[local_good.id] += (local_list.length >= 2) ?
+            randomNumber(local_list[0], local_list[1]) :
+            local_list[0];
+
+        if (local_name.money)
+          usr.money += (local_list.length) ?
+            randomNumber(local_list[0], local_list[1]) :
+            local_list[0];
+      }
+    }
+  },
+
   initUser: function (arg0_user) {
     //Convert from parameters
     var already_registered = true;
@@ -218,6 +297,7 @@ module.exports = {
       if (!usr.city_cap) usr.city_cap = 0;
       if (!usr.city_count) usr.city_count = 0;
       if (!usr.country_age) usr.country_age = 0;
+      if (!usr.government) usr.government = "";
       if (!usr.highest_tier) usr.highest_tier = 0;
       if (!usr.id) usr.id = user_id;
       if (!usr.infamy_rgo_throughput) usr.infamy_rgo_throughput = 0;
@@ -240,6 +320,6 @@ module.exports = {
       if (!usr.vassal_years) usr.vassal_years = 0;
 
     //Apply starting kit if not registered [WIP]
-    //if (!already_registered) config.starting_kit(user_id);
+    if (!already_registered) module.exports.initStartingKit(user_id);
   }
 };
