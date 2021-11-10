@@ -150,7 +150,7 @@ module.exports = {
           returnSafeNumber(city_obj.supply_limit, config.defines.combat.base_supply_limit)/
           config.defines.economy.supply_limit_rgo_modifier
         )*0.01
-    );
+    , 1);
   },
 
   getDevelopmentCost: function (arg0_user, arg1_name, arg2_amount) {

@@ -173,7 +173,7 @@ module.exports = {
     }
   },
 
-  getBuildingConsumption: function (arg0_user, arg1_building) { //[WIP]
+  getBuildingConsumption: function (arg0_user, arg1_building) {
     //Convert from parameters
     var user_id = arg0_user;
     var building_name = arg1_building;
@@ -216,7 +216,6 @@ module.exports = {
     getBuildingCost() - Returns the cost of a building for the specified user as a JSON object/integer.
     options: {
       type: "all", "money", "goods", "pops" - Returns either all cost arguments, only money (as an integer), goods, or pop costs only
-
     }
   */
   getBuildingCost: function (arg0_user, arg1_building, arg2_options) {
@@ -294,7 +293,9 @@ module.exports = {
 
     //Declare local instance variables
     var building_obj = module.exports.getBuilding(building_name);
-    var city_obj = getCity(city_nme, { users: user_id });
+    var city_obj = (city_name) ?
+      getCity(city_name, { users: user_id }) :
+      { name: "No city provided." };
     var production_obj = {};
     var usr = main.users[user_id];
 
