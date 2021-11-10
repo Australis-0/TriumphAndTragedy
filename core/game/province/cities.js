@@ -104,7 +104,7 @@ module.exports = {
             local_province.resource = randomElement(getRawGoods({ return_names: true })).id;
 
             //Set building objects
-            local_province.buildings = {};
+            local_province.buildings = [];
             local_province.development = 0;
             local_province.housing = 0;
 

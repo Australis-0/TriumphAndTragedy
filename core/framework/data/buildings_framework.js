@@ -1,4 +1,12 @@
 module.exports = {
+  ignore_building_keys: [
+    "always_display",
+    "disable_slots",
+    "icon",
+    "name",
+    "order"
+  ],
+
   /*
     getBuilding() - Returns back a building object/key based on options
     options: {
@@ -32,7 +40,7 @@ module.exports = {
         var local_buildings = Object.keys(local_building_category);
 
         for (var x = 0; x < local_buildings.length; x++) {
-          if (!["icon", "name", "order"].includes(local_buildings[x])) {
+          if (!module.exports.ignore_building_keys.includes(local_buildings[x])) {
             var local_building = local_building_category[local_buildings[x]];
 
             if (local_building.name)
@@ -67,7 +75,7 @@ module.exports = {
         var local_buildings = Object.keys(local_building_category);
 
         for (var x = 0; x < local_buildings.length; x++) {
-          if (!["icon", "name", "order"].includes(local_buildings[x])) {
+          if (!module.exports.ignore_building_keys.includes(local_buildings[x])) {
             var local_building = local_building_category[local_buildings[x]];
 
             if (local_building.aliases)
@@ -84,7 +92,7 @@ module.exports = {
         var local_buildings = Object.keys(local_building_category);
 
         for (var x = 0; x < local_buildings.length; x++) {
-          if (!["icon", "name", "order"].includes(local_buildings[x])) {
+          if (!module.exports.ignore_building_keys.includes(local_buildings[x])) {
             var local_building = local_building_category[local_buildings[x]];
 
             if (local_building.aliases)
@@ -399,5 +407,152 @@ module.exports = {
 
     //Return statement
     return production_obj;
+  },
+
+  /*
+    getBuildings() - Returns an array of all valid building objects/keys.
+    options: {
+      return_names: true/false - Whether to return back keys or not
+    }
+  */
+  getBuildings: function (arg0_options) {
+    //Convert from parameters; initialise options
+    var options = (arg0_options) ? arg0_options : {};
+
+    //Declare local instance variables
+    var all_building_category_objects = module.exports.getBuildingCategories();
+    var all_building_categories = Object.keys(all_building_category_objects);
+    var all_buildings = [];
+
+    //Push all valid buildings to array
+    for (var i = 0; i <  all_building_categories.length; i++) {
+      var local_category = all_building_category_objects[all_building_categories[i]];
+      var local_buildings = Object.keys(local_category);
+
+      for (var x = 0; x < local_buildings.length; x++)
+        if (!module.exports.ignore_building_keys.includes(local_buildings[x]))
+          all_buildings.push((options.return_names) ?
+            local_buildings[x] :
+            local_category[local_buildings[x]];
+          );
+    }
+
+    //Return statement
+    return all_buildings;
+  },
+
+  //Gets building slots for a given category/building, returns -1 if unlimited
+  getBuildingSlots: function (arg0_user, arg1_city_name, arg2_building_category, arg3_options) { //[WIP] - Add under_construction field to function for both type building and building_category parsing
+    //Convert from parameters
+    var user_id = arg0_user;
+    var city_name = arg1_city_name;
+    var building_category_name = arg2_building_category;
+
+    //Initialise options
+    var options = (arg3_options) ? arg3_options : {
+      type: "all" //"all", "available_slots", "total_buildings", "total_slots", "under_construction"; all returns entire object, under_construction returns only buildings under construction in that category
+    };
+
+    //Declare local instance variables
+    var available_building_slots = [false, {
+      available_slots: 0,
+      total_buildings: 0,
+      total_buildings_under_construction: 0,
+      total_slots: 0
+    }]; //[encountered_error, { available_slots: 0, total_buildings: 0, total_buildings_under_construction: 0, total_slots: 0}]
+    var building_category = module.exports.getBuildingCategory(building_category_name);
+    var building_obj = module.exports.getBuilding(building_category_name);
+    var city_obj = getCity(city_name, { users: user_id });
+    var usr = main.users[user_id];
+
+    //Check to see whether building_category_name is of type building or building_category
+    try {
+      if (building_category) {
+        var all_buildings_in_category = Object.keys(building_category);
+
+        if (building_category.disable_slots) {
+          available_building_slots[1].available_slots = -1;
+          available_building_slots[1].total_slots = -1;
+
+          available_building_slots[0] = true;
+        } else {
+          //Count all buildings in category in city
+          for (var i = 0; i < city_obj.buildings.length; i++)
+            if (Object.keys(building_category).includes(city_obj.buildings[i].building_type))
+              available_building_slots[1].total_buildings++;
+
+          //Fetch total available slots in city for building_category
+          available_building_slots[1].total_slots =
+            city_obj[`${building_category_name}_building_slots`] +
+            usr.modifiers.extra_building_slots;
+
+          //Set .available_slots
+          available_building_slots[1].available_slots =
+            available_building_slots[1].total_slots -
+            available_building_slots[1].total_buildings;
+
+            available_building_slots[0] = true;
+        }
+      } else if (building_obj) {
+        //If building_category_name is of type building, fetch available slots for that local building
+        //Declare local instance variables
+        var all_building_categories = Object.keys(config.buildings);
+        var actual_building_category;
+
+        for (var i = 0; i < all_building_categories.length; i++)
+          if (Object.keys(config.buildings[all_building_categories[i]]).includes(building_cabuilding_category_name))
+            actual_building_category = all_building_categories[i];
+
+        var local_building_category = module.exports.getBuildingCategory(actual_building_category);
+
+        //Fetch total_buildings
+        for (var i = 0; i < city_obj.buildings.length; i++)
+          if (Object.keys(local_building_category).includes(city_obj.buildings[i].building_type))
+            available_building_slots[1].total_buildings++;
+
+        //Fetch total available slots in city for that building type
+        if (building_obj.separate_building_slots) {
+          available_building_slots[1].total_slots = (usr.modifiers[building_category_name]) ?
+            usr.modifiers[building_category_name] :
+            0;
+
+          //Set total number of available_slots
+          available_building_slots[1].available_slots =
+            available_building_slots[1].total_slots -
+            available_building_slots[1].total_buildings;
+
+          available_building_slots[0] = true;
+        } else if (building_obj.unlimited_slots) {
+          available_building_slots[1].available_slots = -1;
+          available_building_slots[1].total_slots = -1;
+
+          available_building_slots[0] = true;
+        }
+      }
+    } catch {}
+
+    //Return statement
+    switch (options.type) {
+      case "all":
+        return (available_building_slots[0]) ? available_building_slots[1] : undefined;
+
+        break;
+      case "available_slots":
+        return (available_building_slots[0]) ? available_building_slots[1].available_slots : undefined;
+
+        break;
+      case "total_buildings":
+        return (available_building_slots[0]) ? available_building_slots[1].total_buildings : undefined;
+
+        break;
+      case "total_slots":
+        return (available_building_slots[0]) ? available_building_slots[1].total_slots : undefined;
+
+        break;
+      case "under_construction":
+        return (available_building_slots[0]) ? available_building_slots[1].total_buildings_under_construction : undefined;
+
+        break;
+    }
   }
 };

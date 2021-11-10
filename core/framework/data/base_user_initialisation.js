@@ -85,6 +85,9 @@ module.exports = {
     var user_id = arg0_user;
     var usr = (main.users[arg0_user]) ? main.users[arg0_user] : undefined;
 
+    //Declare local instance variables
+    var all_buildings = getBuildings({ return_names: true });
+
     //Define user if not already defined
     if (!usr) {
       already_registered = false;
@@ -147,6 +150,9 @@ module.exports = {
       var all_building_categories = Object.keys(config.buildings);
       for (var i = 0; i < all_building_categories.length; i++) {
         if (!usr.modifiers[`${all_building_categories[i]}_building_slots`]) usr.modifiers[`${all_building_categories[i]}_building_slots`] = 1;
+      }
+      for (var i = 0; i < all_buildings.length; i++) {
+        if (!usr.modifiers[`${all_buildings[i]}`]) usr.modifiers[`${all_buildings[i]}`] = 0;
       }
 
       //Military; includes colonisation travel time
@@ -253,7 +259,6 @@ module.exports = {
     if (!usr.reserves) usr.reserves = {};
     if (!usr.temporary_modifiers) usr.temporary_modifiers = {};
     if (!usr.trades) usr.trades = {};
-    if (!usr.under_construction) usr.under_construction = {};
 
     //Post-object processing (Goods):
     var all_good_categories = Object.keys(config.goods);
@@ -317,6 +322,7 @@ module.exports = {
       if (!usr.research_queue) usr.research_queue = [];
       if (!usr.total_cities) usr.total_cities = 0;
       if (!usr.triggered_events) usr.triggered_events = {};
+      if (!usr.under_construction) usr.under_construction = [];
       if (!usr.vassal_years) usr.vassal_years = 0;
 
     //Apply starting kit if not registered [WIP]
