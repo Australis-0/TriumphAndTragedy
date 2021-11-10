@@ -238,16 +238,117 @@ module.exports = {
   },
 
   //This method only gets building production, not maintenance. See getBuildingConsumption() for maintenance costs instead.
-  getBuildingProduction: function (arg0_user, arg1_building) { //[WIP]
+  getBuildingProduction: function (arg0_user, arg1_building, arg2_city_name) { //[WIP]
     //Convert from parameters
     var user_id = arg0_user;
     var building_name = arg1_building;
+    var city_name = arg2_city_name;
 
     //Declare local instance variables
     var building_obj = module.exports.getBuilding(building_name);
+    var city_obj = getCity(city_nme, { users: user_id });
     var production_obj = {};
     var usr = main.users[user_id];
 
-    //Only start appending if the
+    //Declare changeProductionValue() local function for altering production_obj keys
+    function changeProductionValue (arg0_key, arg1_min_max_argument, arg2_value) {
+      //Convert from parameters
+      var local_key = arg0_key;
+      var min_max_argument = arg1_min_max_argument;
+      var local_value = Math.ceil(returnSafeNumber(arg2_value));
+
+      //Add to production_obj
+      if (production_obj[local_key]) {
+        switch (min_max_argument) {
+          case "minimum":
+            production_obj[local_key][0] += local_value;
+
+            break;
+          case "maximum":
+            production_obj[local_key][1] += local_value;
+
+            break;
+          default:
+            production_obj[local_key][0] += local_value;
+            production_obj[local_key][1] += local_value;
+
+            break;
+        }
+      } else {
+        switch (min_max_argument) {
+          case "minimum":
+            production_obj[local_key] = [local_value, 0];
+
+            break;
+          case "maximum":
+            production_obj[local_key] = [0, local_value];
+
+            break;
+          default:
+            production_obj[local_key] = [local_value, local_value];
+
+            break;
+        }
+      }
+    }
+
+    //Only start appending if the user and building_obj.produces is actually defined
+    if (usr)
+      try {
+        var all_produced_goods = Object.keys(building_obj.produces);
+        for (var i = 0; i < all_produced_goods.length; i++) {
+          var actual_resource = getGood(all_produced_goods[i]);
+          var is_knowledge = false;
+
+          if (actual_resource)
+            is_knowledge = (actual_resource.research_good);
+
+          //Get actual production efficiency
+          var actual_production_efficiency = (building_obj.maintenance) ?
+            usr.modifiers.production_efficiency : 1;
+          var actual_rgo_throughput = (usr.modifiers.rgo_throughput < 1) ?
+            usr.modifiers.rgo_throughput : 1;
+
+          //Apply local RGO throughput to the building's production if the resource lines up
+          actual_rgo_throughput = (city_obj.resource == building_obj.produces[i][1]) ?
+            getCityRGOThroughput(city_obj.name) : actual_rgo_throughput;
+
+          //This is the only actual modifier that affects the production value of this good for this building
+          {
+            actual_production_efficiency = (building_obj.maintenance) ?
+              actual_production_efficiency :
+              actual_rgo_throughput;
+
+            //research_efficiency modifier is used if good is of type knowledge
+            if (is_knowledge)
+              actual_production_efficiency = usr.modifiers.research_efficiency;
+          }
+
+          //Add production value of good to matrix
+          var production_list = getList(building_obj.produces[all_produced_goods[i]]);
+
+          if (production_list.length >= 2) {
+            if (!actual_resource) {
+              changeProductionValue(all_produced_goods[i], "minimum", production_list[0]*actual_production_efficiency);
+              changeProductionValue(all_produced_goods[i], "maximum", production_list[0]*actual_production_efficiency);
+            } else {
+              if (!is_knowledge) {
+                changeProductionValue(all_produced_goods[i], "minimum", production_list[0]*usr.modifiers[`${all_produced_goods[i]}_gain`]*actual_production_efficiency);
+                changeProductionValue(all_produced_goods[i], "maximum", production_list[0]*usr.modifiers[`${all_produced_goods[i]}_gain`]*actual_production_efficiency);
+              } else {
+                changeProductionValue(all_produced_goods[i], "minimum", production_list[0]*actual_production_efficiency*usr.modifiers[`${all_produced_goods[i]}_gain`]);
+                changeProductionValue(all_produced_goods[i], "maximum", production_list[0]*actual_production_efficiency*usr.modifiers[`${all_produced_goods[i]}_gain`]);
+              }
+            }
+          } else {
+            (!is_knowledge) ?
+              changeProductionValue(all_produced_goods[i], "all", production_list[0]*actual_production_efficiency) :
+              changeProductionValue(all_produced_goods[i], "all", production_list[0]);
+          }
+        }
+      } catch {}
+
+    //Return statement
+    return production_obj;
   }
 };

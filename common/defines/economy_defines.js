@@ -63,8 +63,8 @@ config.defines.economy = {
   food_required_per_million: 1, //Note that food requirements in goods/goods.js should also be changed to reflect this number when modding
   money_per_action: 2500, //Assuming taxes were 100%, this is how much a country would earn per action
   resource_base_stock: 100, //How much stock should be set as the default amount in the world market
-  rgo_modifier: 0.1, //Amplifier for RGO modifier effects
   shipment_speed: 50, //How many provinces should a shipment travel per turn as base?
+  supply_limit_rgo_modifier: 100, //How much extra supply limit should it take for an extra +1% boost to RGO throughput in the province?
   urbanisation_cost: 25, //Initial Political Capital cost for urbanisation
   urbanisation_cost_percentile_growth: 1.2, //How fast should the cost grow exponentially?
 

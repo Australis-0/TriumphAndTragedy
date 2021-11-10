@@ -134,6 +134,25 @@ module.exports = {
     return (city_exists[0]) ? city_exists[1] : undefined;
   },
 
+  getCityRGOThroughput: function (arg0_name) {
+    //Convert from parameters
+    var city_name = arg0_name;
+
+    //Declare local instance variables
+    try {
+      var city_obj = getCity(city_name);
+      var usr = main.users[city_obj.controller];
+    } catch {}
+
+    return returnSafeNumber(
+      (usr.modifiers.rgo_throughput) +
+        (
+          returnSafeNumber(city_obj.supply_limit, config.defines.combat.base_supply_limit)/
+          config.defines.economy.supply_limit_rgo_modifier
+        )*0.01
+    );
+  },
+
   getDevelopmentCost: function (arg0_user, arg1_name, arg2_amount) {
     //Convert from parameters
     var user_id = arg0_user;
