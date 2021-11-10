@@ -174,7 +174,42 @@ module.exports = {
   },
 
   getBuildingConsumption: function (arg0_user, arg1_building) { //[WIP]
+    //Convert from parameters
+    var user_id = arg0_user;
+    var building_name = arg1_building;
 
+    //Declare local instance variables
+    var building_obj = module.exports.getBuilding(building_name);
+    var maintenance_obj = {};
+    var usr = main.users[user_id];
+
+    //Only start appending if the .maintenance object exists at all
+    if (building_obj.maintenance) {
+      var all_maintenance_costs = Object.keys(building_obj.maintenance);
+
+      for (var i = 0; i < all_maintenance_costs.length; i++) {
+        var local_consumption_value = getList(building_obj.maintenance[all_maintenance_costs[i]]);
+
+        if (local_consumption_value.length >= 2) {
+          maintenance_obj[all_maintenance_costs[i]] = (!maintenance_obj[all_maintenance_costs[i]]) ?
+            [local_consumption_value[0], local_consumption_value[1]] :
+            [
+              maintenance_obj[all_maintenance_costs[i]][0] + local_consumption_value[0],
+              maintenance_obj[all_maintenance_costs[i]][1] + local_consumption_value[1]
+            ];
+        } else {
+          maintenance_obj[all_maintenance_costs[i]] = (!maintenance_obj[all_maintenance_costs[i]]) ?
+            [local_consumption_value[0], 0] :
+            [
+              maintenance_obj[all_maintenance_costs[i]][0] + local_consumption_value[0],
+              maintenance_obj[all_maintenance_costs[i]][1]
+            ];
+        }
+      }
+    }
+
+    //Return statement
+    return maintenance_obj;
   },
 
   /*
