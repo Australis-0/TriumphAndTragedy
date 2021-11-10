@@ -285,7 +285,7 @@ module.exports = {
   },
 
   //This method only gets building production, not maintenance. See getBuildingConsumption() for maintenance costs instead.
-  getBuildingProduction: function (arg0_user, arg1_building, arg2_city_name) { //[WIP]
+  getBuildingProduction: function (arg0_user, arg1_building, arg2_city_name) {
     //Convert from parameters
     var user_id = arg0_user;
     var building_name = arg1_building;
