@@ -184,7 +184,7 @@ module.exports = {
 
     }
   */
-  getBuildingCost: function (arg0_user, arg1_building, arg2_options) { //[WIP] - Add functionality to pop argument
+  getBuildingCost: function (arg0_user, arg1_building, arg2_options) {
     //Convert from parameters
     var user_id = arg0_user;
     var building_name = arg1_building;
@@ -230,6 +230,19 @@ module.exports = {
           costs_obj[all_costs[i]] = (!costs_obj[all_costs[i]]) ?
             current_resource_demand :
             costs_obj[all_costs[i]] + current_resource_demand;
+      }
+    }
+
+    //Begin appending pops if options.type is either "all" or "pops"
+    if (building_obj.manpower_cost && ["all", "pops"].includes(options.type)) {
+      var all_manpower_costs = Object.keys(building_obj.manpower_cost);
+
+      for (var i = 0; i < all_manpower_costs.length; i++) {
+        var current_resource_demand = building_obj.costs[all_manpower_costs[i]]*amount;
+
+        costs_obj[all_costs[i]] = (!costs_obj[all_costs[i]]) ?
+          current_resource_demand :
+          costs_obj[all_costs[i]] + current_resource_demand;
       }
     }
 
