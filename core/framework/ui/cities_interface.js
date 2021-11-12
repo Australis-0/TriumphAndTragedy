@@ -65,7 +65,7 @@ module.exports = {
     });
   },
 
-  printCity: function (arg0_user, arg1_name) { //[WIP] - Print out buildings and housing somehow
+  printCity: function (arg0_user, arg1_name) { //[WIP] - Print out buildings and housing somehow; add under_construction later
     //Convert from parameters
     var user_id = arg0_user;
     var city_name = arg1_name;
@@ -106,6 +106,67 @@ module.exports = {
       city_string.push(`**RGO:** ${rgo_icon}${rgo_name}`);
       city_string.push(`- **${(usr.modifiers.rgo_throughput-1 >= 0) ? "+" : ""}${printPercentage(usr.modifiers.rgo_throughput-1)}** modifier to ${rgo_icon}${rgo_name} production in this province.`);
       city_string.push(`**Development:** ${config.icons.development} ${parseNumber(city_obj.development)}`);
+
+      city_string.push("");
+      city_string.push(`**Buildings:**`);
+      city_string.push(config.localisation.divider);
+      city_string.push("");
+
+      //Display buildings in building categories!
+      var all_building_categories = getBuildingCategories();
+      var people_housed = 0;
+
+      //Fetch housing amount first
+      for (var i = 0; i < all_building_categories.length; i++) {
+        var local_building_category = getBuildingCategory(all_building_categories[i]);
+
+        //Iterate over all building objects in array
+        var all_buildings_in_category = Object.keys(local_building_category);
+
+        //Fetch housing amount
+        for (var x = 0; x < all_buildings_in_category.length; x++)
+          for (var y = 0; y < city_obj.buildings.length; y++) {
+            var local_building = getBuilding(city_obj.buildings[y].building_type);
+
+            if (local_building.houses)
+              people_housed += local_building.houses;
+          }
+      }
+
+      for (var i = 0; i < all_building_categories.length; i++) {
+        var local_building_category = getBuildingCategory(all_building_categories[i]);
+        var local_building_slots = getBuildingSlots(actual_id, city_name, all_building_categories[i]);
+        var special_string = (local_building_category.is_housing || local_building_category.description) ?
+          (local_building_category.is_housing) ?
+            `\n • **Current Limit:** ${parseNumber(people_housed)}. Cities cannot grow once they surpass their housing limit. Build more **housing** to increase this limit.` :
+            `\n • ${local_building_category.description}`
+        : "";
+
+        //Display category and all buildings inside only if the local building category should either always be displayed or buildings are present inside of the building category
+        if (local_building_category)
+          if (local_building_slots.total_buildings > 0 || local_building_category.always_display) {
+            //Generate and push header to page
+            (local_building_slots) ?
+              city_string.push(`- **${parseString(all_building_categories[i])}:** (${parseNumber(local_building_slots.total_buildings)}/${parseNumber(local_building_slots.total_slots)}) ${special_string}`) :
+              city_string.push(` - **${parseString(all_building_categories[i])}:** ${special_string}`);
+
+            //iterate over all building objects in array
+            for (var x = 0; x < all_buildings_in_category.length; x++)
+              if (!ignore_building_keys.includes(all_buildings_in_category[x])) {
+                var all_buildings = 0;
+                var local_building = getBuilding(all_buildings_in_category[x]);
+                var local_building_name = (local_building.name) ? local_building.name : all_buildings_in_category[x];
+                var local_slots = getBuildingSlots(actual_id, city_name, all_buildings_in_category[x]);
+
+                for (var y = 0; y < city_obj.buildings.length; y++)
+                  if (city_obj.buildings[y].building_type == all_buildings_in_category[x])
+                    all_buildings++;
+
+                if (all_buildings > 0)
+                  city_string.push(` - ${local_building_name}: ${parseNumber(all_buildings)}${(local_slots) ? " (" + parseNumber(all_buildings) + "/" + parseNumber(local_slots.total_slots) + ")" : ""}`);
+              }
+          }
+      }
 
       //Change game_obj.page
       game_obj.page = `view_city_${city_obj.name}`;

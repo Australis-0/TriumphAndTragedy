@@ -1,8 +1,10 @@
 module.exports = {
   ignore_building_keys: [
     "always_display",
+    "description",
     "disable_slots",
     "icon",
+    "is_housing",
     "name",
     "order"
   ],
@@ -433,7 +435,7 @@ module.exports = {
         if (!module.exports.ignore_building_keys.includes(local_buildings[x]))
           all_buildings.push((options.return_names) ?
             local_buildings[x] :
-            local_category[local_buildings[x]];
+            local_category[local_buildings[x]]
           );
     }
 
@@ -442,6 +444,20 @@ module.exports = {
   },
 
   //Gets building slots for a given category/building, returns -1 if unlimited
+  /*
+    getBuildingSlots() - Returns an object of various building slot statistics for a given category within a city.
+
+    options: {
+      type: "all", "available_slots", "total_buildings", "total_slots", "under_construction"; all returns entire object, under_construction returns only buildings under construction in that category
+    }
+
+    returns: {
+      available_slots: -1, 0, -
+      total_buildings: 0, -
+      total_buildings_under_construction: 0, -
+      total_slots: -1, 0, -
+    }
+  */
   getBuildingSlots: function (arg0_user, arg1_city_name, arg2_building_category, arg3_options) { //[WIP] - Add under_construction field to function for both type building and building_category parsing
     //Convert from parameters
     var user_id = arg0_user;
@@ -450,7 +466,7 @@ module.exports = {
 
     //Initialise options
     var options = (arg3_options) ? arg3_options : {
-      type: "all" //"all", "available_slots", "total_buildings", "total_slots", "under_construction"; all returns entire object, under_construction returns only buildings under construction in that category
+      type: "all"
     };
 
     //Declare local instance variables
@@ -520,14 +536,12 @@ module.exports = {
           available_building_slots[1].available_slots =
             available_building_slots[1].total_slots -
             available_building_slots[1].total_buildings;
-
-          available_building_slots[0] = true;
         } else if (building_obj.unlimited_slots) {
           available_building_slots[1].available_slots = -1;
           available_building_slots[1].total_slots = -1;
-
-          available_building_slots[0] = true;
         }
+
+        available_building_slots[0] = true;
       }
     } catch {}
 

@@ -1,6 +1,7 @@
 config.buildings.housing = {
   always_display: true,
   disable_slots: true,
+  is_housing: true,
   order: 9,
 
   neighbourhoods: {
