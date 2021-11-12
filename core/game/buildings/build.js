@@ -34,7 +34,80 @@ module.exports = {
               if (building_slots.available_slots > 0) {
                 if (building_slots.available_slots >= building_amount) {
                   //Check if user has enough resources to construct the specified buildings
+                  var building_costs = getBuildingCost(actual_id, raw_building_name, { amount: building_amount });
+                  var resource_shortages = {};
 
+                  //Iterate over all keys in building_costs and check for prospective shortages
+                  var all_building_costs = Object.keys(building_costs);
+                  var all_goods = getGoods({ return_names: true });
+                  var all_pops = Object.keys(config.pops);
+
+                  for (var i = 0; i < all_building_costs.length; i++) {
+                    var local_cost = building_costs[all_building_costs[i]];
+
+                    //Check if resource cost is good, pop, or other
+                    if (all_goods.includes(all_building_costs[i])) {
+                      if (usr.inventory[all_building_costs[i]] < local_cost)
+                        resource_shortages[all_building_costs[i]] = local_cost - usr.inventory[all_building_costs[i]];
+                    } else if (all_pops.includes(all_building_costs[i])) {
+                      var available_pops = usr.pops[all_building_costs[i]] - usr.pops[`used_${all_building_costs[i]}`];
+
+                      if (available_pops < local_cost)
+                        resource_shortages[all_building_costs[i]] = local_cost - available_pops;
+                    } else {
+                      if (usr[all_building_costs[i]] < local_cost)
+                        resource_shortages[all_building_costs[i]] = local_cost - usr[all_building_costs[i]];
+                    }
+                  }
+
+                  //Check to see if anything is in resource_shortages. If so, print it out and return an error
+                  var all_resource_shortages = Object.keys(resource_shortages);
+
+                  if (all_resource_shortages.length == 0) {
+                    //Fetch base_construction_turns
+                    var base_construction_turns = (building_obj.construction_turns) ?
+                      building_obj.construction_turns :
+                      config.defines.economy.construction_turns;
+                    var total_construction_time = Math.ceil(base_construction_turns*usr.modifiers.construction_time);
+
+                    //Begin constructing the actual buildings
+                    usr.under_construction.push({
+                      building_type: raw_building_name,
+                      building_amount: building_amount,
+                      construction_turns: total_construction_time,
+                      province_id: city_obj.id
+                    });
+
+                    printAlert(game_obj.id, `You have begun constructing **${parseNumber(building_amount)}** ${(building_amount == 1) ? (building_obj.singular) ? building_obj.singular : raw_building_name : (building_obj.name) ? building_obj.name : raw_building_name} in **${city_obj.name}**! Your advisors estimate that construction will complete in **${parseNumber(total_construction_time)}** turn(s).`);
+
+                    //Reload city interface if current user page is there
+                    if (game_obj.page == `view_city_${city_obj.name}`)
+                      createPageMenu(game_obj.middle_embed, {
+                        embed_pages: printCity(game_obj.user, city_obj.name),
+                        user: game_obj.user
+                      });
+                  } else {
+                    //Resource shortages encountered, print them out
+                    var shortage_array = [];
+
+                    for (var i = 0; i < all_resource_shortages.length; i++) {
+                      var local_good = getGood(all_resource_shortages[i]);
+                      var local_icon = "";
+                      var local_shortage = resource_shortages[all_resource_shortages[i]];
+
+                      //Determine icon
+                      if (!usr.inventory[all_resource_shortages[i]]) {
+                        if (all_resource_shortages[i] == "money")
+                          local_icon = config.icons.money;
+                      } else {
+                        local_icon = (local_good.icon) ? config.icons[local_good.icon] : "";
+                      }
+
+                      shortage_array.push(`- ${local_icon} ${parseNumber(local_shortage)} ${(local_good) ? (local_good.name) ? local_good.name : all_resource_shortages[i] : ""}`);
+                    }
+
+                    printError(game_obj.id, `You don't have enough resources to construct **${parseNumber(building_amount)}** ${(building_obj.name) ? building_obj.name : raw_building_name}! You still require the following resources:\n\n${shortage_array.join("\n")}`);
+                  }
                 } else {
                   printError(game_obj.id, `**${raw_category_name}** in **${city_obj.name}** does not have enough building slots remaining to construct **${parseString(building_amount)}** new building(s)! Only **${parseString(building_slots.available_slots)}** available building slot(s) for **${raw_category_name}** could be found in **${city_obj.name}**. Consider promoting urbanisation in this province to gain extra building slots, or researching additional technologies.`);
                 }
