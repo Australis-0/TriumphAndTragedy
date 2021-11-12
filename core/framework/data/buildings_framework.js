@@ -183,6 +183,29 @@ module.exports = {
     }
   },
 
+  /*
+    getBuildingCategoryFromBuilding() - Returns back the building_category object/key based on the specified building name. Only supports raw building names
+    options: {
+      return_key: true/false - Whether or not to return back the building category key instead of object. False by default
+    }
+  */
+  getBuildingCategoryFromBuilding: function (arg0_name, arg1_options) {
+    //Convert from parameters
+    var building_name = arg0_name;
+    var options = (arg1_options) ? arg1_options : {};
+
+    //Declare local instance variables
+    var all_building_categories = Object.keys(config.buildings);
+    var building_category_exists = [false, ""]; //[building_category_exists, category_name]
+
+    for (var i = 0; i < all_building_categories.length; i++)
+      if (Object.keys(config.buildings[all_building_categories[i]]).includes(building_name))
+        building_category_exists = [true, (!options.return_key) ? config.buildings[all_building_categories[i]] : all_building_categories[i];
+
+    //Return statement
+    return (building_category_exists[0]) ? building_category_exists[1] : undefined;
+  },
+
   getBuildingConsumption: function (arg0_user, arg1_building) {
     //Convert from parameters
     var user_id = arg0_user;
@@ -225,7 +248,8 @@ module.exports = {
   /*
     getBuildingCost() - Returns the cost of a building for the specified user as a JSON object/integer.
     options: {
-      type: "all", "money", "goods", "pops" - Returns either all cost arguments, only money (as an integer), goods, or pop costs only
+      type: "all", "money", "goods", "pops" - Returns either all cost arguments, only money (as an integer), goods, or pop costs only,
+      amount: - The number of buildings to check the cost for.
     }
   */
   getBuildingCost: function (arg0_user, arg1_building, arg2_options) {
@@ -236,6 +260,7 @@ module.exports = {
     //Initialise options
     var options = (arg2_options) ? arg2_options : {};
     if (!options.type) options.type = "all";
+    if (!options.amount) options.amount = 1;
 
     //Declare local instance variables
     var building_obj = module.exports.getBuilding(building_name);
@@ -249,7 +274,7 @@ module.exports = {
       for (var i = 0; i < all_costs.length; i++) {
         //Check to make sure that this is an actual resource, and not just a pop value
         var building_cost_modifier = (!Object.keys(config.pops).includes(all_costs[i])) ? returnSafeNumber(usr.modifiers.building_cost, 1) : 1;
-        var current_resource_demand = building_obj.costs[all_costs[i]]*building_cost_modifier*amount;
+        var current_resource_demand = building_obj.costs[all_costs[i]]*building_cost_modifier*options.amount;
 
         //Fetch resource_type
         var resource_type = {
@@ -282,7 +307,7 @@ module.exports = {
       var all_manpower_costs = Object.keys(building_obj.manpower_cost);
 
       for (var i = 0; i < all_manpower_costs.length; i++) {
-        var current_resource_demand = building_obj.costs[all_manpower_costs[i]]*amount;
+        var current_resource_demand = building_obj.costs[all_manpower_costs[i]]*options.amount;
 
         costs_obj[all_costs[i]] = (!costs_obj[all_costs[i]]) ?
           current_resource_demand :
