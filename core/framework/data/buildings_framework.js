@@ -200,7 +200,7 @@ module.exports = {
 
     for (var i = 0; i < all_building_categories.length; i++)
       if (Object.keys(config.buildings[all_building_categories[i]]).includes(building_name))
-        building_category_exists = [true, (!options.return_key) ? config.buildings[all_building_categories[i]] : all_building_categories[i];
+        building_category_exists = [true, (!options.return_key) ? config.buildings[all_building_categories[i]] : all_building_categories[i]];
 
     //Return statement
     return (building_category_exists[0]) ? building_category_exists[1] : undefined;
