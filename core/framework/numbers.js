@@ -5,12 +5,19 @@ module.exports = {
     return randomNumber(0, 100000000000).toString();
   },
 
-  printPercentage: function (arg0_number) {
+  /*
+    printPercentage() - Formats a string to fit a certain percentage (e.g. 23%), instead of a default decimal number.
+    options: {
+      display_prefix: true/false - Whether or not to display a starting prefix
+    }
+  */
+  printPercentage: function (arg0_number, arg1_options) {
     //Convert from parameters
     var number = arg0_number;
+    var options = (arg1_options) ? arg1_options : {};
 
     //Return statement
-    return `${Math.round(number*100)}%`;
+    return `${(options.display_prefix) ? (number > 1) ? "+" : "" : ""}${Math.round(number*100)}%`;
   },
 
   randomNumber: function (min, max) {

@@ -30,6 +30,14 @@ module.exports = {
     return string.replace(/_/g, " ").replace(/(^\w{1})|(\s{1}\w{1})/g, match => match.toUpperCase());
   },
 
+  parseBoolean: function (arg0_boolean) {
+    ///Convert from parameters
+    var boolean = arg0_boolean;
+
+    //Return statement
+    return (boolean) ? "Yes" : "No";
+  },
+
   parseDate: function (arg0_timestamp) {
     var a = new Date(arg0_timestamp);
     var year = a.getFullYear();

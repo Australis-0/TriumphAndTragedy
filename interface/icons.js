@@ -87,6 +87,15 @@ config.icons = {
   wheat: "<:wheat:771829710569078804>",
   wood: "<:wood:716791408928751636>",
 
+  //Government icons
+  black_circle: ":black_circle:",
+  blue_circle: ":blue_circle:",
+  brown_circle: ":brown_circle:",
+  green_circle: ":green_circle:",
+  orange_circle: ":orange_circle:",
+  purple_circle: ":purple_circle:",
+  red_circle: ":red_circle:",
+
   //Interface icons
   actions: "<:actions:716817688244256770>",
   construction_time: "<:building:716827579650408538>",

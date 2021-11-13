@@ -3,7 +3,7 @@ config.governments = {
     name: "Anarchy",
     adjective: "Anarchists",
     singular: "Anarchist",
-    icon: ":black_circle:",
+    icon: "black_circle",
     is_anarchy: true,
     description: "Anarchists believe in a stateless world ... which is bad news for you, since you're roleplaying a state. Go on, do `$government <name>`!",
 
@@ -21,7 +21,7 @@ config.governments = {
     name: "Absolute Monarchy",
     adjective: "Absolute Monarchists",
     singular: "Absolute Monarchist",
-    icon: ":purple_circle:",
+    icon: "purple_circle",
     description: "Supporters of absolute monarchy believe in a divinely ordained monarchy that wields absolute power.",
 
     effect: {
@@ -42,7 +42,7 @@ config.governments = {
     name: "Constitutional Monarchy",
     adjective: "Constitutional Monarchists",
     singular: "Constitutional Monarchist",
-    icon: ":orange_circle:",
+    icon: "orange_circle",
     description: "Constitutionalists believe in a figurehead monarchy, with a democratic system of government.",
 
     effect: {
@@ -59,7 +59,8 @@ config.governments = {
   communism: {
     name: "Communism",
     adjective: "Communists",
-    icon: ":red_circle:",
+    singular: "Communist",
+    icon: "red_circle",
     description: "Communism, the Red Hydra: the dictatorship of the proletariat often means the nationalisation of all privately held property.",
 
     effect: {
@@ -76,7 +77,8 @@ config.governments = {
   socialism: {
     name: "Socialism",
     adjective: "Socialists",
-    icon: ":green_circle:",
+    singular: "Socialist",
+    icon: "green_circle",
     description: "Socialism branched out from communism during the first half of the 20th century, and instead argued for a welfare state, usually along democratic lines.",
 
     effect: {
@@ -94,6 +96,7 @@ config.governments = {
     name: "Democracy",
     adjective: "Republicans",
     singular: "Republican",
+    icon: "blue_circle",
     description: "The concept of democracy often differed throughout history, but eventually came to represent a government by the people.",
 
     effect: {
@@ -111,6 +114,7 @@ config.governments = {
     name: "Fascism",
     adjective: "Fascists",
     singular: "Fascist",
+    icon: "brown_circle",
     description: "Fascism originally stemmed from ethnic hypernationalism and became emblematic of aggressive militaristic countries.",
 
     effect: {
