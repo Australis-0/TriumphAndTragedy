@@ -168,6 +168,7 @@ module.exports = {
       if (!usr.modifiers.combat_order) usr.modifiers.combat_order = config.combat_order;
       if (!usr.modifiers.command_power) usr.modifiers.command_power = 0;
       if (!usr.modifiers.command_power_gain) usr.modifiers.command_power_gain = 0;
+      if (!usr.modifiers.maximum_manpower) usr.modifiers.maximum_manpower = 1;
       if (!usr.modifiers.mobilisation_impact) usr.modifiers.mobilisation_impact = 1;
       if (!usr.modifiers.mobilisation_size) usr.modifiers.mobilisation_size = 1;
       if (!usr.modifiers.mobilisation_speed) usr.modifiers.mobilisation_speed = 1;

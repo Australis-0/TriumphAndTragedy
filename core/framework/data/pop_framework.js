@@ -126,7 +126,7 @@ module.exports = {
     //Declare local instance variables
     var pop_obj = config.pops[pop_type];
     var availability_modifier = (pop_obj.military_pop) ?
-      usr.modifiers.national_manpower
+      usr.modifiers.maximum_manpower*usr.modifiers.national_manpower
       : 1;
 
     //Return statement
