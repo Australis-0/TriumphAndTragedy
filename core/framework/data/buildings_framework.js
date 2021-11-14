@@ -593,5 +593,151 @@ module.exports = {
 
         break;
     }
+  },
+
+  /*
+    getProduction() - Returns the production value of a specific good or all goods for a user. Note that "all" for arg1_good returns an object of all goods with their minimum and maximum production values being stored in a 2-element array.
+  */
+  getProduction: function (arg0_user, arg1_good) {
+    //Convert from parameters
+    var user_id = arg0_user;
+    var good_type = arg1_good;
+
+    //Declare local instance variables, corresponding functions
+    var all_goods = getGoods({ return_names: true });
+    var cities = getCities(user_id);
+    var usr = main.users[user_id];
+
+    //Note that deep copies are made to make sure not to effect the actual user variable and to run a valid simulation to simply fetch values instead of alter them
+    var goods_production = {};
+    var virtual_usr = JSON.parse(JSON.stringify(usr));
+
+    function changeProductionValue (arg0_key, arg1_min_max_argument, arg2_value) {
+      //Convert from parameters
+      var local_key = arg0_key;
+      var min_max_argument = arg1_min_max_argument;
+      var local_value = Math.round(returnSafeNumber(arg2_value));
+
+      //Add to goods production
+      if (goods_production[local_key]) {
+        switch (min_max_argument) {
+          case "minimum":
+            goods_production[local_key][0] += local_value;
+
+            break;
+          case "maximum":
+            goods_production[local_key][1] += local_value;
+
+            break;
+          default:
+            goods_production[local_key][0] += local_value;
+            goods_production[local_key][1] += local_value;
+
+            break;
+        }
+      } else {
+        switch (min_max_argument) {
+          case "minimum":
+            goods_production[local_key] = [local_value, 0];
+
+            break;
+          case "maximum":
+            goods_production[local_key] = [0, local_value];
+
+            break;
+          default:
+            goods_production[local_key] = [local_value, local_value];
+
+            break;
+        }
+      }
+    }
+
+    //Get all goods production by default, filter only if good_type is not set to "all"
+    if (usr) {
+      try {
+        for (var i = 0; i < cities.length; i++)
+          //Iterate over all buildings in city
+          for (var x = 0; x < cities[i].buildings.length; x++) {
+            var building_obj = getBuilding(cities[i].buildings[x].building_type);
+            var local_building = cities[i].buildings[x];
+            var production_valid = true;
+            var raw_building_name = cities[i].buildings[x].building_type;
+
+            if (building_obj.maintenance) {
+              var all_maintenance_costs = Object.keys(building_obj.maintenance);
+              var local_checks = 0;
+
+              for (var y = 0; y < all_maintenance_costs.length; y++) {
+                var local_value = getList(building_obj.maintenance[all_maintenance_costs[y]]);
+
+                //Check to make sure that material actually exists
+                var current_amount = randomElement(local_value);
+                var local_actual_material = all_goods.includes(all_maintenance_costs[y]);
+
+                if (local_actual_material) {
+                  if (virtual_inventory[all_maintenance_costs[y]] >= current_amount) {
+                    local_checks++;
+                    virtual_inventory[all_maintenance_costs[y]] -= current_amount;
+                  }
+                } else {
+                  if (virtual_usr[all_maintenance_costs[y]] >= current_amount) {
+                    local_checks++;
+                    virtual_usr[all_maintenance_costs[y]] -= current_amount;
+                  }
+                }
+
+                //Change production value for it
+                if (good_type == "all") {
+                  changeProductionValue(`${all_maintenance_costs[y]}_upkeep`, "minimum", current_amount);
+                  changeProductionValue(`${all_maintenance_costs[y]}_upkeep`, "maximum", current_amount);
+                }
+
+                //Begin removing resources from virtual_inventory and virtual_user
+                (local_actual_material) ?
+                  virtual_inventory[all_maintenance_costs[y]] -= current_amount :
+                  virtual_usr[all_maintenance_costs[y]] -= current_amount;
+              }
+            }
+
+            if (building_obj.maintenance)
+              production_valid = (local_checks >= all_maintenance_costs.length);
+
+            //Only produce if the building has the necessary resources to do so
+            if (production_valid) {
+              //Add building special_effect to total goods production array
+              goods_production[`${raw_building_name}_special_effect`] = (goods_production[`${raw_building_name}_special_effect`]) ?
+                goods_production[`${raw_building_name}_special_effect`] + 1 :
+                1;
+
+              var building_production = module.exports.getBuildingProduction(user_id, raw_building_name, cities[i].name);
+
+              //Add all_building_production to goods_production
+              var all_building_production = Object.keys(building_production);
+
+              for (var y = 0; y < all_building_production.length; y++) {
+                changeProductionValue(`${all_building_production[y]}`, "minimum", current_amount);
+                changeProductionValue(`${all_building_production[y]}`, "maximum", current_amount);
+              }
+            }
+          }
+
+        //Sort goods_production so that each key is actually [min, max]
+        var all_good_keys = Object.keys(goods_production);
+        for (var i = 0; i < all_good_keys.length; i++)
+          if (Array.isArray(all_good_keys[i]))
+            goods_production[all_good_keys[i]].sort();
+      } catch {
+        log.error(`getProduction() - ran into an error whilst trying to parse production for User ID: ${e}.`);
+        console.error(e);
+      }
+    } else {
+      log.error(`getProduction() - encountered an error when trying to parse production for User ID: ${user_id}.`);
+    }
+
+    //Return statement
+    return (good_type == "all") ?
+      (Object.keys(goods_production).length > 0) ? goods_production : {} :
+      (goods_production[good_type]) ? goods_production[good_type] : {};
   }
 };
