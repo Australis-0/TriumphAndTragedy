@@ -303,6 +303,7 @@ module.exports = {
       if (!usr.city_cap) usr.city_cap = 0;
       if (!usr.city_count) usr.city_count = 0;
       if (!usr.country_age) usr.country_age = 0;
+      if (!usr.coup_this_turn) usr.coup_this_turn = "";
       if (!usr.government) usr.government = "";
       if (!usr.highest_tier) usr.highest_tier = 0;
       if (!usr.id) usr.id = user_id;

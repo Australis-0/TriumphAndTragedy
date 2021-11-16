@@ -65,6 +65,7 @@ FileManager.import("./game/colonisation/settle");
 
 FileManager.import("./game/country/create_country");
 
+FileManager.import("./game/politics/coup_government");
 FileManager.import("./game/politics/set_government");
 FileManager.import("./game/politics/set_tax");
 

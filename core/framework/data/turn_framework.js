@@ -1,5 +1,5 @@
 module.exports = {
-  nextTurn: function (arg0_user, arg1_options) { //[WIP]
+  nextTurn: function (arg0_user, arg1_options) { //[WIP] - Add newspaper section later
     //Convert from parameters
     var user_id = arg0_user;
     var options = (arg1_options) ? arg1_options : {};
@@ -53,6 +53,20 @@ module.exports = {
       //Remove constructed requests
       for (var i = 0; i < construction_requests_to_remove.length; i++)
         removeElement(usr.under_construction, i);
+    }
+
+    //Politics processing
+    {
+      //Check to see if a coup has been initiated
+      if (usr.coup_this_turn != "") {
+        usr.tax_rate = 0;
+        setGovernment(actual_id, usr.coup_this_turn);
+
+        //Reset coup_this_turn so we don't coup 24/7
+        usr.actions = 0;
+        usr.coup_this_turn = "";
+      }
+
     }
 
     //Return statement if simulation
