@@ -55,7 +55,9 @@ module.exports = {
       }
     }
 
-    economy_string.push(`Type **[Inventory]** to view your **current resources**.`);
+    economy_string.push("");
+    economy_string.push(`- **[Constructions]** View a complete list of current constructions.`);
+    economy_string.push(`- **[Inventory]** View your **current resources**.`);
 
     //Remove control panel if one exists
     removeControlPanel(game_obj.id);

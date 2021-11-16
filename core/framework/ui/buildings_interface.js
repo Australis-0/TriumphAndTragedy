@@ -175,5 +175,69 @@ module.exports = {
       title_pages: true,
       fixed_width: true
     });
+  },
+
+  printConstructions: function (arg0_user) {
+    //Convert from parameters
+    var user_id = arg0_user;
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var game_obj = getGameObject(user_id);
+    var usr = main.users[actual_id];
+
+    //Declare construction_obj; construction_string
+    var construction_obj = {};
+    var construction_string = [];
+
+    if (usr) {
+      construction_string.push(`**[Back]** ¦ **[Jump To Page]**`);
+      construction_string.push("");
+
+      //Push all constructions to construction_string as a formatted array, initialise all construction_obj fields first
+      for (var i = 0; i < usr.under_construction.length; i++)
+        if (!construction_obj[usr.under_construction[i].province_id])
+          construction_obj[usr.under_construction[i].province_id] = [];
+      for (var i = 0; i < usr.under_construction.length; i++)
+        construction_obj[usr.under_construction[i].province_id].push(usr.under_construction[i]);
+
+      //Fetch cities alphabetically
+      var all_cities = Object.keys(construction_obj).sort();
+      var raw_city_names = [];
+
+      for (var i = 0; i < all_cities.length; i++)
+        raw_city_names.push(`${provinces[all_cities[i]].name},${all_cities[i]}`);
+      raw_city_names.sort();
+      all_cities = [];
+
+      for (var i = 0; i < raw_city_names.length; i++)
+        all_cities.push(raw_city_names[i].split(",")[1]);
+
+      //Dynamically push city constructions to construction_string
+      for (var i = 0; i < all_cities.length; i++) {
+        var local_constructions = construction_obj[all_cities[i]];
+
+        //Only display city if constructions are currently ongoing there
+        if (local_constructions.length > 0) {
+          construction_string.push(`**${provinces[all_cities[i]].name}**:`);
+          for (var x = 0; x < local_constructions.length; x++) {
+            var local_building_obj = getBuilding(local_constructions[x].building_type);
+
+            construction_string.push(`Currently constructing ${parseNumber(local_constructions[x].building_amount)} ${(local_building_obj.name) ? local_building_obj.name : local_constructions[x].building_type} in this city. They will finish in **${local_constructions[x].construction_turns}** turn(s).`);
+          }
+        }
+      }
+
+      //If no building construction is currently going on within the target country, push message to array
+      if (Object.keys(construction_obj).length == 0)
+        construction_string.push(`_You do not have any constructions currently ongoing within your territory._\n\nCancellation of building constructions can be caused by enemy occupations during wars. Type **[Build]** to start a new construction.`);
+
+      //Return statement
+      return splitEmbed(construction_string, {
+        title: "Construction List:",
+        title_pages: true,
+        fixed_width: true
+      });
+    }
   }
 };

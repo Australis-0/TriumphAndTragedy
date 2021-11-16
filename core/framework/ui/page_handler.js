@@ -198,6 +198,14 @@ module.exports = {
           });
 
           break;
+        case "constructions":
+          createPageMenu(game_obj.middle_embed, {
+            embed_pages: printConstructions(actual_id),
+            user: game_obj.user
+          });
+          game_obj.page = "view_constructions";
+
+          break;
         case "found_city":
           //Make sure that user is actually able to found a city before authorising the command, otherwise print an error
           (usr.city_cap-usr.city_count > 0) ?
@@ -218,6 +226,31 @@ module.exports = {
           });
 
           break;
+        }
+      }
+      if (game_obj.page == "view_constructions") {
+        switch (input) {
+          case "back":
+            game_obj.page = "economy";
+            printEconomy(user_id);
+
+            break;
+          case "jump to page":
+            visualPrompt(game_obj.alert_embed, user_id, {
+              title: `Jump To Page:`,
+              prompts: [
+                [`Which page would you like to jump to?`, "number", { min: 1, max: printConstructions(game_obj.user).length }]
+              ]
+            },
+            function (arg) {
+              createPageMenu(game_obj.middle_embed, {
+                embed_pages: printConstructions(game_obj.user),
+                page: arg[0] - 1,
+                user: game_obj.user
+              });
+            });
+
+            break;
         }
       }
     }
@@ -301,7 +334,7 @@ module.exports = {
                 embed_pages: printProvince(game_obj.user, province_name),
                 page: arg[0] - 1,
                 user: game_obj.user
-              })
+              });
             });
 
             break;
