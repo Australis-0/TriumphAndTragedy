@@ -159,6 +159,28 @@ module.exports = {
     {
       if (["country_interface"].includes(game_obj.page)) {
         switch (input) {
+          case "coup":
+            visualPrompt(game_obj.alert_embed, user_id, {
+              title: `Coup Government:`,
+              prompts: [`What would you like to coup your current government to?\n\nType **[Government List]** for a list of valid governments.`, "string"]
+            },
+            function (arg) {
+              coup(user_id, arg[0]);
+            },
+            function (arg) {
+              switch (arg) {
+                case "government list":
+                  createPageMenu(game_obj.middle_embed, {
+                    embed_pages: printGovernmentList(actual_id),
+                    user: game_obj.user
+                  });
+                  return true;
+
+                  break;
+              }
+            });
+
+            break;
           case "government list":
             createPageMenu(game_obj.middle_embed, {
               embed_pages: printGovernmentList(actual_id),
