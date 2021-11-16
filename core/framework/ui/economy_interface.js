@@ -5,9 +5,14 @@ module.exports = {
 
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
+    var all_good_names = getGoods({ return_names: true });
     var all_pops = Object.keys(config.pops);
     var game_obj = getGameObject(user_id);
     var usr = main.users[actual_id];
+
+    //Declare local tracker variables
+    var all_cities = getCities(actual_id);
+    var local_resource_modifiers = {};
 
     //Initialise economy_string
     var economy_string = [];
@@ -29,12 +34,51 @@ module.exports = {
     economy_string.push(`You have **${parseNumber(getCities(actual_id, { include_hostile_occupations: true, include_occupations: true }).length)}** cities in total throughout your country.`);
     economy_string.push("");
     economy_string.push(`**[View Cities]**${(usr.city_cap-usr.city_count > 0) ? "¦ **[Found City]** (" + parseNumber(usr.city_cap-usr.city_count) + ")" : ""}`);
+    economy_string.push("");
+    economy_string.push(config.localisation.divider);
+
+    //Production modifiers (RGO)
+    for (var i = 0; i < all_good_names.length; i++)
+      local_resource_modifiers[all_good_names[i]] = {
+        count: 0,
+        cities: []
+      };
+
+    for (var i = 0; i < all_cities.length; i++) {
+      var city_obj = all_cities[i];
+      var local_element = local_resource_modifiers[city_obj.resource];
+      var local_throughput = getCityRGOThroughput(city_obj.name) - (usr.modifiers.rgo_throughput - 1);
+
+      local_element.count++;
+      local_element.push(`${city_obj.name}` + (
+        (!isNaN(city_obj.supply_limit)) ?
+          `**${printPercentage(Math.ceil(local_throughput), { display_prefix: true })}**` : ``
+      ));
+    }
+
+    ((usr.modifiers.building_cost - 1)*100 != 0) ?
+      economy_string.push(`${config.icons.construction_time} Building Cost Modifier: **${printPercentage(usr.modifiers.building_cost - 1)}**`) :
+      economy_string.push(`${config.icons.construction_time} No building cost modifiers active.`);
+
+    for (var i = 0; i < all_good_names.length; i++) {
+      var local_good = getGood(all_good_names[i]);
+      var processed_good_name = (local_good.name) ? local_good.name : all_good_names[i];
+      var processed_good_icon = (local_good.icon) ? config.icons[local_good.icon] + " " : "";
+
+      if (local_resource_modifiers[all_good_names[i]].count != 0) {
+        economy_string.push(`${processed_good_icon}Base **${printPercentage(usr.modifiers.rgo_throughput, { display_prefix: true })}** ${processed_good_name} Gain in ${local_resource_modifiers[all_good_names[i]].count}** citie(s):`);
+        economy_string.push(`- ${local_resource_modifiers[all_good_names[i]].cities.join(", ")}.`);
+      }
+    }
 
     economy_string.push("");
     economy_string.push(config.localisation.divider);
+
+    //Resource production
     economy_string.push(`**Resource Production (per turn):**`);
     economy_string.push(`**[Building List]** ¦ **[Build]**`);
     economy_string.push("");
+
     //Dynamically push resource production to economy_string
     var all_production = getProduction(user_id);
     var all_produced_goods = Object.keys(all_production);

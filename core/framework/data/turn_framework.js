@@ -78,9 +78,9 @@ module.exports = {
       //Reset all good modifiers first so that local RGO buffs from cities can be applied
       for (var i = 0; i < all_good_names.length; i++)
         usr.modifiers[`${all_good_names[i]}_gain`] = 1;
-        
+
       for (var i = 0; i < all_cities.length; i++)
-        usr.modifiers[`${all_cities[i].resource}_gain`] += usr.modifiers.rgo_throughput;
+        usr.modifiers[`${all_cities[i].resource}_gain`] += getCityRGOThroughput(all_cities[i].name);
     }
 
     //Return statement if simulation
