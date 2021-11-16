@@ -1,4 +1,7 @@
 module.exports = {
+  budget_pages: [
+    "budget"
+  ],
   economy_pages: [
     "economy",
     "inventory"
@@ -75,7 +78,7 @@ module.exports = {
         new Discord.MessageButton()
           .setCustomId("budget_btn")
           .setLabel(
-            (!["budget"].includes(game_obj.page)) ?
+            (!budget_pages.includes(game_obj.page)) ?
             "𝐁𝐮𝐝𝐠𝐞𝐭" :
             " ͟𝐁͟𝐮͟𝐝͟𝐠͟𝐞͟𝐭͟"
           )
@@ -175,6 +178,15 @@ module.exports = {
           initialiseMapViewer(getGame(user_id));
         }
         module.exports.initialiseTopbar(user_id);
+
+        break;
+      case "budget_btn":
+        //Print out budget menu
+        if (game_obj.page != "budget") {
+          game_obj.page = "budget";
+          module.exports.initialiseTopbar(user_id);
+        }
+        printBudget(user_id);
 
         break;
       case "country_btn":

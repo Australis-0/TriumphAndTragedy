@@ -1,6 +1,7 @@
 config.pops = {
   aristocrats: {
     name: "Aristocrats",
+    formal_name: "Aristocracy",
     singular: "Aristocrat",
     icon: "aristocrats",
 
@@ -17,6 +18,7 @@ config.pops = {
   },
   faculty: {
     name: "Faculty",
+    formal_name: "Faculty",
     singular: "Faculty",
     icon: "faculty",
 
@@ -32,6 +34,7 @@ config.pops = {
   },
   workers: {
     name: "Workers",
+    formal_name: "Proletariat",
     singular: "Worker",
     icon: "workers",
 
@@ -41,6 +44,7 @@ config.pops = {
   },
   soldiers: {
     name: "Soldiers",
+    formal_name: "Soldiery",
     singular: "Soldier",
     icon: "soldiers",
 

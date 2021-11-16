@@ -31,6 +31,30 @@ module.exports = {
     economy_string.push(`**[View Cities]**${(usr.city_cap-usr.city_count > 0) ? "¦ **[Found City]** (" + parseNumber(usr.city_cap-usr.city_count) + ")" : ""}`);
 
     economy_string.push("");
+    economy_string.push(config.localisation.divider);
+    economy_string.push(`**Resource Production (per turn):**`);
+    economy_string.push(`**[Building List]** ¦ **[Build]**`);
+    economy_string.push("");
+    //Dynamically push resource production to economy_string
+    var all_production = getProduction(user_id);
+    var all_produced_goods = Object.keys(all_production);
+
+    for (var i = 0; i < all_produced_goods.length; i++) {
+      var local_good = getGood(all_produced_goods[i]);
+      var local_value = all_production[all_produced_goods[i]];
+
+      if (local_good) {
+        //Deduct upkeep from good production
+        local_value = [
+          local_value[0] - returnSafeNumber(all_production[`${all_produced_goods[i]}_upkeep`][0]),
+          local_value[1] - returnSafeNumber(all_production[`${all_produced_goods[i]}_upkeep`][1]),
+        ].sort();
+
+        //Push to string
+        economy_string.push(`- **${(local_value[0] == local_value[1]) ? parseNumber(local_value[0]) : parseNumber(local_value[0]) + " - " + parseNumber(local_value[1])}** ${(local_good.name) ? local_good.name : all_produced_goods[i]}.`);
+      }
+    }
+
     economy_string.push(`Type **[Inventory]** to view your **current resources**.`);
 
     //Remove control panel if one exists

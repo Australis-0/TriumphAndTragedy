@@ -275,5 +275,16 @@ module.exports = {
     } catch (e) {
       log.error(`getProvinces() - ran into an error with User ID ${user_id}: ${e}.`)
     }
+  },
+
+  isBlockaded: function (arg0_user) {
+    //Convert from parameters
+    var user_id = arg0_user;
+
+    //Declare local instance variables
+    var usr = main.users[user_id];
+
+    //Return statement
+    return (Object.keys(usr.blockaded).length > 0);
   }
 };

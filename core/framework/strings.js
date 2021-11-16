@@ -51,8 +51,22 @@ module.exports = {
     return time;
   },
 
-  parseNumber: function (arg0_number) {
-    return Intl.NumberFormat('de').format(parseInt(arg0_number));
+  /*
+    parseNumber() - Formats a number to a string whilst displaying decimal separators (e.g. 1.567,23 instead of 1567.23).
+    options: {
+      display_prefix: true/false - Whether or not to display a starting prefix
+    }
+  */
+  parseNumber: function (arg0_number, arg1_options) {
+    //Convert from parameters
+    var number = arg0_number;
+    var options = (arg1_options) ? arg1_options : {};
+
+    return (
+      (options.display_prefix) ?
+        (number > 0) ? "+" : ""
+      : ""
+    ) + Intl.NumberFormat('de').format(parseInt(number));
   },
 
   parseString: function (arg0_string) {

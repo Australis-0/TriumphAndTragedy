@@ -47,23 +47,23 @@ module.exports = {
 
           //Other keys that belong towards the bottom
           case "civilian_actions":
-            government_string.push(`- Civilian Actions: ${parsePercentage(local_value)}`);
+            government_string.push(`- Civilian Actions: ${printPercentage(local_value)}`);
 
             break;
           case "famine_penalty":
-            government_string.push(`- Famine Penalty: ${parsePercentage(famine_penalty)}`);
+            government_string.push(`- Famine Penalty: ${printPercentage(famine_penalty)}`);
 
             break;
           case "maximum_manpower":
-            government_string.push(`- Maximum Manpower: ${parsePercentage(local_value)}`);
+            government_string.push(`- Maximum Manpower: ${printPercentage(local_value)}`);
 
             break;
           case "maximum_tax_rate":
-            government_string.push(`- Maximum Tax Rate: ${parsePercentage(local_value)}`);
+            government_string.push(`- Maximum Tax Rate: ${printPercentage(local_value)}`);
 
             break;
           case "reform_desire_gain":
-            government_string.push(`- Reform Desire Gain: ${parsePercentage(local_value)}`);
+            government_string.push(`- Reform Desire Gain: ${printPercentage(local_value)}`);
 
             break;
           case "stability_modifier":
@@ -74,8 +74,8 @@ module.exports = {
                 government_obj.effect.add_expiry_effect.limit.year_is_greater_than
               )
                 if (government_obj.effect.add_expiry_effect.stability_modifier)
-                  government_string.push(`- Stability Modifier: ${parsePercentage(government_obj.effect.add_expiry_effect.stability_modifier, { display_prefix: true })} ${(government_obj.effect.add_expiry_effect.limit.year_is_less_than) ? " before " + government_obj.effect.add_expiry_effect.limit.year_is_less_than : (government_obj.effect.add_expiry_effect.limit.year) ? " when " + government_obj.effect.add_expiry_effect.limit.year : " after " + government_obj.effect.add_expiry_effect.limit.year_is_greater_than }`)
-            government_string.push(`- Stability Modifier: ${parsePercentage(local_value)}`);
+                  government_string.push(`- Stability Modifier: ${printPercentage(government_obj.effect.add_expiry_effect.stability_modifier, { display_prefix: true })} ${(government_obj.effect.add_expiry_effect.limit.year_is_less_than) ? " before " + government_obj.effect.add_expiry_effect.limit.year_is_less_than : (government_obj.effect.add_expiry_effect.limit.year) ? " when " + government_obj.effect.add_expiry_effect.limit.year : " after " + government_obj.effect.add_expiry_effect.limit.year_is_greater_than }`)
+            government_string.push(`- Stability Modifier: ${printPercentage(local_value)}`);
 
             break;
         }

@@ -133,6 +133,36 @@ module.exports = {
     return (!raw_modifier) ? Math.ceil(usr.pops[pop_type]*availability_modifier) : availability_modifier;
   },
 
+  getPopModifier: function (arg0_user, arg1_type, arg2_modifier) {
+    //Convert from parameters
+    var user_id = arg0_user;
+    var usr = main.users[user_id];
+    var pop_type = arg1_type;
+    var raw_modifier = arg2_raw_modifier;
+
+    //Declare local instance variables
+    var pop_obj = config.pops[pop_type];
+    var total_modifier = 0;
+    var total_pop_type = module.exports.getTotalPopManpower(user_id, pop_type);
+
+    //Regular error trapping just in case the specified modifier does not exist
+    try {
+      //Calculate total_modifier
+      total_modifier = (total_pop_type/100000)*pop_obj.per_100k[raw_modifier];
+
+      //Make sure to implement a proper cap
+      if (pop_obj.max_modifier_limit[raw_modifier])
+        if (total_modifier > pop_obj.max_modifier_limit[raw_modifier])
+          total_modifier = pop_obj.max_modifier_limit[raw_modifier];
+
+      //Return statement
+      return total_modifier;
+    } catch (e) {
+      log.error(`Could not calculate total pop modifier of type ${pop_type} for modifier ${raw_modifier}: ${e}`);
+      console.error(e);
+    }
+  },
+
   getPopulation: function (arg0_user) {
     //Convert from parameters
     var user_id = arg0_user;

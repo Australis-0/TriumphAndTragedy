@@ -10,6 +10,26 @@ module.exports = {
     var user_id = arg0_user;
     var usr = main.users[actual_id];
 
+    //Budget page handler
+    {
+      if (budget_pages.includes(game_obj.page)) {
+        switch (input) {
+          case "set tax":
+            visualPrompt(game_obj.alert_embed, user_id, {
+              title: `Set Tax:`,
+              prompts: [
+                [`What is the percentage of tax you would like to set for your citizenry?`, "number", { min: 0, max: Math.ceil(usr.modifiers.max_tax*100) }]
+              ]
+            },
+            function (arg) {
+              setTax(user_id, arg[0]);
+            });
+
+            break;
+        }
+      }
+    }
+
     //Cities page handler
     {
       if (game_obj.page == "cities_list") {
@@ -60,6 +80,31 @@ module.exports = {
             createPageMenu(game_obj.middle_embed, {
               embed_pages: printCities(game_obj.user),
               user: game_obj.user
+            });
+
+            break;
+          case "build":
+            visualPrompt(game_obj.alert_embed, user_id, {
+              title: `Constructing Building(s) in ${getCity(city_name).name}:`,
+              prompts: [
+                [`What would you like to build in your city?\n\nType **[Build List]** for a list of valid buildings.`, "string"],
+                [`How many buildings of this type would you like to begin building?`, "number", { min: 0 }]
+              ]
+            },
+            function (arg) {
+              build(user_id, getCity(city_name).name, arg[1], arg[0]);
+            },
+            function (arg) {
+              switch (arg) {
+                case "build list":
+                  createPageMenu(game_obj.middle_embed, {
+                    embed_pages: printBuildList(actual_id),
+                    user: game_obj.user
+                  });
+
+                  return true;
+                  break;
+              }
             });
 
             break;
@@ -114,6 +159,45 @@ module.exports = {
     {
       if (economy_pages.includes(game_obj.page)) {
       switch (input) {
+        case "build":
+          visualPrompt(game_obj.alert_embed, user_id, {
+            title: `Building Construction Menu:`,
+            prompts: [
+              [`What type of building would you like to build in your city?\n\nType **[Build List]** for a list of valid buildings.`, "string"],
+              [`How many buildings of this type would you like to begin building?`, "number", { min: 0 }],
+              [`Which city would you like to build these new buildings in?\n\nType **[View Cities]** for a list of valid cities.`, "string"]
+            ]
+          },
+          function (arg) {
+            build(user_id, arg[2], arg[1], arg[0]);
+          },
+          function (arg) {
+            switch (arg) {
+              case "build list":
+                createPageMenu(game_obj.middle_embed, {
+                  embed_pages: printBuildList(actual_id),
+                  user: game_obj.user
+                });
+
+                break;
+              case "view cities":
+                createPageMenu(game_obj.middle_embed, {
+                  embed_pages: printCities(game_obj.user),
+                  user: game_obj.user
+                });
+
+                break;
+            }
+          })
+
+          break;
+        case "build list":
+          createPageMenu(game_obj.middle_embed, {
+            embed_pages: printBuildList(actual_id),
+            user: game_obj.user
+          });
+
+          break;
         case "found_city":
           //Make sure that user is actually able to found a city before authorising the command, otherwise print an error
           (usr.city_cap-usr.city_count > 0) ?
@@ -206,19 +290,21 @@ module.exports = {
 
             break;
           case "jump to page":
-          visualPrompt(game_obj.alert_embed, user_id, {
-            title: `Jump To Page:`,
-            prompts: [
-              [`Which page would you like to jump to?`, "number", { min: 1, max: printProvince(game_obj.user, province_name).length }]
-            ]
-          },
-          function (arg) {
-            createPageMenu(game_obj.middle_embed, {
-              embed_pages: printProvince(game_obj.user, province_name),
-              page: arg[0] - 1,
-              user: game_obj.user
-            })
-          });
+            visualPrompt(game_obj.alert_embed, user_id, {
+              title: `Jump To Page:`,
+              prompts: [
+                [`Which page would you like to jump to?`, "number", { min: 1, max: printProvince(game_obj.user, province_name).length }]
+              ]
+            },
+            function (arg) {
+              createPageMenu(game_obj.middle_embed, {
+                embed_pages: printProvince(game_obj.user, province_name),
+                page: arg[0] - 1,
+                user: game_obj.user
+              })
+            });
+
+            break;
         }
       }
     }

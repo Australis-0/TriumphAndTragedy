@@ -1,5 +1,5 @@
 module.exports = {
-  setTax: function (arg0_user, arg1_amount) { //[WIP] - Reload budget panel later on if user comes around to it
+  setTax: function (arg0_user, arg1_amount) {
     //Convert from parameters
     var user_id = arg0_user;
     var raw_amount = arg1_amount;
@@ -20,6 +20,10 @@ module.exports = {
               //Set tax amount
               usr.tax_rate = amount;
               printAlert(game_obj.id, `You have set your tax rate to **${printPercentage(usr.tax_rate)}**.`);
+
+              //Reload budget page if user is on page and tax was set
+              if (game_obj.page == "budget")
+                printBudget(user_id);
             } else {
               printError(game_obj.id, `Your government currently only allows for a maximum tax rate of ${printPercentage(usr.modifiers.max_tax)}! If you wish to raise your taxes this high, consider switching governments.`);
             }
