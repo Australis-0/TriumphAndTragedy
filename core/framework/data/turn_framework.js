@@ -10,11 +10,15 @@ module.exports = {
       main.users[actual_id] :
       JSON.parse(JSON.stringify(main.users[actual_id]));
 
+    //Declare local tracker variables
+    var all_cities = getCities(actual_id);
+    var all_good_names = getGoods({ return_names: true });
+
     //Modifier and tracker variable processing
     {
       //City modifiers/trackers
       usr.city_cap = getCitiesCap(actual_id);
-      usr.total_cities += getCities(actual_id, { include_hostile_occupations: true });
+      usr.total_cities += getCities(actual_id, { include_hostile_occupations: true }).length;
 
       //Population modifiers/trackers
       usr.population = getPopulation(actual_id);
@@ -67,6 +71,16 @@ module.exports = {
         usr.coup_this_turn = "";
       }
 
+    }
+
+    //Resources and RGO
+    {
+      //Reset all good modifiers first so that local RGO buffs from cities can be applied
+      for (var i = 0; i < all_good_names.length; i++)
+        usr.modifiers[`${all_good_names[i]}_gain`] = 1;
+        
+      for (var i = 0; i < all_cities.length; i++)
+        usr.modifiers[`${all_cities[i].resource}_gain`] += usr.modifiers.rgo_throughput;
     }
 
     //Return statement if simulation
