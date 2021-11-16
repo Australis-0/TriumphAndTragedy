@@ -33,9 +33,16 @@ module.exports = {
     economy_string.push(`- ${config.icons.population} Population Growth Rate: **${printPercentage(usr.modifiers.pop_growth_modifier-1)}**`);
     economy_string.push(`You have **${parseNumber(getCities(actual_id, { include_hostile_occupations: true, include_occupations: true }).length)}** cities in total throughout your country.`);
     economy_string.push("");
-    economy_string.push(`**[View Cities]**${(usr.city_cap-usr.city_count > 0) ? "¦ **[Found City]** (" + parseNumber(usr.city_cap-usr.city_count) + ")" : ""}`);
+    economy_string.push(`**[View Cities]**${(usr.city_cap-usr.city_count > 0) ? " ¦ **[Found City]** (" + parseNumber(usr.city_cap-usr.city_count) + ")" : ""}`);
     economy_string.push("");
     economy_string.push(config.localisation.divider);
+    economy_string.push("");
+    economy_string.push(`**Production Modifiers:**`);
+    economy_string.push("");
+
+    ((usr.modifiers.building_cost - 1)*100 != 0) ?
+      economy_string.push(`${config.icons.construction_time} Building Cost Modifier: **${printPercentage(usr.modifiers.building_cost - 1)}**`) :
+      economy_string.push(`${config.icons.construction_time} No building cost modifiers active.`);
 
     //Production modifiers (RGO)
     for (var i = 0; i < all_good_names.length; i++)
@@ -55,10 +62,6 @@ module.exports = {
           `**${printPercentage(Math.ceil(local_throughput), { display_prefix: true })}**` : ``
       ));
     }
-
-    ((usr.modifiers.building_cost - 1)*100 != 0) ?
-      economy_string.push(`${config.icons.construction_time} Building Cost Modifier: **${printPercentage(usr.modifiers.building_cost - 1)}**`) :
-      economy_string.push(`${config.icons.construction_time} No building cost modifiers active.`);
 
     for (var i = 0; i < all_good_names.length; i++) {
       var local_good = getGood(all_good_names[i]);
@@ -98,6 +101,9 @@ module.exports = {
         economy_string.push(`- **${(local_value[0] == local_value[1]) ? parseNumber(local_value[0]) : parseNumber(local_value[0]) + " - " + parseNumber(local_value[1])}** ${(local_good.name) ? local_good.name : all_produced_goods[i]}.`);
       }
     }
+
+    if (Object.keys(all_production).length == 0)
+      economy_string.push(`- _Our economy is not currently producing any goods! Consider constructing some new buildings in order to jumpstart our economy._`);
 
     economy_string.push("");
     economy_string.push(`- **[Constructions]** View a complete list of current constructions.`);

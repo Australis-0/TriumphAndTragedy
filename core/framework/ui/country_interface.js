@@ -82,7 +82,7 @@ module.exports = {
       var local_pop = config.pops[all_pops[i]];
 
       if (local_pop.stats_display)
-        stats_string.push(`${(local_pop.icon) ? local_pop.icon : ""} ${(local_pop.name) ? local_pop.name : all_pops[i]}: (**${parseNumber(usr.pops["used_" + all_pops[i]])}**/**${parseNumber(getTotalPopManpower(user_id, all_pops[i]))}**)${(local_pop.military_pop) ? " ¦ (**" + Math.ceil(getTotalPopManpower(user_id, all_pops[i], true)*100) + "%** Recruitable Population)" : ""}`);
+        stats_string.push(`${(local_pop.icon) ? local_pop.icon : ""} ${(local_pop.name) ? local_pop.name : all_pops[i]}: (**${parseNumber(usr.pops["used_" + all_pops[i]])}**/**${parseNumber(getTotalPopManpower(actual_id, all_pops[i]))}**)${(local_pop.military_pop) ? " ¦ (**" + printPercentage(getTotalPopManpower(actual_id, all_pops[i], true)) + "** Recruitable Population)" : ""}`);
     }
 
     stats_string.push(config.localisation.divider);
