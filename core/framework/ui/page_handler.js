@@ -101,8 +101,8 @@ module.exports = {
                     embed_pages: printBuildList(actual_id),
                     user: game_obj.user
                   });
-
                   return true;
+
                   break;
               }
             });
@@ -155,6 +155,46 @@ module.exports = {
       }
     }
 
+    //Country interface page handler
+    {
+      if (["country_interface"].includes(game_obj.page)) {
+        switch (input) {
+          case "government list":
+            createPageMenu(game_obj.middle_embed, {
+              embed_pages: printGovernmentList(actual_id),
+              user: game_obj.user
+            });
+            menu_obj.page = "view_governments";
+
+            break;
+          case "set government":
+            visualPrompt(game_obj.alert_embed, user_id, {
+              title: `Set Government:`,
+              prompts: [
+                [`What would you like to set your current government to?\n\nType **[Government List]** for a list of valid governments.`, "string"]
+              ]
+            },
+            function (arg) {
+              setGovernmentCommand(user_id, arg[0]);
+            },
+            function (arg) {
+              switch (arg) {
+                case "government list":
+                  createPageMenu(game_obj.middle_embed, {
+                    embed_pages: printGovernmentList(actual_id),
+                    user: game_obj.user
+                  });
+                  return true;
+
+                  break;
+              }
+            });
+
+            break;
+        }
+      }
+    }
+
     //Economy page handler
     {
       if (economy_pages.includes(game_obj.page)) {
@@ -178,6 +218,7 @@ module.exports = {
                   embed_pages: printBuildList(actual_id),
                   user: game_obj.user
                 });
+                return true;
 
                 break;
               case "view cities":
@@ -185,6 +226,7 @@ module.exports = {
                   embed_pages: printCities(game_obj.user),
                   user: game_obj.user
                 });
+                return true;
 
                 break;
             }
@@ -251,6 +293,33 @@ module.exports = {
             });
 
             break;
+        }
+      }
+    }
+
+    //Government page handler
+    {
+      if (game_obj.page == "view_governments") {
+        switch (input) {
+          case "back":
+            printStats(user_id);
+            menu_obj.page = "country_interface";
+
+            break;
+          case "jump to page":
+            visualPrompt(game_obj.alert_embed, user_id, {
+              title: `Jump To Page:`,
+              prompts: [
+                [`Which page would you like jump to?`, "number", { min: 1, max: printGovernmentList(game_obj.user).length }]
+              ]
+            },
+            function (arg) {
+              createPageMenu(game_obj.middle_embed, {
+                embed_pages: printGovernmentList(game_obj.user),
+                page: arg[0] - 1,
+                user: game_obj.user
+              })
+            })
         }
       }
     }

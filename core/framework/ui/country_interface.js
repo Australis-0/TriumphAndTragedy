@@ -95,6 +95,11 @@ module.exports = {
     stats_string.push(`**Internal Politics:**`);
     try {
       stats_string.push(`${config.icons.government} Government Type: **${(config.governments[usr.government].name) ? config.governments[usr.government].name.toLowerCase() : usr.government}**`);
+
+      //Check if country is in anarchy or not
+      (config.governments[usr.government].is_anarchy) ?
+        stats_string.push(`- Your country is currently in anarchy! Consider using **[Set Government]** to establish an effective government.`) :
+        stats_string.push(`- **[Coup]** ¦ **[Government List]**`);
     } catch {}
     stats_string.push(`${config.icons.political_capital} Political Capital: **${parseNumber(usr.modifiers.political_capital)}** (${(usr.modifiers.political_capital_gain >= 0) ? "+" : ""}${parseNumber(usr.modifiers.political_capital_gain)} per turn)`);
 
