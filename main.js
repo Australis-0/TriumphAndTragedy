@@ -56,6 +56,7 @@ FileManager.import("./framework/ui/map_viewer");
 FileManager.import("./framework/ui/page_handler");
 FileManager.import("./framework/ui/pops_interface");
 FileManager.import("./framework/ui/provinces_interface");
+FileManager.import("./framework/ui/tech_interface");
 FileManager.import("./framework/ui/topbar_interface");
 FileManager.import("./framework/ui/ui_framework");
 
