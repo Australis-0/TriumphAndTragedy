@@ -18,7 +18,7 @@ const FileManager = require("./core/file_manager");
 FileManager.import("./ABRS");
 
 FileManager.import("./framework/arrays");
-FileManager.import("./framework/colors");
+FileManager.import("./framework/colours");
 FileManager.import("./framework/log");
 FileManager.import("./framework/numbers");
 FileManager.import("./framework/strings");

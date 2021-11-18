@@ -98,6 +98,7 @@ config.icons = {
 
   //Interface icons
   actions: "<:actions:716817688244256770>",
+  building: "<:building:716827579650408538>",
   construction_time: "<:building:716827579650408538>",
   development: "<:development:716811992421367869>",
   globe: "<:globe:716811246556545035>",

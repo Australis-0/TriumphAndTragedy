@@ -1,5 +1,14 @@
 module.exports = {
-  getAllTechnologies: function () {
+  /*
+    getAllTechnologies() - Fetches an array of all valid technologies.
+    options: {
+      return_names: true/false - Whether or not to return the keys of the categories instead of the object.
+    }
+  */
+  getAllTechnologies: function (arg0_options) {
+    //Convert from parameters
+    var options = (arg0_options) ? arg0_options : {};
+
     //Declare local instance variables
     var all_tech_categories = Object.keys(config.technology);
     var tech_array = [];
@@ -10,7 +19,7 @@ module.exports = {
       var local_techs = Object.keys(local_category);
 
       for (var x = 0; x < local_techs.length; x++)
-        tech_array.push(local_category[local_techs[x]]);
+        tech_array.push((!options.return_names) ? local_category[local_techs[x]] : local_techs[x]);
     }
 
     //Return statement
