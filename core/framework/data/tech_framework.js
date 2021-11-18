@@ -41,7 +41,7 @@ module.exports = {
 
         for (var x = 0; x < local_techs.length; x++)
           if (local_techs[x].toLowerCase().indexOf(tech_name) != -1)
-            technology_exists = [true, (!options.return_key) ? local_category[local_techs[x]], local_techs[x]];
+            technology_exists = [true, (!options.return_key) ? local_category[local_techs[x]] : local_techs[x]];
       }
 
       //Key name, hard match
@@ -51,7 +51,7 @@ module.exports = {
 
         for (var x = 0; x < local_techs.length; x++)
           if (local_techs[x].toLowerCase() == tech_name)
-            technology_exists = [true, (!options.return_key) ? local_category[local_techs[x]], local_techs[x]];
+            technology_exists = [true, (!options.return_key) ? local_category[local_techs[x]] : local_techs[x]];
       }
 
       //Move on to regular tech names if technology still isn't found
