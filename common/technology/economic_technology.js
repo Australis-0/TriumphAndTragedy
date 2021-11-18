@@ -1642,4 +1642,4 @@ config.technology.economic_technology = {
       research_efficiency: 0.05
     }
   }
-}
+};

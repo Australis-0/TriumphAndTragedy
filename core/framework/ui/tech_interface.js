@@ -1,5 +1,5 @@
 module.exports = {
-  printResearchList: function (arg0_user) {
+  printResearchList: function (arg0_user) { //[WIP] - Needs modifier_framework.js before progressing
     //Convert from parameters
     var user_id = arg0_user;
 
@@ -71,7 +71,55 @@ module.exports = {
 
         for (var x = 0; x < local_tech_category.length; x++) {
           var local_tech = getTechnology(local_tech_category[x]);
-          
+
+          var gfx_icon = (local_tech.icon) ? config.icons[local_tech.icon] + " " : "";
+          var researching_status = "";
+
+          for (var y = 0; y < usr.researching.length; y++)
+            if (usr.researching[y].technology_name == local_tech_category[x])
+              researching_status = `__Researching__`;
+
+          for (var y = 0; y < usr.research_queue.length; y++)
+            if (usr.research_queue[y].technology_name == local_tech_category[x])
+              researching_status = `__Queued (#${y+1})__`;
+
+          if (researching_status == "")
+            researching_status = `¦ **[Research ${(local_tech.name) ? local_tech.name : local_tech_category[x]}]**`;
+
+          //Push to tech_string
+          tech_string.push(`${gfx_icon}**${(local_tech.name) ? local_tech.name : local_tech_category[x]}**: ${researching_status}`);
+
+          if (local_tech.description)
+            tech_string.push(`\n_${local_tech.description}_\n`);
+
+          //Ahead of time penalty calculations (AOT)
+          var aot_penalty = 0;
+          var ahead_of_time_config = config.defines.technology.ahead_of_time;
+          var final_aot_penalty = 1;
+          var has_aot_penalty = false;
+
+          for (var y = 0; y < ahead_of_time_config; y++)
+            if (main.date.year >= ahead_of_time_config[y][0] && main.date.year < ahead_of_time_config[y][1])
+              aot_penalty = 2/ahead_of_time_config[y][2];
+
+          if (local_tech.year) {
+            var aot_years = 0;
+
+            if (main.date.year < local_tech.year) {
+              has_aot_penalty = true;
+              aot_years = local_tech.year - main.date.year;
+              final_aot_penalty = (aot_years*aot_penalty) + 1;
+            }
+            tech_string.push(`- **Year:** ${config.icons.time} ${local_tech.year}`);
+          }
+
+          //Calculate total_research_cost
+          var total_research_cost = Math.round(local_tech.research_cost*final_aot_penalty);
+
+          tech_string.push(`- **Cost:** ${config.icons.knowledge} ${parseNumber(total_research_cost)}`);
+          tech_string.push(`- **Effects:**`);
+
+          //Push modifiers
         }
       }
   }
