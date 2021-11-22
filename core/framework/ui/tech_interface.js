@@ -1,5 +1,5 @@
 module.exports = {
-  printResearchList: function (arg0_user) { //[WIP] - Needs modifier_framework.js before progressing
+  printResearchList: function (arg0_user) { //[WIP] - Needs additional frameworks before effects parser is able to progress
     //Convert from parameters
     var user_id = arg0_user;
 
@@ -151,7 +151,31 @@ module.exports = {
                 break;
             }
           }
+
+          //Print what other technologies the current tech leads to
+          var leads_to_array = [];
+
+          for (var y = 0; y < all_techs.length; y++) {
+            var local_tech_obj = getTechnology(all_techs[y]);
+
+            if (local_tech_obj.prerequisite_techs)
+              if (local_tech_obj.indexOf(local_tech_category[x]))
+                leads_to_array.push((local_tech_obj.name) ? local_tech_obj.name : all_techs[y]);
+          }
+
+          if (leads_to_array.length > 0)
+            tech_string.push(`- **Leads to:** ${leads_to_array.join(", ")}`);
+
+          //Insert newline as margin so that all the techs aren't bunched up next to each other
+          tech_string.push("");
         }
       }
+
+    //Return statement
+    return splitEmbed(construction_string, {
+      title: "Available Technologies:",
+      title_pages: true,
+      fixed_width: true
+    });
   }
 };

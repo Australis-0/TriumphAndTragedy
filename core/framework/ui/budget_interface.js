@@ -42,5 +42,19 @@ module.exports = {
     budget_string.push(`**[Set Tax]**`);
     budget_string.push("");
     budget_string.push(`${config.icons.blockade} Blockade status: ${(isBlockaded(actual_id)) ? "you are currently blockaded!" : "you are currently not blockaded."}`);
+
+    //Remove control panel if one exists
+    removeControlPanel(game_obj.id);
+
+    //Create embed and edit to message
+    const budget_embed = new Discord.MessageEmbed()
+      .setColor(settings.bot_colour)
+      .setTitle(`**Budget:**`)
+      .setThumbnail(usr.flag)
+      .setImage("https://cdn.discordapp.com/attachments/722997700391338046/736141424315203634/margin.png")
+      .setDescription(budget_string.join("\n"));
+
+    game_obj.main_embed = budget_embed;
+    game_obj.main_change = true;
   }
 };
