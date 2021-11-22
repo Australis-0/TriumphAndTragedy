@@ -120,6 +120,37 @@ module.exports = {
           tech_string.push(`- **Effects:**`);
 
           //Push modifiers
+          var all_modifiers = Object.keys(local_tech.unlocks);
+
+          for (var y = 0; y < all_modifiers.length; y++) {
+            var local_modifier = getList(local_tech.unlocks[all_modifiers[y]]);
+
+            switch (all_modifiers[y]) {
+              case "obsolete_building":
+                for (var z = 0; z < local_modifier.length; z++)
+                  tech_string.push(`Obsoletes **${(getBuilding(local_modifier[z]).name) > getBuilding(local_modifier[z]).name : local_modifier[z]}**`);
+
+                break;
+              case: "unlock_building":
+                for (var z = 0; z < local_modifier.length; z++)
+                  tech_string.push(`Unlocks **${(getBuilding(local_modifier[z]).name) ? getBuilding(local_modifier[z]).name : local_modifier[z]}**`);
+
+                break;
+              default:
+                if (getModifier(all_modifiers[y])) {
+                  var modifier_obj = getModifier(all_modifiers[y]);
+
+                  //Fetch local tracker variables
+                  var modifier_name = (modifier_obj.name) ? modifier_obj.name : all_modifiers[y];
+
+                  //Push to tech_string
+                  (modifier_obj.type == "percentage") ?
+                    tech_string.push(`**${printPercentage(local_modifier[0] + 1, { display_prefix: true })}** ${modifier_name}`) :
+                    tech_string.push(`**${parseNumber(local_modifier[0], { display_prefix: true })}** ${modifier_name}`);
+                }
+                break;
+            }
+          }
         }
       }
   }
