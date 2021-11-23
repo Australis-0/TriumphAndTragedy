@@ -116,23 +116,6 @@ module.exports = {
     return military_pop_types;
   },
 
-  getTotalPopManpower: function (arg0_user, arg1_type, arg2_raw_modifier) { //WIP
-    //Convert from parameters
-    var user_id = arg0_user;
-    var usr = main.users[user_id];
-    var pop_type = arg1_type;
-    var raw_modifier = arg2_raw_modifier;
-
-    //Declare local instance variables
-    var pop_obj = config.pops[pop_type];
-    var availability_modifier = (pop_obj.military_pop) ?
-      usr.modifiers.maximum_manpower*usr.modifiers.national_manpower
-      : 1;
-
-    //Return statement
-    return (!raw_modifier) ? Math.ceil(usr.pops[pop_type]*availability_modifier) : availability_modifier;
-  },
-
   getPopModifier: function (arg0_user, arg1_type, arg2_modifier) {
     //Convert from parameters
     var user_id = arg0_user;
@@ -178,6 +161,23 @@ module.exports = {
 
     //Return statement
     return total_population;
+  },
+
+  getTotalPopManpower: function (arg0_user, arg1_type, arg2_raw_modifier) { //WIP
+    //Convert from parameters
+    var user_id = arg0_user;
+    var usr = main.users[user_id];
+    var pop_type = arg1_type;
+    var raw_modifier = arg2_raw_modifier;
+
+    //Declare local instance variables
+    var pop_obj = config.pops[pop_type];
+    var availability_modifier = (pop_obj.military_pop) ?
+      usr.modifiers.maximum_manpower*usr.modifiers.national_manpower
+      : 1;
+
+    //Return statement
+    return (!raw_modifier) ? Math.ceil(usr.pops[pop_type]*availability_modifier) : availability_modifier;
   },
 
   killPops: function (arg0_user, arg1_options) {

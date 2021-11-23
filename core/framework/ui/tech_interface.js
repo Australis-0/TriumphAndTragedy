@@ -1,4 +1,89 @@
 module.exports = {
+  printResearch: function (arg0_user) {
+    //Convert from parameters
+    var user_id = arg0_user;
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var game_obj = getGameObject(user_id);
+    var usr = main.users[actual_id];
+
+    //Declare local tracker variables
+    var knowledge_gain = getKnowledgeGain(user_id);
+
+    //Initialise research_string
+    var research_string = [];
+
+    research_string.push(`${config.icons.technology} Research Slots: (**${parseNumber(usr.researching.length)}**/${parseNumber(usr.modifiers.research_slots)}):`);
+    research_string.push(`**[View Research Queue]**`);
+    research_string.push("");
+
+    if (usr.researching.length > 0) {
+      for (var i = 0; i < usr.researching.length; i++) {
+        var local_knowledge_per_turn = [
+          Math.ceil(knowledge_gain[0]/usr.researching.length), //minimum local knowledge gain
+          Math.ceil(knowledge_gain[1]/usr.researching.length)  //maximum local knowledge gain
+        ];
+        var local_tech = getTechnology(usr.researching[i].technology);
+        var local_tech_icon = (local_tech.icon) ? local_tech.icon + " " : "";
+        var local_tech_name = (local_tech.name) ? local_tech.name : "";
+
+        //Apply knowledge_investment mechanic
+        var knowledge_investment_modifier = (usr.researching.length != 1) ?
+          config.defines.technology.max_knowledge_investment*usr.modifiers.knowledge_investment_limit :
+          1;
+
+        if (local_knowledge_per_turn[0] > usr.researching[i].total_research_cost*knowledge_investment_modifier)
+          local_knowledge_per_turn[0] = Math.round(usr.researching[i].total_research_cost*knowledge_investment_modifier);
+        if (local_knowledge_per_turn[1] > usr.researching[i].total_research_cost*knowledge_investment_modifier)
+          local_knowledge_per_turn[1] = usr.researching[i].total_research_cost*knowledge_investment_modifier;
+
+        //Declare local tracker variables
+        var turn_count = [
+          Math.ceil(
+            (usr.researching[i].total_research_cost - usr.researching[i].current_investment)/local_knowledge_per_turn[0]
+          ),
+          Math.ceil(
+            (usr.researching[i].total_research_cost - usr.researching[i].current_investment)/local_knowledge_per_turn[1]
+          )
+        ];
+        var turn_string = "";
+
+        if (local_knowledge_per_turn[0] == 0 && local_knowledge_per_turn[1] == 0) {
+          turn_string = `**infinite**`;
+        } else if (turn_count[0] == turn_count[1]) {
+          turn_string = `**${parseNumber(turn_count[0])}**`;
+        } else {
+          turn_string = `**${parseNumber(turn_count[0])} - ${parseNumber(turn_count[1])}**: **[Cancel Research]**`;
+        }
+
+        //Push tech summary to string
+        research_string.push(`${local_tech_icon} **${local_tech_name}**`)
+
+        //Push research progress to string
+        research_string.push("");
+        research_string.push(`You have invested **${parseNumber(usr.researching[i].current_investment)}/${parseNumber(usr.researching[i].total_research_cost)}** ${config.icons.government} Knowledge into this technology.`);
+        research_string.push(`Your advisors estimate that it will take ${turn_string} turn(s) to finish researching this technology.`);
+        research_string.push("");
+      }
+    } else {
+      research_string.push(`_Nothing is currently being researched._`);
+      research_string.push("");
+      research_string.push(`For a valid list of technologies, check out your **[Research List]**.`);
+    }
+
+    //Declare research_embed
+    const research_embed = new Discord.MessageEmbed()
+      .setColor(settings.bot_colour)
+      .setTitle(`**Research:**`)
+      .setThumbnail(usr.flag)
+      .setImage("https://cdn.discordapp.com/attachments/722997700391338046/736141424315203634/margin.png")
+      .setDescription(research_string.join("\n"));
+
+    game_obj.main_embed = research_embed;
+    game_obj.main_change = true;
+  },
+
   printResearchList: function (arg0_user) { //[WIP] - Needs additional frameworks before effects parser is able to progress
     //Convert from parameters
     var user_id = arg0_user;

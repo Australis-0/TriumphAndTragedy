@@ -26,6 +26,39 @@ module.exports = {
     return tech_array;
   },
 
+  getKnowledgeGain: function (arg0_user) {
+    //Convert from parameters
+    var user_id = arg0_user;
+
+    //Declare local tracker variables
+    var all_pops = Object.keys(config.pops);
+    var local_knowledge_production = (getProduction(user_id, "knowledge")) ?
+      getProduction(user_id, "knowledge") :
+      [0, 0];
+    var pop_knowledge_gain = 0;
+
+    //Fetch pop_knowledge_gain
+    for (var i = 0; i < all_pops.length; i++) {
+      var local_pop = config.pops[all_pops[i]];
+
+      if (local_pop.per_100k)
+        if (local_pop.per_100k.knowledge)
+          pop_knowledge_gain += (getTotalPopManpower(user_id, all_pops[i])/100000)*local_pop.per_100k.knowledge;
+    }
+
+    //Make sure you can't just gain unlimited knowledge from faculty (hard cap)
+    if (pop_knowledge_gain > 500)
+      pop_knowledge_gain = 500;
+
+    local_knowledge_production = [
+      local_knowledge_production[0] + pop_knowledge_gain,
+      local_knowledge_production[1] + pop_knowledge_gain
+    ];
+
+    //Return statement
+    return local_knowledge_production;
+  },
+
   /*
     getTechnology() - Fetches a technology object/key depending on its options.
     options: {
