@@ -74,6 +74,8 @@ FileManager.import("./game/politics/set_tax");
 FileManager.import("./game/province/cities");
 FileManager.import("./game/province/settle_province");
 
+FileManager.import("./game/technology/research");
+
 //Declare config loading order
 global.config = {};
 global.load_order = {
