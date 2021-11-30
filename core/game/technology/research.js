@@ -1,5 +1,33 @@
 module.exports = {
-  research: function (arg0_user, arg1_technology_name) { //[WIP] - Create research queue framework to add auto-queueing feature
+  cancelResearch: function (arg0_user, arg1_slot) { //[WIP] - Automatically update research UI once a new tech is being actively researched
+    //Convert from parameters
+    var user_id = arg0_user;
+    var slot_number = parseInt(arg1_slot) - 1;
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var game_obj = getGameObject(user_id);
+    var usr = main.users[actual_id];
+
+    //Check if slot ID is a valid number or not
+    if (!isNaN(slot_number)) {
+      if (usr.researching[slot_number]) {
+        var local_tech_obj = getTechnology(usr.researching[slot_number].technology);
+
+        //Print feedback to user
+        printAlert(`You cancelled your current research of **${(local_tech_obj.name) ? local_tech_obj.name : usr.researching[slot_number].technology)}** for Slot #**${slot_number)}**.`);
+
+        //Cancel the research slot
+        usr.researching.splice(slot_number, 1);
+      } else {
+        printError(`This research slot is either already empty, or you haven't defined the slot as a valid number!`);
+      }
+    } else {
+      printError(`You must specify a valid Research Slot in order to cancel any research! Check your **[Research]** menu for more information on which slots you can or cannot cancel.`);
+    }
+  },
+
+  research: function (arg0_user, arg1_technology_name) { //[WIP] - Create research queue framework to add auto-queueing feature; automatically update research UI once a new tech is being actively researched
     //Convert from parameters
     var user_id = arg0_user;
     var raw_technology_name = arg1_technology_name.toLowerCase();
@@ -49,13 +77,11 @@ module.exports = {
       can_research = (tech_array_dump.includes(tech_name));
 
       for (var i = 0; i < usr.researching.length; i++)
-        if (usr.researching[i].technology == raw_technology_name)
+        if (usr.researching[i].technology == tech_name)
           can_research = false;
 
       //Check if technology is in queue
-      for (var i = 0; i < usr.research_queue.length; i++)
-        if (usr.research_queue[i].technology == raw_technology_name)
-          is_in_queue = true;
+      is_in_queue = (usr.research_queue.includes(tech_name));
 
       if (is_in_queue)
         can_research = false;
@@ -117,7 +143,7 @@ module.exports = {
 
             usr.researching.push({
               current_investment: 0,
-              technology: raw_technology_name,
+              technology: tech_name,
               total_research_cost: total_research_cost
             });
           } else {

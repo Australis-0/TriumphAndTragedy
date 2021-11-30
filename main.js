@@ -75,6 +75,7 @@ FileManager.import("./game/province/cities");
 FileManager.import("./game/province/settle_province");
 
 FileManager.import("./game/technology/research");
+FileManager.import("./game/technology/research_queue");
 
 //Declare config loading order
 global.config = {};

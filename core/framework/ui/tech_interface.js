@@ -257,8 +257,63 @@ module.exports = {
       }
 
     //Return statement
-    return splitEmbed(construction_string, {
+    return splitEmbed(tech_string, {
       title: "Available Technologies:",
+      title_pages: true,
+      fixed_width: true
+    });
+  },
+
+  printResearchQueue: function (arg0_user) {
+    //Convert from parameters
+    var user_id = arg0_user;
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var game_obj = getGameObject(user_id);
+    var usr = main.users[actual_id];
+
+    //Initialise research_queue_string
+    var research_queue_string = [];
+
+    research_queue_string.push(`Your current ${config.icons.building} **Research Queue** allows for the consecutive research of multiple technologies, even whilst asleep. As soon as a technology is researched, any valid technologies in the research queue will take its spot. You must have at least one active research slot for the Research Queue to work, and you may only queue up to **20** technologies.`);
+    research_queue_string.push("");
+    research_queue_string.push(`You currently have **${usr.research_queue.length}** items in your research queue.`);
+
+    research_queue_string.push("");
+    research_queue_string.push("---");
+    research_queue_string.push("");
+    (usr.research_queue.length < 20) ?
+      research_queue_string.push(`**[Add Technology]** ¦ **[Remove Technology]**`) :
+      research_queue_string.push(`**[Remove Technology]**`);
+    if (usr.research_queue.length >= 20)
+      research_queue_string.push(`\nYour **Research Queue** is currently full up! Considering removing a technology from your research queue if you wish to queue up something else.`);
+
+    research_queue_string.push("");
+    research_queue_string.push("---");
+    research_queue_string.push("");
+
+    if (usr.researching.length > 0) {
+      if (usr.research_queue.length != 0) {
+        for (var i = 0; i < usr.research_queue.length; i++) {
+          var local_tech_obj = getTechnology(usr.research_queue[i]);
+          var raw_technology_name = getTechnology(usr.research_queue[i], { return_key: true });
+
+          var tech_icon = (local_tech_obj.icon) ? config.icons[local_tech_obj.icon] + "  ": "";
+          var tech_name = (local_tech_obj.name) ? local_tech_obj.name : raw_technology_name;
+
+          research_queue_string.push(`**${parseNumber(i + 1)}.** ${tech_icon} ${tech_name}`);
+        }
+      } else {
+        research_queue_string.push(`_You currently have nothing queued up._`);
+      }
+    } else {
+      research_queue_string.push(`_You must have a research slot that is actively researching something in order for your research queue to become functional! Consider switching over to your **[Research]** tab to begin researching something new. Check your **[Research List]** for a list of available technologies to research.`);
+    }
+
+    //Return statement
+    return splitEmbed(research_queue_string, {
+      title: "Research Queue:",
       title_pages: true,
       fixed_width: true
     });
