@@ -27,10 +27,11 @@ module.exports = {
     }
   },
 
-  research: function (arg0_user, arg1_technology_name) { //[WIP] - Create research queue framework to add auto-queueing feature; automatically update research UI once a new tech is being actively researched
+  research: function (arg0_user, arg1_technology_name, arg2_display) { //[WIP] - Create research queue framework to add auto-queueing feature; automatically update research UI once a new tech is being actively researched
     //Convert from parameters
     var user_id = arg0_user;
     var raw_technology_name = arg1_technology_name.toLowerCase();
+    var display = arg2_display;
 
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
@@ -139,24 +140,32 @@ module.exports = {
             }
 
             //Print alert
-            printAlert(`Your scientists have started research on **${(tech_obj.name) ? tech_obj.name : tech_name}**. Your advisor estimates that it will take them ${turn_string} to complete researching this technology.`);
+            if (!display)
+              printAlert(`Your scientists have started research on **${(tech_obj.name) ? tech_obj.name : tech_name}**. Your advisor estimates that it will take them ${turn_string} to complete researching this technology.`);
 
             usr.researching.push({
               current_investment: 0,
               technology: tech_name,
               total_research_cost: total_research_cost
             });
+
+            //Used for research_queue processing
+            return true;
           } else {
-            printError(game_obj.id, `Your research slots are already full up! **${(tech_obj.name) ? tech_obj.name : tech_name}** was added to your queue instead. Next time, consider cancelling one of your current research slots, or queue up technologies manually in your **[Research Queue]**.`);
+            if (!display)
+              printError(game_obj.id, `Your research slots are already full up! **${(tech_obj.name) ? tech_obj.name : tech_name}** was added to your queue instead. Next time, consider cancelling one of your current research slots, or queue up technologies manually in your **[Research Queue]**.`);
           }
         } else {
-          printError(game_obj.id, `You don't have the necessary prerequisites to research **${(tech_obj.name) ? tech_obj.name : tech_name}** yet!`);
+          if (!display)
+            printError(game_obj.id, `You don't have the necessary prerequisites to research **${(tech_obj.name) ? tech_obj.name : tech_name}** yet!`);
         }
       } else {
-        printError(game_obj.id, `**${(tech_obj.name) ? tech_obj.name : tech_name}** is already in your research queue! Try cancelling it first in your **[Research Queue]** before adding it to your active research.`);
+        if (!display)
+          printError(game_obj.id, `**${(tech_obj.name) ? tech_obj.name : tech_name}** is already in your research queue! Try cancelling it first in your **[Research Queue]** before adding it to your active research.`);
       }
     } else {
-      printError(game_obj.id, `**${raw_technology_name}** proved nonexistent! Try checking your **[Research List]** for a valid list of technologies you can research.`);
+      if (!display)
+        printError(game_obj.id, `**${raw_technology_name}** proved nonexistent! Try checking your **[Research List]** for a valid list of technologies you can research.`);
     }
   }
 };
