@@ -84,9 +84,16 @@ module.exports = {
     game_obj.main_change = true;
   },
 
-  printResearchList: function (arg0_user) { //[WIP] - Needs additional frameworks before effects parser is able to progress
+  /*
+    printResearchList() - Prints out a research list for a given user based on available techs.
+    options: {
+      return_names: true/false - Whether or not to return the keys of the tech instead of a displayable embed.
+    }
+  */
+  printResearchList: function (arg0_user, arg1_options) { //[WIP] - Needs additional frameworks before effects parser is able to progress
     //Convert from parameters
     var user_id = arg0_user;
+    var options = (arg1_options) ? arg1_options : {};
 
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
@@ -177,31 +184,7 @@ module.exports = {
           if (local_tech.description)
             tech_string.push(`\n_${local_tech.description}_\n`);
 
-          //Ahead of time penalty calculations (AOT)
-          var aot_penalty = 0;
-          var ahead_of_time_config = config.defines.technology.ahead_of_time;
-          var final_aot_penalty = 1;
-          var has_aot_penalty = false;
-
-          for (var y = 0; y < ahead_of_time_config; y++)
-            if (main.date.year >= ahead_of_time_config[y][0] && main.date.year < ahead_of_time_config[y][1])
-              aot_penalty = 2/ahead_of_time_config[y][2];
-
-          if (local_tech.year) {
-            var aot_years = 0;
-
-            if (main.date.year < local_tech.year) {
-              has_aot_penalty = true;
-              aot_years = local_tech.year - main.date.year;
-              final_aot_penalty = (aot_years*aot_penalty) + 1;
-            }
-            tech_string.push(`- **Year:** ${config.icons.time} ${local_tech.year}`);
-          }
-
-          //Calculate total_research_cost
-          var total_research_cost = Math.round(local_tech.research_cost*final_aot_penalty);
-
-          tech_string.push(`- **Cost:** ${config.icons.knowledge} ${parseNumber(total_research_cost)}`);
+          tech_string.push(`- **Cost:** ${config.icons.knowledge} ${parseNumber(getTechnologyCost(local_tech_category[x]))}`);
           tech_string.push(`- **Effects:**`);
 
           //Push modifiers
@@ -257,11 +240,13 @@ module.exports = {
       }
 
     //Return statement
-    return splitEmbed(tech_string, {
-      title: "Available Technologies:",
-      title_pages: true,
-      fixed_width: true
-    });
+    return (!options.return_names) ?
+      splitEmbed(tech_string, {
+        title: "Available Technologies:",
+        title_pages: true,
+        fixed_width: true
+      }) :
+      tech_array_dump;
   },
 
   printResearchQueue: function (arg0_user) {
@@ -317,5 +302,108 @@ module.exports = {
       title_pages: true,
       fixed_width: true
     });
+  },
+
+  printTechnology: function (arg0_user) {
+    //Convert from parameters
+    var user_id = arg0_user;
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var game_obj = getGameObject(user_id);
+    var usr = main.users[actual_id];
+
+    //Declare local tracker variables
+    var all_technologies = getAllTechnologies();
+    var all_tech_categories = Object.keys(config.technology);
+    var knowledge_gain = getKnowledgeGain(user_id);
+    var tech_array_dump = module.exports.printResearchList(actual_id, { return_names: true });
+
+    //Declare tech_string
+    var tech_string = [];
+
+    //Format tech_string
+    tech_string.push(`**Technological Advancement:**`);
+    tech_string.push("");
+    tech_string.push(`${config.icons.government} Current Tech Count: (**${parseNumber(usr.researched_technologies.length)}**/${parseNumber(all_technologies.length)})`);
+    tech_string.push("");
+    tech_string.push(`**[Research Possibilities]**:`);
+    tech_string.push(config.localisation.divider);
+    tech_string.push("");
+
+    //Iterate over all categories and print how many techs in each have been researched
+    for (var i = 0; i < all_tech_categories.length; i++) {
+      var local_tech_category = config.technology[all_tech_categories[i]];
+      var local_tech_category_icon = (local_tech_category.icon) ? config.icons[local_tech_category.icon] + " " : "";
+      var local_tech_category_name = (local_tech_category.name) ? local_tech_category_name : parseString(local_tech_category);
+      var researched_technologies_in_category = 0;
+      var total_technologies_in_category = Object.keys(local_tech_category).length;
+
+      var all_techs_in_category = Object.keys(local_tech_category);
+
+      for (var x = 0; x < all_techs_in_category.length; x++)
+        if (!["name", "icon", "description"].includes(all_techs_in_category[x])) {
+          if (usr.researched_technologies.includes(all_techs_in_category[x]))
+            researched_technologies_in_category++;
+        } else {
+          total_technologies_in_category--;
+        }
+
+      //Print to tech_string
+      tech_string.push(` - ${local_tech_category_icon}${local_tech_category_name} Research Progress: (**${parseNumber(researched_technologies_in_category)}**/${parseNumber(total_technologies_in_category)})`);
+    }
+
+    tech_string.push("");
+    tech_string.push(`${config.icons.technology} Knowledge Gain Per Turn: ${(Math.min(knowledge_gain[0], knowledge_gain[1]) > 0) ? "+" : ""}**${printRange(knowledge_gain)}**`);
+
+    //Print tech research options
+    for (var i = 0; i < tech_array_dump.length; i++)
+      if (i <= 5) {
+        var local_tech_obj = getTechnology(tech_array_dump[i]);
+        var local_tech_cost = getTechnologyCost(tech_array_dump[i]);
+
+        var local_tech_name = (local_tech_obj.name) ? local_tech_obj.name : tech_array_dump[i];
+
+        tech_string.push(`- ${(local_tech_obj.icon) ? config.icons[local_tech_obj.icon] + " " : ""}${local_tech_name} (${config.icons.knowledge} **${parseNumber(local_tech_cost)}**) **[Research ${local_tech_name}]**`);
+      } else {
+        tech_string.push(`+${parseNumber(tech_array_dump.length - 5)} more ...`);
+      }
+    if (tech_array_dump.length == 0)
+      tech_string.push(`_No available techs for research could be found._`);
+
+    //Format research status
+    tech_string.push("");
+    tech_string.push(`**[Current Research]**:`);
+    tech_string.push(config.localisation.divider);
+
+    if (usr.researching.length > 0) {
+      for (var i = 0; i < usr.researching.length; i++) {
+        var local_tech_obj = getTechnology(usr.researching[i].technology);
+
+        var local_tech_icon = (local_tech_obj.icon) ? config.icons[local_tech_obj.icon] + " " : "";
+        var local_tech_name = (local_tech_obj.name) ? local_tech_obj.name : usr.researching[i].technology;
+
+        tech_string.push(`**[Cancel Research]**`);
+        tech_string.push(`Currently researching ${local_tech_icon}**${local_tech_name}**.`);
+        tech_string.push(`- Research Progress: **${parseNumber(usr.researching[i].current_investment)}/${parseNumber(usr.researching[i].total_research_cost)}**`);
+        tech_string.push("");
+      }
+    } else {
+      tech_string.push(`_You currently aren't researching anything!_`);
+    }
+
+    //Remove control panel if one exists
+    removeControlPanel(game_obj.id);
+
+    //Create embed and edit to message
+    const technology_embed = new Discord.MessageEmbed()
+      .setColor(settings.bot_colour)
+      .setTitle(`**Technology:**`)
+      .setThumbnail(usr.flag)
+      .setImage("https://cdn.discordapp.com/attachments/722997700391338046/736141424315203634/margin.png")
+      .setDescription(tech_string.join("\n"));
+
+    game_obj.main_embed = technology_embed;
+    game_obj.main_change = true;
   }
 };

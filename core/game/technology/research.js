@@ -92,32 +92,10 @@ module.exports = {
         if (can_research) {
           //Check if any spare research slots are available
           if (usr.researching.length < usr.modifiers.research_slots) {
-
             var knowledge_investment = config.defines.technology.max_knowledge_investment*usr.modifiers.knowledge_investment_limit;
 
-            //Ahead of time penalty calculations
-            var ahead_of_time_config = config.defines.technology.ahead_of_time;
-            var aot_penalty = 0;
-            var final_aot_penalty = 1;
-            var has_aot_penalty = false;
-
-
-            for (var i = 0; i < ahead_of_time_config.length; i++)
-              if (main.date.year >= ahead_of_time_config[i][0] && main.year < ahead_of_time_config[i][1])
-                aot_penalty = 2/ahead_of_time_config[i][2];
-
-            if (tech_obj.year) {
-              var aot_years = 0;
-
-              if (main.date.year < tech_obj.year) {
-                has_aot_penalty = true;
-                aot_years = tech_obj.year - main.year;
-                final_aot_penalty = (aot_years*aot_penalty) + 1;
-              }
-            }
-
             //Fetch total_research_cost
-            var total_research_cost = Math.round(tech_obj.research_cost*final_aot_penalty);
+            var total_research_cost = getTechnologyCost(tech_name);
 
             if (usr.researching.length == 0)
               knowledge_investment = 1;

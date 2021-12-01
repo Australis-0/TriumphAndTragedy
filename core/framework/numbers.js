@@ -20,6 +20,23 @@ module.exports = {
     return `${(options.display_prefix) ? (number > 1) ? "+" : "" : ""}${Math.round(number*100)}%`;
   },
 
+  /*
+    printRange() - Returns a given range of numbers as a string using [min, max] format.
+    array: [
+      number_1,
+      number_2
+    ]
+  */
+  printRange: function (arg0_array) {
+    //Convert from parameters
+    var array = arg0_array;
+
+    //Return statement
+    return (array[0] == array[1]) ?
+      parseNumber(array[0]) :
+      `${parseNumber(Math.min(array[0], array[1]))} - ${parseNumber(Math.max(array[0], array[1]))}`;
+  },
+
   randomNumber: function (min, max) {
     //Return statement
   	return Math.round(Math.random() * (max - min) + min);

@@ -13,6 +13,12 @@ module.exports = {
   population_pages: [
     "population"
   ],
+  technology_pages: [
+    "technology",
+    "research",
+    "research_list",
+    "research_queue"
+  ],
 
   initialiseTopbar: function (arg0_user_id) {
     //Convert from parameters

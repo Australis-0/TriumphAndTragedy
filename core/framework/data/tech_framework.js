@@ -130,5 +130,33 @@ module.exports = {
 
     //Return statement
     return (technology_exists[0]) ? technology_exists[1] : undefined;
+  },
+
+  getTechnologyCost: function (arg0_name) {
+    //Convert from parameters
+    var tech_obj = module.exports.getTechnology(arg0_name);
+
+    //Ahead of time penalty calculations (AOT)
+    var aot_penalty = 0;
+    var ahead_of_time_config = config.defines.technology.ahead_of_time;
+    var final_aot_penalty = 1;
+    var has_aot_penalty = false;
+
+    for (var y = 0; y < ahead_of_time_config; y++)
+      if (main.date.year >= ahead_of_time_config[y][0] && main.date.year < ahead_of_time_config[y][1])
+        aot_penalty = 2/ahead_of_time_config[y][2];
+
+    if (tech_obj.year) {
+      var aot_years = 0;
+
+      if (main.date.year < tech_obj.year) {
+        has_aot_penalty = true;
+        aot_years = tech_obj.year - main.date.year;
+        final_aot_penalty = (aot_years*aot_penalty) + 1;
+      }
+    }
+
+    //Return total research cost
+    return Math.round(tech_obj.research_cost*final_aot_penalty);
   }
 };
