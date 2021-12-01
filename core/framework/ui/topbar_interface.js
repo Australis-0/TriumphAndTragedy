@@ -106,8 +106,14 @@ module.exports = {
           .setEmoji("716811992421367869"),
         new Discord.MessageButton()
           .setCustomId("technology_btn")
-          .setLabel("𝐓𝐞𝐜𝐡𝐧𝐨𝐥𝐨𝐠𝐲")
-          .setStyle("SECONDARY")
+          .setLabel((!technology_pages.includes(game_obj.page)) ?
+            "𝐓𝐞𝐜𝐡𝐧𝐨𝐥𝐨𝐠𝐲" :
+            " ͟𝐓͟𝐞͟𝐜͟𝐡͟𝐧͟𝐨͟𝐥͟𝐨͟𝐠͟𝐲͟"
+          )
+          .setStyle((!technology_pages.includes(game_obj.page)) ?
+            "SECONDARY" :
+            "PRIMARY"
+          )
           .setEmoji("716812861514711040"),
         new Discord.MessageButton()
           .setCustomId("politics_btn")
@@ -220,6 +226,15 @@ module.exports = {
           module.exports.initialiseTopbar(user_id);
         }
         printPops(user_id);
+
+        break;
+      case "technology_btn":
+        //Print out tech menu
+        if (game_obj.page != "technology") {
+          game_obj.page = "technology";
+          module.exports.initialiseTopbar(user_id);
+        }
+        printTechnology(user_id);
 
         break;
     }

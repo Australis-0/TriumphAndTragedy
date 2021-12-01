@@ -158,5 +158,15 @@ module.exports = {
 
     //Return total research cost
     return Math.round(tech_obj.research_cost*final_aot_penalty);
+  },
+
+  //parseTechnology() - Parses the technological effects of a given tech for a given user. (Used primarily after the research of a tech has been finished)
+  parseTechnology: function (arg0_user, arg1_technology_name) {
+    //Convert from parameters
+    var usr = main.users[arg0_user];
+    var raw_technology_name = arg1_technology_name.toLowerCase();
+
+    //Declare local instance variables
+    var tech_obj = module.exports.getTechnology(arg1_technology_name);
   }
 };

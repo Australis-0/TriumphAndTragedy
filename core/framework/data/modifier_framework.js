@@ -5,7 +5,7 @@ module.exports = {
       return_key: true/false - Whether or not to return the modifier key
     }
   */
-  getModifier: function (arg0_modifier_name, arg1_options) {
+  getModifier: function (arg0_modifier_name, arg1_options) { //[WIP] - Add sub-modifier parsing capacity
     //Convert from parameters
     var modifier_name = arg0_modifier_name.toLowerCase();
     var options = (arg1_options) ? arg1_options : {};
