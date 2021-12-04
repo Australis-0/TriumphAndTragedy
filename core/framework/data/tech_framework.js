@@ -168,5 +168,16 @@ module.exports = {
 
     //Declare local instance variables
     var tech_obj = module.exports.getTechnology(arg1_technology_name);
+
+    //Parse technology for user!
+    var all_effects = Object.keys(tech_obj.unlocks);
+
+    for (var i = 0; i < all_effects.length; i++) {
+      //Declare local tracker variables
+      var effect_name = all_effects[i];
+      var effect_value = tech_obj.unlocks[effect_name];
+
+      //
+    }
   }
 };
