@@ -247,7 +247,7 @@ config.technology.economic_technology = {
     prerequisite_techs: ["the_watermill", "steel_tools"],
     unlocks: {
       unlock_building: "manufactories",
-      obsolete_unit: "workshops"
+      obsolete_building: "workshops"
     }
   },
   trading_companies: {
@@ -505,7 +505,7 @@ config.technology.economic_technology = {
     unlocks: {
       unlock_building: "fertiliser_factories",
       pop_growth_modifier: 0.01,
-      obsolete_unit: "farms"
+      obsolete_building: "farms"
     }
   },
   factories: {
@@ -1352,7 +1352,7 @@ config.technology.economic_technology = {
     research_cost: 8500,
     year: 1970,
     unlocks: {
-      obsolete_unit: "modern_farms",
+      obsolete_building: "modern_farms",
       agriculture: 3
     }
   },
