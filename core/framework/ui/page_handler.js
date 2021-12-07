@@ -341,7 +341,9 @@ module.exports = {
                 page: arg[0] - 1,
                 user: game_obj.user
               })
-            })
+            });
+
+            break;
         }
       }
     }
@@ -438,6 +440,12 @@ module.exports = {
       switch (game_obj.page) {
         case "research":
           //Button handler
+          //[Back]
+          if (input == "back") {
+            printTechnology(user_id);
+            game_obj.page = "technology";
+          }
+
           //[Cancel Research]
           if (input.startsWith("cancel research ")) {
             var slot_to_cancel = parseInt(input.replace("cancel research ", ""));
@@ -462,6 +470,29 @@ module.exports = {
           break;
         case "research_list":
           //Button handler
+          //[Back]
+          if (input == "back") {
+            printTechnology(user_id);
+            game_obj.page = "technology";
+          }
+
+          //[Jump To Page]
+          if (input == "jump to page")
+            visualPrompt(game_obj.alert_embed, user_id, {
+              title: `Jump To Page:`,
+              prompts: [
+                [`Which page would you like jump to?`, "number", { min: 1, max: printResearchList(game_obj.user).length }]
+              ]
+            },
+            function (arg) {
+              createPageMenu(game_obj.middle_embed, {
+                embed_pages: printResearchList(game_obj.user),
+                page: arg[0] - 1,
+                user: game_obj.user
+              })
+            });
+
+          //[Research]; [Research (Tech)]
           if (input.startsWith("research ")) {
             var tech_to_research = input.replace("research ", "");
           } else if (input == "research") {
@@ -478,6 +509,12 @@ module.exports = {
             addResearchQueue(user_id, tech_to_add);
           } else if (input == "add technology") {
             initialiseAddResearchQueue(user_id);
+          }
+
+          //[Back]
+          if (input == "back") {
+            printTechnology(user_id);
+            game_obj.page = "technology";
           }
 
           //[Current Research]

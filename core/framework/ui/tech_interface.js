@@ -14,6 +14,8 @@ module.exports = {
     //Initialise research_string
     var research_string = [];
 
+    tech_string.push(`**[Back]**`);
+    tech_string.push("");
     research_string.push(`${config.icons.technology} Research Slots: (**${parseNumber(usr.researching.length)}**/${parseNumber(usr.modifiers.research_slots)}):`);
     research_string.push(`**[View Research Queue]**`);
     research_string.push("");
@@ -151,6 +153,9 @@ module.exports = {
     }
 
     //Format string
+    tech_string.push(`**[Back]** ¦ **[Jump To Page]**`);
+    tech_string.push("");
+
     //Begin assembling the tech array by getting all valid tech categories
     for (var i = 0; i < all_tech_categories.length; i++)
       if (processed_tech_categories[all_tech_categories[i]].length > 0) {
@@ -260,6 +265,9 @@ module.exports = {
 
     //Initialise research_queue_string
     var research_queue_string = [];
+
+    tech_string.push(`**[Back]**`);
+    tech_string.push("");
 
     research_queue_string.push(`Your current ${config.icons.building} **Research Queue** allows for the consecutive research of multiple technologies, even whilst asleep. As soon as a technology is researched, any valid technologies in the research queue will take its spot. You must have at least one active research slot for the Research Queue to work, and you may only queue up to **20** technologies.`);
     research_queue_string.push("");
