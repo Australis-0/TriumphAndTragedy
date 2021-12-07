@@ -44,6 +44,74 @@ module.exports = {
     }
   },
 
+  initialiseAddResearchQueue: function (arg0_user) {
+    //Convert from parameters
+    var user_id = arg0_user;
+
+    //Declare local instance variables
+    var game_obj = getGameObject(user_id);
+
+    visualPrompt(game_obj.alert_embed, user_id, {
+      title: `Add Tech To Research Queue:`,
+      description: `Type **[Research List]** to a view complete list of currently researchable technologies.`,
+      prompts: [
+        [`Please type out the name of the technology you would like to add to your **Research Queue**.`, "string"],
+      ]
+    },
+    function (arg) {
+      addResearchQueue(game_obj.user, arg[0]);
+    },
+
+    //Command handling
+    function (input) {
+      var is_command = false;
+
+      switch (input) {
+        case "research list":
+          printResearchList(game_obj.user);
+          is_command = true;
+
+        break;
+      }
+
+      return is_command;
+    });
+  },
+
+  initialiseRemoveResearchQueue: function (arg0_user) {
+    //Convert from parameters
+    var user_id = arg0_user;
+
+    //Declare local instance variables
+    var game_obj = getGameObject(user_id);
+
+    visualPrompt(game_obj.alert_embed, user_id, {
+      title: `Remove Tech From Research Queue:`,
+      description: `Type **[Research Queue]** to view your current research queue.`,
+      prompts: [
+        [`Which Resesarch Queue slot would you like to remove? Please specify a valid number.`, "number", { min: 1, max: 20 }],
+      ]
+    },
+    function (arg) {
+      removeResearchQueue(game_obj.user, arg[0]);
+    },
+
+    //Command handling
+    function (input) {
+      var is_command = false;
+
+      switch (input) {
+        case "research queue":
+          printResearchQueue(game_obj.user);
+          is_command = true;
+
+        break;
+      }
+
+      return is_command;
+    });
+  },
+
   removeResearchQueue: function (arg0_user, arg1_slot) { //[WIP] - Remember to update queue UI when a new technology is appended to the queue
     //Convert from parameters
     var user_id = arg0_user;

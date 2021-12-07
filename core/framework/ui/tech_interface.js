@@ -293,7 +293,7 @@ module.exports = {
         research_queue_string.push(`_You currently have nothing queued up._`);
       }
     } else {
-      research_queue_string.push(`_You must have a research slot that is actively researching something in order for your research queue to become functional! Consider switching over to your **[Research]** tab to begin researching something new. Check your **[Research List]** for a list of available technologies to research.`);
+      research_queue_string.push(`_You must have a research slot that is actively researching something in order for your research queue to become functional! Consider switching over to your **[Current Research]** tab to begin researching something new. Check your **[Research List]** for a list of available technologies to research.`);
     }
 
     //Return statement

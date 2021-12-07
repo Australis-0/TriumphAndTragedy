@@ -1,5 +1,5 @@
 module.exports = {
-  cancelResearch: function (arg0_user, arg1_slot) { //[WIP] - Automatically update research UI once a new tech is being actively researched
+  cancelResearch: function (arg0_user, arg1_slot) {
     //Convert from parameters
     var user_id = arg0_user;
     var slot_number = parseInt(arg1_slot) - 1;
@@ -19,6 +19,10 @@ module.exports = {
 
         //Cancel the research slot
         usr.researching.splice(slot_number, 1);
+
+        //Update UI
+        if (game_obj.page == "research")
+          printResearch(user_id);
       } else {
         printError(`This research slot is either already empty, or you haven't defined the slot as a valid number!`);
       }
@@ -27,7 +31,77 @@ module.exports = {
     }
   },
 
-  research: function (arg0_user, arg1_technology_name, arg2_display) { //[WIP] - Create research queue framework to add auto-queueing feature; automatically update research UI once a new tech is being actively researched
+  initialiseCancelResearch: function (arg0_user) {
+    //Convert from parameters
+    var user_id = arg0_user;
+
+    //Declare local instance variables
+    var game_obj = getGameObject(user_id);
+
+    //Initialise visual prompt
+    visualPrompt(game_obj.alert_embed, user_id, {
+      title: `Cancel A Research Slot:`,
+      description: `Type **[Current Research]** to view a complete list of your current research efforts.`,
+      prompts: [
+        [`Please choose which research slot you would like to cancel. Remember to specify a numeric ID.`, "number", { min: 0 }],
+      ]
+    },
+    function (arg) {
+      cancelResearch(game_obj.user, arg[0]);
+    },
+
+    //Command handling
+    function (input) {
+      var is_command = false;
+
+      switch (input) {
+        case "current research":
+          printResearch(game_obj.user);
+          is_command = true;
+
+        break;
+      }
+
+      return is_command;
+    });
+  },
+
+  initialiseResearch: function (arg0_user) {
+    //Convert from parameters
+    var user_id = arg0_user;
+
+    //Declare local instance variables
+    var game_obj = getGameObject(user_id);
+
+    //Initialise visual prompt
+    visualPrompt(game_obj.alert_embed, user_id, {
+      title: `Research Technology:`,
+      description: `Type **[Research List]** to view a complete list of available technologies for research.`,
+      prompts: [
+        [`Type the name of a technology you would like to research.`, "string"]
+      ]
+    },
+    function (arg) {
+      research(game_obj.user, arg[0]);
+    },
+
+    //Command handling
+    function (input) {
+      var is_command = false;
+
+      switch (input) {
+        case "research list":
+          printResearchList(game_obj.user);
+          is_command = true;
+
+          break;
+      }
+
+      return is_command;
+    });
+  },
+
+  research: function (arg0_user, arg1_technology_name, arg2_display) {
     //Convert from parameters
     var user_id = arg0_user;
     var raw_technology_name = arg1_technology_name.toLowerCase();
@@ -127,7 +201,11 @@ module.exports = {
               total_research_cost: total_research_cost
             });
 
-            //Used for research_queue processing
+            //Update UI
+            if (game_obj.page == "research")
+              printResearch(user_id);
+
+            //Return statement used for research_queue processing
             return true;
           } else {
             if (!display)
