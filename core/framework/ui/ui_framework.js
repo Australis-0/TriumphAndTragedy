@@ -321,10 +321,17 @@ module.exports = {
           local_array_string.push(array_string[i]);
           current_character_count += array_string[i].length;
 
-          if (i != 0 || array_string.length == 1) if (current_character_count >= maximum_characters_per_embed || i == array_string.length-1) {
-            total_page_count++;
-            local_array_string = [];
-          }
+          if (i != 0 || array_string.length == 1)
+            if (
+              current_character_count >= maximum_characters_per_embed || i == array_string.length-1 &&
+
+              //Check to see that string is not empty
+              local_array_string.join("\n").length > 0
+            ) {
+              total_page_count++;
+              current_character_count = 0;
+              local_array_string = [];
+            }
         }
 
         //Reset variables
@@ -337,7 +344,13 @@ module.exports = {
           current_character_count += array_string[i].length;
 
           if (i != 0 || array_string.length == 1)
-            if (current_character_count >= maximum_characters_per_embed || i == array_string.length-1) {
+            if (
+              //Check if page requirements are met
+              current_character_count >= maximum_characters_per_embed || i == array_string.length-1 &&
+
+              //Check to see that string is not empty
+              local_array_string.join("\n").length > 0
+            ) {
               //Initialise page embed
               var local_embed = new Discord.MessageEmbed()
                 .setColor("#a98ac7")
@@ -347,6 +360,7 @@ module.exports = {
               var page_ending = (options.title && options.title_pages) ? `(Page ${all_embeds.length+1} of ${total_page_count}):` : "";
 
               formatEmbed(local_embed, all_embeds, page_ending, options);
+              current_character_count = 0;
               local_array_string = [];
             }
         }

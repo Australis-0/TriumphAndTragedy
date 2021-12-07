@@ -734,6 +734,7 @@ config.technology.naval_technology = {
     icon: "naval_units",
     description: "Submarines, ever present beneath the surface offer a completely new method of conducting naval warfare by starving out an opponent through sinking merchant shipping. Although sometimes frowned upon as not precisely ethical, its practical abilities are nearly limitless.",
     research_cost: 6000,
+    prerequisite_techs: ["torpedo_guidance_systems", "battlecruisers"],
     unlocks: {
       unlock_unit: "submarines",
       obsolete_unit: "torpedo_boats"

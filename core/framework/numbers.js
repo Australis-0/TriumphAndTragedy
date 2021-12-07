@@ -17,7 +17,10 @@ module.exports = {
     var options = (arg1_options) ? arg1_options : {};
 
     //Return statement
-    return `${(options.display_prefix) ? (number > 1) ? "+" : "" : ""}${Math.round(number*100)}%`;
+    return `${(options.display_prefix) ? (
+      (number > 1 && !options.base_zero) ||
+      (number > 0 && options.base_zero)
+    ) ? "+" : "" : ""}${Math.round(number*100)}%`;
   },
 
   /*

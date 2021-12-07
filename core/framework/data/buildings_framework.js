@@ -738,6 +738,6 @@ module.exports = {
     //Return statement
     return (good_type == "all") ?
       (Object.keys(goods_production).length > 0) ? goods_production : {} :
-      (goods_production[good_type]) ? goods_production[good_type] : {};
+      (goods_production[good_type]) ? goods_production[good_type] : [0, 0];
   }
 };

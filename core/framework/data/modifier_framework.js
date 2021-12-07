@@ -59,8 +59,8 @@ module.exports = {
             var local_modifier_keys = Object.keys(local_modifier);
 
             for (var x = 0; x < local_modifier_keys.length; x++)
-              if (local_modifier_keys.startsWith("create_modifier_"))
-                if (local_modifier_keys.replace("create_modifier_", "").indexOf(modifier_name) != -1)
+              if (local_modifier_keys[x].startsWith("create_modifier_"))
+                if (local_modifier_keys[x].replace("create_modifier_", "").indexOf(modifier_name) != -1)
                   modifier_exists = [true, (!options.return_key) ? local_modifier[local_modifier_keys[x]] : local_modifier_keys[x]];
           }
 
@@ -70,8 +70,8 @@ module.exports = {
           var local_modifier_keys = Object.keys(local_modifier);
 
           for (var x = 0; x < local_modifier_keys.length; x++)
-            if (local_modifier_keys.startsWith("create_modifier_"))
-              if (local_modifier_keys.replace("create_modifier_", "") == modifier_name)
+            if (local_modifier_keys[x].startsWith("create_modifier_"))
+              if (local_modifier_keys[x].replace("create_modifier_", "") == modifier_name)
                 modifier_exists = [true, (!options.return_key) ? local_modifier[local_modifier_keys[x]] : local_modifier_keys[x]];
         }
       }
@@ -83,7 +83,7 @@ module.exports = {
           var local_modifier_keys = Object.keys(local_modifier);
 
           for (var x = 0; x < local_modifier_keys.length; x++) {
-            if (local_modifier_keys.startsWith("create_modifier_")) {
+            if (local_modifier_keys[x].startsWith("create_modifier_")) {
               var local_submodifier = local_modifier[local_modifier_keys[x]];
 
               if (local_submodifier.name.indexOf(modifier_name) != -1)
@@ -98,7 +98,7 @@ module.exports = {
           var local_modifier_keys = Object.keys(local_modifier);
 
           for (var x = 0; x < local_modifier_keys.length; x++) {
-            if (local_modifier_keys.startsWith("create_modifier_")) {
+            if (local_modifier_keys[x].startsWith("create_modifier_")) {
               var local_submodifier = local_modifier[local_modifier_keys[x]];
 
               if (local_submodifier.name.toLowerCase() == modifier_name)

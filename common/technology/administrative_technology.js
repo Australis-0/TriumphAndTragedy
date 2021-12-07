@@ -893,7 +893,7 @@ config.technology.administrative_technology = {
     name: "Economic-based Ideologies",
     icon: "gold",
     description: "Economic-based ideologies such as anarcho-capitalism believe the inherent worth of the economy to act as a tool in moulding the life of the ordinary citizen.",
-    prerequis: ["decentralised_administration"],
+    prerequisite_techs: ["decentralised_administration"],
     research_cost: 6500,
     year: 1950,
     custom_effect_description: "This technology currently has no effect. This may change in future versions."

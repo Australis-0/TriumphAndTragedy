@@ -159,6 +159,7 @@ config.technology.military_technology = {
     name: "Light Cavalry",
     icon: "soldiers",
     description: "Light cavalry, compared to heavier forms of mounted infantry, can perform shock attacks and flank enemies at high speed, although their piercing attack is not quite as effective.",
+    prerequisite_techs: ["pike_and_square", "heavy_cavalry"],
     research_cost: 100,
     year: 1300,
     unlocks: {
@@ -1821,6 +1822,7 @@ config.technology.military_technology = {
     name: "Modern Infantry",
     icon: "soldiers",
     description: "Modern infantry are meant to serve in general-purpose environments and storm cities and other dense environments where defensability is more feasible.",
+    prerequisite_techs: ["special_forces", "signal_companies"],
     research_cost: 8500,
     year: 1939,
     unlocks: {
@@ -2069,7 +2071,7 @@ config.technology.military_technology = {
     name: "Improved Sights",
     icon: "government",
     description: "By improving our sights and adding night vision and thermal cameras, we can ensure that our tank crews are adequately equipped to deal with any situation where conventional vision alone is not enough.",
-    prerequisites: ["main_battle_tank"],
+    prerequisite_techs: ["main_battle_tank"],
     research_cost: 10000,
     year: 1980,
     unlocks: {

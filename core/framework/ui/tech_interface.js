@@ -126,9 +126,9 @@ module.exports = {
 
         for (var x = 0; x < local_tech.prerequisite_techs.length; x++)
           if (usr.researched_technologies.includes(local_tech.prerequisite_techs[x]))
-            prerequisite_techs++;
+            prerequisite_checks++;
 
-        if (prerequisite_techs == local_tech.prerequisite_techs.length)
+        if (prerequisite_checks == local_tech.prerequisite_techs.length)
           tech_available = true;
       } else {
         //No prerequisite_techs were found, so it must be a starting tech
@@ -192,37 +192,45 @@ module.exports = {
           tech_string.push(`- **Cost:** ${config.icons.knowledge} ${parseNumber(getTechnologyCost(local_tech_category[x]))}`);
           tech_string.push(`- **Effects:**`);
 
-          //Push modifiers
-          var all_modifiers = Object.keys(local_tech.unlocks);
+          //Push modifiers, but only if the tech unlocks something first
+          if (local_tech.unlocks) {
+            var all_modifiers = Object.keys(local_tech.unlocks);
 
-          for (var y = 0; y < all_modifiers.length; y++) {
-            var local_modifier = getList(local_tech.unlocks[all_modifiers[y]]);
+            for (var y = 0; y < all_modifiers.length; y++) {
+              var local_modifier = getList(local_tech.unlocks[all_modifiers[y]]);
 
-            switch (all_modifiers[y]) {
-              case "obsolete_building":
-                for (var z = 0; z < local_modifier.length; z++)
-                  tech_string.push(`Obsoletes **${((getBuilding(local_modifier[z]).name) > getBuilding(local_modifier[z]).name) ? getBuilding(local_modifier[z]).name : local_modifier[z]}**`);
+              switch (all_modifiers[y]) {
+                case "obsolete_building":
+                  for (var z = 0; z < local_modifier.length; z++)
+                    tech_string.push(`Obsoletes **${((getBuilding(local_modifier[z]).name) > getBuilding(local_modifier[z]).name) ? getBuilding(local_modifier[z]).name : local_modifier[z]}**`);
 
-                break;
-              case "unlock_building":
-                for (var z = 0; z < local_modifier.length; z++)
-                  tech_string.push(`Unlocks **${((getBuilding(local_modifier[z]).name) > getBuilding(local_modifier[z]).name) ? getBuilding(local_modifier[z]).name : local_modifier[z]}**`);
+                  break;
+                case "unlock_building":
+                  for (var z = 0; z < local_modifier.length; z++)
+                    tech_string.push(`Unlocks **${((getBuilding(local_modifier[z]).name) > getBuilding(local_modifier[z]).name) ? getBuilding(local_modifier[z]).name : local_modifier[z]}**`);
 
-                break;
-              default:
-                if (getModifier(all_modifiers[y])) {
-                  var modifier_obj = getModifier(all_modifiers[y]);
+                  break;
+                default:
+                  if (getModifier(all_modifiers[y])) {
+                    var modifier_obj = getModifier(all_modifiers[y]);
 
-                  //Fetch local tracker variables
-                  var modifier_name = (modifier_obj.name) ? modifier_obj.name : all_modifiers[y];
+                    //Fetch local tracker variables
+                    var modifier_name = (modifier_obj.name) ? modifier_obj.name : all_modifiers[y];
 
-                  //Push to tech_string
-                  (modifier_obj.type == "percentage") ?
-                    tech_string.push(`**${printPercentage(local_modifier[0] + 1, { display_prefix: true })}** ${modifier_name}`) :
-                    tech_string.push(`**${parseNumber(local_modifier[0], { display_prefix: true })}** ${modifier_name}`);
-                }
-                break;
+                    //Push to tech_string
+                    (modifier_obj.type == "percentage") ?
+                      //Percentage is true, but is it negative or positive?
+                      (local_modifier[0] < 0) ?
+                        tech_string.push(` • **${printPercentage(local_modifier[0] - 1, { display_prefix: true, base_zero: true })}** ${modifier_name}`) :
+                        tech_string.push(` • **${printPercentage(local_modifier[0], { display_prefix: true, base_zero: true })}** ${modifier_name}`) :
+                      tech_string.push(` • **${parseNumber(local_modifier[0], { display_prefix: true })}** ${modifier_name}`);
+                  }
+                  break;
+              }
             }
+          } else {
+            if (local_tech.custom_effect_description)
+              tech_string.push(`_${local_tech.custom_effect_description}_`);
           }
 
           //Print what other technologies the current tech leads to
@@ -232,7 +240,7 @@ module.exports = {
             var local_tech_obj = getTechnology(all_techs[y]);
 
             if (local_tech_obj.prerequisite_techs)
-              if (local_tech_obj.indexOf(local_tech_category[x]))
+              if (local_tech_obj.prerequisite_techs.includes(local_tech_category[x]))
                 leads_to_array.push((local_tech_obj.name) ? local_tech_obj.name : all_techs[y]);
           }
 
@@ -343,7 +351,7 @@ module.exports = {
     for (var i = 0; i < all_tech_categories.length; i++) {
       var local_tech_category = config.technology[all_tech_categories[i]];
       var local_tech_category_icon = (local_tech_category.icon) ? config.icons[local_tech_category.icon] + " " : "";
-      var local_tech_category_name = (local_tech_category.name) ? local_tech_category_name : parseString(local_tech_category);
+      var local_tech_category_name = (local_tech_category.name) ? local_tech_category_name : parseString(all_tech_categories[i]);
       var researched_technologies_in_category = 0;
       var total_technologies_in_category = Object.keys(local_tech_category).length;
 
@@ -366,7 +374,7 @@ module.exports = {
 
     //Print tech research options
     for (var i = 0; i < tech_array_dump.length; i++)
-      if (i <= 5) {
+      if (i < 5) {
         var local_tech_obj = getTechnology(tech_array_dump[i]);
         var local_tech_cost = getTechnologyCost(tech_array_dump[i]);
 
@@ -374,7 +382,8 @@ module.exports = {
 
         tech_string.push(`- ${(local_tech_obj.icon) ? config.icons[local_tech_obj.icon] + " " : ""}${local_tech_name} (${config.icons.knowledge} **${parseNumber(local_tech_cost)}**) **[Research ${local_tech_name}]**`);
       } else {
-        tech_string.push(`+${parseNumber(tech_array_dump.length - 5)} more ...`);
+        if (i == 6)
+          tech_string.push(`+${parseNumber(tech_array_dump.length - 5)} more ...`);
       }
     if (tech_array_dump.length == 0)
       tech_string.push(`_No available techs for research could be found._`);

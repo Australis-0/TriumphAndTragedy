@@ -51,8 +51,8 @@ module.exports = {
       pop_knowledge_gain = 500;
 
     local_knowledge_production = [
-      local_knowledge_production[0] + pop_knowledge_gain,
-      local_knowledge_production[1] + pop_knowledge_gain
+      local_knowledge_production[0] + returnSafeNumber(pop_knowledge_gain),
+      local_knowledge_production[1] + returnSafeNumber(pop_knowledge_gain)
     ];
 
     //Return statement
@@ -78,7 +78,7 @@ module.exports = {
     {
       //Key name, soft match
       for (var i = 0; i < all_tech_categories.length; i++) {
-        var local_category = config.techology[all_tech_categories[i]];
+        var local_category = config.technology[all_tech_categories[i]];
         var local_techs = Object.keys(local_category);
 
         for (var x = 0; x < local_techs.length; x++)
@@ -88,7 +88,7 @@ module.exports = {
 
       //Key name, hard match
       for (var i = 0; i < all_tech_categories.length; i++) {
-        var local_category = config.techology[all_tech_categories[i]];
+        var local_category = config.technology[all_tech_categories[i]];
         var local_techs = Object.keys(local_category);
 
         for (var x = 0; x < local_techs.length; x++)

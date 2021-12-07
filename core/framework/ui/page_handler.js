@@ -186,7 +186,7 @@ module.exports = {
               embed_pages: printGovernmentList(actual_id),
               user: game_obj.user
             });
-            menu_obj.page = "view_governments";
+            game_obj.page = "view_governments";
 
             break;
           case "set government":
@@ -325,7 +325,7 @@ module.exports = {
         switch (input) {
           case "back":
             printStats(user_id);
-            menu_obj.page = "country_interface";
+            game_obj.page = "country_interface";
 
             break;
           case "jump to page":
@@ -457,7 +457,10 @@ module.exports = {
 
           //[Research List]
           if (input == "research list") {
-            printResearchList(user_id);
+            createPageMenu(game_obj.middle_embed, {
+              embed_pages: printResearchList(actual_id),
+              user: game_obj.user
+            });
             game_obj.page = "research_list";
           }
 
@@ -538,7 +541,10 @@ module.exports = {
 
           //[Research List]; [Research (Tech)]
           if (input == "research list") {
-            printResearchList(user_id);
+            createPageMenu(game_obj.middle_embed, {
+              embed_pages: printResearchList(actual_id),
+              user: game_obj.user
+            });
             game_obj.page = "research_list";
           } else if (input.startsWith("research ")) {
             var tech_to_research = input.replace("research ", "");
@@ -550,7 +556,7 @@ module.exports = {
 
         //Default handler for main technology tab
         default:
-          if (technology_pages.includes(menu_obj.page)) {
+          if (technology_pages.includes(game_obj.page)) {
             //Button Handler
             //[Cancel Research]
             if (input.startsWith("cancel research ")) {
@@ -568,8 +574,11 @@ module.exports = {
             }
 
             //[Research Possibilities]; [Research (Tech)]
-            if (input == "research possibilities") {
-              printResearchList(user_id);
+            if (input == "research possibilities" || input == "research list") {
+              createPageMenu(game_obj.middle_embed, {
+                embed_pages: printResearchList(actual_id),
+                user: game_obj.user
+              });
               game_obj.page = "research_list";
             } else if (input.startsWith("research ")) {
               var tech_to_research = input.replace("research ", "");
