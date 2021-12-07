@@ -15,7 +15,7 @@ module.exports = {
         var local_tech_obj = getTechnology(usr.researching[slot_number].technology);
 
         //Print feedback to user
-        printAlert(`You cancelled your current research of **${(local_tech_obj.name) ? local_tech_obj.name : usr.researching[slot_number].technology)}** for Slot #**${slot_number)}**.`);
+        printAlert(game_obj.id, `You cancelled your current research of **${(local_tech_obj.name) ? local_tech_obj.name : usr.researching[slot_number].technology}** for Slot #**${slot_number}**.`);
 
         //Cancel the research slot
         usr.researching.splice(slot_number, 1);
@@ -24,10 +24,10 @@ module.exports = {
         if (game_obj.page == "research")
           printResearch(user_id);
       } else {
-        printError(`This research slot is either already empty, or you haven't defined the slot as a valid number!`);
+        printError(game_obj.id, `This research slot is either already empty, or you haven't defined the slot as a valid number!`);
       }
     } else {
-      printError(`You must specify a valid Research Slot in order to cancel any research! Check your **[Research]** menu for more information on which slots you can or cannot cancel.`);
+      printError(game_obj.id, `You must specify a valid Research Slot in order to cancel any research! Check your **[Research]** menu for more information on which slots you can or cannot cancel.`);
     }
   },
 

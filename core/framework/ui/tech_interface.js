@@ -201,12 +201,12 @@ module.exports = {
             switch (all_modifiers[y]) {
               case "obsolete_building":
                 for (var z = 0; z < local_modifier.length; z++)
-                  tech_string.push(`Obsoletes **${(getBuilding(local_modifier[z]).name) > getBuilding(local_modifier[z]).name : local_modifier[z]}**`);
+                  tech_string.push(`Obsoletes **${((getBuilding(local_modifier[z]).name) > getBuilding(local_modifier[z]).name) ? getBuilding(local_modifier[z]).name : local_modifier[z]}**`);
 
                 break;
-              case: "unlock_building":
+              case "unlock_building":
                 for (var z = 0; z < local_modifier.length; z++)
-                  tech_string.push(`Unlocks **${(getBuilding(local_modifier[z]).name) ? getBuilding(local_modifier[z]).name : local_modifier[z]}**`);
+                  tech_string.push(`Unlocks **${((getBuilding(local_modifier[z]).name) > getBuilding(local_modifier[z]).name) ? getBuilding(local_modifier[z]).name : local_modifier[z]}**`);
 
                 break;
               default:
