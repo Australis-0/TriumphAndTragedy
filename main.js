@@ -65,7 +65,6 @@ FileManager.import("./framework/ui/trade_framework");
 FileManager.import("./framework/ui/ui_framework");
 
 //Game command files
-
 FileManager.import("./game/colonisation/settle");
 
 FileManager.import("./game/country/create_country");
