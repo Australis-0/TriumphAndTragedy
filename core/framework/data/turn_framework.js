@@ -16,6 +16,9 @@ module.exports = {
 
     //Modifier and tracker variable processing
     {
+      //Generic trackers
+      usr.country_age++;
+
       //City modifiers/trackers
       usr.city_cap = getCitiesCap(actual_id);
       usr.total_cities += getCities(actual_id, { include_hostile_occupations: true }).length;
@@ -57,6 +60,13 @@ module.exports = {
       //Remove constructed requests
       for (var i = 0; i < construction_requests_to_remove.length; i++)
         removeElement(usr.under_construction, i);
+    }
+
+    //Market processing
+    {
+      //Reduce maximum transaction amount from the Global Market to 20% of total Shipment Capacity after 10 turns, or whatever it is set to in defines
+      if (usr.country_age > 10)
+        usr.modifiers.maximum_transaction_amount = config.defines.economy.resource_max_percentile;
     }
 
     //Politics processing

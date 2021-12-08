@@ -53,6 +53,7 @@ FileManager.import("./framework/ui/cities_interface");
 FileManager.import("./framework/ui/country_interface");
 FileManager.import("./framework/ui/economy_interface");
 FileManager.import("./framework/ui/games");
+FileManager.import("./framework/ui/global_market_interface");
 FileManager.import("./framework/ui/government_interface");
 FileManager.import("./framework/ui/map_viewer");
 FileManager.import("./framework/ui/page_handler");
@@ -60,6 +61,7 @@ FileManager.import("./framework/ui/pops_interface");
 FileManager.import("./framework/ui/provinces_interface");
 FileManager.import("./framework/ui/tech_interface");
 FileManager.import("./framework/ui/topbar_interface");
+FileManager.import("./framework/ui/trade_framework");
 FileManager.import("./framework/ui/ui_framework");
 
 //Game command files
