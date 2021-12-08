@@ -70,6 +70,7 @@ FileManager.import("./game/colonisation/settle");
 FileManager.import("./game/country/create_country");
 
 FileManager.import("./game/market/buy");
+FileManager.import("./game/market/sell");
 
 FileManager.import("./game/politics/coup_government");
 FileManager.import("./game/politics/set_government");

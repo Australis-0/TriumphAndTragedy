@@ -14,7 +14,7 @@ module.exports = {
     var usr = main.users[actual_id];
 
     //Check to make sure that resource exists in the first place
-    if (good_obj) {
+    if (main.market[good_name]) {
       //Make sure that the user isn't blockaded
       if (Object.keys(usr.blockaded).length == 0) {
         if (!isNaN(good_amount)) {
