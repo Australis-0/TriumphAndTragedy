@@ -1,5 +1,42 @@
 module.exports = {
   /*
+    Returns either an object or key list of all available modifiers.
+    options: {
+      return_names: true/false - Whether or not to return modifier keys instead of objects
+    }
+  */
+  getAllModifiers: function (arg0_options) {
+    //Convert from parameters
+    var options = (arg0_options) ? arg0_options : {};
+
+    //Declare local instance variables
+    var modifier_dump = [];
+
+    //Iterate through all modifier keys, 1st layer
+    var all_modifiers = Object.keys(config.modifiers);
+
+    for (var i = 0; i < all_modifiers.length; i++) {
+      var local_modifier = config.modifiers[all_modifiers[i]];
+      //Push base modifier
+      (!options.return_names) ?
+        modifier_dump.push(local_modifier) :
+        modifier_dump.push(all_modifiers[i]);
+
+      //Iterate over all submodifier keys if they exist (2nd layer)
+      var all_modifier_keys = Object.keys(local_modifier);
+
+      for (var x = 0; x < all_modifier_keys.length; x++)
+        if (all_modifier_keys[x].startsWith("create_modifier_"))
+          (!options.return_names) ?
+            modifier_dump.push(local_modifier[all_modifier_keys[x]]) :
+            modifier_dump.push(all_modifier_keys[x]);
+    }
+
+    //Return statement
+    return modifier_dump;
+  },
+
+  /*
     getModifier() - Gets either the modifier object or key.
     options: {
       return_key: true/false - Whether or not to return the modifier key
