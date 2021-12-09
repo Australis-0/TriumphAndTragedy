@@ -36,7 +36,7 @@ module.exports = {
               all_goods[i].buy_price*0.5,
             stock: (all_goods[i].stock) ?
               all_goods[i].stock :
-              common.defines.economy.resource_base_stock
+              config.defines.economy.resource_base_stock
           };
         }
 

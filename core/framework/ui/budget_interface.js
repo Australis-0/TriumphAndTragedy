@@ -37,7 +37,7 @@ module.exports = {
     budget_string.push("");
     budget_string.push(`**Economic Policy:**`);
     budget_string.push("");
-    budget_string.push(`Current tax: (**${printPercentage(usr.tax_rate)}**/**${printPercentage(usr.modifiers.max_tax)}**) - ${(getIncome(actual_id) < 0) ? "Consider adjusting your tax rate to gain additional income." : ""}`;
+    budget_string.push(`Current tax: (**${printPercentage(usr.tax_rate)}**/**${printPercentage(usr.modifiers.max_tax)}**) - ${(getIncome(actual_id) < 0) ? "Consider adjusting your tax rate to gain additional income." : ""}`);
     budget_string.push("");
     budget_string.push(`**[Set Tax]**`);
     budget_string.push("");

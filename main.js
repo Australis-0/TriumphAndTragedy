@@ -33,6 +33,7 @@ FileManager.import("./framework/data/government_framework");
 FileManager.import("./framework/data/modifier_framework");
 FileManager.import("./framework/data/pop_framework");
 FileManager.import("./framework/data/tech_framework");
+FileManager.import("./framework/data/trade_framework");
 FileManager.import("./framework/data/turn_framework");
 FileManager.import("./framework/data/user_framework");
 
@@ -62,7 +63,6 @@ FileManager.import("./framework/ui/provinces_interface");
 FileManager.import("./framework/ui/tech_interface");
 FileManager.import("./framework/ui/topbar_interface");
 FileManager.import("./framework/ui/trade_interface");
-FileManager.import("./framework/ui/trade_framework");
 FileManager.import("./framework/ui/ui_framework");
 
 //Game command files
