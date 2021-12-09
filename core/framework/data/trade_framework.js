@@ -1,4 +1,30 @@
 module.exports = {
+  generateTradeID: function (arg0_user, arg1_receiving_user) {
+    //Convert from parameters
+    var user_id = arg0_user;
+    var other_user = arg1_receiving_user;
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var ot_actual_id = main.global.user_map[other_user];
+    var ot_user = main.users[ot_actual_id];
+    var usr = main.users[actual_id];
+
+    var local_id_suffix;
+
+    //While loop to find ID, just in-case of conflicting random ID's:
+    while (true) {
+      var full_id = `${actual_id}-${ot_actual_id}-${local_id_suffix}`;
+      local_id_suffix = generateRandomID();
+
+      //Return and break once a true ID is found
+      if (!usr.trades[full_id]) {
+        return full_id;
+        break;
+      }
+    }
+  },
+
   getImports: function (arg0_user) {
     //Convert from parameters
     var user_id = arg0_user;
@@ -40,6 +66,17 @@ module.exports = {
     );
   },
 
+  getShipmentCapacity: function (arg0_user) {
+    //Convert from parameters
+    var user_id = arg0_user;
+
+    //Declare local instance variables
+    var usr = main.users[user_id];
+
+    //Return statement
+    return usr.modifiers.shipment_capacity - module.exports.getUsedCapacity(user_id);
+  },
+
   getUsedCapacity: function (arg0_user) {
     //Convert from parameters
     var user_id = arg0_user;
@@ -57,6 +94,6 @@ module.exports = {
     }
 
     //Return statement
-    return total_used_capacity;
+    return total_used_capacity + usr.transactions_this_turn;
   }
 };
