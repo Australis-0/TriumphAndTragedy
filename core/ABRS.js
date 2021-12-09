@@ -1,5 +1,19 @@
 //ABRS - Automated Backup and Restoration System (ABRS)
 module.exports = {
+  initialiseGraph: function () {
+    //Initialise global graph
+    global.graph = global.bn_graph();
+
+    //Declare local instance variables
+    var all_provinces = Object.keys(main.provinces);
+
+    for (var i = 0; i < all_provinces.length; i++)
+      if (all_provinces[i].match(/^[0-9]+$/) && all_provinces[i].length > 0)
+        //Add graph links with uniform weighting
+        for (var x = 0; x < main.provinces[all_provinces[i]].adjacencies.length; x++)
+          graph.addLink(all_provinces[i], main.provinces[all_provinces[i]].adjacencies[x], { weight: 1 });
+  },
+
   loadBackupArray: function () {
     //Declare backup array
     global.backup_array = fs.readdirSync("./backups/");
@@ -93,6 +107,9 @@ module.exports = {
   	loadMap("colonial_map.svg", "colonial");
     loadMap("political_map.svg", "political");
     loadMap("supply_limit_map.svg", "supply");
+
+    //Load province adjacencies
+    setTimeout(module.exports.initialiseGraph, 500);
   },
 
   returnABRSDateString: function () {

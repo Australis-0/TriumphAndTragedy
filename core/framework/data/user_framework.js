@@ -286,5 +286,38 @@ module.exports = {
 
     //Return statement
     return (Object.keys(usr.blockaded).length > 0);
+  },
+
+  moveTo: function (arg0_province, arg1_province) {
+    //Convert from parameters
+    var starting_province = arg0_province;
+    var ending_province = arg1_province;
+
+    try {
+      var pathfinder = pbn_path.aStar(graph, {
+        distance(fromNode, toNode, link) {
+          return link.data.weight;
+        }
+      });
+
+      var connections = [];
+      var path = pathfinder.find(ending_province, starting_province);
+
+      for (var i = 0; i < path.length; i++)
+        connections.push(path[i].id);
+
+      //Parse connections
+      for (var i = 0; i < connections.length; i++)
+        if (isNaN(parseInt(connections[i])))
+          connections.splice(i, 1);
+
+      //Return connections
+      return connections;
+    } catch (e) {
+      log.error(`moveTo() ran into an exceptiion when trying to find a path between Province ID ${starting_province} and Province ID ${ending_province}! ${e}`);
+
+      //Return statement
+      return [starting_province, ending_province];
+    }
   }
 };
