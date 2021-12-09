@@ -5,7 +5,7 @@ module.exports = {
     var raw_amount = arg1_amount;
     var amount = parseInt(Math.round(arg1_amount/100));
 
-    //Convert from parameters
+    //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
     var anarchy_name = getGovernment({ return_anarchy: true, return_key: true });
     var game_obj = getGameObject(user_id);
