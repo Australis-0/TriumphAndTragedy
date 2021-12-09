@@ -1,4 +1,81 @@
 module.exports = {
+  printExports: function (arg0_user) {
+    //Convert from parameters
+    var user_id = arg0_user;
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var game_obj = getGameObject(user_id);
+    var usr = main.users[actual_id];
+
+    //Initailise export_string
+    var all_exports = Object.keys(usr.trades);
+    var export_string = [];
+
+    for (var i = 0; i < all_exports.length; i++) {
+      var local_export = usr.trades[all_exports[i]];
+      var local_good_icon = (getGood(local_export.good_type).icon) ?
+        getGood(local_export.good_type).icon + " " :
+        (local_export.good_type == "money") ?
+          config.icons.money + " " :
+          "";
+      var local_good_name = (getGood(local_export.good_type).name) ?
+        getGood(local_export.good_type).name :
+        local_export.good_type;
+
+      export_string.push(`Exporting ${local_good_icon}${parseNumber(local_export.amount)} ${local_good_name} to **${main.users[local_export.target].name}**.\nThe shipment will arrive in **${parseNumber(local_export[i].time_remaining)}** turn(s).`);
+    }
+
+    if (all_exports.length == 0)
+      export_string.push(`_You have no outgoing exports._`);
+
+    //Return statement
+    return splitEmbed(export_string, {
+      title: "Imports:",
+      title_pages: true,
+      fixed_width: true
+    });
+  },
+
+  printImports: function (arg0_user) {
+    //Convert from parameters
+    var user_id = arg0_user;
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var game_obj = getGameObject(user_id);
+    var usr = main.users[actual_id];
+
+    //Initailise import_string
+    var import_string = [];
+
+    //Format import_string
+    var all_imports = getImports(actual_id);
+
+    for (var i = 0; i < all_imports.length; i++) {
+      var local_good_icon = (getGood(all_imports[i].good_type).icon) ?
+        getGood(all_imports[i].good_type).icon + " " :
+        (all_imports[i].good_type == "money") ?
+          config.icons.money + " " :
+          "";
+      var local_good_name = (getGood(all_imports[i].good_type).name) ?
+        getGood(all_imports[i].good_type).name :
+        all_imports[i].good_type;
+
+      import_string.push(`Importing ${local_good_icon}${parseNumber(all_imports[i].amount)} ${local_good_name} from **${main.users[all_imports[i].exporter].name}**.\nThe shipment will arrive in **${parseNumber(all_imports[i].time_remaining)}** turn(s).`);
+    }
+
+    if (all_imports.length == 0)
+      import_string.push(`_You have no incoming imports._`);
+
+    //Return statement
+    return splitEmbed(import_string, {
+      title: "Imports:",
+      title_pages: true,
+      fixed_width: true
+    });
+  },
+
   printTrade: function (arg0_user) {
     //Convert from parameters
     var user_id = arg0_user;
@@ -54,13 +131,15 @@ module.exports = {
     for (var i = 0; i < local_imports.length; i++)
       if (i <= 10) {
         var local_good_icon = (getGood(local_imports[i].good_type).icon) ?
-          config.icons[getGood(local_imports[i].good_type).icon] + " " :
-          "";
+          getGood(local_imports[i].good_type).icon + " " :
+          (local_imports[i].good_type == "money") ?
+            config.icons.money + " " :
+            "";
         var local_good_name = (getGood(local_imports[i].good_type).name) ?
           getGood(local_imports[i].good_type).name :
           local_imports[i].good_type;
 
-        import_string.push(`Importing ${parseNumber(local_imports[i].amount)} ${local_good_icon}${local_good_name} from **${main.users[local_imports[i].exporter].name}**.\nThe shipment will arrive in ${parseNumber(local_imports[i].time_remaining)}** turn(s).`);
+        import_string.push(`Importing ${local_good_icon}${parseNumber(local_imports[i].amount)} ${local_good_name} from **${main.users[local_imports[i].exporter].name}**.\nThe shipment will arrive in ${parseNumber(local_imports[i].time_remaining)}** turn(s).`);
       }
 
     if (local_imports.length > 10)
@@ -77,12 +156,14 @@ module.exports = {
         var local_export = usr.trades[all_exports[i]];
         var local_good_icon = (getGood(local_export.good_type).icon) ?
           getGood(local_export.good_type).icon + " " :
-          "";
+          (local_export.good_type == "money") ?
+            config.icons.money + " " :
+            "";
         var local_good_name = (getGood(local_export.good_type).name) ?
           getGood(local_export.good_type).name :
           local_export.good_type;
 
-        export_string.push(`Exporting ${parseNumber(local_export.amount)} ${local_good_icon}${local_good_name} to **${main.users[local_export.target].name}**.\nThe shipment will arrive in ${parseNumber(local_exports[i].time_remaining)}** turn(s).`);
+        export_string.push(`Exporting ${local_good_icon}${parseNumber(local_export.amount)} ${local_good_name} to **${main.users[local_export.target].name}**.\nThe shipment will arrive in ${parseNumber(local_exports[i].time_remaining)}** turn(s).`);
       }
 
     if (local_exports.length > 10)
