@@ -16,7 +16,7 @@ module.exports = {
     //Check to make sure that resource exists in the first place
     if (main.market[good_name]) {
       //Make sure that the user isn't blockaded
-      if (Object.keys(usr.blockaded).length == 0) {
+      if (!isBlockaded(actual_id)) {
         if (!isNaN(good_amount)) {
           var temp_market = JSON.parse(JSON.stringify(main.market));
           var total_cost = 0;
