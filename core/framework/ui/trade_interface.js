@@ -8,10 +8,15 @@ module.exports = {
     var game_obj = getGameObject(user_id);
     var usr = main.users[actual_id];
 
-    //Initialise trade_string
+    //Initialise trade_string, import_string, export_string and market_string, with the latter being separate fields of the embed.
+    var export_string = [];
+    var import_string = [];
+    var market_string = [];
     var trade_string = [];
 
     //Format trade_string
+    var all_exports = Object.keys(usr.trades);
+    var all_market_goods = Object.keys(main.market);
     var local_imports = getImports(actual_id);
     var number_of_autotrades = Object.keys(usr.auto_trades).length;
     var capacity_used = getUsedCapacity(actual_id);
@@ -39,19 +44,14 @@ module.exports = {
       trade_string.push(`You currently have **${parseNumber(number_of_autotrades)}** ongoing auto-trades. **[Manage Auto-Trades]**`) :
       trade_string.push(`_You currently have no ongoing autotrades._ In order to access the Auto Trade UI, type **[Manage Auto-Trades]**.`);
 
-    trade_string.push("");
-    trade_string.push(`${config.icons.taxes} **[Import List]:**`);
-
-    trade_string.push("");
-
     (local_imports.length > 0) ?
-      trade_string.push(`You currently have **${parseNumber(local_imports.length)}** imports in transfer.`) :
-      trade_string.push(`_You have no incoming imports._`);
+      import_string.push(`You currently have **${parseNumber(local_imports.length)}** imports in transfer.`) :
+      import_string.push(`_You have no incoming imports._`);
 
-    trade_string.push("");
+    import_string.push("");
 
     //Print imports; may only print up to 10 imports
-    for (var i = 0; i < local_imports.length; i++) {
+    for (var i = 0; i < local_imports.length; i++)
       if (i <= 10) {
         var local_good_icon = (getGood(local_imports[i].good_type).icon) ?
           config.icons[getGood(local_imports[i].good_type).icon] + " " :
@@ -60,11 +60,88 @@ module.exports = {
           getGood(local_imports[i].good_type).name :
           local_imports[i].good_type;
 
-        import_list.push(`Importing ${local_good_icon}${parseNumber(local_imports[i].amount)} ${local_good_name} from **${main.users[local_imports[i].exporter].name}**.\nThe shipment will arrive in ${local_imports[i].time_remaining}** turn(s).`);
+        import_string.push(`Importing ${parseNumber(local_imports[i].amount)} ${local_good_icon}${local_good_name} from **${main.users[local_imports[i].exporter].name}**.\nThe shipment will arrive in ${parseNumber(local_imports[i].time_remaining)}** turn(s).`);
       }
-    }
 
     if (local_imports.length > 10)
-      trade_string.push(`+${parseNumber(local_imports.length-10)} more ...`);
+      import_string.push(`+${parseNumber(local_imports.length-10)} more ...`);
+
+    //Print exports; may only print up to 10 exports
+
+    (all_exports.length > 0) ?
+      export_string.push(`You currently have **${all_exports.length}** exports in transfer.`) :
+      export_string.push(`_You have no outgoing exports._`);
+
+    for (var i = 0; i < all_exports.length; i++)
+      if (i <= 10) {
+        var local_export = usr.trades[all_exports[i]];
+        var local_good_icon = (getGood(local_export.good_type).icon) ?
+          getGood(local_export.good_type).icon + " " :
+          "";
+        var local_good_name = (getGood(local_export.good_type).name) ?
+          getGood(local_export.good_type).name :
+          local_export.good_type;
+
+        export_string.push(`Exporting ${parseNumber(local_export.amount)} ${local_good_icon}${local_good_name} to **${main.users[local_export.target].name}**.\nThe shipment will arrive in ${parseNumber(local_exports[i].time_remaining)}** turn(s).`);
+      }
+
+    if (local_exports.length > 10)
+      export_string.push(`+${parseNumber(local_exports.length-10)} more ...`);
+
+    //World Market
+
+    market_string.push(config.localisation.divider);
+    market_string.push("");
+
+    //Enter entries
+    for (var i = 0; i < all_market_goods.length; i++)
+      if (i <= 10) {
+        var local_good = getGood(all_market_goods[i]);
+        var local_market_good = main.market[all_market_goods[i]];
+
+        var local_good_icon = (local_good.icon) ?
+          config.icons[local_good.icon] + " " :
+          "";
+        var local_good_name = (local_good.name) ?
+          local_good.name :
+          all_market_goods[i];
+
+        market_string.push(`${local_good_icon} - ${local_good_name} (**${parseNumber(local_market_good.stock)}** in stock): Buy Price: £${parseNumber(local_market_good.buy_price)} ¦ Sell Price: £${parseNumber(local_market_good.sell_price)}`);
+        market_string.push(`- **[Buy ${local_good_name}]** ¦ **[Sell ${local_good_name}]**`);
+      }
+
+    if (all_market_goods.length > 10)
+      market_string.push(`+${parseNumber(all_market_goods.length-10)} more ...`);
+
+    //Remove control panel if one exists
+    removeControlPanel(game_obj.id);
+
+    //Create embed and edit to message
+    const trade_embed = new Discord.MessageEmbed()
+      .setColor(settings.bot_colour)
+      .setTitle(`**Trade:**`)
+      .setThumbnail(usr.flag)
+      .setImage("https://cdn.discordapp.com/attachments/722997700391338046/736141424315203634/margin.png")
+      .setDescription(trade_string.join("\n"))
+      .addFields(
+        {
+          name: `${config.icons.taxes} **[Import List]**:`,
+          value: import_string.join("\n"),
+          inline: true
+        },
+        {
+          name: `${config.icons.trade} **[Export List]**:`,
+          value: export_string.join("\n"),
+          inline: true
+        },
+        {
+          name: `**[World Market]**:`,
+          value: market_string.join("\n")
+        }
+      );
+
+    //Return statement
+    game_obj.main_embed = trade_embed;
+    game_obj.main_change = true;
   }
 };
