@@ -12,6 +12,8 @@ module.exports = {
     var trade_string = [];
 
     //Format trade_string
+    var local_imports = getImports(actual_id);
+    var number_of_autotrades = Object.keys(usr.auto_trades).length;
     var capacity_used = getUsedCapacity(actual_id);
 
     trade_string.push(`**Travel Modifiers:**`);
@@ -29,5 +31,40 @@ module.exports = {
     trade_string.push(`- Shipment Time Modifier: **${printPercentage(usr.modifiers.shipment_time)}**`);
 
     //Import/Export list
+    trade_string.push(config.localisation.divider);
+    trade_string.push(`**Imports/Exports:**`);
+    trade_string.push("");
+
+    (number_of_autotrades > 0) ?
+      trade_string.push(`You currently have **${parseNumber(number_of_autotrades)}** ongoing auto-trades. **[Manage Auto-Trades]**`) :
+      trade_string.push(`_You currently have no ongoing autotrades._ In order to access the Auto Trade UI, type **[Manage Auto-Trades]**.`);
+
+    trade_string.push("");
+    trade_string.push(`${config.icons.taxes} **[Import List]:**`);
+
+    trade_string.push("");
+
+    (local_imports.length > 0) ?
+      trade_string.push(`You currently have **${parseNumber(local_imports.length)}** imports in transfer.`) :
+      trade_string.push(`_You have no incoming imports._`);
+
+    trade_string.push("");
+
+    //Print imports; may only print up to 10 imports
+    for (var i = 0; i < local_imports.length; i++) {
+      if (i <= 10) {
+        var local_good_icon = (getGood(local_imports[i].good_type).icon) ?
+          config.icons[getGood(local_imports[i].good_type).icon] + " " :
+          "";
+        var local_good_name = (getGood(local_imports[i].good_type).name) ?
+          getGood(local_imports[i].good_type).name :
+          local_imports[i].good_type;
+
+        import_list.push(`Importing ${local_good_icon}${parseNumber(local_imports[i].amount)} ${local_good_name} from **${main.users[local_imports[i].exporter].name}**.\nThe shipment will arrive in ${local_imports[i].time_remaining}** turn(s).`);
+      }
+    }
+
+    if (local_imports.length > 10)
+      trade_string.push(`+${parseNumber(local_imports.length-10)} more ...`);
   }
 };
