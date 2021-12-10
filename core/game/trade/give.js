@@ -16,75 +16,90 @@ module.exports = {
     var usr = main.users[actual_id];
 
     //Check to make sure that user isn't giving goods to themselves
-    if (actual_id != ot_actual_id) {
-      if (!isNaN(raw_amount)) {
-        if (raw_amount >= 0) {
-          if (raw_amount > 0) {
-            if (!good_obj.research_good) {
-              if (!good_obj.doesnt_stack) {
-                //Check if user has enough shipment capacity
-                if (getShipmentCapacity(actual_id) >= raw_amount) {
-                  //Check if user has enough items to actually carry this out
-                  if (
-                    (raw_good_name == "money" && usr.money >= raw_amount) ||
-                    (good_obj && usr.inventory[good_name] >= raw_amount)
-                  ) {
-                    //Fetch user variables
-                    var distance = moveTo(getCapital(actual_id).id, getCapital(ot_actual_id).id).length;
-                    var amount_of_turns = Math.ceil(
-                      config.defines.combat.base_transfer_time + (
-                        distance/config.defines.combat.shipment_time
-                      )*usr.modifiers.shipment_time
-                    );
-                    var trade_id = generateTradeID(actual_id, ot_actual_id);
+    if (ot_user) {
+      if (actual_id != ot_actual_id) {
+        if (!isNaN(raw_amount)) {
+          if (raw_amount >= 0) {
+            if (raw_amount > 0) {
+              if (!good_obj.research_good) {
+                if (!good_obj.doesnt_stack) {
+                  if (!isBlockaded(actual_id)) {
+                    if (!isBlockaded(ot_actual_id)) {
+                      //Check if user has enough shipment capacity
+                      if (getShipmentCapacity(actual_id) >= raw_amount) {
+                        //Check if user has enough items to actually carry this out
+                        if (
+                          (raw_good_name == "money" && usr.money >= raw_amount) ||
+                          (good_obj && usr.inventory[good_name] >= raw_amount)
+                        ) {
+                          //Fetch user variables
+                          var distance = moveTo(getCapital(actual_id).id, getCapital(ot_actual_id).id).length;
+                          var amount_of_turns = Math.ceil(
+                            config.defines.combat.base_transfer_time + (
+                              distance/config.defines.combat.shipment_time
+                            )*usr.modifiers.shipment_time
+                          );
+                          var trade_id = generateTradeID(actual_id, ot_actual_id);
 
-                    if (good_obj || raw_good_name == "money") {
-                      usr.trades[trade_id] = {
-                        target: other_user,
-                        exporter: user_id,
+                          if (good_obj || raw_good_name == "money") {
+                            usr.trades[trade_id] = {
+                              target: other_user,
+                              exporter: user_id,
 
-                        amount: raw_amount,
-                        good_type: good_name,
+                              amount: raw_amount,
+                              good_type: (raw_good_name == "money") ?
+                                "money" :
+                                good_name,
 
-                        time_remaining: amount_of_turns
-                      };
+                              time_remaining: amount_of_turns
+                            };
 
-                      var local_good_icon = (getGood(good_name).icon) ?
-                        getGood(good_name).icon + " " :
-                        (raw_good_name == "money") ?
-                          config.icons.money + " " :
-                          "";
-                      var local_good_name = (getGood(good_name).name) ?
-                        getGood(good_name).name :
-                        all_imports[i].good_type;
+                            var local_good_icon = (getGood(good_name).icon) ?
+                              getGood(good_name).icon + " " :
+                              (raw_good_name == "money") ?
+                                config.icons.money + " " :
+                                "";
+                            var local_good_name = (getGood(good_name).name) ?
+                              getGood(good_name).name :
+                              all_imports[i].good_type;
 
-                      printAlert(`Your transports have begun to ship ${parseNumber(raw_amount)} ${local_good_icon}${local_good_name} to **${ot_user.name}**. They will arrive in **${parseNumber(amount_of_turns)}** turn(s).`);
+                            printAlert(`Your transports have begun to ship ${parseNumber(raw_amount)} ${local_good_icon}${local_good_name} to **${ot_user.name}**. They will arrive in **${parseNumber(amount_of_turns)}** turn(s).`);
+                          } else {
+                            printError(game_obj.id, `You may only ship inventory goods or money!`);
+                          }
+                        } else {
+                          printError(game_obj.id, `You were unable to ship these goods due to a shortage of items.`);
+                        }
+                      } else {
+                        printError(game_obj.id, `You don't have enough Shipment Capacity to transport this many items! You currently have **${parseNumber(getShipmentCapacity(actual_id))}** remaining Shipment Capacity out of **${parseNumber(usr.modifiers.shipment_capacity)}** total, allowing you to only ship up to that many items.`);
+                      }
                     } else {
-                      printError(game_obj.id, `You may only ship inventory goods or money!`);
+                      printError(game_obj.id, `You can't ship items to blockaded countries like that!`);
                     }
                   } else {
-                    printError(game_obj.id, `You were unable to ship these goods due to a shortage of items.`);
+                    printError(game_obj.id, `You can't give stuff to other users whilst under a blockade!`);
                   }
                 } else {
-                  printError(game_obj.id, `You don't have enough Shipment Capacity to transport this many items! You currently have **${parseNumber(getShipmentCapacity(actual_id))}** remaining Shipment Capacity out of **${parseNumber(usr.modifiers.shipment_capacity)}** total, allowing you to only ship up to that many items.`);
+                  printError(game_obj.id, `You can't ship non-stackable items to other players!`);
                 }
               } else {
-                printError(game_obj.id, `You can't ship non-stackable items to other players!`);
+                printError(game_obj.id, `You can't ship knowledge to other players!`);
               }
             } else {
-              printError(game_obj.id, `You can't ship knowledge to other players!`);
+              printError(game_obj.id, `You can't give zero units of something!`);
             }
           } else {
-            printError(game_obj.id, `You can't give zero units of something!`);
+            printError(game_obj.id, `You can't steal from other users like that!`);
           }
         } else {
-          printError(game_obj.id, `You can't steal from other users like that!`);
+          printError(game_obj.id, `You must give a valid numeric amount of stuff!`);
         }
       } else {
-        printError(game_obj.id, `You must give a valid numeric amount of stuff!`);
+        printError(game_obj.id, `You can't give stuff to yourself!`);
       }
     } else {
-      printError(game_obj.id, `You can't give stuff to yourself!`);
+      printError(game_obj.id, `The receiving country you have specified turned out to be nonexistent!`);
     }
+
   }
 };

@@ -83,6 +83,8 @@ FileManager.import("./game/province/settle_province");
 FileManager.import("./game/technology/research");
 FileManager.import("./game/technology/research_queue");
 
+FileManager.import("./game/trade/cancel_auto_trade");
+FileManager.import("./game/trade/create_auto_trade");
 FileManager.import("./game/trade/give");
 
 //Declare config loading order
