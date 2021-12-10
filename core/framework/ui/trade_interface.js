@@ -1,4 +1,56 @@
 module.exports = {
+  printAutoTrades: function (arg0_user) {
+    //Convert from parameters
+    var user_id = arg0_user;
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var game_obj = getGameObject(user_id);
+    var usr = main.users[actual_id];
+
+    //Initialise auto_trade_string
+    var all_auto_trades = Object.keys(usr.auto_trades);
+    var auto_trade_prefix_string = [];
+    var auto_trade_string = [];
+
+    auto_trade_prefix_string.push(`**[Back]**`);
+    auto_trade_prefix_string.push("");
+    auto_trade_prefix_string.push(`${config.icons.taxes} **Auto-Trades** are shipments of goods that occur automatically from your nation to another country. These goods are shipped out once per turn.`);
+    auto_trade_prefix_string.push("");
+    auto_trade_prefix_string.push(` **[Cancel Auto Trade]** ¦ **[Create Auto Trade]**`);
+    auto_trade_prefix_string.push("");
+    auto_trade_prefix_string.push(config.localisation.divider);
+    auto_trade_prefix_string.push("");
+
+    //Dynamically print out auto-trades
+    if (all_auto_trades.length > 0) {
+      for (var i = 0; i < all_auto_trades.length; i++) {
+        var local_auto_trade = usr.auto_trades[all_auto_trades[i]];
+        var local_good_icon = (getGood(local_auto_trade.good_type).icon) ?
+          getGood(local_auto_trade.good_type).icon + " " :
+          (local_auto_trade.good_type == "money") ?
+            config.icons.money + " " :
+            "";
+        var local_good_name = (getGood(local_auto_trade.good_type).name) ?
+          getGood(local_auto_trade.good_type).name :
+          local_auto_trade.good_type;
+
+        //Format string
+        auto_trade_string.push(`Exporting ${local_good_icon}${parseNumber(local_auto_trade.amount)} ${local_good_name} to **${main.users[local_auto_trade.target].name}** each turn.`);
+      }
+    } else {
+      auto_trade_string.push(`_You currently have no ongoing auto-trades._`);
+    }
+
+    //Return statement
+    return splitEmbed(auto_trade_string, {
+      title: "**[Back]** ¦ Auto-Trades:",
+      description: auto_trade_prefix_string,
+      title_pages: true,
+      fixed_width: true
+    });
+  },
+
   printExports: function (arg0_user) {
     //Convert from parameters
     var user_id = arg0_user;
@@ -31,7 +83,7 @@ module.exports = {
 
     //Return statement
     return splitEmbed(export_string, {
-      title: "Imports:",
+      title: "**[Back]** ¦ Exports:",
       title_pages: true,
       fixed_width: true
     });
@@ -70,7 +122,7 @@ module.exports = {
 
     //Return statement
     return splitEmbed(import_string, {
-      title: "Imports:",
+      title: "**[Back]** ¦ Imports:",
       title_pages: true,
       fixed_width: true
     });

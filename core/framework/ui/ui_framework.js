@@ -354,7 +354,12 @@ module.exports = {
               //Initialise page embed
               var local_embed = new Discord.MessageEmbed()
                 .setColor("#a98ac7")
-                .setDescription(local_array_string.join("\n"));
+                .setDescription(
+                  (options.description) ?
+                    options.description.join("\n") :
+                    "" +
+                  local_array_string.join("\n")
+                );
 
               //Declare local options variables
               var page_ending = (options.title && options.title_pages) ? `(Page ${all_embeds.length+1} of ${total_page_count}):` : "";
