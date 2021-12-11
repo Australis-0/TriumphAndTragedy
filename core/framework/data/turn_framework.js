@@ -1,4 +1,8 @@
 module.exports = {
+  nextGlobalTurn: function () {
+    
+  },
+
   nextTurn: function (arg0_user, arg1_options) { //[WIP] - Add newspaper section later; add technology parser when a new tech is researched
     //Convert from parameters
     var user_id = arg0_user;
@@ -119,7 +123,8 @@ module.exports = {
                 //Technology effect
                 usr.researched_technologies.push(usr.researching[i].technology);
 
-                //[WIP] - Add in tech parser here
+                //Parse technology effects
+                parseTechnology(actual_id, usr.researching[i].technology);
 
                 //Set highest_tier tracking variable if tech cost exceeds previous highest_tier
                 usr.highest_tier = (returnSafeNumber(local_tech_obj.research_cost) > usr.highest_tier) ?
@@ -158,6 +163,49 @@ module.exports = {
         //Remove all research_queue_removal_array indices from the queue
         for (var i = 0; i < research_queue_removal_array.length; i++)
           removeElement(usr.research_queue, research_queue_removal_array[i]);
+      }
+    }
+
+    //Trade
+    {
+      //Autotrade processing
+      var all_auto_trades = Object.keys(usr.auto_trades);
+
+      for (var i = 0; i < all_auto_trades.length; i++) {
+        var local_auto_trade = usr.auto_trades[all_auto_trades[i]];
+
+        //Initiate local shipment to user per turn
+        give(
+          local_auto_trade.exporter,
+          local_auto_trade.target,
+
+          local_auto.amount,
+          local_auto_trade.good_type,
+          { hide_display: true }
+        );
+      }
+
+      //Conventional trade processing
+      var all_exports = Object.keys(usr.trades);
+
+      for (var i = 0; i < all_exports.length; i++) {
+        var local_export = usr.trades[all_exports[i]];
+
+        local_export.time_remaining--;
+
+        //Finish export if no time is left remaining
+        if (local_export.time_remaining <= 0) {
+          var target_user = main.users[local_export.target];
+
+          //Transfer goods to target
+          if (getGood(local_export.good_type))
+            target_user.inventory[local_export.good_type] += local_export.amount;
+          if (local_export.good_type == "money")
+            target_user.money += local_export.amount;
+
+          //Remove local_export
+          delete local_export;
+        }
       }
     }
 
