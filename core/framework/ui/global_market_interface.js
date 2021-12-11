@@ -31,7 +31,7 @@ module.exports = {
 
     //Return statement
     return splitEmbed(market_string, {
-      title: `World Market:`,
+      title: `**[Back]** ¦ World Market:`,
       title_pages: true,
       fixed_width: true
     });
