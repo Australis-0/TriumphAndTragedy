@@ -19,6 +19,13 @@ module.exports = {
     "research_list",
     "research_queue"
   ],
+  trade_pages: [
+    "auto_trades",
+    "exports",
+    "imports",
+    "trade",
+    "world_market"
+  ],
 
   initialiseTopbar: function (arg0_user_id) {
     //Convert from parameters
@@ -136,8 +143,14 @@ module.exports = {
           .setEmoji("758424911852470293"),
         new Discord.MessageButton()
           .setCustomId("trade_btn")
-          .setLabel("𝐓𝐫𝐚𝐝𝐞")
-          .setStyle("SECONDARY")
+          .setLabel((!trade_pages.includes(game_obj.page)) ?
+            "𝐓𝐫𝐚𝐝𝐞" :
+            " ͟͟͟𝐓͟𝐫͟𝐚͟𝐝͟𝐞͟"
+          )
+          .setStyle((!trade_pages.includes(game_obj.page)) ?
+            "SECONDARY" :
+            "PRIMARY"
+          )
           .setEmoji("716828677115084812"),
         new Discord.MessageButton()
           .setCustomId("diplomacy_btn")
@@ -235,6 +248,15 @@ module.exports = {
           module.exports.initialiseTopbar(user_id);
         }
         printTechnology(user_id);
+
+        break;
+      case "trade_btn":
+        //Print out trade menu
+        if (game_obj.page != "trade") {
+          game_obj.page = "trade";
+          module.exports.initialiseTopbar(user_id);
+        }
+        printTrade(user_id);
 
         break;
     }

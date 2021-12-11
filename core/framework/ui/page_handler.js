@@ -592,5 +592,31 @@ module.exports = {
           break;
       }
     }
+
+    //Trade page handler
+    {
+      switch (game_obj.page) {
+        case "auto_trades":
+
+          break;
+        case "exports":
+
+          break;
+        case "imports":
+
+          break;
+        case "world_market":
+
+          break;
+
+        //Default handler for main trade tab
+        default:
+          if (trade_pages.includes(game_obj.page)) {
+            //Button Handler
+          }
+
+          break;
+      }
+    }
   }
 };
