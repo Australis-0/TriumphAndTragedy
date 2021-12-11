@@ -36,4 +36,22 @@ module.exports = {
       printError(game_obj.id, `You don't currently have any ongoing auto-trades! Try creating a new auto-trade before cancelling it.`);
     }
   },
+
+  initialiseCancelAutoTrade: function (arg0_user) {
+    //Convert from parameters
+    var user_id = arg0_user;
+
+    //Declare local instance variables
+    var game_obj = getGameObject(user_id);
+
+    visualPrompt(game_obj.alert_embed, user_id, {
+      title: `Cancel Auto Trade:`,
+      prompts: [
+        [`What is the ID of the auto-trade you would like to cancel? Please insert a valid number.`, "number", { min: 0 }]
+      ]
+    },
+    function (arg) {
+      cancelAutoTrade(user_id, arg[0].toString());
+    });
+  }
 };

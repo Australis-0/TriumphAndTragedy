@@ -25,7 +25,12 @@ module.exports = {
                 if (raw_amount > 0) {
                   if (!isBlockaded(actual_id)) {
                     if (!isBlockaded(ot_actual_id)) {
-                      usr.auto_trades[generateAutoTradeID()] = {
+                      //This is referred to twice to make sure we can get the name of the key later on
+                      var auto_trade_id = generateAutoTradeID();
+
+                      usr.auto_trades[auto_trade_id] = {
+                        id: auto_trade_id,
+
                         exporter: actual_id,
                         target: ot_actual_id,
 
@@ -63,5 +68,35 @@ module.exports = {
     } else {
       printError(game_obj.id, `The country you are trying to ship items to doesn't even exist!`);
     }
+  },
+
+  initialiseCreateAutoTrade: function (arg0_user) {
+    //Convert from parameters
+    var user_id = arg0_user;
+
+    //Declare local instance variables
+    var game_obj = getGameObject(user_id);
+
+    //Initialise visual prompt
+    visualPrompt(game_obj.alert_embed, user_id, {
+      title: `Create Auto Trade:`,
+      prompts: [
+        [`Which country would you like to conduct an auto-trade with?`, "mention"],
+        [`What type of resource would you like to send?\n\nType **[Inventory]** for a list of valid resources, or 'money' to send money.`, "string"],
+        [`How much of this resource would you like to send per turn?`, "number", { min: 1 }]
+      ]
+    },
+    function (arg) {
+      createAutoTrade(user_id, arg[0], arg[2], arg[1]);
+    },
+    function (arg) {
+      switch (arg) {
+        case "inventory":
+          printInventory(user_id);
+          return true;
+
+          break;
+      }
+    });
   }
 };

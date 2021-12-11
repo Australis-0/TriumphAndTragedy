@@ -597,15 +597,50 @@ module.exports = {
     {
       switch (game_obj.page) {
         case "auto_trades":
+          //Button Handler
+          //[Back]
+          if (input == "back") {
+            game_obj.page = "trade";
+            printTrade(user_id);
+          }
+
+          //[Cancel Auto Trade]
+          if (input == "cancel auto trade")
+            initialiseCancelAutoTrade();
+
+          //[Create Auto Trade]
+          if (input == "create auto trade")
+            initialiseCreateAutoTrade();
 
           break;
         case "exports":
+          //Button Handler
+          //[Back]
+          if (input == "back") {
+            game_obj.page = "back";
+            printTrade(user_id);
+          }
 
           break;
         case "imports":
+          //Button Handler
+          //[Back]
+          if (input == "back") {
+            game_obj.page = "back";
+            printTrade(user_id);
+          }
 
           break;
         case "world_market":
+          //Button Handler
+          //[Back]
+          if (input == "back") {
+            game_obj.page = "back";
+            printTrade(user_id);
+          }
+
+          //[Buy (Good)]
+          //[Sell (Good)]
 
           break;
 
@@ -613,6 +648,14 @@ module.exports = {
         default:
           if (trade_pages.includes(game_obj.page)) {
             //Button Handler
+            //[Back]
+
+            //[Buy (Good)]
+            //[Export List]
+            //[Import List]
+            //[Manage Auto-Trades]
+            //[Sell (Good)]
+            //[World Market]
           }
 
           break;

@@ -36,7 +36,7 @@ module.exports = {
           local_auto_trade.good_type;
 
         //Format string
-        auto_trade_string.push(`Exporting ${local_good_icon}${parseNumber(local_auto_trade.amount)} ${local_good_name} to **${main.users[local_auto_trade.target].name}** each turn.`);
+        auto_trade_string.push(`#**${local_auto_trade.id}**. Exporting ${local_good_icon}${parseNumber(local_auto_trade.amount)} ${local_good_name} to **${main.users[local_auto_trade.target].name}** each turn.`);
       }
     } else {
       auto_trade_string.push(`_You currently have no ongoing auto-trades._`);
