@@ -1,9 +1,62 @@
 module.exports = {
   nextGlobalTurn: function () {
-    
+    //Declare local instance variables
+    var all_market_goods = Object.keys(main.market);
+
+    //World Market Up-Logic
+    {
+      for (var i = 0; i < all_market_goods.length; i++) {
+        var local_market_good = main.market[all_market_goods[i]];
+
+        //Increase buy_price each turn
+        if (local_market_good.buy_price < local_market_good.sell_price*1.2)
+          local_market_good.buy_price = Math.ceil(local_market_good.buy_price*1.2);
+
+        //Institute minimum good price caps
+        local_market_good.buy_price =
+          Math.max(local_market_good.buy_price, config.defines.economy.resource_min_buy_price);
+
+        local_market_good.sell_price =
+          Math.max(local_market_good.sell_price, config.defines.economy.resource_min_sell_price);
+      }
+
+      //World Market Down-Logic
+      {
+        for (var i = 0; i < all_market_goods.length; i++) {
+          var local_market_good = main.market[all_market_goods[i]];
+
+          //If no one cares about a good enough, the prices will come down
+          if (
+            local_market_good.amount_sold < 5 &&
+
+            //There can't be a shortage of the existing good
+            local_market_good.stock >= Math.ceil(
+              config.defines.economy.resource_base_stock*0.1
+            )
+          ) {
+            if (local_market_good.buy_price > 100 && local_market.sell_price > 100) {
+              local_market_good.buy_price = Math.ceil(local_market_good.buy_price*0.8);
+              local_market_good.sell_price = Math.ceil(local_market_good.sell_price*0.8);
+            }
+          } else {
+            //Randomly increase the buy_price of the good by anywhere from 3-8%, and decrease the sell_price of the good by anywhere from 3-8%.
+
+            local_market_good.buy_price = Math.ceil(local_market_good.buy_price*
+              (randomNumber(103, 108)/100)
+            );
+            local_market_good.sell_price = Math.ceil(local_market_good.sell_price*
+              (randomNumber(92, 97)/100)
+            );
+          }
+
+          //amount_sold deteriorates each turn to simulate large market demand
+          local_market_good.amount_sold = Math.ceil(local_market_good.amount_sold*0.5);
+        }
+      }
+    }
   },
 
-  nextTurn: function (arg0_user, arg1_options) { //[WIP] - Add newspaper section later; add technology parser when a new tech is researched
+  nextTurn: function (arg0_user, arg1_options) { //[WIP] - Add newspaper section later
     //Convert from parameters
     var user_id = arg0_user;
     var options = (arg1_options) ? arg1_options : {};

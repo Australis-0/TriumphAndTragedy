@@ -224,6 +224,9 @@ setInterval(function(){
     main.last_turn = current_date;
     writeSave({ file_limit: settings.backup_limit });
 
+    //Process nextGlobalTurn() for global processes and calculations
+    nextGlobalTurn();
+
     //Iterate over all users and process their turns
     var all_users = Object.keys(main.users);
 
