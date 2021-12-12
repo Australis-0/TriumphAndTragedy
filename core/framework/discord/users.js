@@ -31,13 +31,11 @@ module.exports = {
     var user_string = arg0_string.toLowerCase();
 
     //User mention detected, parse to ID
-    var processed_user_id = user_string.replace("<!@", "").replace("<@", "").replace(">", ""));
+    var processed_user_id = user_string.replace("<!@", "").replace("<@", "").replace(">", "");
     var return_user_id;
 
     //Detected as direct user mention
-    if (!isNaN(
-      parseInt(processed_user_id)
-    ) {
+    if (!isNaN(parseInt(processed_user_id))) {
       if (main.global.user_map[processed_user_id]) {
         //Return statement
         return_user_id = main.global.user_map[processed_user_id];
