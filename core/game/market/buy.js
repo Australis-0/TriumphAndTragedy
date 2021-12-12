@@ -70,6 +70,10 @@ module.exports = {
                     //Increase amount sold
                     market[good_name].amount_sold += good_amount;
 
+                    //Update global market UI if page is still on world_market
+                    if (game_obj.page == "world_market")
+                      printGlobalMarket(game_obj.user);
+
                     //Print out alert
                     printAlert(game_obj.id, `You bought **${parseNumber(good_amount)}** ${(good_obj.icon) ? config.icons[good_obj.icon] + " " : ""}${(good_obj.name) ? good_obj.name : good_name} for **£${parseNumber(total_buy_price)}**.`);
                   } else {
@@ -96,5 +100,85 @@ module.exports = {
     } else {
       printError(game_obj.id, `**${good_type}** isn't for sale!`);
     }
+  },
+
+  initialiseBuy: function (arg0_user, arg1_good_type) {
+    //Convert from parameters
+    var user_id = arg0_user;
+    var raw_good_name = arg1_good_type;
+
+    //Declare local instance variables
+    var game_obj = getGameObject(user_id);
+    var good_obj = getGood(raw_good_name);
+
+    //Initialise visual prompt
+    (good_obj) ?
+      visualPrompt(game_obj.alert_embed, user_id, {
+        title: `Buy ${good_obj.name}:`,
+        prompts: [
+          [`How much ${(good_obj.icon) ? config.icons[good_obj.icon] + " " : ""}${good_obj.name} would you like to buy?\n\nType **[Inventory]** to view your current inventory.\nType **[World Market]** for a list of valid goods.`, "number", { min: 1 }]
+        ]
+      },
+      function (arg) {
+        module.exports.buy(user_id, arg[0], good_obj.name);
+      },
+      function (arg) {
+        switch (arg) {
+          case "inventory":
+            printInventory(user_id);
+            return true;
+
+            break;
+          case "global market":
+          case "world market":
+            createPageMenu(game_obj.middle_embed, {
+              embed_pages: printGlobalMarket(user_id),
+              user: game_obj.user
+            });
+            return true;
+
+            break;
+        }
+      }) :
+      printError(game_obj.id, `You must specify a valid good to buy!`);
+  },
+
+  initialiseDumbBuy: function (arg0_user) {
+    //Convert from parameters
+    var user_id = arg0_user;
+    var raw_good_name = arg1_good_type;
+
+    //Declare local instance variables
+    var game_obj = getGameObject(user_id);
+
+    //Initialise visual prompt
+    visualPrompt(game_obj.alert_embed, user_id, {
+      title: `Buy Goods From The World Market:`,
+      prompts: [
+        [`What type of good would you like to buy from the World Market?`, "string"],
+        [`How much ${(good_obj.icon) ? config.icons[good_obj.icon] + " " : ""}${good_obj.name} would you like to buy?\n\nType **[Inventory]** to view your current inventory.\nType **[World Market]** for a list of valid goods.`, "number", { min: 1 }]
+      ]
+    },
+    function (arg) {
+      module.exports.buy(user_id, arg[0], arg[1]);
+    },
+    function (arg) {
+      switch (arg) {
+        case "inventory":
+          printInventory(user_id);
+          return true;
+
+          break;
+        case "global market":
+        case "world market":
+          createPageMenu(game_obj.middle_embed, {
+            embed_pages: printGlobalMarket(user_id),
+            user: game_obj.user
+          });
+          return true;
+
+          break;
+      }
+    });
   }
 };

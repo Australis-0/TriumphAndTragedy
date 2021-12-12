@@ -29,6 +29,10 @@ module.exports = {
 
         //Remove selected auto trade
         delete selected_auto_trade;
+
+        //Update auto trade UI if game_obj.page is still on auto_trades
+        if (game_obj.page == "auto_trades")
+          printAutoTrades(game_obj.user);
       } else {
         printError(game_obj.id, `The auto-trade you have selected turned out to be nonexistent! Try selected a valid autotrade ID to cancel instead.`)
       }
@@ -51,7 +55,7 @@ module.exports = {
       ]
     },
     function (arg) {
-      cancelAutoTrade(user_id, arg[0].toString());
+      module.exports.cancelAutoTrade(user_id, arg[0].toString());
     });
   }
 };

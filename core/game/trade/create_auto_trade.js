@@ -8,7 +8,7 @@ module.exports = {
     var good_name = getGood(arg3_good_type, { return_key: true });
     var good_obj = getGood(arg3_good_type);
 
-    //Convert from parameters
+    //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
     var game_obj = getGameObject(user_id);
     var ot_actual_id = main.global.user_map[other_user];
@@ -39,6 +39,13 @@ module.exports = {
                           "money" :
                           good_name
                       };
+
+                      //Update auto trade UI if game_obj.page is still on auto_trades
+                      if (game_obj.page == "auto_trades")
+                        printAutoTrades(game_obj.user);
+
+                      //Print alert
+                      printAlert(game_obj.id, `You have begun shipping out **${parseNumber(raw_amount)}** ${(good_obj.name) ? good_obj.name : "money"} per turn to the country of **${ot_user.name}**.`);
                     } else {
                       printError(game_obj.id, `You can't ship items to other blockaded users!`);
                     }
@@ -87,7 +94,7 @@ module.exports = {
       ]
     },
     function (arg) {
-      createAutoTrade(user_id, arg[0], arg[2], arg[1]);
+      module.exports.createAutoTrade(user_id, arg[0], arg[2], arg[1]);
     },
     function (arg) {
       switch (arg) {

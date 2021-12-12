@@ -635,27 +635,78 @@ module.exports = {
           //Button Handler
           //[Back]
           if (input == "back") {
-            game_obj.page = "back";
+            game_obj.page = "trade";
             printTrade(user_id);
           }
 
           //[Buy (Good)]
+          if (input.startsWith("buy ")) {
+            var good_name = input.trim().replace("buy ", "");
+
+            initialiseBuy(user_id, good_name);
+          } else if (input == "buy") {
+            initialiseDumbBuy(user_id);
+          }
+
           //[Sell (Good)]
+          if (input.startsWith("sell ")) {
+            var good_name = input.trim().replace("sell ", "");
+
+            initialiseSell(user_id, good_name);
+          } else if (input == "sell") {
+            initialiseDumbSell(user_id);
+          }
 
           break;
 
         //Default handler for main trade tab
         default:
           if (trade_pages.includes(game_obj.page)) {
-            //Button Handler
-            //[Back]
+            if (game_obj.page == "trade") {
+              //Button Handler
 
-            //[Buy (Good)]
-            //[Export List]
-            //[Import List]
-            //[Manage Auto-Trades]
-            //[Sell (Good)]
-            //[World Market]
+              //[Buy (Good)]
+              if (input.startsWith("buy ")) {
+                var good_name = input.trim().replace("buy ", "");
+
+                initialiseBuy(user_id, good_name);
+              } else if (input == "buy") {
+                initialiseDumbBuy(user_id);
+              }
+
+              //[Export List]
+              if (input == "export list") {
+                printExports(user_id);
+                game_obj.page = "exports";
+              }
+
+              //[Import List]
+              if (input == "import list") {
+                printImports(user_id);
+                game_obj.page = "imports";
+              }
+
+              //[Manage Auto-Trades]
+              if (["auto-trades", "autotrades", "manage auto-trades", "manage autotrades"].includes(game_obj.page)) {
+                printAutoTrades(user_id);
+                game_obj.page = "auto_trades";
+              }
+
+              //[Sell (Good)]
+              if (input.startsWith("sell ")) {
+                var good_name = input.trim().replace("sell ", "");
+
+                initialiseSell(user_id, good_name);
+              } else if (input == "sell") {
+                initialiseDumbSell(user_id);
+              }
+
+              //[World Market]
+              if (["global market", "world market"].includes(input)) {
+                printGlobalMarket(user_id);
+                game_obj.page = "world_market";
+              }
+            }
           }
 
           break;
