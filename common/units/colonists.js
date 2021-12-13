@@ -1,5 +1,6 @@
 config.units.colonists = {
   name: "Colonists",
+  type: "reserves",
 
   //Colonial Units
   conquistadors: {

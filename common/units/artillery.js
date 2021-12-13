@@ -1,5 +1,6 @@
 config.units.artillery = {
   name: "Artillery",
+  type: "land",
 
   //Mediaeval to Early Modern Artillery
   bombard: {

@@ -1,5 +1,6 @@
 config.units.naval = {
   name: "Naval",
+  type: "naval",
 
   //Naval Units
   caravels: {

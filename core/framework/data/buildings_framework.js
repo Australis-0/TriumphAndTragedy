@@ -126,7 +126,7 @@ module.exports = {
         if (!building_categories[local_building_category.order-1]) {
           building_categories[local_building_category.order-1] = all_building_categories[i];
         } else {
-          log.error(`${local_building_category[i]} has an invalid order number! .order: ${local_building_category.order-1} is already occupied by ${building_categories[local_building_category.order-1]}!\n\nCheck common/buildings for more information on resolving this error.`);
+          log.error(`${all_building_categories[i]} has an invalid order number! .order: ${local_building_category.order-1} is already occupied by ${building_categories[local_building_category.order-1]}!\n\nCheck common/buildings for more information on resolving this error.`);
         }
       } else {
         no_order_cache.push(all_building_categories[i]);
@@ -149,7 +149,7 @@ module.exports = {
   */
   getBuildingCategory: function (arg0_name, arg1_options) {
     //Convert from parameters
-    var building_category_name = arg0_name.toLowerCase();
+    var building_category_name = arg0_name.trim().toLowerCase();
 
     //Initialise options
     var options = (arg1_options) ? arg1_options : {};
@@ -161,7 +161,9 @@ module.exports = {
 
     //Initialise all_processed_building_categories
     for (var i = 0; i < all_building_categories.length; i++)
-      all_processed_building_categories.push(parseString(all_building_categories[i]));
+      (!config.buildings[all_building_categories[i]].name) ?
+        all_processed_building_categories.push(parseString(all_building_categories[i])) :
+        all_processed_building_categories.push(config.buildings[all_building_categories[i]].name);
 
     //Fetch config object
     if (config.buildings[building_category_name]) {
@@ -171,12 +173,12 @@ module.exports = {
       //Soft match first
       for (var i = 0; i < all_processed_building_categories.length; i++)
         if (all_processed_building_categories[i].toLowerCase().indexOf(building_category_name) != -1)
-          building_category_exists = [true, (options.return_key) ? config.buildings[all_building_categories[i]] : all_building_categories[i]];
+          building_category_exists = [true, (!options.return_key) ? config.buildings[all_building_categories[i]] : all_building_categories[i]];
 
       //Hard match second
       for (var i = 0; i < all_processed_building_categories.length; i++)
         if (all_processed_building_categories[i].toLowerCase() == building_category_name)
-          building_category_name = [true, (options.return_key) ? config.buildings[all_building_categories[i]] : all_building_categories[i]];
+          building_category_exists = [true, (!options.return_key) ? config.buildings[all_building_categories[i]] : all_building_categories[i]];
 
       //Return statement after soft-hard search
       return (building_category_name[0]) ? building_category_name[1] : undefined;

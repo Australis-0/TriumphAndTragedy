@@ -1,6 +1,7 @@
 config.units.infantry = {
   name: "Infantry",
-  
+  type: "land",
+
   //Early Game Infantry Units
   skirmishers: {
     name: "Skirmishers",

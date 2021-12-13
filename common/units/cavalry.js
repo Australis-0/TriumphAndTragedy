@@ -1,5 +1,6 @@
 config.units.cavalry = {
   name: "Cavalry",
+  type: "land",
 
   //Cavalry Units
   lance_cavalry: {

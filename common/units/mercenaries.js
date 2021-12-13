@@ -1,5 +1,6 @@
 config.units.mercenaries = {
   name: "Mercenaries",
+  type: "land",
 
   //Mercenaries
   condottieri: {

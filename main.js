@@ -65,6 +65,7 @@ FileManager.import("./framework/ui/tech_interface");
 FileManager.import("./framework/ui/topbar_interface");
 FileManager.import("./framework/ui/trade_interface");
 FileManager.import("./framework/ui/ui_framework");
+FileManager.import("./framework/ui/unit_interface");
 
 //Game command files
 FileManager.import("./game/colonisation/settle");

@@ -1,5 +1,6 @@
 config.units.armour = {
   name: "Armour",
+  type: "land",
 
   //Other Armoured Vehicles
   armoured_cars: {

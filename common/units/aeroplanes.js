@@ -1,5 +1,6 @@
 config.units.aeroplanes = {
   name: "Aeroplanes",
+  type: "air",
 
   //Air Units - Pre-WW1
   reconaissance_balloons: {
