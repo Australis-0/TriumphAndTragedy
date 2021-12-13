@@ -71,6 +71,10 @@ module.exports = {
             if (Object.keys(config.pops).includes(all_building_costs[y]))
               manpower_array.push(`${parseNumber(Math.ceil(local_building_cost))} ${pop_name}`);
 
+            //Set costs_string
+            if (costs_array.length > 0)
+              costs_string = `Costs ${costs_array.join(", ")}`;
+
             //Set manpower_string
             if (manpower_array.length > 0)
               manpower_string = ` ¦ ${manpower_array.join(", ")}`;
