@@ -23,7 +23,7 @@ module.exports = {
       //Iterate over all buildings in category and push them to the list based on availability
       for (var x = 0; x < local_buildings.length; x++) {
         //Only push building to category if user has the building unlocked
-        if (usr.available_buildings.includes(local_building)) {
+        if (usr.available_buildings.includes(local_buildings[x])) {
           //Get building costs, consumption and production
           var building_costs = getBuildingCost(actual_id, local_buildings[x]);
           var building_maintenance = getBuildingConsumption(actual_id, local_buildings[x]);

@@ -16,7 +16,11 @@ module.exports = {
 
     for (var i = 0; i < all_unit_categories.length; i++) {
       var local_unit_category = getUnitCategory(all_unit_categories[i]);
-      
+      var local_unit_category_name = (local_unit_category.name) ? local_unit_category.name : parseString(all_unit_categories[i]);
+      var local_unit_category_string = [];
+      var local_units= Object.keys(local_unit_category);
+
+      //
     }
   }
 }
