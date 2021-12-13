@@ -250,7 +250,7 @@ module.exports = {
   /*
     getBuildingCost() - Returns the cost of a building for the specified user as a JSON object/integer.
     options: {
-      type: "all", "money", "goods", "pops" - Returns either all cost arguments, only money (as an integer), goods, or pop costs only,
+      type: "all", "money", "goods", "pops" - Returns either all cost arguments, only money (as an integer), goods, or pop costs only.
       amount: - The number of buildings to check the cost for.
     }
   */
@@ -261,8 +261,8 @@ module.exports = {
 
     //Initialise options
     var options = (arg2_options) ? arg2_options : {};
-    if (!options.type) options.type = "all";
-    if (!options.amount) options.amount = 1;
+      if (!options.type) options.type = "all";
+      if (!options.amount) options.amount = 1;
 
     //Declare local instance variables
     var building_obj = module.exports.getBuilding(building_name);

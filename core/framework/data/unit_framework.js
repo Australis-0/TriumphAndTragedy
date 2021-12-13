@@ -192,5 +192,84 @@ module.exports = {
 
     //Return statement
     return (unit_category_exists[0]) ? unit_category_exists[1] : undefined;
+  },
+
+  /*
+    getUnitCost() - Returns the cost of a unit for the specified user as a JSON object/integer.
+    options: {
+      type: "all", "money", "goods", "pops" - Returns either all cost arguments, only money (as an integer), goods, or pop costs only.
+      amount: - The number of units to check for.
+    }
+  */
+  getUnitCost: function (arg0_user, arg1_unit, arg2_options) {
+    //Convert from parameters
+    var user_id = arg0_user;
+    var unit_name = arg1_unit;
+
+    //Initialise options
+    var options = (arg2_options) ? arg2_options : {};
+      if (!options.type) options.type = "all";
+      if (!options.amount) options.amount = 1;
+
+    //Declare local instance variables
+    var costs_obj = {};
+    var unit_obj = module.exports.getUnit(unit_name);
+    var usr = main.users[user_id];
+
+    //Only start appending if the .costs object exists at all
+    if (unit_obj.costs) {
+      var all_costs = Object.keys(unit_obj.costs);
+
+      for (var i = 0; i < all_costs.length; i++) {
+        //Check to make sure that this is an actual resource and not just a pop value
+        var unit_cost_modifier = (!Object.keys(config.pops).includes(all_costs[i])) ?
+            (!getGood(all_costs[i]).is_cp) ?
+              returnSafeNumber(usr.modifiers.unit_cost, 1) :
+              returnSafeNumber(usr.modifiers.training_cost, 1)
+            :
+          1;
+        var current_resource_demand = unit_obj.costs[all_costs[i]]*unit_cost_modifier*options.amount;
+
+        //Fetch resource_type
+        var resource_type = {
+          is_money: (all_costs[i] == "money"),
+          is_resource: getGoods({ return_names: true }).includes(all_costs[i])
+        };
+        var valid_resource = false;
+
+        if (resource_type.is_money) {
+          if (["all", "money"].includes(options.type))
+            valid_resource = true;
+        } else if (resource_type.is_resource) {
+          if (["all", "goods"].includes(options.type))
+            valid_resource = true;
+        } else {
+          if (["all"].includes(options.type))
+            valid_resource = true;
+        }
+
+        //Add valid resource to object
+        if (valid_resource)
+          costs_obj[all_costs[i]] = (!costs_obj[all_costs[i]]) ?
+            current_resource_demand :
+            costs_obj[all_costs[i]] + current_resource_demand;
+      }
+    }
+
+    //Begin appending pops if options.type is either "all" or "pops"
+    if (building_obj.manpower_cost && ["all", "pops"].includes(options.type)) {
+      var all_manpower_costs = Object.keys(unit_cost.manpower_cost);
+
+      for (var i = 0; i < all_manpower_costs.length; i++) {
+        var current_resource_demand = unit_obj.costs[all_manpower_costs[i]]*options.amount;
+
+        costs_obj[all_costs[i]] = (!costs_obj[all_costs[i]]) ?
+          current_resource_demand :
+          costs_obj[all_costs[i]] + current_resource_demand;
+      }
+    }
+
+    //Return object
+    return (options.type != "money") ? costs_obj : returnSafeNumber(costs_obj.money, 0);
   }
 };

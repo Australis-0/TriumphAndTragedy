@@ -18,9 +18,15 @@ module.exports = {
       var local_unit_category = getUnitCategory(all_unit_categories[i]);
       var local_unit_category_name = (local_unit_category.name) ? local_unit_category.name : parseString(all_unit_categories[i]);
       var local_unit_category_string = [];
-      var local_units= Object.keys(local_unit_category);
+      var local_units = Object.keys(local_unit_category);
 
-      //
+      //Iterate over all units in category and push them to the list based on availability
+      for (var x = 0; x < local_units.length; x++) {
+        //Only push unit to category if user has the unit unlocked
+        if (usr.available_units.includes(local_units[x])) {
+
+        }
+      }
     }
   }
 }

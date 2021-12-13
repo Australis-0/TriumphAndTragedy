@@ -18,30 +18,35 @@ config.goods = { //WIP, REFACTOR
       name: "Army CP",
       icon: "active_personnel",
 
+      is_cp: true,
       doesnt_stack: true
     },
     ground_artillery_cp: {
       name: "Artillery CP",
       icon: "artillery",
 
+      is_cp: true,
       doesnt_stack: true
     },
     ground_vehicles_cp: {
       name: "Armour CP",
       icon: "land_vehicles",
 
+      is_cp: true,
       doesnt_stack: true
     },
     aeroplanes_cp: {
       name: "Air CP",
       icon: "aeroplanes",
 
+      is_cp: true,
       doesnt_stack: true
     },
     naval_units_cp: {
       name: "Naval CP",
       icon: "naval_units",
 
+      is_cp: true,
       doesnt_stack: true
     }
   },
