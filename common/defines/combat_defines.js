@@ -12,7 +12,8 @@ config.defines.combat = {
   base_mobilisation_size: 0.05, //Default percentage of worker pops mobilised
   base_supply_limit: 40, //How many thousands of soldiers can a colonised province support by default?
   blockade_challenge_limit: 5, //How many times can a fleet challenge a blockade on the same turn?
-  combat_order: ["ap", "dp"], //What should the combat order be by default?
+	combat_modifiers: ["attack", "defence", "manoeuvre", "initiative"], //What are the main modifiers/stats for combat units?
+	combat_order: ["attack", "defence"], //What should the combat order be by default?
 	combat_order_switch_tech: "war_of_movement", //What tech should switch the combat order back around?
   infrastructure_range: 5, //What is the radius of provinces that should be affected by constructed infrastructure?
   interception_range: 5, //From how many provinces away should air wings be allowed to intercept other air wings?

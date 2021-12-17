@@ -28,11 +28,13 @@ module.exports = {
 
           //Get unit costs and quantity
           var unit_costs = getUnitCost(actual_id, local_units[x]);
+          var unit_name = (local_unit.name) ? local_unit.name : local_units[x];
           var unit_quantity = (local_unit.quantity) ? local_unit.quantity : 1;
 
           //Production indicator stuff
           var costs_array = [];
           var manpower_array = [];
+          var unit_stats_array = [];
 
           var colonisation_string = "";
           var costs_string = "";
@@ -72,7 +74,7 @@ module.exports = {
 
             //Set costs_string
             if (costs_string.length > 0)
-              costs_string = ` ¦ ${costs_array.join(", ")}`;
+              costs_string = costs_array.join(", ");
 
             //Set manpower_string
             if (manpower_array.length > 0)
@@ -88,9 +90,39 @@ module.exports = {
           //Get quantity_string
           quantity_string = ` ¦ x${parseNumber(unit_quantity)} Quantity`;
 
-          //
+          //Push item to array, followed by unit_stats
+          unit_string.push(`**${unit_name}** - ${costs_string} ${manpower_string}`);
+
+          for (var i = 0; i < config.defines.combat.combat_modifiers.length; i++)
+            if (local_unit[config.defines.combat.combat_modifiers[i]])
+              unit_stats_array.push(`${local_unit[config.defines.combat.combat_modifiers[i]]} ${parseString(config.defines.combat.combat_modifiers[i])}`);
+
+          //Format unit_stats_string
+          unit_stats_string += "`";
+
+          for (var i = 0; i < unit_stats_array.length; i++)
+            unit_stats_string += unit_stats_array[i] + (
+              //Add dash only if i is not equal to unit_stats_array.length-1
+              (i < unit_stats_array.length-1) ?
+                " - " :
+                ""
+            );
+
+          unit_stats_string += "`";
+
+          unit_string.push(unit_stats_string);
         }
       }
+
+      //Insert margin break between categories
+      unit_string.push("");
     }
+
+    //Return statement
+    return splitEmbed(unit_string, {
+      title: "Unit List",
+      title_pages: true,
+      fixed_width: true
+    });
   }
 }
