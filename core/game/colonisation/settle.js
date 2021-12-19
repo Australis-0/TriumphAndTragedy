@@ -132,7 +132,7 @@ module.exports = {
 
             prov_colonisation_turns = Math.ceil(
               prov_distance/
-                (config.defines.combat.colonisation_speed*usr.modifiers.colonist_colonist_travel_speed)
+                (config.defines.combat.colonisation_speed*usr.modifiers.colonist_travel_speed)
             );
 
             //Cap it off at a certain point so that things can't get too crazy
@@ -144,6 +144,7 @@ module.exports = {
 
             //Push to expeditions
             usr.expeditions[local_colonisation_id] = {
+              id: local_colonisation_id,
               provinces: provinces,
               time_remaining: prov_colonisation_turns + config.defines.colonisation.base_colonisation_turns,
               unit_type: unit_type

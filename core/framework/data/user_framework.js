@@ -188,6 +188,19 @@ module.exports = {
     , 1);
   },
 
+  getColonisationSpeed: function (arg0_user) {
+    //Convert from parameters
+    var user_id = arg0_user;
+
+    //Ddeclare local instance variables
+    var usr = main.users[user_id];
+
+    //Return statement
+    return Math.ceil(
+      config.defines.combat.colonisation_speed*usr.modifiers.colonist_travel_speed
+    );
+  },
+
   getDevelopmentCost: function (arg0_user, arg1_name, arg2_amount) {
     //Convert from parameters
     var user_id = arg0_user;
