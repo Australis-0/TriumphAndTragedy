@@ -78,6 +78,20 @@ module.exports = {
                       province_id: city_obj.id
                     });
 
+                    //Deduct unit_costs from inventory and other user metrics
+                    for (var i = 0; i < all_building_costs.length; i++) {
+                      var local_cost = building_costs[all_building_costs[i]];
+
+                      //Check if resource cost is good, pop, or other
+                      if (all_goods.includes(all_building_costs[i])) {
+                        usr.inventory[all_unit_costs[i]] -= local_cost;
+                      } else if (all_pops.includes(all_building_costs[i])) {
+                        usr.pops[`used_${all_building_costs[i]}`] += local_cost;
+                      } else {
+                        usr[all_building_costs[i]] -= local_cost;
+                      }
+                    }
+
                     printAlert(game_obj.id, `You have begun constructing **${parseNumber(building_amount)}** ${(building_amount == 1) ? (building_obj.singular) ? building_obj.singular : raw_building_name : (building_obj.name) ? building_obj.name : raw_building_name} in **${city_obj.name}**! Your advisors estimate that construction will complete in **${parseNumber(total_construction_time)}** turn(s).`);
 
                     //Reload city interface if current user page is there

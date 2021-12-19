@@ -89,6 +89,8 @@ FileManager.import("./game/trade/cancel_auto_trade");
 FileManager.import("./game/trade/create_auto_trade");
 FileManager.import("./game/trade/give");
 
+FileManager.import("./game/units/craft");
+
 //Declare config loading order
 global.config = {};
 global.load_order = {
