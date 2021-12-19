@@ -1,4 +1,6 @@
 config.defines.colonisation = {
+  base_colonisation_turns: 2, //What should the number of base colonisation turns for erecting a settlement be? 
+
   initial_rural_population_minimum: 30000, //What should the minimum number of rural pops in a generated province be at start?
   initial_rural_population_maximum: 50000, //What should the maximum number of rural pops in a generated province be at start?
   rural_population_cap_minimum: 100000, //What should be the minimum soft cap for the population of rural provinces?

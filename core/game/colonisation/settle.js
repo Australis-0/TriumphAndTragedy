@@ -118,7 +118,22 @@ module.exports = {
               prov_colonisation_turns = Math.min(config.defines.combat.max_colonisation_speed, prov_colonisation_turns);
 
             //Generate new colonisation ID
+            var local_colonisation_id = generateColonisationID();
+
+            //Push to expeditions
+            usr.expeditions[local_colonisation_id] = {
+              provinces: provinces,
+              time_remaining: prov_colonisation_turns + config.defines.colonisation.base_colonisation_turns,
+              unit_type: unit_type
+            };
+
+            //[WIP] - Update colonisation/reserves UI if user is currently on it
+
+            printAlert(game_obj.id, `Settlers from **${usr.name}** have set out to colonise the province(s) of ${provinces.join(", ")}. They will arrive in **${parseNumber(prov_colonisation_turns)}**. They will then take an additional **${parseNumber(config.defines.colonisation.base_colonisation_turns)} turn(s) to colonise.`);
           } catch (e) {
+            if (usr.capital_id == 0 || isNaN(usr.capital_id))
+              printError(game_obj.id, `You need to have a set capital city in order to start colonising provinces!`);
+
             log.error(`settle() command by User ID ${user_id}, Actual ID ${actual_id}, Country ${usr.name} was noted: ${e}.`);
           }
         }
