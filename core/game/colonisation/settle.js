@@ -1,11 +1,33 @@
 module.exports = {
+  initialiseSettle: function (arg0_user) {
+    //Convert from parameters
+    var user_id = arg0_user;
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var game_obj = getGameObject(user_id);
+    var usr = main.users[actual_id];
+
+    //Initialise visual prompt
+    visualPrompt(game_obj.alert_embed, user_id, {
+      title: "Create A New Colonisation Charter:",
+      prompts: [
+        [`Which Province ID's would you like to claim in the name of **${usr.name}**? Please list them out as numeric ID's separated by spaces`, "string"]
+      ]
+    },
+    function (arg) {
+      settle(user_id, arg[0]);
+    })
+  },
+
   initialiseSettleStartingProvinces: function (arg0_user) {
     //Convert from parameters
     var user_id = arg0_user;
 
     //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
     var game_obj = getGameObject(user_id);
-    var usr = main.users[arg0_user];
+    var usr = main.users[actual_id];
 
     //Reinitialise visual prompt
     visualPrompt(game_obj.alert_embed, user_id, {
