@@ -20,11 +20,119 @@ module.exports = {
     });
   },
 
-  //Used for instantly settling provinces when a new country is founded
-  settleStartingProvinces: function (arg0_user, arg1_provinces) { //[WIP]
+  settle: function (arg0_user, arg1_provinces) { //[WIP] - Update colonisation/charter UI if user is currently on it
     //Convert from parameters
     var user_id = arg0_user;
-    var provinces = arg1_provinces;
+    var provinces = splitCommandLine(arg1_provinces);
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var all_expeditions = Object.keys(usr.expeditions);
+    var all_pops = Object.keys(config.pops);
+    var all_units = getAllUnits({ return_names: true });
+    var game_obj = getGameObject(user_id);
+    var unit_type = "";
+    var usr = main.users[actual_id];
+
+    //Error tracker variables
+    var colonised_provinces = [];
+    var error_msg = [];
+    var has_duplicates = false;
+    var missing_provinces = [];
+
+    //Check if user even has enough expedition capacity for a new colonisation expedition
+    if (all_expeditions.length < usr.modifiers.maximum_expeditions) {
+      //Check for appropriate unit type
+      for (var i = 0; i < all_units.length; i++) {
+        var local_unit = getUnit(all_units[i]);
+        var local_unit_name = getUnit(all_units[i], { return_key: true });
+
+        if (local_unit.colonise_provinces)
+          if (provinces.length <= local_unit.colonise_provinces)
+            if (unit_type == "" || returnSafeNumber(usr.reserves[unit_type]) <= 0)
+              if (usr.reserves[local_unit_name] > 0)
+                unit_type = local_unit_name;
+      }
+
+      //Check if unit_type even exists
+      if (usr.reserves[unit_type] > 0) {
+        //Get unit_costs so that we can subtract the needed manpower from the used pile
+        var unit_costs = getUnitCost(local_unit);
+
+        var all_unit_costs = Object.keys(unit_costs);
+
+        //Deduct from used pops
+        for (var i = 0; i < all_unit_costs.length; i++)
+          if (all_pops.includes(all_unit_costs[i]))
+            usr[`used_${all_unit_costs[i]}`] = Math.max(usr[`used_${all_unit_costs[i]}`] - all_unit_costs[i], 0);
+
+        //Check for errors
+        var local_checks = 0;
+        for (var i = 0; i < provinces.length; i++)
+          if (main.provinces[provinces[i]]) { //Check to make sure that the province even exists in the first place
+            //Check for any duplicates
+            if (findDuplicates(provinces).length == 0) {
+              //Check to make sure province is not settled
+              if (!main.provinces[provinces[i]].owner) {
+                local_checks++;
+              } else {
+                colonised_provinces.push(`**${provinces[i]}**`);
+              }
+            } else {
+              has_duplicates = true;
+            }
+          } else {
+            missing_provinces.push(`**${provinces[i]}**`);
+          }
+
+        //We ran into an error! I wonder what it was ..
+        if (local_checks < provinces.length) {
+          error_msg.push(`**Your colonists are baffled at your command!** The following errors were jotted down:`);
+          if (colonised_provinces.length > 0)
+            error_msg.push(`- The province(s) of ${colonised_provinces.join(", ")} were already owned by other nations.`);
+          if (has_duplicates)
+            error_msg.push(`- The specified province(s) of ${findDuplicates(provinces).join(", ")} were duplicates of one another.`);
+          if (missing_provinces.length > 0)
+            error_msg.push(`- Our cartographers failed to find the province(s) of ${missing_provinces.join(", ")} anywhere on the map!`);
+
+          printError(game_obj.id, error_msg.join("\n"));
+        } else {
+          //The $settle command went through, create a new colonial charter, update Colonisation UI if currently active, and send user feedback
+          usr.reserves[unit_type]--;
+
+          //Get distance and colonisation time
+          var prov_colonisation_turns = 0;
+          var prov_distance = 0;
+          var random_prov_id = randomElement(provinces);
+
+          try {
+            prov_distance = moveTo(usr.capital_id.toString(), random_prov_id.toString()).length;
+
+            prov_colonisation_turns = Math.ceil(
+              prov_distance/
+                (config.defines.combat.colonisation_speed*usr.modifiers.colonist_colonist_travel_speed)
+            );
+
+            //Cap it off at a certain point so that things can't get too crazy
+            if (!(config.defines.combat.max_colonisation_speed == 0 || !config.defines.combat.max_colonisation_speed))
+              prov_colonisation_turns = Math.min(config.defines.combat.max_colonisation_speed, prov_colonisation_turns);
+
+            //Generate new colonisation ID
+          } catch (e) {
+            log.error(`settle() command by User ID ${user_id}, Actual ID ${actual_id}, Country ${usr.name} was noted: ${e}.`);
+          }
+        }
+      }
+    } else {
+      printError(game_obj.id, `You have already reached your limit of **${parseNumber(usr.modifiers.maximum_expeditions)}** ongoing expedition(s)!`);
+    }
+  },
+
+  //Used for instantly settling provinces when a new country is founded
+  settleStartingProvinces: function (arg0_user, arg1_provinces) {
+    //Convert from parameters
+    var user_id = arg0_user;
+    var provinces = splitCommandLine(arg1_provinces);
 
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
@@ -56,11 +164,14 @@ module.exports = {
       //We ran into an error! I wonder what it was ..
       if (local_checks < provinces.length) {
         error_msg.push(`**Your colonists are baffled at your command!** The following errors were jotted down:`);
-        if (colonised_provinces.length > 0) error_msg.push(`- The province(s) of ${colonised_provinces.join(", ")} were already owned by other nations.`);
-        if (has_duplicates) error_msg.push(`- The specified province(s) of ${findDuplicates(provinces).join(", ")} were duplicates of one another.`);
-        if (missing_provinces.length > 0) error_msg.push(`- Our cartographers failed to find the province(s) of ${missing_provinces.join(", ")} anywhere on the map!`);
+        if (colonised_provinces.length > 0)
+          error_msg.push(`- The province(s) of ${colonised_provinces.join(", ")} were already owned by other nations.`);
+        if (has_duplicates)
+          error_msg.push(`- The specified province(s) of ${findDuplicates(provinces).join(", ")} were duplicates of one another.`);
+        if (missing_provinces.length > 0)
+          error_msg.push(`- Our cartographers failed to find the province(s) of ${missing_provinces.join(", ")} anywhere on the map!`);
 
-        printError(game_obj.id, error_msg.join(" "));
+        printError(game_obj.id, error_msg.join("\n"));
         reinitialise_command = true;
       } else {
         var display_provinces = [];

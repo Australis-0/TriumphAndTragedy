@@ -5,6 +5,34 @@ module.exports = {
     return randomNumber(0, 100000000000).toString();
   },
 
+  getAverage: function (arg0_numbers) {
+    //Convert from parameters
+    var numbers = getList(arg0_numbers);
+
+    //Iterate over numbers array and return average
+    var total_sum = 0;
+
+    for (var i = 0; i < numbers.length; i++)
+      total_sum += numbers[i];
+
+    //Return statement
+    return total_sum/numbers.length;
+  },
+
+  getSum: function (arg0_numbers) {
+    //Convert from parameters
+    var numbers = getList(arg0_numbers);
+
+    //Iterate over numbers array and return sum
+    var total_sum = 0;
+
+    for (var i = 0; i < numbers.length; i++)
+      total_sum += numbers[i];
+
+    //Return statement
+    return total_sum;
+  },
+
   /*
     printPercentage() - Formats a string to fit a certain percentage (e.g. 23%), instead of a default decimal number.
     options: {

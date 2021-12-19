@@ -1,4 +1,26 @@
 module.exports = {
+  generateColonisationID: function (arg0_user) {
+    //Convert from parameters
+    var user_id = arg0_user;
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var usr = main.users[actual_id];
+
+    var local_id;
+
+    //While loop to find ID, just in-case of conflicting random ID's:
+    while (true) {
+      local_id = generateRandomID();
+
+      //Return and break once a true ID is found
+      if (!usr.expeditions[local_id]) {
+        return local_id;
+        break;
+      }
+    }
+  },
+
   /*
     getAllUnits() - Fetches an object/key list of all units.
     options: {
