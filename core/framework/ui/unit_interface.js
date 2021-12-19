@@ -1,4 +1,61 @@
 module.exports = {
+  printReserves: function (arg0_user) { //[WIP] - Finish interface print-out
+    //Convert from parameters
+    var user_id = arg0_user;
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var game_obj = getGameObject(user_id);
+    var usr = main.users[actual_id];
+
+    //Initialise reserves_string
+    var reserves_string = [];
+
+    //Format reserves_string
+    reserves_string.push(`${config.icons.globe} Country: **${usr.name}**`);
+    reserves_string.push(`**[Create Army]** ¦ **[Disband Units]**`);
+    reserves_string.push(config.localisation.divider);
+    reserves_string.push(`${config.icons.manpower} **Reserves:**`)
+
+    //Iterate over all valid units
+    var all_unit_categories = getUnitCategories();
+
+    for (var i = 0; i < all_unit_categories.length; i++) {
+      var local_unit_category = getUnitCategory(all_unit_categories[i]);
+      var local_unit_category_icon = (local_unit_category.icon) ? config.icons[local_unit_category.icon] + " " : "";
+      var local_unit_category_name = (local_unit_category.name) ? local_unit_category.name : parseString(all_unit_categories[i]);
+      var local_units = Object.keys(local_unit_category);
+      var units_found_in_category = false;
+
+      //Push unit header to reserves_string
+      reserves_string.push(config.localisation.divider);
+      reserves_string.push(`${local_unit_category_icon}**${local_unit_category_name}:**`);
+      reserves_string.push("");
+
+      //Iterate over all units in category and push them to the list based on availability
+      for (var x = 0; x < local_units.length; x++)
+        if (returnSafeNumber(usr.reserves[local_units[x]]) > 0) {
+          var local_unit = getUnit(local_units[x]);
+
+          //Get unit name and icon
+          var unit_icon = (local_unit.icon) ? config.icons[local_unit.icon] + " " : "";
+          var unit_name = (local_unit.name) ? local_unit.name : local_units[x];
+
+          //Push to reserves_string
+          reserves_string.push(`${unit_icon}**${unit_name}** - ${parseNumber(usr.reserves[local_units[x]])}`);
+
+          units_found_in_category = true;
+        }
+
+      if (!units_found_in_category)
+        reserves_string.push(`_No units in this category could be found._`);
+    }
+
+    //Print Upkeep
+    //Print total attack; total defence
+    //Return embed as splitEmbed
+  },
+
   printUnitList: function (arg0_user) {
     //Convert from parameters
     var user_id = arg0_user;
@@ -16,9 +73,15 @@ module.exports = {
 
     for (var i = 0; i < all_unit_categories.length; i++) {
       var local_unit_category = getUnitCategory(all_unit_categories[i]);
+      var local_unit_category_icon = (local_unit_category.icon) ? config.icons[local_unit_category.icon] + " " : "";
       var local_unit_category_name = (local_unit_category.name) ? local_unit_category.name : parseString(all_unit_categories[i]);
       var local_unit_category_string = [];
       var local_units = Object.keys(local_unit_category);
+
+      //Print unit category header
+      unit_string.push(`${local_unit_category_icon}**${local_unit_category_name}**:`);
+      unit_string.push(config.localisation.divider);
+      unit_string.push("");
 
       //Iterate over all units in category and push them to the list based on availability
       for (var x = 0; x < local_units.length; x++) {
@@ -91,7 +154,7 @@ module.exports = {
           quantity_string = ` ¦ x${parseNumber(unit_quantity)} Quantity`;
 
           //Push item to array, followed by unit_stats
-          unit_string.push(`**${unit_name}** - ${costs_string} ${manpower_string}`);
+          unit_string.push(`${unit_icon}**${unit_name}** - ${costs_string} ${manpower_string}`);
 
           for (var i = 0; i < config.defines.combat.combat_modifiers.length; i++)
             if (local_unit[config.defines.combat.combat_modifiers[i]])
