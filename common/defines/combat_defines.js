@@ -15,6 +15,7 @@ config.defines.combat = {
 	combat_modifiers: ["attack", "defence", "manoeuvre", "initiative"], //What are the main modifiers/stats for combat units?
 	combat_order: ["attack", "defence"], //What should the combat order be by default?
 	combat_order_switch_tech: "war_of_movement", //What tech should switch the combat order back around?
+	cumulative_combat_modifiers: ["attack", "defence"], //Which combat modifiers are cumulative as opposed to per unit?
   infrastructure_range: 5, //What is the radius of provinces that should be affected by constructed infrastructure?
   interception_range: 5, //From how many provinces away should air wings be allowed to intercept other air wings?
   max_army_creation_limit: 100, //How many armies should users be able to create with a single command? Set to 0 to disable
@@ -22,6 +23,7 @@ config.defines.combat = {
   mobilisation_cooldown: 3, //Amount of turns before a person can mobilise/demobilise again
   mobilise_unit: "none", //Default unit for mobilisation
   peacetime_mobilisation_penalty: 0.5, //What should the penalty for peacetime mobilisation be (in infamy)?
+	unit_upkeep: 1, //How much should 100 units cost per turn?
   war_exhaustion_blockade_limit: 0.20, //What should be the maximum warscore penalty for being blockaded?
   war_exhaustion_blockade_rate: 0.05, //How fast should war exhaustion tick up if user is blockaded?
   war_exhaustion_mobilisation_rate: 0.03, //How fast should war exhaustion tick up if user is mobilised?

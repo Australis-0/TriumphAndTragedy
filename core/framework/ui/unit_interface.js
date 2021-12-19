@@ -52,8 +52,31 @@ module.exports = {
     }
 
     //Print Upkeep
+    reserves_string.push(config.localisation.divider);
+    reserves_string.push(`${config.icons.money} **Upkeep:**`);
+    reserves_string.push("");
+
+    reserves_string.push(`**£${parseNumber(getUnitUpkeep(actual_id))}** will be spent on the military each turn.`);
+    reserves_string.push("");
+
     //Print total attack; total defence
+    var army_display_stats = [];
+    var army_stats = getArmyStats(actual_id);
+
+    for (var i = 0; i < config.defines.combat.cumulative_combat_modifiers.length; i++) {
+      var local_combat_modifier = config.defines.combat.cumulative_combat_modifiers[i];
+
+      army_display_stats.push(`Total ${parseString(local_combat_modifier)}: ` + "`" + `${parseNumber(army_stats[local_combat_modifier])}` + "`");
+    }
+
+    reserves_string.push(`${army_stats.join(" ¦ ")}.`);
+
     //Return embed as splitEmbed
+    return splitEmbed(unit_string, {
+      title: "Reserves",
+      title_pages: true,
+      fixed_width: true
+    });
   },
 
   printUnitList: function (arg0_user) {

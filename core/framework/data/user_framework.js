@@ -1,4 +1,39 @@
 module.exports = {
+  //getArmyStats() - Returns an army_obj with related stats, including attack and defence
+  getArmyStats: function (arg0_user) { //[WIP] - Fix function to sum up stats for all user armies as well
+    //Convert from parameters
+    var user_id = arg0_user;
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var all_unit_names = getAllUnits({ return_names: true });
+    var all_units = getAllUnits();
+    var army_obj = {};
+    var usr = main.users[actual_id];
+
+    var all_armies = Object.keys(usr.armies);
+
+    //Initialise army_obj
+    for (var i = 0; i < config.defines.combat.combat_modifiers.length; i++)
+      army_obj[config.defines.combat.combat_modifiers[i]] = 0;
+
+    //Sum up all stats for all units the user has in reserves
+    for (var i = 0; i < all_unit_names.length; i++)
+      for (var x = 0; x < config.defines.combat.combat_modifiers.length; x++) {
+        var local_combat_modifier = config.defines.combat.combat_modifiers[x];
+        var unit_obj = getUnit(all_unit_names[i]);
+
+        army_obj[local_combat_modifier] +=
+          returnSafeNumber(
+            returnSafeNumber(usr.reserves[all_unit_names[i]])*
+              unit_obj[local_combat_modifier]
+          );
+      }
+
+    //Return statement
+    return army_obj;
+  },
+
   getCapital: function (arg0_user) {
     //Convert from parameters
     var user_id = arg0_user;
@@ -275,6 +310,42 @@ module.exports = {
     } catch (e) {
       log.error(`getProvinces() - ran into an error with User ID ${user_id}: ${e}.`)
     }
+  },
+
+  getTotalSoldiers: function (arg0_user) { //[WIP] - Needs to account for mobilised soldiers
+    //Convert from parameters
+    var user_id = arg0_user;
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var all_pops = Object.keys(config.pops);
+    var total_sum = 0;
+    var usr = main.users[actual_id];
+
+    //Check how many total soldiers in all military pops there are
+    for (var i = 0; i < all_pops.length; i++)
+      if (config.pops[all_pops[i]].military_pop)
+        total_sum += usr[`used_${all_pops[i]}`];
+
+    //[WIP] - Add mobilised soldiers to the count
+
+    //Return statement
+    return total_sum;
+  },
+
+  getUnitUpkeep: function (arg0_user) {
+    //Convert from parameters
+    var user_id = arg0_user;
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var usr = main.users[actual_id];
+
+    //Return statement
+    return (
+      Math.ceil(module.exports.getTotalSoldiers(actual_id)/100)*
+        config.defines.combat.unit_upkeep*usr.modifiers.army_upkeep
+    );
   },
 
   isBlockaded: function (arg0_user) {
