@@ -69,6 +69,7 @@ module.exports = {
 
     //Declare local tracker variables
     var all_cities = getCities(actual_id);
+    var all_expeditions = Object.keys(usr.expeditions);
     var all_good_names = getGoods({ return_names: true });
 
     //Modifier and tracker variable processing
@@ -88,6 +89,30 @@ module.exports = {
     {
       //Add money based on calculated user income
       usr.money += getIncome(actual_id);
+    }
+
+    //Colonisation processing
+    {
+      if (!options.is_simulation)
+        for (var i = 0; i < all_expeditions.length; i++) {
+          var local_expedition = usr.expeditions[all_expeditions[i]];
+
+          //Decrease time_remaining
+          local_expedition.time_remaining--;
+
+          if (local_expedition.time_remaining < 1) {
+            for (var x = 0; x < local_expedition.provinces.length; x++) {
+              //Check to see if province already has an owner, if not, settle it
+              var local_province = main.provinces[local_expedition.provinces[x]];
+
+              if (!local_province.owner)
+                settleProvince(local_expedition.provinces[x], actual_id);
+
+              //Remove expedition key
+              delete local_expedition;
+            }
+          }
+        }
     }
 
     //Construction processing
