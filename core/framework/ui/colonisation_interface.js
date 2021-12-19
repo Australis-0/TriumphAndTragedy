@@ -10,6 +10,7 @@ module.exports = {
 
     //Declare local tracker variables
     var all_expeditions = Object.keys(usr.expeditions);
+    var game_obj = getGameObject(user_id);
     var provinces_can_colonise = 0;
     var total_colonial_units = 0;
 

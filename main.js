@@ -68,6 +68,7 @@ FileManager.import("./framework/ui/ui_framework");
 FileManager.import("./framework/ui/unit_interface");
 
 //Game command files
+FileManager.import("./game/colonisation/cancel_charter");
 FileManager.import("./game/colonisation/settle");
 
 FileManager.import("./game/country/create_country");
