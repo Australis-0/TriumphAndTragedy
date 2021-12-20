@@ -52,6 +52,7 @@ FileManager.import("./framework/map/province_renderer");
 
 FileManager.import("./framework/ui/budget_interface");
 FileManager.import("./framework/ui/cities_interface");
+FileManager.import("./framework/ui/colonisation_interface");
 FileManager.import("./framework/ui/country_interface");
 FileManager.import("./framework/ui/economy_interface");
 FileManager.import("./framework/ui/games");
