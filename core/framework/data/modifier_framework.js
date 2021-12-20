@@ -1,4 +1,21 @@
 module.exports = {
+  applyModifiers: function (arg0_user, arg1_scope) {
+    //Convert from parameters
+    var user_id = arg0_user;
+    var modifiers = arg1_scope;
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var all_modifiers = Object.keys(modifiers);
+    var usr = main.users[user_id];
+
+    //Begin parsing
+    for (var i = 0; i < all_modifiers.length; i++)
+      //Check if the modifier in question actually exists before incrementing
+      if (usr.modifiers[all_modifiers[i]])
+        usr.modifiers[all_modifiers[i]] += modifiers[all_modifiers[i]];
+  },
+
   /*
     Returns either an object or key list of all available modifiers.
     options: {
