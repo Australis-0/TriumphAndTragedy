@@ -1,5 +1,5 @@
 module.exports = {
-  craft: function (arg0_user, arg1_amount, arg2_unit_name) { //[WIP] - Update Reserves UI if user is currently situated on that page
+  craft: function (arg0_user, arg1_amount, arg2_unit_name) {
     //Convert from parameters
     var user_id = arg0_user;
     var raw_amount = arg1_amount;
@@ -73,7 +73,9 @@ module.exports = {
                   }
                 }
 
-                //[WIP] - Update reserves UI if user is currently on it
+                //Update reserves UI if user is currently on it
+                if (game_obj.page == "reserves")
+                  printReserves(user_id);
 
                 //Print alert
                 printAlert(game_obj.id, `You have successfully trained **${parseNumber(unit_amount)}** ${(unit_amount == 1) ? "regiment" : "regiments"} of ${unit_name}!`);

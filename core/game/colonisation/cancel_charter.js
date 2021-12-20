@@ -1,5 +1,5 @@
 module.exports = {
-  cancelCharter: function (arg0_user, arg1_charter_id) { //[WIP] - Update colonisation UI if currently active
+  cancelCharter: function (arg0_user, arg1_charter_id) {
     //Convert from parameters
     var user_id = arg0_user;
     var charter_id = arg1_charter_id.toLowerCase().trim();
@@ -14,6 +14,10 @@ module.exports = {
       if (usr.expeditions[actual_id]) {
         //Print user feedback
         printAlert(game_obj.id, `You have removed Colonial Charter **#${charter_id}** from your current colonisation efforts.`);
+
+        //Update colonisation UI if currently active
+        if (game_obj.page == "colonisation")
+          printColonisation(user_id);
 
         //Delete from expeditions object
         delete usr.expeditions[actual_id];
@@ -49,7 +53,7 @@ module.exports = {
         case "colonisation":
           printColonisation(user_id);
           return true;
-          
+
           break;
       }
     });
