@@ -2,6 +2,9 @@ module.exports = {
   budget_pages: [
     "budget"
   ],
+  colonisation_pages: [
+    "colonisation"
+  ],
   economy_pages: [
     "economy",
     "inventory"
@@ -159,8 +162,14 @@ module.exports = {
           .setEmoji("716827579323121666"),
         new Discord.MessageButton()
           .setCustomId("colonisation_btn")
-          .setLabel("𝐂𝐨𝐥𝐨𝐧𝐢𝐬𝐚𝐭𝐢𝐨𝐧")
-          .setStyle("SECONDARY")
+          .setLabel((!colonisation_pages.includes(game_obj.page)) ?
+            "𝐂𝐨𝐥𝐨𝐧𝐢𝐬𝐚𝐭𝐢𝐨𝐧" :
+            " ͟𝐂͟𝐨͟𝐥͟𝐨͟𝐧͟𝐢͟𝐬͟𝐚͟𝐭͟𝐢͟𝐨͟𝐧͟"
+          )
+          .setStyle((!colonisation_pages.includes(game_obj.page)) ?
+            "SECONDARY" :
+            "PRIMARY"
+          )
           .setEmoji("716821194891853826"),
         new Discord.MessageButton()
           .setCustomId("military_btn")
@@ -212,6 +221,15 @@ module.exports = {
           module.exports.initialiseTopbar(user_id);
         }
         printBudget(user_id);
+
+        break;
+      case "colonisation_btn":
+        //Print out colonisation menu
+        if (game_obj.page != "colonisation") {
+          game_obj.page = "colonisation";
+          module.exports.initialiseTopbar(user_id);
+        }
+        printColonisation(user_id);
 
         break;
       case "country_btn":
