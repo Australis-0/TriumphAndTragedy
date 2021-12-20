@@ -1,5 +1,5 @@
 module.exports = {
-  mobilise: function (arg0_user) { //pWIP] - Apply infamy malus if it turns out that the user mobilising isn't currently being justified on or isn't currently at war; update military UI if mobilised
+  mobilise: function (arg0_user) { //pWIP] - Apply infamy malus if it turns out that the user mobilising isn't currently being justified on or isn't currently at war; update military UI if mobilised; print to global news reports
     //Convert from parameters
     var user_id = arg0_user;
 

@@ -76,6 +76,7 @@ FileManager.import("./game/country/create_country");
 FileManager.import("./game/market/buy");
 FileManager.import("./game/market/sell");
 
+FileManager.import("./game/military/demobilise");
 FileManager.import("./game/military/mobilise");
 
 FileManager.import("./game/politics/coup_government");
