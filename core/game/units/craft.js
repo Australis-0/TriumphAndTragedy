@@ -95,5 +95,37 @@ module.exports = {
     } else {
       printError(game_obj.id, `You must have a country before being able to craft units!`);
     }
+  },
+
+  initialiseCraft: function (arg0_user) {
+    //Convert from parameters
+    var user_id = arg0_user;
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var game_obj = getGameObject(user_id);
+    var usr = main.users[actual_id];
+
+    //Initialise visual prompt
+    visualPrompt(game_obj.alert_embed, user_id, {
+      title: `Train Units:`,
+      prompts: [
+        [`What type of unit would you like to build?\n\nCheck your **[Unit List]** for a full list of available units to construct.`, "string"],
+        [`How many units would you like to train?`, "number", { min: 1 }]
+      ]
+    },
+    function (arg) {
+      module.exports.craft(user_id, arg[1], arg[0]);
+    },
+    function (arg) {
+      switch (arg) {
+        case "craft list":
+        case "unit list":
+          printUnitList(user_id);
+          return true;
+
+          break;
+      }
+    })
   }
 };

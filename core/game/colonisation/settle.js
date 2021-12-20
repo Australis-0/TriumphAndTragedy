@@ -17,7 +17,7 @@ module.exports = {
     },
     function (arg) {
       settle(user_id, arg[0]);
-    })
+    });
   },
 
   initialiseSettleStartingProvinces: function (arg0_user) {

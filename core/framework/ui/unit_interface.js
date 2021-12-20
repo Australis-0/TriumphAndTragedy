@@ -13,7 +13,7 @@ module.exports = {
 
     //Format reserves_string
     reserves_string.push(`${config.icons.globe} Country: **${usr.name}**`);
-    reserves_string.push(`**[Create Army]** ¦ **[Disband Units]**`);
+    reserves_string.push(`**[Create Army]** ¦ **[Disband Units]** ¦ **[Train Units]** ¦ **[Unit List]**`);
     reserves_string.push(config.localisation.divider);
     reserves_string.push(`${config.icons.manpower} **Reserves:**`)
 
@@ -73,7 +73,7 @@ module.exports = {
 
     //Return embed as splitEmbed
     return splitEmbed(unit_string, {
-      title: "Reserves",
+      title: "**[Back]** ¦ **[Jump To Page]** ¦ Reserves:",
       title_pages: true,
       fixed_width: true
     });

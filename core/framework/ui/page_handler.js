@@ -155,6 +155,100 @@ module.exports = {
       }
     }
 
+    //Colonisation interface page handler
+    {
+      switch (game_obj.page) {
+        case "colonisation":
+          //Button handler
+          //[Cancel Charter #(Charter ID)]
+          if (input.startsWith("cancel charter ")) {
+            var charter_to_cancel = input
+              .replace("cancel charter ", "")
+              .replace("#", "");
+
+            cancelCharter(user_id, charter_to_cancel);
+          } else {
+            initialiseCancelCharter(user_id);
+          }
+
+          //[Jump To Page]
+          if (input == "jump to page")
+            visualPrompt(game_obj.alert_embed, user_id, {
+              title: `Jump To Page:`,
+              prompts: [
+                [`Which page would you like jump to?`, "number", { min: 1, max: printColonisation(game_obj.user).length }]
+              ]
+            },
+            function (arg) {
+              createPageMenu(game_obj.middle_embed, {
+                embed_pages: printColonisation(game_obj.user),
+                page: arg[0] - 1,
+                user: game_obj.user
+              })
+            });
+
+          //[Reserves]
+          if (input == "reserves") {
+            printReserves(user_id);
+            game_obj.page = "reserves";
+          }
+
+          //[Settle]
+          if (input == "settle")
+            initialiseSettle(user_id);
+
+          break;
+        case "reserves":
+          //Button handler [WIP]
+          //[Back]
+          if (input == "back") {
+            createPageMenu(game_obj.middle_embed, {
+              embed_pages: printColonisation(game_obj.user),
+              user: game_obj.user
+            });
+            game_obj.page = "colonisation";
+          }
+
+          //[Create Army]
+          //[Jump To Page]
+          if (input == "jump to page")
+            visualPrompt(game_obj.alert_embed, user_id, {
+              title: `Jump To Page:`,
+              prompts: [
+                [`Which page would you like jump to?`, "number", { min: 1, max: printColonisation(game_obj.user).length }]
+              ]
+            },
+            function (arg) {
+              createPageMenu(game_obj.middle_embed, {
+                embed_pages: printColonisation(game_obj.user),
+                page: arg[0] - 1,
+                user: game_obj.user
+              })
+            });
+
+          //[Train Units]
+          if (input == "craft")
+            initialiseCraft(user_id);
+
+          //[Unit List]
+          if (["craft list", "unit list"].includes(input)) {
+            printUnitList(user_id);
+            game_obj.page = "unit_list";
+          }
+
+          break;
+        case "unit list":
+          //Button handler
+          //[Back]
+          if (input == "back") {
+            printColonisation(user_id);
+            game_obj.page = "colonisation";
+          }
+
+          break;
+      }
+    }
+
     //Country interface page handler
     {
       if (["country_interface"].includes(game_obj.page)) {
@@ -220,78 +314,79 @@ module.exports = {
     //Economy page handler
     {
       if (economy_pages.includes(game_obj.page)) {
-      switch (input) {
-        case "build":
-          visualPrompt(game_obj.alert_embed, user_id, {
-            title: `Building Construction Menu:`,
-            prompts: [
-              [`What type of building would you like to build in your city?\n\nType **[Build List]** for a list of valid buildings.`, "string"],
-              [`How many buildings of this type would you like to begin building?`, "number", { min: 0 }],
-              [`Which city would you like to build these new buildings in?\n\nType **[View Cities]** for a list of valid cities.`, "string"]
-            ]
-          },
-          function (arg) {
-            build(user_id, arg[2], arg[1], arg[0]);
-          },
-          function (arg) {
-            switch (arg) {
-              case "build list":
-                createPageMenu(game_obj.middle_embed, {
-                  embed_pages: printBuildList(actual_id),
-                  user: game_obj.user
-                });
-                return true;
+        switch (input) {
+          case "build":
+            visualPrompt(game_obj.alert_embed, user_id, {
+              title: `Building Construction Menu:`,
+              prompts: [
+                [`What type of building would you like to build in your city?\n\nType **[Build List]** for a list of valid buildings.`, "string"],
+                [`How many buildings of this type would you like to begin building?`, "number", { min: 0 }],
+                [`Which city would you like to build these new buildings in?\n\nType **[View Cities]** for a list of valid cities.`, "string"]
+              ]
+            },
+            function (arg) {
+              build(user_id, arg[2], arg[1], arg[0]);
+            },
+            function (arg) {
+              switch (arg) {
+                case "build list":
+                  createPageMenu(game_obj.middle_embed, {
+                    embed_pages: printBuildList(actual_id),
+                    user: game_obj.user
+                  });
+                  return true;
 
-                break;
-              case "view cities":
-                createPageMenu(game_obj.middle_embed, {
-                  embed_pages: printCities(game_obj.user),
-                  user: game_obj.user
-                });
-                return true;
+                  break;
+                case "view cities":
+                  createPageMenu(game_obj.middle_embed, {
+                    embed_pages: printCities(game_obj.user),
+                    user: game_obj.user
+                  });
+                  return true;
 
-                break;
-            }
-          })
+                  break;
+              }
+            })
 
-          break;
-        case "build list":
-          createPageMenu(game_obj.middle_embed, {
-            embed_pages: printBuildList(actual_id),
-            user: game_obj.user
-          });
+            break;
+          case "build list":
+            createPageMenu(game_obj.middle_embed, {
+              embed_pages: printBuildList(actual_id),
+              user: game_obj.user
+            });
 
-          break;
-        case "constructions":
-          createPageMenu(game_obj.middle_embed, {
-            embed_pages: printConstructions(actual_id),
-            user: game_obj.user
-          });
-          game_obj.page = "view_constructions";
+            break;
+          case "constructions":
+            createPageMenu(game_obj.middle_embed, {
+              embed_pages: printConstructions(actual_id),
+              user: game_obj.user
+            });
+            game_obj.page = "view_constructions";
 
-          break;
-        case "found_city":
-          //Make sure that user is actually able to found a city before authorising the command, otherwise print an error
-          (usr.city_cap-usr.city_count > 0) ?
-            initialiseFoundCity(user_id, game_obj.id) :
-            printError(game_obj.id, `You don't have enough city slots remaining to found a new city!`);
+            break;
+          case "found_city":
+            //Make sure that user is actually able to found a city before authorising the command, otherwise print an error
+            (usr.city_cap-usr.city_count > 0) ?
+              initialiseFoundCity(user_id, game_obj.id) :
+              printError(game_obj.id, `You don't have enough city slots remaining to found a new city!`);
 
-          break;
-        case "inventory":
-          game_obj.page = "inventory";
-          printInventory(user_id);
+            break;
+          case "inventory":
+            game_obj.page = "inventory";
+            printInventory(user_id);
 
-          break;
-        case "view cities":
-          game_obj.page = "cities_list";
-          createPageMenu(game_obj.middle_embed, {
-            embed_pages: printCities(game_obj.user),
-            user: game_obj.user
-          });
+            break;
+          case "view cities":
+            game_obj.page = "cities_list";
+            createPageMenu(game_obj.middle_embed, {
+              embed_pages: printCities(game_obj.user),
+              user: game_obj.user
+            });
 
-          break;
+            break;
         }
       }
+
       if (game_obj.page == "view_constructions") {
         switch (input) {
           case "back":

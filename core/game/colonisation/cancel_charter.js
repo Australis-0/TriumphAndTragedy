@@ -23,5 +23,35 @@ module.exports = {
     } else {
       printError(game_obj.id, `You must specify a numeric ID to remove from your list of ongoing expeditions!`);
     }
+  },
+
+  initialiseCancelCharter: function (arg0_user) {
+    //Convert from parameters
+    var user_id = arg0_user;
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var game_obj = getGameObject(user_id);
+    var usr = main.users[actual_id];
+
+    //Initialise visual prompt
+    visualPrompt(game_obj.alert_embed, user_id, {
+      title: "Cancel An Ongoing Expedition",
+      prompts: [
+        [`Which current expedition would you like to cancel? You currently have **${Object.keys(usr.expeditions).length}** ongoing expedition(s).\n\nCheck **[Colonisation]** for a full list of your current colonial ventures.`, "string"]
+      ]
+    },
+    function (arg) {
+      module.exports.cancelCharter(user_id, arg[0]);
+    },
+    function (arg) {
+      switch (arg) {
+        case "colonisation":
+          printColonisation(user_id);
+          return true;
+          
+          break;
+      }
+    });
   }
 };

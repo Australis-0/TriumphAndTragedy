@@ -74,7 +74,7 @@ module.exports = {
     //Edit main embed display
     createPageMenu(game_obj.middle_embed, {
       embed_pages: splitEmbed(unit_string, {
-        title: "Colonisation:",
+        title: "**[Back]** ¦ **[Jump To Page]** ¦ Colonisation:",
         title_pages: true,
         fixed_width: true
       }),
