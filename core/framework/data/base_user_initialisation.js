@@ -329,7 +329,7 @@ module.exports = {
       if (!usr.under_construction) usr.under_construction = [];
       if (!usr.vassal_years) usr.vassal_years = 0;
 
-    //Apply starting kit if not registered [WIP]
+    //Apply starting kit if not registered
     if (!already_registered) module.exports.initStartingKit(user_id);
   }
 };

@@ -65,7 +65,7 @@ module.exports = {
     });
   },
 
-  printCity: function (arg0_user, arg1_name) { //[WIP] - Print out buildings and housing somehow; add under_construction later
+  printCity: function (arg0_user, arg1_name) { //[WIP] - Add under_construction later
     //Convert from parameters
     var user_id = arg0_user;
     var city_name = arg1_name;

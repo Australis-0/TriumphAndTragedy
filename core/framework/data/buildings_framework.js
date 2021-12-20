@@ -485,7 +485,7 @@ module.exports = {
       total_slots: -1, 0, -
     }
   */
-  getBuildingSlots: function (arg0_user, arg1_city_name, arg2_building_category, arg3_options) { //[WIP] - Add under_construction field to function for both type building and building_category parsing
+  getBuildingSlots: function (arg0_user, arg1_city_name, arg2_building_category, arg3_options) {
     //Convert from parameters
     var user_id = arg0_user;
     var city_name = arg1_city_name;
