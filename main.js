@@ -30,6 +30,7 @@ FileManager.import("./framework/data/games");
 FileManager.import("./framework/data/global_initialisation");
 FileManager.import("./framework/data/goods_framework");
 FileManager.import("./framework/data/government_framework");
+FileManager.import("./framework/data/laws_framework");
 FileManager.import("./framework/data/modifier_framework");
 FileManager.import("./framework/data/pop_framework");
 FileManager.import("./framework/data/tech_framework");

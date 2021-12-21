@@ -125,7 +125,7 @@ module.exports = {
     var unit_categories = [];
     var no_order_cache = [];
 
-    //Iterate over all building categories
+    //Iterate over all unit categories
     for (var i = 0; i < all_unit_categories.length; i++) {
       var local_unit_category = config.units[all_unit_categories[i]];
 
