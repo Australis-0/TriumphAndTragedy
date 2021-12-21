@@ -58,6 +58,9 @@ module.exports = {
           for (var i = 0; i < all_mobilisation_keys.length; i++)
             if (!["last_mobilised"].includes(all_mobilisation_keys[i]))
               delete usr.mobilised[all_mobilisation_keys[i]];
+
+          //Update last_mobilised modifier to be the last turn the user demobilised
+          usr.mobilised.last_mobilised = JSON.parse(JSON.stringify(main.global.round_count));
         } else {
           printError(game_obj.id, `Your people can't mobilise and demobilise instantly! Wait for **${parseNumber((main.global.round_count - last_mobilised) + 1)}** more turn(s).`);
         }

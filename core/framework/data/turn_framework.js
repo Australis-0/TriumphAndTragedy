@@ -71,6 +71,7 @@ module.exports = {
     var all_cities = getCities(actual_id);
     var all_expeditions = Object.keys(usr.expeditions);
     var all_good_names = getGoods({ return_names: true });
+    var all_pops = Object.keys(config.pops);
 
     //Modifier and tracker variable processing
     {
@@ -149,6 +150,34 @@ module.exports = {
       //Reduce maximum transaction amount from the Global Market to 20% of total Shipment Capacity after 10 turns, or whatever it is set to in defines
       if (usr.country_age > 10)
         usr.modifiers.maximum_transaction_amount = config.defines.economy.resource_max_percentile;
+    }
+
+    //Military processing
+    {
+      //Mobilisation processing
+      {
+        if (usr.mobilisation.is_mobilised) {
+          //Update local tracker variables
+          var new_manpower_mobilised = 0;
+
+          //Mobilise more people if current_manpower_mobilised is not the same as total_manpower_mobilised
+          if (current_manpower_mobilised < total_manpower_mobilised)
+            new_manpower_mobilised += Math.ceil(
+              (total_manpower_mobilised - current_manpower_mobilised)/
+                usr.mobilisation.original_time_remaining
+            );
+
+          //How to deal with rounding?
+          new_manpower_mobilised = Math.min(new_manpower_mobilised, total_manpower_mobilised - current_manpower_mobilised);
+
+          usr.mobilisation.total_manpower_mobilised += new_manpower_mobilised;
+          usr.reserves[usr.mobilisation.unit_type] += new_manpower_mobilised;
+
+          //Decrement time_remaining
+          if (usr.mobilisation.time_remaining > 0)
+            usr.mobilisation.time_remaining--;
+        }
+      }
     }
 
     //Politics processing

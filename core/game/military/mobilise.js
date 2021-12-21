@@ -55,11 +55,13 @@ module.exports = {
           //Create mobilisation object
           usr.mobilisation = {
             is_mobilised: true,
+            last_mobilised: JSON.parse(JSON.stringify(main.global.round_count)),
 
             current_manpower_mobilised: 0,
             total_manpower_mobilised: manpower_mobilised,
             mobilised_pops: mobilised_pops,
 
+            original_time_remaining: mobilisation_speed,
             time_remaining: mobilisation_speed,
             unit_type: unit_type
           };
