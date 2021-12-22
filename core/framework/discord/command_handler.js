@@ -167,7 +167,7 @@ module.exports = {
     var options = arg0_options;
 
     //Use ternary operators to decide on the defaults for each value if not provided.
-    var step_suffix = `(Step ${options.answers.length+1} of ${options.prompts.length+1})`;
+    var step_suffix = `(Step ${options.answers.length+1} of ${options.prompts.length})`;
     var embed_colour = (options.colour) ? RGBToHex(options.colour) : settings.bot_colour;
       embed_colour = eval("0x" + embed_colour.replace("#", ""));
     var embed_title = (options.title) ? options.title : "Command Prompt:";
