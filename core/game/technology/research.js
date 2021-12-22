@@ -116,6 +116,7 @@ module.exports = {
     var all_technologies = getAllTechnologies();
     var all_technology_names = getAllTechnologies({ return_names: true });
     var can_research = false;
+    var is_being_researched = false;
     var is_in_queue = false;
     var knowledge_gain = getKnowledgeGain(user_id);
     var tech_array_dump = [];
@@ -156,8 +157,10 @@ module.exports = {
       can_research = (tech_array_dump.includes(tech_name));
 
       for (var i = 0; i < usr.researching.length; i++)
-        if (usr.researching[i].technology == tech_name)
+        if (usr.researching[i].technology == tech_name) {
           can_research = false;
+          is_being_researched = true;
+        }
 
       //Check if technology is in queue
       is_in_queue = (usr.research_queue.includes(tech_name));
@@ -166,65 +169,70 @@ module.exports = {
         can_research = false;
 
       //Only allow research if research is allowed and can be researched
-      if (!is_in_queue) {
-        if (can_research) {
-          //Check if any spare research slots are available
-          if (usr.researching.length < usr.modifiers.research_slots) {
-            var knowledge_investment = config.defines.technology.max_knowledge_investment*usr.modifiers.knowledge_investment_limit;
+      if (!is_being_researched) {
+        if (!is_in_queue) {
+          if (can_research) {
+            //Check if any spare research slots are available
+            if (usr.researching.length < usr.modifiers.research_slots) {
+              var knowledge_investment = config.defines.technology.max_knowledge_investment*usr.modifiers.knowledge_investment_limit;
 
-            //Fetch total_research_cost
-            var total_research_cost = getTechnologyCost(tech_name);
+              //Fetch total_research_cost
+              var total_research_cost = getTechnologyCost(tech_name);
 
-            if (usr.researching.length == 0)
-              knowledge_investment = 1;
+              if (usr.researching.length == 0)
+                knowledge_investment = 1;
 
-            //Make sure that current knowledge_gain stats are applicable for all research slots
-            knowledge_gain = [
-              Math.round(knowledge_gain[0]/(usr.researching.length + 1)*knowledge_investment),
-              Math.round(knowledge_gain[1]/(usr.researching.length + 1)*knowledge_investment)
-            ];
+              //Make sure that current knowledge_gain stats are applicable for all research slots
+              knowledge_gain = [
+                Math.round(knowledge_gain[0]/(usr.researching.length + 1)*knowledge_investment),
+                Math.round(knowledge_gain[1]/(usr.researching.length + 1)*knowledge_investment)
+              ];
 
-            //Format turn_string
-            var turn_string = "";
+              //Format turn_string
+              var turn_string = "";
 
-            if (knowledge_gain[0] == 0 && knowledge_gain[1] == 0) {
-              turn_string = "**forever**";
-            } else if (knowledge_gain[0] == knowledge_gain[1]) {
-              turn_string = `**${parseNumber(Math.ceil(total_research_cost/knowledge_gain[0]))}** turn(s)`;
+              if (knowledge_gain[0] == 0 && knowledge_gain[1] == 0) {
+                turn_string = "**forever**";
+              } else if (knowledge_gain[0] == knowledge_gain[1]) {
+                turn_string = `**${parseNumber(Math.ceil(total_research_cost/knowledge_gain[0]))}** turn(s)`;
+              } else {
+                turn_string = `**${parseNumber(Math.ceil(total_research_cost/knowledge_gain[0]))} - ${parseNumber(Math.ceil(total_research_cost/knowledge_gain[1]))}** turn(s)`;
+              }
+
+              //Print alert
+              if (!display)
+                printAlert(game_obj.id, `Your scientists have started research on **${(tech_obj.name) ? tech_obj.name : tech_name}**. Your advisor estimates that it will take them ${turn_string} to complete researching this technology.`);
+
+              usr.researching.push({
+                current_investment: 0,
+                technology: tech_name,
+                total_research_cost: total_research_cost
+              });
+
+              //Update UI
+              if (game_obj.page == "research")
+                printResearch(user_id);
+
+              if (game_obj.page == "research_list")
+                printRes
+
+              //Return statement used for research_queue processing
+              return true;
             } else {
-              turn_string = `**${parseNumber(Math.ceil(total_research_cost/knowledge_gain[0]))} - ${parseNumber(Math.ceil(total_research_cost/knowledge_gain[1]))}** turn(s)`;
+              if (!display)
+                printError(game_obj.id, `Your research slots are already full up! **${(tech_obj.name) ? tech_obj.name : tech_name}** was added to your queue instead. Next time, consider cancelling one of your current research slots, or queue up technologies manually in your **[Research Queue]**.`);
             }
-
-            //Print alert
-            if (!display)
-              printAlert(game_obj.id, `Your scientists have started research on **${(tech_obj.name) ? tech_obj.name : tech_name}**. Your advisor estimates that it will take them ${turn_string} to complete researching this technology.`);
-
-            usr.researching.push({
-              current_investment: 0,
-              technology: tech_name,
-              total_research_cost: total_research_cost
-            });
-
-            //Update UI
-            if (game_obj.page == "research")
-              printResearch(user_id);
-
-            if (game_obj.page == "research_list")
-              printRes
-
-            //Return statement used for research_queue processing
-            return true;
           } else {
             if (!display)
-              printError(game_obj.id, `Your research slots are already full up! **${(tech_obj.name) ? tech_obj.name : tech_name}** was added to your queue instead. Next time, consider cancelling one of your current research slots, or queue up technologies manually in your **[Research Queue]**.`);
+              printError(game_obj.id, `You don't have the necessary prerequisites to research **${(tech_obj.name) ? tech_obj.name : tech_name}** yet!`);
           }
         } else {
           if (!display)
-            printError(game_obj.id, `You don't have the necessary prerequisites to research **${(tech_obj.name) ? tech_obj.name : tech_name}** yet!`);
+            printError(game_obj.id, `**${(tech_obj.name) ? tech_obj.name : tech_name}** is already in your research queue! Try cancelling it first in your **[Research Queue]** before adding it to your active research.`);
         }
       } else {
         if (!display)
-          printError(game_obj.id, `**${(tech_obj.name) ? tech_obj.name : tech_name}** is already in your research queue! Try cancelling it first in your **[Research Queue]** before adding it to your active research.`);
+          printError(game_obj.id, `**${(tech_obj.name) ? tech_obj.name : tech_name}** is already being researched!`);
       }
     } else {
       if (!display)
