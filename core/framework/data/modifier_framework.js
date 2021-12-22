@@ -179,8 +179,17 @@ module.exports = {
     //Format modifier_string
     for (var i = 0; i < all_modifier_keys.length; i++) {
       var local_modifier = module.exports.getModifier(all_modifier_keys[i]);
-      var local_modifier_name = (local_modifier.name) ? local_modifier.name : all_modifier_keys[i];
+      var local_modifier_name;
       var local_value = getList(modifier_obj[all_modifier_keys[i]]);
+
+      //Fetch local_modifier_name
+      if (local_modifier) {
+        local_modifier_name = (local_modifier.name) ? local_modifier.name : all_modifier_keys[i];
+      } else {
+        //Substantiate dummy local_modifier variables if not found
+        local_modifier = { name: "" };
+        local_modifier_name = "undefined";
+      }
 
       switch (local_modifier.type) {
         case "integer":
@@ -293,7 +302,10 @@ module.exports = {
 
             //Default parser
             default:
-              modifier_string.push(`• **${printPercentage(local_value[0], { display_prefix: true })}** ${local_modifier_name}`);
+              modifier_string.push(`• **${printPercentage(local_value[0], {
+                display_prefix: true,
+                base_zero: true
+              })}** ${local_modifier_name}`);
 
               break;
           }
