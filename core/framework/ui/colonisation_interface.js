@@ -32,7 +32,7 @@ module.exports = {
 
       //The local unit is a colonial unit if it can colonise provinces
       if (local_unit.colonise_provinces) {
-        provinces_can_colonise += returnSafeNumber(usr.reserves[all_unit_names[i]]*local_unit.colonise_provinces;
+        provinces_can_colonise += returnSafeNumber(usr.reserves[all_unit_names[i]]*local_unit.colonise_provinces);
         total_colonial_units += returnSafeNumber(usr.reserves[all_unit_names[i]]);
       }
     }
