@@ -60,12 +60,12 @@ module.exports = {
         }
 
         //Push tech summary to string
-        research_string.push(`#**${i + 1}**. ${local_tech_icon} **${local_tech_name}**`)
+        research_string.push(`#**${i + 1}**. ${local_tech_icon} **${local_tech_name}** ¦ **[Cancel Research]**`)
 
         //Push research progress to string
         research_string.push(`---`);
         research_string.push(`You have invested **${parseNumber(usr.researching[i].current_investment)}/${parseNumber(usr.researching[i].total_research_cost)}** ${config.icons.government} Knowledge into this technology.`);
-        research_string.push(`Your advisors estimate that it will take ${turn_string} turn(s) to finish researching this technology. ¦ **[Cancel Research]**`);
+        research_string.push(`Your advisors estimate that it will take ${turn_string} turn(s) to finish researching this technology.`);
         research_string.push("");
       }
     } else {
