@@ -130,15 +130,19 @@ module.exports = {
         var tech_available = false;
 
         //Increment technologies based on what techs the user has already researched
-        for (var x = 0; x < all_technologies[i].prerequisite_techs.length; x++)
-          if (usr.researched_technologies.includes(all_technologies[i].prerequisite_techs[x]))
-            prerequisite_checks++;
+        if (all_technologies[i].prerequisite_techs) {
+          for (var x = 0; x < all_technologies[i].prerequisite_techs.length; x++)
+            if (usr.researched_technologies.includes(all_technologies[i].prerequisite_techs[x]))
+              prerequisite_checks++;
 
-        //Check if user has fulfilled all prerequisites, or if it is a starting tech
-        tech_available = (
-          all_technologies[i].prerequisite_techs.length == prerequisite_checks ||
-          all_technologies[i].prerequisite_techs.length == 0
-        );
+          //Check if user has fulfilled all prerequisites, or if it is a starting tech
+          tech_available = (
+            all_technologies[i].prerequisite_techs.length == prerequisite_checks ||
+            all_technologies[i].prerequisite_techs.length == 0
+          );
+        } else {
+          tech_available = true;
+        }
 
         //Check if user has already researched tech
         tech_available = (usr.researched_technologies.includes(all_technology_names[i])) ? false : tech_available;
@@ -193,7 +197,7 @@ module.exports = {
 
             //Print alert
             if (!display)
-              printAlert(`Your scientists have started research on **${(tech_obj.name) ? tech_obj.name : tech_name}**. Your advisor estimates that it will take them ${turn_string} to complete researching this technology.`);
+              printAlert(game_obj.id, `Your scientists have started research on **${(tech_obj.name) ? tech_obj.name : tech_name}**. Your advisor estimates that it will take them ${turn_string} to complete researching this technology.`);
 
             usr.researching.push({
               current_investment: 0,
@@ -204,6 +208,9 @@ module.exports = {
             //Update UI
             if (game_obj.page == "research")
               printResearch(user_id);
+
+            if (game_obj.page == "research_list")
+              printRes
 
             //Return statement used for research_queue processing
             return true;

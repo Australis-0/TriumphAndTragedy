@@ -32,8 +32,8 @@ module.exports = {
 
       //The local unit is a colonial unit if it can colonise provinces
       if (local_unit.colonise_provinces) {
-        provinces_can_colonise += usr.reserves[all_unit_names[i]]*local_unit.colonise_provinces;
-        total_colonial_units += usr.reserves[all_unit_names[i]];
+        provinces_can_colonise += returnSafeNumber(usr.reserves[all_unit_names[i]])*local_unit.colonise_provinces;
+        total_colonial_units += returnSafeNumber(usr.reserves[all_unit_names[i]]);
       }
     }
 
@@ -73,7 +73,7 @@ module.exports = {
 
     //Edit main embed display
     createPageMenu(game_obj.middle_embed, {
-      embed_pages: splitEmbed(unit_string, {
+      embed_pages: splitEmbed(colonisation_string, {
         title: "**[Back]** ¦ **[Jump To Page]** ¦ Colonisation:",
         title_pages: true,
         fixed_width: true
