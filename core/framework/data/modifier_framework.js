@@ -165,5 +165,144 @@ module.exports = {
 
     //Return statement
     return (modifier_exists[0]) ? modifier_exists[1] : undefined;
+  },
+
+  //Parses modifiers to a string
+  parseModifiers: function (arg0_modifier_obj) {
+    //Convert from parameters
+    var modifier_obj = arg0_modifier_obj;
+
+    //Declare local instance variables
+    var all_modifier_keys = Object.keys(modifier_obj);
+    var modifier_string = [];
+
+    //Format modifier_string
+    for (var i = 0; i < all_modifier_keys.length; i++) {
+      var local_modifier = module.exports.getModifier(all_modifier_keys[i]);
+      var local_modifier_name = (local_modifier.name) ? local_modifier.name : all_modifier_keys[i];
+      var local_value = getList(modifier_obj[all_modifier_keys[i]]);
+
+      switch (local_modifier.type) {
+        case "integer":
+          //Parse modifier as integer
+          modifier_string.push(`• **${parseNumber(local_value[0], { display_prefix: true })}** ${local_modifier_name}`);
+
+          break;
+        case "percentage":
+        default:
+          //By default a modifier is parsed as percentage, but only if it is not an effect
+          switch (all_modifier_keys[i]) {
+            //Effect blocks
+            case "obsolete_building":
+              var building_names = [];
+              for (var i = 0; i < local_value.length; i++)
+                building_names.push(
+                  (getBuilding(local_value[i]).name) ?
+                    getBuilding(local_value[i]).name :
+                    local_value[i]
+                )
+
+              modifier_string.push(`• Obsoletes **${building_names.join(", ")}**`);
+
+              break;
+            case "obsolete_government":
+              var government_names = [];
+              for (var i = 0; i < local_value.length; i++)
+                government_names.push(
+                  (config.governments[local_value[i]].name) ?
+                    config.governments[local_value[i]].name :
+                    local_value[i]
+                )
+
+              modifier_string.push(`• Obsoletes **${government_names.join(", ")}**`);
+
+              break;
+            case "obsolete_reform":
+              var reform_names = [];
+              for (var i = 0; i < local_value.length; i++)
+                government_names.push(
+                  (getReform(local_value[i]).name) ?
+                    getReform(local_value[i]).name :
+                    local_value[i]
+                );
+
+              modifier_string.push(`• Obsoletes **${reform_names.join(", ")}**`);
+
+              break;
+            case "obsolete_unit":
+              var unit_names = [];
+              for (var i = 0; i < local_value.length; i++)
+                unit_names.push(
+                  (getUnit(local_value[i]).name) ?
+                    getUnit(local_value[i]).name :
+                    local_value[i]
+                );
+
+              modifier_string.push(`• Obsoletes **${unit_names.join(", ")}**`);
+
+              break;
+
+            case "unlock_building":
+              var building_names = [];
+              for (var i = 0; i < local_value.length; i++)
+                building_names.push(
+                  (getBuilding(local_value[i]).name) ?
+                    getBuilding(local_value[i]).name :
+                    local_value[i]
+                );
+
+              modifier_string.push(`• Enables **${building_names.join(", ")}**`);
+
+              break;
+            case "unlock_government":
+              var government_names = [];
+              for (var i = 0; i < local_value.length; i++)
+                government_names.push(
+                  (getGovernment(local_value[i]).name) ?
+                    getGovernment(local_value[i]).name :
+                    local_value[i]
+                );
+
+              modifier_string.push(`• Unlocks **${government_names.join(", ")}**`);
+
+              break;
+            case "unlock_reform":
+              var reform_names = [];
+              for (var i = 0; i < local_value.length; i++)
+                reform_names.push(
+                  (getReform(local_value[i]).name) ?
+                    getReform(local_value[i]).name :
+                    local_value[i]
+                );
+
+              modifier_string.push(`• Unlocks **${reform_names.join(", ")}**`);
+
+              break;
+            case "unlock_unit":
+              var unit_names = [];
+              for (var i = 0; i < local_value.length; i++)
+                unit_names.push(
+                  (getUnit(local_value[i]).name) ?
+                    getUnit(local_value[i]).name :
+                    local_value[i]
+                );
+
+              modifier_string.push(`• Enables **${unit_names.join(", ")}**`);
+
+              break;
+
+            //Default parser
+            default:
+              modifier_string.push(`• **${printPercentage(local_value[0], { display_prefix: true })}** ${local_modifier_name}`);
+
+              break;
+          }
+
+          break;
+      }
+    }
+
+    //Return statement
+    return modifier_string.join("\n");
   }
 };
