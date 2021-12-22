@@ -14,8 +14,8 @@ module.exports = {
     //Initialise research_string
     var research_string = [];
 
-    tech_string.push(`**[Back]**`);
-    tech_string.push("");
+    research_string.push(`**[Back]**`);
+    research_string.push("");
     research_string.push(`${config.icons.technology} Research Slots: (**${parseNumber(usr.researching.length)}**/${parseNumber(usr.modifiers.research_slots)}):`);
     research_string.push(`**[View Research Queue]**`);
     research_string.push("");
@@ -27,7 +27,7 @@ module.exports = {
           Math.ceil(knowledge_gain[1]/usr.researching.length)  //maximum local knowledge gain
         ];
         var local_tech = getTechnology(usr.researching[i].technology);
-        var local_tech_icon = (local_tech.icon) ? local_tech.icon + " " : "";
+        var local_tech_icon = (local_tech.icon) ? config.icons[local_tech.icon] + " " : "";
         var local_tech_name = (local_tech.name) ? local_tech.name : "";
 
         //Apply knowledge_investment mechanic
@@ -60,12 +60,12 @@ module.exports = {
         }
 
         //Push tech summary to string
-        research_string.push(`${local_tech_icon} **${local_tech_name}**`)
+        research_string.push(`#**${i + 1}**. ${local_tech_icon} **${local_tech_name}**`)
 
         //Push research progress to string
-        research_string.push("");
+        research_string.push(`---`);
         research_string.push(`You have invested **${parseNumber(usr.researching[i].current_investment)}/${parseNumber(usr.researching[i].total_research_cost)}** ${config.icons.government} Knowledge into this technology.`);
-        research_string.push(`Your advisors estimate that it will take ${turn_string} turn(s) to finish researching this technology.`);
+        research_string.push(`Your advisors estimate that it will take ${turn_string} turn(s) to finish researching this technology. ¦ **[Cancel Research]**`);
         research_string.push("");
       }
     } else {

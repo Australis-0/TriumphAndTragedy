@@ -15,7 +15,7 @@ module.exports = {
         var local_tech_obj = getTechnology(usr.researching[slot_number].technology);
 
         //Print feedback to user
-        printAlert(game_obj.id, `You cancelled your current research of **${(local_tech_obj.name) ? local_tech_obj.name : usr.researching[slot_number].technology}** for Slot #**${slot_number}**.`);
+        printAlert(game_obj.id, `You cancelled your current research of **${(local_tech_obj.name) ? local_tech_obj.name : usr.researching[slot_number].technology}** for Slot #**${slot_number + 1}**.`);
 
         //Cancel the research slot
         usr.researching.splice(slot_number, 1);
@@ -214,7 +214,14 @@ module.exports = {
                 printResearch(user_id);
 
               if (game_obj.page == "research_list")
-                printRes
+                createPageMenu(game_obj.middle_embed, {
+                  embed_pages: printResearchList(actual_id),
+                  user: game_obj.user,
+                  page: interfaces[game_obj.middle_embed.id].page
+                });
+
+              if (game_obj.page == "technology")
+                printTechnology(user_id);
 
               //Return statement used for research_queue processing
               return true;
