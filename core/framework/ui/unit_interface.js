@@ -73,7 +73,7 @@ module.exports = {
 
     //Return embed as splitEmbed
     return splitEmbed(unit_string, {
-      title: "**[Back]** ¦ **[Jump To Page]** ¦ Reserves:",
+      title: "[Back] ¦ [Jump To Page] ¦ Reserves:",
       title_pages: true,
       fixed_width: true
     });

@@ -167,7 +167,7 @@ module.exports = {
               .replace("#", "");
 
             cancelCharter(user_id, charter_to_cancel);
-          } else {
+          } else if (input == "cancel charter") {
             initialiseCancelCharter(user_id);
           }
 

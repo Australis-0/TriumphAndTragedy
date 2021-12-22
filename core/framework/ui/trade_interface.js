@@ -44,7 +44,7 @@ module.exports = {
 
     //Return statement
     return splitEmbed(auto_trade_string, {
-      title: "**[Back]** ¦ Auto-Trades:",
+      title: "[Back] ¦ Auto-Trades:",
       description: auto_trade_prefix_string,
       title_pages: true,
       fixed_width: true
@@ -83,7 +83,7 @@ module.exports = {
 
     //Return statement
     return splitEmbed(export_string, {
-      title: "**[Back]** ¦ Exports:",
+      title: "[Back] ¦ Exports:",
       title_pages: true,
       fixed_width: true
     });
@@ -122,7 +122,7 @@ module.exports = {
 
     //Return statement
     return splitEmbed(import_string, {
-      title: "**[Back]** ¦ Imports:",
+      title: "[Back] ¦ Imports:",
       title_pages: true,
       fixed_width: true
     });
