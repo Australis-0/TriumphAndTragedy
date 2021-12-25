@@ -9,6 +9,7 @@ config.governments = {
 
     effect: {
       can_justify_wars: false,
+      disabled_reforms: true,
       has_elections: false,
       maximum_manpower: 1.00,
       maximum_tax_rate: 0.01,
@@ -26,6 +27,7 @@ config.governments = {
 
     effect: {
       can_justify_wars: true,
+      disabled_reforms: true,
       has_elections: false,
       maximum_manpower: 0.10,
       maximum_tax_rate: 0.65,

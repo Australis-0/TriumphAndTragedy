@@ -192,5 +192,46 @@ module.exports = {
 
     //Return statement
     return (reform_category_exists[0]) ? reform_category_exists[1] : undefined;
+  },
+
+  //getReformsInCategory() - Returns back an array of reform keys inside of a given category based on order.
+  getReformsInCategory: function (arg0_name) {
+    //Convert from parameters
+    var raw_reform_category = arg0_name.trim().toLowerCase();
+
+    //Declare local instance variables
+    var no_order_cache = [];
+    var reform_category = module.exports.getReformCategory(raw_reform_category);
+    var reform_list = [];
+
+    //Only proceed if the reform category actually exists
+    if (reform_category) {
+      var all_reforms_in_category = Object.keys(reform_category);
+
+      //Iterate over all reforms in category
+      for (var i = 0; i < all_reforms_in_category.length; i++) {
+        var local_reform = reform_category[all_reforms_in_category[i]];
+
+        //Push to either no_order_cache or reform_list
+        if (local_reform.order) {
+          if (!reform_list[local_reform.order-1]) {
+            reform_list[local_reform.order-1] = all_reforms_in_category[i];
+          } else {
+            log.error(`${all_reforms_in_category[i]} has an invalid order number! .order ${local_reform.order-1} os already occupied by ${reform_list[local_reform.order-1]}!\n\nCheck common/laws for more information on resolving this error.`);
+          }
+        } else {
+          no_order_cache.push(all_reforms_in_category[i]);
+        }
+      }
+
+      //Push no_order_cache onto end
+      for (var i = 0; i < no_order_cache.length; i++)
+        reform_list.push(no_order_cache[i]);
+
+      //Return statement
+      return reform_list;
+    } else {
+      log.error(`getReformsInCategory() - The reform category specified, ${raw_reform_category}, is nonexistent!`);
+    }
   }
 };

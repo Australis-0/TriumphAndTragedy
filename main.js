@@ -75,6 +75,8 @@ FileManager.import("./game/colonisation/settle");
 
 FileManager.import("./game/country/create_country");
 
+FileManager.import("./game/laws/enact_reform");
+
 FileManager.import("./game/market/buy");
 FileManager.import("./game/market/sell");
 

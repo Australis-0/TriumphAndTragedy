@@ -255,6 +255,7 @@ module.exports = {
     if (!usr.events) usr.events = {};
     if (!usr.expeditions) usr.expeditions = {};
     if (!usr.inventory) usr.inventory = {};
+    if (!usr.laws) usr.laws = {};
     if (!usr.mobilisation) usr.mobilisation = {};
     if (!usr.national_modifiers) usr.national_modifiers = {};
     if (!usr.researching) usr.researching = [];
