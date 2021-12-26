@@ -76,21 +76,24 @@ module.exports = {
                       all_governments[i];
 
                     var stance = ""; //in support, in opposition, neutral
-
-                    if (reform_obj.political_appeasement) {
-                      var local_reform_discontent = reform_obj.political_appeasement[`${all_governments[i]}_discontent`];
-                      var old_reform_discontent = (old_reform_obj.political_appeasement) ?
+                    var local_reform_discontent = (reform_obj.political_appeasement) ?
+                      (reform_obj.political_appeasement[all_governments[i]]) ?
+                        reform_obj.political_appeasement[`${all_governments[i]}_discontent`] :
+                        0 :
+                      0;
+                    var old_reform_discontent = (old_reform_obj.political_appeasement) ?
+                      (old_reform_obj.political_appeasement[all_governments[i]]) ?
                         old_reform_obj.political_appeasement[`${all_governments[i]}_discontent`] :
-                        0;
+                        0 :
+                      0;
 
-                      //Check whether party is in opposition, in support, or neutral
-                      if (local_reform_discontent == old_reform_discontent) {
-                        stance = "neutral";
-                      } else if (local_reform_discontent > old_reform_discontent) {
-                        stance = "in opposition";
-                      } else {
-                        stance = "in support";
-                      }
+                    //Check whether party is in opposition, in support, or neutral
+                    if (local_reform_discontent == old_reform_discontent) {
+                      stance = "neutral";
+                    } else if (local_reform_discontent > old_reform_discontent) {
+                      stance = "in opposition";
+                    } else {
+                      stance = "in support";
                     }
 
                     if (local_government.popularity > 0)

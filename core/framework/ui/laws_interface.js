@@ -1,5 +1,5 @@
 module.exports = {
-  printReform: function (arg0_user, arg1_reform_name) { //[WIP] - Add party support indicator in the future
+  printReform: function (arg0_user, arg1_reform_name) {
     //Convert from parameters
     var user_id = arg0_user;
     var reform_name = arg1_reform_name.trim().toLowerCase();
@@ -38,6 +38,43 @@ module.exports = {
         reform_string.push("");
         reform_string.push(parseModifiers(reform_obj.effects));
       }
+
+      //Political appeasement handler
+      if (reform_is_unlocked)
+        if (reform_obj.political_appeasement) {
+          var all_governments = Object.keys(config.governments);
+          var current_reform_obj = getReform(usr.laws[raw_reform_category_name]);
+
+          //Format header for political appeasement
+          reform_string.push("");
+          reform_string.push(`**Political Appeasement:**`);
+          reform_string.push(config.localisation.divider);
+          reform_string.push("");
+
+          //Check whether party would be supportive of this reform when compared to the current reform
+          for (var i = 0; i < all_governments.length; i++) {
+            var local_government = config.governments[all_governments[i]];
+            var local_government_adjective = (local_government.adjective) ? local_government.adjective : all_governments[i];
+            var local_reform_discontent = (reform_obj.political_appeasement) ?
+              (reform_obj.political_appeasement[all_governments[i]]) ?
+                reform_obj.political_appeasement[`${all_governments[i]}_discontent`] :
+                0 :
+              0;
+            var old_reform_discontent = (current_reform_obj.political_appeasement) ?
+              (current_reform_obj.political_appeasement[all_governments[i]]) ?
+                current_reform_obj.political_appeasement[`${all_governments[i]}_discontent`] :
+                0 :
+              0;
+
+            if (local_reform_discontent == old_reform_discontent) {
+              reform_string.push(`The **${local_government_adjective}** would be **neutral** to this motion, and their entire party would abstain.`);
+            } else if (local_reform_discontent > old_reform_discontent) {
+              reform_string.push(`The **${local_government_adjective}** would be **in opposition** to this motion, and representatives of their party would either vote in opposition, or abstain.`);
+            } else {
+              reform_string.push(`The **${local_government_adjective}** would be **supportive** of this motion, and representatives of their party would either vote in support, or abstain.`);
+            }
+          }
+        }
 
       //Return user feedback as alert
       printAlert(game_obj.id, reform_string.join("\n"));
