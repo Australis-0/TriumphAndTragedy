@@ -30,7 +30,7 @@ module.exports = {
             var reforms_in_category = getReformsInCategory(raw_reform_category_name);
 
             //Check if user has even unlocked the reform yet
-            if (usr.available_reforms.includes(raw_reform_name)) {
+            if (usr.available_reforms.includes(raw_reform_category_name)) {
               //Check if specified index is valid compared to the current numeric index of the current legal position
               var current_reform_index = reforms_in_category.indexOf(usr.laws[raw_reform_category_name]);
               var old_reform_obj = getReform(usr.laws[raw_reform_category_name]);

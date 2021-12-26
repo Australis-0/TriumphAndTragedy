@@ -59,6 +59,7 @@ FileManager.import("./framework/ui/economy_interface");
 FileManager.import("./framework/ui/games");
 FileManager.import("./framework/ui/global_market_interface");
 FileManager.import("./framework/ui/government_interface");
+FileManager.import("./framework/ui/laws_interface");
 FileManager.import("./framework/ui/map_viewer");
 FileManager.import("./framework/ui/page_handler");
 FileManager.import("./framework/ui/pops_interface");
