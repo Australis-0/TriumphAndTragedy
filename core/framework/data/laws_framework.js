@@ -172,7 +172,7 @@ module.exports = {
   },
 
   /*
-    getReformCategoryFromUnit() - Returns back the reform_category object/key based on the specified reform name. Only supports raw reform names
+    getReformCategoryFromReform() - Returns back the reform_category object/key based on the specified reform name. Only supports raw reform names
     options: {
       return_key: true/false - Whether or not to return back the reform category key instead of object. False by default
     }

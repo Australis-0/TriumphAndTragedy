@@ -1,4 +1,49 @@
 module.exports = {
+  printReform: function (arg0_user, arg1_reform_name) { //[WIP] - Add party support indicator in the future
+    //Convert from parameters
+    var user_id = arg0_user;
+    var reform_name = arg1_reform_name.trim().toLowerCase();
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var all_reform_categories = getReformCategories();
+    var game_obj = getGameObject(user_id);
+    var raw_reform_name = getReform(reform_name, { return_key: true });
+    var reform_obj = getReform(reform_name);
+    var usr = main.users[actual_id];
+
+    //Initialise reform_string
+    var reform_string = [];
+
+    if (reform_obj) {
+      var raw_reform_category_name = getReformCategoryFromReform(raw_reform_name, { return_key: true });
+      var reform_is_unlocked = usr.available_reforms.includes(raw_reform_category_name);
+
+      reform_string.push(`${(reform_obj.icon) ? config.icons[reform_obj.icon] + " " : ""}**${(reform_obj.name) ? reform_obj.name : raw_reform_name}`);
+
+      if (!reform_is_unlocked)
+        reform_string.push(`\nYou have not yet unlocked this reform.`);
+
+      //Description handler
+      if (reform_obj.description) {
+        reform_string.push("");
+        reform_string.push(`_${reform_obj.description}_`);
+      }
+
+      //Effects handler
+      if (reform_obj.effects) {
+        reform_string.push("");
+        reform_string.push(`**Effects:**`);
+        reform_string.push(config.localisation.divider);
+        reform_string.push("");
+        reform_string.push(parseModifiers(reform_obj.effects));
+      }
+
+      //Return user feedback as alert
+      printAlert(game_obj.id, reform_string.join("\n"));
+    }
+  },
+
   printReforms: function (arg0_user) {
     //Convert from parameters
     var user_id = arg0_user;
