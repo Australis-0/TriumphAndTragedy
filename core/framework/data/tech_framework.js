@@ -163,6 +163,7 @@ module.exports = {
   //parseTechnology() - Parses the technological effects of a given tech for a given user. (Used primarily after the research of a tech has been finished)
   parseTechnology: function (arg0_user, arg1_technology_name) {
     //Convert from parameters
+    var user_id = arg0_user;
     var usr = main.users[arg0_user];
     var raw_technology_name = arg1_technology_name.toLowerCase();
 
@@ -214,7 +215,7 @@ module.exports = {
           break;
         case "unlock_reform":
           for (var x = 0; x < effect_value.length; x++)
-            usr.available_reforms.push(effect_value[x]);
+            unlockReform(user_id, effect_value[x]);
 
           break;
         case "unlock_unit":

@@ -12,8 +12,11 @@ module.exports = {
     //Begin parsing
     for (var i = 0; i < all_modifiers.length; i++)
       //Check if the modifier in question actually exists before incrementing
-      if (usr.modifiers[all_modifiers[i]])
+      if (usr.modifiers[all_modifiers[i]]) {
         usr.modifiers[all_modifiers[i]] += modifiers[all_modifiers[i]];
+      } else if (usr[all_modifiers[i]]) {
+        usr[all_modifiers[i]] += modifiers[all_modifiers[i]];
+      }
   },
 
   /*

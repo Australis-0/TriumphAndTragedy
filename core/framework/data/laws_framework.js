@@ -233,5 +233,47 @@ module.exports = {
     } else {
       log.error(`getReformsInCategory() - The reform category specified, ${raw_reform_category}, is nonexistent!`);
     }
+  },
+
+  unlockReform: function (arg0_user, arg1_reform_category_name) {
+    //Convert from parameters
+    var user_id = arg0_user;
+    var reform_category = arg1_reform_category_name.trim().toLowerCase();
+
+    //Declare local instance variables
+    var reform_category_name = getReformCategory(reform_category, { return_key: true });
+    var reform_category_obj = getReformCategory(reform_category);
+    var usr = main.users[user_id];
+
+    //Current reform is decided based on ruling party
+    var all_reforms_in_category = Object.keys(reform_category_obj);
+    var chosen_reform = ["", -1000]; //[current_law, political_appeasement]
+
+    for (var i = 0; i < all_reforms_in_category.length; i++) {
+      var local_reform = reform_category_obj[all_reforms_in_category[i]];
+      var local_reform_appeasement = 0;
+
+      //Set local_reform_appeasement
+      if (local_reform.political_appeasement)
+        if (local_reform.political_appeasement[usr.government])
+          local_reform_appeasement = local_reform.political_appeasement[usr.government];
+
+      //Check political_appeasement
+      chosen_reform = (local_reform_appeasement > chosen_reform[1]) ?
+        [all_reforms_in_category[i], local_reform_appeasement] :
+        chosen_reform;
+    }
+
+    //Unlock current chosen_reform
+    var reform_obj = getReform(chosen_reform[0]);
+
+    usr.laws[reform_category_name] = chosen_reform[0];
+
+    //Apply effects
+    if (reform_obj.effects)
+      applyModifiers(reform_obj.effects);
+
+    //Push reform to available_reforms
+    usr.available_reforms.push(reform_category_name);
   }
 };
