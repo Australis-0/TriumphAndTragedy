@@ -1,4 +1,29 @@
 module.exports = {
+  calculateCulturalPercentage: function (arg0_user, arg1_culture) {
+    //Convert from parameters
+    var user_id = arg0_user;
+    var culture_name = arg1_culture;
+
+    //Declare local instance variables
+    var all_provinces = Object.keys(main.provinces);
+    var culture_obj = module.exports.getCulture(culture_name);
+    var raw_culture_name = module.exports.getCulture(culture_name, { return_key: true });
+    var total_culture_population = 0;
+    var usr = main.users[user_id];
+
+    //Iterate over all provincs controlled by the target user
+    for (var i = 0; i < all_provinces.length; i++)
+      if (main.provinces[all_provinces[i]].controller == user_id) {
+        var local_province = main.provinces[all_provinces[i]];
+
+        if (local_province.culture == raw_culture_name)
+          total_culture_population += local_province.population;
+      }
+
+    //Return percentage as number
+    return (total_culture_population/usr.population);
+  },
+
   generateCultureID: function () {
     //Declare local instance variables
     var local_id;
@@ -13,6 +38,39 @@ module.exports = {
         break;
       }
     }
+  },
+
+  /*
+    getAcceptedCultureProvinces() - Returns an array of province keys where the accepted culture is dominant
+    options: {
+      exclude_primary_culture: true/false - Whether or not to exclude the primary culture. Defaults to false
+    }
+  */
+  getAcceptedCultureProvinces: function (arg0_user, arg1_options) {
+    //Convert from parameters
+    var user_id = arg0_user;
+    var options = (arg1_options) ? arg1_options: {};
+
+    //Declare local instance variables
+    var accepted_culture_provinces = [];
+    var all_provinces = Object.keys(main.provinces);
+    var usr = main.users[user_id];
+
+    for (var i = 0; i < all_provinces.length; i++)
+      if (main.provinces[all_provinces[i]].controller == user_id) {
+        var local_province = main.provinces[all_provinces[i]];
+        var local_culture = getCulture(local_province.culture);
+
+        //Check if local_culture meets the prerequisites for being pushed
+        if (
+          local_culture.accepted_culture.includes(user_id) ||
+          (local_culture.primary_culture.includes(user_id) && !options.exclude_primary_culture)
+        )
+          accepted_culture_provinces.push(all_provinces[i]);
+      }
+
+    //Return statement
+    return accepted_culture_provinces;
   },
 
   /*
@@ -64,5 +122,28 @@ module.exports = {
 
     //Return key
     return (culture_exists[0]) ? culture_exists[1] : undefined;
+  },
+
+  getPrimaryCultureProvinces: function (arg0_user) {
+    //Convert from parameters
+    var user_id = arg0_user;
+
+    //Declare local instance variables
+    var all_provinces = Object.keys(main.provinces);
+    var primary_culture_provinces = [];
+    var usr = main.users[user_id];
+
+    for (var i = 0; i < all_provinces.length; i++)
+      if (main.provinces[all_provinces[i]].controller == user_id) {
+        var local_province = main.provinces[all_provinces[i]];
+        var local_culture = getCulture(local_province.culture);
+
+        //Check if local_culture meets the prerequisites for being pushed
+        if (local_culture.primary_culture.includes(user_id))
+          primary_culture_provinces.push(all_provinces[i]);
+      }
+
+    //Return statement
+    return primary_culture_provinces;
   }
 };
