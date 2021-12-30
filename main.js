@@ -81,6 +81,9 @@ FileManager.import("./game/country/create_country");
 FileManager.import("./game/culture/add_accepted_culture");
 FileManager.import("./game/culture/assimilate_all");
 FileManager.import("./game/culture/assimilate");
+FileManager.import("./game/culture/remove_accepted_culture");
+FileManager.import("./game/culture/rename_culture_adjective");
+FileManager.import("./game/culture/rename_culture");
 
 FileManager.import("./game/laws/enact_reform");
 
