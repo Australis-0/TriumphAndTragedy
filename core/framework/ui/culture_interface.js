@@ -10,19 +10,64 @@ module.exports = {
 
     //Declare tracker variables
     var accepted_culture_provinces = getAcceptedCultureProvinces(actual_id);
-    var all_accepted_cultures = getAcceptedCultures(actual_id, { exclude_primary_culture: true });
+    var accepted_cultures = getAcceptedCultures(actual_id, { exclude_primary_culture: true });
+    var all_accepted_cultures = getAcceptedCultures(actual_id);
     var all_primary_cultures = getPrimaryCultures(actual_id);
     var total_accepted_culture_population = calculateAcceptedCultureTotal(actual_id);
-    var sorted_culture_array = [];
+    var sorted_culture_array = getSortedCultures(actual_id);
     var total_unaccepted_population = calculateUnacceptedCultureTotal(actual_id);
-
-    //Initialise sorted_culture_array
-    
 
     //Initialise culture_string
     var culture_string = [];
 
     //Format culture_string
+    culture_string.push(`${config.icons.culture} Primary Culture(s): **${getCultureNames(all_primary_cultures)}**.`);
+    culture_string.push(`${config.icons.consciousness} Accepted Culture(s): ${getCultureNames(accepted_cultures)}`);
+    culture_string.push("");
+    culture_string.push(`${config.icons.political_capital} Political Capital: **${parseNumber(usr.modifiers.political_capital)}**`);
 
+    if (usr.provinces - accepted_culture_provinces.length > 0)
+      culture_string.push(`${config.icons.population} We have **${parseNumber(usr.provinces - accepted_culture_provinces.length)}** non-accepted provinces with a total population of **${parseNumber(total_unaccepted_population)}**, of which we are receiving just **${printPercentage(usr.modifiers.non_core_manpower)}** of in manpower.`);
+
+    culture_string.push("");
+    culture_string.push(config.localisation.divider);
+    culture_string.push("");
+
+    for (var i = 0; i < sorted_culture_array.length; i++) {
+      var culture_description = "";
+      var is_accepted_culture = accepted_cultures.includes(sorted_culture_array[i]);
+      var is_primary_culture = all_primary_cultures.includes(sorted_culture_array[i]);
+
+      if (is_primary_culture)
+        culture_description = `our primary culture.`;
+
+      culture_description = (is_accepted_culture) ?
+        `an accepted culture.` :
+        `an unaccepted culture. Either assimilate their provinces in **[View Population]**, or add them as an accepted culture for **${parseNumber(config.defines.politics.accepted_culture_cost)}** ${config.icons.political_capital} Political Capital.`;
+
+      culture_string.push(`**${printPercentage(calculateCulturalPercentage(sorted_sorted_culture_array[i]))}** of our population, or **${parseNumber(getCultureProvinces(actual_id, sorted_culture_array[i]))}** of our provinces identify as **${getCulture(sorted_culture_array).adjective}**, ${culture_description}`);
+    }
+
+    culture_string.push("");
+    culture_string.push(config.localisation.divider);
+
+    //Format cultural integrations
+    if (usr.cultural_integrations.length > 0) {
+      for (var i = 0; i < usr.cultural_integrations.length; i++)
+        culture_string.push(`We are currently integrating **${getCulture(usr.cultural_integrations[i].culture_id).adjective}** culture into our society. Our advisors estimate that it will take **${parseNumber(usr.cultural_integrations[i].time_remaining)}** more turn(s) before they are fully integrated.`);
+    } else {
+      culture_string.push(`_We are currently not integrating any cultures into our societal fabric._`);
+      culture_string.push("");
+      culture_string.push(`**[Add Accepted Culture]** for ${config.icons.political_capital} **${parseNumber(config.defines.politics.accepted_culture_cost)}** Political Capital.`);
+      culture_string.push("");
+      culture_string.push(`**[Assimilate All]** ¦ **[View Population]**`);
+    }
+
+    //Return statement
+    return splitEmbed(culture_string, {
+      title: "[Back] ¦ [Jump To Page] ¦ Culture:",
+      title_pages: true,
+      fixed_width: true
+    });
   }
 };

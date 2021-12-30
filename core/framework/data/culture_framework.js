@@ -238,6 +238,20 @@ module.exports = {
     return (culture_exists[0]) ? culture_exists[1] : undefined;
   },
 
+  getCultureNames: function (arg0_cultures) {
+    //Convert from parameters
+    var culture_list = getList(arg0_cultures);
+
+    //Declare local instance variable
+    var name_list = [];
+
+    for (var i = 0; i < culture_list.length; i++)
+      name_list.push(getCulture(culture_list[i]).name);
+
+    //Return statement
+    return name_list;
+  },
+
   //getCultures() - Returns an array of keys for all cultures inside a given user's controlled territory
   getCultures: function (arg0_user) {
     //Convert from parameters
@@ -259,6 +273,29 @@ module.exports = {
 
     //Return statement
     return culture_list;
+  },
+
+  getCultureProvinces: function (arg0_user, arg1_culture) {
+    //Convert from parameters
+    var user_id = arg0_user;
+    var culture_name = arg1_culture;
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var all_provinces = Object.keys(main.provinces);
+    var province_list = [];
+
+    //Parse through all provinces the user controls for unique cultures
+    for (var i = 0; i < all_provinces.length; i++) {
+      var local_province = main.provinces[all_provinces[i]];
+
+      if (local_province.controller == actual_id)
+        if (local_province.culture == culture_name)
+          province_list.push(all_provinces[i]);
+    }
+
+    //Return statement
+    return province_list;
   },
 
   getPrimaryCultureProvinces: function (arg0_user) {
