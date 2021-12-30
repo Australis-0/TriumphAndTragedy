@@ -238,6 +238,29 @@ module.exports = {
     return (culture_exists[0]) ? culture_exists[1] : undefined;
   },
 
+  //getCultures() - Returns an array of keys for all cultures inside a given user's controlled territory
+  getCultures: function (arg0_user) {
+    //Convert from parameters
+    var user_id = arg0_user;
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var all_provinces = Object.keys(main.provinces);
+    var culture_list = [];
+
+    //Parse through all provinces the user controls for unique cultures
+    for (var i = 0; i < all_provinces.length; i++) {
+      var local_province = main.provinces[all_provinces[i]];
+
+      if (local_province.controller == actual_id)
+        if (!culture_list.includes(local_province.culture))
+          culture_list.push(local_province.culture);
+    }
+
+    //Return statement
+    return culture_list;
+  },
+
   getPrimaryCultureProvinces: function (arg0_user) {
     //Convert from parameters
     var user_id = arg0_user;
@@ -282,4 +305,28 @@ module.exports = {
     //Return statement#
     return all_primary_cultures;
   },
+
+  getSortedCultures: function (arg0_user) {
+    //Convert from parameters
+    var user_id = arg0_user;
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var culture_list = []; //[culture_id, population]
+    var user_cultures = module.exports.getCultures(actual_id);
+
+    //Initialise culture_list array
+    for (var i = 0; i < user_cultures.length; i++)
+      culture_list.push({
+        id: user_cultures[i],
+        percentage_population: calculateCulturalPercentage(actual_id, user_cultures[i]),
+        total_population: calculateCulturalTotal(actual_id, user_cultures[i])
+      });
+
+    //Sort culture_list array
+    culture_list = culture_list.sort((a, b) => b.total_population - a.total_population);
+
+    //Return statement
+    return culture_list;
+  }
 };
