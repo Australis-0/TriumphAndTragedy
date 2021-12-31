@@ -443,6 +443,14 @@ module.exports = {
       }
     }
 
+    //Politics page handler
+    {
+      //Culture
+      {
+
+      }
+    }
+
     //Pops page handler
     {
       if (population_pages.includes(game_obj.page)) {

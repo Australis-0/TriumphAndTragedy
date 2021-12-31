@@ -13,6 +13,11 @@ module.exports = {
     "founding_map",
     "map"
   ],
+  politics_pages: [
+    "cultures",
+    "politics",
+    "reforms"
+  ],
   population_pages: [
     "population"
   ],
@@ -127,8 +132,14 @@ module.exports = {
           .setEmoji("716812861514711040"),
         new Discord.MessageButton()
           .setCustomId("politics_btn")
-          .setLabel("𝐏𝐨𝐥𝐢𝐭𝐢𝐜𝐬")
-          .setStyle("SECONDARY")
+          .setLabel((!politics_pages.includes(game_obj.page)) ?
+            "𝐏𝐨𝐥𝐢𝐭𝐢𝐜𝐬" :
+            " ͟𝐏͟𝐨͟𝐥͟𝐢͟𝐭͟𝐢͟𝐜͟𝐬͟"
+          )
+          .setStyle((!politics_pages.includes(game_obj.page)) ?
+            "SECONDARY" :
+            "PRIMARY"
+          )
           .setEmoji("732730754911436830")
       );
     const country_row_2 = new Discord.MessageActionRow()
@@ -248,6 +259,15 @@ module.exports = {
           module.exports.initialiseTopbar(user_id);
         }
         printEconomy(user_id);
+
+        break;
+      case "politics_btn":
+        //Print out politics menu
+        if (game_obj.page != "politics") {
+          game_obj.page = "politics";
+          module.exports.initialiseTopbar(user_id);
+        }
+        printPolitics(user_id);
 
         break;
       case "population_btn":
