@@ -204,5 +204,38 @@ module.exports = {
         printError(game_obj.id, `You can't pass reforms as a non-state actor! Get your government out of anarchy first before attempting to pass anything.`) :
         printError(game_obj.id, `You can't pass reforms as an **${(current_government.name) ? current_government.name : usr.government}**! Try managing your stability the good-old fashioned way instead.`);
     }
+  },
+
+  initialiseEnactReform: function (arg0_user) {
+    //Convert from parameters
+    var user_id = arg0_user;
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var game_obj = getGameObject(user_id);
+    var usr = main.users[actual_id];
+
+    //Initialise visual prompt
+    visualPrompt(game_obj.alert_embed, user_id, {
+      title: `Enact Reform:`,
+      prompts: [
+        [`What is the name of the reform you wouid like to enact?\n\nType **[View Reforms]** for a list of valid reforms.`, "string"]
+      ]
+    },
+    function (arg) {
+      module.exports.enactReform(user_id, arg[0]);
+    },
+    function (arg) {
+      switch (arg) {
+        case "view reforms":
+          createPageMenu(game_obj.middle_embed, {
+            embed_pages: printReforms(user_id),
+            user: game_obj.user
+          });
+          return true;
+
+          break;
+      }
+    });
   }
 };

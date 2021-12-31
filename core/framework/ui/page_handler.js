@@ -448,7 +448,6 @@ module.exports = {
       switch (game_obj.page) {
         case "culture":
           //Button handler
-
           //[Add Accepted Culture]
           if (input == "add accepted culture")
             initialiseAddAcceptedCulture(user_id);
@@ -487,6 +486,51 @@ module.exports = {
               user: game_obj.user
             });
           }
+
+          break;
+        case "reforms":
+          //Button handler
+          //[Back]
+          if (input == "back") {
+            game_obj.page = "politics";
+            printPolitics(game_obj.user);
+          }
+
+          //[Enact (Reform Name)]
+          if (input.startsWith("enact ")) {
+            var law_to_enact = input.replace("enact ", "");
+            enactReform(user_id, law_to_enact);
+          } else if (input == "enact") {
+            initialiseEnactReform(game_obj.user);
+          }
+
+          //[Jump To Page]
+          if (input == "jump to page")
+            visualPrompt(game_obj.alert_embed, user_id, {
+              title: `Jump To Page:`,
+              prompts: [
+                [`Which page would you like to jump to?`, "number", { min: 1, max: printReforms(game_obj.user).length }]
+              ]
+            },
+            function (arg) {
+              createPageMenu(game_obj.middle_embed, {
+                embed_pages: printReforms(game_obj.user),
+                page: arg[0] - 1,
+                user: game_obj.user
+              });
+            });
+
+          break;
+        default:
+          //Button handler
+          //[Coup]
+          if (input == "coup")
+            initialiseCoup(user_id);
+
+          //[Support Party]
+          //[View Cultures]
+          //[View Reforms]
+          //[Raise Stability]
 
           break;
       }
