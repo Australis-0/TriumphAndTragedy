@@ -521,7 +521,7 @@ module.exports = {
             });
 
           break;
-        default:
+        default: //[WIP] - Add remaining buttons
           //Button handler
           //[Coup]
           if (input == "coup")
