@@ -33,6 +33,7 @@ FileManager.import("./framework/data/goods_framework");
 FileManager.import("./framework/data/government_framework");
 FileManager.import("./framework/data/laws_framework");
 FileManager.import("./framework/data/modifier_framework");
+FileManager.import("./framework/data/politics_framework");
 FileManager.import("./framework/data/pop_framework");
 FileManager.import("./framework/data/tech_framework");
 FileManager.import("./framework/data/trade_framework");
