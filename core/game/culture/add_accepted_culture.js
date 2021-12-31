@@ -40,5 +40,36 @@ module.exports = {
     } else {
       printError(game_obj.id, `The culture you have specified could not be found anywhere in the world! Type **[View Cultures]** to see a list of all valid cultures.`);
     }
+  },
+
+  initialiseAddAcceptedCulture: function (arg0_user) {
+    //Convert from parameters
+    var user_id = arg0_user;
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var game_obj = getGameObject(user_id);
+    var usr = main.users[actual_id];
+
+    //Initialise visual prompt
+    visualPrompt(game_obj.alert_embed, user_id, {
+      title: "Add A New Accepted Culture:",
+      prompts: [`Which culture would you like to begin integrating into your nation's societal fabric?\n\nType **[View Cultures]** for a list of valid cultures.`, "string"]
+    },
+    function (arg) {
+      module.exports.addAcceptedCulture(user_id, arg[0]);
+    },
+    function (arg) {
+      switch (arg) {
+        case "view cultures":
+          createPageMenu(game_obj.middle_embed, {
+            embed_pages: printCultures(user_id),
+            user: game_obj.user
+          });
+          return true;
+
+          break;
+      }
+    });
   }
 };

@@ -445,9 +445,50 @@ module.exports = {
 
     //Politics page handler
     {
-      //Culture
-      {
+      switch (game_obj.page) {
+        case "culture":
+          //Button handler
 
+          //[Add Accepted Culture]
+          if (input == "add accepted culture")
+            initialiseAddAcceptedCulture(user_id);
+
+          //[Assimilate ALl]
+          if (input == "assimilate all")
+            initialiseAssimilateAll(user_id);
+
+          //[Back]
+          if (input == "back") {
+            printPolitics(user_id);
+            game_obj.page = "politics";
+          }
+
+          //[Jump To Page]
+          if (input == "jump to page")
+            visualPrompt(game_obj.alert_embed, user_id, {
+              title: `Jump To Page:`,
+              prompts: [
+                [`Which page would you like to jump to?`, "number", { min: 1, max: printCultures(game_obj.user).length }]
+              ]
+            },
+            function (arg) {
+              createPageMenu(game_obj.middle_embed, {
+                embed_pages: printCultures(game_obj.user),
+                page: arg[0] - 1,
+                user: game_obj.user
+              });
+            });
+
+          //[View Population]
+          if (input == "view population") {
+            game_obj.page = "provinces_list";
+            createPageMenu(game_obj.middle_embed, {
+              embed_pages: printProvinces(game_obj.user),
+              user: game_obj.user
+            });
+          }
+
+          break;
       }
     }
 

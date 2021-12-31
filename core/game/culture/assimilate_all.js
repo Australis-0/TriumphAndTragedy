@@ -68,5 +68,39 @@ module.exports = {
     } else {
       printError(game_obj.id, `You must have a country before you can begin assimilating other cultures into your fold!`);
     }
+  },
+
+  initialiseAssimilateAll: function (arg0_user) {
+    //Convert from parameters
+    var user_id = arg0_user;
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var game_obj = getGameObject(user_id);
+    var usr = main.users[actual_id];
+
+    //Initialise visual prompt
+    visualPrompt(game_obj.alert_embed, user_id, {
+      title: `Assimilate All Provinces of a Given Culture:`,
+      prompts: [
+        [`Which culture would you like to assimilate?\n\nType **[View Cultures]** for a list of valid cultures.`, "string"],
+        [`Which culture would you like to assimilate them into?\n\nType **[View Cultures]** for a list of valid cultures.`, "string"]
+      ]
+    },
+    function (arg) {
+      module.exports.assimilateAll(user_id, arg[0], arg[1]);
+    },
+    function (arg) {
+      switch (arg) {
+        case "view cultures":
+          createPageMenu(game_obj.middle_embed, {
+            embed_pages: printCultures(user_id),
+            user: game_obj.user
+          });
+          return true;
+
+          break;
+      }
+    });
   }
 };
