@@ -353,21 +353,9 @@ module.exports = {
 
       //Stability
       {
-        var government_stability_modifier = 0;
+        var government_stability_modifier = getGovernmentStabilityModifier(actual_id);
+        var low_party_popularity = false;
         var popularity_stability_modifier = usr.politics[usr.government].popularity*0.75;
-        var ruling_government_obj = config.governments[usr.government];
-
-        if (ruling_government_obj.effect.stability_modifier)
-          government_stability_modifier = ruling_government_obj.effect.stability_modifier;
-
-        if (ruling_government_obj.effect.add_expiry_effect.stability_modifier)
-          if (ruling_government_obj.effect.add_expiry_effect.limit.year_is_less_than) {
-            if (main.date.year < ruling_government_obj.effect.add_expiry_effect.limit.year_is_less_than)
-              government_stability_modifier = ruling_government_obj.effect.add_expiry_effect.stability_modifier;
-          } else if (ruling_government_obj.effect.add_expiry_effect.limit.year_is_greater_than) {
-            if (main.date.year > ruling_government_obj.effect.add_expiry_effect.limit.year_is_greater_than)
-              government_stability_modifier = ruling_government_obj.effect.add_expiry_effect.stability_modifier;
-          }
 
         //Calculate stability
         usr.modifiers.stability = Math.ceil(
@@ -384,24 +372,30 @@ module.exports = {
         usr.modifiers.stability = Math.max(usr.modifiers.stability, 0);
 
         if (usr.country_age > 10) {
+          //Check for dice roll and low party popularity
           var dice_roll = randomNumber(0, 100);
+
+          for (var i = 0; i < all_governments.length; i++)
+            if (usr.politics[all_governments[i]].popularity >= 0.30)
+              low_party_popularity = true;
 
           if (dice_roll > usr.modifiers.stability + config.defines.politics.revolt_threshold) {
             //Fetch list of valid governments to coup to
             var coup_list = JSON.parse(JSON.stringify(usr.available_governments));
             removeElement(coup_list, usr.government);
 
-            if (coup_list.length > 0) {
-              var new_government = randomElement(coup_list);
+            if (low_party_popularity)
+              if (coup_list.length > 0) {
+                var new_government = randomElement(coup_list);
 
-              //Set new government
-              setGovernment(actual_id, new_government);
+                //Set new government
+                setGovernment(actual_id, new_government);
 
-              //Reset actions and tax rate
-              usr.actions = 0;
-              if (!options.is_simulation)
-                usr.tax_rate = 0;
-            }
+                //Reset actions and tax rate
+                usr.actions = 0;
+                if (!options.is_simulation)
+                  usr.tax_rate = 0;
+              }
           }
         }
       }

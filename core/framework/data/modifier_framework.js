@@ -63,6 +63,33 @@ module.exports = {
     return modifier_dump;
   },
 
+  getGovernmentStabilityModifier: function (arg0_user) {
+    //Convert from parameters
+    var user_id = arg0_user;
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var usr = main.users[user_id];
+
+    var government_stability_modifier = 0;
+    var ruling_government_obj = config.governments[usr.government];
+
+    if (ruling_government_obj.effect.stability_modifier)
+      government_stability_modifier = ruling_government_obj.effect.stability_modifier;
+
+    if (ruling_government_obj.effect.add_expiry_effect.stability_modifier)
+      if (ruling_government_obj.effect.add_expiry_effect.limit.year_is_less_than) {
+        if (main.date.year < ruling_government_obj.effect.add_expiry_effect.limit.year_is_less_than)
+          government_stability_modifier = ruling_government_obj.effect.add_expiry_effect.stability_modifier;
+      } else if (ruling_government_obj.effect.add_expiry_effect.limit.year_is_greater_than) {
+        if (main.date.year > ruling_government_obj.effect.add_expiry_effect.limit.year_is_greater_than)
+          government_stability_modifier = ruling_government_obj.effect.add_expiry_effect.stability_modifier;
+      }
+
+    //Return statement
+    return government_stability_modifier;
+  },
+
   /*
     getModifier() - Gets either the modifier object or key.
     options: {
@@ -326,5 +353,37 @@ module.exports = {
 
     //Return statement
     return modifier_string.join("\n");
+  },
+
+  parseStabilityModifier: function (arg0_user) { //[WIP] - Finish parsing stability string
+    //Convert from parameters
+    var user_id = arg0_user;
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var usr = main.users[actual_id];
+
+    //Declare stability_string
+    var stability_string = [];
+
+    //Same variable calculation from turn_framework.js
+    var government_stability_modifier = module.exports.getGovernmentStabilityModifier(actual_id);
+    var popularity_stability_modifier = usr.politics[usr.government].popularity*0.75;
+
+    //Print out all individual modifiers first
+    if (government_stability_modifier != 0)
+      stability_string.push(`• **${printPercentage(government_stability_modifier, { display_prefix: true })}** due to ${config.governments[usr.government].name} being in power.`);
+    if (usr.tax_rate > 0)
+      stability_string.push(`• **${printPercentage(usr.tax_rate*-1, { display_prefix: true })}** from current tax rate.`);
+    if (returnSafeNumber(usr.boosted_stability) > 0)
+      stability_string.push(`• **${printPercentage(usr.boosted_stability, { display_prefix: true })}** from boosted stability. (**-1%** per turn).`);
+    if (usr.modifiers.overextension != 0)
+      stability_string.push(`• **${printPercentage(Math.ceil(usr.modifiers.overextension*-1, { display_prefix: true }))}** from overextension.`);
+
+    //Print base stability
+    stability_string.push(`• **${printPercentage(usr.modifiers.stability_modifier, { display_prefix: true })}** base stability modifier.`);
+
+    //Return statement
+    return stability_string.join("\n");
   }
 };
