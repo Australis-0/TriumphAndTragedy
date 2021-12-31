@@ -15,7 +15,14 @@ module.exports = {
       if (usr.modifiers[all_modifiers[i]]) {
         usr.modifiers[all_modifiers[i]] += modifiers[all_modifiers[i]];
       } else if (usr[all_modifiers[i]]) {
-        usr[all_modifiers[i]] += modifiers[all_modifiers[i]];
+        var is_government = Object.keys(config.governments).includes(all_modifiers[i]);
+        var modifier_value = modifiers[all_modifiers[i]];
+
+        if (is_government) {
+          usr.politics[all_modifiers[i]].drift += modifier_value;
+        } else {
+          usr[all_modifiers[i]] += modifier_value;
+        }
       }
   },
 

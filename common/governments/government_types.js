@@ -32,6 +32,7 @@ config.governments = {
       maximum_manpower: 0.10,
       maximum_tax_rate: 0.65,
       civilian_actions: 0.10,
+      reform_desire_gain: -0.1,
       add_expiry_effect: {
         limit: {
           year_is_less_than: 1815

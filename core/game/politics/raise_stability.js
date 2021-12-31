@@ -14,10 +14,10 @@ module.exports = {
         //Boost stability
         usr.modifiers.political_capital -= config.defines.politics.stability_cost;
         usr.boosted_stability = returnSafeNumber(
-          usr.boosted_stability + 0.10,
+          usr.boosted_stability + config.defines.politics.stability_boost,
           0.10
         );
-        usr.modifiers.stability += 0.10;
+        usr.modifiers.stability += config.defines.politics.stability_boost;
 
         //Print user feedback
         printAlert(game_obj.id, `${config.icons.stability} You have raised your stability by **${printPercentage(config.defines.politics.stability_boost)}**! (-1% per turn).`);

@@ -53,10 +53,13 @@ module.exports = {
           local_market_good.amount_sold = Math.ceil(local_market_good.amount_sold*0.5);
         }
       }
+
+      //Increment global round-count
+      main.global.round_count++;
     }
   },
 
-  nextTurn: function (arg0_user, arg1_options) { //[WIP] - Add newspaper section later
+  nextTurn: function (arg0_user, arg1_options) { //[WIP] - Add newspaper section later, subtract political capital by vassal maintenance each turn
     //Convert from parameters
     var user_id = arg0_user;
     var options = (arg1_options) ? arg1_options : {};
@@ -71,6 +74,7 @@ module.exports = {
     var all_cities = getCities(actual_id);
     var all_expeditions = Object.keys(usr.expeditions);
     var all_good_names = getGoods({ return_names: true });
+    var all_governments = Object.keys(config.governments);
     var all_pops = Object.keys(config.pops);
 
     //Modifier and tracker variable processing
@@ -84,6 +88,10 @@ module.exports = {
 
       //Population modifiers/trackers
       usr.population = getPopulation(actual_id);
+
+      //Stability modifiers/trackers
+      if (returnSafeNumber(usr.stability_boost) > 0)
+        usr.stability_boost -= 0.01;
     }
 
     //Budget processing
@@ -182,7 +190,55 @@ module.exports = {
 
     //Politics processing
     {
-      //Check to see if a coup has been initiated
+      //Political Discontent Modifiers - Keep at top, applies political modifiers
+      {
+        //Subtract first to level the playing field
+        usr.modifiers.political_capital_gain -= usr.political_capital_gain_modifier;
+        usr.modifiers.reform_desire_gain -= usr.political_reform_desire_modifier;
+        usr.modifiers.stability_modifier -= usr.political_instability_modifier;
+
+        usr.political_capital_gain_modifier = 0;
+        usr.political_reform_desire_modifier = 0;
+        usr.political_instability_modifier = 0;
+
+        //Negatively impacts stability and political capital gain; only begins impacting if party discontent is over 25.
+
+        for (var i = 0; i < all_governments.length; i++) {
+          var government_obj = config.governments[all_governments[i]];
+          var local_government = usr.politics[all_governments[i]];
+
+          if (local_government.popularity > 0)
+            if (local_government.discontent > 25) {
+              usr.political_capital_gain_modifier += -5*local_government.popularity*local_government.discontent;
+              usr.political_reform_desire_modifier += 0.2*local_government.popularity*local_government.discontent;
+              usr.political_instability_modifier += 35*local_government.popularity*local_government.discontent;
+            } else {
+              usr.political_capital_gain_modifier += 5*local_government.popularity*local_government.discontent;
+              usr.political_reform_desire_modifier += -0.2*local_government.popularity*local_government.discontent;
+              usr.political_instability_modifier += -35*local_government.popularity*local_government.discontent;
+            }
+        }
+
+        //Stability-cap, cap before re-adding
+        usr.political_instability_modifier = Math.min(usr.political_instability_modifier, -35);
+        usr.political_instability_modifier = Math.max(usr.political_instability_modifier, 50);
+
+        usr.political_capital_gain_modifier = Math.min(usr.political_capital_gain_modifier, 0);
+
+        //Reapply modifiers
+        usr.modifiers.political_capital_gain += usr.political_capital_gain_modifier;
+        usr.modifiers.reform_desire_gain += usr.political_reform_desire_modifier;
+        usr.modifiers.stability_modifier += usr.political_instability_modifier;
+
+        //Institute cap
+        usr.modifiers.political_capital_gain = Math.min(usr.modifiers.political_capital_gain, 5);
+        usr.modifiers.political_capital_gain = Math.max(usr.modifiers.political_capital_gain, 200);
+
+        usr.modifiers.reform_desire_gain = Math.min(usr.modifiers.reform_desire_gain, -0.25);
+        usr.modifiers.reform_desire_gain = Math.max(usr.modifiers.reform_desire_gain, 0.2);
+      }
+
+      //Coup
       if (usr.coup_this_turn != "") {
         usr.tax_rate = 0;
         setGovernment(actual_id, usr.coup_this_turn);
@@ -192,6 +248,163 @@ module.exports = {
         usr.coup_this_turn = "";
       }
 
+      //Party drift
+      {
+        var most_popular_party = [0, ""]; //[percentage, party_name];
+        var total_change = 0;
+
+        for (var i = 0; i < all_governments.length; i++) {
+          var local_government = usr.politics[all_governments[i]];
+
+          if (local_government.popularity > most_popular_party[0])
+            most_popular_party = [local_government.popularity, all_governments[i]];
+
+          if (usr.available_governments.includes(all_governments[i])) {
+            total_change += local_government.drift;
+            local_government.popularity += local_government.drift;
+          }
+        }
+
+        var most_popular_party_obj = usr.politics[most_popular_party[1]];
+
+        //Make sure all percentages equal 100%
+        var total_percentage = 0;
+
+        for (var i = 0; i < all_governments.length; i++)
+          total_percentage += usr.politics[all_governments[i]].popularity;
+
+        if (total_percentage < 100) {
+          most_popular_party_obj.popularity += (1 - total_percentage);
+        } else if (total_percentage > 100) {
+          most_popular_party_obj.popularity += (total_percentage - 1);
+        }
+
+        most_popular_party_obj.popularity = Math.max(most_popular_party_obj.popularity, 0);
+
+        //Reconduct check after processing
+        for (var i = 0; i < all_governments.length; i++)
+          if (local_government.popularity > most_popular_party[0])
+            most_popular_party = [usr.politics[all_governments[i]].popularity, all_governments[i]];
+
+        //Conduct election if more than 5 turns have passed since the last one
+        if (main.global.round_count >= usr.last_election + 5) {
+          var election_winner = most_popular_party[0];
+
+          if (config.governments[usr.government].effect.has_elections)
+            setGovernment(actual_id, election_winner);
+
+          //Set last election
+          usr.last_election = main.global.round_count;
+        }
+
+        //Reset political parties if anarchy
+        if (config.governments[usr.government].is_anarchy)
+          for (var i = 0; i < all_governments.length; i++)
+            if (!config.governments[all_governments[i]].is_anarchy)
+              usr.politics[all_governments[i]].popularity = 0;
+
+        usr.politics[usr.government].popularity = 1;
+      }
+
+      //Political Capital
+      {
+        usr.modifiers.political_capital += usr.modifiers.political_capital_gain;
+
+        //Accepted cultures maintenance for political capital
+        usr.modifiers.political_capital -= getAcceptedCultures(actual_id)*config.defines.politics.accepted_culture_maintenance_cost;
+
+        //Round off political_capital
+        usr.modifiers.political_capital = Math.round(usr.modifiers.political_capital);
+      }
+
+      //Reform Desire
+      {
+        var total_reform_desire_gain = usr.modifiers.reform_desire_gain;
+
+        for (var i = 0; i < all_governments.length; i++) {
+          var government_obj = config.governments[all_governments[i]];
+          var local_government = usr.politics[all_governments[i]];
+
+          if (local_government.popularity > 0)
+            if (government_obj.effect.reform_desire_gain)
+              total_reform_desire_gain += government_obj.effect.reform_desire_gain*local_government.popularity;
+        }
+
+        total_reform_desire_gain = Math.min(total_reform_desire_gain, 0.09); //9% cap
+
+        usr.modifiers.reform_desire += total_reform_desire_gain;
+
+        //Cap off reform desire at 0-100%
+        usr.modifiers.reform_desire = Math.max(usr.modifiers.reform_desire, 0);
+        usr.modifiers.reform_desire = Math.min(usr.modifiers.reform_desire, 1);
+
+        //If no reforms are unlocked, reset reform_desire
+        if (usr.available_reforms.length == 0)
+          usr.modifiers.reform_desire = 0;
+
+        //Check if reform desire is at 100%, if so, add discontent to all parties with a popularity greater than 0%
+        for (var i = 0; i < all_governments.length; i++) {
+          var local_government = usr.politics[all_governments[i]];
+
+          if (local_government.popularity > 0)
+            local_government.discontent = Math.min(local_government.discontent + 10, 100);
+        }
+      }
+
+      //Stability
+      {
+        var government_stability_modifier = 0;
+        var popularity_stability_modifier = usr.politics[usr.government].popularity*0.75;
+        var ruling_government_obj = config.governments[usr.government];
+
+        if (ruling_government_obj.effect.stability_modifier)
+          government_stability_modifier = ruling_government_obj.effect.stability_modifier;
+
+        if (ruling_government_obj.effect.add_expiry_effect.stability_modifier)
+          if (ruling_government_obj.effect.add_expiry_effect.limit.year_is_less_than) {
+            if (main.date.year < ruling_government_obj.effect.add_expiry_effect.limit.year_is_less_than)
+              government_stability_modifier = ruling_government_obj.effect.add_expiry_effect.stability_modifier;
+          } else if (ruling_government_obj.effect.add_expiry_effect.limit.year_is_greater_than) {
+            if (main.date.year > ruling_government_obj.effect.add_expiry_effect.limit.year_is_greater_than)
+              government_stability_modifier = ruling_government_obj.effect.add_expiry_effect.stability_modifier;
+          }
+
+        //Calculate stability
+        usr.modifiers.stability = Math.ceil(
+          popularity_stability_modifier +
+          government_stability_modifier -
+          usr.tax_rate -
+          usr.modifiers.overextension +
+          usr.boosted_stability +
+          usr.modifiers.stability_modifier
+        );
+
+        //Cap off stability
+        usr.modifiers.stability = Math.min(usr.modifiers.stability, 1);
+        usr.modifiers.stability = Math.max(usr.modifiers.stability, 0);
+
+        if (usr.country_age > 10) {
+          var dice_roll = randomNumber(0, 100);
+
+          if (dice_roll > usr.modifiers.stability + config.defines.politics.revolt_threshold) {
+            //Fetch list of valid governments to coup to
+            var coup_list = JSON.parse(JSON.stringify(usr.available_governments));
+            removeElement(coup_list, usr.government);
+
+            if (coup_list.length > 0) {
+              var new_government = randomElement(coup_list);
+
+              //Set new government
+              setGovernment(actual_id, new_government);
+
+              //Reset actions and tax rate
+              usr.actions = 0;
+              if (!options.is_simulation)
+                usr.tax_rate = 0;
+            }
+          }
+        }
+      }
     }
 
     //Resources and RGO

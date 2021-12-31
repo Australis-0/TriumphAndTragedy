@@ -228,9 +228,13 @@ module.exports = {
         default:
           //Check if effect_name is a building category or not
           var is_building_category = Object.keys(config.buildings).includes(effect_name);
+          var is_government = Object.keys(config.governments).includes(effect_name);
 
           if (is_building_category) {
             usr.modifiers[`${effect_name}_building_slots`] += effect_value[0];
+          } else if (is_government) {
+            if (usr.politics[effect_name])
+              usr.politics[effect_name].drift += effect_value[0];
           } else {
             //Process all other effects here
             usr.modifiers[effect_name] += effect_value[0];
