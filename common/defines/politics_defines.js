@@ -16,5 +16,8 @@ config.defines.politics = {
   political_capital_gain: 10, //All costs not labelled in this category are in political capital
   reform_cost: 25, //PC cost for attempting a reform
   revolt_threshold: 0.40, //How low should the stability threshold be before coups are possible? Number is a %
+  stability_boost: 0.10, //How much should the stability boost amount be?
   stability_cost: 75, //PC cost for boosting stability 10%
+  support_boost: 0.10, //How much should the political boost for supporting a party be?
+  support_cost: 50 //PC cost for supporting a party
 };
