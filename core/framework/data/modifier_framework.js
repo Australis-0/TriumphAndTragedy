@@ -77,14 +77,15 @@ module.exports = {
     if (ruling_government_obj.effect.stability_modifier)
       government_stability_modifier = ruling_government_obj.effect.stability_modifier;
 
-    if (ruling_government_obj.effect.add_expiry_effect.stability_modifier)
-      if (ruling_government_obj.effect.add_expiry_effect.limit.year_is_less_than) {
-        if (main.date.year < ruling_government_obj.effect.add_expiry_effect.limit.year_is_less_than)
-          government_stability_modifier = ruling_government_obj.effect.add_expiry_effect.stability_modifier;
-      } else if (ruling_government_obj.effect.add_expiry_effect.limit.year_is_greater_than) {
-        if (main.date.year > ruling_government_obj.effect.add_expiry_effect.limit.year_is_greater_than)
-          government_stability_modifier = ruling_government_obj.effect.add_expiry_effect.stability_modifier;
-      }
+    if (ruling_government_obj.effect.add_expiry_effect)
+      if (ruling_government_obj.effect.add_expiry_effect.stability_modifier)
+        if (ruling_government_obj.effect.add_expiry_effect.limit.year_is_less_than) {
+          if (main.date.year < ruling_government_obj.effect.add_expiry_effect.limit.year_is_less_than)
+            government_stability_modifier = ruling_government_obj.effect.add_expiry_effect.stability_modifier;
+        } else if (ruling_government_obj.effect.add_expiry_effect.limit.year_is_greater_than) {
+          if (main.date.year > ruling_government_obj.effect.add_expiry_effect.limit.year_is_greater_than)
+            government_stability_modifier = ruling_government_obj.effect.add_expiry_effect.stability_modifier;
+        }
 
     //Return statement
     return government_stability_modifier;

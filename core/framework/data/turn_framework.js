@@ -401,6 +401,48 @@ module.exports = {
       }
     }
 
+    //Pop processing
+    {
+      //Cultural assimilations
+      {
+        var assimilations_to_remove = [];
+        var cultural_integrations_to_remove = [];
+
+        //Cultural integrations
+        for (var i = 0; i < usr.cultural_integrations.length; i++) {
+          usr.cultural_integrations[i].time_remaining--;
+
+          if (usr.cultural_integrations[i].time_remaining <= 0) {
+            var local_culture = getCulture(usr.cultural_integrations[i].culture_id);
+
+            local_culture.accepted_culture.push(actual_id);
+            cultural_integrations_to_remove.push(usr.cultural_integrations[i]);
+          }
+        }
+
+        //Remove cultural integrations
+        for (var i = 0; i < cultural_integrations_to_remove.length; i++)
+          removeElement(usr.cultural_integrations, cultural_integrations_to_remove[i]);
+
+        //Province assimilations
+        for (var i = 0; i < usr.assimilations.length; i++) {
+          var local_province = getProvince(usr.assimilations[i].province_id);
+
+          usr.assimilations[i].time_remaining--;
+
+          if (usr.assimilations[i].time_remaining <= 0)
+            if (local_province.controller == actual_id) {
+              local_province.culture = usr.assimilations[i].culture_id;
+              assimilations_to_remove.push(usr.assimilations[i]);
+            }
+        }
+
+        //Remove assimilations
+        for (var i = 0; i < assimilations_to_remove.length; i++)
+          removeElement(usr.assimilations, assimilations_to_remove[i]);
+      }
+    }
+
     //Resources and RGO
     {
       //Reset all good modifiers first so that local RGO buffs from cities can be applied

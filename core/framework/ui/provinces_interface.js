@@ -99,6 +99,7 @@ module.exports = {
     var usr = main.users[actual_id];
 
     //Declare local tracker variables
+    var accepted_cultures = getAcceptedCultures(actual_id);
     var cities = getCities(actual_id, {
       include_hostile_occupations: true,
       include_occupations: true
@@ -139,6 +140,9 @@ module.exports = {
 
           //Print culture
           province_string.push(`- ${config.icons.culture} Culture: ${cities[i].culture}`);
+
+          if (!accepted_cultures.includes(cities[i].culture))
+            province_string.push(`- **[Assimilate]**`);
         }
       } else {
         (provinces.length > 0) ?
@@ -165,6 +169,9 @@ module.exports = {
 
             //Print culture
             province_string.push(`- ${config.icons.culture} Culture: ${provinces[i].culture}`);
+
+            if (!accepted_cultures.includes(provinces[i].culture))
+              province_string.push(`- **[Assimilate]**`);
           } catch {}
         }
       } else {

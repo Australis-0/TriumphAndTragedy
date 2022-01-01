@@ -21,8 +21,8 @@ module.exports = {
     var culture_string = [];
 
     //Format culture_string
-    culture_string.push(`${config.icons.culture} Primary Culture(s): **${getCultureNames(all_primary_cultures)}**.`);
-    culture_string.push(`${config.icons.consciousness} Accepted Culture(s): ${getCultureNames(accepted_cultures)}`);
+    culture_string.push(`${config.icons.culture} Primary Culture(s): **${getCultureNames(all_primary_cultures).join(", ")}**.`);
+    culture_string.push(`${config.icons.consciousness} Accepted Culture(s): ${getCultureNames(accepted_cultures).join(", ")}`);
     culture_string.push("");
     culture_string.push(`${config.icons.political_capital} Political Capital: **${parseNumber(usr.modifiers.political_capital)}**`);
 
@@ -39,22 +39,22 @@ module.exports = {
       var is_primary_culture = all_primary_cultures.includes(sorted_culture_array[i]);
 
       if (is_primary_culture)
-        culture_description = `our primary culture.`;
+        culture_description = `our primary culture. ¦ **[Rename Culture]** ¦ **[Rename Culture Adjective]**`;
 
       culture_description = (is_accepted_culture) ?
-        `an accepted culture.` :
+        `an accepted culture. ¦ **[Remove Accepted Culture]**` :
         `an unaccepted culture. Either assimilate their provinces in **[View Population]**, or add them as an accepted culture for **${parseNumber(config.defines.politics.accepted_culture_cost)}** ${config.icons.political_capital} Political Capital.`;
 
-      culture_string.push(`**${printPercentage(calculateCulturalPercentage(sorted_sorted_culture_array[i]))}** of our population, or **${parseNumber(getCultureProvinces(actual_id, sorted_culture_array[i]))}** of our provinces identify as **${getCulture(sorted_culture_array).adjective}**, ${culture_description}`);
+      culture_string.push(`**${printPercentage(calculateCulturalPercentage(actual_id, sorted_culture_array[i].id))}** of our population, or **${parseNumber(getCultureProvinces(actual_id, sorted_culture_array[i].id))}** of our provinces identify as **${getCulture(sorted_culture_array[i].id).adjective}**, ${culture_description}`);
     }
 
     culture_string.push("");
     culture_string.push(config.localisation.divider);
 
     //Format cultural integrations
-    if (usr.cultural_integrations.length > 0) {
+    if (usr.pops.cultural_integrations.length > 0) {
       for (var i = 0; i < usr.cultural_integrations.length; i++)
-        culture_string.push(`We are currently integrating **${getCulture(usr.cultural_integrations[i].culture_id).adjective}** culture into our society. Our advisors estimate that it will take **${parseNumber(usr.cultural_integrations[i].time_remaining)}** more turn(s) before they are fully integrated.`);
+        culture_string.push(`We are currently integrating **${getCulture(usr.pops.cultural_integrations[i].culture_id).adjective}** culture into our society. Our advisors estimate that it will take **${parseNumber(usr.pops.cultural_integrations[i].time_remaining)}** more turn(s) before they are fully integrated.`);
     } else {
       culture_string.push(`_We are currently not integrating any cultures into our societal fabric._`);
       culture_string.push("");

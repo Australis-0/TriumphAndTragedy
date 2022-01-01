@@ -37,12 +37,11 @@ module.exports = {
       ]
     },
     function (arg) {
-      var province_list = arg[0].replace(/ +(?= )/g, "").split(" ");
-      settleStartingProvinces(user_id, province_list);
+      settleStartingProvinces(user_id, arg[0]);
     });
   },
 
-  settle: function (arg0_user, arg1_provinces) { //[WIP] - Update colonisation/charter UI if user is currently on it
+  settle: function (arg0_user, arg1_provinces) {
     //Convert from parameters
     var user_id = arg0_user;
     var provinces = splitCommandLine(arg1_provinces);

@@ -52,6 +52,13 @@ module.exports = {
                 assimilated_provinces++;
             }
 
+            //Update culture page if user is currently on it
+            if (game_obj.page == "culture")
+              createPageMenu(game_obj.middle_embed, {
+                embed_pages: printCultures(user_id),
+                user: game_obj.user
+              });
+
             //Print status essage
             (assimilated_provinces == provinces_to_assimilate.length) ?
               printAlert(game_obj.id, `You have successfully begun integrating all **${parseNumber(assimilated_provinces)}** ${assimilating_culture.adjective} province(s) underneath your control to the **${core_culture.adjective}** culture.`) :

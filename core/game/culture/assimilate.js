@@ -50,8 +50,25 @@ module.exports = {
                     culture_id: raw_culture_name,
                     province_id: province_id,
 
-                    time_remaining: assimilation_time;
+                    time_remaining: assimilation_time
                   });
+
+                  //Update province UI if user is currently on it
+                  if (game_obj.page.startsWith("view_province_")) {
+                    var province_name = game_obj.page.replace("view_province_", "");
+
+                    if (getCity(province_name)) {
+                      createPageMenu(game_obj.middle_embed, {
+                        embed_pages: printCity(game_obj.user, province_name),
+                        user: game_obj.user
+                      });
+                    } else if (getProvince(province_name)) {
+                      createPageMenu(game_obj.middle_embed, {
+                        embed_pages: printProvince(game_obj.user, province_name),
+                        user: game_obj.user
+                      });
+                    }
+                  }
 
                   //Print user feedback
                   if (options.hide_display)
@@ -86,5 +103,46 @@ module.exports = {
       if (options.hide_display)
         returnError(game_obj.id, `The province you have specified wasn't even on the map! Cartographers are scrambling to find a province with the name '**${province_id}**'.`);
     }
+  },
+
+  initialiseAssimilate: function (arg0_user) {
+    var user_id = arg0_user;
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var game_obj = getGameObject(user_id);
+    var usr = main.users[actual_id];
+
+    //Initialise visual prompt
+    visualPrompt(game_obj.alert_embed, user_id, {
+      title: `Assimilate A Province:`,
+      prompts: [
+        [`Where would you like to change the local culture? Please specify a valid Province ID.\n\nType **[Province List]** to view all your provinces and their respective populations.`, "string"],
+        [`Which culture would you like to assimilate the locals to?\n\nType **[View Cultures]** for a list of valid cultures.`, "string"]
+      ]
+    },
+    function (arg) {
+      module.exports.assimilate(user_id, arg[0], arg[1]);
+    },
+    function (arg) {
+      switch (arg) {
+        case "province list":
+          createPageMenu(game_obj.middle_embed, {
+            embed_pages: printProvinces(user_id),
+            usr: game_obj.user
+          });
+          return true;
+
+          break;
+        case "view cultures":
+          createPageMenu(game_obj.middle_embed, {
+            embed_pages: printCultures(user_id),
+            usr: game_obj.user
+          });
+          return true;
+
+          break;
+      }
+    });
   }
 };

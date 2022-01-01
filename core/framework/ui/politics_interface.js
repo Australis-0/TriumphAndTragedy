@@ -37,8 +37,9 @@ module.exports = {
     if (usr.available_reforms.length > 0) {
       politics_string.push("");
       politics_string.push(`${config.icons.consciousness} Reform Desire: **${printPercentage(usr.modifiers.reform_desire, { display_prefix: true })}** (${printPercentage(total_reform_desire_gain, { display_prefix: true })} per turn). Pass Reforms to lower **Reform Desire**.`);
-      politics_string.push("");
     }
+    
+    politics_string.push("");
 
     //Print out discontentment per party
     for (var i = 0; i < all_governments.length; i++)
@@ -60,7 +61,8 @@ module.exports = {
     politics_string.push("");
     politics_string.push(`**Stability:**`);
     politics_string.push("");
-    politics_string.push(`**[Raise Stability]** by **${printPercentage(config.deefines.politics.stability_boost)}** for **${parseNumber(config.defines.politics.stability_cost)} ${config.icons.political_capital} Political Capital.`);
+    politics_string.push(`**[Raise Stability]** by **${printPercentage(config.defines.politics.stability_boost)}** for **${parseNumber(config.defines.politics.stability_cost)}** ${config.icons.political_capital} Political Capital.`);
+    politics_string.push(`**[Set Tax]**`);
     politics_string.push("");
 
     politics_string.push(parseStabilityModifier(actual_id));

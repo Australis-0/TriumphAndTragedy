@@ -1,5 +1,5 @@
 module.exports = {
-  addAcceptedCulture: function (arg0_user, arg1_culture_name) { //[WIP] - Update culture screen if user is currently viewing it
+  addAcceptedCulture: function (arg0_user, arg1_culture_name) {
     //Convert from parameters
     var user_id = arg0_user;
     var culture_name = arg1_culture_name.trim().toLowerCase();
@@ -28,6 +28,13 @@ module.exports = {
             culture_id: raw_culture_name,
             time_remaining: integration_time
           });
+
+          //Update culture screen if user is currently viewing it
+          if (game_obj.page == "culture")
+            createPageMenu(game_obj.middle_embed, {
+              embed_pages: printCultures(user_id),
+              user: game_obj.user
+            });
 
           //Print user feedback
           printAlert(game_obj.id, `You have begun to integrate the **${culture_obj.adjective}** culture into your nation's societal fabric. Your analysts estimate that this will take up to **${parseNumber(integration_time)}** turns.`);
