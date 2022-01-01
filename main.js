@@ -24,6 +24,7 @@ FileManager.import("./framework/numbers");
 FileManager.import("./framework/strings");
 FileManager.import("./framework/users");
 
+FileManager.import("./framework/data/alert_framework");
 FileManager.import("./framework/data/base_user_initialisation");
 FileManager.import("./framework/data/buildings_framework");
 FileManager.import("./framework/data/culture_framework");
@@ -32,6 +33,7 @@ FileManager.import("./framework/data/global_initialisation");
 FileManager.import("./framework/data/goods_framework");
 FileManager.import("./framework/data/government_framework");
 FileManager.import("./framework/data/laws_framework");
+FileManager.import("./framework/data/localisation_framework");
 FileManager.import("./framework/data/modifier_framework");
 FileManager.import("./framework/data/politics_framework");
 FileManager.import("./framework/data/pop_framework");
