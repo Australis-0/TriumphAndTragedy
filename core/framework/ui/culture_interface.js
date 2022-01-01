@@ -39,10 +39,10 @@ module.exports = {
       var is_primary_culture = all_primary_cultures.includes(sorted_culture_array[i]);
 
       if (is_primary_culture)
-        culture_description = `our primary culture.`;
+        culture_description = `our primary culture. ¦ **[Rename Culture]** ¦ **[Rename Culture Adjective]**`;
 
       culture_description = (is_accepted_culture) ?
-        `an accepted culture.` :
+        `an accepted culture. ¦ **[Remove Accepted Culture]**` :
         `an unaccepted culture. Either assimilate their provinces in **[View Population]**, or add them as an accepted culture for **${parseNumber(config.defines.politics.accepted_culture_cost)}** ${config.icons.political_capital} Political Capital.`;
 
       culture_string.push(`**${printPercentage(calculateCulturalPercentage(sorted_sorted_culture_array[i]))}** of our population, or **${parseNumber(getCultureProvinces(actual_id, sorted_culture_array[i]))}** of our provinces identify as **${getCulture(sorted_culture_array).adjective}**, ${culture_description}`);

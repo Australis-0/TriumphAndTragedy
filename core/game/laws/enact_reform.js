@@ -181,6 +181,14 @@ module.exports = {
                     0;
                 }
 
+                //Update reform UI if user is currently viewing it
+                if (game_obj.page == "reforms")
+                  createPageMenu(game_obj.middle_embed, {
+                    embed_pages: printReforms(user_id),
+                    page: interfaces[game_obj.middle_embed.id].page,
+                    user: game_obj.user
+                  });
+
               } else if (reform_index == current_reform_index) {
                 printError(game_obj.id, `You have already enacted **${actual_reform_name}** as your stance on **${reform_category_name}**!`);
               } else {

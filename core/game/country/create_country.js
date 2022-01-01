@@ -54,6 +54,18 @@ module.exports = {
       //Set name of country
       usr.name = processed_country_name;
 
+      //Add new culture object to main.global
+      var culture_id = generateCultureID();
+
+      main.global.cultures[culture_id] = {
+        id: culture_id,
+        name: processed_country_name,
+        adjective: processed_country_name,
+
+        primary_culture: [user_id],
+        accepted_culture: []
+      }
+
       return usr;
     }
   },

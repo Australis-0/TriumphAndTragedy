@@ -61,6 +61,7 @@ module.exports = {
     politics_string.push(`**Stability:**`);
     politics_string.push("");
     politics_string.push(`**[Raise Stability]** by **${printPercentage(config.deefines.politics.stability_boost)}** for **${parseNumber(config.defines.politics.stability_cost)} ${config.icons.political_capital} Political Capital.`);
+    politics_string.push(`**[Set Tax]**`);
     politics_string.push("");
 
     politics_string.push(parseStabilityModifier(actual_id));

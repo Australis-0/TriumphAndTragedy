@@ -478,6 +478,18 @@ module.exports = {
               });
             });
 
+          //[Remove Accepted Culture]
+          if (input == "remove accepted culture")
+            initialiseRemoveAcceptedCulture();
+
+          //[Rename Culture]
+          if (input == "rename culture")
+            initialiseRenameCulture();
+
+          //[Rename Culture Adjective]
+          if (input == "rename culture adjective")
+            initialiseRenameCultureAdjective();
+
           //[View Population]
           if (input == "view population") {
             game_obj.page = "provinces_list";
@@ -527,10 +539,35 @@ module.exports = {
           if (input == "coup")
             initialiseCoup(user_id);
 
+          //[Set Tax]
+          if (input == "set tax")
+            initialiseSetTax(user_id);
+
           //[Support Party]
-          //[View Cultures]
-          //[View Reforms]
+          if (input == "support party")
+            initialiseSupportParty(user_id);
+
           //[Raise Stability]
+          if (input == "raise stability")
+            raiseStability(user_id);
+
+          //[View Cultures]
+          if (input == "view cultures") {
+            createPageMenu(game_obj.middle_embed, {
+              embed_pages: printCultures(user_id),
+              user: game_obj.user
+            });
+            game_obj.page = "cultures";
+          }
+
+          //[View Reforms]
+          if (input == "view reforms") {
+            createPageMenu(game_obj.middle_embed, {
+              embed_pages: printReforms(user_id),
+              user: game_obj.user
+            });
+            game_obj.page = "reforms";
+          }
 
           break;
       }
@@ -561,12 +598,14 @@ module.exports = {
               //City view handler
               var city_name = input.replace("view", "").trim();
 
-              (getCity(city_name)) ?
+              if (getCity(city_name)) {
                 createPageMenu(game_obj.middle_embed, {
                   embed_pages: printCity(game_obj.user, city_name),
                   user: game_obj.user
-                }) :
-                printError(game_obj.id, `**${city_name}** is not a valid city that you can view!`);
+                });
+              } else if (!getProvince(province_name)) {
+                printError(game_obj.id, `**${city_name}** is not a valid city that you can view!`)
+              }
             } else {
               //Province view handler [WIP]
               var province_name = input.replace("view", "").trim()
@@ -585,6 +624,10 @@ module.exports = {
         }
 
         switch (input) {
+          case "assimilate":
+            initialiseAssimilate(user_id);
+
+            break;
           case "back":
             game_obj.page = "population";
             printPops(user_id);
@@ -595,6 +638,10 @@ module.exports = {
         var province_name = game_obj.page.replace("view_province_", "");
 
         switch (input) {
+          case "assimilate":
+            initialiseAssimilate(user_id);
+
+            break;
           case "back":
             game_obj.page = "provinces_list";
             createPageMenu(game_obj.middle_embed, {

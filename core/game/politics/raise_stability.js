@@ -1,5 +1,5 @@
 module.exports = {
-  raiseStability: function (arg0_user) { //[WIP] - Update the politics screen if user is currently on it
+  raiseStability: function (arg0_user) {
     //Convert from parameters
     var user_id = arg0_user;
 
@@ -18,6 +18,13 @@ module.exports = {
           0.10
         );
         usr.modifiers.stability += config.defines.politics.stability_boost;
+
+        //Update politics page if user is currently on it
+        if (game_obj.page == "politics")
+          createPageMenu(game_obj.middle_embed, {
+            embed_pages: printPolitics(user_id),
+            user: game_obj.user
+          });
 
         //Print user feedback
         printAlert(game_obj.id, `${config.icons.stability} You have raised your stability by **${printPercentage(config.defines.politics.stability_boost)}**! (-1% per turn).`);

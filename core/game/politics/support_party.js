@@ -1,5 +1,37 @@
 module.exports = {
-  supportParty: function (arg0_user, arg1_party_name) { //[WIP] - Update politics UI if user is currently on it
+  initialiseSupportParty: function (arg0_user) {
+    var user_id = arg0_user;
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var game_obj = getGameObject(user_id);
+    var usr = main.users[actual_id];
+
+    //Initialise visual prompt
+    visualPrompt(game_obj.alert_embed, user_id, {
+      title: `Support Party:`,
+      prompts: [
+        [`Which party would you like to support?\n\nType **[Government List]** for a full list of valid parties.`, "string"]
+      ]
+    },
+    function (arg) {
+      module.exports.supportParty(user_id, arg[0]);
+    },
+    function (arg) {
+      switch (arg) {
+        case "government list":
+          createPageMenu(game_obj.middle_embed, {
+            embed_pages: printGovernmentList(user_id),
+            usr: game_obj.user
+          });
+          return true;
+
+          break;
+      }
+    });
+  },
+
+  supportParty: function (arg0_user, arg1_party_name) {
     //Convert from parameters
     var user_id = arg0_user;
     var party_name = arg1_party_name.trim().toLowerCase();
@@ -22,6 +54,13 @@ module.exports = {
             ideology: raw_party_name,
             amount: config.defines.politics.support_boost
           });
+
+          //Update politics page if user is currently on it
+          if (game_obj.page == "politics")
+            createPageMenu(game_obj.middle_embed, {
+              embed_pages: printPolitics(user_id),
+              user: game_obj.user
+            });
 
           //Print user feedback
           printAlert(game_obj.id, `You boosted **${government_obj.adjective}** by **${printPercentage(config.defines.politics.support_boost)}** for ${config.icons.political_capital} ${parseNumber(config.defines.politics.support_cost)} Political Capital.`);

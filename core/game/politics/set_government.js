@@ -23,7 +23,15 @@ module.exports = {
         if (government_name) {
           if (usr.available_governments.includes(government_name)) {
             setGovernment(actual_id, raw_government_type, { set_party_popularity: 100 });
-              printAlert(game_obj.id, `You have successfully set your government type to **${(getGovernment(usr.government).name) ? getGovernment(usr.government).name : usr.government}**.`);
+
+            //Update politics page if user is currently on it
+            if (game_obj.page == "politics")
+              createPageMenu(game_obj.middle_embed, {
+                embed_pages: printPolitics(user_id),
+                user: game_obj.user
+              });
+
+            printAlert(game_obj.id, `You have successfully set your government type to **${(getGovernment(usr.government).name) ? getGovernment(usr.government).name : usr.government}**.`);
           } else {
             printError(game_obj.id, `The government you have specified, **${government_name}** has not yet been unlocked by your country! Consider researching new technologies in order to unlock this form of government.`);
           }
