@@ -50,7 +50,7 @@ module.exports = {
                     culture_id: raw_culture_name,
                     province_id: province_id,
 
-                    time_remaining: assimilation_time;
+                    time_remaining: assimilation_time
                   });
 
                   //Update province UI if user is currently on it
