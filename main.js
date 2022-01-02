@@ -28,6 +28,7 @@ FileManager.import("./framework/data/alert_framework");
 FileManager.import("./framework/data/base_user_initialisation");
 FileManager.import("./framework/data/buildings_framework");
 FileManager.import("./framework/data/culture_framework");
+FileManager.import("./framework/data/diplomacy_framework");
 FileManager.import("./framework/data/games");
 FileManager.import("./framework/data/global_initialisation");
 FileManager.import("./framework/data/goods_framework");
@@ -89,6 +90,8 @@ FileManager.import("./game/culture/assimilate");
 FileManager.import("./game/culture/remove_accepted_culture");
 FileManager.import("./game/culture/rename_culture_adjective");
 FileManager.import("./game/culture/rename_culture");
+
+FileManager.import("./game/diplomacy/ally");
 
 FileManager.import("./game/laws/enact_reform");
 
