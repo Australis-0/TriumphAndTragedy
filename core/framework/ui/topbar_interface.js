@@ -44,10 +44,6 @@ module.exports = {
     var game_obj = getGameObject(user_id);
     var usr = main.users[actual_id];
 
-    //Declare local tracker variables
-    var total_alerts = Object.keys(usr.alerts).length;
-    var total_events = Object.keys(usr.events).length;
-
     //Add buttons to top row
     const main_menu_row = new Discord.MessageActionRow()
       .addComponents(
@@ -67,14 +63,14 @@ module.exports = {
           .setEmoji("716821884867444746"),
         new Discord.MessageButton()
           .setCustomId("alerts_btn")
-          .setLabel(`You have ${parseNumber(total_alerts)} alert(s).`)
+          .setLabel(`You have ${parseNumber(usr.alerts.length)} alert(s).`)
           .setStyle("DANGER")
           .setDisabled(total_alerts == 0)
           .setEmoji("798006990638940160"),
         new Discord.MessageButton()
           .setCustomId("events_btn")
           .setLabel((total_events > 0) ?
-            `You have ${parseNumber(total_events)} event(s) that need your attention.` :
+            `You have ${parseNumber(usr.events.length)} event(s) that need your attention.` :
             `No new events.`
           )
           .setStyle("DANGER")
