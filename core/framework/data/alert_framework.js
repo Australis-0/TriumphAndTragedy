@@ -36,13 +36,13 @@ module.exports = {
   },
 
   /*
-    printAlert() - Prints an alert to a given user based on the provided key
+    sendAlert() - Sends an alert to a given user based on the provided key
     options: {
       FROM: "actual_id", - Which user first invoked the alert
       TO: "actual_id" - The recipient user
     }
   */
-  printAlert: function (arg0_user, arg1_alert_name, arg2_options) { //[WIP] - Add localisation API later
+  sendAlert: function (arg0_user, arg1_alert_name, arg2_options) { //[WIP] - Add localisation API later
     //Convert from parameters
     var user_id = arg0_user;
     var alert_name = arg1_alert_name;
@@ -94,6 +94,7 @@ module.exports = {
       name: alert_title,
 
       description: alert_description,
+      icon: alert_obj.icon,
       image: alert_obj.image,
       thumbnail: alert_obj.thumbnail,
 

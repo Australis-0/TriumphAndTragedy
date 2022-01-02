@@ -1,5 +1,36 @@
 module.exports = {
-  printAlerts: function (arg0_user) { //[WIP] - Finish print UI for printAlerts()
+  printAlert: function (arg0_user, arg1_alert) { //[WIP] - Add date string to printAlert()
+    //Convert from parameters
+    var user_id = arg0_user;
+    var alert_obj = arg1_alert;
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var game_obj = getGameObject(user_id);
+    var usr = main.users[actual_id];
+
+    //Declare alert_string
+    var alert_string = [];
+
+    //[WIP] - Add date string instead of just time remaining
+    alert_string.push(` - ${config.icons.time} **${parseNumber(alert_obj.time_remaining)}** turn(s) remaining`);
+
+    if (alert_obj.description)
+      alert_string.push(alert_obj.description);
+
+    //Format embed
+    const alert_embed = new Discord.MessageEmbed()
+      .setColor(settings.bot_colour)
+      .setTitle(`[Back] ¦ ${alert_obj.title}:`)
+      .setThumbnail(alert_obj.thumbnail ? alert_obj.thumbnail : usr.flag)
+      .setImage(alert_obj.image ? alert_obj.image : "https://cdn.discordapp.com/attachments/722997700391338046/736141424315203634/margin.png")
+      .setDescription(alert_string.join("\n"));
+
+    game_obj.main_embed = alert_embed;
+    game_obj.main_change = true;
+  },
+
+  printAlerts: function (arg0_user) {
     //Convert from parameters
     var user_id = arg0_user;
 
@@ -8,12 +39,29 @@ module.exports = {
     var game_obj = getGameObject(user_id);
     var usr = main.users[actual_id];
 
-    //Declare alert_embeds
-    var alert_embeds = [];
+    //Print first page
+    var first_page_string = [];
+
+    first_page_string.push(`**[Back]** ¦ **[Jump To Page]**`);
+    first_page_string.push("");
+    first_page_string.push(config.localisation.divider);
+    first_page_string.push("");
+    first_page_string.push(`**Current Alerts:**`);
+    first_page_string.push("");
 
     //Go through all usr.alerts
-    for (var i = 0; i < usr.alerts.length; i++) {
+    for (var i = 0; i < usr.alerts.length; i++)
+      first_page_string.push(`**${i + 1}.** - ${(usr.alerts[i].icon ? config.icons[usr.alerts[i].icon] + " " : "")}${usr.alerts[i].name} (${config.icons.time} ${parseNumber(usr.alerts[i].time_remaining})`);
 
-    }
+    //No alert text
+    if (usr.alerts.length == 0)
+      first_page_string.push(`_You have no current alerts that need attending to!_`);
+
+    //Split embed and push to alert_embeds
+    return splitEmbed(first_page_string, {
+      title: "Alert List:",
+      title_pages: true,
+      fixed_width: true
+    });
   }
 };
