@@ -18,6 +18,14 @@ module.exports = {
     if (alert_obj.description)
       alert_string.push(alert_obj.description);
 
+      for (var i = 0; i < alert_obj.buttons.length; i++) {
+        alert_string.push("");
+        alert_string.push(`**[${alert_obj.buttons[i].name}]**`);
+
+        if (!alert_obj.buttons[i].hide_description)
+          alert_string.push(`\n${alert_obj.buttons[i].description}`);
+      }
+
     //Format embed
     const alert_embed = new Discord.MessageEmbed()
       .setColor(settings.bot_colour)

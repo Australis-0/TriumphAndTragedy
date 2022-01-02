@@ -77,7 +77,11 @@ module.exports = {
 
         var push_obj = {
           id: all_subkeys[i],
-          name: button_title
+          name: button_title,
+
+          description: (button_obj.description) ?
+            button_obj.description.split("\n").join("\n• ") :
+            `• _This choice currently has no effect._`
         };
 
         //Add effect to push_obj if it exists
