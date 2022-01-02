@@ -1,4 +1,7 @@
 config.defines.common = {
+  alert_timeout: 5, //How many turns should alerts last before they timeout?
+  event_timeout: 5, //How many turns should events last before they timeout?
+
   starting_provinces: 1,
   starting_year: 1815,
 

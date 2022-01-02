@@ -248,11 +248,11 @@ module.exports = {
       }
 
     //Empty subobjects
-    if (!usr.alerts) usr.alerts = {};
+    if (!usr.alerts) usr.alerts = [];
     if (!usr.armies) usr.armies = {};
     if (!usr.auto_trades) usr.auto_trades = {};
     if (!usr.blockaded) usr.blockaded = {};
-    if (!usr.events) usr.events = {};
+    if (!usr.events) usr.events = [];
     if (!usr.expeditions) usr.expeditions = {};
     if (!usr.inventory) usr.inventory = {};
     if (!usr.laws) usr.laws = {};

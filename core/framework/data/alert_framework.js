@@ -38,22 +38,69 @@ module.exports = {
   /*
     printAlert() - Prints an alert to a given user based on the provided key
     options: {
-      from: "actual_id", - Which user first invoked the alert
-      to: "actual_id" - The recipient user
+      FROM: "actual_id", - Which user first invoked the alert
+      TO: "actual_id" - The recipient user
     }
   */
   printAlert: function (arg0_user, arg1_alert_name, arg2_options) { //[WIP] - Add localisation API later
     //Convert from parameters
     var user_id = arg0_user;
     var alert_name = arg1_alert_name;
+    var options = (arg2_options) ? arg2_options : {};
 
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
+    var alert_name = module.exports.findAlert(alert_name, { return_key: true });
     var alert_obj = module.exports.findAlert(alert_name);
     var game_obj = getGameObject(user_id);
     var usr = main.users[actual_id];
 
     //Add to usr.alerts object
+    var alert_buttons = [];
+    var alert_description = (alert_obj.description) ?
+      parseLocalisation(alert_obj.description, { scopes: options }) :
+      "";
+    var alert_title = (alert_obj.name) ?
+      parseLocalisation(alert_obj.name, { scopes: options }) :
+      "";
 
+    //Push buttons to array
+    var all_subkeys = Object.keys(alert_obj);
+
+    for (var i = 0; i < all_subkeys.length; i++)
+      if (all_subkeys[i].startsWith("btn_")) {
+        var button_obj = alert_obj[all_subkeys[i]];
+
+        var button_title = (button_obj.title) ?
+          parseLocalisation(button_obj.title, { scopes: options }) :
+          all_subkeys[i];
+
+        var push_obj = {
+          id: all_subkeys[i],
+          name: button_title
+        };
+
+        //Add effect to push_obj if it exists
+        if (button_obj.effect)
+          push_obj.effect = button_obj.effect;
+
+        //Push push_obj to alert_buttons
+        alert_buttons.push(push_obj);
+      }
+
+    //Push alert_obj to usr.alerts
+    usr.alerts.push({
+      id: alert_name,
+      name: alert_title,
+
+      description: alert_description,
+      image: alert_obj.image,
+      thumbnail: alert_obj.thumbnail,
+
+      buttons: alert_buttons,
+
+      //Tracker variables
+      time_remaining: config.defines.common.alert_timeout
+    });
   }
 };
