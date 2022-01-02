@@ -3,6 +3,10 @@ config.defines.diplomacy = {
   justify_wargoal_cost: 75, //Amount of PC needed to justify a wargoal
   justify_wargoal_time: 3, //Base number of turns needed to justify a wargoal
 
+  //Common Diplomatic Defines
+  alliance_alert_id: "alliance_proposal",
+  alliance_relation_threshold: 75, //How high should relations need to be before one can propose an alliance?
+
   //Diplomatic Actions
   improve_relations_cost: 50, //Amount of PC needed to improve relations
   decrease_relations_cost: 25, //Amount of PC needed to decrease relations
