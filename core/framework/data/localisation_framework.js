@@ -30,7 +30,7 @@ module.exports = {
 
           //Replace scopes
           for (var x = 0; x < all_scopes.length; x++)
-            local_replacement = local_replacement.replace(all_scopes[x], `main.users[${options.scopes[all_scopes[x]]}]`);
+            local_replacement = local_replacement.replace(all_scopes[x], `main.users['${options.scopes[all_scopes[x]]}']`);
 
           local_replacement = local_replacement.replace(`GLOBAL`, `main.global`);
 
@@ -43,7 +43,7 @@ module.exports = {
 
         //Replace keys in text with matches
         for (var i = 0; i < all_localisation_keys.length; i++)
-          localisation_string.replace(all_localisation_keys[i], all_localisation_matches[i]);
+          localisation_string = localisation_string.replace(all_localisation_keys[i], all_localisation_matches[i]);
       }
     } catch (e) {
       log.error(`parseLocalisation() - ran into an error: ${e}.`);
