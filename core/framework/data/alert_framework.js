@@ -1,11 +1,11 @@
 module.exports = {
   /*
-    findAlert() - Returns an alert key/object based on the provided name
+    getAlert() - Returns an alert key/object based on the provided name
     options: {
       return_key: true/false - Whether or not to return a key or object. Defaults to false
     }
   */
-  findAlert: function (arg0_alert_name, arg1_options) {
+  getAlert: function (arg0_alert_name, arg1_options) {
     //Convert from parameters
     var alert_name = arg0_alert_name;
     var options = (arg1_options) ? arg1_options : {};
@@ -24,7 +24,7 @@ module.exports = {
           alert_found = [true, (!options.return_key) ? lcoal_alert_category[local_alerts[x]] : local_alerts[x]];
     }
 
-    //Hard-match first
+    //Hard-match second
     for (var i = 0; i < all_alert_categories.length; i++) {
       var local_alert_category = config.alerts[all_alert_categories[i]];
       var local_alerts = Object.keys(local_alert_category);
@@ -33,6 +33,48 @@ module.exports = {
         if (local_alerts[x] == alert_name)
           alert_found = [true, (!options.return_key) ? lcoal_alert_category[local_alerts[x]] : local_alerts[x]];
     }
+  },
+
+  /*
+    getButton() - Returns the button key/object based on the provided name for a specific alert.
+    options: {
+      return_key: true/false - Whether or not to return a key or object. Defaults to false
+    }
+  */
+  getButton: function (arg0_alert_name, arg1_button_name, arg2_options) {
+    //Convert from parameters
+    var alert_name = arg0_alert_name;
+    var button_name = arg1_button_name.trim().toLowerCase();
+    var options = (arg2_options) ? arg2_options : {};
+
+    //Declare local instance variables
+    var alert_obj = module.exports.getAlert(alert_name);
+    var button_found = [false, ""]; //[button_found, button_obj]
+
+    var all_buttons = Object.keys(alert_obj);
+
+    //Soft-match first
+    for (var i = 0; i < all_buttons.length; i++)
+      if (all_buttons[i].startsWith("btn_")) {
+        var local_btn = alert_obj[all_buttons[i]];
+        var local_title = (local_btn.title) ? local_btn.title : all_buttons[i];
+
+        if (local_title.toLowerCase().indexOf(button_name) != -1)
+          button_found = [true, (!options.return_key) ? local_btn : all_buttons[i]];
+      }
+
+    //Hard-match second
+    for (var i = 0; i < all_buttons.length; i++)
+      if (all_buttons[i].startsWith("btn_")) {
+        var local_btn = alert_obj[all_buttons[i]];
+        var local_title = (local_btn.title) ? local_btn.title : all_buttons[i];
+
+        if (local_title.toLowerCase() == button_name)
+          button_found = [true, (!options.return_key) ? local_btn : all_buttons[i]];
+      }
+
+    //Return statement
+    return (button_found[0]) ? button_found[1] : undefined;
   },
 
   /*
