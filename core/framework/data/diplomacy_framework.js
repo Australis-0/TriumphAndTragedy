@@ -13,7 +13,7 @@ module.exports = {
 
     //Set alliance objects for both users
     usr.allies[actual_ot_user_id] = {
-      id: ot_user_id,
+      id: actual_ot_user_id,
       status: "active"
     };
     ot_user.allies[actual_id] = {
@@ -36,13 +36,65 @@ module.exports = {
 
     //Set military access objects for both users
     usr.military_access[actual_ot_user_id] = {
-      id: ot_user_id,
+      id: actual_ot_user_id,
       status: "active"
     };
     ot_user.military_access[actual_id] = {
       id: actual_id,
       status: "active"
     };
+  },
+
+  /*
+    createNonAggressionPact() - Creates a non-aggression pact between two countries.
+    options: {
+      time_remaining: 20 //-1 by default, equals infinite
+    }
+  */
+  createNonAggressionPact: function (arg0_user, arg1_user, arg2_options) {
+    //Convert from parameters
+    var user_id = arg0_user;
+    var ot_user_id = arg1_user;
+    var options = (arg2_options) ? arg2_options : {};
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var actual_ot_user_id = main.global.user_map[ot_user_id];
+    var game_obj = getGameObject(user_id);
+    var ot_user = main.users[actual_ot_user_id];
+    var usr = main.users[actual_id];
+
+    //Declare local tracker variables
+    var time_remaining = (options.time_remaining) ? options.time_remaining : -1;
+
+    //Create non-aggression pact if it doesn't exist
+    if (!usr.non_aggression_pacts[actual_ot_user_id]) {
+      usr.non_aggression_pacts[actual_ot_user_id] = {
+        id: actual_ot_user_id,
+        time_remaining: time_remaining
+      };
+      ot_user.non_aggression_pacts[actual_ot_user_id] = {
+        id: actual_ot_user_id,
+        time_remaining: time_remaining
+      };
+    }
+
+    //Extend non-aggression pact if it does unless it is already infinite
+    if (usr.non_aggression_pacts[actual_ot_user_id]) {
+      var non_aggression_pact = usr.non_aggression_pacts[actual_ot_user_id];
+
+      if (non_aggression_pact.time_remaining != -1) {
+        non_aggression_pact.time_remaining += time_remaining;
+
+        //Delete if time_remaining is less than one afterwards
+        if (non_aggression_pact.time_remaining < 1)
+          delete usr.non_aggression_pacts[actual_ot_user_id];
+      }
+
+      //Non-aggression pacts are mutual, so clone if existent
+      if (usr.non_aggression_pacts[actual_ot_user_id])
+        ot_user.non_aggression_pacts[actual_id] = JSON.parse(JSON.stringify(non_aggression_pact));
+    }
   },
 
   createRivalry: function (arg0_user, arg1_user) {
@@ -59,7 +111,7 @@ module.exports = {
 
     //Set rivalry objects for both users
     usr.rivals[actual_ot_user_id] = {
-      id: ot_user_id,
+      id: actual_ot_user_id,
       status: "active"
     };
     ot_user.rivals[actual_id] = {
@@ -83,6 +135,23 @@ module.exports = {
     //Dissolve alliances for both users
     delete usr.allies[actual_ot_user_id];
     delete ot_user.allies[actual_id];
+  },
+
+  dissolveNonAggressionPact: function (arg0_user, arg1_user) {
+    //Convert from parameters
+    var user_id = arg0_user;
+    var ot_user_id = arg1_user;
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var actual_ot_user_id = main.global.user_map[ot_user_id];
+    var game_obj = getGameObject(user_id);
+    var ot_user = main.users[actual_ot_user_id];
+    var usr = main.users[actual_id];
+
+    //Dissolve non aggression pact for both users
+    delete usr.non_aggression_pacts[actual_ot_user_id];
+    delete ot_user.non_aggression_pacts[actual_id];
   },
 
   dissolveMilitaryAccess: function (arg0_user, arg1_user) {
@@ -148,6 +217,7 @@ module.exports = {
       var local_relations = usr.relations[actual_ot_user_id];
 
       current_relations[0] = local_relations.value;
+      current_relations[1] = local_relations;
     }
 
     //Return statement
@@ -196,6 +266,24 @@ module.exports = {
       if (local_military_access.status == "active")
         return true;
     }
+  },
+
+  hasNonAggressionPact: function (arg0_user, arg1_user) {
+    //Convert from parameters
+    var user_id = arg0_user;
+    var ot_user_id = arg1_user;
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var actual_ot_user_id = main.global.user_map[ot_user_id];
+    var game_obj = getGameObject(user_id);
+    var ot_user = main.users[actual_ot_user_id];
+    var usr = main.users[actual_id];
+
+    //Check if user_id has a non aggression pact with ot_user_id
+    if (usr.non_aggression_pacts[actual_ot_user_id])
+      //Return statement
+      return true;
   },
 
   hasRivalry: function (arg0_user, arg1_user) {
