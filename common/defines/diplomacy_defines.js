@@ -5,7 +5,8 @@ config.defines.diplomacy = {
 
   //Common Diplomatic Defines
   absolute_infamy_limit: 15, //What is the highest infamy can go?
-  alliance_alert_id: "alliance_proposal",
+  alliance_alert_id: "alliance_proposal", //What alert should popup when an alliance is proposed?
+  alliance_break_alert_id: "alliance_broken", //What alert should popup when an alliance is broken?
   alliance_relation_threshold: 75, //How high should relations need to be before one can propose an alliance?
   infamy_limit: 8, //Total infamy before containment CB kicks in, and bad effects
   infamy_loss: -0.05, //Per turn

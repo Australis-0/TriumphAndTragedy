@@ -27,13 +27,13 @@ config.alerts.diplomacy = {
     btn_guarantee_positive_relations: {
       title: "They must be proud to offer this arrangement to such a noble nation.",
       effect: function (options) {
-        addTemporaryModifier(options.TO.id, {
+        addTemporaryModifier(options.TO, {
           type: "stability_modifier",
           value: 0.10,
           duration: 5
         });
         modifyRelations(options.TO.id, {
-          target: options.FROM.id,
+          target: options.FROM,
           value: 25
         });
       }
@@ -52,11 +52,11 @@ config.alerts.diplomacy = {
       effect: function (options) {
         options.FROM.diplomacy.used_diplomatic_slots++;
         modifyRelations(options.TO, {
-          target: options.FROM.id,
+          target: options.FROM,
           value: 20
         });
         createNonAggressionPact({
-          target: options.FROM.id,
+          target: options.FROM,
           duration: 10
         })
       }
@@ -65,8 +65,8 @@ config.alerts.diplomacy = {
       name: "We respectfully decline the offer.",
       effect: function (options) {
         sendAlert(options.FROM.id, "an_uneasy_peace", {
-          TO: options.FROM.id,
-          FROM: options.TO.id
+          TO: options.FROM,
+          FROM: options.TO
         });
       }
     }
@@ -113,31 +113,34 @@ config.alerts.diplomacy = {
     btn_accept_alliance: {
       name: "It is in our best interest to conclude an alliance.",
       effect: function (options) {
-        sendAlert(options.FROM.id, "alliance_accepted", {
-          TO: options.FROM.id,
-          FROM: options.TO.id
+        sendAlert(options.FROM, "alliance_accepted", {
+          TO: options.FROM,
+          FROM: options.TO
         });
-        createAlliance(options.FROM.id, options.TO.id);
-        options.TO.diplomacy.used_diplomatic_slots++;
+        createAlliance(options.FROM, options.TO);
+        options.TO_USER.diplomacy.used_diplomatic_slots++;
       }
     },
     btn_decline_alliance: {
       name: "Respectfully decline the offer for now.",
       effect: function (options) {
-        sendAlert(options.FROM.id, "alliance_declined", {
-          TO: options.FROM.id,
-          FROM: options.TO.id
+        var FROM_USER = main.users[options.FROM_USER];
+
+        sendAlert(options.FROM, "alliance_declined", {
+          TO: options.FROM,
+          FROM: options.TO
         });
-        modifyRelations(options.FROM.id, {
-          target: options.TO.id,
+        modifyRelations(options.FROM, {
+          target: options.TO,
           value: -20
         });
-        dissolveAlliance(options.FROM.id, options.TO.id);
-        options.FROM.diplomacy.used_diplomatic_slots--;
+        dissolveAlliance(options.FROM, options.TO);
+        FROM_USER.diplomacy.used_diplomatic_slots--;
       }
     }
   },
 
+  //[WIP] - Rescripting done up to here
   an_offer_to_lay_down_arms: {
     name: "An Offer to Lay Down Arms.",
     description: "{FROM.name} is offering us peace in exchange for the terms listed below. We have the option to either accept or deny this.",
