@@ -4,8 +4,12 @@ config.defines.diplomacy = {
   justify_wargoal_time: 3, //Base number of turns needed to justify a wargoal
 
   //Common Diplomatic Defines
+  absolute_infamy_limit: 15, //What is the highest infamy can go?
   alliance_alert_id: "alliance_proposal",
   alliance_relation_threshold: 75, //How high should relations need to be before one can propose an alliance?
+  infamy_limit: 8, //Total infamy before containment CB kicks in, and bad effects
+  infamy_loss: -0.05, //Per turn
+  relation_change_speed: 10, //Maximum amount relations can change by per turn
 
   //Diplomatic Actions
   improve_relations_cost: 50, //Amount of PC needed to improve relations

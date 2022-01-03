@@ -75,7 +75,9 @@ module.exports = {
     var all_expeditions = Object.keys(usr.expeditions);
     var all_good_names = getGoods({ return_names: true });
     var all_governments = Object.keys(config.governments);
+    var all_non_aggression_pacts = Object.keys(usr.diplomacy.non_aggression_pacts);
     var all_pops = Object.keys(config.pops);
+    var all_relations = Object.keys(usr.diplomacy.relations);
 
     //Modifier and tracker variable processing
     {
@@ -85,6 +87,16 @@ module.exports = {
       //City modifiers/trackers
       usr.city_cap = getCitiesCap(actual_id);
       usr.total_cities += getCities(actual_id, { include_hostile_occupations: true }).length;
+
+      //Diplomatic modifiers
+      {
+        //Reduce infamy
+        usr.modifiers.infamy += usr.modifiers.infamy_loss;
+
+        //Set infamy caps
+        usr.modifiers.infamy = Math.max(usr.modifiers.infamy, 0);
+        usr.modifiers.infamy = Math.min(usr.modifiers.infamy, config.defines.diplomacy.absolute_infamy_limit);
+      }
 
       //Population modifiers/trackers
       usr.population = getPopulation(actual_id);
@@ -151,6 +163,60 @@ module.exports = {
       //Remove constructed requests
       for (var i = 0; i < construction_requests_to_remove.length; i++)
         removeElement(usr.under_construction, i);
+    }
+
+    //Diplomacy processing
+    {
+      if (!options.is_simulation) {
+        //Improve/decrease relations
+        for (var i = 0; i < all_relations.length; i++) {
+          var local_relation = usr.diplomacy.relations[all_relations[i]];
+
+          //Check if improving_to value exists
+          if (local_relation.improving_to) {
+            var relation_change = (local_relation.improving_to - local_relation.value)/local_relation.time_remaining;
+
+            //Set new relation value
+            local_relation.value += relation_change;
+
+            //Cap off at whatever relation_change was, negative/positive
+            //Negative handler
+            if (
+              (relation_change < 0 && local_relation.value < local_relation.improving_to) ||
+              (relation_change > 0 && local_relation.value > local_relation.improving_to)
+            )
+              local_relation.value = local_relation.improving_to;
+
+            //Check if the current value is equal to the improved relation
+            if (local_relation.value == local_relation.improving_to) {
+              //Set status to stagnant
+              local_relation.status = "stagnant";
+
+              //If so, delete the keys
+              delete local_relation.improving_to;
+              delete local_relation.time_remaining;
+            }
+          }
+        }
+
+        //Non-aggression pacts
+        for (var i = 0; i < all_non_aggression_pacts.length; i++) {
+          var local_non_aggression_pact = usr.diplomacy.non_aggression_pacts[i];
+
+          //Decrement time_remaining if greater than zero
+          if (local_non_aggression_pact.time_remaining > 0)
+            local_non_aggression_pact.time_remaining--;
+
+          //Delete non aggression pact once time runs out
+          if (local_non_aggression_pact.time_remaining == 0)
+            dissolveNonAggressionPact(actual_id, local_non_aggression_pact.id);
+        }
+
+        //Prestige
+        {
+          usr.prestige = Math.max(0, usr.prestige + usr.modifiers.prestige_gain);
+        }
+      }
     }
 
     //Market processing
