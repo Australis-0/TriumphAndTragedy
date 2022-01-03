@@ -26,16 +26,16 @@ config.alerts.diplomacy = {
 
     btn_guarantee_positive_relations: {
       title: "They must be proud to offer this arrangement to such a noble nation.",
-      effect: {
-        add_temporary_modifier: {
+      effect: function (options) {
+        addTemporaryModifier(options.TO.id, {
           type: "stability_modifier",
           value: 0.10,
           duration: 5
-        },
-        improve_relations: {
-          target: "FROM",
+        });
+        modifyRelations(options.TO.id, {
+          target: options.FROM.id,
           value: 25
-        }
+        });
       }
     },
     btn_guarantee_negative_relations: {
@@ -49,57 +49,25 @@ config.alerts.diplomacy = {
 
     btn_accept_non_aggression: {
       title: "We shall accept the offer.",
-      effect: {
-        use_diplomatic_slots: 1,
-        improve_relations: {
-          target: "FROM",
+      effect: function (options) {
+        options.FROM.diplomacy.used_diplomatic_slots++;
+        modifyRelations(options.TO, {
+          target: options.FROM.id,
           value: 20
-        },
-        sign_non_aggression_pact: {
-          target: "FROM",
+        });
+        createNonAggressionPact({
+          target: options.FROM.id,
           duration: 10
-        }
+        })
       }
     },
     btn_decline_non_aggression: {
       name: "We respectfully decline the offer.",
-      effect: {
-        send_alert: {
-          target: "FROM",
-          type: "an_uneasy_peace"
-        }
-      }
-    }
-  },
-
-  alliance_proposal: {
-    name: "An Offer For Alliance.",
-    description: "We have received an official diplomatic delegation from {FROM.name}. They are requesting our mutual aid and support in military and economic affairs, and a formal agreement regarding an alliance. How should our government respond?",
-
-    btn_accept_alliance: {
-      name: "It is in our best interest to conclude an alliance.",
-      effect: {
-        send_alert: {
-          target: "FROM",
-          type: "alliance_accepted"
-        },
-        sign_alliance: {
-          target: "FROM"
-        },
-        use_diplomatic_slots: 1,
-      }
-    },
-    btn_decline_alliance: {
-      name: "Respectfully decline the offer for now.",
-      effect: {
-        decrease_relations: {
-          target: "FROM",
-          value: 20
-        },
-        send_alert: {
-          target: "FROM",
-          type: "alliance_declined"
-        }
+      effect: function (options) {
+        sendAlert(options.FROM.id, "an_uneasy_peace", {
+          TO: options.FROM.id,
+          FROM: options.TO.id
+        });
       }
     }
   },
@@ -120,6 +88,15 @@ config.alerts.diplomacy = {
     }
   },
 
+  alliance_broken: {
+    name: "Alliance Broken.",
+    description: "We were informed by a diplomatic envoy from {FROM.name} that our alliance has expired today. Our government worries, however, that it could be the start of colder diplomatic relations between our two nations.",
+
+    btn_alliance_broken: {
+      name: "What could we have done?"
+    }
+  },
+
   alliance_declined: {
     name: "Alliance Declined.",
     description: "{FROM.name} has declined our repeated requests for an alliance. We should get ready for whatever they have planned ...",
@@ -129,12 +106,35 @@ config.alerts.diplomacy = {
     }
   },
 
-  alliance_broken: {
-    name: "Alliance Broken.",
-    description: "We were informed by a diplomatic envoy from {FROM.name} that our alliance has expired today. Our government worries, however, that it could be the start of colder diplomatic relations between our two nations.",
+  alliance_proposal: {
+    name: "An Offer For Alliance.",
+    description: "We have received an official diplomatic delegation from {FROM.name}. They are requesting our mutual aid and support in military and economic affairs, and a formal agreement regarding an alliance. How should our government respond?",
 
-    btn_alliance_broken: {
-      name: "What could we have done?"
+    btn_accept_alliance: {
+      name: "It is in our best interest to conclude an alliance.",
+      effect: function (options) {
+        sendAlert(options.FROM.id, "alliance_accepted", {
+          TO: options.FROM.id,
+          FROM: options.TO.id
+        });
+        createAlliance(options.FROM.id, options.TO.id);
+        options.TO.diplomacy.used_diplomatic_slots++;
+      }
+    },
+    btn_decline_alliance: {
+      name: "Respectfully decline the offer for now.",
+      effect: function (options) {
+        sendAlert(options.FROM.id, "alliance_declined", {
+          TO: options.FROM.id,
+          FROM: options.TO.id
+        });
+        modifyRelations(options.FROM.id, {
+          target: options.TO.id,
+          value: -20
+        });
+        dissolveAlliance(options.FROM.id, options.TO.id);
+        options.FROM.diplomacy.used_diplomatic_slots--;
+      }
     }
   },
 
