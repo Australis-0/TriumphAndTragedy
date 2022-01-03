@@ -242,6 +242,10 @@ module.exports = {
         {
           usr.prestige = Math.max(0, usr.prestige + usr.modifiers.prestige_gain);
         }
+
+        //Vassalage
+        if (getVassal(actual_id))
+          usr.vassal_years++;
       }
     }
 

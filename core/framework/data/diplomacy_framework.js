@@ -153,8 +153,9 @@ module.exports = {
     var usr = main.users[actual_id];
 
     //Set vassal object
-    usr.diplomacy.vassals = {
-      id: actual_ot_user_id
+    usr.diplomacy.vassals[actual_ot_user_id] = {
+      id: actual_ot_user_id,
+      overlord: actual_id
     };
   },
 
@@ -246,10 +247,14 @@ module.exports = {
     var user_id = arg0_user;
 
     //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
     var vassal_obj = module.exports.getVassal(user_id);
+    var usr = main.users[actual_id];
 
     //Delete vassal_obj
     delete vassal_obj;
+
+    usr.vassal_years = 0;
   },
 
   getGuarantees: function (arg0_user) {

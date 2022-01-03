@@ -10,8 +10,10 @@ config.defines.diplomacy = {
   alliance_relation_threshold: 75, //How high should relations need to be before one can propose an alliance?
   infamy_limit: 8, //Total infamy before containment CB kicks in, and bad effects
   infamy_loss: -0.05, //Per turn
+  liberation_alert_id: "we_are_free", //What alert should popup when a vassal is voluntarily liberated by its overlord?
   military_access_cancellation_alert_id: "access_cancelled", //Which alert should popup when military access to another country is cancelled?
   relation_change_speed: 10, //Maximum amount relations can change by per turn
+  rival_cancellation_alert_id: "the_coming_thaw", //Determines which alert should be triggered when rivals seek mutual reconciliation
 
   //Diplomatic Actions
   improve_relations_cost: 50, //Amount of PC needed to improve relations
