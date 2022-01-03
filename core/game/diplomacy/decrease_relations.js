@@ -13,9 +13,9 @@ module.exports = {
 
     //Check if other user exists
     if (ot_user) {
-      if (usr.modifiers.political_capital >= config.defines.diplomacy.decrease_relations_cost) {
-        //Check if user is targeting themselves
-        if (actual_id != actual_ot_user_id) {
+      //Check if user is targeting themselves
+      if (actual_id != actual_ot_user_id) {
+        if (usr.modifiers.political_capital >= config.defines.diplomacy.decrease_relations_cost) {
           //Check if relations are already at a minimum
           var current_relations = getRelations(actual_ot_user_id, actual_id);
 
@@ -40,10 +40,10 @@ module.exports = {
             printError(game_obj.id, `You already have minimum relations with **${ot_user.name}**!`);
           }
         } else {
-          printError(game_obj.id, `How about practising some positive self-talk instead?`);
+          printError(game_obj.id, `You need ${config.icons.political_capital} **${parseNumber(config.defines.diplomacy.decrease_relations_cost - usr.modifiers.political_capital)}** more Political Capital before you can decrease relations with **${ot_user.name}**`);
         }
       } else {
-        printError(game_obj.id, `You need ${config.icons.political_capital} **${parseNumber(config.defines.diplomacy.decrease_relations_cost - usr.modifiers.political_capital)}** more Political Capital before you can decrease relations with **${ot_user.name}**`);
+        printError(game_obj.id, `How about practising some positive self-talk instead?`);
       }
     } else {
       printError(game_obj.id, `The person you are trying to insult doesn't even exist!`);
