@@ -22,6 +22,29 @@ module.exports = {
     };
   },
 
+  createMilitaryAccess: function (arg0_user, arg1_user) {
+    //Convert from parameters
+    var user_id = arg0_user;
+    var ot_user_id = arg1_user;
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var actual_ot_user_id = main.global.user_map[ot_user_id];
+    var game_obj = getGameObject(user_id);
+    var ot_user = main.users[actual_ot_user_id];
+    var usr = main.users[actual_id];
+
+    //Set military access objects for both users
+    usr.military_access[actual_ot_user_id] = {
+      id: ot_user_id,
+      status: "active"
+    };
+    ot_user.military_access[actual_id] = {
+      id: actual_id,
+      status: "active"
+    };
+  },
+
   createRivalry: function (arg0_user, arg1_user) {
     //Convert from parameters
     var user_id = arg0_user;
@@ -34,7 +57,7 @@ module.exports = {
     var ot_user = main.users[actual_ot_user_id];
     var usr = main.users[actual_id];
 
-    //Set alliance objects for both users
+    //Set rivalry objects for both users
     usr.rivals[actual_ot_user_id] = {
       id: ot_user_id,
       status: "active"
@@ -60,6 +83,23 @@ module.exports = {
     //Dissolve alliances for both users
     delete usr.allies[actual_ot_user_id];
     delete ot_user.allies[actual_id];
+  },
+
+  dissolveMilitaryAccess: function (arg0_user, arg1_user) {
+    //Convert from parameters
+    var user_id = arg0_user;
+    var ot_user_id = arg1_user;
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var actual_ot_user_id = main.global.user_map[ot_user_id];
+    var game_obj = getGameObject(user_id);
+    var ot_user = main.users[actual_ot_user_id];
+    var usr = main.users[actual_id];
+
+    //Dissolve military access for both users
+    delete usr.military_access[actual_ot_user_id];
+    delete ot_user.military_access[actual_id];
   },
 
   dissolveRivalry: function (arg0_user, arg1_user) {
@@ -132,6 +172,28 @@ module.exports = {
 
       //Return statement if alliance is currently active
       if (local_alliance.status == "active")
+        return true;
+    }
+  },
+
+  hasMilitaryAccess: function (arg0_user, arg1_user) {
+    //Convert from parameters
+    var user_id = arg0_user;
+    var ot_user_id = arg1_user;
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var actual_ot_user_id = main.global.user_map[ot_user_id];
+    var game_obj = getGameObject(user_id);
+    var ot_user = main.users[actual_ot_user_id];
+    var usr = main.users[actual_id];
+
+    //Check if user_id has military_access on ot_user_id
+    if (usr.military_access[actual_ot_user_id]) {
+      var local_military_access = usr.military_access[actual_ot_user_id];
+
+      //Return statement if an access agreement is currently active
+      if (local_military_access.status == "active")
         return true;
     }
   },
