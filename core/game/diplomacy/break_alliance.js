@@ -29,6 +29,9 @@ module.exports = {
 
           //Remove Political Capital
           usr.modifiers.political_capital -= config.defines.diplomacy.break_alliance_cost;
+
+          //Print user feedback
+          printAlert(game_obj.id, `${config.icons.checkmark} You have successfully broken off your alliance with **${ot_user.name}** for ${config.icons.political_capital} **${parseNumber(config.defines.diplomacy.break_alliance_cost)}** Political Capital.`);
         } else {
           printError(game_obj.id, `You must have at least ${config.icons.political_capital} **${parseNumber(config.defines.diplomacy.break_alliance_cost)}** Political Capital before being able to break off one of your alliances!`);
         }

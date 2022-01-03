@@ -53,10 +53,6 @@ module.exports = {
     var usr = main.users[actual_id];
 
     //Set military access objects for both users
-    usr.diplomacy.military_access[actual_ot_user_id] = {
-      id: actual_ot_user_id,
-      status: "active"
-    };
     ot_user.diplomacy.military_access[actual_id] = {
       id: actual_id,
       status: "active"
@@ -225,7 +221,6 @@ module.exports = {
     var usr = main.users[actual_id];
 
     //Dissolve military access for both users
-    delete usr.diplomacy.military_access[actual_ot_user_id];
     delete ot_user.diplomacy.military_access[actual_id];
   },
 

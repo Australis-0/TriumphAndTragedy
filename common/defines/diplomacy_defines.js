@@ -10,6 +10,7 @@ config.defines.diplomacy = {
   alliance_relation_threshold: 75, //How high should relations need to be before one can propose an alliance?
   infamy_limit: 8, //Total infamy before containment CB kicks in, and bad effects
   infamy_loss: -0.05, //Per turn
+  military_access_cancellation_alert_id: "access_cancelled", //Which alert should popup when military access to another country is cancelled?
   relation_change_speed: 10, //Maximum amount relations can change by per turn
 
   //Diplomatic Actions

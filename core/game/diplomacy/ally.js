@@ -39,7 +39,7 @@ module.exports = {
                     if (usr.diplomacy.used_diplomatic_slots < usr.modifiers.diplomatic_slots) {
                       //Pending alliances take 1 diplomatic slot and cost PC
                       usr.diplomacy.used_diplomatic_slots++;
-                      usr.modifiers.political_capital -= config.defines.diplomacy.alliance_relation_threshold;
+                      usr.modifiers.political_capital -= config.defines.diplomacy.form_alliance_cost;
 
                       //Send diplomatic alert to other user
                       sendAlert(actual_ot_user_id, config.defines.diplomacy.alliance_alert_id, {
@@ -58,6 +58,7 @@ module.exports = {
                       };
 
                       //Print out user feedback
+                      printAlert(game_obj.id, `${config.icons.checkmark} You have successfully sent an alliance proposal to **${ot_user.name}** for ${config.icons.political_capital} **${parseNumber(config.defines.diplomacy.form_alliance_cost)}** Political Capital. It should now appear in their alerts screen.`);
                     } else {
                       printError(game_obj.id, `You do not have enough diplomatic slots remaining to propose an alliance!`);
                     }
