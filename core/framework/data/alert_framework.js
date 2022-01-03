@@ -80,7 +80,7 @@ module.exports = {
           name: button_title,
 
           description: (button_obj.description) ?
-            button_obj.description.split("\n").join("\n• ") :
+            button_obj.description.join("\n• ") :
             `• _This choice currently has no effect._`
         };
 
