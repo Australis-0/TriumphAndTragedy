@@ -50,7 +50,7 @@ module.exports = {
                     culture_id: raw_culture_name,
                     province_id: province_id,
 
-                    time_remaining: assimilation_time
+                    duration: assimilation_time
                   });
 
                   //Update province UI if user is currently on it
@@ -77,7 +77,7 @@ module.exports = {
                   return true;
                 } else {
                   if (options.hide_display)
-                    returnError(game_obj.id, `Province **${province_id}** is already being assimilated to the **${getCulture(is_being_assimilated[1].culture_id).adjective}** culture! Your advisor estimates that it will take up to **${parseNumber(is_being_assimilated[1].time_remaining)}** turn(s) to finish the assimilation process.`);
+                    returnError(game_obj.id, `Province **${province_id}** is already being assimilated to the **${getCulture(is_being_assimilated[1].culture_id).adjective}** culture! Your advisor estimates that it will take up to **${parseNumber(is_being_assimilated[1].duration)}** turn(s) to finish the assimilation process.`);
                 }
               } else {
                 if (options.hide_display)

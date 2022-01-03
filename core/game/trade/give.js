@@ -65,7 +65,7 @@ module.exports = {
                                 "money" :
                                 good_name,
 
-                              time_remaining: amount_of_turns
+                              duration: amount_of_turns
                             };
 
                             var local_good_icon = (getGood(good_name).icon) ?

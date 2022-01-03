@@ -26,7 +26,7 @@ module.exports = {
           //Begin integration process
           usr.pops.cultural_integrations.push({
             culture_id: raw_culture_name,
-            time_remaining: integration_time
+            duration: integration_time
           });
 
           //Update culture screen if user is currently viewing it

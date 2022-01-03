@@ -1,4 +1,36 @@
 module.exports = {
+  /*
+    addTemporaryModifier() - Creates and adds a new temporary modifier to the user
+    options: {
+      type: "stability_modifier",
+      value: 0.15,
+      duration: 5 //How long the target modifier should last for, -1 if permanent
+    }
+  */
+  addTemporaryModifier: function (arg0_user, arg1_options) {
+    //Convert from parameters
+    var user_id = arg0_user;
+    var options = (arg1_options) ? arg1_options : {};
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var usr = main.users[user_id];
+
+    //Push temporary modifier to object
+    var modifier_id = module.exports.generateTemporaryModifierID();
+
+    usr.temporary_modifiers[modifier_id] = {
+      type: options.type,
+      value: options.value,
+      duration: (options.duration) ? (options.duration) : -1
+    };
+
+    //Immediately apply the current modifiers to user
+    module.exports.applyModifiers(actual_id, {
+      [options.type]: options.value
+    });
+  },
+
   applyModifiers: function (arg0_user, arg1_scope) {
     //Convert from parameters
     var user_id = arg0_user;
@@ -24,6 +56,28 @@ module.exports = {
           usr[all_modifiers[i]] += modifier_value;
         }
       }
+  },
+
+  generateTemporaryModifierID: function (arg0_user) {
+    //Convert from parameters
+    var user_id = arg0_user;
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var usr = main.users[actual_id];
+
+    var local_id;
+
+    //While loop to find ID, just in-case of conflicting random ID's:
+    while (true) {
+      var local_id = generateRandomID();
+
+      //Return and break once a true ID is found
+      if (!usr.temporary_modifiers[local_id]) {
+        return local_id;
+        break;
+      }
+    }
   },
 
   /*

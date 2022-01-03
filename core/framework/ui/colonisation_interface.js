@@ -59,9 +59,9 @@ module.exports = {
         var local_expedition_unit_name = (local_expedition_unit.name) ? local_expedition_unit.name.toLowerCase() : local_expedition.unit_type;
 
         colonisation_string.push(`${config.icons.old_map} Charter #${parseNumber(local_expedition.id)} - **${local_expedition.provinces}**:`);
-        (local_expedition.time_remaining > config.defines.colonisation.base_colonisation_turns) ?
-          colonisation_string.push(` - The **${local_expedition_unit_name}** will arrive in **${parseNumber(local_expedition.time_remaining - config.defines.colonisation.base_colonisation_turns)}** turn(s). **[Cancel Charter #${local_expedition.id}]**`) :
-          colonisation_string.push(` - The **${local_expedition_unit_name}** have arrived! They have begun setting and your advisor estimates that it will take them **${parseNumber(local_expedition.time_remaining)}** more turn(s).`);
+        (local_expedition.duration > config.defines.colonisation.base_colonisation_turns) ?
+          colonisation_string.push(` - The **${local_expedition_unit_name}** will arrive in **${parseNumber(local_expedition.duration - config.defines.colonisation.base_colonisation_turns)}** turn(s). **[Cancel Charter #${local_expedition.id}]**`) :
+          colonisation_string.push(` - The **${local_expedition_unit_name}** have arrived! They have begun setting and your advisor estimates that it will take them **${parseNumber(local_expedition.duration)}** more turn(s).`);
 
         //What provinces do these people want to colonise?
         colonisation_string.push(` - They hope to colonise the province(s) of **${local_expedition.provinces.join(", ")}**.`);

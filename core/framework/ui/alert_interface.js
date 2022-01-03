@@ -13,7 +13,7 @@ module.exports = {
     var alert_string = [];
 
     //[WIP] - Add date string instead of just time remaining
-    alert_string.push(` - ${config.icons.time} **${parseNumber(alert_obj.time_remaining)}** turn(s) remaining`);
+    alert_string.push(` - ${config.icons.time} **${parseNumber(alert_obj.duration)}** turn(s) remaining`);
 
     if (alert_obj.description)
       alert_string.push(alert_obj.description);
@@ -59,7 +59,7 @@ module.exports = {
 
     //Go through all usr.alerts
     for (var i = 0; i < usr.alerts.length; i++)
-      first_page_string.push(`**${i + 1}.** - ${(usr.alerts[i].icon ? config.icons[usr.alerts[i].icon] + " " : "")}${usr.alerts[i].name} (${config.icons.time} ${parseNumber(usr.alerts[i].time_remaining})`);
+      first_page_string.push(`**${i + 1}.** - ${(usr.alerts[i].icon ? config.icons[usr.alerts[i].icon] + " " : "")}${usr.alerts[i].name} (${config.icons.time} ${parseNumber(usr.alerts[i].duration})`);
 
     //No alert text
     if (usr.alerts.length == 0)

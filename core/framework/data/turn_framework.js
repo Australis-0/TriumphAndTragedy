@@ -78,6 +78,7 @@ module.exports = {
     var all_non_aggression_pacts = Object.keys(usr.diplomacy.non_aggression_pacts);
     var all_pops = Object.keys(config.pops);
     var all_relations = Object.keys(usr.diplomacy.relations);
+    var all_temporary_modifiers = Object.keys(usr.temporary_modifiers);
 
     //Modifier and tracker variable processing
     {
@@ -104,6 +105,27 @@ module.exports = {
       //Stability modifiers/trackers
       if (returnSafeNumber(usr.stability_boost) > 0)
         usr.stability_boost -= 0.01;
+
+      //Temporary modifier handling
+      {
+        //Iterate over all temporary modifiers
+        for (var i = 0; i < all_temporary_modifiers.length; i++) {
+          var local_temporary_modifier = usr.temporary_modifiers[all_temporary_modifiers[i]];
+
+          //Reduce temporary_modifier duration if it is over zero
+          if (local_temporary_modifier.duration > 0)
+            local_temporary_modifier.duration--;
+
+          //If the temporary_modifier's duration is now zero, apply the inverse modifier to the user and delete the key
+          if (local_temporary_modifier.duration == 0) {
+            applyModifiers(actual_id, {
+              [local_temporary_modifier.type]: local_temporary_modifier.value
+            });
+
+            delete usr.temporary_modifiers[all_temporary_modifiers[i]];
+          }
+        }
+      }
     }
 
     //Budget processing
@@ -118,10 +140,10 @@ module.exports = {
         for (var i = 0; i < all_expeditions.length; i++) {
           var local_expedition = usr.expeditions[all_expeditions[i]];
 
-          //Decrease time_remaining
-          local_expedition.time_remaining--;
+          //Decrease duration
+          local_expedition.duration--;
 
-          if (local_expedition.time_remaining < 1) {
+          if (local_expedition.duration < 1) {
             for (var x = 0; x < local_expedition.provinces.length; x++) {
               //Check to see if province already has an owner, if not, settle it
               var local_province = main.provinces[local_expedition.provinces[x]];
@@ -174,7 +196,7 @@ module.exports = {
 
           //Check if improving_to value exists
           if (local_relation.improving_to) {
-            var relation_change = (local_relation.improving_to - local_relation.value)/local_relation.time_remaining;
+            var relation_change = (local_relation.improving_to - local_relation.value)/local_relation.duration;
 
             //Set new relation value
             local_relation.value += relation_change;
@@ -194,7 +216,7 @@ module.exports = {
 
               //If so, delete the keys
               delete local_relation.improving_to;
-              delete local_relation.time_remaining;
+              delete local_relation.duration;
             }
           }
         }
@@ -203,12 +225,12 @@ module.exports = {
         for (var i = 0; i < all_non_aggression_pacts.length; i++) {
           var local_non_aggression_pact = usr.diplomacy.non_aggression_pacts[i];
 
-          //Decrement time_remaining if greater than zero
-          if (local_non_aggression_pact.time_remaining > 0)
-            local_non_aggression_pact.time_remaining--;
+          //Decrement duration if greater than zero
+          if (local_non_aggression_pact.duration > 0)
+            local_non_aggression_pact.duration--;
 
           //Delete non aggression pact once time runs out
-          if (local_non_aggression_pact.time_remaining == 0)
+          if (local_non_aggression_pact.duration == 0)
             dissolveNonAggressionPact(actual_id, local_non_aggression_pact.id);
         }
 
@@ -238,7 +260,7 @@ module.exports = {
           if (current_manpower_mobilised < total_manpower_mobilised)
             new_manpower_mobilised += Math.ceil(
               (total_manpower_mobilised - current_manpower_mobilised)/
-                usr.mobilisation.original_time_remaining
+                usr.mobilisation.original_duration
             );
 
           //How to deal with rounding?
@@ -247,9 +269,9 @@ module.exports = {
           usr.mobilisation.total_manpower_mobilised += new_manpower_mobilised;
           usr.reserves[usr.mobilisation.unit_type] += new_manpower_mobilised;
 
-          //Decrement time_remaining
-          if (usr.mobilisation.time_remaining > 0)
-            usr.mobilisation.time_remaining--;
+          //Decrement duration
+          if (usr.mobilisation.duration > 0)
+            usr.mobilisation.duration--;
         }
       }
     }
@@ -476,9 +498,9 @@ module.exports = {
 
         //Cultural integrations
         for (var i = 0; i < usr.cultural_integrations.length; i++) {
-          usr.cultural_integrations[i].time_remaining--;
+          usr.cultural_integrations[i].duration--;
 
-          if (usr.cultural_integrations[i].time_remaining <= 0) {
+          if (usr.cultural_integrations[i].duration <= 0) {
             var local_culture = getCulture(usr.cultural_integrations[i].culture_id);
 
             local_culture.accepted_culture.push(actual_id);
@@ -494,9 +516,9 @@ module.exports = {
         for (var i = 0; i < usr.assimilations.length; i++) {
           var local_province = getProvince(usr.assimilations[i].province_id);
 
-          usr.assimilations[i].time_remaining--;
+          usr.assimilations[i].duration--;
 
-          if (usr.assimilations[i].time_remaining <= 0)
+          if (usr.assimilations[i].duration <= 0)
             if (local_province.controller == actual_id) {
               local_province.culture = usr.assimilations[i].culture_id;
               assimilations_to_remove.push(usr.assimilations[i]);
@@ -613,10 +635,10 @@ module.exports = {
       for (var i = 0; i < all_exports.length; i++) {
         var local_export = usr.trades[all_exports[i]];
 
-        local_export.time_remaining--;
+        local_export.duration--;
 
         //Finish export if no time is left remaining
-        if (local_export.time_remaining <= 0) {
+        if (local_export.duration <= 0) {
           var target_user = main.users[local_export.target];
 
           //Transfer goods to target

@@ -54,7 +54,7 @@ module.exports = {
     //Format cultural integrations
     if (usr.pops.cultural_integrations.length > 0) {
       for (var i = 0; i < usr.cultural_integrations.length; i++)
-        culture_string.push(`We are currently integrating **${getCulture(usr.pops.cultural_integrations[i].culture_id).adjective}** culture into our society. Our advisors estimate that it will take **${parseNumber(usr.pops.cultural_integrations[i].time_remaining)}** more turn(s) before they are fully integrated.`);
+        culture_string.push(`We are currently integrating **${getCulture(usr.pops.cultural_integrations[i].culture_id).adjective}** culture into our society. Our advisors estimate that it will take **${parseNumber(usr.pops.cultural_integrations[i].duration)}** more turn(s) before they are fully integrated.`);
     } else {
       culture_string.push(`_We are currently not integrating any cultures into our societal fabric._`);
       culture_string.push("");

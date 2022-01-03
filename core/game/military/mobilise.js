@@ -61,13 +61,13 @@ module.exports = {
             total_manpower_mobilised: manpower_mobilised,
             mobilised_pops: mobilised_pops,
 
-            original_time_remaining: mobilisation_speed,
-            time_remaining: mobilisation_speed,
+            original_duration: mobilisation_speed,
+            duration: mobilisation_speed,
             unit_type: unit_type
           };
 
           //Print out user feedback
-          printAlert(`You have begun to mobilise **${parseNumber(usr.mobilisation.total_manpower_mobilised)}** men as **${(unit_obj.name) ? unit_obj.name : usr.mobilise_unit}**! They will finish mobilising in **${parseNumber(usr.mobilisation.time_remaining)}** ${(usr.mobilisation.time_remaining == 1) ? "turn" : "turns"}.`);
+          printAlert(`You have begun to mobilise **${parseNumber(usr.mobilisation.total_manpower_mobilised)}** men as **${(unit_obj.name) ? unit_obj.name : usr.mobilise_unit}**! They will finish mobilising in **${parseNumber(usr.mobilisation.duration)}** ${(usr.mobilisation.duration == 1) ? "turn" : "turns"}.`);
         } else {
           printError(game_obj.id, `Your people haven't even heard of such a concept yet! Research mobilisation first.`);
         }

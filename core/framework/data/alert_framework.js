@@ -107,7 +107,7 @@ module.exports = {
       //Tracker variables
       date: JSON.parse(JSON.stringify(main.date)),
       round_count: JSON.parse(JSON.stringify(main.round_count)),
-      time_remaining: config.defines.common.alert_timeout
+      duration: config.defines.common.alert_timeout
     });
   }
 };

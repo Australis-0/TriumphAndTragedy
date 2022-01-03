@@ -66,7 +66,7 @@ module.exports = {
   /*
     createNonAggressionPact() - Creates a non-aggression pact between two countries.
     options: {
-      time_remaining: 20 //-1 by default, equals infinite
+      duration: 20 //-1 by default, equals infinite
     }
   */
   createNonAggressionPact: function (arg0_user, arg1_user, arg2_options) {
@@ -83,17 +83,17 @@ module.exports = {
     var usr = main.users[actual_id];
 
     //Declare local tracker variables
-    var time_remaining = (options.time_remaining) ? options.time_remaining : -1;
+    var duration = (options.duration) ? options.duration : -1;
 
     //Create non-aggression pact if it doesn't exist
     if (!usr.diplomacy.non_aggression_pacts[actual_ot_user_id]) {
       usr.diplomacy.non_aggression_pacts[actual_ot_user_id] = {
         id: actual_ot_user_id,
-        time_remaining: time_remaining
+        duration: duration
       };
       ot_user.diplomacy.non_aggression_pacts[actual_ot_user_id] = {
         id: actual_ot_user_id,
-        time_remaining: time_remaining
+        duration: duration
       };
     }
 
@@ -101,11 +101,11 @@ module.exports = {
     if (usr.diplomacy.non_aggression_pacts[actual_ot_user_id]) {
       var non_aggression_pact = usr.diplomacy.non_aggression_pacts[actual_ot_user_id];
 
-      if (non_aggression_pact.time_remaining != -1) {
-        non_aggression_pact.time_remaining += time_remaining;
+      if (non_aggression_pact.duration != -1) {
+        non_aggression_pact.duration += duration;
 
-        //Delete if time_remaining is less than one afterwards
-        if (non_aggression_pact.time_remaining < 1)
+        //Delete if duration is less than one afterwards
+        if (non_aggression_pact.duration < 1)
           delete usr.diplomacy.non_aggression_pacts[actual_ot_user_id];
       }
 
@@ -421,7 +421,7 @@ module.exports = {
     options: {
       target: "actual_ot_user_id",
       value: 40, //Any range from -100 to 100
-      time_remaining: 0 //0 by default, equals instant
+      duration: 0 //0 by default, equals instant
     }
   */
   modifyRelations: function (arg0_user, arg1_options) {
@@ -436,12 +436,12 @@ module.exports = {
     var ot_user = main.users[actual_ot_user_id];
     var usr = main.users[actual_id];
 
-    //Improve relations instantly if time_remaining is not defined
+    //Improve relations instantly if duration is not defined
     var relations_value = (options.value) ? options.value : 0;
-    var time_remaining = (options.time_remaining) ? options.time_remaining : 0;
+    var duration = (options.duration) ? options.duration : 0;
 
     //Check if relation modification time is instant or not
-    if (time_remaining <= 0) {
+    if (duration <= 0) {
       //Check if usr.diplomacy.relations is alrady defined
       if (!usr.diplomacy.relations[actual_ot_user_id]) {
         usr.diplomacy.relations[actual_ot_user_id] = {
@@ -479,14 +479,14 @@ module.exports = {
             improving_to: relations_value,
 
             status: improving_type,
-            time_remaining: time_remaining
+            duration: duration
           };
         } else {
           var relations_obj = usr.diplomacy.relations[actual_ot_user_id];
 
           relations_obj.improving_to = relations_value;
           relations_obj.status = improving_type;
-          relations_obj.time_remaining = time_remaining;
+          relations_obj.duration = duration;
         }
     }
   }

@@ -145,7 +145,7 @@ module.exports = {
             usr.expeditions[local_colonisation_id] = {
               id: local_colonisation_id,
               provinces: provinces,
-              time_remaining: prov_colonisation_turns + config.defines.colonisation.base_colonisation_turns,
+              duration: prov_colonisation_turns + config.defines.colonisation.base_colonisation_turns,
               unit_type: unit_type
             };
 
