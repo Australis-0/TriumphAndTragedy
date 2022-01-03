@@ -14,11 +14,11 @@ module.exports = {
     //Set alliance objects for both users
     usr.allies[actual_ot_user_id] = {
       id: ot_user_id,
-      status: "active";
+      status: "active"
     };
     ot_user.allies[actual_id] = {
       id: actual_id,
-      status: "active";
+      status: "active"
     };
   },
 
@@ -37,11 +37,11 @@ module.exports = {
     //Set alliance objects for both users
     usr.rivals[actual_ot_user_id] = {
       id: ot_user_id,
-      status: "active";
+      status: "active"
     };
     ot_user.rivals[actual_id] = {
       id: actual_id,
-      status: "active";
+      status: "active"
     };
   },
 

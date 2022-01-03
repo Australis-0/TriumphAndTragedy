@@ -1,5 +1,5 @@
 module.exports = {
-  ally: function (arg0_user, arg1_user) { //[WIP] - If the other user already has an alliance pending, just accept it
+  ally: function (arg0_user, arg1_user) {
     //Convert from parameters
     var user_id = arg0_user;
     var ot_user_id = arg1_user;
@@ -20,34 +20,52 @@ module.exports = {
             if (actual_id != actual_ot_user_id) {
               //Check if an alliance is already pending
               var alliance_is_pending = false;
+              var ot_user_has_alliance_pending = false;
 
+              //Check if current user has a pending alliance
               if (usr.allies[actual_ot_user_id])
                 if (usr.allies[actual_ot_user_id].status == "pending")
                   alliance_is_pending = true;
 
+              //Check if ot_user has a pending alliance
+              if (ot_user.allies[actual_id])
+                if (ot_user.allies[actual_id].status == "pending")
+                  ot_user_has_alliance_pending = true;
+
               if (!alliance_is_pending) {
-                //Check if relations are high enough
-                if (getRelations(actual_id, actual_ot_user_id)[0] >= config.defines.diplomacy.alliance_relation_threshold) {
-                  if (usr.diplomacy.used_diplomatic_slots < usr.modifiers.diplomatic_slots) {
-                    //Pending alliances take 1 diplomatic slot and cost PC
-                    usr.diplomacy.used_diplomatic_slots++;
-                    usr.modifiers.political_capital -= config.defines.diplomacy.alliance_relation_threshold;
+                if (!ot_user_has_alliance_pending) {
+                  //Check if relations are high enough
+                  if (getRelations(actual_id, actual_ot_user_id)[0] >= config.defines.diplomacy.alliance_relation_threshold) {
+                    if (usr.diplomacy.used_diplomatic_slots < usr.modifiers.diplomatic_slots) {
+                      //Pending alliances take 1 diplomatic slot and cost PC
+                      usr.diplomacy.used_diplomatic_slots++;
+                      usr.modifiers.political_capital -= config.defines.diplomacy.alliance_relation_threshold;
 
-                    //Send diplomatic alert to other user
-                    sendAlert(actual_ot_user_id, config.defines.diplomacy.alliance_alert_id, {
-                      FROM: actual_id,
-                      TO: actual_ot_user_id
-                    });
+                      //Send diplomatic alert to other user
+                      sendAlert(actual_ot_user_id, config.defines.diplomacy.alliance_alert_id, {
+                        FROM: actual_id,
+                        TO: actual_ot_user_id
+                      });
 
-                    //Declare pending alliance object
+                      //Declare pending alliance object
+                      usr.allies[actual_ot_user_id] = {
+                        id: actual_id,
+                        status: "pending"
+                      };
+                      ot_user.allies[actual_id] = {
+                        id: actual_id,
+                        status: "pending"
+                      };
 
-
-                    //Print out user feedback
+                      //Print out user feedback
+                    } else {
+                      printError(game_obj.id, `You do not have enough diplomatic slots remaining to propose an alliance!`);
+                    }
                   } else {
-                    printError(game_obj.id, `You do not have enough diplomatic slots remaining to propose an alliance!`);
+                    printError(game_obj.id, `You must have at leas **${parseNumber(config.defines.diplomacy.alliance_relation_threshold, { display_prefix: true })}** Relations with **${ot_user.name}** in order to propose an alliance!`);
                   }
                 } else {
-                  printError(game_obj.id, `You must have at leas **${parseNumber(config.defines.diplomacy.alliance_relation_threshold, { display_prefix: true })}** Relations with **${ot_user.name}** in order to propose an alliance!`);
+                  printError(game_obj.id, `**${ot_user.name}** already has an alliance pending with you! Accept their alliance request in your Alerts screen to ally with them.`);
                 }
               } else {
                 printError(game_obj.id, `You already have an alliance request pending with **${ot_user.name}**!`);
