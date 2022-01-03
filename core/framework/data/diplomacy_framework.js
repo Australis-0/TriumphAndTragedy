@@ -52,8 +52,8 @@ module.exports = {
     var ot_user = main.users[actual_ot_user_id];
     var usr = main.users[actual_id];
 
-    //Set military access objects for both users
-    ot_user.diplomacy.military_access[actual_id] = {
+    //Set military access objects for only one user, since military access only goes one way
+    usr.diplomacy.military_access[actual_id] = {
       id: actual_id,
       status: "active"
     };
@@ -220,8 +220,8 @@ module.exports = {
     var ot_user = main.users[actual_ot_user_id];
     var usr = main.users[actual_id];
 
-    //Dissolve military access for both users
-    delete ot_user.diplomacy.military_access[actual_id];
+    //Dissolve military access for the other user
+    delete usr.diplomacy.military_access[actual_ot_user_id];
   },
 
   dissolveRivalry: function (arg0_user, arg1_user) {

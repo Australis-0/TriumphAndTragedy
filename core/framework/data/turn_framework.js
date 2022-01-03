@@ -218,6 +218,10 @@ module.exports = {
               delete local_relation.improving_to;
               delete local_relation.duration;
             }
+
+            //Cap it out at -100 and +100
+            local_relation.value = Math.max(local_relation.value, -100);
+            local_relation.value = Math.min(local_relation.value, 100);
           }
         }
 
