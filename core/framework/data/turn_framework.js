@@ -19,44 +19,44 @@ module.exports = {
         local_market_good.sell_price =
           Math.max(local_market_good.sell_price, config.defines.economy.resource_min_sell_price);
       }
-
-      //World Market Down-Logic
-      {
-        for (var i = 0; i < all_market_goods.length; i++) {
-          var local_market_good = main.market[all_market_goods[i]];
-
-          //If no one cares about a good enough, the prices will come down
-          if (
-            local_market_good.amount_sold < 5 &&
-
-            //There can't be a shortage of the existing good
-            local_market_good.stock >= Math.ceil(
-              config.defines.economy.resource_base_stock*0.1
-            )
-          ) {
-            if (local_market_good.buy_price > 100 && local_market.sell_price > 100) {
-              local_market_good.buy_price = Math.ceil(local_market_good.buy_price*0.8);
-              local_market_good.sell_price = Math.ceil(local_market_good.sell_price*0.8);
-            }
-          } else {
-            //Randomly increase the buy_price of the good by anywhere from 3-8%, and decrease the sell_price of the good by anywhere from 3-8%.
-
-            local_market_good.buy_price = Math.ceil(local_market_good.buy_price*
-              (randomNumber(103, 108)/100)
-            );
-            local_market_good.sell_price = Math.ceil(local_market_good.sell_price*
-              (randomNumber(92, 97)/100)
-            );
-          }
-
-          //amount_sold deteriorates each turn to simulate large market demand
-          local_market_good.amount_sold = Math.ceil(local_market_good.amount_sold*0.5);
-        }
-      }
-
-      //Increment global round-count
-      main.global.round_count++;
     }
+
+    //World Market Down-Logic
+    {
+      for (var i = 0; i < all_market_goods.length; i++) {
+        var local_market_good = main.market[all_market_goods[i]];
+
+        //If no one cares about a good enough, the prices will come down
+        if (
+          local_market_good.amount_sold < 5 &&
+
+          //There can't be a shortage of the existing good
+          local_market_good.stock >= Math.ceil(
+            config.defines.economy.resource_base_stock*0.1
+          )
+        ) {
+          if (local_market_good.buy_price > 100 && local_market.sell_price > 100) {
+            local_market_good.buy_price = Math.ceil(local_market_good.buy_price*0.8);
+            local_market_good.sell_price = Math.ceil(local_market_good.sell_price*0.8);
+          }
+        } else {
+          //Randomly increase the buy_price of the good by anywhere from 3-8%, and decrease the sell_price of the good by anywhere from 3-8%.
+
+          local_market_good.buy_price = Math.ceil(local_market_good.buy_price*
+            (randomNumber(103, 108)/100)
+          );
+          local_market_good.sell_price = Math.ceil(local_market_good.sell_price*
+            (randomNumber(92, 97)/100)
+          );
+        }
+
+        //amount_sold deteriorates each turn to simulate large market demand
+        local_market_good.amount_sold = Math.ceil(local_market_good.amount_sold*0.5);
+      }
+    }
+
+    //Increment global round-count
+    main.global.round_count++;
   },
 
   nextTurn: function (arg0_user, arg1_options) { //[WIP] - Add newspaper section later, subtract political capital by vassal maintenance each turn
