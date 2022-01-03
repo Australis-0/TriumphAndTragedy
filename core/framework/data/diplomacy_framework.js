@@ -16,9 +16,27 @@ module.exports = {
       id: actual_ot_user_id,
       status: "active"
     };
-    ot_user.allies[actual_id] = {
+    ot_user.diplomacy.allies[actual_id] = {
       id: actual_id,
       status: "active"
+    };
+  },
+
+  createGuarantee: function (arg0_user, arg1_user) {
+    //Convert from parameters
+    var user_id = arg0_user;
+    var ot_user_id = arg1_user;
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var actual_ot_user_id = main.global.user_map[ot_user_id];
+    var game_obj = getGameObject(user_id);
+    var ot_user = main.users[actual_ot_user_id];
+    var usr = main.users[actual_id];
+
+    //Set guarantee objects for both users
+    usr.diplomacy.guarantees[actual_ot_user_id] = {
+      id: actual_ot_user_id
     };
   },
 
@@ -39,7 +57,7 @@ module.exports = {
       id: actual_ot_user_id,
       status: "active"
     };
-    ot_user.military_access[actual_id] = {
+    ot_user.diplomacy.military_access[actual_id] = {
       id: actual_id,
       status: "active"
     };
@@ -73,7 +91,7 @@ module.exports = {
         id: actual_ot_user_id,
         time_remaining: time_remaining
       };
-      ot_user.non_aggression_pacts[actual_ot_user_id] = {
+      ot_user.diplomacy.non_aggression_pacts[actual_ot_user_id] = {
         id: actual_ot_user_id,
         time_remaining: time_remaining
       };
@@ -93,7 +111,7 @@ module.exports = {
 
       //Non-aggression pacts are mutual, so clone if existent
       if (usr.diplomacy.non_aggression_pacts[actual_ot_user_id])
-        ot_user.non_aggression_pacts[actual_id] = JSON.parse(JSON.stringify(non_aggression_pact));
+        ot_user.diplomacy.non_aggression_pacts[actual_id] = JSON.parse(JSON.stringify(non_aggression_pact));
     }
   },
 
@@ -114,7 +132,7 @@ module.exports = {
       id: actual_ot_user_id,
       status: "active"
     };
-    ot_user.rivals[actual_id] = {
+    ot_user.diplomacy.rivals[actual_id] = {
       id: actual_id,
       status: "active"
     };
@@ -158,7 +176,23 @@ module.exports = {
 
     //Dissolve alliances for both users
     delete usr.diplomacy.allies[actual_ot_user_id];
-    delete ot_user.allies[actual_id];
+    delete ot_user.diplomacy.allies[actual_id];
+  },
+
+  dissolveGuarantee: function (arg0_user, arg1_user) {
+    //Convert from parameters
+    var user_id = arg0_user;
+    var ot_user_id = arg1_user;
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var actual_ot_user_id = main.global.user_map[ot_user_id];
+    var game_obj = getGameObject(user_id);
+    var ot_user = main.users[actual_ot_user_id];
+    var usr = main.users[actual_id];
+
+    //Delete guarantee object
+    delete usr.diplomacy.guarantees[actual_ot_user_id];
   },
 
   dissolveNonAggressionPact: function (arg0_user, arg1_user) {
@@ -175,7 +209,7 @@ module.exports = {
 
     //Dissolve non aggression pact for both users
     delete usr.diplomacy.non_aggression_pacts[actual_ot_user_id];
-    delete ot_user.non_aggression_pacts[actual_id];
+    delete ot_user.diplomacy.non_aggression_pacts[actual_id];
   },
 
   dissolveMilitaryAccess: function (arg0_user, arg1_user) {
@@ -192,7 +226,7 @@ module.exports = {
 
     //Dissolve military access for both users
     delete usr.diplomacy.military_access[actual_ot_user_id];
-    delete ot_user.military_access[actual_id];
+    delete ot_user.diplomacy.military_access[actual_id];
   },
 
   dissolveRivalry: function (arg0_user, arg1_user) {
@@ -209,7 +243,7 @@ module.exports = {
 
     //Dissolve alliances for both users
     delete usr.diplomacy.rivals[actual_ot_user_id];
-    delete ot_user.rivals[actual_id];
+    delete ot_user.diplomacy.rivals[actual_id];
   },
 
   dissolveVassal: function (arg0_user) {
@@ -221,6 +255,27 @@ module.exports = {
 
     //Delete vassal_obj
     delete vassal_obj;
+  },
+
+  getGuarantees: function (arg0_user) {
+    //Convert from parameters
+    var user_id = arg0_user;
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var all_guarantees = [];
+    var all_users = Object.keys(main.users);
+
+    //Iterate over all users and push all guarantee objects to array
+    for (var i = 0; i < all_users.length; i++) {
+      var local_user = main.users[all_users[i]];
+
+      if (local_user.diplomacy.guarantees[actual_id])
+        all_guarantees.push(local_user.diplomacy.guarantees[actual_id]);
+    }
+
+    //Return statement
+    return all_guarantees;
   },
 
   getMutualRelations: function (arg0_user, arg1_user) {
