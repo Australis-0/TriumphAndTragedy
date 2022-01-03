@@ -10,6 +10,84 @@ module.exports = {
     var user_id = arg0_user;
     var usr = main.users[actual_id];
 
+    //Alerts page handler
+    {
+      if (game_obj.page == "alerts") {
+        //Button Handler
+        //[Alert ID]
+        if (!isNaN(parseInt(input.trim()))) {
+          var local_alert_id = parseInt(input.trim());
+
+          if (usr.alerts[local_alert_id]) {
+            var alert_obj = usr.alerts[local_alert_id];
+
+            //Print alert and set page
+            printAlert(user_id, alert_obj);
+            game_obj.page = `alert_${local_alert_id}`;
+          }
+        }
+
+        //[Back]
+        if (input == "back") {
+          game_obj.page = "country_interface";
+          module.exports.initialiseTopbar(user_id);
+          printStats(user_id);
+        }
+
+        //[Jump To Page]
+        visualPrompt(game_obj.alert_embed, user_id, {
+          title: `Jump To Page:`,
+          prompts: [
+            [`Which page would you like to jump to?`, "number", { min: 1, max: printAlerts(game_obj.user).length }]
+          ]
+        },
+        function (arg) {
+          createPageMenu(game_obj.middle_embed, {
+            embed_pages: printAlerts(game_obj.user),
+            page: arg[0] - 1,
+            user: game_obj.user
+          });
+        });
+
+      } else if (game_obj.page.startsWith("alert_")) {
+        var current_alert_id = game_obj.page.replace("alert_", "");
+
+        var alert_obj = usr.alerts[local_alert_id];
+
+        //Button Handler
+        //[Back]
+        if (input == "back") {
+          game_obj.page = "alerts";
+          createPageMenu(game_obj.middle_embed, {
+            embed_pages: printAlerts(game_obj.user),
+            user: game_obj.user
+          });
+        }
+
+        //Default handler
+        var button_obj = getButton(alert_obj.id, input);
+
+        //Execute if button is found
+        if (button_obj)
+          if (button_obj.effect) {
+            button_obj.effect(alert_obj.options);
+
+            //Send user feedback
+            printAlert(game_obj.id, `${config.icons.checkmark} You have successfully resolved **${alert_obj.name}** by choosing **${button_obj.name}**.`);
+
+            //Delete alert key
+            usr.alerts.splice(local_alert_id, 1);
+
+            //Go back to the main alert screen after resolving
+            game_obj.page = "alerts";
+            createPageMenu(game_obj.middle_embed, {
+              embed_pages: printAlerts(game_obj.user),
+              user: game_obj.user
+            });
+          }
+      }
+    }
+
     //Budget page handler
     {
       if (budget_pages.includes(game_obj.page)) {

@@ -92,8 +92,8 @@ module.exports = {
 
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
-    var alert_name = module.exports.findAlert(alert_name, { return_key: true });
-    var alert_obj = module.exports.findAlert(alert_name);
+    var alert_name = module.exports.getAlert(alert_name, { return_key: true });
+    var alert_obj = module.exports.getAlert(alert_name);
     var game_obj = getGameObject(user_id);
     var usr = main.users[actual_id];
 
@@ -138,6 +138,7 @@ module.exports = {
     usr.alerts.push({
       id: alert_name,
       name: alert_title,
+      options: options,
 
       description: alert_description,
       icon: alert_obj.icon,

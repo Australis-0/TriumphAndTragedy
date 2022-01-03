@@ -1,4 +1,7 @@
 module.exports = {
+  alert_pages: [
+    "alerts"
+  ],
   budget_pages: [
     "budget"
   ],
@@ -219,6 +222,17 @@ module.exports = {
           initialiseMapViewer(getGame(user_id));
         }
         module.exports.initialiseTopbar(user_id);
+
+        break;
+      case "alerts_btn":
+        if (!alert_pages.includes(game_obj.page)) {
+          game_obj.page = "alerts";
+          module.exports.initialiseTopbar(user_id);
+        }
+        createPageMenu(game_obj.middle_embed, {
+          embed_pages: printAlerts(user_id),
+          user: game_obj.user
+        });
 
         break;
       case "budget_btn":

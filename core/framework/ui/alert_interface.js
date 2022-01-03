@@ -49,11 +49,6 @@ module.exports = {
 
     //Print first page
     var first_page_string = [];
-
-    first_page_string.push(`**[Back]** ¦ **[Jump To Page]**`);
-    first_page_string.push("");
-    first_page_string.push(config.localisation.divider);
-    first_page_string.push("");
     first_page_string.push(`**Current Alerts:**`);
     first_page_string.push("");
 
@@ -67,7 +62,7 @@ module.exports = {
 
     //Split embed and push to alert_embeds
     return splitEmbed(first_page_string, {
-      title: "Alert List:",
+      title: "[Back] ¦ [Jump To Page] ¦ Alert List:",
       title_pages: true,
       fixed_width: true
     });
