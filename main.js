@@ -96,7 +96,14 @@ FileManager.import("./game/diplomacy/break_alliance");
 FileManager.import("./game/diplomacy/cancel_military_access");
 FileManager.import("./game/diplomacy/decrease_relations");
 FileManager.import("./game/diplomacy/end_rivalry");
+FileManager.import("./game/diplomacy/improve_relations");
 FileManager.import("./game/diplomacy/liberate");
+FileManager.import("./game/diplomacy/military_access");
+FileManager.import("./game/diplomacy/non_aggression_pact");
+FileManager.import("./game/diplomacy/proclaim_guarantee");
+FileManager.import("./game/diplomacy/revoke_guarantee");
+FileManager.import("./game/diplomacy/rival");
+FileManager.import("./game/diplomacy/vassalise");
 
 FileManager.import("./game/laws/enact_reform");
 

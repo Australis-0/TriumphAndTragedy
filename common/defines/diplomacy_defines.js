@@ -12,8 +12,15 @@ config.defines.diplomacy = {
   infamy_loss: -0.05, //Per turn
   liberation_alert_id: "we_are_free", //What alert should popup when a vassal is voluntarily liberated by its overlord?
   military_access_cancellation_alert_id: "access_cancelled", //Which alert should popup when military access to another country is cancelled?
+  military_access_request_alert_id: "other_armies_our_soil", //Which alert should popup for the target user when military access is being requested of them?
+  non_aggression_pact_request_alert_id: "a_guaranteed_peace", //Which alert should popup when a user is requesting a non-aggression pact?
+  proclaim_guarantee_alert_id: "a_guarantee_for_our_nation", //What alert should popup for the target user when someone is guaranteeing their independence?
   relation_change_speed: 10, //Maximum amount relations can change by per turn
+  revoke_guarantee_alert_id: "guarantee_broken", //What alert should popup when a guarantee of independence is revoked?
   rival_cancellation_alert_id: "the_coming_thaw", //Determines which alert should be triggered when rivals seek mutual reconciliation
+  rival_declaration_alert_id: "rival_declared", //Determines which alert should be triggered for the target nation when a rivalry begins
+  rival_relations_threshold: 50, //How high is too high in terms of relations for countries to be rivals?
+  vassalisation_request_alert_id: "the_option_to_submit", //What alert should be sent to the target of a vassalisation request?
 
   //Diplomatic Actions
   improve_relations_cost: 50, //Amount of PC needed to improve relations

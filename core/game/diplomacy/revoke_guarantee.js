@@ -1,0 +1,41 @@
+module.exports = {
+  revokeGuarantee: function (arg0_user, arg1_user) {
+    //Convert from parameters
+    var user_id = arg0_user;
+    var ot_user_id = arg1_user;
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var actual_ot_user_id = main.global.user_map[ot_user_id];
+    var game_obj = getGameObject(user_id);
+    var ot_user = main.users[actual_ot_user_id];
+    var usr = main.users[actual_id];
+
+    //Check if other user even exists
+    if (ot_user) {
+      //See if other user are themselves
+      if (actual_id != actual_ot_user_id) {
+        //Check if target user is currently being guaranteed by invokee
+        if (hasGuarantee(actual_id, actual_ot_user_id)) {
+          //Remove a used diplomatic slot and print user feedback
+          dissolveGuarantee(actual_id, actual_ot_user_id);
+          usr.diplomacy.used_diplomatic_slots--;
+
+          sendAlert(actual_ot_user_id, config.defines.diplomacy.revoke_guarantee_alert_id, {
+            FROM: actual_id,
+            TO: actual_ot_user_id
+          });
+
+          //Print user feedback
+          printAlert(game_obj.id, `${config.icons.checkmark} We have broken off our guarantee with **${ot_user.name}**.`);
+        } else {
+          printError(game_obj.id, `You aren't currently guaranteeing the independence of **${ot_user.name}**!`);
+        }
+      } else {
+        printError(game_obj.id, `You can't stop guaranteeing the independence of yourself! If you're really that desperate, try vassalising yourself to someone.`);
+      }
+    } else {
+      printError(game_obj.id, `You can't revoke your guarantee of independence for a non-existent country!`);
+    }
+  }
+};

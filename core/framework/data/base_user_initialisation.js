@@ -109,7 +109,6 @@ module.exports = {
     //Define subobjects
     if (!usr.diplomacy) usr.diplomacy = {};
       if (!usr.diplomacy.used_diplomatic_slots) usr.diplomacy.used_diplomatic_slots = 0;
-      if (!usr.diplomacy.rival_slots) usr.diplomacy.rival_slots = config.rival_slots;
 
       if (!usr.diplomacy.allies) usr.diplomacy.allies = {};
       if (!usr.diplomacy.guarantees) usr.diplomacy.guarantees = {};
@@ -208,6 +207,7 @@ module.exports = {
       if (!usr.modifiers.reform_desire) usr.modifiers.reform_desire = 0;
       if (!usr.modifiers.reform_desire_gain) usr.modifiers.reform_desire_gain = 0.02;
       if (!usr.modifiers.republicanism) usr.modifiers.republicanism = 0;
+      if (!usr.modifiers.rival_slots) usr.modifiers.rival_slots = config.defines.diplomacy.rival_slots;
       if (!usr.modifiers.ruling_party_support) usr.modifiers.ruling_party_support = 0;
       if (!usr.modifiers.stability) usr.modifiers.stability = 0.75;
       if (!usr.modifiers.stability_modifier) usr.modifiers.stability_modifier = 0;
