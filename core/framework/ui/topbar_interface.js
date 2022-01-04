@@ -68,11 +68,11 @@ module.exports = {
           .setCustomId("alerts_btn")
           .setLabel(`You have ${parseNumber(usr.alerts.length)} alert(s).`)
           .setStyle("DANGER")
-          .setDisabled(total_alerts == 0)
+          .setDisabled(usr.alerts.length == 0)
           .setEmoji("798006990638940160"),
         new Discord.MessageButton()
           .setCustomId("events_btn")
-          .setLabel((total_events > 0) ?
+          .setLabel((usr.events.length > 0) ?
             `You have ${parseNumber(usr.events.length)} event(s) that need your attention.` :
             `No new events.`
           )

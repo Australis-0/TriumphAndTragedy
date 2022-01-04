@@ -54,7 +54,7 @@ module.exports = {
 
     //Go through all usr.alerts
     for (var i = 0; i < usr.alerts.length; i++)
-      first_page_string.push(`**${i + 1}.** - ${(usr.alerts[i].icon ? config.icons[usr.alerts[i].icon] + " " : "")}${usr.alerts[i].name} (${config.icons.time} ${parseNumber(usr.alerts[i].duration})`);
+      first_page_string.push(`**${i + 1}.** - ${(usr.alerts[i].icon ? config.icons[usr.alerts[i].icon] + " " : "")}${usr.alerts[i].name} (${config.icons.time} ${parseNumber(usr.alerts[i].duration)})`);
 
     //No alert text
     if (usr.alerts.length == 0)

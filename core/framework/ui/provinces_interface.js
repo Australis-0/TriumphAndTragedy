@@ -37,6 +37,9 @@ module.exports = {
       //Initialise province_string
       var province_string = [];
 
+      //Initialise tracker variables
+      var culture_obj = getCulture(province_obj.culture);
+
       //Format embed
       province_string.push(`**[Back]** ¦ **[Jump To Page]**`);
       province_string.push("");
@@ -67,8 +70,8 @@ module.exports = {
         province_string.push(`- ${(config.pops[all_pops[i]].icon) ? config.pops[all_pops[i]].icon + " " : ""}${(config.pops[all_pops[i]].name) ? config.pops[all_pops[i]].name : all_pops[i]}: ${parseNumber(province_obj.pops[all_pops[i]])}`);
 
       //Display total population, culture
-      province_string.push(`- ${config.icons.population} Population: ${parseNumbre(province_obj.pops.population)}`);
-      province_string.push(`- ${config.icons.culture} Culture: ${province_obj.culture}`);
+      province_string.push(`- ${config.icons.population} Population: ${parseNumber(province_obj.pops.population)}`);
+      province_string.push(`- ${config.icons.culture} Culture: ${culture_obj.name}`);
 
       //Change game_obj.page
       game_obj.page = `view_province_${province_id}`;
