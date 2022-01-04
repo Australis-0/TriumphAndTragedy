@@ -51,6 +51,28 @@ module.exports = {
     return time;
   },
 
+  parseList: function (arg0_list) {
+    //Convert from parameters
+    var name_array = arg0_list;
+
+    //Declare local tracker variables
+    var name_string = "";
+
+    //Modify ending
+    if (name_array.length > 2) {
+      name_array[name_array.length-1] = `and ${name_array[name_array.length-1]}`;
+      name_string = name_array.join(", ");
+    } else if (name_array.length == 2) {
+      name_array[name_array.length-1] = `and ${name_array[name_array.length-1]}`;
+      name_string = name_array.join(" ");
+    } else {
+      name_string = name_array[0];
+    }
+
+    //Return statement
+    return name_string;
+  },
+
   /*
     parseNumber() - Formats a number to a string whilst displaying decimal separators (e.g. 1.567,23 instead of 1567.23).
     options: {
