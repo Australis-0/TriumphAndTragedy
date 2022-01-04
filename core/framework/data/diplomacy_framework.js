@@ -279,6 +279,24 @@ module.exports = {
     return all_guarantees;
   },
 
+  getMilitaryAccesses: function (arg0_user) {
+    //Convert from parameters
+    var user_id = arg0_user;
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var all_military_accesses = [];
+    var all_users = Object.keys(main.users);
+
+    //Iterate over all users and push all military access objects to array
+    for (var i = 0; i < all_users.length; i++)
+      if (hasMilitaryAccess(all_users[i], actual_id))
+        all_military_accesses.push(all_users[i]);
+
+    //Return statement
+    return all_military_accesses;
+  },
+
   getMutualRelations: function (arg0_user, arg1_user) {
     return [
       module.exports.getRelations(user_id, ot_user_id)[0],
