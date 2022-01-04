@@ -21,6 +21,7 @@ config.defines.diplomacy = {
   rival_declaration_alert_id: "rival_declared", //Determines which alert should be triggered for the target nation when a rivalry begins
   rival_relations_threshold: 50, //How high is too high in terms of relations for countries to be rivals?
   vassalisation_request_alert_id: "the_option_to_submit", //What alert should be sent to the target of a vassalisation request?
+  vassal_maintenance_cost: 0.2, //What is the factor by which vassals should cost PC?
 
   //Diplomatic Actions
   improve_relations_cost: 50, //Amount of PC needed to improve relations

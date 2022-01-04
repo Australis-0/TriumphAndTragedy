@@ -333,6 +333,21 @@ module.exports = {
     }
   },
 
+  getVassalMaintenance: function (arg0_user) {
+    //Convert from parameters
+    var user_id = arg0_user;
+
+    //Declare lcal instance variables
+    var actual_id = main.global.user_map[user_id];
+    var usr = main.users[actual_id];
+
+    //Return statement
+    return (
+      usr.modifiers.political_capital_gain*
+        ((Object.keys(usr.vassals).length)*config.defines.diplomacy.vassal_maintenance_cost)
+    );
+  },
+
   hasAlliance: function (arg0_user, arg1_user) {
     //Convert from parameters
     var user_id = arg0_user;
