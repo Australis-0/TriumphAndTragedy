@@ -159,7 +159,7 @@ module.exports = {
       trade_string.push("");
     }
 
-    trade_string.push(`Base travel time: **${parseNumber(Math.ceil(config.defines.combat.base_transfer_time*usr.modifiers.shipmshipment_time))}** turn(s).`);
+    trade_string.push(`Base travel time: **${parseNumber(Math.ceil(config.defines.combat.base_transfer_time*usr.modifiers.shipment_time))}** turn(s).`);
     trade_string.push(`Current travel speed: **${parseNumber(Math.ceil(config.defines.combat.shipment_time/usr.modifiers.shipment_time))}** province(s) a turn.`);
     trade_string.push(`Shipment capacity: **${parseNumber(capacity_used)}** out of **${parseNumber(usr.modifiers.shipment_capacity)}** currently in use.`);
     trade_string.push(`- Shipment Time Modifier: **${printPercentage(usr.modifiers.shipment_time)}**`);
@@ -215,11 +215,11 @@ module.exports = {
           getGood(local_export.good_type).name :
           local_export.good_type;
 
-        export_string.push(`Exporting ${local_good_icon}${parseNumber(local_export.amount)} ${local_good_name} to **${main.users[local_export.target].name}**.\nThe shipment will arrive in ${parseNumber(local_exports[i].duration)}** turn(s).`);
+        export_string.push(`Exporting ${local_good_icon}${parseNumber(local_export.amount)} ${local_good_name} to **${main.users[local_export.target].name}**.\nThe shipment will arrive in ${parseNumber(local_export[i].duration)}** turn(s).`);
       }
 
-    if (local_exports.length > 10)
-      export_string.push(`+${parseNumber(local_exports.length-10)} more ...`);
+    if (all_exports.length > 10)
+      export_string.push(`+${parseNumber(all_exports.length-10)} more ...`);
 
     //World Market
 
@@ -228,7 +228,7 @@ module.exports = {
 
     //Enter entries
     for (var i = 0; i < all_market_goods.length; i++)
-      if (i <= 10) {
+      if (i <= 5) {
         var local_good = getGood(all_market_goods[i]);
         var local_market_good = main.market[all_market_goods[i]];
 
