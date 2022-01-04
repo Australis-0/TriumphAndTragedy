@@ -121,7 +121,7 @@ module.exports = {
     var user_id = arg0_user;
     var usr = main.users[user_id];
     var pop_type = arg1_type;
-    var raw_modifier = arg2_raw_modifier;
+    var raw_modifier = arg2_modifier;
 
     //Declare local instance variables
     var pop_obj = config.pops[pop_type];

@@ -77,7 +77,7 @@ module.exports = {
             `No new events.`
           )
           .setStyle("DANGER")
-          .setDisabled(total_events == 0)
+          .setDisabled(usr.events.length == 0)
           .setEmoji("800548280589221888")
       );
     const country_row_1 = new Discord.MessageActionRow()

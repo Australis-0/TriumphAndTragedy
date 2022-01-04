@@ -44,5 +44,14 @@ module.exports = {
     //Declare tracker variables
     if (!main.last_backup) main.last_backup = new Date().getTime();
     if (!main.last_turn) main.last_turn = new Date().getTime();
+
+    //Fix province ID's
+    var all_provinces = Object.keys(main.provinces);
+    
+    for (var i = 0; i < all_provinces.length; i++) {
+      var local_province = main.provinces[all_provinces[i]];
+
+      local_province.id = all_provinces[i];
+    }
   }
 };

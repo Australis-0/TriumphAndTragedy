@@ -57,6 +57,8 @@ module.exports = {
       //Add new culture object to main.global
       var culture_id = generateCultureID();
 
+      usr.culture = culture_id;
+
       main.global.cultures[culture_id] = {
         id: culture_id,
         name: processed_country_name,
@@ -64,7 +66,7 @@ module.exports = {
 
         primary_culture: [user_id],
         accepted_culture: []
-      }
+      };
 
       return usr;
     }

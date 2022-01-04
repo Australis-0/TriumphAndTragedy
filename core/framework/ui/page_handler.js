@@ -670,36 +670,43 @@ module.exports = {
     //Province page handlers
     {
       if (game_obj.page == "provinces_list") {
-        if (arg[0] == "view") {
-          if (arg.length > 1) {
-            if (arg[1] != "province") {
-              //City view handler
-              var city_name = input.replace("view", "").trim();
+        if (input != "view provinces")
+          if (arg[0] == "view") {
+            if (arg.length > 1) {
+              if (arg[1] != "province") {
+                //City view handler
+                var city_name = input.replace("view", "").trim()
+                  .replace("province", "").trim();
 
-              if (getCity(city_name)) {
-                createPageMenu(game_obj.middle_embed, {
-                  embed_pages: printCity(game_obj.user, city_name),
-                  user: game_obj.user
-                });
-              } else if (!getProvince(province_name)) {
-                printError(game_obj.id, `**${city_name}** is not a valid city that you can view!`)
+                if (getCity(city_name)) {
+                  createPageMenu(game_obj.middle_embed, {
+                    embed_pages: printCity(game_obj.user, city_name),
+                    user: game_obj.user
+                  });
+                } else if (getProvince(province_name)) {
+                  createPageMenu(game_obj.middle_embed, {
+                    embed_pages: printProvince(game_obj.user, city_name),
+                    user: game_obj.user
+                  });
+                } else {
+                  printError(game_obj.id, `**${city_name}** is not a valid city that you can view!`);
+                }
+              } else {
+                //Province view handler [WIP]
+                var province_name = input.replace("view", "").trim()
+                  .replace("province", "").trim();
+
+                (getProvince(province_name)) ?
+                  createPageMenu(game_obj.middle_embed, {
+                    embed_pages: printProvince(game_obj.user, province_name),
+                    user: game_obj.user
+                  }) :
+                  printError(game_obj.id, `**${province_name}** is not a valid province that you can view!`);
               }
             } else {
-              //Province view handler [WIP]
-              var province_name = input.replace("view", "").trim()
-                .replace("province", "").trim();
-
-              (getProvince(province_name)) ?
-                createPageMenu(game_obj.middle_embed, {
-                  embed_pages: printProvince(game_obj.user, province_name),
-                  user: game_obj.user
-                }) :
-                printError(game_obj.id, `**${province_name}** is not a valid province that you can view!`);
+              initialisePrintProvince(user_id, game_obj.id);
             }
-          } else {
-            initialisePrintProvince(user_id, game_obj.id);
           }
-        }
 
         switch (input) {
           case "assimilate":
