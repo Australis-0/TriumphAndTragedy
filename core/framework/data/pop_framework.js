@@ -163,6 +163,24 @@ module.exports = {
     return total_population;
   },
 
+  getTotalActiveDuty: function (arg0_user) {
+    //Convert from parameters
+    var user_id = arg0_user;
+    var usr = main.users[user_id];
+
+    //Declare local instance variables
+    var all_pops = Object.keys(config.pops);
+    var total_active_duty = 0;
+
+    //Fetch total active duty
+    for (var i = 0; i < all_pops.length; i++)
+      if (config.pops[all_pops[i]].military_pop)
+        total_active_duty += usr.pops[`used_${all_pops[i]}`];
+
+    //Return statement
+    return total_active_duty;
+  },
+
   getTotalPopManpower: function (arg0_user, arg1_type, arg2_raw_modifier) { //WIP
     //Convert from parameters
     var user_id = arg0_user;

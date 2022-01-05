@@ -34,6 +34,22 @@ module.exports = {
     return army_obj;
   },
 
+  getAverageTechCount: function () {
+    //Declare local instance variables
+    var all_users = Object.keys(main.users);
+    var tech_sum = 0;
+
+    //Iterate over all users and sum
+    for (var i = 0; i < all_users.length; i++) {
+      var local_user = main.users[all_users[i]];
+
+      tech_sum += local_user.researched_technologies.length;
+    }
+
+    //Return statement
+    return tech_sum/all_users.length;
+  },
+
   getCapital: function (arg0_user) {
     //Convert from parameters
     var user_id = arg0_user;
