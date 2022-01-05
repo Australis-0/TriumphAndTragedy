@@ -83,10 +83,12 @@ module.exports = {
     var usr = main.users[user_id];
 
     //Declare diplomacy_view_string
+    var diplomacy_view_embeds = [];
     var diplomacy_view_string = [];
     var stats_string = []; //Used for viewing country stats
 
     //Declare and initialise local tracker variables
+    var all_pops = Object.keys(config.pops);
     var all_user_keys = Object.keys(main.global.user_map);
     var capital_obj = getCapital(actual_ot_user_id);
     var current_ot_user_relations = getRelations(actual_ot_user_id, actual_id);
@@ -95,124 +97,288 @@ module.exports = {
     var user_keys = [];
     var user_provinces = getProvinces(actual_ot_user_id, { include_occupations: true });
 
-    //Diplomatic relation variables
-    var allies_array = [];
-    var have_military_access_array = getMilitaryAccesses(actual_ot_user_id);
-    var guaranteed_array = [];
-    var guarantors_array = [];
-    var military_access_array = [];
-    var non_aggression_pact_array = [];
-    var rivals_array = [];
-    var vassal_array = [];
-    var vassal_obj = getVassal(actual_ot_user_id);
+    //Diplomatic Actions page
+    {
+      //Diplomatic relation variables
+      var allies_array = [];
+      var have_military_access_array = getMilitaryAccesses(actual_ot_user_id);
+      var guaranteed_array = [];
+      var guarantors_array = [];
+      var military_access_array = [];
+      var non_aggression_pact_array = [];
+      var rivals_array = [];
+      var vassal_array = [];
+      var vassal_obj = getVassal(actual_ot_user_id);
 
-    //Initialise diplomatic relation variables
-    var all_allies = Object.keys(ot_user.diplomacy.allies);
-    var all_guarantees = Object.keys(ot_user.diplomacy.guarantees);
-    var all_guarantors = getGuarantees(user_id);
-    var all_military_accesses = Object.keys(ot_user.diplomacy.military_access);
-    var all_non_aggression_pacts = Object.keys(ot_user.diplomacy.non_aggression_pacts);
-    var all_rivals = Object.keys(ot_user.diplomacy.rivals);
-    var all_vassals = Object.keys(ot_user.diplomacy.vassals);
+      //Initialise diplomatic relation variables
+      var all_allies = Object.keys(ot_user.diplomacy.allies);
+      var all_guarantees = Object.keys(ot_user.diplomacy.guarantees);
+      var all_guarantors = getGuarantees(user_id);
+      var all_military_accesses = Object.keys(ot_user.diplomacy.military_access);
+      var all_non_aggression_pacts = Object.keys(ot_user.diplomacy.non_aggression_pacts);
+      var all_rivals = Object.keys(ot_user.diplomacy.rivals);
+      var all_vassals = Object.keys(ot_user.diplomacy.vassals);
 
-    //Alliances
-    for (var i = 0; i < all_allies.length; i++)
-      if (hasAlliance(actual_ot_user_id, all_allies[i]))
-        allies_array.push(main.users[all_allies[i]].name);
+      //Alliances
+      for (var i = 0; i < all_allies.length; i++)
+        if (hasAlliance(actual_ot_user_id, all_allies[i]))
+          allies_array.push(main.users[all_allies[i]].name);
 
-    //Guarantees
-    for (var i = 0; i < all_guarantees.length; i++)
-      if (hasGuarantee(actual_ot_user_id, all_guarantees[i]))
-        guaranteed_array.push(main.users[all_guarantees[i]].name);
+      //Guarantees
+      for (var i = 0; i < all_guarantees.length; i++)
+        if (hasGuarantee(actual_ot_user_id, all_guarantees[i]))
+          guaranteed_array.push(main.users[all_guarantees[i]].name);
 
-    //Guarantors
-    for (var i = 0; i < all_guarantors.length; i++)
-      guarantors_array.push(main.users[all_guarantors[i].guarantor].name);
+      //Guarantors
+      for (var i = 0; i < all_guarantors.length; i++)
+        guarantors_array.push(main.users[all_guarantors[i].guarantor].name);
 
-    //Military Accesses
-    for (var i = 0; i < all_military_accesses.length; i++)
-      if (hasMilitaryAccess(actual_ot_user_id, all_military_accesses[i]))
-        military_access_array.push(main.users[all_military_accesses[i]].name);
+      //Military Accesses
+      for (var i = 0; i < all_military_accesses.length; i++)
+        if (hasMilitaryAccess(actual_ot_user_id, all_military_accesses[i]))
+          military_access_array.push(main.users[all_military_accesses[i]].name);
 
-    //Non-aggression Pacts
-    for (var i = 0; i < all_non_aggression_pacts.length; i++)
-      if (hasNonAggressionPact(actual_ot_user_id, all_non_aggression_pacts[i]))
-        non_aggression_pact_array.push(main.users[all_non_aggression_pacts[i]].name);
+      //Non-aggression Pacts
+      for (var i = 0; i < all_non_aggression_pacts.length; i++)
+        if (hasNonAggressionPact(actual_ot_user_id, all_non_aggression_pacts[i]))
+          non_aggression_pact_array.push(main.users[all_non_aggression_pacts[i]].name);
 
-    //Rivalries
-    for (var i = 0; i < all_rivals.length; i++)
-      if (hasRivalry(actual_ot_user_id, all_rivals[i]))
-        rivals_array.push(main.users[all_rivals[i]].name);
+      //Rivalries
+      for (var i = 0; i < all_rivals.length; i++)
+        if (hasRivalry(actual_ot_user_id, all_rivals[i]))
+          rivals_array.push(main.users[all_rivals[i]].name);
 
-    //Vassals
-    for (var i = 0; i < all_vassals.length; i++)
-      if (ot_user.diplomacy.vassals[all_vassals[i]].overlord == actual_id)
-        vassal_array.push(main.users[all_vassals[i]].name);
+      //Vassals
+      for (var i = 0; i < all_vassals.length; i++)
+        if (ot_user.diplomacy.vassals[all_vassals[i]].overlord == actual_id)
+          vassal_array.push(main.users[all_vassals[i]].name);
 
 
-    //User variables
-    for (var i = 0; i < all_user_keys.length; i++)
-      if (main.global.user_map[all_user_keys[i]] == actual_ot_user_id)
-        user_keys.push(`<@${all_user_keys[i]}>`);
+      //User variables
+      for (var i = 0; i < all_user_keys.length; i++)
+        if (main.global.user_map[all_user_keys[i]] == actual_ot_user_id)
+          user_keys.push(`<@${all_user_keys[i]}>`);
 
-    //Push main statistics
-    diplomacy_view_string.push(`**${ot_user.name}** ¦ ${parseList(user_keys)}`);
-    diplomacy_view_string.push(`${config.icons.political_capital} Government: **${(government_obj.name) ? government_obj.name : ot_user.government}**`);
-    diplomacy_view_string.push(`${config.icons.provinces} Provinces: ${parseNumber(user_provinces.length)} (${(capital_obj.id) ? `Capital ID: Province ${capital_obj.id}` : `No set capital`})`);
-    diplomacy_view_string.push(`${config.icons.population} Population: **${parseNumber(ot_user.population)}**`);
-    diplomacy_view_string.push(`${config.icons.technology} Techs Researched: **${parseNumber(ot_user.researched_technologies.length)}**`);
-    diplomacy_view_string.push("");
-    diplomacy_view_string.push(config.localisation.divider);
-    diplomacy_view_string.push("");
+      //Push main statistics
+      diplomacy_view_string.push(`**${ot_user.name}** ¦ ${parseList(user_keys)}`);
+      diplomacy_view_string.push(`${config.icons.political_capital} Government: **${(government_obj.name) ? government_obj.name : ot_user.government}**`);
+      diplomacy_view_string.push(`${config.icons.provinces} Provinces: ${parseNumber(user_provinces.length)} (${(capital_obj.id) ? `Capital ID: Province ${capital_obj.id}` : `No set capital`})`);
+      diplomacy_view_string.push(`${config.icons.population} Population: **${parseNumber(ot_user.population)}**`);
+      diplomacy_view_string.push(`${config.icons.technology} Techs Researched: **${parseNumber(ot_user.researched_technologies.length)}**`);
+      diplomacy_view_string.push("");
+      diplomacy_view_string.push(config.localisation.divider);
+      diplomacy_view_string.push("");
 
-    //Diplomatic statistics
-    diplomacy_view_string.push(`${config.icons.faculty} Diplomatic Slots: (**${parseNumber(ot_user.diplomacy.used_diplomatic_slots)}**/**${parseNumber(ot_user.modifiers.diplomatic_slots)}**)`);
-    diplomacy_view_string.push(`${config.icons.infamy} Infamy: **${parseNumber(ot_user.modifiers.infamy)}**`);
-    diplomacy_view_string.push("");
+      //Diplomatic statistics
+      diplomacy_view_string.push(`${config.icons.faculty} Diplomatic Slots: (**${parseNumber(ot_user.diplomacy.used_diplomatic_slots)}**/**${parseNumber(ot_user.modifiers.diplomatic_slots)}**)`);
+      diplomacy_view_string.push(`${config.icons.infamy} Infamy: **${parseNumber(ot_user.modifiers.infamy)}**`);
+      diplomacy_view_string.push("");
 
-    //Push relations
-    var current_relations_string = "";
-    var ot_user_relations_string = "";
+      //Push relations
+      var current_relations_string = "";
+      var ot_user_relations_string = "";
 
-    //Set current status string for both current_relations_string and ot_user_relations_string
-    if (current_user_relations[1].status == "improving") {
-      current_relations_string = `(Improving to ${parseNumber(current_user_relations[1].improving_to, { display_prefix: true })} in ${parseNumber(current_user_relations[1].duration)} turn(s)).`;
-    } else if (current_user_relations[1].status == "decreasing") {
-      current_relations_string = `(Decreasing to ${parseNumber(current_user_relations[1].improving_to, { display_prefix: true })} in ${parseNumber(current_user_relations[1].duration)} turn(s)).`;
+      //Set current status string for both current_relations_string and ot_user_relations_string
+      if (current_user_relations[1].status == "improving") {
+        current_relations_string = `(Improving to ${parseNumber(current_user_relations[1].improving_to, { display_prefix: true })} in ${parseNumber(current_user_relations[1].duration)} turn(s)).`;
+      } else if (current_user_relations[1].status == "decreasing") {
+        current_relations_string = `(Decreasing to ${parseNumber(current_user_relations[1].improving_to, { display_prefix: true })} in ${parseNumber(current_user_relations[1].duration)} turn(s)).`;
+      }
+
+      if (current_ot_user_relations[1].status == "improving") {
+        ot_user_relations_string = `(Improving to ${parseNumber(current_ot_user_relations[1].improving_to, { display_prefix: true })} in ${parseNumber(current_ot_user_relations[1].duration)} turn(s)).`;
+      } else if (current_ot_user_relations[1].status == "decreasing") {
+        ot_user_relations_string = `(Decreasing to ${parseNumber(current_ot_user_relations[1].improving_to, { display_prefix: true })} in ${parseNumber(current_ot_user_relations[1].duration)} turn(s)).`;
+      }
+
+      //Push relational status to diplomacy_view_string
+      diplomacy_view_string.push(`Our relations with them: **${parseNumber(current_user_relations[0], { display_prefix: true })}** ${current_relations_string}`);
+      diplomacy_view_string.push(`Their relations with us: **${parseNumber(current_ot_user_relations[0], { display_prefix: true })}** ${current_relations_string}`);
+
+      //Other info
+      diplomacy_view_string.push("");
+
+      if (allies_array.length > 0)
+        diplomacy_view_string.push(`The following nations are allied to **${ot_user.name}**: ${parseList(allies_array)}.`);
+      if (vassal_array.length > 0)
+        diplomacy_view_string.push(`The following nations are vassals to **${ot_user.name}**: ${parseList(vassal_array)}.`);
+      if (rivals_array.length > 0)
+        diplomacy_view_string.push(`The following nations are rivals of **${ot_user.name}**: ${parseList(rivals_array)}.`);
+      if (guaranteed_array.length > 0)
+        diplomacy_view_string.push(`**${ot_user.name}** is currently guaranteeing the independence of: ${parseList(guaranteed_array)}.`);
+      if (guarantors_array.length > 0)
+        diplomacy_view_string.push(`The following nations are currently guaranteeing the independence of **${ot_user.name}**: ${parseList(guarantors_array)}.`);
+      if (military_access_array.length > 0)
+        diplomacy_view_string.push(`The following nations have military access through **${ot_user.name}**: ${parseList(military_access_array)}.`);
+
+      if (non_aggression_pact_array.length > 0)
+        diplomacy_view_string.push(`The following nations have a non-aggression pact with **${ot_user.name}**: ${parseList(non_aggression_pact_array)}.`);
+      if (hasNonAggressionPact(actual_id, actual_ot_user_id))
+        diplomacy_view_string.push(`- You currently have a non-aggression pact with this country for the next **${parseNumber(usr.diplomacy.non_aggression_pacts[actual_ot_user_id].duration)}** turn(s).`);
+
+      if (vassal_obj)
+        diplomacy_view_string.push(`**${ot_user.name}** is a vassal of **${main.users[vassal_obj.overlord].name}**.`);
+
+      //Diplomatic actions
+      diplomacy_view_string.push(config.localisation.divider);
+      diplomacy_view_string.push("");
+      diplomacy_view_string.push(`**Diplomatic Actions:**`);
+      diplomacy_view_string.push("");
+
+      if (actual_id != actual_ot_user_id) {
+        //[WIP] - Add is justifying indicator here in future
+
+        diplomacy_view_string.push(`**[Improve Relations]** ${config.icons.political_capital} ${parseNumber(config.defines.diplomacy.improve_relations_cost)} PC`);
+        diplomacy_view_string.push(`**[Decrease Relations]** ${config.icons.political_capital} ${parseNumber(config.defines.diplomacy.decrease_relations_cost)} PC`);
+        diplomacy_view_string.push("");
+
+        (hasAlliance(actual_id, actual_ot_user_id)) ?
+          diplomacy_view_string.push(`**[Break Alliance]** ${config.icons.political_capital} ${parseNumber(config.defines.diplomacy.break_alliance_cost)} PC`) :
+          diplomacy_view_string.push(`**[Request Alliance]** ${config.icons.political_capital} ${parseNumber(config.defines.diplomacy.form_alliance_cost)} PC`);
+
+        (hasRivalry(actual_id, actual_ot_user_id)) ?
+          diplomacy_view_string.push(`**[End Rivalry]**`) :
+          diplomacy_view_string.push(`**[Declare Rivalry]** ${config.icons.political_capital} ${parseNumber(config.defines.diplomacy.declare_rival_cost)} PC`);
+
+        (hasGuarantee(actual_id, actual_ot_user_id)) ?
+          diplomacy_view_string.push(`**[Revoke Guarantee]**`) :
+          diplomacy_view_string.push(`**[Guarantee Independence]** ${config.icons.political_capital} ${parseNumber(config.defines.diplomacy.guarantee_independence_cost)} PC`);
+
+        if (!hasMilitaryAccess(actual_id, actual_ot_user_id))
+          diplomacy_view_string.push(`**[Request Military Access]** ${config.icons.political_capital} ${parseNumber(config.defines.diplomacy.request_military_access_cost)} PC`);
+
+        if (!hasNonAggressionPact(actual_id, actual_ot_user_id))
+          diplomacy_view_string.push(`**[Sign Non-Aggression Pact]** ${config.icons.political_capital} ${parseNumber(config.defines.diplomacy.sign_non_aggression_pact_cost)} PC`);
+
+        if (vassal_obj) {
+          if (vassal_obj.overlord == actual_id) {
+            diplomacy_view_string.push("");
+            diplomacy_view_string.push(config.localisation.divider);
+            diplomacy_view_string.push("");
+            diplomacy_view_string.push(`**Subject Actions:**`);
+            diplomacy_view_string.push("");
+            diplomacy_view_string.push(`**[Liberate]**`);
+            diplomacy_view_string.push(`**[Demand Annexation]** ${config.icons.political_capital} ${parseNumber(config.defines.diplomacy.annex_cost)} PC`);
+          }
+        } else {
+          diplomacy_view_string.push(`**[Demand Vassalisation]** ${config.icons.political_capital} ${parseNumber(config.defines.diplomacy.vassalise_cost)} PC`);
+        }
+      } else {
+        diplomacy_view_string.push(`_You can't conduct diplomatic relations with yourself!_`);
+      }
     }
 
-    if (current_ot_user_relations[1].status == "improving") {
-      ot_user_relations_string = `(Improving to ${parseNumber(current_ot_user_relations[1].improving_to, { display_prefix: true })} in ${parseNumber(current_ot_user_relations[1].duration)} turn(s)).`;
-    } else if (current_ot_user_relations[1].status == "decreasing") {
-      ot_user_relations_string = `(Decreasing to ${parseNumber(current_ot_user_relations[1].improving_to, { display_prefix: true })} in ${parseNumber(current_ot_user_relations[1].duration)} turn(s)).`;
+    //Statistics page
+    {
+      //Fetch city list
+      var cities = [];
+      var ending_string = "";
+      var name_array = [];
+      var name_string = "";
+      var usr_provinces = getProvinces(actual_ot_user_id);
+
+      //Append cities to list
+      for (var i = 0; i < usr_provinces.length; i++)
+        if (usr_provinces[i].type == "urban") {
+          var local_city = usr_provinces[i];
+          cities.push({
+            name: local_city.name,
+            population: local_city.population,
+            type: local_city.city_type //Capital or regular city
+          });
+        }
+
+      //Sort cities by population
+      cities.sort(function (a, b) {
+        return b.population - a.population;
+      });
+
+      var capital_included = false;
+      for (var i = 0; i < cities.length; i++)
+        if (i < 15) {
+          if (cities[i].type == "capital") {
+            capital_included = true;
+            name_array.push(`**${local_city.name}**`);
+          }
+          name_array.push(local_city.name);
+        }
+
+      if (name_array.length >= 2) {
+        name_array[name_array.length-1] = `and ${name_array[name_array.length-1]}`;
+        name_string = (name_array.length > 2) ? name_array.join(", ") : name_array.join(" ");
+      } else {
+        name_string = (name_array.length > 0) ? name_array[0] : "No cities.";
+      }
+
+      if (cities.length > name_array.length)
+        ending_string = `, (+${cities.length-name_array.length} more)`;
+
+      //Begin formatting stats_string
+      stats_string.push(`**${ot_user.name}** ¦ ${parseList(user_keys)}`);
+      stats_string.push(`${config.icons.political_capital} Government: **${(government_obj.name) ? government_obj.name : ot_user.government}**`);
+      stats_string.push(`${config.icons.provinces} Provinces: ${parseNumber(user_provinces.length)} (${(capital_obj.id) ? `Capital ID: Province ${capital_obj.id}` : `No set capital`})`);
+      stats_string.push(`${config.icons.population} Population: **${parseNumber(ot_user.population)}**`);
+      stats_string.push(`${config.icons.technology} Techs Researched: **${parseNumber(ot_user.researched_technologies.length)}**`);
+      stats_string.push("");
+      stats_string.push(config.localisation.divider);
+      stats_string.push("");
+
+      //Push main statistics: cities, number of workers; money, political capital; infamy, war exhaustion, number of soldiers
+      stats_string.push(`**Economic Statistsics:**`);
+      stats_string.push("");
+
+      stats_string.push(`${config.icons.development} Cities: (**${parseNumber(getCitiesCap(actual_ot_user_id))}**/**${parseNumber(cities.length)}**): ${name_string}`);
+
+      //Civilian pops display
+      for (var i = 0; i < all_pops.length; i++) {
+        var local_pop = config.pops[all_pops[i]];
+
+        if (local_pop.stats_display && !local_pop.military_pop)
+          stats_string.push(`${(local_pop.icon) ? local_pop.icon + " " : ""}${(local_pop.name) ? local_pop.name : all_pops[i]}: (**${parseNumber(ot_user.pops["used_" + all_pops[i]])}**/**${parseNumber(getTotalManpower(actual_ot_user_id, all_pops[i]))})`);
+      }
+
+      stats_string.push("");
+      stats_string.push(`${config.icons.money} Money: **${parseNumber(ot_user.money)}**`);
+      stats_string.push(`${config.icons.political_capital} Political Capital: **${parseNumber(ot_user.political_capital)}**`);
+
+      stats_string.push("");
+      stats_string.push(`**Military Statistics:**`);
+      stats_string.push("");
+
+      stats_string.push(`${config.icons.infamy} Infamy: **${parseNumber(ot_user.modifiers.infamy)}** (${parseNumber(ot_user.modifiers.infamy_loss, { display_prefix: true })} per turn)`);
+      stats_string.push(`${config.icons.infamy} War Exhaustion: **${printPercentage(ot_user.modifiers.war_exhaustion)}**`);
+      stats_string.push("");
+
+      //Military pops display
+      for (var i = 0; i < all_pops.length; i++) {
+        var local_pop = config.pops[all_pops[i]];
+
+        if (local_pop.stats_display && local_pop.military_pop)
+          stats_string.push(`${(local_pop.icon) ? local_pop.icon + " " : ""}${(local_pop.name) ? local_pop.name : all_pops[i]}: (**${parseNumber(ot_user.pops["used_" + all_pops[i]])}**/**${parseNumber(getTotalManpower(actual_ot_user_id, all_pops[i]))}) ¦ (**${printPercentage(getTotalManpower(actual_ot_user_id, all_pops[i], true))}** Recruitable Population)`);
+      }
     }
 
-    //Push relational status to diplomacy_view_string
-    diplomacy_view_string.push(`Our relations with them: **${parseNumber(current_user_relations[0], { display_prefix: true })}** ${current_relations_string}`);
-    diplomacy_view_string.push(`Their relations with us: **${parseNumber(current_ot_user_relations[0], { display_prefix: true })}** ${current_relations_string}`);
+    //Remove control panel if one exists
+    removeControlPanel(game_obj.id);
 
-    //Other info
-    diplomacy_view_string.push("");
+    //Format both diplomatic actions and statistics page to embeds
+    const diplomacy_embed = new Discord.MessageEmbed()
+      .setColor(settings.bot_colour)
+      .setTitle(`[Back] ¦ **Diplomatic Overview:**`)
+      .setThumbnail(usr.flag)
+      .setImage("https://cdn.discordapp.com/attachments/722997700391338046/736141424315203634/margin.png")
+      .setDescription(diplomacy_view_string.join("\n"));
 
-    if (allies_array.length > 0)
-      diplomacy_view_string.push(`The following nations are allied to **${ot_user.name}**: ${parseList(allies_array)}.`);
-    if (vassal_array.length > 0)
-      diplomacy_view_string.push(`The following nations are vassals to **${ot_user.name}**: ${parseList(vassal_array)}.`);
-    if (rivals_array.length > 0)
-      diplomacy_view_string.push(`The following nations are rivals of **${ot_user.name}**: ${parseList(rivals_array)}.`);
-    if (guaranteed_array.length > 0)
-      diplomacy_view_string.push(`**${ot_user.name}** is currently guaranteeing the independence of: ${parseList(guaranteed_array)}.`);
-    if (guarantors_array.length > 0)
-      diplomacy_view_string.push(`The following nations are currently guaranteeing the independence of **${ot_user.name}**: ${parseList(guarantors_array)}.`);
-    if (military_access_array.length > 0)
-      diplomacy_view_string.push(`The following nations have military access through **${ot_user.name}**: ${parseList(military_access_array)}.`);
+    const stats_embed = new Discord.MessageEmbed()
+      .setColor(settings.bot_colour)
+      .setTitle(`[Back] ¦ **Diplomatic Overview:**`)
+      .setThumbnail(usr.flag)
+      .setImage("https://cdn.discordapp.com/attachments/722997700391338046/736141424315203634/margin.png")
+      .setDescription(stats_string.join("\n"));
 
-    if (non_aggression_pact_array.length > 0)
-      diplomacy_view_string.push(`The following nations have a non-aggression pact with **${ot_user.name}**: ${parseList(non_aggression_pact_array)}.`);
-    if (hasNonAggressionPact(actual_id, actual_ot_user_id))
-      diplomacy_view_string.push(`- You currently have a non-aggression pact with this country for the next **${parseNumber(usr.diplomacy.non_aggression_pacts[actual_ot_user_id].duration)}** turn(s).`);
-
-    if (vassal_obj)
-      diplomacy_view_string.push(`**${ot_user.name}** is a vassal of **${main.users[vassal_obj.overlord].name}**.`);
+    createPageMenu(game_obj.middle_embed, {
+      embed_pages: [diplomacy_embed, stats_embed],
+      user: game_obj.user
+    });
   }
 };

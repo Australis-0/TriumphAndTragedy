@@ -82,14 +82,14 @@ module.exports = {
       var local_pop = config.pops[all_pops[i]];
 
       if (local_pop.stats_display)
-        stats_string.push(`${(local_pop.icon) ? local_pop.icon : ""} ${(local_pop.name) ? local_pop.name : all_pops[i]}: (**${parseNumber(usr.pops["used_" + all_pops[i]])}**/**${parseNumber(getTotalPopManpower(actual_id, all_pops[i]))}**)${(local_pop.military_pop) ? " ¦ (**" + printPercentage(getTotalPopManpower(actual_id, all_pops[i], true)) + "** Recruitable Population)" : ""}`);
+        stats_string.push(`${(local_pop.icon) ? local_pop.icon + " " : ""} ${(local_pop.name) ? local_pop.name : all_pops[i]}: (**${parseNumber(usr.pops["used_" + all_pops[i]])}**/**${parseNumber(getTotalPopManpower(actual_id, all_pops[i]))}**)${(local_pop.military_pop) ? " ¦ (**" + printPercentage(getTotalPopManpower(actual_id, all_pops[i], true)) + "** Recruitable Population)" : ""}`);
     }
 
     stats_string.push(config.localisation.divider);
     stats_string.push("**Economy:**");
     stats_string.push("");
     stats_string.push(`${config.icons.technology} Techs Researched: (**${parseNumber(usr.researched_technologies.length)}**/**${parseNumber(getAllTechnologies().length)}**)`);
-    stats_string.push(`${config.icons.money} Money: **${parseNumber(usr.money)}**`);
+    stats_string.push(`${config.icons.money} Money: **${parseNumber(usr.money)}** (${config.icons.money} **${parseNumber(getIncome(actual_id))}** per turn).`);
     stats_string.push(config.localisation.divider);
     stats_string.push("");
     stats_string.push(`**Internal Politics:**`);
