@@ -420,5 +420,37 @@ module.exports = {
       //Return statement
       return [starting_province, ending_province];
     }
+  },
+
+  /*
+    transferProvince() - Transfers a province from the base user to another one. Cannot transfer an uncolonised province.
+    options: {
+      province_id: "province_id", //Which province to transfer
+      target: "actual_ot_user_id" //Whom to transfer it to
+    }
+  */
+  transferProvince: function (arg0_user, arg1_options) {
+    //Convert from parameters
+    var user_id = arg0_user;
+    var options = (arg1_options) ? arg1_options : {};
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var actual_ot_user_id = main.global.user_map[options.target];
+    var ot_user = main.users[actual_ot_user_id];
+    var province_obj = main.provinces[options.province_id];
+    var usr = main.users[actual_id];
+
+    //Transfer province
+    if (province_obj.controller) {
+      province_obj.owner = actual_ot_user_id;
+      province_obj.controller = actual_ot_user_id;
+
+      usr.provinces--;
+      ot_user.provinces++;
+
+      //Change province colour
+      setProvinceColour("political", options.province_id, ot_user.colour);
+    }
   }
 };

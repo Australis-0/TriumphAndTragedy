@@ -66,6 +66,9 @@ module.exports = {
         province_obj.culture = usr.pops.primary_culture;
         usr.population += total_population;
         usr.provinces++;
+
+        //Change province colour
+        setProvinceColour("political", province_id, usr.colour);
       } else {
         log.warn(`settleProvince() - ran into an error whilst generating Province ID ${province_id}: Province already had a province type.`);
         console.log(e);
