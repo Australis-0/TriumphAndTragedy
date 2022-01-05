@@ -66,8 +66,47 @@ module.exports = {
     game_obj.main_change = true;
   },
 
-  printLedger: function (arg0_user) { //[WIP] - Add getScore() function later
+  printLedger: function (arg0_user) {
+    //Convert from parameters
+    var user_id = arg0_user;
 
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var game_obj = getGameObject(user_id);
+    var usr = main.users[user_id];
+
+    //Declare local instance variables
+    var ledger_string = [];
+    var sorted_user_array = getSortedUsers();
+    var tech_sum = getAllTechnologies().length;
+
+    //Run through sorted_user_array, appending to ledger_string
+    for (var i = 0; i < sorted_user_array.length; i++) {
+      var local_score = getScore(sorted_user_array[i]);
+      var local_user = main.users[sorted_user_array[i]];
+
+      //Name, Score, Provinces, Population, Military, Money, Tech
+      ledger_string.push(`**${local_user.name}**`);
+      ledger_string.push(`- ${config.icons.prestige} Score: **${parseNumber(local_score)}**`);
+      ledger_string.push(`- ${config.icons.provinces} Provinces: ${parseNumber(local_user.provinces)}`);
+      ledger_string.push(`- ${config.icons.population} Population: ${parseNumber(local_user.population)}`);
+      ledger_string.push(`- ${config.icons.soldiers} Active Soldiers: ${parseNumber(getTotalActiveDuty(sorted_user_array[i]))}`);
+      ledger_string.push(`- ${config.icons.money} Money: ${local_user.money}`);
+      ledger_string.push(`- ${config.icons.technology} Techs Researched: (**${parseNumber(local_user.researched_technologies.length)}**/**${parseNumber(tech_sum)}**)`);
+    }
+
+    //Remove control panel if one exists
+    removeControlPanel(game_obj.id);
+
+    //Edit main embed display
+    createPageMenu(game_obj.middle_embed, {
+      embed_pages: splitEmbed(ledger_string, {
+        title: "[Back] ¦ [Jump To Page] ¦ Diplomatic Ledger:",
+        title_pages: true,
+        fixed_width: true
+      }),
+      user: game_obj.user
+    });
   },
 
   viewDiplomacy: function (arg0_user, arg1_user) { //[WIP] - Create bulk of function; push war status to fore if found to be valid
