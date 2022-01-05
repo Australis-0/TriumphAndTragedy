@@ -27,6 +27,7 @@ FileManager.import("./framework/users");
 FileManager.import("./framework/data/alert_framework");
 FileManager.import("./framework/data/base_user_initialisation");
 FileManager.import("./framework/data/buildings_framework");
+FileManager.import("./framework/data/casus_belli_framework");
 FileManager.import("./framework/data/culture_framework");
 FileManager.import("./framework/data/diplomacy_framework");
 FileManager.import("./framework/data/games");
