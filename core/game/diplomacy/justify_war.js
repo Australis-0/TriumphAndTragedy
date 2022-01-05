@@ -1,8 +1,9 @@
 module.exports = {
-  justifyWar: function (arg0_user, arg1_user) { //[WIP] - Send out news alert to other countries when someone is being justified on
+  justifyWar: function (arg0_user, arg1_user, arg2_cb_type) { //[WIP] - Send out news alert to other countries when someone is being justified on
     //Convert from parameters
     var user_id = arg0_user;
     var ot_user_id = arg1_user;
+    var cb_name = arg2_cb_type;
 
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
@@ -28,6 +29,42 @@ module.exports = {
 
                 if (!is_vassal_of_user) {
                   //Check if user has a valid CB
+                  var has_valid_cb = [false, -1]; //[has_valid_cb, cb_index]
+                  var raw_cb_name = getCB(cb_name, { return_key: true });
+
+                  for (var i = 0; i < usr.diplomacy.casus_belli.length; i++) {
+                    var local_cb = usr.diplomacy.casus_belli[i];
+
+                    if (local_cb.type == raw_cb_name)
+                      has_valid_cb = [true, i];
+                  }
+
+                  //Final check
+                  if (has_valid_cb[0]) {
+                    //Begin justification and add infamy
+                    var cb_obj = getCB(cb_name);
+
+                    //Fetch actual_justification_time
+                    var actual_justification_time = (hasRivalry(actual_id, actual_ot_user_id)) ?
+                      Math.round(config.defines.diplomacy.justify_wargoal_time/2) :
+                      config.defines.diplomacy.justify_wargoal_time;
+                    var actual_infamy = (cb_obj.infamy) ? cb_obj.infamy : 0;
+
+                    usr.justifications.push({
+                      type: raw_cb_name,
+                      target: actual_ot_user_id,
+
+                      duration: actual_justification_time
+                    });
+
+                    //Print user feedback
+                    printAlert(`You have begun justifying a war of **${(cb_obj.anem) ? cb_obj.name : raw_cb_name}** against **${ot_user.name}**!\n\nYou may cancel this justification at any time before its completion by typing **[Cancel Justification]**`);
+
+                    //Remove CB
+                    usr.casus_belli.splice(has_valid_cb[1], 1);
+                  } else {
+                    printError(game_obj.id, `**${cb_name}** is not a valid CB for **${ot_user.name}**! View a list of valid CB's by typing **[View Casus Belli]**.`);
+                  }
                 } else {
                   printError(game_obj.id, `**${ot_user.name}** is one of your vassals! You cannot justify on one of your own vassals.`);
                 }

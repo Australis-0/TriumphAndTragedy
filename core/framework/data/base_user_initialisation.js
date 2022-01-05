@@ -119,9 +119,9 @@ module.exports = {
       if (!usr.diplomacy.vassals) usr.diplomacy.vassals = {};
 
       //Diplomatic trackers
-      if (!usr.diplomacy.casus_belli) usr.diplomacy.casus_belli = {};
-      if (!usr.diplomacy.justifications) usr.diplomacy.justifications = {};
-      if (!usr.diplomacy.wargoals) usr.diplomacy.wargoals = {};
+      if (!usr.diplomacy.casus_belli) usr.diplomacy.casus_belli = [];
+      if (!usr.diplomacy.justifications) usr.diplomacy.justifications = [];
+      if (!usr.diplomacy.wargoals) usr.diplomacy.wargoals = [];
 
     if (!usr.modifiers) usr.modifiers = {};
       //Colonisation
