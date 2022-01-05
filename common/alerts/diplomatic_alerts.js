@@ -26,13 +26,14 @@ config.alerts.diplomacy = {
 
     btn_guarantee_positive_relations: {
       title: "They must be proud to offer this arrangement to such a noble nation.",
+      ai_chance: 100,
       effect: function (options) {
         addTemporaryModifier(options.TO, {
           type: "stability_modifier",
           value: 0.10,
           duration: 5
         });
-        modifyRelations(options.TO.id, {
+        modifyRelations(options.TO, {
           target: options.FROM,
           value: 25
         });
@@ -50,7 +51,9 @@ config.alerts.diplomacy = {
     btn_accept_non_aggression: {
       title: "We shall accept the offer.",
       effect: function (options) {
-        options.FROM.diplomacy.used_diplomatic_slots++;
+        var FROM_USER = main.users[options.FROM];
+
+        FROM_USER.diplomacy.used_diplomatic_slots++;
         modifyRelations(options.TO, {
           target: options.FROM,
           value: 20
@@ -63,8 +66,9 @@ config.alerts.diplomacy = {
     },
     btn_decline_non_aggression: {
       name: "We respectfully decline the offer.",
+      ai_chance: 100,
       effect: function (options) {
-        sendAlert(options.FROM.id, "an_uneasy_peace", {
+        sendAlert(options.FROM, "an_uneasy_peace", {
           TO: options.FROM,
           FROM: options.TO
         });
@@ -78,12 +82,13 @@ config.alerts.diplomacy = {
 
     btn_alliance_accepted: {
       name: "We shall accomplish much together.",
-      effect: {
-        add_temporary_modifier: {
+      ai_chance: 100,
+      effect: function (options) {
+        addTemporaryModifier(options.FROM, {
           type: "stability_modifier",
           value: 0.05,
           duration: 3
-        }
+        });
       }
     }
   },
@@ -113,6 +118,8 @@ config.alerts.diplomacy = {
     btn_accept_alliance: {
       name: "It is in our best interest to conclude an alliance.",
       effect: function (options) {
+        var TO_USER = main.users[options.TO];
+
         sendAlert(options.FROM, "alliance_accepted", {
           TO: options.FROM,
           FROM: options.TO
@@ -124,7 +131,7 @@ config.alerts.diplomacy = {
     btn_decline_alliance: {
       name: "Respectfully decline the offer for now.",
       effect: function (options) {
-        var FROM_USER = main.users[options.FROM_USER];
+        var FROM_USER = main.users[options.FROM];
 
         sendAlert(options.FROM, "alliance_declined", {
           TO: options.FROM,
