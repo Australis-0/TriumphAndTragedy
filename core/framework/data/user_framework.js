@@ -34,6 +34,7 @@ module.exports = {
     return army_obj;
   },
 
+  //getAverageTechCount() - Fetches average tech count from all users
   getAverageTechCount: function () {
     //Declare local instance variables
     var all_users = Object.keys(main.users);
