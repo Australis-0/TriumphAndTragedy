@@ -378,6 +378,11 @@ module.exports = {
     );
   },
 
+  //[WIP] - Completely annexes a target nation into another
+  inherit: function (arg0_user, arg1_user) {
+
+  },
+
   isBlockaded: function (arg0_user) {
     //Convert from parameters
     var user_id = arg0_user;

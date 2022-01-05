@@ -154,6 +154,63 @@ module.exports = {
     };
   },
 
+  //destroyAllDiplomaticRelations() - Destroys all diplomatic relations other countries have with the target user
+  destroyAllDiplomaticRelations: function (arg0_user) { //[WIP] - Add war justifications in the future
+    //Convert from parameters
+    var user_id = arg0_user;
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var all_users = Object.keys(main.users);
+    var usr = main.users[user_id];
+
+    //Iterate over all users, destroying any diplomatic relations that currently exist
+    for (var i = 0; i < all_users.length; i++)
+      if (all_users[i] != actual_id) {
+        var local_user = main.users[all_users[i]];
+
+        //Allies
+        if (local_user.diplomacy.allies[actual_id]) {
+          local_user.diplomacy.used_diplomatic_slots--;
+
+          module.exports.dissolveAlliance(all_users[i], actual_id);
+        }
+
+        //Guarantees
+        if (module.exports.hasGuarantee(all_users[i], actual_id)) {
+          local_user.diplomacy.used_diplomatic_slots--;
+
+          module.exports.dissolveGuarantee(all_users[i], actual_id);
+        }
+
+        //Military Accesses
+        if (module.exports.hasMilitaryAccess(all_users[i], actual_id))
+          module.exports.dissolveMilitaryAccess(all_users[i], actual_id);
+
+        //Non-Aggression Pacts
+        if (module.exports.hasNonAggressionPact(all_users[i], actual_id)) {
+          local_user.diplomacy.used_diplomatic_slots--;
+
+          module.exports.dissolveNonAggressionPact(all_users[i], actual_id);
+        }
+
+        //Relations
+        if (local_user.diplomacy.relations[actual_id])
+          delete local_user.diplomacy.relations[actual_id];
+
+        //Rivals
+        if (module.exports.hasRivalry(all_users[i], actual_id))
+          module.exports.dissolveRivalry(all_users[i], actual_id);
+
+        //Vassals
+        if (local_user.diplomacy.vassals[actual_id]) {
+          local_user.diplomacy.used_diplomatic_slots--;
+
+          module.exports.dissolveVassal(all_users[i], actual_id);
+        }
+      }
+  },
+
   dissolveAlliance: function (arg0_user, arg1_user) {
     //Convert from parameters
     var user_id = arg0_user;
