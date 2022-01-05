@@ -8,6 +8,8 @@ config.defines.diplomacy = {
   alliance_alert_id: "alliance_proposal", //What alert should popup when an alliance is proposed?
   alliance_break_alert_id: "alliance_broken", //What alert should popup when an alliance is broken?
   alliance_relation_threshold: 75, //How high should relations need to be before one can propose an alliance?
+  annex_alert_id: "the_coming_integration", //Which alert should be printed out when an annexation request is declared?
+  infamy_annex_cost: 3, //How much infamy should an annexation request cost?
   infamy_limit: 8, //Total infamy before containment CB kicks in, and bad effects
   infamy_loss: -0.05, //Per turn
   liberation_alert_id: "we_are_free", //What alert should popup when a vassal is voluntarily liberated by its overlord?

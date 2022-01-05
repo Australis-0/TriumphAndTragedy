@@ -92,6 +92,7 @@ FileManager.import("./game/culture/rename_culture_adjective");
 FileManager.import("./game/culture/rename_culture");
 
 FileManager.import("./game/diplomacy/ally");
+FileManager.import("./game/diplomacy/annex");
 FileManager.import("./game/diplomacy/break_alliance");
 FileManager.import("./game/diplomacy/cancel_military_access");
 FileManager.import("./game/diplomacy/decrease_relations");

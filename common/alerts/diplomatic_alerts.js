@@ -311,33 +311,35 @@ config.alerts.diplomacy = {
 
     btn_decline_annexation: {
       name: "Those bloody backstabbers!",
-      effect: {
-        decrease_relations: {
-          target: "FROM",
-          value: 30
-        },
-        FROM: {
-          decrease_relations: {
-            target: "FROM",
-            value: 30
-          }
-        },
-        liberate_country: true,
-        send_alert: {
-          target: "FROM",
-          type: "pouring_over_the_maps"
-        }
+      effect: function (options) {
+        var FROM_USER = main.users[options.FROM];
+
+        //Decrease mutual relations by 30
+        modifyRelations(options.FROM, {
+          target: options.TO,
+          value: -30
+        });
+        modifyRelations(options.TO, {
+          target: options.FROM,
+          value: -30
+        });
+
+        //Liberate country
+        FROM_USER.diplomacy.used_diplomatic_slots--;
+        dissolveVassal(options.FROM, options.TO);
+
+        //Send alert
+        sendAlert(options.FROM, "pouring_over_the_maps", {
+          TO: options.FROM,
+          FROM: options.TO
+        });
       }
     },
 
     btn_accept_annexation: {
       name: "We have no choice. Goodbye, cruel world!",
-      effect: {
-        FROM: {
-          annex_country: {
-            target: "FROM"
-          }
-        }
+      effect: function (options) {
+        inherit(options.TO, options.FROM);
       }
     }
   },

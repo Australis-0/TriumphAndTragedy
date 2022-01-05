@@ -379,8 +379,25 @@ module.exports = {
   },
 
   //[WIP] - Completely annexes a target nation into another
-  inherit: function (arg0_user, arg1_user) {
+  inherit: function (arg0_user, arg1_user) { //[WIP] - Controlled/occupied territory handler in the future
+    //Convert from parameters
+    var user_id = arg0_user; //User to be annexed
+    var ot_user_id = arg1_user; //Recipient user
 
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var actual_ot_user_id = main.global.user_map[ot_user_id];
+
+    //Annex all provinces
+    var all_provinces = module.exports.getProvinces(actual_id, { include_occupations: true });
+
+    for (var i = 0; i < all_provinces.length; i++)
+      transferProvince(actual_id, { target: actual_ot_user_id, province_id = all_provinces[i].id });
+
+    //Remove all diplomatic relations and delete user object
+    destroyAllDiplomaticRelations(actual_id);
+
+    delete main.users[actual_id];
   },
 
   isBlockaded: function (arg0_user) {

@@ -155,7 +155,7 @@ module.exports = {
   },
 
   //destroyAllDiplomaticRelations() - Destroys all diplomatic relations other countries have with the target user
-  destroyAllDiplomaticRelations: function (arg0_user) { //[WIP] - Add war justifications in the future
+  destroyAllDiplomaticRelations: function (arg0_user) { //[WIP] - Add war justifications in the future; withdraw from war
     //Convert from parameters
     var user_id = arg0_user;
 
