@@ -105,6 +105,7 @@ module.exports = {
     var alert_title = (alert_obj.name) ?
       parseLocalisation(alert_obj.name, { scopes: options }) :
       "";
+    var has_ai_chance = false;
 
     //Push buttons to array
     var all_subkeys = Object.keys(alert_obj);
@@ -126,6 +127,12 @@ module.exports = {
             `• _This choice currently has no effect._`
         };
 
+        //AI chance
+        if (button_obj.ai_chance) {
+          has_ai_chance = true;
+          push_obj.ai_chance = button_obj.ai_chance;
+        }
+
         //Add effect to push_obj if it exists
         if (button_obj.effect)
           push_obj.effect = button_obj.effect;
@@ -139,6 +146,8 @@ module.exports = {
       id: alert_name,
       name: alert_title,
       options: options,
+
+      has_ai_chance: has_ai_chance,
 
       description: alert_description,
       icon: alert_obj.icon,
