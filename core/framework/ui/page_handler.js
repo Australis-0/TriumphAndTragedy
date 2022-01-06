@@ -391,11 +391,44 @@ module.exports = {
 
     //Diplomacy page handler [WIP]
     {
+      if (game_obj.page == "cb_list") {
+        //[Back]
+        if (input == "back") {
+          printDiplomacy(user_id);
+          game_obj.page = "diplomacy";
+        }
+
+        //[Jump To Page]
+        if (input == "jump to page")
+          visualPrompt(game_obj.alert_embed, user_id, {
+            title: `Jump To Page:`,
+            prompts: [
+              [`Which page would you like jump to?`, "number", { min: 1, max: printCBs(game_obj.user).length }]
+            ]
+          },
+          function (arg) {
+            createPageMenu(game_obj.middle_embed, {
+              embed_pages: printCBs(game_obj.user),
+              page: arg[0] - 1,
+              user: game_obj.user
+            })
+          });
+      }
+
       if (game_obj.page == "diplomacy") {
         //Button Handler
         //[Allow Ceding]
         //[Cede Province]
         //[Deny Ceding]
+        //[View CB List]
+        if (input == "view cb list") {
+          createPageMenu(game_obj.middle_embed, {
+            embed_pages: prinCBList(user_id),
+            user: game_obj.user
+          });
+          game_obj.page = "cb_list";
+        }
+
         //[View Ledger]
         if (input == "view ledger") {
           printLedger(user_id);
@@ -485,6 +518,11 @@ module.exports = {
       if (game_obj.page == "ledger") {
         //Button Handler
         //[Back]
+        if (input == "back") {
+          printDiplomacy(user_id);
+          game_obj.page = "diplomacy";
+        }
+
         //[Jump To Page]
         //[View Relations]
       }
@@ -494,6 +532,11 @@ module.exports = {
 
         //Button Handler
         //[Back]
+        if (input == "back") {
+          viewDiplomacy(user_id, actual_ot_user_id);
+          game_obj.page = `diplomacy_view_${actual_ot_user_id}`;
+        }
+
         //[Jump To Page]
         //[Justify Wargoal]
       }
@@ -503,6 +546,11 @@ module.exports = {
 
         //Button Handler
         //[Back]
+        if (input == "back") {
+          viewDiplomacy(user_id, actual_ot_user_id);
+          game_obj.page = `diplomacy_view_${actual_ot_user_id}`;
+        }
+
         //[Jump To Page]
         //[Justify Wargoal]
       }

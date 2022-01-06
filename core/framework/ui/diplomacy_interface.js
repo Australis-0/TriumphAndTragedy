@@ -59,7 +59,7 @@ module.exports = {
     //[WIP] - Insert At War status here
 
     diplomacy_string.push("");
-    diplomacy_string.push(`**[War List]**`);
+    diplomacy_string.push(`**[View CB List]** ¦ **[War List]**`);
     diplomacy_string.push("");
     diplomacy_string.push(config.localisation.divider);
     diplomacy_string.push("");
