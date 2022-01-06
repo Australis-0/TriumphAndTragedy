@@ -48,5 +48,38 @@ module.exports = {
 
     //Return statement
     return (casus_belli_exists[0]) ? casus_belli_exists[1] : undefined;
+  },
+
+  /*
+    getJustification() - Gets a user justification on another user
+    {
+      target: actual_id, //Whom the target user of the justification is
+      type: "lebensraum", //What type of CB we are looking for
+
+      get_index: true/false //Whether to return the index instead of the element. False by default
+    }
+  */
+  getJustification: function (arg0_user, arg1_options) {
+    //Convert from parameters
+    var user_id = arg0_user;
+    var options = (arg1_options) ? arg1_options : {};
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var cb_name = options.type.trim().toLowerCase();
+    var has_justification = [false, ""]; //[justification_exists, justification_obj/index]
+    var raw_cb_name = module.exports.getCB(cb_name, { return_key: true });
+    var usr = main.users[user_id];
+
+    //Check if user has justification
+    for (var i = 0; i < usr.diplomacy.justifications.length; i++) {
+      var local_justification = usr.diplomacy.justifications[i];
+
+      if (local_justification.type == raw_cb_name && local_justification.target == options.target)
+        has_justification = [true, (!options.get_index) ? local_justification : i];
+    }
+
+    //Return statement
+    return (has_justification[0]) ? has_justification[1] : undefined;
   }
 };

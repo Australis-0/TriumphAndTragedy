@@ -58,7 +58,7 @@ module.exports = {
                     });
 
                     //Print user feedback
-                    printAlert(`You have begun justifying a war of **${(cb_obj.anem) ? cb_obj.name : raw_cb_name}** against **${ot_user.name}**!\n\nYou may cancel this justification at any time before its completion by typing **[Cancel Justification]**`);
+                    printAlert(`You have begun justifying a war of **${(cb_obj.name) ? cb_obj.name : raw_cb_name}** against **${ot_user.name}**!\n\nYou may cancel this justification at any time before its completion by typing **[Cancel Justification]**`);
 
                     //Remove CB
                     usr.casus_belli.splice(has_valid_cb[1], 1);
