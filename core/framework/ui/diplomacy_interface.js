@@ -1,4 +1,25 @@
 module.exports = {
+  initialiseViewDiplomacy: function (arg0_user) {
+    visualPrompt(game_obj.alert_embed, user_id, {
+      title: `View Diplomatic Relations:`,
+      prompts: [
+        [`Which country would you like to view your diplomatic relations with?\n\nType **[View Ledger]** to view a list of valid nations.`, "mention"]
+      ]
+    },
+    function (arg) {
+      module.exports.viewDiplomacy(user_id, arg[0]);
+    },
+    function (arg) {
+      switch (arg) {
+        case "view ledger":
+          module.exports.printLedger(user_id);
+          return true;
+
+          break;
+      }
+    });
+  },
+
   //[WIP] - All three of these need to be done before we can move onto CB's and wargoals!
   printDiplomacy: function (arg0_user) { //[WIP] - At war
     //Convert from parameters
@@ -282,6 +303,12 @@ module.exports = {
         (hasGuarantee(actual_id, actual_ot_user_id)) ?
           diplomacy_view_string.push(`**[Revoke Guarantee]**`) :
           diplomacy_view_string.push(`**[Guarantee Independence]** ${config.icons.political_capital} ${parseNumber(config.defines.diplomacy.guarantee_independence_cost)} PC`);
+
+        if (hasMilitaryAccess(actual_ot_user_id, actual_id))
+          diplomacy_view_string.push(`**[Revoke Military Access]**`);
+
+        if (hasMilitaryAccess(actual_id, actual_ot_user_id))
+          diplomacy_view_string.push(`**[Cancel Military Access]**`);
 
         if (!hasMilitaryAccess(actual_id, actual_ot_user_id))
           diplomacy_view_string.push(`**[Request Military Access]** ${config.icons.political_capital} ${parseNumber(config.defines.diplomacy.request_military_access_cost)} PC`);

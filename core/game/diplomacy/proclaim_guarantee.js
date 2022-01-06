@@ -73,10 +73,7 @@ module.exports = {
     function (arg) {
       switch (arg) {
         case "view ledger":
-          createPageMenu(game_obj.middle_embed, {
-            embed_pages: printLedger(user_id),
-            user: game_obj.user
-          });
+          printLedger(user_id);
           return true;
 
           break;

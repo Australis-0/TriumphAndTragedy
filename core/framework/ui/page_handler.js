@@ -389,6 +389,18 @@ module.exports = {
       }
     }
 
+    //Diplomacy page handler
+    {
+      if (game_obj.page == "diplomacy") {
+        //[Allow Ceding]
+        //[Cede Province]
+        //[Deny Ceding]
+        //[View Ledger]
+        //[View Relations]
+        //[War List]
+      }
+    }
+
     //Economy page handler
     {
       if (economy_pages.includes(game_obj.page)) {
