@@ -59,6 +59,7 @@ FileManager.import("./framework/map/province_renderer");
 
 FileManager.import("./framework/ui/alert_interface");
 FileManager.import("./framework/ui/budget_interface");
+FileManager.import("./framework/ui/casus_belli_interface");
 FileManager.import("./framework/ui/cities_interface");
 FileManager.import("./framework/ui/colonisation_interface");
 FileManager.import("./framework/ui/country_interface");
