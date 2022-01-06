@@ -184,7 +184,7 @@ module.exports = {
 
       //Remove all alerts in alerts_to_remove
       for (var i = 0; i < alerts_to_remove.length; i++)
-        removeElement(usr.alerts, alerts_to_remove[i]);
+        usr.alerts.splice(alerts_to_remove[i], 1);
     }
 
     //Budget processing
@@ -305,6 +305,33 @@ module.exports = {
         //Vassalage
         if (getVassal(actual_id))
           usr.vassal_years++;
+
+        //Wargoal justification
+        {
+          var justifications_to_remove = [];
+
+          for (var i = 0; i < usr.diplomacy.justifications.length; i++) {
+            var local_justification = usr.diplomacy.justifications[i];
+
+            local_justification.duration--;
+
+            //Check if justification has finished
+            if (local_justification.duration <= 0) {
+              //Give wargoal
+              usr.diplomacy.wargoals.push({
+                type: local_justification.type,
+                target: local_justification.target
+              });
+
+              //Push to removal array
+              justifications_to_remove.push(i);
+            }
+          }
+
+          //Remove justifications_to_remove from usr.diplomacy.justifications
+          for (var i = 0; i < justifications_to_remove.length; i++)
+            usr.diplomacy.justifications.splice(justifications_to_remove[i], 1);
+        }
       }
     }
 
