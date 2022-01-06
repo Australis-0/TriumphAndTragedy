@@ -2,7 +2,7 @@ config.casus_belli = {
   territorial_violation: {
     name: "Territorial Violation",
     description: "Target has moved armed forces through your country without permission.",
-    icon: config.icons.active_personnel,
+    icon: "active_personnel",
     infamy: 0,
 
     limit: {
@@ -20,7 +20,7 @@ config.casus_belli = {
   theft: {
     name: "Theft",
     description: "The target has blockaded you or sank neutral shipping.",
-    icon: config.icons.taxes,
+    icon: "taxes",
     infamy: 0,
 
     limit: {
@@ -38,7 +38,7 @@ config.casus_belli = {
   containment: {
     name: "Containment",
     description: "Target has over 8 infamy.",
-    icon: config.icons.infamy,
+    icon: "infamy",
     infamy: 0,
 
     limit: {
@@ -51,7 +51,7 @@ config.casus_belli = {
   colonial_integration: {
     name: "Colonial Integration",
     description: "Attacker's total deployed AP are over 4x that of their target's deployed military. Target is behind on tech.",
-    icon: config.icons.globe,
+    icon: "globe",
     infamy: 2,
 
     limit: {
@@ -67,7 +67,7 @@ config.casus_belli = {
   free_oppressed_people: {
     name: "Free Oppressed People",
     description: "Attacker is a democracy/HM Government, target is not. Target has over 3 infamy.",
-    icon: config.icons.diplomacy,
+    icon: "diplomacy",
     infamy: 2,
 
     limit: {
@@ -91,7 +91,7 @@ config.casus_belli = {
   independence: {
     name: "Independence",
     description: "The attacker has been a puppet for more than 5 turns to the target.",
-    icon: config.icons.revolt,
+    icon: "revolt",
     infamy: 2,
 
     limit: {
@@ -109,7 +109,7 @@ config.casus_belli = {
   revanchism: {
     name: "Revanchism",
     description: "Target occupies land once controlled by the attacker.",
-    icon: config.icons.old_map,
+    icon: "old_map",
     infamy: 2,
 
     limit: {
@@ -123,7 +123,7 @@ config.casus_belli = {
   anschluss: {
     name: "Anschluss",
     description: "Target is your puppet, and refused to be annexed by you.",
-    icon: config.icons.old_scroll,
+    icon: "old_scroll",
     infamy: 3,
 
     peace_demands: ["status_quo", "annexation"]
@@ -133,7 +133,7 @@ config.casus_belli = {
   diplomatic_insult: {
     name: "Diplomatic Insult",
     description: "Target has formally insulted the attacker.",
-    icon: config.icons.cb,
+    icon: "cb",
     infamy: 5,
 
     peace_demands: ["status_quo", "war_reparations"]
@@ -142,7 +142,7 @@ config.casus_belli = {
   lebensraum: {
     name: "Lebensraum",
 		description: "Attacker is communist, fascist, or absolute monarchy.",
-    icon: config.icons.land_vehicles,
+    icon: "land_vehicles",
     infamy: 5,
 
     limit: {
@@ -155,7 +155,7 @@ config.casus_belli = {
   acquire_state: {
     name: "Acquire State",
     description: "Attacker's capital is less than 15 provinces away from target's capital. Attacker's total AP are over twice that of target's.",
-    icon: config.icons.provinces,
+    icon: "provinces",
     infamy: 5,
 
     limit: {

@@ -1,4 +1,55 @@
 module.exports = {
+  printCBList: function (arg0_user) {
+    //Convert from parameters
+    var user_id = arg0_user;
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var all_cbs = Object.keys(config.casus_belli);
+    var game_obj = getGameObject(user_id);
+    var usr = main.users[actual_id];
+
+    //Declare cb_list_string
+    var cb_list_string = [];
+
+    //Format cb_list_string
+    cb_list_string.push(`Notice: 'Status Quo' includes war reparations.`);
+    cb_list_string.push("");
+
+    //Iterate over all CB's and print them out
+    for (var i = 0; i < all_cbs.length; i++) {
+      var local_cb = config.casus_belli[all_cbs[i]];
+      var local_cb_description = (local_cb.description) ? local_cb.description : "";
+      var local_cb_icon = (local_cb.icon) ? config.icons[local_cb.icon] + " " : "";
+      var local_cb_infamy = returnSafeNumber(local_cb.infamy);
+      var local_cb_name = (local_cb.name) ? local_cb.name : all_cbs[i];
+
+      //Format peace_demands_array
+      var peace_demands_array = [];
+
+      try {
+        for (var x = 0; x < local_cb.peace_demands.length; x++)
+          //Check if localisation has anything
+          if (config.localisation[local_cb.peace_demands[x]])
+            peace_demands_array.push(config.localisation[local_cb.peace_demands[x]]);
+      } catch {}
+
+      //Format CB
+      cb_list_string.push(`${local_cb_icon}${local_cb_name}`);
+      cb_list_string.push(`- ${config.icons.old_scroll} Requirement: ${local_cb_description}`);
+      cb_list_string.push(`- ${config.icons.diplomacy} Peace Demands: ${peace_demands_array.join(", ")}`);
+      cb_list_string.push(`- ${config.icons.infamy} Infamy: ${parseNumber(local_cb_infamy)}`);
+      cb_list_string.push("");
+    }
+
+    //Return embed
+    return splitEmbed(cb_list_string, {
+      title: `List of Casus Belli:`,
+      title_pages: true,
+      fixed_width: true
+    });
+  },
+
   printCBs: function (arg0_user, arg1_user) {
     //Convert from parameters
     var user_id = arg0_user;
@@ -7,7 +58,7 @@ module.exports = {
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id]
     var actual_ot_user_id = main.global.user_map[ot_user_id];;
-    var game_obj = getGameObject(actual_id);
+    var game_obj = getGameObject(user_id);
     var ot_user = main.users[actual_ot_user_id];
     var usr = main.users[actual_id];
 
@@ -58,6 +109,6 @@ module.exports = {
   },
 
   printWargoals: function (arg0_user, arg1_user) {
-    
+
   }
 };
