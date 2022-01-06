@@ -389,15 +389,122 @@ module.exports = {
       }
     }
 
-    //Diplomacy page handler
+    //Diplomacy page handler [WIP]
     {
       if (game_obj.page == "diplomacy") {
+        //Button Handler
         //[Allow Ceding]
         //[Cede Province]
         //[Deny Ceding]
         //[View Ledger]
+        if (input == "view ledger") {
+          printLedger(user_id);
+          game_obj.page = "ledger";
+        }
+
         //[View Relations]
+        if (input == "view relations") {
+          initialiseViewDiplomacy(user_id);
+        } else if (input.startsWith("view relations ")) {
+          var ot_user_id = returnMention(game_obj.page.replace("view relations ", ""));
+
+          viewDiplomacy(user_id, ot_user_id);
+          game_obj.page = `diplomacy_view_${main.global.user_map[ot_user_id]}`;
+        }
+
         //[War List]
+      }
+
+      if (game_obj.page.startsWith("diplomacy_view_")) {
+        var actual_ot_user_id = game_obj.page.replace("diplomacy_view_", "");
+
+        //Button Handler
+        //[Back]
+        if (input == "back") {
+          printDiplomacy(user_id);
+          game_obj.page = "diplomacy";
+        }
+
+        //[Break Alliance]
+        if (input == "break alliance")
+          breakAlliance(user_id, actual_ot_user_id);
+
+        //[Cancel Military Access]
+        if (input == "cancel military access")
+          cancelMilitaryAccess(user_id, actual_ot_user_id);
+
+        //[Declare Rivalry]
+        if (input == "declare rivalry")
+          rival(user_id, actual_ot_user_id);
+
+        //[Decrease Relations]
+        if (input == "decrease relations")
+          decreaseRelations(user_id, actual_ot_user_id);
+
+        //[Demand Annexation]
+        if (input == "demand annexation")
+          annex(user_id, actual_ot_user_id);
+
+        //[Demand Vassalisation]
+        if (input == "demand vassalisation")
+          vassalise(user_id, actual_ot_user_id);
+
+        //[End Rivalry]
+        if (input == "end rivalry")
+          endRivalry(user_id, actual_ot_user_id);
+
+        //[Guarantee Independence]
+        if (input == "guarantee independence")
+          proclaimGuarantee(user_id, actual_ot_user_id);
+
+        //[Improve Relations]
+        if (input == "improve relations")
+          improveRelations(user_id, actual_ot_user_id);
+
+        //[Request Alliance]
+        if (input == "request alliance")
+          ally(user_id, actual_ot_user_id);
+
+        //[Request Military Access]
+        if (input == "request military access")
+          militaryAccess(user_id, actual_ot_user_id);
+
+        //[Revoke Guarantee]
+        if (input == "revoke guarantee")
+          revokeGuarantee(user_id, actual_ot_user_id);
+
+        //[Revoke Military Access]
+        if (input == "revoke military access")
+          cancelMilitaryAccess(user_id, actual_ot_user_id);
+
+        //[Sign Non-Aggression Pact]
+        if (input == "sign non aggression pact")
+          nonAggressionPact(user_id, actual_ot_user_id);
+      }
+
+      if (game_obj.page == "ledger") {
+        //Button Handler
+        //[Back]
+        //[Jump To Page]
+        //[View Relations]
+      }
+
+      if (game_obj.page.startsWith("view_cb_")) {
+        var actual_ot_user_id = game_obj.page.replace("view_cb_", "");
+
+        //Button Handler
+        //[Back]
+        //[Jump To Page]
+        //[Justify Wargoal]
+      }
+
+      if (game_obj.page.startsWith("view_wargoal_")) {
+        var actual_ot_user_id = game_obj.page.replace("view_cb_", "");
+
+        //Button Handler
+        //[Back]
+        //[Jump To Page]
+        //[Justify Wargoal]
       }
     }
 

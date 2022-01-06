@@ -1,5 +1,10 @@
 module.exports = {
-  initialiseViewDiplomacy: function (arg0_user) {
+  initialiseViewDiplomacy: function (arg0_user, arg1_do_not_change_page) {
+    //Convert from parameters
+    var user_id = arg0_user;
+    var do_not_change_page = arg1_do_not_change_page;
+
+    //Declare visual prompt
     visualPrompt(game_obj.alert_embed, user_id, {
       title: `View Diplomatic Relations:`,
       prompts: [
@@ -8,6 +13,8 @@ module.exports = {
     },
     function (arg) {
       module.exports.viewDiplomacy(user_id, arg[0]);
+      if (!do_not_change_page)
+        game_obj.page = `diplomacy_view_${main.global.user_map[arg[0]]}`;
     },
     function (arg) {
       switch (arg) {
@@ -123,6 +130,12 @@ module.exports = {
     createPageMenu(game_obj.middle_embed, {
       embed_pages: splitEmbed(ledger_string, {
         title: "[Back] ¦ [Jump To Page] ¦ Diplomatic Ledger:",
+        description: [
+          `**[View Relations]**`,
+          ``,
+          config.localisation.divider,
+          ``
+        ],
         title_pages: true,
         fixed_width: true
       }),
