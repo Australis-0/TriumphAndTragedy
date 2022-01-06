@@ -46,5 +46,35 @@ module.exports = {
     } else {
       printError(game_obj.id, `You can't be terrified enough of a nonexistent country to request a non-aggression pact with them!`);
     }
+  },
+
+  initialiseNonAggressionPact: function (arg0_user) {
+    var user_id = arg0_user;
+
+    //Declare local instance variables
+    var game_obj = getGameObject(user_id);
+
+    //Initialise visual prompt
+    visualPrompt(game_obj.alert_embed, user_id, {
+      title: `Sign Non-Aggression Pact:`,
+      prompts: [
+        [`What country would you like to try signing a non-aggression pact with?\n\nType **[View Ledger]** to a view a ledger of all valid nations.`, "mention"]
+      ]
+    },
+    function (arg) {
+      module.exports.nonAggressionPact(user_id, arg[0]);
+    },
+    function (arg) {
+      switch (arg) {
+        case "view ledger":
+          createPageMenu(game_obj.middle_embed, {
+            embed_pages: printLedger(user_id),
+            user: game_obj.user
+          });
+          return true;
+
+          break;
+      }
+    })
   }
 };

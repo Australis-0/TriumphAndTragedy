@@ -88,5 +88,44 @@ module.exports = {
     } else {
       printError(game_obj.id, `You cannot justify a war on a nonexistent nation!`);
     }
+  },
+
+  initialiseJustifyWar: function (arg0_user) {
+    var user_id = arg0_user;
+
+    //Declare local instance variables
+    var game_obj = getGameObject(user_id);
+
+    //Initialise visual prompt
+    visualPrompt(game_obj.alert_embed, user_id, {
+      title: `Justify A Wargoal:`,
+      prompts: [
+        [`Which country would you like to justify a war against?\n\nType **[View Ledger]** to a view a ledger of all valid nations.`, "mention"],
+        [`What type of wargoal would you like to use?\n\nType **[View CB List]** to a view a list of all valid CB's.`, "string"]
+      ]
+    },
+    function (arg) {
+      module.exports.justifyWar(user_id, arg[0], arg[1]);
+    },
+    function (arg) {
+      switch (arg) {
+        case "view cb list":
+          createPageMenu(game_obj.middle_embed, {
+            embed_pages: printCBList(user_id),
+            user: game_obj.user
+          });
+          return true;
+
+          break;
+        case "view ledger":
+          createPageMenu(game_obj.middle_embed, {
+            embed_pages: printLedger(user_id),
+            user: game_obj.user
+          });
+          return true;
+
+          break;
+      }
+    })
   }
 };

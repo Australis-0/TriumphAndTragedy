@@ -29,5 +29,35 @@ module.exports = {
     } else {
       printError(game_obj.id, `The person you are trying to unrival is nonexistent! Try finding a valid country to unrival in your **[Diplomacy]** screen.`);
     }
+  },
+
+  initialiseEndRivalry: function (arg0_user) {
+    var user_id = arg0_user;
+
+    //Declare local instance variables
+    var game_obj = getGameObject(user_id);
+
+    //Initialise visual prompt
+    visualPrompt(game_obj.alert_embed, user_id, {
+      title: `End Rivalry:`,
+      prompts: [
+        [`Whom would you like to thaw tensions with? This country must be one of your current rivals.\n\nType **[View Ledger]** to a view a ledger of all valid nations.`, "mention"]
+      ]
+    },
+    function (arg) {
+      module.exports.endRivalry(user_id, arg[0]);
+    },
+    function (arg) {
+      switch (arg) {
+        case "view ledger":
+          createPageMenu(game_obj.middle_embed, {
+            embed_pages: printLedger(user_id),
+            user: game_obj.user
+          });
+          return true;
+
+          break;
+      }
+    })
   }
 };
