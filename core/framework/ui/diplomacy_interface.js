@@ -94,9 +94,10 @@ module.exports = {
     game_obj.main_change = true;
   },
 
-  printLedger: function (arg0_user) {
+  printLedger: function (arg0_user, arg1_return_split_embed) {
     //Convert from parameters
     var user_id = arg0_user;
+    var return_split_embed = arg1_return_split_embed;
 
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
@@ -126,21 +127,27 @@ module.exports = {
     //Remove control panel if one exists
     removeControlPanel(game_obj.id);
 
-    //Edit main embed display
-    createPageMenu(game_obj.middle_embed, {
-      embed_pages: splitEmbed(ledger_string, {
-        title: "[Back] ¦ [Jump To Page] ¦ Diplomatic Ledger:",
-        description: [
-          `**[View Relations]**`,
-          ``,
-          config.localisation.divider,
-          ``
-        ],
-        title_pages: true,
-        fixed_width: true
-      }),
-      user: game_obj.user
+    var split_ledger = splitEmbed(ledger_string, {
+      title: "[Back] ¦ [Jump To Page] ¦ Diplomatic Ledger:",
+      description: [
+        `**[View Relations]**`,
+        ``,
+        config.localisation.divider,
+        ``
+      ],
+      title_pages: true,
+      fixed_width: true
     });
+
+    //Edit main embed display
+    if (!return_split_embed)
+      createPageMenu(game_obj.middle_embed, {
+        embed_pages: split_ledger,
+        user: game_obj.user
+      });
+
+    if (return_split_embed)
+      return split_ledger;
   },
 
   viewDiplomacy: function (arg0_user, arg1_user) { //[WIP] - Create bulk of function; push war status to fore if found to be valid

@@ -411,7 +411,7 @@ module.exports = {
               embed_pages: printCBs(game_obj.user),
               page: arg[0] - 1,
               user: game_obj.user
-            })
+            });
           });
       }
 
@@ -462,6 +462,10 @@ module.exports = {
         if (input == "break alliance")
           breakAlliance(user_id, actual_ot_user_id);
 
+        //[Cancel Justification]
+        if (input == "cancel justification")
+          initialiseCancelJustification(user_id);
+
         //[Cancel Military Access]
         if (input == "cancel military access")
           cancelMilitaryAccess(user_id, actual_ot_user_id);
@@ -494,6 +498,10 @@ module.exports = {
         if (input == "improve relations")
           improveRelations(user_id, actual_ot_user_id);
 
+        //[Justify Wargoal]
+        if (input == "justify wargoal")
+          initialiseJustifyWar(user_id);
+
         //[Request Alliance]
         if (input == "request alliance")
           ally(user_id, actual_ot_user_id);
@@ -524,7 +532,30 @@ module.exports = {
         }
 
         //[Jump To Page]
+        if (input == "jump to page")
+          visualPrompt(game_obj.alert_embed, user_id, {
+            title: `Jump To Page:`,
+            prompts: [
+              [`Which page would you like jump to?`, "number", { min: 1, max: printLedger(game_obj.user, true).length }]
+            ]
+          },
+          function (arg) {
+            createPageMenu(game_obj.middle_embed, {
+              embed_pages: printLedger(game_obj.user, true),
+              page: arg[0] - 1,
+              user: game_obj.user
+            });
+          });
+
         //[View Relations]
+        if (input == "view relations") {
+          initialiseViewDiplomacy(user_id);
+        } else if (input.startsWith("view relations ")) {
+          var ot_user_id = returnMention(game_obj.page.replace("view relations ", ""));
+
+          viewDiplomacy(user_id, ot_user_id);
+          game_obj.page = `diplomacy_view_${main.global.user_map[ot_user_id]}`;
+        }
       }
 
       if (game_obj.page.startsWith("view_cb_")) {
@@ -538,7 +569,24 @@ module.exports = {
         }
 
         //[Jump To Page]
+        if (input == "jump to page")
+          visualPrompt(game_obj.alert_embed, user_id, {
+            title: `Jump To Page:`,
+            prompts: [
+              [`Which page would you like jump to?`, "number", { min: 1, max: printCBs(game_obj.user, actual_ot_user_id).length }]
+            ]
+          },
+          function (arg) {
+            createPageMenu(game_obj.middle_embed, {
+              embed_pages: printCBs(game_obj.user, actual_ot_user_id),
+              page: arg[0] - 1,
+              user: game_obj.user
+            });
+          });
+
         //[Justify Wargoal]
+        if (input == "justify wargoal")
+          initialiseJustifyWar();
       }
 
       if (game_obj.page.startsWith("view_wargoal_")) {
@@ -552,7 +600,22 @@ module.exports = {
         }
 
         //[Jump To Page]
-        //[Justify Wargoal]
+        if (input == "jump to page")
+          visualPrompt(game_obj.alert_embed, user_id, {
+            title: `Jump To Page:`,
+            prompts: [
+              [`Which page would you like jump to?`, "number", { min: 1, max: printWargoals(game_obj.user, actual_ot_user_id).length }]
+            ]
+          },
+          function (arg) {
+            createPageMenu(game_obj.middle_embed, {
+              embed_pages: printWargoals(game_obj.user, actual_ot_user_id),
+              page: arg[0] - 1,
+              user: game_obj.user
+            });
+          });
+
+        //[Declare War]
       }
     }
 
