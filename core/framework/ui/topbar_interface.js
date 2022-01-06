@@ -8,6 +8,11 @@ module.exports = {
   colonisation_pages: [
     "colonisation"
   ],
+  diplomacy_pages: [
+    "cb_list",
+    "diplomacy",
+    "ledger"
+  ],
   economy_pages: [
     "economy",
     "inventory"
@@ -167,8 +172,14 @@ module.exports = {
           .setEmoji("716828677115084812"),
         new Discord.MessageButton()
           .setCustomId("diplomacy_btn")
-          .setLabel("𝐃𝐢𝐩𝐥𝐨𝐦𝐚𝐜𝐲")
-          .setStyle("SECONDARY")
+          .setLabel((!diplomacy_pages.includes(game_obj.page)) ?
+            "𝐃𝐢𝐩𝐥𝐨𝐦𝐚𝐜𝐲" :
+            " ͟𝐃͟𝐢͟𝐩͟𝐥͟𝐨͟𝐦͟𝐚͟𝐜͟𝐲͟"
+          )
+          .setStyle((!diplomacy_pages.includes(game_obj.page)) ?
+            "SECONDARY" :
+            "PRIMARY"
+          )
           .setEmoji("716827579323121666"),
         new Discord.MessageButton()
           .setCustomId("colonisation_btn")
@@ -260,6 +271,15 @@ module.exports = {
           module.exports.initialiseTopbar(user_id);
         }
         printStats(user_id);
+
+        break;
+      case "diplomacy_btn":
+        //Print out diplomacy menu
+        if (game_obj.page != "diplomacy") {
+          game_obj.page = "diplomacy";
+          module.exports.initialiseTopbar(user_id);
+        }
+        printDiplomacy(user_id);
 
         break;
       case "economy_btn":
