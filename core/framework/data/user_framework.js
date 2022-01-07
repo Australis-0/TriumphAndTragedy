@@ -378,6 +378,24 @@ module.exports = {
     );
   },
 
+  hasWargoal: function (arg0_user, arg1_user) {
+    //Convert from parameters
+    var user_id = arg0_user;
+    var ot_user_id = arg1_user;
+
+    //Declare local instance variables
+    var usr = main.users[user_id];
+    var ot_user = main.users[ot_user_id];
+
+    //Iterate over all wargoals to check
+    for (var i = 0; i < usr.diplomacy.wargoals.length; i++) {
+      var local_wargoal = usr.diplomacy.wargoals[i];
+
+      if (local_wargoal.target == ot_user_id)
+        return true;
+    }
+  },
+
   //[WIP] - Completely annexes a target nation into another
   inherit: function (arg0_user, arg1_user) { //[WIP] - Controlled/occupied territory handler in the future
     //Convert from parameters
@@ -400,6 +418,25 @@ module.exports = {
     delete main.users[actual_id];
   },
 
+  isBeingJustifiedOn: function (arg0_user) {
+    //Convert from parameters
+    var user_id = arg0_user;
+
+    //Declare local instance variables
+    var all_users = Object.keys(main.users);
+
+    for (var i = 0; i < all_users.length; i++) {
+      var local_user = main.users[all_users[i]];
+
+      for (var x = 0; x < local_user.diplomacy.justifications.length; x++) {
+        var local_justification = local_user.diplomacy.justifications[x];
+
+        if (local_justification.target == user_id)
+          return true;
+      }
+    }
+  },
+
   isBlockaded: function (arg0_user) {
     //Convert from parameters
     var user_id = arg0_user;
@@ -409,6 +446,24 @@ module.exports = {
 
     //Return statement
     return (Object.keys(usr.blockaded).length > 0);
+  },
+
+  isJustifying: function (arg0_user, arg1_user) {
+    //Convert from parameters
+    var user_id = arg0_user;
+    var ot_user_id = arg1_user;
+
+    //Declare local instance variables
+    var usr = main.users[user_id];
+    var ot_user = main.users[ot_user_id];
+
+    //Check for justification against ot_user
+    for (var i = 0; i < usr.diplomacy.justifications.length; i++) {
+      var local_justification = usr.diplomacy.justifications[i];
+
+      if (local_justification.target == ot_user_id)
+        return true;
+    }
   },
 
   moveTo: function (arg0_province, arg1_province) {

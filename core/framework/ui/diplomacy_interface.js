@@ -184,6 +184,7 @@ module.exports = {
       var have_military_access_array = getMilitaryAccesses(actual_ot_user_id);
       var guaranteed_array = [];
       var guarantors_array = [];
+      var justifying_wargoals = [];
       var military_access_array = [];
       var non_aggression_pact_array = [];
       var rivals_array = [];
@@ -233,11 +234,21 @@ module.exports = {
         if (ot_user.diplomacy.vassals[all_vassals[i]].overlord == actual_id)
           vassal_array.push(main.users[all_vassals[i]].name);
 
-
       //User variables
       for (var i = 0; i < all_user_keys.length; i++)
         if (main.global.user_map[all_user_keys[i]] == actual_ot_user_id)
           user_keys.push(`<@${all_user_keys[i]}>`);
+
+      //Wargoal justifications
+      for (var i = 0; i < usr.diplomacy.justifications.length; i++) {
+        var local_justification = usr.diplomacy.justifications[i];
+
+        if (local_justification.target == ot_user_id) {
+          var cb_obj = getCB(local_justification.type);
+
+          justifying_wargoals.push(`**${(cb_obj.name) ? cb_obj.name.toLowerCase() : local_justification.ttype}**`);
+        }
+      }
 
       //Push main statistics
       diplomacy_view_string.push(`**${ot_user.name}** ¦ ${parseList(user_keys)}`);
@@ -307,6 +318,19 @@ module.exports = {
 
       if (actual_id != actual_ot_user_id) {
         //[WIP] - Add is justifying indicator here in future
+        if (!isJustifying(actual_id, actual_ot_user_id)) {
+          if (!hasWargoal(actual_id, actual_ot_user_id)) {
+            diplomacy_view_string.push(`**[Justify Wargoal]** ${config.icons.political_capital} ${parseNumber(config.defines.diplomacy.justify_wargoal_cost)} PC`);
+            diplomacy_view_string.push(`- **[View CBs]**`);
+          } else {
+            diplomacy_view_string.push(`**[Declare War]**`);
+            diplomacy_view_string.push(`- **[View Wargoals]**`);
+          }
+        } else {
+          diplomacy_view_string.push(`We are currently justifying ${(justifying_wargoals.length > 1) ? "wars of" : "a war of"} ${justifying_wargoals.join(", ")} against this nation.`);
+          diplomacy_view_string.push("");
+          diplomacy_view_string.push(`**[Cancel Justification]**`);
+        }
 
         diplomacy_view_string.push(`**[Improve Relations]** ${config.icons.political_capital} ${parseNumber(config.defines.diplomacy.improve_relations_cost)} PC`);
         diplomacy_view_string.push(`**[Decrease Relations]** ${config.icons.political_capital} ${parseNumber(config.defines.diplomacy.decrease_relations_cost)} PC`);

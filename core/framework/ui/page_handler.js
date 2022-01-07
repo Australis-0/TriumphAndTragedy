@@ -521,6 +521,24 @@ module.exports = {
         //[Sign Non-Aggression Pact]
         if (input == "sign non aggression pact")
           nonAggressionPact(user_id, actual_ot_user_id);
+
+        //[View CBs]
+        if (input == "view cbs") {
+          game_obj.page = `view_cb_${actual_ot_user_id}`;
+          createPageMenu(game_obj.middle_embed, {
+            embed_pages: printCBs(user_id, actual_ot_user_id),
+            user: game_obj.user;
+          });
+        }
+
+        //[View Wargoals]
+        if (input == "view wargoals") {
+          game_obj.page = `view_wargoals_${actual_ot_user_id}`;
+          createPageMenu(game_obj.middle_embed, {
+            embed_pages: printWargoals(user_id, actual_ot_user_id),
+            user: game_obj.user;
+          });
+        }
       }
 
       if (game_obj.page == "ledger") {
@@ -587,6 +605,9 @@ module.exports = {
         //[Justify Wargoal]
         if (input == "justify wargoal")
           initialiseJustifyWar();
+
+        //Tooltip handler
+        printCBTooltip(user_id, actual_ot_user_id, input);
       }
 
       if (game_obj.page.startsWith("view_wargoal_")) {
@@ -616,6 +637,9 @@ module.exports = {
           });
 
         //[Declare War]
+
+        //Tooltip handler
+        printCBTooltip(user_id, actual_ot_user_id, input);
       }
     }
 
