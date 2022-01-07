@@ -44,6 +44,7 @@ FileManager.import("./framework/data/trade_framework");
 FileManager.import("./framework/data/turn_framework");
 FileManager.import("./framework/data/unit_framework");
 FileManager.import("./framework/data/user_framework");
+FileManager.import("./framework/data/war_framework");
 
 FileManager.import("./framework/discord/channels");
 FileManager.import("./framework/discord/button_handler");

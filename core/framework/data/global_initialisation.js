@@ -9,6 +9,7 @@ module.exports = {
     if (!main.global) main.global = {};
       if (!main.global.cultures) main.global.cultures = {};
       if (!main.global.user_map) main.global.user_map = {};
+      if (!main.global.wars) main.global.wars = {};
     if (!main.interfaces) main.interfaces = {};
     if (!main.users) main.users = {};
     if (!main.provinces) main.provinces = JSON.parse(fs.readFileSync(`./map/provinces.js`, "utf8").toString());
@@ -47,7 +48,7 @@ module.exports = {
 
     //Fix province ID's
     var all_provinces = Object.keys(main.provinces);
-    
+
     for (var i = 0; i < all_provinces.length; i++) {
       var local_province = main.provinces[all_provinces[i]];
 
