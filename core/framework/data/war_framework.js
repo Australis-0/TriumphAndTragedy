@@ -31,10 +31,14 @@ module.exports = {
     var defender_id = main.global.user_map[options.defender];
     var defender_obj = main.users[defender_obj];
 
+    //Declare local tracker variables
+    var attacker_culture_adjective = main.global.cultures[getPrimaryCultures(defender_id)[1]].adjective;
+    var defender_culture_adjective = main.global.cultures[getPrimaryCultures(attacker_id)[0]].adjective;
+
     //Declare war_obj and format
     var war_id = module.exports.generateWarID();
     var war_obj = {
-      name: `${main.global.cultures[getPrimaryCultures(attacker_id)[0]].adjective}-${main.global.cultures[getPrimaryCultures(defender_id)[1]].adjective} War`,
+      name: `${attacker_culture_adjective}-${defender_culture_adjective} War`,
       starting_date: JSON.parse(JSON.stringify(main.date)),
       starting_round: JSON.parse(JSON.stringify(main.round_count)),
 
@@ -52,5 +56,18 @@ module.exports = {
     };
 
     //Automatically call in all vassals on both sides
+    for (var i = 0; i < attacker_obj.diplomacy.vassals.length; i++) {
+      var local_vassal = attacker_obj.diplomacy.vassals[i];
+
+      if (local_vassal.overlord == attacker_id)
+        attackers.push(local_vassal.id);
+    }
+
+    for (var i = 0; i < defender_obj.diplomacy.vassals.length; i++) {
+      var local_vassal = defender_obj.diplomacy.vassals[i];
+
+      if (local_vassal.overlord == defender_id)
+        defenders.push(local_vassal.id);
+    }
   }
 };
