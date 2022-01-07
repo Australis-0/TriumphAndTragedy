@@ -516,7 +516,7 @@ module.exports = {
 
         //[Revoke Military Access]
         if (input == "revoke military access")
-          cancelMilitaryAccess(user_id, actual_ot_user_id);
+          revokeMilitaryAccess(user_id, actual_ot_user_id);
 
         //[Sign Non-Aggression Pact]
         if (input == "sign non aggression pact")

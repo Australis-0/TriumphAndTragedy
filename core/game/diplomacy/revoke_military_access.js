@@ -1,5 +1,5 @@
 module.exports = {
-  cancelMilitaryAccess: function (arg0_user, arg1_user) {
+  revokeMilitaryAccess: function (arg0_user, arg1_user) {
     //Convert from parameters
     var user_id = arg0_user;
     var ot_user_id = arg1_user;
@@ -14,24 +14,29 @@ module.exports = {
     //Check if user has military access in the first place
     if (ot_user) {
       if (actual_id != actual_ot_user_id) {
-        if (hasMilitaryAccess(actual_id, actual_ot_user_id)) {
-          usr.diplomacy.used_diplomatic_slots--;
-          dissolveMilitaryAccess(actual_id, actual_ot_user_id);
+        if (hasMilitaryAccess(actual_ot_user_id, actual_id)) {
+          sendAlert(actual_ot_user_id, config.defines.diplomacy.military_access_cancellation_alert_id, {
+            FROM: actual_id,
+            TO: actual_ot_user_id
+          });
+
+          ot_user.diplomacy.used_diplomatic_slots--;
+          dissolveMilitaryAccess(actual_ot_user_id, actual_id);
 
           //Print user feedback
-          printAlert(game_obj.id, `${config.icons.checkmark} You have successfully cancelled your military access with **${ot_user.name}**.`);
+          printAlert(game_obj.id, `${config.icons.checkmark} You have successfully revoked military access to your nation for **${ot_user.name}**. They have been notified of their expulsion effective immediately.`);
         } else {
-          printError(game_obj.id, `You have already cancelled military access with **${ot_user.name}**!`);
+          printError(game_obj.id, `You have already revoked/denied military access to **${ot_user.name}**!`);
         }
       } else {
         printError(game_obj.id, `You cannot cancel military access to yourself!`);
       }
     } else {
-      printError(game_obj.id, `The country you are trying to cancel military access with is nonexistent!`);
+      printError(game_obj.id, `The country you are trying to deny military access to, **${ot_user_id}**, is nonexistent!`);
     }
   },
 
-  initialiseCancelMilitaryAccess: function (arg0_user) {
+  initialiseRevokeMilitaryAccess: function (arg0_user) {
     var user_id = arg0_user;
 
     //Declare local instance variables

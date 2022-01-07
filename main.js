@@ -107,6 +107,7 @@ FileManager.import("./game/diplomacy/military_access");
 FileManager.import("./game/diplomacy/non_aggression_pact");
 FileManager.import("./game/diplomacy/proclaim_guarantee");
 FileManager.import("./game/diplomacy/revoke_guarantee");
+FileManager.import("./game/diplomacy/revoke_military_access");
 FileManager.import("./game/diplomacy/rival");
 FileManager.import("./game/diplomacy/vassalise");
 
