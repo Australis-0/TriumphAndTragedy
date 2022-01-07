@@ -23,6 +23,14 @@ module.exports = {
           ot_user.diplomacy.used_diplomatic_slots--;
           dissolveMilitaryAccess(actual_ot_user_id, actual_id);
 
+          //Status updater
+          if (game_obj.page.startsWith("diplomacy_view_")) {
+            var current_ot_user_id = game_obj.page.replace("diplomacy_view_", "");
+
+            if (current_ot_user_id == actual_ot_user_id)
+              viewDiplomacy(user_id, current_ot_user_id);
+          }
+
           //Print user feedback
           printAlert(game_obj.id, `${config.icons.checkmark} You have successfully revoked military access to your nation for **${ot_user.name}**. They have been notified of their expulsion effective immediately.`);
         } else {

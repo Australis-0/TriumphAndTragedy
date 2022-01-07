@@ -32,6 +32,14 @@ module.exports = {
             return_index: true
           });
 
+          //Status updater
+          if (game_obj.page.startsWith("diplomacy_view_")) {
+            var current_ot_user_id = game_obj.page.replace("diplomacy_view_", "");
+
+            if (current_ot_user_id == actual_ot_user_id)
+              viewDiplomacy(user_id, current_ot_user_id);
+          }
+
           //Print user feedback
           printAlert(game_obj.id, `We have cancelled our justification of **${(cb_obj.name) ? cb_obj.name : raw_cb_name}** against **${ot_user.name}**.`);
 

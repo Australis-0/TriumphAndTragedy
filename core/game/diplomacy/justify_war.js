@@ -57,6 +57,21 @@ module.exports = {
                       duration: actual_justification_time
                     });
 
+                    //Status updater
+                    if (game_obj.page.startsWith("diplomacy_view_")) {
+                      var current_ot_user_id = game_obj.page.replace("diplomacy_view_", "");
+
+                      if (current_ot_user_id == actual_ot_user_id)
+                        viewDiplomacy(user_id, current_ot_user_id);
+                    }
+
+                    if (game_obj.page.startsWith("view_cb_")) {
+                      var current_ot_user_id = game_obj.page.replace("view_cb_", "");
+
+                      if (current_ot_user_id == actual_ot_user_id)
+                        viewDiplomacy(user_id, current_ot_user_id);
+                    }
+
                     //Print user feedback
                     printAlert(`You have begun justifying a war of **${(cb_obj.name) ? cb_obj.name : raw_cb_name}** against **${ot_user.name}**!\n\nYou may cancel this justification at any time before its completion by typing **[Cancel Justification]**`);
 

@@ -30,6 +30,14 @@ module.exports = {
           //Remove Political Capital
           usr.modifiers.political_capital -= config.defines.diplomacy.break_alliance_cost;
 
+          //Status updater
+          if (game_obj.page.startsWith("diplomacy_view_")) {
+            var current_ot_user_id = game_obj.page.replace("diplomacy_view_", "");
+
+            if (current_ot_user_id == actual_ot_user_id)
+              viewDiplomacy(user_id, current_ot_user_id);
+          }
+
           //Print user feedback
           printAlert(game_obj.id, `${config.icons.checkmark} You have successfully broken off your alliance with **${ot_user.name}** for ${config.icons.political_capital} **${parseNumber(config.defines.diplomacy.break_alliance_cost)}** Political Capital.`);
         } else {
