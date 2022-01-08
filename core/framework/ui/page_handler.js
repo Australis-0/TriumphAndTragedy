@@ -470,9 +470,17 @@ module.exports = {
         if (input == "cancel military access")
           cancelMilitaryAccess(user_id, actual_ot_user_id);
 
+        //[Cancel Wargoal]
+        if (input == "cancel wargoal")
+          initialiseCancelWargoal(user_id);
+
         //[Declare Rivalry]
         if (input == "declare rivalry")
           rival(user_id, actual_ot_user_id);
+
+        //[Declare War]
+        if (input == "declare war")
+          initialiseDeclareWar(user_id);
 
         //[Decrease Relations]
         if (input == "decrease relations")

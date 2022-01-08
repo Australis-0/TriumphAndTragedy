@@ -324,6 +324,7 @@ module.exports = {
             diplomacy_view_string.push(`- **[View CBs]**`);
           } else {
             diplomacy_view_string.push(`**[Declare War]**`);
+            diplomacy_view_string.push(`- **[Cancel Wargoal]**`);
             diplomacy_view_string.push(`- **[View Wargoals]**`);
           }
         } else {
