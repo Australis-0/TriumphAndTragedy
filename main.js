@@ -100,6 +100,7 @@ FileManager.import("./game/diplomacy/break_alliance");
 FileManager.import("./game/diplomacy/cancel_justification");
 FileManager.import("./game/diplomacy/cancel_military_access");
 FileManager.import("./game/diplomacy/cancel_wargoal");
+FileManager.import("./game/diplomacy/declare_war");
 FileManager.import("./game/diplomacy/decrease_relations");
 FileManager.import("./game/diplomacy/end_rivalry");
 FileManager.import("./game/diplomacy/improve_relations");

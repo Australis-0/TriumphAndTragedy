@@ -1,11 +1,12 @@
 module.exports = {
-  declareWar: function (arg0_user, arg1_user, arg2_cb_name) {
+  declareWar: function (arg0_user, arg1_user, arg2_cb_name) { //[WIP] - Print to news; update war UI if user is currently on it
     //Convert from parameters
     var user_id = arg0_user;
     var ot_user_id = arg1_user;
     var raw_cb_name = arg2_cb_name.trim().toLowerCase();
 
     //Convert from parameters
+    var all_users = Object.keys(main.users);
     var attacker_id = main.global.user_map[user_id];
     var attacker_obj = main.users[attacker_id];
     var cb_obj = getCB(raw_cb_name);
@@ -42,6 +43,28 @@ module.exports = {
 
                 if (!is_vassal_of_attacker) {
                   //Check if users are already at war
+                  if (!areAtWar(attacker_id, defender_id)) {
+                    //Initialise war
+                    initialiseWar({
+                      type: getCB(raw_cb_name, { return_key: true }),
+
+                      attacker: attacker_id,
+                      defender: defender_id
+                    });
+
+                    //Call in guarantors
+                    for (var i = 0; i < all_users.length; i++)
+                      if (hasGuarantee(all_users[i], defender_id))
+                        sendAlert(all_users[i], config.defines.diplomacy.guarantee_alert_id, {
+                          TO: all_users[i],
+                          FROM: defender_id
+                        });
+
+                    //Print out user feedback
+                    printAlert(game_obj.id, `${config.icons.defender} You are now at war with **${ot_user.name}**. In order to call in allies, type **[Call Ally]** from the diplomacy screen. In order to a view a list of ongoing wars, type **[View Wars]**.`);
+                  } else {
+                    printError(game_obj.id, `You can't declare war on a country you are already at war with!`);
+                  }
                 } else {
                   printError(game_obj.id, `You can't declare war on your own vassal!`);
                 }
