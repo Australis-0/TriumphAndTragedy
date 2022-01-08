@@ -21,16 +21,24 @@ module.exports = {
           if (!hasNonAggressionPact(actual_id, actual_ot_user_id)) {
             //Check if user has enough diplomatic slots
             if (usr.diplomacy.used_diplomatic_slots < usr.modifiers.diplomatic_slots) {
-              //Deduct Political Capital and send request
-              usr.modifiers.political_capital -= config.defines.diplomacy.sign_non_aggression_pact_cost;
+              if (!getVassal(actual_id)) {
+                if (!getVassal(actual_ot_user_id)) {
+                  //Deduct Political Capital and send request
+                  usr.modifiers.political_capital -= config.defines.diplomacy.sign_non_aggression_pact_cost;
 
-              sendAlert(actual_ot_user_id, config.defines.diplomacy.non_aggression_pact_request_alert_id, {
-                FROM: actual_id,
-                TO: actual_ot_user_id
-              });
+                  sendAlert(actual_ot_user_id, config.defines.diplomacy.non_aggression_pact_request_alert_id, {
+                    FROM: actual_id,
+                    TO: actual_ot_user_id
+                  });
 
-              //Print user feedback
-              printAlert(game_obj.id, `${config.icons.checkmark} You have successfully sent a request for a non-aggression pact to **${ot_user.name}**.`);
+                  //Print user feedback
+                  printAlert(game_obj.id, `${config.icons.checkmark} You have successfully sent a request for a non-aggression pact to **${ot_user.name}**.`);
+                } else {
+                  printError(gane_obj.id, `You cannot propose non-aggression pacts to vassals independently of their overlord!`);
+                }
+              } else {
+                printError(game_obj.id, `You can't sign non-aggression pacts with other countries independently of your overlord!`);
+              }
             } else {
               printError(game_obj.id, `You are already using your current maximum amount of diplomatic slots! (${config.icons.bureaucrats} **${parseNumber(usr.diplomacy.used_diplomatic_slots)}**/${parseNumber(usr.modifiers.diplomatic_slots)})!\n\nTry cancelling some sort of diplomatic relation first to gain back your slots.`);
             }

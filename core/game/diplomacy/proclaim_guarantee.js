@@ -23,25 +23,33 @@ module.exports = {
             if (!hasRivalry(actual_id, actual_ot_user_id)) {
               //Check if user has enough diplomatic slots
               if (usr.diplomacy.used_diplomatic_slots < usr.modifiers.diplomatic_slots) {
-                //Deduct Political Capital and send request
-                usr.modifiers.political_capital -= config.defines.diplomacy.guarantee_independence_cost;
-                usr.diplomacy.used_diplomatic_slots++;
+                if (!getVassal(actual_id)) {
+                  if (!getVassal(actual_ot_user_id)) {
+                    //Deduct Political Capital and send request
+                    usr.modifiers.political_capital -= config.defines.diplomacy.guarantee_independence_cost;
+                    usr.diplomacy.used_diplomatic_slots++;
 
-                sendAlert(actual_ot_user_id, config.defines.diplomacy.proclaim_guarantee_alert_id, {
-                  FROM: actual_id,
-                  TO: actual_ot_user_id
-                });
+                    sendAlert(actual_ot_user_id, config.defines.diplomacy.proclaim_guarantee_alert_id, {
+                      FROM: actual_id,
+                      TO: actual_ot_user_id
+                    });
 
-                //Status updater
-                if (game_obj.page.startsWith("diplomacy_view_")) {
-                  var current_ot_user_id = game_obj.page.replace("diplomacy_view_", "");
+                    //Status updater
+                    if (game_obj.page.startsWith("diplomacy_view_")) {
+                      var current_ot_user_id = game_obj.page.replace("diplomacy_view_", "");
 
-                  if (current_ot_user_id == actual_ot_user_id)
-                    viewDiplomacy(user_id, current_ot_user_id);
+                      if (current_ot_user_id == actual_ot_user_id)
+                        viewDiplomacy(user_id, current_ot_user_id);
+                    }
+
+                    //Print user feedback
+                    printAlert(game_obj.id, `${config.icons.checkmark} We have guaranteed the independence of **${ot_user.name}**! Only good can result from this ...`);
+                  } else {
+                    printError(game_obj.id, `You cannot guarantee the independence of a vassal state independently of their overlord!`);
+                  }
+                } else {
+                  printError(game_obj.id, `You can't guarantee the independence of other nations as a vassal yourself!`);
                 }
-
-                //Print user feedback
-                printAlert(game_obj.id, `${config.icons.checkmark} We have guaranteed the independence of **${ot_user.name}**! Only good can result from this ...`);
               } else {
                 printError(game_obj.id, `You are already using your current maximum amount of diplomatic slots! (${config.icons.bureaucrats} **${parseNumber(usr.diplomacy.used_diplomatic_slots)}**/${parseNumber(usr.modifiers.diplomatic_slots)})!\n\nTry cancelling some sort of diplomatic relation first to gain back your slots.`);
               }

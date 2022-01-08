@@ -37,28 +37,36 @@ module.exports = {
                   //Check if relations are high enough
                   if (getRelations(actual_id, actual_ot_user_id)[0] >= config.defines.diplomacy.alliance_relation_threshold) {
                     if (usr.diplomacy.used_diplomatic_slots < usr.modifiers.diplomatic_slots) {
-                      //Pending alliances take 1 diplomatic slot and cost PC
-                      usr.diplomacy.used_diplomatic_slots++;
-                      usr.modifiers.political_capital -= config.defines.diplomacy.form_alliance_cost;
+                      if (!getVassal(actual_id)) {
+                        if (!getVassal(actual_ot_user_id)) {
+                          //Pending alliances take 1 diplomatic slot and cost PC
+                          usr.diplomacy.used_diplomatic_slots++;
+                          usr.modifiers.political_capital -= config.defines.diplomacy.form_alliance_cost;
 
-                      //Send diplomatic alert to other user
-                      sendAlert(actual_ot_user_id, config.defines.diplomacy.alliance_alert_id, {
-                        FROM: actual_id,
-                        TO: actual_ot_user_id
-                      });
+                          //Send diplomatic alert to other user
+                          sendAlert(actual_ot_user_id, config.defines.diplomacy.alliance_alert_id, {
+                            FROM: actual_id,
+                            TO: actual_ot_user_id
+                          });
 
-                      //Declare pending alliance object
-                      usr.allies[actual_ot_user_id] = {
-                        id: actual_id,
-                        status: "pending"
-                      };
-                      ot_user.allies[actual_id] = {
-                        id: actual_id,
-                        status: "pending"
-                      };
+                          //Declare pending alliance object
+                          usr.allies[actual_ot_user_id] = {
+                            id: actual_id,
+                            status: "pending"
+                          };
+                          ot_user.allies[actual_id] = {
+                            id: actual_id,
+                            status: "pending"
+                          };
 
-                      //Print out user feedback
-                      printAlert(game_obj.id, `${config.icons.checkmark} You have successfully sent an alliance proposal to **${ot_user.name}** for ${config.icons.political_capital} **${parseNumber(config.defines.diplomacy.form_alliance_cost)}** Political Capital. It should now appear in their alerts screen.`);
+                          //Print out user feedback
+                          printAlert(game_obj.id, `${config.icons.checkmark} You have successfully sent an alliance proposal to **${ot_user.name}** for ${config.icons.political_capital} **${parseNumber(config.defines.diplomacy.form_alliance_cost)}** Political Capital. It should now appear in their alerts screen.`);
+                        } else {
+                          printError(game_obj.id, `You cannot ally the vassals of other countries!`);
+                        }
+                      } else {
+                        printError(game_obj.id, `You cannot propose/accept alliances from other countries as a vassal of your overlord!`);
+                      }
                     } else {
                       printError(game_obj.id, `You do not have enough diplomatic slots remaining to propose an alliance!`);
                     }
