@@ -71,6 +71,7 @@ FileManager.import("./framework/ui/global_market_interface");
 FileManager.import("./framework/ui/government_interface");
 FileManager.import("./framework/ui/laws_interface");
 FileManager.import("./framework/ui/map_viewer");
+FileManager.import("./framework/ui/next_turn_interface");
 FileManager.import("./framework/ui/page_handler");
 FileManager.import("./framework/ui/politics_interface");
 FileManager.import("./framework/ui/pops_interface");
@@ -271,7 +272,7 @@ setInterval(function(){
 	}
 
   //Turn processing for all users
-  if (turn_time_difference > settings.turn_time*1000) {
+  if (turn_time_difference > settings.turn_timer*1000) {
     main.last_backup = current_date;
     main.last_turn = current_date;
     writeSave({ file_limit: settings.backup_limit });

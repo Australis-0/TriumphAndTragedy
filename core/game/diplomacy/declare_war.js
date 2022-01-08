@@ -10,6 +10,7 @@ module.exports = {
     var attacker_id = main.global.user_map[user_id];
     var attacker_obj = main.users[attacker_id];
     var cb_obj = getCB(raw_cb_name);
+    var game_obj = getGameObject(user_id);
     var defender_id = main.global.user_map[ot_user_id];
     var defender_obj = main.users[defender_id];
 

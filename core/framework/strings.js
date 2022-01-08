@@ -30,6 +30,18 @@ module.exports = {
     return string.replace(/_/g, " ").replace(/(^\w{1})|(\s{1}\w{1})/g, match => match.toUpperCase());
   },
 
+  getCurrentDate: function () {
+    return module.exports.getDate(main.date);
+  },
+
+  getDate: function (arg0_date_obj) {
+    //Convert from parameters
+    var date_obj = arg0_date_obj;
+
+    //Return statement
+    return `${date_obj.day} ${module.exports.months[date_obj.month]} ${date_obj.year}`;
+  },
+
   parseBoolean: function (arg0_boolean) {
     ///Convert from parameters
     var boolean = arg0_boolean;
