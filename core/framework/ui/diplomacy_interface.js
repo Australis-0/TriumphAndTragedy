@@ -27,8 +27,7 @@ module.exports = {
     });
   },
 
-  //[WIP] - All three of these need to be done before we can move onto CB's and wargoals!
-  printDiplomacy: function (arg0_user) { //[WIP] - At war
+  printDiplomacy: function (arg0_user) {
     //Convert from parameters
     var user_id = arg0_user;
 
@@ -178,7 +177,7 @@ module.exports = {
       return split_ledger;
   },
 
-  viewDiplomacy: function (arg0_user, arg1_user) { //[WIP] - Create bulk of function; push war status to fore if found to be valid
+  viewDiplomacy: function (arg0_user, arg1_user) {
     //Convert from parameters
     var user_id = arg0_user;
     var ot_user_id = arg1_user;
