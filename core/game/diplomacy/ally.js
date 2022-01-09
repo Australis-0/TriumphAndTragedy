@@ -120,6 +120,6 @@ module.exports = {
 
           break;
       }
-    })
+    });
   }
 };

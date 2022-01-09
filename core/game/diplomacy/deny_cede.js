@@ -24,5 +24,32 @@ module.exports = {
     } else {
       printError(game_obj.id, `You must allow a nation that actually _exists_ from ceding to you, not some fictitious country!`);
     }
+  },
+
+  initialiseDenyCede: function (arg0_user) {
+    var user_id = arg0_user;
+
+    //Declare local instance variables
+    var game_obj = getGameObject(user_id);
+
+    //Initialise visual prompt
+    visualPrompt(game_obj.alert_embed, user_id, {
+      title: `Deny Ceding By A Foreign Country:`,
+      prompts: [
+        [`Whom would you like to blacklist from ceding provinces to you?\n\nType **[View Diplomacy]** to see a list of nations you currently allow ceding from.`, "mention"]
+      ]
+    },
+    function (arg) {
+      module.exports.denyCede(user_id, arg[0]);
+    },
+    function (arg) {
+      switch (arg) {
+        case "view diplomacy":
+          printDiplomacy(user_id);
+          return true;
+
+          break;
+      }
+    });
   }
 };

@@ -24,5 +24,32 @@ module.exports = {
     } else {
       printError(game_obj.id, `You must allow a nation that actually _exists_ to be able to cede to you, not some fictitious country!`);
     }
+  },
+
+  initialiseAllowCede: function (arg0_user) {
+    var user_id = arg0_user;
+
+    //Declare local instance variables
+    var game_obj = getGameObject(user_id);
+
+    //Initialise visual prompt
+    visualPrompt(game_obj.alert_embed, user_id, {
+      title: `Allow Ceding By A Foreign Country:`,
+      prompts: [
+        [`Whom would you like to grant permission to cede provinces to you?\n\nType **[View Ledger]** to a view a ledger of all valid nations.`, "mention"]
+      ]
+    },
+    function (arg) {
+      module.exports.allowCede(user_id, arg[0]);
+    },
+    function (arg) {
+      switch (arg) {
+        case "view ledger":
+          printLedger(user_id);
+          return true;
+
+          break;
+      }
+    });
   }
 };
