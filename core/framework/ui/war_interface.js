@@ -1,14 +1,15 @@
 module.exports = {
-  printWar: function (arg0_user, arg1_war_name) { //[WIP] - Work on remainder of function
+  printWar: function (arg0_user, arg1_war_name, arg2_archived_war) { //[WIP] - Work on remainder of function
     //Convert from parameters
     var user_id = arg0_user;
     var raw_war_name = arg1_war_name.trim().toLowerCase();
+    var is_archived_war = arg2_archived_war;
 
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
     var game_obj = getGameObject(user_id);
     var usr = main.users[actual_id];
-    var war_obj = getwar(raw_war_name);
+    var war_obj = (!is_archived_war) ? getwar(raw_war_name) : getArchivedWar(raw_war_name);
 
     //Declare local tracker variables
     var attackers_string = [];
@@ -21,9 +22,13 @@ module.exports = {
     //Check if war_obj exists
     if (war_obj) {
       //Peace treaty buttons
-      (!war_obj.peace_treaties[actual_id]) ?
-        war_string.push(`**[Sign Peace Treaty]**`) :
-        war_string.push(`**[Add Wargoal]** ¦ **[Remove Wargoal]** ¦ **[View Peace Offer]** ¦ **[Send Peace Offer]**`);
+      if (!is_archived_war)
+        (!war_obj.peace_treaties[actual_id]) ?
+          war_string.push(`**[Sign Peace Treaty]**`) :
+          war_string.push(`**[Add Wargoal]** ¦ **[Remove Wargoal]** ¦ **[View Peace Offer]** ¦ **[Send Peace Offer]**`);
+
+      if (is_archived_war)
+        war_string.push(`**${getDate(war_obj.starting_date)}** - **${getDate(war_obj.end_date)}**\n`);
 
       war_string.push(`Attacker Warscore: **${printPercentage(war_obj.attacker_warscore)}** ¦ Defender Warscore: **${printPercentage(war_obj.defender_warscore)}`);
       war_string.push("");
@@ -62,7 +67,7 @@ module.exports = {
       //Format embed and display
       var war_embed = new Discord.MessageEmbed()
         .setColor(settings.bot_colour)
-        .setTitle(`**[Rename War]** ¦ __**${war_obj.name.trim()}**__:`)
+        .setTitle(`${(!is_archived_war) ? "**[Rename War]** ¦ " : ""}__**${war_obj.name.trim()}**__:`)
         .setImage("https://cdn.discordapp.com/attachments/722997700391338046/736141424315203634/margin.png")
         .setDescription(war_string.join("\n"))
         .addFields(

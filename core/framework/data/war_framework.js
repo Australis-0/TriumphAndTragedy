@@ -1,4 +1,22 @@
 module.exports = {
+  archiveWar: function (arg0_war_name) {
+    //Convert from parameters
+    var raw_war_name = arg0_war_name.trim().toLowerCase();
+
+    //Declare local instance variables
+    var war_obj = module.exports.getWar(raw_war_name);
+
+    //Move to war archive
+    if (war_obj) {
+      //Add end date
+      war_obj.end_date = JSON.parse(JSON.stringify(main.date));
+
+      main.global.archived_wars[module.exports.generateArchivedWarID()] = JSON.parse(JSON.stringify(war_obj));
+
+      delete war_obj;
+    }
+  },
+
   areAtWar: function (arg0_user, arg1_user) {
     //Convert from parameters
     var user_id = arg0_user;
@@ -74,6 +92,21 @@ module.exports = {
     delete war_obj.peace_treaties[actual_id];
   },
 
+  generateArchivedWarID: function () {
+    var local_id;
+
+    //While loop to find ID, just in-case of conflicting random ID's:
+    while (true) {
+      var local_id = generateRandomID();
+
+      //Return and break once a true ID is found
+      if (!main.global.archived_wars[local_id]) {
+        return local_id;
+        break;
+      }
+    }
+  },
+
   generateWarID: function () {
     var local_id;
 
@@ -90,9 +123,47 @@ module.exports = {
   },
 
   /*
+    getArchivedWar() - Fetches war object/key.
+    options: {
+      return_key: true/false - Whether or not to return the key instead of the object
+    }
+  */
+  getArchivedWar: function (arg0_war_name, arg1_options) {
+    //Convert from parameters
+    var war_name = arg0_war_name.trim().toLowerCase();
+    var options = (arg1_options) ? arg1_options : {};
+
+    //Declare local instance variables
+    var all_wars = Object.keys(main.global.archived_wars);
+    var war_found = [false, ""];
+
+    //ID search
+    if (main.global.wars[war_name])
+      return (!options.return_key) ?
+        main.global.wars[war_name] :
+        war_name;
+
+    //Name search - Soft
+    for (var i = 0; i < all_wars.length; i++) {
+      var local_war = main.global.archived_wars[all_wars[i]];
+
+      if (local_war.name.trim().toLowerCase().indexOf(war_name) != -1)
+        war_found = [true, (!options.return_key) ? local_war : all_wars[i]];
+    }
+
+    //Name search - Hard
+    for (var i = 0; i < all_wars.length; i++) {
+      var local_war = main.global.archived_wars[all_wars[i]];
+
+      if (local_war.name.trim().toLowerCase() == war_name)
+        war_found = [true, (!options.return_key) ? local_war : all_wars[i]];
+    }
+  },
+
+  /*
     getWar() - Fetches war object/key.
     options: {
-      return_key: true/false //Whether or not to return the key instead of the object
+      return_key: true/false - Whether or not to return the key instead of the object
     }
   */
   getWar: function (arg0_war_name, arg1_options) {
