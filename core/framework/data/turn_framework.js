@@ -94,6 +94,10 @@ module.exports = {
         //Reduce infamy
         usr.modifiers.infamy += usr.modifiers.infamy_loss;
 
+        //Reset tracker variables
+        usr.total_ceded_this_turn = 0;
+        usr.total_cities_ceded_this_turn = 0;
+
         //Set infamy caps
         usr.modifiers.infamy = Math.max(usr.modifiers.infamy, 0);
         usr.modifiers.infamy = Math.min(usr.modifiers.infamy, config.defines.diplomacy.absolute_infamy_limit);

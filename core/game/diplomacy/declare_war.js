@@ -100,7 +100,7 @@ module.exports = {
 
     //Initialise visual prompt
     visualPrompt(game_obj.alert_embed, user_id, {
-      title: `Justify A Wargoal:`,
+      title: `Declare War:`,
       prompts: [
         [`Which country would you like to declare a war against?\n\nType **[View Ledger]** to a view a ledger of all valid nations.`, "mention"],
         [`What type of wargoal would you like to use?\n\nType **[View CB List]** to a view a list of all valid CB's.`, "string"]
@@ -125,6 +125,6 @@ module.exports = {
 
           break;
       }
-    })
+    });
   }
 };
