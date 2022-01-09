@@ -1,5 +1,5 @@
 module.exports = {
-  printWar: function (arg0_user, arg1_war_name, arg2_archived_war) { //[WIP] - Work on remainder of function
+  printWar: function (arg0_user, arg1_war_name, arg2_archived_war) {
     //Convert from parameters
     var user_id = arg0_user;
     var raw_war_name = arg1_war_name.trim().toLowerCase();
@@ -67,7 +67,7 @@ module.exports = {
       //Format embed and display
       var war_embed = new Discord.MessageEmbed()
         .setColor(settings.bot_colour)
-        .setTitle(`${(!is_archived_war) ? "**[Rename War]** ¦ " : ""}__**${war_obj.name.trim()}**__:`)
+        .setTitle(`**[Back]** ¦ ${(!is_archived_war) ? "**[Rename War]** ¦ " : ""}__**${war_obj.name.trim()}**__:`)
         .setImage("https://cdn.discordapp.com/attachments/722997700391338046/736141424315203634/margin.png")
         .setDescription(war_string.join("\n"))
         .addFields(
@@ -106,5 +106,62 @@ module.exports = {
     } else {
       printError(game_obj.id, `The war you have specified, **${raw_war_name}** is either no longer ongoing, or does not exist!`);
     }
+  },
+
+  printWars: function (arg0_user) {
+    //Convert from parameters
+    var user_id = arg0_user;
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var all_archived_wars = Object.keys(main.global.archived_wars);
+    var all_wars = Object.keys(main.global.wars);
+    var game_obj = getGameObject(user_id);
+    var usr = main.users[actual_id];
+
+    //Declare wars_string
+    var wars_string = [];
+
+    //Format embed
+    if (all_wars.length > 0) {
+      wars_string.push(`War Name ¦ Participants ¦ Attacker Warscore - Defender Warscore ¦ Total Casualties`);
+      wars_string.push("");
+
+      for (var i = 0; i < all_wars.length; i++) {
+        var local_war = main.global.wars[all_wars[i]];
+        var number_of_nations = local_war.attackers.length + local_war.defenders.length;
+        var total_casualties = local_war.attacker_total_casualties + local_war.defender_total_casualties;
+
+        wars_string.push(`**${local_war.name}** ¦ ${parseNumber(number_of_nations)} ¦ **${parsePercentage(local_war.attacker_warscore)}** - **${parsePercentage(local_war.defender_warscore)}** ¦ ${parseNumber(total_casualties)}`);
+        wars_string.push(`- **[View ${local_war.name}]**`);
+      }
+    } else {
+      wars_string.push(`_There are currently no ongoing conflicts._`);
+    }
+
+    wars_string.push("");
+    wars_string.push(config.localisation.divider);
+    wars_string.push("");
+    wars_string.push(`**Archived Conflicts:**`);
+    wars_string.push("");
+
+    if (all_archived_wars.length > 0) {
+      wars_string.push(`War Name ¦ Total Casualties`);
+      wars_string.push("");
+
+      for (var i = 0; i < all_archived_wars.length; i++) {
+        var local_war = main.global.archived_wars[all_archived_wars[i]];
+        var total_casualties = local_war.attacker_total_casualties + local_war.defender_total_casualties;
+
+        wars_string.push(`[${local_war.name}] ¦ **${parseNumber(total_casualties)}** ¦ `);
+      }
+    }
+
+    //Return statement
+    return splitEmbed(wars_string, {
+      title: "[Back] ¦ War List:",
+      title_pages: true,
+      fixed_width: true
+    });
   }
 };
