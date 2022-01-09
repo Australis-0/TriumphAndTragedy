@@ -57,6 +57,44 @@ module.exports = {
   },
 
   /*
+    getWar() - Fetches war object/key.
+    options: {
+      return_key: true/false //Whether or not to return the key instead of the object
+    }
+  */
+  getWar: function (arg0_war_name, arg1_options) {
+    //Convert from parameters
+    var war_name = arg0_war_name.trim().toLowerCase();
+    var options = (arg1_options) ? arg1_options : {};
+
+    //Declare local instance variables
+    var all_wars = Object.keys(main.global.wars);
+    var war_found = [false, ""];
+
+    //ID search
+    if (main.global.wars[war_name])
+      return (!options.return_key) ?
+        main.global.wars[war_name] :
+        war_name;
+
+    //Name search - Soft
+    for (var i = 0; i < all_wars.length; i++) {
+      var local_war = main.global.wars[all_wars[i]];
+
+      if (local_war.name.trim().toLowerCase().indexOf(war_name) != -1)
+        war_found = [true, (!options.return_key) ? local_war : all_wars[i]];
+    }
+
+    //Name search - Hard
+    for (var i = 0; i < all_wars.length; i++) {
+      var local_war = main.global.wars[all_wars[i]];
+
+      if (local_war.name.trim().toLowerCase() == war_name)
+        war_found = [true, (!options.return_key) ? local_war : all_wars[i]];
+    }
+  },
+
+  /*
     initialiseWar() - Creates a new war data structure with aggressors and all. Make sure users can't declare war on themselves
     options: {
       type: "acquire_state",
@@ -83,6 +121,8 @@ module.exports = {
     //Declare war_obj and format
     var war_id = module.exports.generateWarID();
     var war_obj = {
+      id: war_id,
+
       name: `${attacker_culture_adjective}-${defender_culture_adjective} War`,
       starting_date: JSON.parse(JSON.stringify(main.date)),
       starting_round: JSON.parse(JSON.stringify(main.round_count)),
@@ -127,5 +167,49 @@ module.exports = {
 
     //Set war_obj
     main.global.wars[war_id] = war_obj;
+  },
+
+  joinWar: function (arg0_user, arg1_side, arg2_war_name) {
+    //Convert from parameters
+    var user_id = arg0_user;
+    var friendly_side = arg1_side;
+    var war_name = arg2_war_name;
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var opposite_side = (friendly_side == "defenders") ? "attackers" : "defenders";
+    var usr = main.users[actual_id];
+    var war_obj = module.exports.getWar(war_name);
+
+    //Check if joining against yourself
+    if (!war_obj[opposite_side].includes(actual_id)) {
+      //Check if user has any non-aggression pacts with the opposing side
+      var has_non_aggression_pact = false;
+
+      for (var i = 0; i < war_obj[opposite_side].length; i++) {
+        if (hasNonAggressionPact(war_obj[opposite_side][i], actual_id))
+          has_non_aggression_pact = true;
+
+      if (!has_non_aggression_pact) {
+        //Break off any alliances on the opposing side
+        for (var i = 0; i < war_obj[opposite_side].length; i++) {
+          var local_user = main.users[war_obj[opposite_side][i]];
+
+          if (hasAlliance(war_obj[opposite_side][i], actual_id)) {
+            dissolveAlliance(war_obj[opposite_side][i], actual_id);
+
+            usr.diplomacy.used_diplomatic_slots--;
+            local_user.diplomacy.used_diplomatic_slots--;
+          }
+        }
+
+        //Push user into conflict if not already included
+        if (!war_obj[friendly_side].includes(actual_id))
+          war_obj[friendly_side].push(actual_id);
+
+        //Declare casualties tracker
+        war_obj[`${actual_id}_casualties`] = 0;
+      }
+    }
   }
 };
