@@ -378,6 +378,7 @@ module.exports = {
     );
   },
 
+  //getWars() - Returns array of all war objects user is in
   getWars: function (arg0_user) {
     //Convert from parameters
     var user_id = arg0_user;
@@ -389,13 +390,12 @@ module.exports = {
     var user_wars = [];
 
     //Iterate across wars to create list
-    for(const war of all_wars) {
+    for (const war of all_wars) {
       var local_war = main.global.wars[war];
-      if (local_war.attackers.includes(actual_id)||local_war.defenders.includes(actual_id)){
+      if (local_war.attackers.includes(actual_id) || local_war.defenders.includes(actual_id))
         user_wars.push(local_war);
-      }
     }
-    
+
     return user_wars;
   },
 

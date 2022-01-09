@@ -36,14 +36,42 @@ module.exports = {
     var actual_id = main.global.user_map[user_id];
     var all_good_names = getGoods({ return_names: true });
     var all_pops = Object.keys(config.pops);
+    var all_wars = Object.keys(main.global.wars);
     var game_obj = getGameObject(user_id);
     var usr = main.users[actual_id];
 
     //Declare local tracker variables
     var accepted_cultures = getAcceptedCultures(actual_id, { exclude_primary_culture: true });
+    var defensive_wars = 0;
+    var enemies = [];
+    var offensive_wars = 0;
+
+    //Initialise war trackers
+    for (var i = 0; i < all_wars.length; i++) {
+      var local_war = main.global.wars[all_wars[i]];
+
+      if (local_war.attackers.includes(actual_id)) {
+        for (var x = 0; x < local_war.defenders.length; x++)
+          enemies.push(main.users[local_war.defenders[x]].name);
+
+        offensive_wars++;
+      }
+
+      if (local_war.defenders.includes(actual_id)) {
+        for (var x = 0; x < local_war.attackes.length; x++)
+          enemies.push(main.users[local_war.attackers[x]].name);
+
+        defensive_wars++;
+      }
+    }
 
     //Declare diplomacy_string
     var diplomacy_string = [];
+
+    //War indicator
+    (offensive_wars + defensive_wars > 0) ?
+      diplomacy_string.push(`${config.icons.land_vehicles} You are currently **at war** with ${parseList(enemies)} in **${parseNumber(offensive_wars)}** wars of aggression, and **${parseNumber(defensive_wars)}** defensive wars.\n- **[View War]** - View statistics on a current conflict.\n`) :
+      diplomacy_string.push(`${config.icons.diplomacy} _You are currently at peace._`);
 
     //Format diplomacy_string
     diplomacy_string.push(`${config.icons.political_capital} Political Capital: **${parseNumber(usr.modifiers.political_capital)}** (${parseNumber(usr.modifiers.political_capital_gain, { display_prefix: true })} per turn)`);
@@ -317,7 +345,6 @@ module.exports = {
       diplomacy_view_string.push("");
 
       if (actual_id != actual_ot_user_id) {
-        //[WIP] - Add is justifying indicator here in future
         if (!isJustifying(actual_id, actual_ot_user_id)) {
           if (!hasWargoal(actual_id, actual_ot_user_id)) {
             diplomacy_view_string.push(`**[Justify Wargoal]** ${config.icons.political_capital} ${parseNumber(config.defines.diplomacy.justify_wargoal_cost)} PC`);
