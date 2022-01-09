@@ -96,6 +96,7 @@ FileManager.import("./game/culture/remove_accepted_culture");
 FileManager.import("./game/culture/rename_culture_adjective");
 FileManager.import("./game/culture/rename_culture");
 
+FileManager.import("./game/diplomacy/allow_cede");
 FileManager.import("./game/diplomacy/ally");
 FileManager.import("./game/diplomacy/annex");
 FileManager.import("./game/diplomacy/break_alliance");
@@ -105,6 +106,7 @@ FileManager.import("./game/diplomacy/cancel_wargoal");
 FileManager.import("./game/diplomacy/cede_province");
 FileManager.import("./game/diplomacy/declare_war");
 FileManager.import("./game/diplomacy/decrease_relations");
+FileManager.import("./game/diplomacy/deny_cede");
 FileManager.import("./game/diplomacy/end_rivalry");
 FileManager.import("./game/diplomacy/improve_relations");
 FileManager.import("./game/diplomacy/liberate");
