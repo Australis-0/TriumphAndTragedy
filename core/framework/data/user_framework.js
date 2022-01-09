@@ -378,6 +378,27 @@ module.exports = {
     );
   },
 
+  getWars: function (arg0_user) {
+    //Convert from parameters
+    var user_id = arg0_user;
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var usr = main.users[actual_id];
+    var all_wars = Object.keys(main.global.wars);
+    var user_wars = [];
+
+    //Iterate across wars to create list
+    for(const war of all_wars) {
+      var local_war = main.global.wars[war];
+      if (local_war.attackers.includes(actual_id)||local_war.defenders.includes(actual_id)){
+        user_wars.push(local_war);
+      }
+    }
+    
+    return user_wars;
+  },
+
   hasWargoal: function (arg0_user, arg1_user) {
     //Convert from parameters
     var user_id = arg0_user;
