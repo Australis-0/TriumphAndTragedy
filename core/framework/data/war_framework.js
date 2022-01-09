@@ -41,6 +41,39 @@ module.exports = {
     }
   },
 
+  createPeaceTreaty: function (arg0_user, arg1_war_name) {
+    //Convert from parameters
+    var user_id = arg0_user;
+    var war_name = arg1_war_name.trim().toLowerCase();
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var war_obj = module.exports.getWar(war_name);
+
+    //Make sure user doesn't already have a peace treaty registered
+    if (!war_obj.peace_treaties[actual_id]) {
+      var peace_treaty_obj = {
+        id: actual_id,
+        peace_demands: {}
+      };
+
+      war_obj.peace_treaties[actual_id] = peace_treaty_obj;
+    }
+  },
+
+  deletePeaceTreaty: function (arg0_user, arg1_war_name) {
+    //Convert from parameters
+    var user_id = arg0_user;
+    var war_name = arg1_war_name.trim().toLowerCase();
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var war_obj = module.exports.getWar(war_name);
+
+    //Delete peace treaty object
+    delete war_obj.peace_treaties[actual_id];
+  },
+
   generateWarID: function () {
     var local_id;
 
