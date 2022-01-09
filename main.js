@@ -141,6 +141,8 @@ FileManager.import("./game/trade/give");
 
 FileManager.import("./game/units/craft");
 
+FileManager.import("./game/war/rename_war");
+
 //Declare config loading order
 global.config = {};
 global.load_order = {
