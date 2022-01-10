@@ -32,6 +32,30 @@ module.exports = {
       }
   },
 
+  deleteArmy: function (arg0_army, arg1_army_name) {
+    //Convert from parameters
+    var user_id = arg0_user;
+    var army_name = arg1_army_name.trim();
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var army_obj = module.exports.getArmy(actual_id, army_name);
+    var usr = main.users[actual_id];
+
+    //Return all units to reserves
+    if (army_obj) {
+      var all_units = Object.keys(army_obj.units);
+
+      for (var i = 0; i < all_units.length; i++)
+        usr.reserves[all_units[i]] = (usr.reserves[all_units[i]]) ?
+          usr.reserves[all_units[i]] + army_obj.units[all_units[i]] :
+          army_obj.units[all_units[i]];
+
+      //Delete army
+      delete army_obj;
+    }
+  },
+
   /*
     getArmy() - Fetches an army object from a user by name property
     options: {
