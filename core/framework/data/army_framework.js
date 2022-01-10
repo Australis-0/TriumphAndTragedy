@@ -32,6 +32,42 @@ module.exports = {
       }
   },
 
+  /*
+    getArmy() - Fetches an army object from a user by name property
+    options: {
+      return_key: true/false - Whether or not to return a key or object. False by default.
+    }
+  */
+  getArmy: function (arg0_user, arg1_army_name, arg2_options) {
+    //Convert from parameters
+    var user_id = arg0_user;
+    var army_name = arg1_army_name.trim().toLowerCase();
+    var options = (arg2_options) ? arg2_options : {};
+
+    //Declare local instance variables
+    var all_armies = Object.keys(usr.armies);
+    var army_exists = [false, ""]; //[army_exists, army_obj/key];
+
+    //Soft match
+    for (var i = 0; i < all_armies.length; i++) {
+      var local_army = usr.armies[all_armies[i]];
+
+      if (local_army.name.toLowerCase().indexOf(army_name) != -1)
+        army_exists = [true, (!options.return_key) ? local_army : all_armies[i]];
+    }
+
+    //Hard match
+    for (var i = 0; i < all_armies.length; i++) {
+      var local_army = usr.armies[all_armies[i]];
+
+      if (local_army.name.toLowerCase() == army_name)
+        army_exists = [true, (!options.return_key) ? local_army : all_armies[i]];
+    }
+
+    //Return statement
+    return (army_exists[0]) ? army_exists[1] : undefined;
+  },
+
   generateArmyID: function (arg0_user) {
     //Convert from parameters
     var user_id = arg0_user;
