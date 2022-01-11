@@ -126,7 +126,6 @@ module.exports = {
     var army_obj = module.exports.getArmy(actual_id, army_name);
     var unit_obj = getUnit(unit_name);
     var raw_unit_name = getUnit(unit_name, { return_key: true });
-    var return_statement = [false, ""]; //[successful_deployment, err_msg];
     var usr = main.users[actual_id];
 
     //Check if unit_obj and army_obj exist
@@ -175,6 +174,13 @@ module.exports = {
             army_obj.units[raw_unit_name] = (army_obj.units[raw_unit_name]) ?
               army_obj.units[raw_unit_name] + amount :
               amount;
+
+            //Modify reserves
+            if (!options.spawn_units)
+              usr.reserves[raw_unit_name] -= amount;
+
+            if (usr.reserves[raw_unit_name] == 0)
+              delete usr.reserves[raw_unit_name];
 
             return [true, `**${parseNumber(amount)}** ${(unit_obj.name) ? unit_obj.name : raw_unit_name} were ${(!options.spawn_units) ? "transferred to" : "deployed in"} the **${army_obj.name}**.`];
 
@@ -239,5 +245,117 @@ module.exports = {
         break;
       }
     }
+  },
+
+  mergeArmy: function (arg0_user, arg1_army_name, arg2_army_name) {
+    //Convert from parameters
+    var user_id = arg0_user;
+    var merged_army = arg1_army_name.trim().toLowerCase();
+    var army_name = arg2_army_name.trim().toLowerCase();
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var army_obj = module.exports.getArmy(user_id, army_name);
+    var merged_army_obj = module.exports.getArmy(user_id, merged_army);
+    var usr = main.users[actual_id];
+
+    //Check for the usual
+    if (usr)
+      if (army_obj)
+        if (merged_army_obj) {
+          //Declare local tracker variables
+          var total_aeroplanes = 0;
+
+          //Guard clauses for error trapping
+          if (army_obj.province != merged_army_obj.province)
+            return [false, `**${army_obj.name}** and **${merged_army_obj.name}** are not in the same province together! **${army_obj.name}** is in Province **${army_obj.povince}**, whilst **${merged_army_obj.name}** is in Province **${merged_army_obj.province}**.`];
+
+          if (
+            (army_obj.type == "army" && merged_army_obj.type == "navy") ||
+            (army_obj.type == "navy" && merged_army_obj.type == "army")
+          )
+            return [false, `Your ships are not capable of going on land!`];
+
+          //Fetch stats of both armies
+          var army_obj_stats = module.exports.calculateArmyType(actual_id, army_obj.name);
+          var merged_army_obj_stats = module.exports.calculateArmyType(actual_id, merged_army_obj.name);
+
+          var total_carrier_capacity = army_obj_stats.carrier_capacity + merged_army_obj_stats.carrier_capacity;
+
+          //Count aeroplanes
+          var all_army_units = Object.keys(army_obj.units);
+          var all_ot_army_units = Object.keys(merged_army_obj.units);
+
+          for (var i = 0; i < all_army_units.length; i++)
+            if (getUnitCategoryFromUnit(all_army_units[i]).type == "air")
+              total_aeroplanes += army_obj.units[all_army_units[i]];
+
+          for (var i = 0; i < all_ot_army_units.length; i++)
+            if (getUnitCategoryFromUnit(all_ot_army_units[i]).type == "air")
+              total_aeroplanes += merged_army_obj.units[all_ot_army_units[i]];
+
+          //Check for aeroplane capacity if is navy
+          if (
+            (army_obj.type == "air" && merged_army_obj.type == "navy") ||
+            (army_obj.type == "navy" && merged_army_obj.type == "air")
+          )
+            if (total_carrier_capacity == 0) {
+              return [false, `You don't have any ships capable of carrying aircraft in the fleet you are trying to merge to!`];
+            } else if (total_aeroplanes > total_carrier_capacity)
+              return [false, `You don't have enough air capacity in the fleet you are trying to merge to! You are currently trying to cram **${parseNumber(total_aeroplanes)}** air units onto a fleet capable of supporting just **${parseNumber(total_carrier_capacity)}** of them! Consider assigning another aircraft to your fleet to offset this balance.`];
+
+          //Merge the two armies if we've made it this far
+          for (var i = 0; i < all_ot_army_units.length; i++)
+            army_obj.units[all_ot_army_units[i]] = (army_obj.units[all_ot_army_units[i]]) ?
+              army_obj.units[all_ot_army_units[i]] + merged_army_obj.units[all_ot_army_units[i]] :
+              merged_army_obj.units[all_ot_army_units[i]];
+
+          //Delete merged_army_obj now that troops have been transferred
+          var merged_army_name = JSON.parse(JSON.stringify(merged_army_obj.name));
+
+          module.exports.deleteArmy(actual_id, merged_army_obj.name);
+
+          //Return statement
+          return [true, `The **${merged_army_obj.name}** was merged into the **${army_obj.name}**.`];
+        }
+  },
+
+  relieveUnits: function (arg0_user, arg1_amount, arg2_unit_name, arg3_army_name) {
+    //Convert from parameters
+    var user_id = arg0_user;
+    var amount = parseInt(arg1_amount);
+    var unit_name = arg2_unit_name.trim().toLowerCase();
+    var army_name = arg3_army_name.trim().toLowerCase();
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var army_obj = module.exports.getArmy(actual_id, army_name);
+    var raw_unit_name = getUnit(unit_name, { return_key: true });
+    var unit_obj = getUnit(unit_name);
+    var usr = main.users[actual_id];
+
+    //Check for the usual
+    if (usr)
+      if (army_obj)
+        if (unit_obj) {
+          //Guard clauses for failure cases
+          if (!army_obj.units[raw_unit_name])
+            return [false, `You can't withdraw phantom ${(unit_obj.name) ? unit_obj.name : raw_unit_name} from the **${army_obj.name}**!`];
+
+          if (amount > army_obj.units[raw_unit_name])
+            return [false, `You don't have that many troops in **${army_obj.name}**! You may only withdraw up to **${parseNumber(army_obj.units[raw_unit_name])}** ${(unit_obj.name) ? unit_obj.name : raw_unit_name} from this force.`];
+
+          //Begin withdrawal process
+          army_obj.units[raw_unit_name] -= amount;
+          usr.reserves[raw_unit_name] = (usr.reserves[raw_unit_name]) ?
+            usr.reserves[raw_unit_name] + amount :
+            amount;
+
+          if (army_obj.units[raw_unit_name] == 0)
+            delete army_obj.units[raw_unit_name];
+
+          //Print out return statement
+          return [true, `You placed **${parseNumber(amount)}** ${(unit_obj.name) ? unit_obj.name : raw_unit_name} from the **${army_obj.name}** back into reserve.`];
+        }
   }
 };
