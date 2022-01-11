@@ -17,6 +17,26 @@ module.exports = {
     }
   },
 
+  atWar: function (arg0_user) {
+    //Convert from parameters
+    var user_id = arg0_user;
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var all_wars = Object.keys(mian.global.wars);
+    var is_at_war = false;
+
+    for (var i = 0; i < all_wars.length; i++) {
+      var local_war = main.global.wars[all_wars[i]];
+
+      if (local_war.attackers.includes(actual_id) || local_war.defenders.includes(actual_id))
+        is_at_war = true;
+    }
+
+    //Return statement
+    return is_at_war;
+  },
+
   areAtWar: function (arg0_user, arg1_user) {
     //Convert from parameters
     var user_id = arg0_user;
