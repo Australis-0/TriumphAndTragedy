@@ -70,7 +70,7 @@ module.exports = {
           status: "stationed",
           type: "empty", //Land (air_land, land), Air, Sea (air_sea, sea), Empty
           province: province_id,
-          moving_to: province_id,
+          moving_to: [],
 
           in_battle: false,
           stationary_turns: 0,
@@ -265,6 +265,9 @@ module.exports = {
       for (var i = 0; i < all_units.length; i++)
         army_size += army_obj.units[all_units[i]]*getUnitSize(all_units[i]);
     }
+
+    //Return statement
+    return army_size;
   },
 
   mergeArmy: function (arg0_user, arg1_army_name, arg2_army_name) {
@@ -339,13 +342,41 @@ module.exports = {
           return [true, `The **${merged_army_obj.name}** was merged into the **${army_obj.name}**.`];
         }
   },
-
-  //[WIP] - Work on smartMove() function first
+  
   moveArmy: function (arg0_user, arg1_army_name, arg2_province_id) {
     //Convert from parameters
     var user_id = arg0_user;
     var army_name = arg1_army_name.trim().toLowerCase();
     var province_id = arg2_province_id;
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var army_obj = module.exports.getArmy(actual_id, army_name);
+    var usr = main.users[actual_id];
+
+    //Try moving the army if possible
+    if (usr)
+      if (army_obj)
+        if (!["empty", "navy"].includes(army_obj.type))
+          if (main.provinces[province_id]) {
+            if (province_id != army_obj.province) {
+              var moving_to_array = smartMove(actual_id, army_obj.name, army_obj.province, province_id);
+
+              if (moving_to_array) {
+                army_obj.moving_to = moving_to_array;
+                army_obj.status = "moving";
+
+                var time_to_arrival = Math.ceil(army_obj.moving_to.length/(config.defines.combat.army_speed*usr.modifiers.army_travel_speed));
+
+                return [true, `The **${army_obj.name}** is now en route to Province **${province_id}**. It will arrive in approximately **${parseNumber(time_to_arrival)}** turn(s).`];
+              }
+            } else {
+              army_obj.moving_to = [];
+              army_obj.status = "stationed";
+
+              return [true, `You have ordered the **${army_obj.name}** to remain still.`];
+            }
+          }
   },
 
   relieveUnits: function (arg0_user, arg1_amount, arg2_unit_name, arg3_army_name) {

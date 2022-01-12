@@ -1,5 +1,5 @@
 module.exports = {
-  addDemand: function (arg0_user, arg1_war_name, arg2_demand_name, arg3_options = {}) {
+  addDemand: function (arg0_user, arg1_war_name, arg2_demand_name, arg3_options) {
     /*
       status_quo: true/false
       install_government: { "actual_user_id": { id: "actual_user_id", type: "democracy" }}
@@ -14,15 +14,15 @@ module.exports = {
     var user_id = arg0_user;
     var war_name = arg1_war_name;
     var demand_name = arg2_demand_name;
-    var options = arg3_options
+    var options = arg3_options;
 
     //Declare local vars
     var actual_id = main.global.user_map[user_id];
     var war_obj = module.exports.getWar(war_name);
-    var demands = war_obj.peace_treaties[actual_id].peace_demands
+    var demands = war_obj.peace_treaties[actual_id].peace_demands;
 
-    switch (demand_name){
-      case 'status_quo': 
+    switch (demand_name) {
+      case 'status_quo':
         demands.status_quo = true;
         break;
       case 'install_government':
@@ -225,6 +225,35 @@ module.exports = {
       if (local_war.name.trim().toLowerCase() == war_name)
         war_found = [true, (!options.return_key) ? local_war : all_wars[i]];
     }
+  },
+
+  getEnemies: function (arg0_user) {
+    //Convert from parameters
+    var user_id = arg0_user;
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var all_wars = Object.keys(main.global.wars);
+    var enemies = [];
+    var usr = main.users[actual_id];
+
+    //Iterate through all wars
+    for (var i = 0; i < all_wars.length; i++) {
+      var local_war = main.global.wars[all_wars[i]];
+      var opposing_side = "";
+
+      if (local_war.attackers.includes(actual_id))
+        opposing_side = "defenders";
+      if (local_war.defenders.includes(actual_id))
+        opposing_side = "attackers";
+
+      for (var i = 0; i < local_war[opposing_side].length; i++)
+        if (!enemies.includes(local_war[opposing_side][i]))
+          enemies.push(local_war[opposing_side][i]);
+    }
+
+    //Return statement
+    return enemies;
   },
 
   /*
