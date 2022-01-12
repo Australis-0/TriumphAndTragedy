@@ -143,6 +143,7 @@ FileManager.import("./game/trade/create_auto_trade");
 FileManager.import("./game/trade/give");
 
 FileManager.import("./game/units/craft");
+FileManager.import("./game/units/disband_units");
 
 FileManager.import("./game/war/rename_war");
 
