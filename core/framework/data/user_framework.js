@@ -1,4 +1,60 @@
 module.exports = {
+  /*
+    createUserGraph() - Creates a new user graph from options
+    options: {
+      army_size: 0, - Whatever the army size is. 0 by default
+      avoid_attrition: true/false - true by default
+    }
+  */
+  createUserGraph: function (arg0_user, arg1_options) {
+    //Convert from parameters
+    var user_id = arg0_user;
+    var options = (arg1_options) ? arg1_options : {};
+
+    //Declare local instance variables
+    var all_provinces = Object.keys(main.provinces);
+    var army_size = returnSafeNumber(options.army_size);
+    var local_graph = global.bn_graph();
+
+    for (var i = 0; i < all_provinces.length; i++) {
+      var local_province = main.provinces[all_provinces[i]];
+      var valid_province = false;
+
+      //Check if province is uncolonised
+      valid_province = (local_province.controller) ? true : valid_province;
+
+      if (local_province.controller) {
+        //Check for alliances, military access, vassalage, or being at war
+        if (usr.options.avoid_territorial_violation != "never") {
+          var vassal_obj = getVassal(local_province.controller);
+
+          valid_province = (hasAlliance(actual_id, local_province.controller)) ? true : valid_province;
+          valid_province = (hasMilitaryAccess(actual_id, local_province.controller)) ? true : valid_province;
+          valid_province = (at_war.includes(local_province.controller)) ? true : valid_province;
+
+          if (vassal_obj)
+            if (vassal_obj.overlord)
+              valid_province = true;
+        } else {
+          valid_province = true;
+        }
+
+        var local_supply = returnSafeNumber(local_province.supply_limit*1000, 0);
+
+        if (options.avoid_attrition != false)
+          if (getTroopCountInProvince(all_provinces[i]) + army_size > local_supply)
+            valid_province = false;
+
+        if (valid_province)
+          for (var x = 0; x < local_province.adjacencies.length; x++)
+            local_graph.addLink(all_provinces[i], local_province.adjacencies[x], { weight: 1 });
+      }
+    }
+
+    //Return statement
+    return local_graph;
+  },
+
   //getArmyStats() - Returns an army_obj with related stats, including attack and defence
   getArmyStats: function (arg0_user) { //[WIP] - Fix function to sum up stats for all user armies as well
     //Convert from parameters
@@ -342,7 +398,7 @@ module.exports = {
     }
   },
 
-  getTotalSoldiers: function (arg0_user) { //[WIP] - Needs to account for mobilised soldiers
+  getTotalSoldiers: function (arg0_user) { //Needs to account for mobilised soldiers
     //Convert from parameters
     var user_id = arg0_user;
 
@@ -357,11 +413,15 @@ module.exports = {
       if (config.pops[all_pops[i]].military_pop)
         total_sum += usr[`used_${all_pops[i]}`];
 
-    //[WIP] - Add mobilised soldiers to the count
+    //Add mobilised soldiers to the count
+    if (usr.mobilisation.is_mobilised)
+      total_sum += usr.mobilisation.current_manpower_mobilised;
 
     //Return statement
     return total_sum;
   },
+
+  //getTroopCountInProvince: function
 
   getUnitUpkeep: function (arg0_user) {
     //Convert from parameters
@@ -431,7 +491,7 @@ module.exports = {
     var all_provinces = module.exports.getProvinces(actual_id, { include_occupations: true });
 
     for (var i = 0; i < all_provinces.length; i++)
-      transferProvince(actual_id, { target: actual_ot_user_id, province_id = all_provinces[i].id });
+      transferProvince(actual_id, { target: actual_ot_user_id, province_id: all_provinces[i].id });
 
     //Remove all diplomatic relations and delete user object
     destroyAllDiplomaticRelations(actual_id);
@@ -493,7 +553,7 @@ module.exports = {
     var ending_province = arg1_province;
 
     try {
-      var pathfinder = pbn_path.aStar(graph, {
+      var pathfinder = bn_path.aStar(graph, {
         distance(fromNode, toNode, link) {
           return link.data.weight;
         }
@@ -513,11 +573,89 @@ module.exports = {
       //Return connections
       return connections;
     } catch (e) {
-      log.error(`moveTo() ran into an exceptiion when trying to find a path between Province ID ${starting_province} and Province ID ${ending_province}! ${e}`);
+      log.error(`moveTo() ran into an exception when trying to find a path between Province ID ${starting_province} and Province ID ${ending_province}! ${e}`);
 
       //Return statement
       return [starting_province, ending_province];
     }
+  },
+
+  smartMove: function (arg0_user, arg1_army_name, arg2_starting_province, arg3_ending_province) {
+    //Convert from parameters
+    var user_id = arg0_user;
+    var army_name = arg1_army_name.trim().toLowerCase();
+    var starting_province = arg2_starting_province;
+    var ending_province = arg3_ending_province;
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[actual_id];
+    var all_provinces = Object.keys(main.provinces);
+    var army_obj = getArmy(actual_id, army_name);
+    var at_war = getEnemies(actual_id);
+    var usr = main.users[actual_id];
+
+    //Make sure both the starting and ending province actually exist
+    if (army_obj)
+      if (main.provinces[starting_province])
+        if (main.provinces[ending_province]) {
+          var army_size = getArmySize(actual_id, army_obj.name);
+          var connections = [];
+
+          if (usr.options.avoid_attrition == "never" && usr.options.avoid_territorial_violation == "never") {
+            return module.exports.moveTo(starting_province, ending_province);
+          } else {
+            if (usr.options.avoid_attrition != "never") {
+              try {
+                var local_graph = module.exports.createUserGraph(actual_id, { army_size: army_size });
+
+                var pathfinder = bn_path.aStar(local_graph, {
+                  distance(fromNode, toNode, link) {
+                    return link.data.weight;
+                  }
+                });
+
+                var path = pathfinder.find(ending_province, starting_province);
+
+                for (var i = 0; i < path.length; i++)
+                  connections.push(path[i].id);
+
+                //Parse connections
+                for (var i = 0; i < connections.length; i++)
+                  if (isNaN(parseInt(connections[i])))
+                    connections.splice(i, 1);
+              } catch {}
+            }
+
+            if (connections.length == 0)
+              if (usr.options.avoid_attrition != "always") {
+                try {
+                  var local_graph = module.exports.createUserGraph(actual_id, { army_size: army_size, avoid_attrition: false });
+
+                  var pathfinder = bn_path.aStar(local_graph, {
+                    distance(fromNode, toNode, link) {
+                      return link.data.weight;
+                    }
+                  });
+
+                  var path = pathfinder.find(ending_province, starting_province);
+
+                  for (var i = 0; i < path.length; i++)
+                    connections.push(path[i].id);
+
+                  //Parse connections
+                  for (var i = 0; i < connections.length; i++)
+                    if (isNaN(parseInt(connections[i])))
+                      connections.splice(i, 1);
+                } catch {}
+              }
+
+            if (connections.length == 0)
+              return module.exports.moveTo(starting_province, ending_province);
+          }
+
+          //Return statement
+          return connections;
+        }
   },
 
   /*

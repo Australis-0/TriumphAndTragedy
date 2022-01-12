@@ -1,4 +1,51 @@
 module.exports = {
+  addDemand: function (arg0_user, arg1_war_name, arg2_demand_name, arg3_options) {
+    /*
+      status_quo: true/false
+      install_government: { "actual_user_id": { id: "actual_user_id", type: "democracy" }}
+      cut_down_to_size: ["actual_user_id", "actual_user_id_2", "actual_user_id_3"],
+      liberation: true/false
+      puppet: { "actual_user_id": { id: "actual_user_id", overlord: "overlord_id" }}
+      retake_cores: ["actual_user_id", "actual_user_id_2"]
+      annexation: { "actual_user_id": { id: "actual_user_id", provinces: ["4082", "2179", ...] }}
+    */
+
+    //Convert from parameters
+    var user_id = arg0_user;
+    var war_name = arg1_war_name;
+    var demand_name = arg2_demand_name;
+    var options = arg3_options;
+
+    //Declare local vars
+    var actual_id = main.global.user_map[user_id];
+    var war_obj = module.exports.getWar(war_name);
+    var demands = war_obj.peace_treaties[actual_id].peace_demands;
+
+    switch (demand_name) {
+      case 'status_quo':
+        demands.status_quo = true;
+        break;
+      case 'install_government':
+        demands.install_government = options;
+        break;
+      case 'cut_down_to_size':
+        demands.cut_down_to_size = options;
+        break;
+      case 'liberation':
+        demands.liberation = true;
+        break;
+      case 'puppet':
+        demands.puppet = options;
+        break;
+      case 'retake_cores':
+        demands.retake_cores = [actual_id, options];
+        break;
+      case 'annexation':
+        demands.annexation = options;
+        break;
+    }
+  },
+
   archiveWar: function (arg0_war_name) {
     //Convert from parameters
     var raw_war_name = arg0_war_name.trim().toLowerCase();
@@ -15,6 +62,26 @@ module.exports = {
 
       delete war_obj;
     }
+  },
+
+  atWar: function (arg0_user) {
+    //Convert from parameters
+    var user_id = arg0_user;
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var all_wars = Object.keys(mian.global.wars);
+    var is_at_war = false;
+
+    for (var i = 0; i < all_wars.length; i++) {
+      var local_war = main.global.wars[all_wars[i]];
+
+      if (local_war.attackers.includes(actual_id) || local_war.defenders.includes(actual_id))
+        is_at_war = true;
+    }
+
+    //Return statement
+    return is_at_war;
   },
 
   areAtWar: function (arg0_user, arg1_user) {
@@ -158,6 +225,35 @@ module.exports = {
       if (local_war.name.trim().toLowerCase() == war_name)
         war_found = [true, (!options.return_key) ? local_war : all_wars[i]];
     }
+  },
+
+  getEnemies: function (arg0_user) {
+    //Convert from parameters
+    var user_id = arg0_user;
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var all_wars = Object.keys(main.global.wars);
+    var enemies = [];
+    var usr = main.users[actual_id];
+
+    //Iterate through all wars
+    for (var i = 0; i < all_wars.length; i++) {
+      var local_war = main.global.wars[all_wars[i]];
+      var opposing_side = "";
+
+      if (local_war.attackers.includes(actual_id))
+        opposing_side = "defenders";
+      if (local_war.defenders.includes(actual_id))
+        opposing_side = "attackers";
+
+      for (var i = 0; i < local_war[opposing_side].length; i++)
+        if (!enemies.includes(local_war[opposing_side][i]))
+          enemies.push(local_war[opposing_side][i]);
+    }
+
+    //Return statement
+    return enemies;
   },
 
   /*
