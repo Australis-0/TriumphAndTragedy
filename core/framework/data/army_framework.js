@@ -342,7 +342,7 @@ module.exports = {
           return [true, `The **${merged_army_obj.name}** was merged into the **${army_obj.name}**.`];
         }
   },
-  
+
   moveArmy: function (arg0_user, arg1_army_name, arg2_province_id) {
     //Convert from parameters
     var user_id = arg0_user;

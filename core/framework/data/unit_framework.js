@@ -1,4 +1,36 @@
 module.exports = {
+  disbandUnits: function (arg0_user, arg1_amount, arg2_unit_name) {
+    //Convert from parameters
+    var user_id = arg0_user;
+    var amount = parseInt(arg1_amount);
+    var unit_name = arg2_unit_name;
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var raw_unit_name = module.exports.getUnit(unit_name, { return_key: true });
+    var unit_obj = module.exports.getUnit(unit_name);
+    var usr = main.users[actual_id];
+
+    if (unit_obj)
+      if (!isNaN(amount))
+        if (usr.reserves[raw_unit_name] >= amount) {
+          //Subtract from current used pop capacities
+          if (unit_obj.manpower_cost) {
+            var all_manpower_costs = Object.keys(unit_obj.manpower_cost);
+
+            for (var i = 0; i < all_manpower_costs.length; i++) {
+              usr[`used_${all_manpower_costs[i]}`] -= (unit_obj.manpower_cost[all_manpower_costs[i]]/returnSafeNumber(unit_obj.quantity, 1))*amount;
+
+              if (usr[`used_${all_manpower_costs[i]}`] < 0)
+                usr[`used_${all_manpower_costs[i]}`] = 0;
+            }
+          }
+
+          //Remove from reserves
+          usr.reserves[raw_unit_name] -= amount;
+        }
+  },
+
   generateColonisationID: function (arg0_user) {
     //Convert from parameters
     var user_id = arg0_user;
