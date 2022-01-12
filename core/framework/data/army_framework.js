@@ -189,6 +189,28 @@ module.exports = {
           }
   },
 
+  generateArmyID: function (arg0_user) {
+    //Convert from parameters
+    var user_id = arg0_user;
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var usr = main.users[actual_id];
+
+    var local_id;
+
+    //While loop to find ID, just in-case of conflicting random ID's:
+    while (true) {
+      var local_id = generateRandomID();
+
+      //Return and break once a true ID is found
+      if (!usr.armies[local_id]) {
+        return local_id;
+        break;
+      }
+    }
+  },
+
   /*
     getArmy() - Fetches an army object from a user by name property
     options: {
@@ -225,25 +247,23 @@ module.exports = {
     return (army_exists[0]) ? army_exists[1] : undefined;
   },
 
-  generateArmyID: function (arg0_user) {
+  getArmySize: function (arg0_user, arg1_army_name) {
     //Convert from parameters
     var user_id = arg0_user;
+    var army_name = arg1_army_name.trim().toLowerCase();
 
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
+    var army_obj = module.exports.getArmy(army_name);
+    var army_size = 0;
     var usr = main.users[actual_id];
 
-    var local_id;
+    //Check if army_obj exists
+    if (army_obj) {
+      var all_units = Object.keys(army_obj.units);
 
-    //While loop to find ID, just in-case of conflicting random ID's:
-    while (true) {
-      var local_id = generateRandomID();
-
-      //Return and break once a true ID is found
-      if (!usr.armies[local_id]) {
-        return local_id;
-        break;
-      }
+      for (var i = 0; i < all_units.length; i++)
+        army_size += army_obj.units[all_units[i]]*getUnitSize(all_units[i]);
     }
   },
 

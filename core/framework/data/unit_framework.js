@@ -293,5 +293,28 @@ module.exports = {
 
     //Return object
     return (options.type != "money") ? costs_obj : returnSafeNumber(costs_obj.money, 0);
+  },
+
+  getUnitSize: function (arg0_unit_name) {
+    //Convert from parameters
+    var unit_name = arg0_unit_name;
+
+    //Declare local instance variables
+    var unit_obj = module.exports.getUnit(unit_name);
+    var unit_size = 0;
+
+    if (unit_obj)
+      if (unit_obj.manpower_cost) {
+        var all_manpower_costs = Object.keys(unit_obj.manpower_cost);
+
+        for (var i = 0; i < all_manpower_costs.length; i++) {
+          var local_manpower_cost = unit_obj.manpower_cost[all_manpower_costs[i]];
+
+          unit_size += local_manpower_cost;
+        }
+      }
+
+    //Return statement
+    return unit_size/returnSafeNumber(unit_obj.quantity, 1);
   }
 };
