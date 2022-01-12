@@ -320,6 +320,14 @@ module.exports = {
         }
   },
 
+  //[WIP] - Work on smartMove() function first
+  moveArmy: function (arg0_user, arg1_army_name, arg2_province_id) {
+    //Convert from parameters
+    var user_id = arg0_user;
+    var army_name = arg1_army_name.trim().toLowerCase();
+    var province_id = arg2_province_id;
+  },
+
   relieveUnits: function (arg0_user, arg1_amount, arg2_unit_name, arg3_army_name) {
     //Convert from parameters
     var user_id = arg0_user;

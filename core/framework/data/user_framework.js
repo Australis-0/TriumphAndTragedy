@@ -342,7 +342,7 @@ module.exports = {
     }
   },
 
-  getTotalSoldiers: function (arg0_user) { //[WIP] - Needs to account for mobilised soldiers
+  getTotalSoldiers: function (arg0_user) { //Needs to account for mobilised soldiers
     //Convert from parameters
     var user_id = arg0_user;
 
@@ -357,11 +357,15 @@ module.exports = {
       if (config.pops[all_pops[i]].military_pop)
         total_sum += usr[`used_${all_pops[i]}`];
 
-    //[WIP] - Add mobilised soldiers to the count
+    //Add mobilised soldiers to the count
+    if (usr.mobilisation.is_mobilised)
+      total_sum += usr.mobilisation.current_manpower_mobilised;
 
     //Return statement
     return total_sum;
   },
+
+  //getTroopCountInProvince: function 
 
   getUnitUpkeep: function (arg0_user) {
     //Convert from parameters
@@ -431,7 +435,7 @@ module.exports = {
     var all_provinces = module.exports.getProvinces(actual_id, { include_occupations: true });
 
     for (var i = 0; i < all_provinces.length; i++)
-      transferProvince(actual_id, { target: actual_ot_user_id, province_id = all_provinces[i].id });
+      transferProvince(actual_id, { target: actual_ot_user_id, province_id: all_provinces[i].id });
 
     //Remove all diplomatic relations and delete user object
     destroyAllDiplomaticRelations(actual_id);
@@ -518,6 +522,23 @@ module.exports = {
       //Return statement
       return [starting_province, ending_province];
     }
+  },
+
+  smartMove: function (arg0_user, arg1_starting_province, arg2_ending_province) {
+    //Convert from parameters
+    var user_id = arg0_user;
+    var starting_province = arg1_starting_province;
+    var ending_province = arg2_ending_province;
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[actual_id];
+    var usr = main.users[actual_id];
+
+    //Make sure both the starting and ending province actually exist
+    if (main.provinces[starting_province])
+      if (main.provinces[ending_province]) {
+
+      }
   },
 
   /*
