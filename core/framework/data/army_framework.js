@@ -1,4 +1,41 @@
 module.exports = {
+  calculateArmyStats: function (arg0_user, arg1_army_name) {
+    //Convert from parameters
+    var user_id = arg0_user;
+    var army_name = arg1_army_name;
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var army_obj = (typeof army_name != "object") ?
+      module.exports.getArmy(actual_id, army_name) :
+      army_name;
+    var army_stats = {
+      attack: 0,
+      defence: 0
+    };
+    var usr = main.users[actual_id];
+
+    //Check for the usual
+    if (usr)
+      if (army_obj) {
+        var all_units = Object.keys(army_obj.units);
+
+        for (var i = 0; i < all_units.length; i++) {
+          var unit_obj = getUnit(all_units[i]);
+
+          army_stats.attack += army_obj.units[all_units[i]]*
+            returnSafeNumber(unit_obj.attack)*
+            returnSafeNumber(usr.modifiers[`${getUnitCategoryFromUnit(all_units[i], { return_key: true })}_attack`], 1);
+          army_stats.defence += army_obj.units[all_units[i]]*
+            returnSafeNumber(unit_obj.attack)*
+            returnSafeNumber(usr.modifiers[`${getUnitCategoryFromUnit(all_units[i], { return_key: true })}_defence`], 1);
+        }
+      }
+
+    //Return statement
+    return army_stats;
+  },
+
   calculateArmyType: function (arg0_user, arg1_army_name) {
     //Convert from parameters
     var user_id = arg0_user;
@@ -211,6 +248,32 @@ module.exports = {
     }
   },
 
+  //getArmiesInProvince() - Returns an object array of all armies in a province
+  getArmiesInProvince: function (arg0_province_id) {
+    //Convert from parameters
+    var province_id = arg0_province_id.trim();
+
+    //Declare local instance variables
+    var all_users = Object.keys(main.users);
+    var armies_in_province = [];
+
+    //Iterate over all users and their armies
+    for (var i = 0; i < all_users.length; i++) {
+      var local_user = main.users[all_users[i]];
+      var local_user_armies = Object.keys(local_user.armies);
+
+      for (var x = 0; x < local_user_armies.length; x++) {
+        var local_army = local_user.armies[local_user_armies[x]];
+
+        if (local_army.type != "navy")
+          armies_in_province.push(local_army);
+      }
+    }
+
+    //Return statement
+    return armies_in_province;
+  },
+
   /*
     getArmy() - Fetches an army object from a user by name property
     options: {
@@ -250,11 +313,13 @@ module.exports = {
   getArmySize: function (arg0_user, arg1_army_name) {
     //Convert from parameters
     var user_id = arg0_user;
-    var army_name = arg1_army_name.trim().toLowerCase();
+    var army_name = arg1_army_name;
 
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
-    var army_obj = module.exports.getArmy(army_name);
+    var army_obj = (typeof army_name != "object") ?
+      module.exports.getArmy(army_name) :
+      army_name;
     var army_size = 0;
     var usr = main.users[actual_id];
 
@@ -268,6 +333,22 @@ module.exports = {
 
     //Return statement
     return army_size;
+  },
+
+  getTroopsInProvince: function (arg0_province_id) {
+    //Convert from parameters
+    var province_id = arg0_province_id.trim();
+
+    //Declare local instance variables
+    var local_armies = module.exports.getArmiesInProvince(province_id);
+    var total_troop_count = 0;
+
+    //Iterate over local armies
+    for (var i = 0; i < local_armies.length; i++)
+      total_troop_count += module.exports.getArmySize(local_armies[i]);
+
+    //Return statement
+    return total_troop_count;
   },
 
   mergeArmy: function (arg0_user, arg1_army_name, arg2_army_name) {

@@ -36,6 +36,7 @@ module.exports = {
   /*
     printPercentage() - Formats a string to fit a certain percentage (e.g. 23%), instead of a default decimal number.
     options: {
+      base_zero: true/false - Whether to start at a base zero instead of one
       display_prefix: true/false - Whether or not to display a starting prefix
     }
   */

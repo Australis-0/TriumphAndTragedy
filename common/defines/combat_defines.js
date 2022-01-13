@@ -23,6 +23,8 @@ config.defines.combat = {
   mobilisation_cooldown: 3, //Amount of turns before a person can mobilise/demobilise again
   mobilise_unit: "none", //Default unit for mobilisation
   peacetime_mobilisation_penalty: 0.5, //What should the penalty for peacetime mobilisation be (in infamy)?
+	seaplane_bonus: 0.5, //What should the bonus combat modifier whilst at sea be?
+	submarine_cooldown: 1, //How many turns should it take for submarines to cooldown from their previous operation? Set to 0 to disable
 	unit_upkeep: 1, //How much should 100 units cost per turn?
   war_exhaustion_blockade_limit: 0.20, //What should be the maximum warscore penalty for being blockaded?
   war_exhaustion_blockade_rate: 0.05, //How fast should war exhaustion tick up if user is blockaded?
