@@ -34,7 +34,7 @@ module.exports = {
                   };
 
                   //Set new army status
-                  army_obj.status = "blockading";
+                  army_obj.status = `blockading **${usr.name}**`;
                   army_obj.is_blockading = true;
 
                   //If users are not already at war, grant a theft CB to the other user; print to news
