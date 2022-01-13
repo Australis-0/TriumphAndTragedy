@@ -124,8 +124,8 @@ module.exports = {
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
     var army_obj = module.exports.getArmy(actual_id, army_name);
-    var unit_obj = getUnit(unit_name);
     var raw_unit_name = getUnit(unit_name, { return_key: true });
+    var unit_obj = getUnit(unit_name);
     var usr = main.users[actual_id];
 
     //Check if unit_obj and army_obj exist

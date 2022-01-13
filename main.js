@@ -126,6 +126,8 @@ FileManager.import("./game/market/sell");
 FileManager.import("./game/military/create_army");
 FileManager.import("./game/military/delete_army");
 FileManager.import("./game/military/demobilise");
+FileManager.import("./game/military/deploy_units");
+FileManager.import("./game/military/merge_army");
 FileManager.import("./game/military/mobilise");
 
 FileManager.import("./game/politics/coup_government");
