@@ -129,6 +129,7 @@ FileManager.import("./game/military/demobilise");
 FileManager.import("./game/military/deploy_units");
 FileManager.import("./game/military/merge_army");
 FileManager.import("./game/military/mobilise");
+FileManager.import("./game/military/relieve_units");
 
 FileManager.import("./game/politics/coup_government");
 FileManager.import("./game/politics/raise_stability");
