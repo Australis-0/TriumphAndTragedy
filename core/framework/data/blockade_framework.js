@@ -27,6 +27,7 @@ module.exports = {
                   var at_war = areAtWar(actual_id, actual_ot_user_id);
 
                   usr.blockaded = {
+                    id: usr.id,
                     is_blockaded: true,
 
                     blockaded_war_exhaustion: 0,
@@ -87,6 +88,7 @@ module.exports = {
         for (var i = 0; i < usr.blockaded.fleets.length) {
           var local_fleet = getArmy(usr.blockaded.fleets[i].id, usr.blockaded.fleets[i].fleet_id);
 
+          local_fleet.blockade_recovery_turns = config.defines.combat.blockade_cooldown;
           local_fleet.status = "in harbour";
           delete local_fleet.is_blockading;
         }
