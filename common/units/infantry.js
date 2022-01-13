@@ -1,5 +1,6 @@
 config.units.infantry = {
   name: "Infantry",
+  icon: "active_personnel",
   type: "land",
 
   //Early Game Infantry Units

@@ -1,5 +1,6 @@
 config.units.aeroplanes = {
   name: "Aeroplanes",
+  icon: "aeroplanes",
   type: "air",
 
   //Air Units - Pre-WW1

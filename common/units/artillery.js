@@ -1,5 +1,6 @@
 config.units.artillery = {
   name: "Artillery",
+  icon: "artillery",
   type: "land",
 
   //Mediaeval to Early Modern Artillery

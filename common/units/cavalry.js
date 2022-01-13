@@ -1,5 +1,6 @@
 config.units.cavalry = {
   name: "Cavalry",
+  icon: "manpower",
   type: "land",
 
   //Cavalry Units

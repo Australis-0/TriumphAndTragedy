@@ -1,5 +1,6 @@
 config.units.colonists = {
   name: "Colonists",
+  icon: "colonisation",
   type: "reserves",
 
   //Colonial Units

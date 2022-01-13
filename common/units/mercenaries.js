@@ -1,5 +1,6 @@
 config.units.mercenaries = {
   name: "Mercenaries",
+  icon: "active_personnel",
   type: "land",
 
   //Mercenaries
