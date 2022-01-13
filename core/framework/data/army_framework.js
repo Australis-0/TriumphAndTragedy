@@ -83,7 +83,7 @@ module.exports = {
       }
   },
 
-  deleteArmy: function (arg0_user, arg1_army_name) {
+  deleteArmy: function (arg0_user, arg1_army_name) { //[WIP] - Blockade handler in future
     //Convert from parameters
     var user_id = arg0_user;
     var army_name = arg1_army_name.trim();

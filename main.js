@@ -123,6 +123,8 @@ FileManager.import("./game/laws/enact_reform");
 FileManager.import("./game/market/buy");
 FileManager.import("./game/market/sell");
 
+FileManager.import("./game/military/create_army");
+FileManager.import("./game/military/delete_army");
 FileManager.import("./game/military/demobilise");
 FileManager.import("./game/military/mobilise");
 
