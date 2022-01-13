@@ -17,6 +17,7 @@ config.defines.diplomacy = {
   military_access_cancellation_alert_id: "access_cancelled", //Which alert should popup when military access to another country is cancelled?
   military_access_request_alert_id: "other_armies_our_soil", //Which alert should popup for the target user when military access is being requested of them?
   non_aggression_pact_request_alert_id: "a_guaranteed_peace", //Which alert should popup when a user is requesting a non-aggression pact?
+  peacetime_blockade_penalty: 5, //How much infamy should a nation-state get if they blockade another country during peacetime?
   proclaim_guarantee_alert_id: "a_guarantee_for_our_nation", //What alert should popup for the target user when someone is guaranteeing their independence?
   relation_change_speed: 10, //Maximum amount relations can change by per turn
   revoke_guarantee_alert_id: "guarantee_broken", //What alert should popup when a guarantee of independence is revoked?

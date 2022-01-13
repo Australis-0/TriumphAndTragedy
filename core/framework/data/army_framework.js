@@ -494,6 +494,9 @@ module.exports = {
           if (army_obj.units[raw_unit_name] == 0)
             delete army_obj.units[raw_unit_name];
 
+          //Recalculate army type
+          module.exports.calculateArmyType(actual_id, army_obj.name);
+
           //Print out return statement
           return [true, `You placed **${parseNumber(amount)}** ${(unit_obj.name) ? unit_obj.name : raw_unit_name} from the **${army_obj.name}** back into reserve.`];
         }

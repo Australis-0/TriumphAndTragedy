@@ -525,8 +525,11 @@ module.exports = {
     //Declare local instance variables
     var usr = main.users[user_id];
 
+    var blockade_is_empty = (Object.keys(usr.blockaded).length > 0);
+    var blockade_obj = usr.blockaded;
+
     //Return statement
-    return (Object.keys(usr.blockaded).length > 0);
+    return (blockade_obj.is_blockaded || blockade_is_empty);
   },
 
   isJustifying: function (arg0_user, arg1_user) {
