@@ -35,6 +35,7 @@ module.exports = {
 
                   //Set new army status
                   army_obj.status = "blockading";
+                  army_obj.is_blockading = true;
 
                   //If users are not already at war, grant a theft CB to the other user; print to news
                   if (!at_war) {
@@ -69,5 +70,35 @@ module.exports = {
     } else {
       return [false, `You must specify an extant nation to blockade!`];
     }
+  },
+
+  deleteBlockade: function (arg0_user) {
+    //Convert from parameters
+    var user_id = arg0_user;
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var usr = main.users[actual_id];
+
+    //Check if user is actually blockaded
+    if (actual_id)
+      if (isBlockaded(actual_id)) {
+        //Go through all fleets that are still blockading
+        for (var i = 0; i < usr.blockaded.fleets.length) {
+          var local_fleet = getArmy(usr.blockaded.fleets[i].id, usr.blockaded.fleets[i].fleet_id);
+
+          local_fleet.status = "in harbour";
+          delete local_fleet.is_blockading;
+        }
+
+        //Subtract from war_exhaustion
+        usr.modifiers.war_exhaustion -= usr.blockaded.blockaded_war_exhaustion;
+
+        //Set cooldown
+        usr.blockaded.blockade_cooldown = config.defines.combat.blockade_cooldown;
+
+        //Delete blockading object
+        delete usr.blockaded;
+      }
   }
 };
