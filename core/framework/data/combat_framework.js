@@ -15,7 +15,16 @@ module.exports = {
     var usr = main.users[actual_id];
 
     //Check for the usual
+    if (usr)
+      if (ot_user)
+        if (attacking_army_obj)
+          if (defending_army_obj) {
+            //Calculate army stats
+            var attacking_army_stats = calculateArmyStats(actual_id, attacking_army_obj);
+            var defending_army_stats = calculateArmyStats(actual_ot_user_id, defending_army_obj);
 
+            //Go for it
+          }
   },
 
   initialiseAirRaid: function (arg0_user, arg1_city_name, arg2_army_name) { //[WIP] - Work on initialiseAirBattle() first
