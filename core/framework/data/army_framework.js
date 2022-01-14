@@ -1,5 +1,11 @@
 module.exports = {
-  calculateArmyStats: function (arg0_user, arg1_army_name) {
+  /*
+    calculateArmyStats() - Returns the attack and defence value of the given army based on the available options.
+    options: {
+      mode: "air_raid", "anti_submarine_warfare", "default", "submarine_warfare" - Which mode to calculate in; default by default.
+    }
+  */
+  calculateArmyStats: function (arg0_user, arg1_army_name, arg2_options) {
     //Convert from parameters
     var user_id = arg0_user;
     var army_name = arg1_army_name;
@@ -23,12 +29,28 @@ module.exports = {
         for (var i = 0; i < all_units.length; i++) {
           var unit_obj = getUnit(all_units[i]);
 
-          army_stats.attack += army_obj.units[all_units[i]]*
+          var default_attack = army_obj.units[all_units[i]]*
             returnSafeNumber(unit_obj.attack)*
             returnSafeNumber(usr.modifiers[`${getUnitCategoryFromUnit(all_units[i], { return_key: true })}_attack`], 1);
-          army_stats.defence += army_obj.units[all_units[i]]*
+          var default_defence = army_obj.units[all_units[i]]*
             returnSafeNumber(unit_obj.attack)*
             returnSafeNumber(usr.modifiers[`${getUnitCategoryFromUnit(all_units[i], { return_key: true })}_defence`], 1);
+
+          //Check to see if unit_counts according to the current mode
+          var unit_counts = false;
+
+          if (mode == "air_raid")
+            if (unit_obj.type)
+              if (unit_obj.type.includes("can_bomb"))
+                unit_counts = true;
+
+          if (mode == "default")
+            unit_counts = true;
+
+          if (unit_counts) {
+            army_stats.attack += default_attack;
+            army_stats.defence += default_defence;
+          }
         }
       }
 
