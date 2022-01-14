@@ -120,7 +120,7 @@ module.exports = {
       }
   },
 
-  deleteArmy: function (arg0_user, arg1_army_name) { //[WIP] - Blockade handler in future
+  deleteArmy: function (arg0_user, arg1_army_name) {
     //Convert from parameters
     var user_id = arg0_user;
     var army_name = arg1_army_name.trim();
@@ -133,11 +133,32 @@ module.exports = {
     //Return all units to reserves
     if (army_obj) {
       var all_units = Object.keys(army_obj.units);
+      var all_users = Object.keys(main.users);
 
       for (var i = 0; i < all_units.length; i++)
         usr.reserves[all_units[i]] = (usr.reserves[all_units[i]]) ?
           usr.reserves[all_units[i]] + army_obj.units[all_units[i]] :
           army_obj.units[all_units[i]];
+
+      //Check if army is currently in a blockade, if so withdraw
+      if (army_obj.is_blockading)
+        for (var i = 0; i < all_users.length; i++) {
+          var local_user = main.users[all_users[i]];
+
+          //Check for blockade
+          if (local_user.blockaded.is_blockaded)
+            for (var x = 0; x < local_user.blockaded.fleets.length; x++) {
+              var local_fleet = local_user.blockaded.fleets[x];
+
+              if (local_fleet.id == actual_id && local_fleet.fleet_id == army_obj.id)
+                local_user.blockaded.fleets.splice(x, 1);
+            }
+
+          //Delete blockade if no fleet is left to blockade
+          if (local_user.blockaded.is_blockaded)
+            if (local_user.blockaded.fleets.length == 0)
+              deleteBlockade(all_users[i]);
+        }
 
       //Delete army
       delete army_obj;
