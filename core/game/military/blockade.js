@@ -41,8 +41,8 @@ module.exports = {
 
               //Print user feedback
               (blockade_creation[0]) ?
-              printAlert(game_obj.id, blockade_creation[1]) :
-              printError(game_obj.id, blockade_creation[1]);
+                printAlert(game_obj.id, blockade_creation[1]) :
+                printError(game_obj.id, blockade_creation[1]);
             }
           } else {
             printError(game_obj.id, `The **${fleet_name}** is already busy ${army_obj.status}! Try checking your **[Army List]** for a full list of available navies.`);

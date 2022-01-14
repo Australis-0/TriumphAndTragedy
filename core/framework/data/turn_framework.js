@@ -71,6 +71,7 @@ module.exports = {
       JSON.parse(JSON.stringify(main.users[actual_id]));
 
     //Declare local tracker variables
+    var all_armies = Object.keys(usr.armies);
     var all_cities = getCities(actual_id);
     var all_expeditions = Object.keys(usr.expeditions);
     var all_good_names = getGoods({ return_names: true });
@@ -88,6 +89,17 @@ module.exports = {
       //City modifiers/trackers
       usr.city_cap = getCitiesCap(actual_id);
       usr.total_cities += getCities(actual_id, { include_hostile_occupations: true }).length;
+
+      //Combat modifiers
+      {
+        //Blockades
+        if (usr.blockaded.blockade_cooldown)
+          usr.blockaded.blockade_cooldown--;
+
+        //Delete unnecessary keys
+        if (usr.blockaded.blockade_cooldown == 0)
+          delete usr.blockaded.blockade_cooldown;
+      }
 
       //Diplomatic modifiers
       {
@@ -189,6 +201,21 @@ module.exports = {
       //Remove all alerts in alerts_to_remove
       for (var i = 0; i < alerts_to_remove.length; i++)
         usr.alerts.splice(alerts_to_remove[i], 1);
+    }
+
+    //Army processing
+    {
+      for (var i = 0; i < all_armies.length; i++) {
+        var local_army = usr.armies[all_armies[i]];
+
+        //Naval processing
+        if (local_army.blockade_recovery_turns > 0)
+          local_army.blockade_recovery_turns--;
+
+        //Delete unneeded keys
+        if (local_army.blockade_recovery_turns == 0)
+          delete local_army.blockade_recovery_turns;
+      }
     }
 
     //Budget processing
@@ -309,6 +336,20 @@ module.exports = {
         //Vassalage
         if (getVassal(actual_id))
           usr.vassal_years++;
+
+        //War exhaution
+        {
+          //Blockades
+          if (isBlockaded(actual_id))
+            if (usr.blockaded.blockaded_war_exhaustion + config.defines.combat.war_exhaustion_blockade_rate < config.defines.combat.war_exhaustion_blockade_limit) {
+              var local_war_exhaustion_rate = (config.defines.combat.war_exhaustion_blockade_limit - usr.blockaded.blockaded_war_exhaustion < config.defines.combat.war_exhaustion_blockade_rate) ?
+                config.defines.combat.war_exhaustion_blockade_limit - usr.blockaded.blockaded_war_exhaustion :
+                config.defines.combat.war_exhaustion_blockade_rate;
+
+              usr.blockaded.blockaded_war_exhaustion += returnSafeNumber(local_war_exhaustion_rate);
+              usr.modifiers.war_exhaustion += returnSafeNumber(local_war_exhaustion_rate);
+            }
+        }
 
         //Wargoal justification
         {
