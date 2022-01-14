@@ -65,15 +65,31 @@ module.exports = {
         }
 
         //Default handler
-        var button_obj = getButton(alert_obj.id, input);
+        if (!alert_obj.news_alert) {
+          var button_obj = getButton(alert_obj.id, input);
 
-        //Execute if button is found
-        if (button_obj)
-          if (button_obj.effect) {
-            button_obj.effect(alert_obj.options);
+          //Execute if button is found
+          if (button_obj)
+            if (button_obj.effect) {
+              button_obj.effect(alert_obj.options);
 
+              //Send user feedback
+              printAlert(game_obj.id, `${config.icons.checkmark} You have successfully resolved **${alert_obj.name}** by choosing **${button_obj.name}**.`);
+
+              //Delete alert key
+              usr.alerts.splice(local_alert_id, 1);
+
+              //Go back to the main alert screen after resolving
+              game_obj.page = "alerts";
+              createPageMenu(game_obj.middle_embed, {
+                embed_pages: printAlerts(game_obj.user),
+                user: game_obj.user
+              });
+            }
+        } else {
+          if (input == "OK") {
             //Send user feedback
-            printAlert(game_obj.id, `${config.icons.checkmark} You have successfully resolved **${alert_obj.name}** by choosing **${button_obj.name}**.`);
+            printAlert(game_obj.id, `${config.icons.checkmark} You have successfully dismissed this alert.`);
 
             //Delete alert key
             usr.alerts.splice(local_alert_id, 1);
@@ -85,6 +101,7 @@ module.exports = {
               user: game_obj.user
             });
           }
+        }
       }
     }
 

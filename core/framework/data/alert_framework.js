@@ -161,5 +161,26 @@ module.exports = {
       round_count: JSON.parse(JSON.stringify(main.round_count)),
       duration: config.defines.common.alert_timeout
     });
+  },
+
+  sendEmbedAlert: function (arg0_user, arg1_embed_obj) {
+    //Convert from parameters
+    var user_id = arg0_user;
+    var embed_obj = arg1_embed_obj;
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var usr = main.users[actual_id];
+
+    //Push embed_obj to usr.alerts
+    usr.alerts.push({
+      news_alert: true,
+      embed: embed_obj,
+
+      //Tracker variables
+      date: JSON.parse(JSON.stringify(main.date)),
+      round_count: JSON.parse(JSON.stringify(main.round_count)),
+      duration: config.defines.common.alert_timeout
+    });
   }
 };

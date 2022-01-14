@@ -10,29 +10,36 @@ module.exports = {
     var usr = main.users[actual_id];
 
     //Declare alert_string
+    var alert_embed;
     var alert_string = [];
 
     //[WIP] - Add date string instead of just time remaining
     alert_string.push(` - ${config.icons.time} **${parseNumber(alert_obj.duration)}** turn(s) remaining`);
 
-    if (alert_obj.description)
-      alert_string.push(alert_obj.description);
+    if (!alert_obj.news_alert) {
+      if (alert_obj.description)
+        alert_string.push(alert_obj.description);
 
-      for (var i = 0; i < alert_obj.buttons.length; i++) {
-        alert_string.push("");
-        alert_string.push(`**[${alert_obj.buttons[i].name}]**`);
+        for (var i = 0; i < alert_obj.buttons.length; i++) {
+          alert_string.push("");
+          alert_string.push(`**[${alert_obj.buttons[i].name}]**`);
 
-        if (!alert_obj.buttons[i].hide_description)
-          alert_string.push(`\n${alert_obj.buttons[i].description}`);
-      }
+          if (!alert_obj.buttons[i].hide_description)
+            alert_string.push(`\n${alert_obj.buttons[i].description}`);
+        }
 
-    //Format embed
-    const alert_embed = new Discord.MessageEmbed()
-      .setColor(settings.bot_colour)
-      .setTitle(`[Back] ¦ ${alert_obj.title}:`)
-      .setThumbnail(alert_obj.thumbnail ? alert_obj.thumbnail : usr.flag)
-      .setImage(alert_obj.image ? alert_obj.image : "https://cdn.discordapp.com/attachments/722997700391338046/736141424315203634/margin.png")
-      .setDescription(alert_string.join("\n"));
+      //Format embed
+      alert_embed = new Discord.MessageEmbed()
+        .setColor(settings.bot_colour)
+        .setTitle(`[Back] ¦ ${alert_obj.title}:`)
+        .setThumbnail(alert_obj.thumbnail ? alert_obj.thumbnail : usr.flag)
+        .setImage(alert_obj.image ? alert_obj.image : "https://cdn.discordapp.com/attachments/722997700391338046/736141424315203634/margin.png")
+        .setDescription(alert_string.join("\n"));
+    } else {
+      alert_embed = alert_obj.embed;
+      alert_embed.setTitle(`[Back] ¦ ${alert_embed.title}`);
+      alert_embed.setDescription(`${alert_embed.description}\n\n**[OK]**`);
+    }
 
     game_obj.main_embed = alert_embed;
     game_obj.main_change = true;
