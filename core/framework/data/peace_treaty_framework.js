@@ -99,8 +99,7 @@ module.exports = {
                         for(user of retake_cores){
                             for(prov of getProvinces(user, {include_hostile_occupations: true, include_occupations: false})){
                                 if(actual_id.cores.includes(prov)){
-                                    main.provinces[prov].owner = actual_id;
-                                    main.provinces[prov].controller = actual_id;
+                                    transferProvince(user, {province: prov, target: user_id})
                                 }
                             }
                         }
@@ -111,8 +110,7 @@ module.exports = {
                         provinces = demands.annexation[target].provinces
     
                         for(prov of provinces){
-                            main.provinces[prov].owner = actual_id;
-                            main.provinces[prov].controller = actual_id;
+                            transferProvince(target, {province: prov, target: user_id});
                         }
                     }
                 }
