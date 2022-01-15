@@ -198,6 +198,13 @@ module.exports = {
     return (!raw_modifier) ? Math.ceil(usr.pops[pop_type]*availability_modifier) : availability_modifier;
   },
 
+  /*
+    killPops() - Kills a certain number of pops from a user based on the available options.
+    options: {
+      type: "soldiers", - Which type of pop to kill off
+      amount: 10000 - How much of the pop to kill off
+    }
+  */
   killPops: function (arg0_user, arg1_options) {
     //Convert from parameters
     var user_id = arg0_user;

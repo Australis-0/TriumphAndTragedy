@@ -42,6 +42,26 @@ module.exports = {
     return `${date_obj.day} ${module.exports.months[date_obj.month]} ${date_obj.year}`;
   },
 
+  ordinalise: function (arg0_number) {
+    //Convert from parameters
+    var i = arg0_number;
+
+    //Declare local instance variables
+    var negative_suffix = (i < 0) ? "-" : "";
+
+    local_number = Math.abs(local_number);
+    var j = i % 10,
+      k = i % 100;
+
+    if (j == 1 && k != 11)
+      return `${negative_suffix}${i}st`;
+    if (j == 2 && k != 12)
+      return `${negative_suffix}${i}nd`;
+    if (j == 3 && k != 13)
+      return `${negative_suffix}${i}rd`;
+    return `${negative_suffix}${i}th`;
+  },
+
   parseBoolean: function (arg0_boolean) {
     ///Convert from parameters
     var boolean = arg0_boolean;
