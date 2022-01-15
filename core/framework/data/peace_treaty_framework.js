@@ -96,7 +96,7 @@ module.exports = {
                         createVassal(overlord, target);
                     }
                     if(demands.retake_cores){
-                        for(user of retake_cores){
+                        for(user of demands.retake_cores){
                             for(prov of getProvinces(user, {include_hostile_occupations: true, include_occupations: false})){
                                 if(getCulture(prov).primary_culture.includes(actual_id)){
                                     transferProvince(user, {province: prov, target: user_id})
