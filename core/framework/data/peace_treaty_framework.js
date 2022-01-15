@@ -98,7 +98,7 @@ module.exports = {
                     if(demands.retake_cores){
                         for(user of retake_cores){
                             for(prov of getProvinces(user, {include_hostile_occupations: true, include_occupations: false})){
-                                if(actual_id.cores.includes(prov)){
+                                if(getCulture(prov).primary_culture.includes(actual_id)){
                                     transferProvince(user, {province: prov, target: user_id})
                                 }
                             }
