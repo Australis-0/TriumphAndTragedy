@@ -15,6 +15,7 @@ config.defines.combat = {
 	blockade_cooldown: 3, //How many turns should cooldowns in between blockades for the same user be?
 	combat_modifiers: ["attack", "defence", "manoeuvre", "initiative"], //What are the main modifiers/stats for combat units?
 	combat_order: ["attack", "defence"], //What should the combat order be by default?
+	combat_order_stalemate_tech: "chemical_cannisters", //Which tech should switch the defender and attacker combat order?
 	combat_order_switch_tech: "war_of_movement", //What tech should switch the combat order back around?
 	cumulative_combat_modifiers: ["attack", "defence"], //Which combat modifiers are cumulative as opposed to per unit?
   infrastructure_range: 5, //What is the radius of provinces that should be affected by constructed infrastructure?
