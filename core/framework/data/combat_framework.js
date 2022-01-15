@@ -198,6 +198,14 @@ module.exports = {
                     module.exports.calculateRoll(defending_army_obj)
                 );
               }
+
+            //Check if army must retreat
+
+            //Occupy province
+
+            //Add warscore
+
+            //Delete armies if no units are left in them
           }
   },
 
