@@ -321,6 +321,12 @@ module.exports = {
     return primary_culture_provinces;
   },
 
+  /*
+    getPrimaryCultures() - Returns a list of a user's primary cultures.
+    options: {
+      return_objects: true/false - Whether or not to return the objects of the cultures instead. False by default
+    }
+  */
   getPrimaryCultures: function (arg0_user, arg1_options) {
     //Convert from parameters
     var user_id = arg0_user;
@@ -336,7 +342,7 @@ module.exports = {
       var local_culture = main.global.cultures[all_cultures[i]];
 
       if (!local_culture.primary_culture.includes(actual_id))
-        all_primary_cultures.push(all_cultures[i]);
+        all_primary_cultures.push((!options.return_objects) ? all_cultures[i] : local_culture);
     }
 
     //Return statement#

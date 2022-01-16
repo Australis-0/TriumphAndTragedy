@@ -335,6 +335,9 @@ module.exports = {
       attackers: [attacker_id],
       defenders: [defender_id],
 
+      [`${attacker_id}_casualties`]: 0,
+      [`${defender_id}_casualties`]: 0,
+
       attacker_total_casualties: 0,
       defender_total_casualties: 0,
       attacker_warscore: 0,

@@ -4,6 +4,22 @@ module.exports = {
     return "stroke:#000000;stroke-width:0.26458332px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;opacity:1";
   },
 
+  setOccupationColour: function (arg0_user, arg1_province_id) {
+    //Convert from parameters
+    var user_id = arg0_user;
+    var province_id = arg1_province_id;
+
+    //Declare local instance variables
+    var usr = main.users[user_id];
+
+    //Change province colour
+    module.exports.setProvinceColour("political", province_id, [
+      Math.max(usr.colour[0] - 20, 0),
+      Math.max(usr.colour[1] - 20, 0),
+      Math.max(usr.colour[2] - 20, 0)
+    ]);
+  },
+
   setProvinceColour: function (arg0_file, arg1_province_id, arg2_colour) {
     //Convert from parameters
     var local_map = global[`${arg0_file}_parsed`];

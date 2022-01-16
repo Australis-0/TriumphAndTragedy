@@ -421,8 +421,6 @@ module.exports = {
     return total_sum;
   },
 
-  //getTroopCountInProvince: function
-
   getUnitUpkeep: function (arg0_user) {
     //Convert from parameters
     var user_id = arg0_user;

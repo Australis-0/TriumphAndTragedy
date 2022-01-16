@@ -1,8 +1,9 @@
 module.exports = {
-  liftBlockade: function (arg0_user, arg1_army_name) { //[WIP] - Add to news
+  liftBlockade: function (arg0_user, arg1_army_name, arg2_do_not_display) { //[WIP] - Add to news
     //Convert from parameters
     var user_id = arg0_user;
     var fleet_name = arg1_army_name.trim();
+    var do_not_display = arg2_display;
 
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
@@ -39,20 +40,24 @@ module.exports = {
 
           //Print user feedback
           if (blockade_index[0].fleets.length >= 1) {
-            printAlert(game_obj.id, `You have withdrawn the **${army_obj.name}** from the blockade on **${blockaded_user.name}**.`);
+            if (!do_not_display)
+              printAlert(game_obj.id, `You have withdrawn the **${army_obj.name}** from the blockade on **${blockaded_user.name}**.`);
           } else {
             //Delete blockade
             deleteBlockade(blockade_index[0].id);
 
-            printAlert(game_obj.id, `You have ended your blockade on **${blockaded_user.name}**.`);
+            if (!do_not_display)
+              printAlert(game_obj.id, `You have ended your blockade on **${blockaded_user.name}**.`);
           }
 
         }
       } else {
-        printError(game_obj.id, `The **${army_obj.name}** isn't currently blockading anyone!`);
+        if (!do_not_display)
+          printError(game_obj.id, `The **${army_obj.name}** isn't currently blockading anyone!`);
       }
     } else {
-      printError(game_obj.id, `You can't lift a blockade from a nonexistent navy! That's just not how this works ..`);
+      if (!do_not_display)
+        printError(game_obj.id, `You can't lift a blockade from a nonexistent navy! That's just not how this works ..`);
     }
   }
 };

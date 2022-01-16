@@ -34,12 +34,19 @@ module.exports = {
           for (var i = 0; i < all_mobilised_pops.length; i++) {
             var local_mobilised_pop = usr.mobilised.mobilised_pops[all_mobilised_pops[i]];
 
+            if (local_mobilised_pop < 0)
+              local_mobilised_pop = 0;
+
             usr[`used_${all_mobilised_pops[i]}`] -= local_mobilised_pop;
           }
 
           var unit_obj = getUnit(usr.mobilised.unit_type);
           var unit_reserves = usr.reserves[usr.mobilised.unit_type];
           var units_to_remove = JSON.parse(JSON.stringify(usr.mobilised.current_manpower_mobilised));
+
+          //Make sure we can't remove negative units
+          if (units_to_remove < 0)
+            units_to_remove = 0;
 
           //Remove unit type from reserves
           units_to_remove -= unit_reserves;
@@ -50,7 +57,7 @@ module.exports = {
           //[WIP] - Remove unit type from all armies
 
           //Print out user feedback
-          printAlert(game_obj.id, `You demobilised **${parseNumber(usr.mobilised.current_manpower_mobilised)}** ${(unit_obj.name) ? unit_obj.name : usr.mobilised.unit_type}.`);
+          printAlert(game_obj.id, `You demobilised **${parseNumber(units_to_remove)}** ${(unit_obj.name) ? unit_obj.name : usr.mobilised.unit_type}.`);
 
           //Reset all mobilisation keys apart from last_mobilised
           var all_mobilisation_keys = Object.keys(usr.mobilised);
