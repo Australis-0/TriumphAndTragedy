@@ -1,5 +1,6 @@
 config.defines.combat = {
 	anti_aircraft_base_damage: 10000, //How much AP should each AA gun be worth at the start?
+	anti_aircraft_building: "ack_ack_guns", //What is the name of the anti-aircraft building?
 	anti_aircraft_effectiveness: 1, //How effective should ack-ack be by default? This modifies total AP damage outputted by ack-ack gun buildings
 	anti_aircraft_fixed_damage: true, //Should ack-ack damage be fixed or scale with the bomber force?
   base_attrition_rate: 0.90, //What should the base attrition rate be? (percentage)

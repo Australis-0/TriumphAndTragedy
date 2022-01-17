@@ -643,7 +643,7 @@ module.exports = {
         var actual_building_category;
 
         for (var i = 0; i < all_building_categories.length; i++)
-          if (Object.keys(config.buildings[all_building_categories[i]]).includes(building_cabuilding_category_name))
+          if (Object.keys(config.buildings[all_building_categories[i]]).includes(building_category_name))
             actual_building_category = all_building_categories[i];
 
         var local_building_category = module.exports.getBuildingCategory(actual_building_category);
@@ -841,5 +841,25 @@ module.exports = {
     return (good_type == "all") ?
       (Object.keys(goods_production).length > 0) ? goods_production : {} :
       (goods_production[good_type]) ? goods_production[good_type] : [0, 0];
+  },
+
+  getTotalBuildings: function (arg0_city_name, arg1_building_name) {
+    //Convert from parameters
+    var city_name = arg0_city_name.toLowerCase().trim();
+    var building_name = arg1_building_name.toLowerCase().trim();
+
+    //Declare local instance variables
+    var city_obj = getCity(city_name);
+    var raw_building_name = module.exports.getBuilding(building_name);
+    var total = 0;
+
+    //Iterate over all buildings in province
+    if (city_obj)
+      for (var i = 0; i < city_obj.buildings.length; i++)
+        if (city_obj.buildings[i].building_type == raw_building_name)
+          total++;
+
+    //Return statement
+    return total;
   }
 };
