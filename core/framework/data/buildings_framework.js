@@ -9,6 +9,106 @@ module.exports = {
     "order"
   ],
 
+  constructBuilding: function (arg0_amount, arg1_building_name, arg2_province) {
+    //Convert from parameters
+    var amount = Math.ceil(parseInt(arg0_amount));
+    var building_name = arg1_building_name.trim();
+    var province_id = arg2_province;
+
+    //Declare local instance variables
+    var building_obj = module.exports.getBuilding(building_name);
+    var province_obj = main.provinces[province_id];
+    var raw_building_name = module.exports.getBuilding(building_name, { return_key: true });
+
+    if (province_obj)
+      if (province_obj.buildings)
+        if (building_obj)
+          if (!isNaN(amount)) {
+            //Supply limit handler
+            if (building_obj.supply_limit) {
+              var supplied_provinces = getProvincesInRange(province_id, config.defines.combat.infrastructure_range);
+
+              for (var i = 0; i < supplied_provinces.length; i++) {
+                var local_province = main.provinces[supplied_provinces[i]];
+
+                local_province.supply_limit = (local_province.supply_limit) ?
+                  local_province.supply_limit + building_obj.supply_limit*amount :
+                  building_obj.supply_limit*amount;
+              }
+            }
+
+            //Push to buildings array
+            for (var i = 0; i < amount; i++)
+              province_obj.buildings.push({
+                building_type: raw_building_name
+              });
+          }
+  },
+
+  destroyBuilding: function (arg0_amount, arg1_building_name, arg2_province) {
+    //Convert from parameters
+    var amount = Math.ceil(parseInt(arg0_amount));
+    var building_name = arg1_building_name.trim();
+    var province_id = arg2_province;
+
+    //Declare local instance variables
+    var building_obj = module.exports.getBuilding(building_name);
+    var freed_manpower = {};
+    var province_obj = main.provinces[province_id];
+    var raw_building_name = module.exports.getBuilding(building_name, { return_key: true });
+
+    //Remove buildings from local province
+    if (province_obj)
+      if (province_obj.buildings)
+        if (building_obj)
+          if (!isNaN(amount)) {
+            //Supply limit handler
+            if (building_obj.supply_limit) {
+              var local_user = main.users[province_obj.controller];
+              var supplied_provinces = getProvincesInRange(province_id, config.defines.combat.infrastructure_range);
+
+              for (var i = 0; i < supplied_provinces.length; i++) {
+                var local_province = main.provinces[supplied_provinces[i]];
+
+                local_province.supply_limit = (local_province.supply_limit) ?
+                  local_province.supply_limit - building_obj.supply_limit*amount :
+                  0;
+              }
+
+              //Splice from buildings array
+              for (var i = province_obj.buildings.length - 1; i >= 0; i--)
+                if (amount > 0)
+                  if (province_obj.buildings[i].building_type == raw_building_name)
+                    province_obj.buildings.splice(i, 1);
+
+              //Free up manpower
+              if (building_obj.manpower_cost) {
+                var all_manpower_costs = Object.keys(building_obj.manpower_cost);
+
+                for (var i = 0; i < all_manpower_costs.length; i++) {
+                  var local_manpower_cost = building_obj.manpower_cost[all_manpower_costs[i]];
+
+                  local_user.pops[`used_${all_manpower_costs[i]}`] -= local_manpower_cost*amount;
+
+                  //Add to tracker variable
+                  freed_manpower[all_manpower_costs[i]] = (freed_manpower[all_manpower_costs[i]]) ?
+                    freed_manpower[all_manpower_costs[i]] + local_manpower_cost*amount :
+                    local_manpower_cost*amount;
+                }
+              }
+            }
+          }
+
+      //Make sure user's available pops can't be less than zero
+      var all_pops = Object.keys(config.pops);
+
+      for (var i = 0; i < all_pops.length; i++)
+        usr.pops[`used_${all_pops[i]}`] = Math.max(0, usr.pops[`used_${all_pops[i]}`]);
+
+      //Return statement
+      return freed_manpower;
+  },
+
   /*
     getBuilding() - Returns back a building object/key based on options
     options: {
