@@ -410,7 +410,7 @@ module.exports = {
           }
   },
 
-  initialiseAirRaid: function (arg0_user, arg1_city_name, arg2_army_name) { //[WIP] - Work on initialiseAirBattle() first
+  initialiseAirRaid: function (arg0_user, arg1_city_name, arg2_army_name) { //[WIP] - Work on destroyBuilding() function first
     //Convert from parameters
     var user_id = arg0_user;
     var city_name = arg1_city_name.trim();
@@ -428,10 +428,38 @@ module.exports = {
       if (city_obj)
         if (army_obj) {
           var actual_ot_user_id = city_obj.owner;
-          var army_stats = calculateArmyStats(actual_id, army_obj, { mode: "air_raid" });
           var ot_user = main.users[actual_ot_user_id];
+          var total_buildings = city_obj.buildings.length;
 
+          //Check for any potential interceptions
+          try {
+            var potential_interception_provinces = getProvincesInRange(
+              city_obj.id,
+              Math.ceil(
+                config.defines.combat.interception_range*returnSafeNumber(ot_user.modifiers.air_interception_range, 1
+                )
+              )
+            );
 
+            for (var i = 0; i < potential_interception_provinces.length; i++) {
+              var defender_armies_in_province = getArmiesInProvince(potential_interception_provinces[i]);
+
+              for (var x = 0; x < defender_armies_in_province.length; x++)
+                if (defender_armies_in_province[x].owner == city_obj.controller && defender_armies_in_province.type == "air")
+                  module.exports.initialiseBattle(actual_ot_user_id, defender_armies_in_province[x].name, actual_id, army_obj.name);
+            }
+          } catch {}
+
+          //Bombs away!
+          if (total_buildings > 0) {
+            var army_stats = calculateArmyStats(actual_id, army_obj, { mode: "air_raid" });
+            var city_buildings = [];
+            var destroyed_buildings = {};
+            var total_attacker_casualties = 0;
+            var total_casualties = 0;
+
+            //Scramble buildings/shuffle buildings
+          }
         }
   }
 };

@@ -308,6 +308,9 @@ module.exports = {
       for (var x = 0; x < local_user_armies.length; x++) {
         var local_army = local_user.armies[local_user_armies[x]];
 
+        //Append owner for identification
+        local_army.owner = all_users[i];
+
         if (local_army.type != "navy")
           armies_in_province.push(local_army);
       }
