@@ -119,7 +119,7 @@ module.exports = {
     return current_roll;
   },
 
-  initialiseBattle: function (arg0_user, arg1_army_name, arg2_user, arg3_army_name) { //[WIP] - There needs to be some way to send battle results as an alert
+  initialiseBattle: function (arg0_user, arg1_army_name, arg2_user, arg3_army_name) {
     //Convert from parameters
     var user_id = arg0_user;
     var attacking_army_name = arg1_army_name.trim();
@@ -410,7 +410,7 @@ module.exports = {
           }
   },
 
-  initialiseAirRaid: function (arg0_user, arg1_city_name, arg2_army_name) { //[WIP] - Work on destroyBuilding() function first
+  initialiseAirRaid: function (arg0_user, arg1_city_name, arg2_army_name) {
     //Convert from parameters
     var user_id = arg0_user;
     var city_name = arg1_city_name.trim();
