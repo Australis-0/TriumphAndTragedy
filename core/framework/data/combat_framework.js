@@ -450,15 +450,46 @@ module.exports = {
             }
           } catch {}
 
+          //Calculate largest_wing
+          var all_units = Object.keys(army_obj.units);
+          var largest_wing = 0;
+          var main_unit_ap = 0;
+
+          for (var i = 0; i < all_units.length; i++)
+            if (army_obj.units[all_units[i]] > largest_wing) {
+              var unit_obj = getUnit(all_units[i]);
+
+              largest_wing = army_obj.units[all_units[i]];
+              main_unit_ap = returnSafeNumber(unit_obj.attack);
+            }
+
           //Bombs away!
           if (total_buildings > 0) {
+            var all_pops = Object.keys(config.pops);
             var army_stats = calculateArmyStats(actual_id, army_obj, { mode: "air_raid" });
             var city_buildings = [];
             var destroyed_buildings = {};
             var total_attacker_casualties = 0;
             var total_casualties = 0;
 
-            //Scramble buildings/shuffle buildings
+            //Each ack-ack gun is worth 10x the main_unit_ap, revert to fixed AP damage if valid
+            main_unit_ap = (config.defines.combat.anti_aircraft_fixed_damage) ?
+              config.defines.combat.anti_aircraft_base_damage/10 :
+              main_unit_ap;
+
+            //Attacker rolls, each building has ((defender_ap/building_count)*100) + 500 HP
+            var attacker_roll = randomNumber(0, army_stats.attack);
+            var defender_defence = ((defender_attack/total_buildings)*100) + 500;
+
+            //Deduct buildings, floored
+            var deducted_buildings = Math.max(Math.floor(attacker_roll/defender_defence), total_buildings - 1);
+
+            //40% destruction cap, population killed = percentage of deducted buildings, soft cap at 120k
+            if (Math.ceil(total_buildings*0.2) <= deducted_buildings) {
+              //Destroy buildings
+              for (var i = 0; i < Math.ceil(total_buildings*0.2); i++)
+                //destroyBuilding() function, WIP
+            }
           }
         }
   }
