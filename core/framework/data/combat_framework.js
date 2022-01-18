@@ -46,7 +46,7 @@ module.exports = {
           var all_mobilised_pops = Object.keys(usr.mobilisation.mobilised_pops);
 
           for (var y = 0; y < all_mobilised_pops.length; i++) {
-            var local_amount = usr.mobilisation.mobilised_pops[all_mobilised_pops];
+            var local_amount = usr.mobilisation.mobilised_pops[all_mobilised_pops[y]];
             var local_percentage = local_amount/usr.mobilisation.current_manpower_mobilised;
 
             //Begin removing pops based on local percentage
@@ -735,6 +735,22 @@ module.exports = {
         var local_manpower_costs = (local_unit.manpower_cost) ?
           Object.keys(local_unit.manpower_cost) :
           [];
+
+        for (var i = 0; i < local_manpower_costs.length; i++) {
+          //Check to see if local_manpower_cost is of a military pop or not
+          var local_value = local_unit.manpower_cost[local_manpower_costs[x]]/returnSafeNumber(unit_obj.quantity, 1);
+          var pop_obj = config.pops[local_manpower_cost[i]];
+
+          //Kill off pops; mobilisation handler
+          if (usr.mobilisation.is_mobilised) {
+            var all_mobilised_pops = Object.keys(usr.mobilisation.mobilised_pops);
+
+            for (var x = 0; x < all_mobilised_pops.length; x++) {
+              var local_amount = usr.mobilisation.mobilised_pops[all_mobilised_pops[x]];
+              var local_percentage = local_amount/usr.mobilisation.currrent_manpower_mobilised;
+            }
+          }
+        }
       }
   }
 };
