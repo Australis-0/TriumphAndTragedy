@@ -2,7 +2,7 @@ module.exports = {
   /*
     calculateArmyStats() - Returns the attack and defence value of the given army based on the available options.
     options: {
-      mode: "air_raid", "anti_submarine_warfare", "default", "submarine_warfare" - Which mode to calculate in; default by default.
+      mode: "air_raid", "default", "submarine_defence", "submarine_raid" - Which mode to calculate in; default by default.
     }
   */
   calculateArmyStats: function (arg0_user, arg1_army_name, arg2_options) {
@@ -25,6 +25,7 @@ module.exports = {
     if (usr)
       if (army_obj) {
         var all_units = Object.keys(army_obj.units);
+        var pure_submarines = true;
 
         for (var i = 0; i < all_units.length; i++) {
           var unit_obj = getUnit(all_units[i]);
@@ -38,20 +39,46 @@ module.exports = {
 
           //Check to see if unit_counts according to the current mode
           var unit_counts = false;
+          var unit_attack_modifier = 1;
+          var unit_defence_modifier = 1;
 
           if (mode == "air_raid")
             if (unit_obj.type)
               if (unit_obj.type.includes("can_bomb"))
                 unit_counts = true;
 
+          if (mode == "submarine_defence")
+            if (unit_obj.type)
+              if (unit_obj.type.includes("destroyer") || unit_obj.type.includes("helicopter")) {
+                unit_counts = true;
+              } else if (unit_obj.type.includes("cruiser")) {
+                unit_counts = true;
+                unit_attack_modifier = 0.5;
+              }
+
+          if (mode == "submarine_raid")
+            if (unit_obj.type)
+              if (unit_obj.type.includes("submarine"))
+                unit_counts = true;
+
           if (mode == "default")
             unit_counts = true;
 
+
           if (unit_counts) {
-            army_stats.attack += default_attack;
-            army_stats.defence += default_defence;
+            army_stats.attack += default_attack*unit_attack_modifier;
+            army_stats.defence += default_defence*unit_defence_modifier;
           }
+
+          //Add army_obj flags
+          if (!unit_obj.type)
+            pure_submarines = false;
+          if (unit_obj.type)
+            if (!unit_obj.type.includes("submarine"))
+              pure_submarines = false;
         }
+
+        army_stats.pure_submarines = pure_submarines;
       }
 
     //Return statement

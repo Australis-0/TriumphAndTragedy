@@ -661,5 +661,80 @@ module.exports = {
             }
           }
         }
+  },
+
+  initialiseSubmarineRaid: function (arg0_user, arg1_army_name, arg2_user, arg3_mode) {
+    //Convert from parameters
+    var user_id = arg0_user;
+    var army_name = arg1_army_name.trim().toLowerCase();
+    var ot_user_id = arg2_user;
+    var mode = arg3_mode.trim().toLowerCase();
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var actual_ot_user_id = main.global.user_map[ot_user_id];
+    var army_obj = getArmy(actual_id, army_name);
+    var game_obj = getGameObject(user_id);
+    var ot_game_obj = getGameObject(ot_user_id);
+    var ot_user = main.users[actual_ot_user_id];
+    var usr = main.users[actual_id];
+
+    //Check to see if the other user is a thing and army_obj exists
+    if (ot_user)
+      if (army_obj)
+        if (army_obj.type == "navy") {
+          //Check to see if the navy contains only submarines
+          var army_stats = getArmyStats(actual_id, army_obj);
+
+          if (army_stats.pure_submarines)
+            if (areAtWar(actual_id, actual_ot_user_id))
+              if (returnSafeNumber(army_obj.submarine_cooldown) == 0) {
+                var all_defender_armies = Object.keys(ot_user.armies);
+                var defender_attack = 0;
+
+                for (var i = 0; i < all_defender_armies.length; i++)
+                  defender_attack += calculateArmyStats(actual_ot_user_id, ot_user.armies[all_defender_armies[i]], { mode: "submarine_defence" });
+
+                switch (mode) {
+                  case "convoy":
+                    //Attacks a random import the user might have
+                    var succeed_chance = (army_stats.attack/defender_attack)*0.8 + 0.2; //80% comes from the attacker to defender ratio, 20% base chance
+                    var random_chance = randomNumber(0, 100);
+
+                    if (random_chance <= succeed_chance*100) {
+                      //50-50 chance of losing a submarine or two
+                      var actual_sub_losses = 0;
+                      var submarines_lost = randomNumber(0, 2);
+
+
+                    }
+
+                    break;
+                }
+
+              }
+        }
+  }, //[WIP] - Code bulk of function
+
+  //killUnitPops() - Kills unit pops without killing the player unit.
+  killUnitPops: function (arg0_user, arg1_amount, arg2_unit_name) { //[WIP] - Code bulk of function
+    //Convert from parameters
+    var user_id = arg0_user;
+    var amount = Math.ceil(parseInt(arg1_amount));
+    var unit_name = arg2_unit_name.trim().toLowerCase();
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var raw_unit_name = getUnit(unit_name, { return_key: true });
+    var unit_obj = getUnit(unit_name);
+    var usr = main.users[actual_id];
+
+    //Check to make sure that the unit_obj exists
+    if (usr)
+      if (unit_obj) {
+        var local_manpower_costs = (local_unit.manpower_cost) ?
+          Object.keys(local_unit.manpower_cost) :
+          [];
+      }
   }
 };
