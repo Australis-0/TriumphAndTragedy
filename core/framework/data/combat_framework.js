@@ -41,43 +41,8 @@ module.exports = {
           Math.ceil(total_casualties*0.5*unit_loss_rate) :
           Math.ceil((attacker_roll/local_defence)*unit_loss_rate);
 
-        //Kill off pops; mobilisation handler
-        if (usr.mobilisation.is_mobilised) {
-          var all_mobilised_pops = Object.keys(usr.mobilisation.mobilised_pops);
-
-          for (var y = 0; y < all_mobilised_pops.length; i++) {
-            var local_amount = usr.mobilisation.mobilised_pops[all_mobilised_pops[y]];
-            var local_percentage = local_amount/usr.mobilisation.current_manpower_mobilised;
-
-            //Begin removing pops based on local percentage
-            if (defender_units[i] != usr.mobilisation.unit_type) {
-              var amount_killed = Math.ceil(local_value/all_mobilised_pops.length)*total_casualties;
-
-              killPops(user_id, {
-                type: local_manpower_costs[x],
-                amount: amount_killed
-              });
-
-              usr.pops[`used_${local_manpower_costs[x]}`] = Math.max(
-                usr.pops[`used_${local_manpower_costs[x]}`] - amount_killed,
-                0
-              );
-
-              total_losses += amount_killed;
-            } else {
-              var amount_killed = Math.ceil(local_value*local_percentage)*total_casualties;
-
-              killPops(user_id, {
-                type: all_mobilised_pops[y],
-                amount: Math.ceil(amount_killed)
-              });
-
-              total_losses += Math.ceil(amount_killed);
-              usr.mobilisation.mobilised_pops[all_mobilised_pops[y]] -= amount_killed;
-              usr.mobilisation.current_manpower_mobilised -= amount_killed;
-            }
-          }
-        }
+        //Kill units
+        module.exports.killUnitPops(actual_id, total_casualties, defender_units[i]);
       }
     }
 
@@ -726,6 +691,7 @@ module.exports = {
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
     var raw_unit_name = getUnit(unit_name, { return_key: true });
+    var total_losses = 0;
     var unit_obj = getUnit(unit_name);
     var usr = main.users[actual_id];
 
@@ -738,8 +704,8 @@ module.exports = {
 
         for (var i = 0; i < local_manpower_costs.length; i++) {
           //Check to see if local_manpower_cost is of a military pop or not
-          var local_value = local_unit.manpower_cost[local_manpower_costs[x]]/returnSafeNumber(unit_obj.quantity, 1);
-          var pop_obj = config.pops[local_manpower_cost[i]];
+          var local_value = local_unit.manpower_cost[local_manpower_costs[i]]/returnSafeNumber(unit_obj.quantity, 1);
+          var pop_obj = config.pops[local_manpower_costs[i]];
 
           //Kill off pops; mobilisation handler
           if (usr.mobilisation.is_mobilised) {
@@ -748,9 +714,54 @@ module.exports = {
             for (var x = 0; x < all_mobilised_pops.length; x++) {
               var local_amount = usr.mobilisation.mobilised_pops[all_mobilised_pops[x]];
               var local_percentage = local_amount/usr.mobilisation.currrent_manpower_mobilised;
+
+              //Begin removing pops based on local percentage
+              if (raw_unit_name != usr.mobilisation.unit_type) {
+                var amount_killed = Math.ceil(local_value/all_mobilised_pops.length)*amount;
+
+                killPops(actual_id, {
+                  type: local_manpower_costs[i],
+                  amount: amount_killed
+                });
+
+                usr.pops[`used_${local_manpower_costs[i]}`] = Math.max(
+                  usr.pops[`used_${local_manpower_costs[i]}`] - amount_killed,
+                  0
+                );
+
+                total_losses += amount_killed;
+              } else {
+                var amount_killed = Math.ceil(local_value*local_percentage)*amount;
+
+                killPops(actual_id, {
+                  type: local_manpower_costs[i],
+                  amount: amount_killed
+                });
+
+                total_losses += Math.ceil(amount_killed);
+                usr.mobilisation.mobilised_pops[all_mobilised_pops[x]] -= amount_killed;
+                usr.mobilisation.current_manpower_mobilised -= amount_killed;
+              }
             }
+          } else {
+            var amount_killed = Math.ceil(local_value)*amount;
+
+            killPops(user_id, {
+              type: local_manpower_costs[i],
+              amount: amount_killed
+            });
+
+            usr.pops[`used_${local_manpower_costs[i]}`] = Math.max(
+              usr.pops[`used_${local_manpower_costs[x]}`] - amount_killed,
+              0
+            );
+
+            total_losses += Math.ceil(amount_killed);
           }
         }
       }
+
+    //Return statement
+    return total_losses;
   }
 };
