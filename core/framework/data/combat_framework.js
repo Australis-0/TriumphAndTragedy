@@ -655,6 +655,7 @@ module.exports = {
             if (areAtWar(actual_id, actual_ot_user_id))
               if (returnSafeNumber(army_obj.submarine_cooldown) == 0) {
                 var all_defender_armies = Object.keys(ot_user.armies);
+                var all_units = Object.keys(army_obj.units);
                 var defender_attack = 0;
 
                 for (var i = 0; i < all_defender_armies.length; i++)
@@ -670,9 +671,30 @@ module.exports = {
                       //50-50 chance of losing a submarine or two
                       var actual_sub_losses = 0;
                       var submarines_lost = randomNumber(0, 2);
+                      var total_submarines_lost = JSON.parse(JSON.stringify(submarines_lost));
 
-
+                      for (var i = 0; i < all_units.length; i++) {
+                        if (submarines_lost > 0) {
+                          if (army_obj.units[all_units[i]] > submarines_lost) {
+                            army_obj.units[all_units[i]] -= submarines_lost;
+                            module.exports.killUnitPops(actual_id, submarines_lost, all_units[i]);
+                            submarines_lost = 0;
+                          } else {
+                            submarines_lost -= army_obj.units[all_units[i]];
+                            module.exports.killUnitPops(actual_id, submarines_lost, all_units[i]);
+                            army_obj.units[all_units[i]] = 0;
+                          }
+                        }
+                      }
                     }
+
+                    var export_to_remove = randomElement(Object.keys(usr.trades));
+                    var local_export = usr.trades[export_to_remove];
+                    var local_export_good = getGood(local_export.good_type);
+
+                    returnAlert(game_obj.id, `Your submarines intercepted a shipment of ${parseInt(local_export.amount)} ${(local_export_good.name) ? local_export_good.name : local_export.good_type} to **${main.users[local_export_good.target].name}** at the cost of **${parseNumber(total_submarines_lost)}** of their own.`);
+
+                    delete local_export;
 
                     break;
                 }
