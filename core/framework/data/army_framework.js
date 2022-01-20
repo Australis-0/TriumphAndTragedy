@@ -56,6 +56,15 @@ module.exports = {
                 unit_attack_modifier = 0.5;
               }
 
+          if (mode == "submarine_naval_defence")
+            if (unit_obj.type)
+              if (unit_obj.type.includes("destroyer")) {
+                unit_counts = true;
+              } else if (unit_obj.type.includes("cruiser")) {
+                unit_counts = true;
+                unit_attack_modifier = 0.5;
+              }
+
           if (mode == "submarine_raid")
             if (unit_obj.type)
               if (unit_obj.type.includes("submarine"))
