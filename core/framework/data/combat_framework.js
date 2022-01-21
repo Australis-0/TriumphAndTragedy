@@ -716,7 +716,7 @@ module.exports = {
       if (army_obj)
         if (army_obj.type == "navy") {
           //Check to see if the navy contains only submarines
-          var army_stats = getArmyStats(actual_id, army_obj);
+          var army_stats = calculateArmyStats(actual_id, army_obj);
 
           if (army_stats.pure_submarines)
             if (areAtWar(actual_id, actual_ot_user_id))

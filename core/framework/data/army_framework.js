@@ -437,6 +437,51 @@ module.exports = {
     return army_size;
   },
 
+  /*
+    getMilitaryStrength() - Gets the overall strength of a nation's military
+    options: {
+      include_reserves: true/false - Whether or not to include reserves in the overall calculations
+    }
+  */
+  getMilitaryStrength: function (arg0_user, arg1_options) {
+    //Convert from parameters
+    var user_id = arg0_user;
+    var options = (arg1_options) ? arg1_options : {};
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var military_stats = {
+      attack: 0,
+      defence: 0
+    };
+    var usr = main.users[actual_id];
+
+    var all_armies = Object.keys(usr.armies);
+
+    //Iterate over all armies
+    for (var i = 0; i < all_armies.length; i++) {
+      var local_army = usr.armies[all_armies[i]];
+      var local_army_stats = module.exports.calculateArmyStats(actual_id, local_army);
+
+      var all_army_stats = Object.keys(local_army_stats);
+
+      for (var x = 0; x < all_army_stats.length; x++)
+        military_stats[all_army_stats[x]] = (military_stats[all_army_stats[x]]) ?
+          military_stats[all_army_stats[x]] + local_army_stats[all_army_stats[x]] :
+          local_army_stats[all_army_stats[x]];
+    }
+
+    if (options.include_reserves) {
+      var reserves_strength = getArmyStats(actual_id);
+
+      military_stats.attack += reserves_strength.attack;
+      military_stats.defence += reserves_strength.defence;
+    }
+
+    //Return statement
+    return military_stats;
+  },
+
   getTroopsInProvince: function (arg0_province_id) {
     //Convert from parameters
     var province_id = arg0_province_id.trim();

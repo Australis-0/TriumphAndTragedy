@@ -406,7 +406,7 @@ module.exports = {
       }
     }
 
-    //Diplomacy page handler [WIP] - Add peace treaties
+    //Diplomacy page handler [WIP] - Add peace treaty handler
     {
       if (game_obj.page == "cb_list") {
         //[Back]

@@ -76,6 +76,7 @@ FileManager.import("./framework/ui/global_market_interface");
 FileManager.import("./framework/ui/government_interface");
 FileManager.import("./framework/ui/laws_interface");
 FileManager.import("./framework/ui/map_viewer");
+FileManager.import("./framework/ui/military_interface");
 FileManager.import("./framework/ui/next_turn_interface");
 FileManager.import("./framework/ui/page_handler");
 FileManager.import("./framework/ui/politics_interface");
