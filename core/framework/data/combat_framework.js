@@ -165,9 +165,13 @@ module.exports = {
             //Calculate army stats
             var attacking_army_stats = calculateArmyStats(actual_id, attacking_army_obj);
             var attacker_losses = 0;
+            var defender_stackwiped = false;
+            var attacker_understrength = false;
             var attacker_units = Object.keys(attacking_army_obj.units);
             var defending_army_stats = calculateArmyStats(actual_ot_user_id, defending_army_obj);
             var defender_losses = 0;
+            var defender_stackwiped = false;
+            var defender_understrength = false;
             var defender_units = Object.keys(defending_army_obj.units);
 
             var old_attacking_army_obj = JSON.parse(JSON.stringify(attacking_army_obj));
@@ -182,22 +186,45 @@ module.exports = {
             if (ot_user.researched_technologies.includes(config.defines.combat.ccombat_order_switch_tech))
               combat_order = ["attack", "defence"];
 
+            //Check if one side has less than 5% AP or DP of the other side
+            if (battle_type == "land") {
+              if (attacking_army_stats.attack < defending_army_stats.attack*0.05 && attacking_army_obj.defence < defending_army_stats.defence*0.05) {
+                attacker_understrength = true;
+
+                //50% chance of the attacker being stackwiped
+                attacker_stackwiped = (randomNumber(0, 100) <= 50);
+              }
+              if (defending_army_stats.attack < attacking_army_stats.attack*0.05 && defending_army_stats.defence < defending_army_stats.defence*0.05) {
+                defender_stackwiped = true;
+
+                //50% chance of the defender being stackwiped
+                defender_stackwiped = (randomNumber(0, 100) <= 50);
+              }
+            }
+
             //Begin rolling and subtracting units
             var attacker_casualties;
             var attacker_dice_roll = module.exports.calculateRoll(attacking_army_obj);
             var defender_casualties;
             var defender_dice_roll = module.exports.calculateRoll(defending_army_obj);
 
-            for (var i = 0; i < combat_order.length; i++)
-              if (combat_order[i] == "attack") {
-                defender_casualties = module.exports.calculateCausalties(actual_ot_user_id, defending_army_obj,
-                    attacker_dice_roll
-                );
-              } else if (combat_order[i] == "defence") {
-                attacker_casualties = module.exports.calculateCausalties(actual_id, attacking_army_obj,
-                    defender_dice_roll
-                );
-              }
+            //Process stackwipes
+            if (attacker_stackwiped)
+              attacker_casualties = module.exports.calculateCasualties(actual_id, attacking_army_obj, attacking_army_stats.defence);
+            if (defender_stackwiped)
+              defender_casualties = module.exports.calculateCasualties(actual_id, defending_army_obj, defending_army_stats.defence);
+
+            if (!attacker_stackwiped && !defender_stackwiped)
+              for (var i = 0; i < combat_order.length; i++)
+                if (combat_order[i] == "attack") {
+                  defender_casualties = module.exports.calculateCausalties(actual_ot_user_id, defending_army_obj,
+                      attacker_dice_roll
+                  );
+                } else if (combat_order[i] == "defence") {
+                  attacker_casualties = module.exports.calculateCausalties(actual_id, attacking_army_obj,
+                      defender_dice_roll
+                  );
+                }
 
             //Check if army must retreat
             var attacker_retreat = false;
@@ -208,8 +235,10 @@ module.exports = {
             var new_defending_army_stats = calculateArmyStats(actual_ot_user_id, defending_army_obj);
 
             if (
-              (new_defending_army_stats.defence < defending_army_obj.defence*0.5 || new_defending_army_stats.defence == 0) &&
-              defender_casualties > attacker_casualties
+              (
+                (new_defending_army_stats.defence < defending_army_obj.defence*0.5 || new_defending_army_stats.defence == 0) &&
+                defender_casualties > attacker_casualties
+              ) || defender_understrength
             ) {
               defender_retreat = true;
 
@@ -231,8 +260,10 @@ module.exports = {
                   liftBlockade(actual_id, defending_army_obj.name, true);
               }
             } else if (
-              (new_attacking_army_stats.defence < attacking_army_stats.defence*0.5 || new_attacking_army_stats.defence == 0) &&
-              attacker_casualties > defender_casualties
+              (
+                (new_attacking_army_stats.defence < attacking_army_stats.defence*0.5 || new_attacking_army_stats.defence == 0) &&
+                attacker_casualties > defender_casualties
+              ) || attacker_understrength
             ) {
               attacker_retreat = true;
 
@@ -291,7 +322,7 @@ module.exports = {
               getArmySize(actual_id, attacking_army_obj) == 0 ||
               (
                 attacker_retreat && attacking_army_obj.province == defending_army_obj.province
-              )
+              ) || attacker_stackwiped
             )
               deleteArmy(actual_id, attacking_army_obj.name);
 
@@ -299,7 +330,7 @@ module.exports = {
               getArmySize(actual_ot_user_id, defending_army_obj) == 0 ||
               (
                 defender_retreat && defending_army_obj.province == attacking_army_obj.province
-              )
+              ) || defender_stackwiped
             )
               deleteArmy(actual_ot_user_id, defending_army_obj.name);
 
@@ -358,15 +389,23 @@ module.exports = {
             result_string.push(`**Dice Rolls:** ${usr.name} - ${config.icons.dice} **${parseNumber(attacker_dice_roll)}** ¦ ${ot_user.name} - ${config.icons.dice} **${parseNumber(defender_dice_roll)}**`);
             result_string.push(`${config.icons.death} Total Casualties: **${parseNumber(attacker_casualties + defender_casualties)}`);
 
-            if (defender_retreat) {
-              result_string.push(`${config.icons.retreat} Due to heavy losses, the defending side was forced to retreat from the battlefield.`);
-              result_string.push(`${config.icons.prestige} **${getPrimaryCultures(actual_id, { return_objects: true }).adjective} Victory**`);
-            } else if (attacker_retreat) {
-              result_string.push(`${config.icons.retreat} Due to heavy losses, the attacking side was forced to retreat from the battlefield.`);
+            if (attacker_stackwiped) {
+              result_string.push(`${config.icons.retreat} Due to being understrength, the attacking side was completely routed from the battlefield and massacred.`);
               result_string.push(`${config.icons.prestige} **${getPrimaryCultures(actual_ot_user_id, { return_objects: true }).adjective} Victory**`);
+            } else if (defender_stackwiped) {
+              result_string.push(`${config.icons.retreat} Due to being understrength, the defending side was completely routed from the battlefield and massacred.`);
+              result_string.push(`${config.icons.prestige} **${getPrimaryCultures(actual_id, { return_objects: true }).adjective} Victory**`);
             } else {
-              result_string.push(`${config.icons.small_arms} Neither side was forced to retreat from the battle, and the fighting rages on!`);
-              result_string.push(`${config.icons.prestige} **Stalemate**`);
+              if (defender_retreat) {
+                result_string.push(`${config.icons.retreat} Due to heavy losses, the defending side was forced to retreat from the battlefield.`);
+                result_string.push(`${config.icons.prestige} **${getPrimaryCultures(actual_id, { return_objects: true }).adjective} Victory**`);
+              } else if (attacker_retreat) {
+                result_string.push(`${config.icons.retreat} Due to heavy losses, the attacking side was forced to retreat from the battlefield.`);
+                result_string.push(`${config.icons.prestige} **${getPrimaryCultures(actual_ot_user_id, { return_objects: true }).adjective} Victory**`);
+              } else {
+                result_string.push(`${config.icons.small_arms} Neither side was forced to retreat from the battle, and the fighting rages on!`);
+                result_string.push(`${config.icons.prestige} **Stalemate**`);
+              }
             }
 
             result_string.push("");
