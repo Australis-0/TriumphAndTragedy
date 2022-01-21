@@ -119,8 +119,12 @@ module.exports = {
     var actual_id = main.global.user_map[user_id];
     var actual_ot_user_id = main.global.user_map[ot_user_id];
     var all_wars = Object.keys(main.global.wars);
-    var attacking_army_obj = getArmy(actual_id, attacking_army_name);
-    var defending_army_obj = getArmy(actual_ot_user_id, defending_army_name);
+    var attacking_army_obj = (typeof attacking_army_name != "object") ?
+      getArmy(actual_id, attacking_army_name) :
+      attacking_army_name;
+    var defending_army_obj = (typeof defending_army_name != "object") ?
+      getArmy(actual_ot_user_id, defending_army_name) :
+      defending_army_name;
     var ot_user = main.users[actual_ot_user_id];
     var usr = main.users[actual_id];
 

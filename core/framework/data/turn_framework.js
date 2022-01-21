@@ -1,4 +1,45 @@
 module.exports = {
+  nextBattleTick: function () {
+    //Declare local instance variables
+    var all_armies = getAllArmies();
+    var all_users = Object.keys(main.users);
+    var all_enemies = {};
+
+    main.global.battle_tick = current_date;
+    main.last_backup = current_date;
+		writeSave({ file_limit: settings.backup_limit });
+
+    //Create lookup table of all enemies
+    for (var i = 0; i < all_users.length; i++)
+      all_enemies[all_users[i]] = getEnemies(all_users[i]);
+
+    //Iterate over all armies
+    for (var i = 0; i < all_armies.length; i++) {
+      var local_army = all_armies[i];
+      var local_enemies = all_enemies[local_army.owner];
+      var local_user = main.users[local_army.owner];
+      var province_obj = main.provinces[army_obj.province];
+
+      var in_combat = false;
+
+      //Check for hostile users in the same province
+      for (var x = 0; x < all_armies.length; x++)
+        if (local_enemies.includes(all_armies[x].owner) && all_armies[x].province = local_army.province)
+          if (local_army.type != "navy" && all_armies[x].type != "navy") {
+            (local_army.stationary_turns > all_armies[x].stationary_turns) ?
+              initialiseBattle(all_armies[x].owner, all_armies[x], local_army.owner, local_army) :
+              initialiseBattle(local_army.owner, local_army, all_armies[x].owner, all_armies[x]);
+
+            in_combat = true;
+          }
+
+      //If army is in a hostile province with an army that has more than 0,5% of the local population, and is not in combat, occupy it
+      if (!in_combat && local_enemies.includes(province_obj.controller))
+        if (getArmySize(local_army) > province_obj.pops.population*0.005)
+          province_obj.controller = local_army.owner;
+    }
+  },
+
   nextGlobalTurn: function () {
     //Declare local instance variables
     var all_market_goods = Object.keys(main.market);
