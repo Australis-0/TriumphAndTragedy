@@ -25,10 +25,12 @@ FileManager.import("./framework/strings");
 FileManager.import("./framework/users");
 
 FileManager.import("./framework/data/alert_framework");
+FileManager.import("./framework/data/army_framework");
 FileManager.import("./framework/data/base_user_initialisation");
 FileManager.import("./framework/data/blockade_framework");
 FileManager.import("./framework/data/buildings_framework");
 FileManager.import("./framework/data/casus_belli_framework");
+FileManager.import("./framework/data/combat_framework");
 FileManager.import("./framework/data/culture_framework");
 FileManager.import("./framework/data/diplomacy_framework");
 FileManager.import("./framework/data/games");
@@ -38,6 +40,7 @@ FileManager.import("./framework/data/government_framework");
 FileManager.import("./framework/data/laws_framework");
 FileManager.import("./framework/data/localisation_framework");
 FileManager.import("./framework/data/modifier_framework");
+FileManager.import("./framework/data/peace_treaty_framework");
 FileManager.import("./framework/data/politics_framework");
 FileManager.import("./framework/data/pop_framework");
 FileManager.import("./framework/data/tech_framework");
@@ -283,13 +286,23 @@ setInterval(function(){
 
   //ABRS - Save backups!
 	var current_date = new Date().getTime();
+  var battle_difference = current_date - returnSafeNumber(main.global.battle_tick);
 	var time_difference = current_date - main.last_backup;
   var turn_time_difference = current_date - main.last_turn;
 
+  //Backup processing
 	if (time_difference > settings.backup_timer*1000) {
 		main.last_backup = current_date;
 		writeSave({ file_limit: settings.backup_limit });
 	}
+
+  //Combat processing
+  if (battle_difference > (settings.turn_timer*1000)/100) {
+    main.global.battle_tick = current_date;
+    main.last_backup = current_date;
+
+    nextBattleTick();
+  }
 
   //Turn processing for all users
   if (turn_time_difference > settings.turn_timer*1000) {

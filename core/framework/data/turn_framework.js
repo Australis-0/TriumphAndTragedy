@@ -100,7 +100,7 @@ module.exports = {
     main.global.round_count++;
   },
 
-  nextTurn: function (arg0_user, arg1_options) { //[WIP] - Add newspaper section later, subtract political capital by vassal maintenance each turn
+  nextTurn: function (arg0_user, arg1_options) { //[WIP] - Add newspaper section later, subtract political capital by vassal maintenance each turn, war exhaustion handler
     //Convert from parameters
     var user_id = arg0_user;
     var options = (arg1_options) ? arg1_options : {};
@@ -114,6 +114,7 @@ module.exports = {
     //Declare local tracker variables
     var all_armies = Object.keys(usr.armies);
     var all_cities = getCities(actual_id);
+    var all_enemies = getEnemies(actual_id);
     var all_expeditions = Object.keys(usr.expeditions);
     var all_good_names = getGoods({ return_names: true });
     var all_governments = Object.keys(config.governments);
@@ -121,6 +122,9 @@ module.exports = {
     var all_pops = Object.keys(config.pops);
     var all_relations = Object.keys(usr.diplomacy.relations);
     var all_temporary_modifiers = Object.keys(usr.temporary_modifiers);
+    var controlled_provinces = getProvinces(actual_id);
+    var is_being_justified_on = isBeingJustifiedOn(actual_id);
+    var owned_provinces = getProvinces(actual_id, { include_hostile_occupations: true });
 
     //Modifier and tracker variable processing
     {
@@ -154,6 +158,10 @@ module.exports = {
         //Set infamy caps
         usr.modifiers.infamy = Math.max(usr.modifiers.infamy, 0);
         usr.modifiers.infamy = Math.min(usr.modifiers.infamy, config.defines.diplomacy.absolute_infamy_limit);
+
+        //War exhaustion
+        if (all_enemies.length == 0 && !usr.blockaded.is_blockaded && !usr.mobilisation.is_mobilised)
+          usr.modifiers.war_exhaustion -= config.defines.combat.war_exhaustion_tickdown_rate;
       }
 
       //Population modifiers/trackers
@@ -374,20 +382,6 @@ module.exports = {
         //Vassalage
         if (getVassal(actual_id))
           usr.vassal_years++;
-
-        //War exhaution
-        {
-          //Blockades
-          if (isBlockaded(actual_id))
-            if (usr.blockaded.blockaded_war_exhaustion + config.defines.combat.war_exhaustion_blockade_rate < config.defines.combat.war_exhaustion_blockade_limit) {
-              var local_war_exhaustion_rate = (config.defines.combat.war_exhaustion_blockade_limit - usr.blockaded.blockaded_war_exhaustion < config.defines.combat.war_exhaustion_blockade_rate) ?
-                config.defines.combat.war_exhaustion_blockade_limit - usr.blockaded.blockaded_war_exhaustion :
-                config.defines.combat.war_exhaustion_blockade_rate;
-
-              usr.blockaded.blockaded_war_exhaustion += returnSafeNumber(local_war_exhaustion_rate);
-              usr.modifiers.war_exhaustion += returnSafeNumber(local_war_exhaustion_rate);
-            }
-        }
 
         //Wargoal justification
         {
@@ -828,6 +822,40 @@ module.exports = {
           delete local_export;
         }
       }
+    }
+
+    //War Exhaustion
+    {
+      //Blockades
+      if (isBlockaded(actual_id))
+        if (usr.blockaded.blockaded_war_exhaustion + config.defines.combat.war_exhaustion_blockade_rate < config.defines.combat.war_exhaustion_blockade_limit) {
+          var local_war_exhaustion_rate = (config.defines.combat.war_exhaustion_blockade_limit - usr.blockaded.blockaded_war_exhaustion < config.defines.combat.war_exhaustion_blockade_rate) ?
+            config.defines.combat.war_exhaustion_blockade_limit - usr.blockaded.blockaded_war_exhaustion :
+            config.defines.combat.war_exhaustion_blockade_rate;
+
+          usr.blockaded.blockaded_war_exhaustion += returnSafeNumber(local_war_exhaustion_rate);
+          usr.modifiers.war_exhaustion += returnSafeNumber(local_war_exhaustion_rate);
+        }
+
+      //Mobilisation
+      if (usr.mobilisation.is_mobilised) {
+        usr.modifiers.war_exhaustion += config.defines.combat.war_exhaustion_mobilisation_rate;
+
+        if (!is_being_justified_on && all_enemies.length == 0)
+          usr.modifiers.infamy += config.defines.peacetime_mobilisation_penalty;
+      }
+
+      //Occupation
+      var occupied_provinces = owned_provinces.length - controlled_provinces.length;
+
+      //A full siege of the target user ticks up warscore by 10% per turn
+      usr.modifiers.war_exhaustion += parseInt(((occupied_provinces/owned_provinces.length)*0.1).toFixed(2));
+    }
+
+    //Modifier cap handlers - KEEP AT BOTTOM!
+    {
+      usr.modifiers.infamy = Math.min(Math.max(usr.modifiers.infamy, 0), 1);
+      usr.modifiers.war_exhaustion = Math.min(Math.max(usr.modifiers.war_exhaustion, 0), 1);
     }
 
     //Return statement if simulation
