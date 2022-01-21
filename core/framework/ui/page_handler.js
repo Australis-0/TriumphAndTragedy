@@ -406,7 +406,7 @@ module.exports = {
       }
     }
 
-    //Diplomacy page handler [WIP]
+    //Diplomacy page handler [WIP] - Add peace treaties
     {
       if (game_obj.page == "cb_list") {
         //[Back]
@@ -435,8 +435,17 @@ module.exports = {
       if (game_obj.page == "diplomacy") {
         //Button Handler
         //[Allow Ceding]
+        if (input == "allow ceding")
+          initialiseAllowCede(user_id);
+
         //[Cede Province]
+        if (input == "cede province")
+          initialiseCedeProvince(user_id);
+
         //[Deny Ceding]
+        if (input == "deny ceding")
+          initialiseDenyCede(user_id);
+
         //[View CB List]
         if (input == "view cb list") {
           createPageMenu(game_obj.middle_embed, {
@@ -463,6 +472,8 @@ module.exports = {
         }
 
         //[War List]
+        if (input == "war list")
+          printWars(user_id);
       }
 
       if (game_obj.page.startsWith("diplomacy_view_")) {
@@ -662,6 +673,8 @@ module.exports = {
           });
 
         //[Declare War]
+        if (input == "declare war")
+          initialiseDeclareWar(user_id);
 
         //Tooltip handler
         printCBTooltip(user_id, actual_ot_user_id, input);
