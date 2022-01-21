@@ -43,6 +43,47 @@ module.exports = {
   nextGlobalTurn: function () {
     //Declare local instance variables
     var all_market_goods = Object.keys(main.market);
+    var all_wars = Object.keys(main.global.wars);
+
+    //War processing
+    {
+      //Iterate over all wars to process warscore
+      for (var i = 0; i < all_wars.length; i++) {
+        var local_war = main.global.wars[all_wars[i]];
+
+        var attacker_war_exhaustion = 0;
+        var attacker_warscore = 0;
+        var defender_war_exhaustion = 0;
+        var defender_warscore = 0;
+        var fully_sieged_defenders = 0;
+
+        //Initialise variables
+        for (var x = 0; x < local_war.attackers.length; x++) {
+          var local_user = main.users[local_war.attackers[x]];
+
+          attacker_war_exhaustion += returnSafeNumber(local_user.modifiers.war_exhaustion, 1);
+        }
+        for (var x = 0; x < local_war.defenders.length; x+=) {
+          var local_user = main.users[local_war.defenders[x]];
+
+          defender_war_exhaustion += returnSafeNumber(local_user.modifiers.war_exhaustion, 1);
+          if (returnSafeNumber(local_user.modifiers.war_exhaustion, 1) == 1)
+            fully_sieged_defenders++;
+        }
+
+        //Set attacker_warscore; defender_warscore
+        attacker_warscore = (fully_sieged_defenders != local_war.defenders.length) ?
+          local_war.attacker_warscore = ((0.75*defender_war_exhaustion) + (
+            0.25*returnSafeNumber(main.users[local_war.defenders_war_leader].modifiers.war_exhaustion, 1)
+          ) :
+          1;
+        defender_warscore = parseInt((attacker_war_exhaustion/local_war.attackers.length).toFixed(2));
+
+        //Institute warscore caps so they can't exceed 100%
+        local_war.attacker_warscore = Math.min(local_war.attacker_warscore, 1);
+        local_war.defender_warscore = Math.min(local_war.defender_warscore, 1);
+      }
+    }
 
     //World Market Up-Logic
     {
