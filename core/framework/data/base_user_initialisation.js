@@ -216,6 +216,7 @@ module.exports = {
       if (!usr.options.allow_ceding) usr.options.allow_ceding = [];
       if (!usr.options.avoid_attrition) usr.options.avoid_attrition = "if possible";
       if (!usr.options.avoid_territorial_violation) usr.options.avoid_territorial_violation = "if possible";
+      if (!usr.options.ignore_orders) usr.options.ignore_orders = false;
 
     if (!usr.politics) usr.politics = {};
       var all_governments = Object.keys(config.governments);

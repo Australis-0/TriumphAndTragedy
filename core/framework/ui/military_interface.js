@@ -168,6 +168,82 @@ module.exports = {
       false: "No"
     };
 
-    
+    options_array.push(`We currently have our policy on **[Attrition Avoidance]** set to **${reference_string[usr.options.avoid_attrition]}**.`);
+    if (usr.options.avoid_attrition == "always") {
+      options_array.push("Our troops will always avoid attrition, and will refuse to move if ordered into a province that will result in deaths from attrition.");
+		} else if (usr.options.avoid_attrition == "if possible") {
+			options_array.push("Our troops will attempt to avoid attrition whenever possible, but will move into zones of attrition if strictly necessary.");
+		} else {
+			options_array.push("Our troops will always take the shortest route to a target province, regardless of attrition.");
+		}
+
+    options_array.push(`We currently have our policy on **[Territorial Violation]** set to **${reference_string[usr.options.avoid_territorial_violation]}**.`);
+    if (usr.options.avoid_territorial_violation == "always") {
+			options_array.push("Our troops will always avoid violating the sovereign territory of other countries, and will automatically refuse to move if ordered to pass through one.");
+		} else if (usr.options.avoid_territorial_violation == "if possible") {
+			options_array.push("Our troops will avoid violating the territory of other countries whenever possible, but may pass through them unprovoked if no alternative routes can be found.");
+		} else {
+			options_array.push("Our soldiers will march straight from point A to point B, regardless of any country standing in their paths!");
+		}
+
+    options_array.push(`We currently have our policy on **[Ignore Orders When Carpet Sieging]** set to **${reference_string[usr.options.ignore_orders]}**.`);
+    if (usr.ignore_orders_when_carpet_sieging) {
+			options_array.push("Orders given out by you to carpet siege will always override existing orders of armies if no available armies can be found.");
+		} else {
+			options_array.push("Only armies without orders or currently stationed will be requistioned for carpet sieging when ordered to.");
+		}
+
+    //1 non-inline field, list of QOL commands
+    var army_creation_array = [];
+    var army_management_array = [];
+    var command_list_array = [];
+    var global_orders_array = [];
+
+    command_list_array.push(`Military organisation commands act as power commands allowing you to quickly manage, equip, and deploy your armies, thereby reducing the need for micromanagement, and giving additional tools to players.`);
+    command_list_array.push("");
+    command_list_array.push(`---`);
+
+    global_orders_array.push(`- **[Carpet Siege]** - Order your troops to siege down an entire nation.`);
+    global_orders_array.push(`- **[Garrison Cities]** - Guard all the cities within your country.`);
+    global_orders_array.push(`- **[Garrison Provinces]** - Guard all the provinces within your country.`);
+    global_orders_array.push(`- **[Delete All Armies]** - Delete all your armies and return all troops and materiel to your reserves.`);
+    global_orders_array.push(`- **[Move All]** - Moves all your armies into a single province.`);
+
+    army_creation_array.push(`- **[Create Armies]** - Create multiple armies.`);
+    army_creation_array.push(`- **[Delete Armies]** - Delete multiple armies.`);
+    army_creation_array.push(`- **[Merge Armies]** - Power-merges several armies into an existing one.`)
+    army_creation_array.push(`- **[Split Armies]** - Splits off multiple armies from an existing one.`);
+
+    army_management_array.push(`- **[Mass Deploy]** - For deploying troops to armies en masse.`);
+    army_management_array.push(`- **[Mass Relieve]** - Relieves units from several armies, putting them back in reserves.`);
+    army_management_array.push(`- **[Move Armies]** - Moves several armies to a single province.`);
+
+    //Create embed object
+    const embed_military_hq = new Discord.MessageEmbed()
+			.setColor(settings.bot_colour)
+			.setTitle(`Military:\n${config.localisation.divider}`)
+			.setThumbnail(usr.flag)
+			.setDescription(military_hq_description.join("\n"))
+			.addFields(
+				{ name: "**Military Statistics:**", value: military_status_array.join("\n"), inline: true },
+				{ name: "**Recent Casualties:**", value: military_civilian_casualties.join("\n"), inline: true },
+				{ name: "**Military Options:**", value: options_array.join("\n") },
+				{ name: "**Military Organisation Commands:**", value: command_list_array.join("\n") },
+				{ name: "**Global Orders:**", value: global_orders_array.join("\n") },
+				{ name: "**Army Creation:**", value: army_creation_array.join("\n") },
+				{ name: "**Army Management:**", value: army_management_array.join("\n") }
+			);
+
+    //Remove control panel if one exists
+    removeControlPanel(game_obj.id);
+
+    //Edit main embed display
+    createPageMenu(game_obj.middle_embed, {
+      embed_pages: [embed_military_hq],]
+      user: game_obj.user
+    });
+
+    //Return statement
+    return [embed_military_hq];
   }
 };
