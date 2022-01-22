@@ -1,5 +1,5 @@
 module.exports = {
-  printMilitary: function (arg0_user) { //[WIP] - Code bulk of function, add status viewer, print army orders on a second page
+  printMilitary: function (arg0_user) {
     //Convert from parameters
     var user_id = arg0_user;
 
@@ -218,6 +218,26 @@ module.exports = {
     army_management_array.push(`- **[Mass Relieve]** - Relieves units from several armies, putting them back in reserves.`);
     army_management_array.push(`- **[Move Armies]** - Moves several armies to a single province.`);
 
+    //2nd page, print out all army orders; sort by number of active orders
+    var all_army_orders = Object.keys(army_orders);
+    var army_orders_array = [];
+    var sorted_army_orders = [];
+
+    for (var i = 0; i < all_army_orders.length; i++)
+      sorted_army_orders.push([army_orders[all_army_orders[i]], all_army_orders[i]]);
+
+    //Sort array
+    sorted_army_orders.sort((b[0], a[0]) => b[0] - a[0]);
+
+    //Format army_orders_array
+    army_orders_array.push(`We have **${parseNumber(all_armies.length)}** combat formations currently in the field. Of these:`);
+    army_orders_array.push("");
+
+    for (var i = 0; i < sorted_army_orders.length; i++)
+      (i != sorted_army_orders.length - 1) ?
+      army_orders_array.push(`*- *${parseNumber(sorted_army_orders[i][0])}** are ${sorted_army_orders[i][1]},`) :
+      army_orders_array.push(`- and **${parseNumber(sorted_army_orders[i][0])}** are ${sorted_army_orders[i][1]}.`);
+
     //Create embed object
     const embed_military_hq = new Discord.MessageEmbed()
 			.setColor(settings.bot_colour)
@@ -233,17 +253,22 @@ module.exports = {
 				{ name: "**Army Creation:**", value: army_creation_array.join("\n") },
 				{ name: "**Army Management:**", value: army_management_array.join("\n") }
 			);
+    const embed_military_orders = new Discord.MessageEmbed()
+			.setColor(settings.bot_colour)
+			.setTitle(`Order Breakdown:\n${config.localisation.divider}`)
+			.setThumbnail(usr.flag)
+			.setDescription(army_orders_array.join("\n"));
 
     //Remove control panel if one exists
     removeControlPanel(game_obj.id);
 
     //Edit main embed display
     createPageMenu(game_obj.middle_embed, {
-      embed_pages: [embed_military_hq],]
+      embed_pages: [embed_military_hq, embed_military_orders],
       user: game_obj.user
     });
 
     //Return statement
-    return [embed_military_hq];
+    return [embed_military_hq, embed_military_orders];
   }
 };
