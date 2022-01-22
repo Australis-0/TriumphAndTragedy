@@ -61,7 +61,7 @@ module.exports = {
 
     //Print total attack; total defence
     var army_display_stats = [];
-    var army_stats = getArmyStats(actual_id);
+    var army_stats = getMilitaryStrength(actual_id);
 
     for (var i = 0; i < config.defines.combat.cumulative_combat_modifiers.length; i++) {
       var local_combat_modifier = config.defines.combat.cumulative_combat_modifiers[i];

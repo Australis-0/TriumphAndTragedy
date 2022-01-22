@@ -472,7 +472,7 @@ module.exports = {
     }
 
     if (options.include_reserves) {
-      var reserves_strength = getArmyStats(actual_id);
+      var reserves_strength = getReserveStrength(actual_id);
 
       military_stats.attack += reserves_strength.attack;
       military_stats.defence += reserves_strength.defence;
@@ -480,6 +480,39 @@ module.exports = {
 
     //Return statement
     return military_stats;
+  },
+
+  //getReserveStrength() - Returns the current strength and army modifiers a user has in their reserves
+  getReserveStrength: function (arg0_user) { //[WIP] - Fix function to sum up stats for all user armies as well
+    //Convert from parameters
+    var user_id = arg0_user;
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var all_unit_names = getAllUnits({ return_names: true });
+    var all_units = getAllUnits();
+    var army_obj = {};
+    var usr = main.users[actual_id];
+
+    //Initialise army_obj
+    for (var i = 0; i < config.defines.combat.combat_modifiers.length; i++)
+      army_obj[config.defines.combat.combat_modifiers[i]] = 0;
+
+    //Sum up all stats for all units the user has in reserves
+    for (var i = 0; i < all_unit_names.length; i++)
+      for (var x = 0; x < config.defines.combat.combat_modifiers.length; x++) {
+        var local_combat_modifier = config.defines.combat.combat_modifiers[x];
+        var unit_obj = getUnit(all_unit_names[i]);
+
+        army_obj[local_combat_modifier] +=
+          returnSafeNumber(
+            returnSafeNumber(usr.reserves[all_unit_names[i]])*
+              unit_obj[local_combat_modifier]
+          );
+      }
+
+    //Return statement
+    return army_obj;
   },
 
   getTroopsInProvince: function (arg0_province_id) {

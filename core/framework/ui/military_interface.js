@@ -7,8 +7,9 @@ module.exports = {
     var actual_id = main.users[user_id];
     var game_obj = getGameObject(user_id);
     var military_string = [];
+    var reserves_strength = getReserveStrength(actual_id);
     var usr = main.users[actual_id];
 
-    //
+
   }
 };
