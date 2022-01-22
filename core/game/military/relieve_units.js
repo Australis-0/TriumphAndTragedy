@@ -34,5 +34,37 @@ module.exports = {
     } else {
       printError(game_obj.id, `No army by the name of the **${army_name}** could be found in your country! Check your **[Army List]** for a comprehensive overview of all your armies.`);
     }
+  },
+
+  initialiseRelieveUnits: function (arg0_user) {
+    var user_id = arg0_user;
+
+    //Declare local instance variables
+    var game_obj = getGameObject(user_id);
+
+    //Initialise visual prompt
+    visualPrompt(game_obj.alert_embed, user_id, {
+      title: `Relieve Units:`,
+      prompts: [
+        [`What is the name of the army you would like to relieve your units from?\n\nType **[Army List]** to view a list of all valid armies.`, "string"],
+        [`Which type of unit would you like to relieve?`],
+        [`How many soldiers would you like to put back in your reserves?`, "number", { min: 0 }]
+      ]
+    },
+    function (arg) {
+      module.exports.relieveUnits(user_id, arg[1], arg[2], arg[0]);
+    },
+    function (arg) {
+      switch (arg) {
+        case "army list":
+          createPageMenu(game_obj.middle_embed, {
+            embed_pages: printArmyList(user_id),
+            user: game_obj.user
+          });
+          return true;
+
+          break;
+      }
+    });
   }
 };

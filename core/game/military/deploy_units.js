@@ -35,5 +35,41 @@ module.exports = {
     } else {
       printError(game_obj.id, `The army you have specified, the **${army_name}**, proved nonexistent!`);
     }
+  },
+
+  initialiseDeployUnits: function (arg0_user) {
+    var user_id = arg0_user;
+
+    //Declare local instance variables
+    var game_obj = getGameObject(user_id);
+
+    //Initialise visual prompt
+    visualPrompt(game_obj.alert_embed, user_id, {
+      title: `Deploy Units:`,
+      prompts: [
+        [`What is the name of the army you would like to deploy your units in?\n\nType **[Army List]** to view a list of all valid armies.`, "string"],
+        [`Which type of unit would you like to deploy?\n\nType **[View Reserves]** to view a list of all valid units.`],
+        [`How many soldiers would you like to deploy?`, "number", { min: 0 }]
+      ]
+    },
+    function (arg) {
+      module.exports.deployUnits(user_id, arg[1], arg[2], arg[0]);
+    },
+    function (arg) {
+      switch (arg) {
+        case "army list":
+          createPageMenu(game_obj.middle_embed, {
+            embed_pages: printArmyList(user_id),
+            user: game_obj.user
+          });
+          return true;
+
+          break;
+        case "view reserves":
+          printReserves(game_obj.user);
+
+          break;
+      }
+    });
   }
 };

@@ -26,18 +26,22 @@ module.exports = {
             if (amount > 0) {
               //Check if the original army really has this many units of this type
               if (army_obj.units[raw_unit_name] >= amount) {
-                var deployment = deployUnits(actual_id, amount, raw_unit_name, army_obj.name, { spawn_units: true });
+                if (army_obj != ot_army_obj) {
+                  var deployment = deployUnits(actual_id, amount, raw_unit_name, army_obj.name, { spawn_units: true });
 
-                if (deployment[0]) {
-                  army_obj.units[raw_unit_name] -= amount;
+                  if (deployment[0]) {
+                    army_obj.units[raw_unit_name] -= amount;
 
-                  if (army_obj.units[raw_unit_name] == 0)
-                    delete army_obj.units[raw_unit_name];
+                    if (army_obj.units[raw_unit_name] == 0)
+                      delete army_obj.units[raw_unit_name];
 
-                  //Print user feedback
-                  printAlert(game_obj.id, `You have successfully transferred **${parseNumber(amount)}** ${(unit_obj.name) ? unit_obj.name : raw_unit_name} from the **${army_obj.name}** to the **${ot_army_obj.name}**.`);
+                    //Print user feedback
+                    printAlert(game_obj.id, `You have successfully transferred **${parseNumber(amount)}** ${(unit_obj.name) ? unit_obj.name : raw_unit_name} from the **${army_obj.name}** to the **${ot_army_obj.name}**.`);
+                  } else {
+                    printError(game_obj.id, deployment[1]);
+                  }
                 } else {
-                  printError(game_obj.id, deployment[1]);
+                  printError(game_obj.id, `You can't transfer units from the **${army_obj.name}** to itself!`);
                 }
               } else {
                 printError(game_obj.id, `The **${army_obj.name}** doesn't have this many **${(unit_obj.name) ? unit_obj.name : raw_unit_name}** available for transfer! You may only transfer up to **${parseNumber(army_obj.units[raw_unit_name])}** ${(unit_obj.name) ? unit_obj.name : raw_unit_name} from this army.`);
@@ -59,5 +63,38 @@ module.exports = {
     } else {
       printError(game_obj.id, `You can't transfer units from a nonexistent army! Check your **[Army List]** for a full view of all armies under your control.`);
     }
+  },
+
+  initialiseRelieveUnits: function (arg0_user) {
+    var user_id = arg0_user;
+
+    //Declare local instance variables
+    var game_obj = getGameObject(user_id);
+
+    //Initialise visual prompt
+    visualPrompt(game_obj.alert_embed, user_id, {
+      title: `Transfer Units Between Armies:`,
+      prompts: [
+        [`Which army would you like to transfer units from?\n\nType **[Army List]** to view a list of all valid armies.`, "string"],
+        [`Which type of unit would you like to transfer?`],
+        [`How many soldiers would you like to transfer?`, "number", { min: 0 }],
+        [`Which army would you like to transfer these soldiers to?\n\nType **[Army List]** to view a list of all valid armies.`, "string"],
+      ]
+    },
+    function (arg) {
+      module.exports.transferUnits(user_id, arg[2], arg[1], arg[0], arg[3]);
+    },
+    function (arg) {
+      switch (arg) {
+        case "army list":
+          createPageMenu(game_obj.middle_embed, {
+            embed_pages: printArmyList(user_id),
+            user: game_obj.user
+          });
+          return true;
+
+          break;
+      }
+    });
   }
 };

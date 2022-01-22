@@ -59,5 +59,35 @@ module.exports = {
       if (!do_not_display)
         printError(game_obj.id, `You can't lift a blockade from a nonexistent navy! That's just not how this works ..`);
     }
+  },
+
+  initialiseLiftBlockade: function (arg0_user) {
+    var user_id = arg0_user;
+
+    //Declare local instance variables
+    var game_obj = getGameObject(user_id);
+
+    //Initialise visual prompt
+    visualPrompt(game_obj.alert_embed, user_id, {
+      title: `Lift Blockade:`,
+      prompts: [
+        [`Which fleet would you like to issue orders for lifting a blockade to?\n\nType **[Army List]** for a valid list of all fleets.`, "string"]
+      ]
+    },
+    function (arg) {
+      module.exports.liftBlockade(user_id, arg[0]);
+    },
+    function (arg) {
+      switch (arg) {
+        case "army list":
+          createPageMenu(game_obj.middle_embed, {
+            embed_pages: printArmyList(user_id),
+            user: game_obj.user
+          });
+          return true;
+
+          break;
+      }
+    });
   }
 };

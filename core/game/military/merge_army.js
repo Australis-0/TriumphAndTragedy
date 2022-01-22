@@ -27,5 +27,36 @@ module.exports = {
     } else {
       printError(game_obj.id, `The army you have specified to merge, the **${army_name}**, could not be found as an actively deployed field army! Check **[Army List]** for a full list of valid armies.`);
     }
+  },
+
+  initialiseMergeArmy: function (arg0_user) {
+    var user_id = arg0_user;
+
+    //Declare local instance variables
+    var game_obj = getGameObject(user_id);
+
+    //Initialise visual prompt
+    visualPrompt(game_obj.alert_embed, user_id, {
+      title: `Merge Army:`,
+      prompts: [
+        [`What is the name of the army you would like to merge?\n\nType **[Army List]** for a valid list of all armies.`, "string"],
+        [`What is the name of the army you would like to merge it into?\n\nType **[Army List]** for a valid list of all armies.`, "string"]
+      ]
+    },
+    function (arg) {
+      module.exports.mergeArmy(user_id, arg[0], arg[1]);
+    },
+    function (arg) {
+      switch (arg) {
+        case "army list":
+          createPageMenu(game_obj.middle_embed, {
+            embed_pages: printArmyList(user_id),
+            user: game_obj.user
+          });
+          return true;
+
+          break;
+      }
+    });
   }
 };

@@ -27,5 +27,36 @@ module.exports = {
     } else {
       printError(game_obj.id, `The army you have specified, the **${army_name}**, doesn't even exist!`);
     }
+  },
+
+  initialiseMoveArmy: function (arg0_user) {
+    var user_id = arg0_user;
+
+    //Declare local instance variables
+    var game_obj = getGameObject(user_id);
+
+    //Initialise visual prompt
+    visualPrompt(game_obj.alert_embed, user_id, {
+      title: `Move Army:`,
+      prompts: [
+        [`What's the name of the army you would like to move?\n\nType **[Army List]** for a valid list of all armies.`, "string"],
+        [`What is the ID of the province you would like to move this army to?`, "string"]
+      ]
+    },
+    function (arg) {
+      module.exports.moveArmy(user_id, arg[0], arg[1]);
+    },
+    function (arg) {
+      switch (arg) {
+        case "army list":
+          createPageMenu(game_obj.middle_embed, {
+            embed_pages: printArmyList(user_id),
+            user: game_obj.user
+          });
+          return true;
+
+          break;
+      }
+    });
   }
 };

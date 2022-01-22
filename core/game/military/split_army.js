@@ -32,5 +32,36 @@ module.exports = {
     } else {
       printError(game_obj.id, `**${new_army_name}** exceeds the maximum character limit of **100** by **${parseNumber(new_army_name.length - 100)}** character(s)!`);
     }
+  },
+
+  initialiseSplitArmy: function (arg0_user) {
+    var user_id = arg0_user;
+
+    //Declare local instance variables
+    var game_obj = getGameObject(user_id);
+
+    //Initialise visual prompt
+    visualPrompt(game_obj.alert_embed, user_id, {
+      title: `Split Army:`,
+      prompts: [
+        [`What is the name of the army you would like to create a new army off of?\n\nType **[Army List]** for a valid list of all armies.`, "string"],
+        [`What should be the name of the new army?`, "string"]
+      ]
+    },
+    function (arg) {
+      module.exports.splitArmy(user_id, arg[0], arg[1]);
+    },
+    function (arg) {
+      switch (arg) {
+        case "army list":
+          createPageMenu(game_obj.middle_embed, {
+            embed_pages: printArmyList(user_id),
+            user: game_obj.user
+          });
+          return true;
+
+          break;
+      }
+    });
   }
 };

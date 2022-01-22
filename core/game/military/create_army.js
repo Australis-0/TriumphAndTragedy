@@ -37,5 +37,23 @@ module.exports = {
     } else {
       printError(game_obj.id, `You already have an army by the name of the **${army_name}**!`);
     }
+  },
+
+  initialiseCreateArmyCommand: function (arg0_user) {
+    var user_id = arg0_user;
+
+    //Declare local instance variables
+    var game_obj = getGameObject(user_id);
+
+    //Initialise visual prompt
+    visualPrompt(game_obj.alert_embed, user_id, {
+      title: `Create An Army:`,
+      prompts: [
+        [`What is the name of the army you would like to create?`, "string"]
+      ]
+    },
+    function (arg) {
+      module.exports.createArmy(user_id, arg[0]);
+    });
   }
 };

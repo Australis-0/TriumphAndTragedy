@@ -56,5 +56,41 @@ module.exports = {
     } else {
       printError(game_obj.id, `Your people haven't even heard of the concept of blockades, let alone how to blockade other users! Try researching the concept of blockades in your **[Technology]** tree first.`);
     }
+  },
+
+  initialiseBlockade: function (arg0_user) {
+    var user_id = arg0_user;
+
+    //Declare local instance variables
+    var game_obj = getGameObject(user_id);
+
+    //Initialise visual prompt
+    visualPrompt(game_obj.alert_embed, user_id, {
+      title: `Blockade A Country:`,
+      prompts: [
+        [`Which country would you like to blockade?\n\nType **[View Ledger]** to view a ledger of all valid nations`, "mention"],
+        [`What is the name of the fleet you would like to send to blockade this country?\n\nType **[Army List]** to view a list of all valid armies.`, "string"]
+      ]
+    },
+    function (arg) {
+      module.exports.blockade(user_id, arg[0], arg[1]);
+    },
+    function (arg) {
+      switch (arg) {
+        case "army list":
+          createPageMenu(game_obj.middle_embed, {
+            embed_pages: printArmyList(user_id),
+            user: game_obj.user
+          });
+          return true;
+
+          break;
+        case "view ledger":
+          printLedger(user_id);
+          return true;
+
+          break;
+      }
+    });
   }
 };
