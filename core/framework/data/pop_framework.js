@@ -212,6 +212,7 @@ module.exports = {
 
     //Declare local instance variables
     var decimation_obj = {};
+    var pop_obj = config.pops[options.type];
     var pop_types = getList(options.type);
     var remaining_population = options.amount;
 
@@ -227,6 +228,12 @@ module.exports = {
     //Begin subtracting pops
     for (var i = 0; i < pop_types.length; i++)
       removePops(user_id, Math.ceil(decimation_obj[pop_types[i]]*remaining_population), pop_types[i]);
+
+    //Add to civilian/military casualties tracker
+    if (pop_obj.military_pop)
+      usr.recent_military_casualties[usr.recent_military_casualties.length - 1] += options.amount;
+    else
+      usr.recent_civilian_casualties[usr.recent_civilian_casualties.length - 1] += options.amount;
   },
 
   parsePops: function () {

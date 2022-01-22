@@ -9,6 +9,10 @@ module.exports = {
     main.last_backup = current_date;
 		writeSave({ file_limit: settings.backup_limit });
 
+    //Clear all combat flags
+    for (var i = 0; i < all_armies.length; i++)
+      delete all_armies[i].in_combat;
+
     //Create lookup table of all enemies
     for (var i = 0; i < all_users.length; i++)
       all_enemies[all_users[i]] = getEnemies(all_users[i]);
@@ -20,17 +24,19 @@ module.exports = {
       var local_user = main.users[local_army.owner];
       var province_obj = main.provinces[army_obj.province];
 
-      var in_combat = false;
-
       //Check for hostile users in the same province
       for (var x = 0; x < all_armies.length; x++)
         if (local_enemies.includes(all_armies[x].owner) && all_armies[x].province = local_army.province)
-          if (local_army.type != "navy" && all_armies[x].type != "navy") {
+          if (
+            local_army.type != "navy" && all_armies[x].type != "navy" &&
+            !(local_army.in_combat || all_armies[x].in_combat)
+          ) {
             (local_army.stationary_turns > all_armies[x].stationary_turns) ?
               initialiseBattle(all_armies[x].owner, all_armies[x], local_army.owner, local_army) :
               initialiseBattle(local_army.owner, local_army, all_armies[x].owner, all_armies[x]);
 
-            in_combat = true;
+            local_army.in_combat = true;
+            all_armies[x].in_combat = true;
           }
 
       //If army is in a hostile province with an army that has more than 0,5% of the local population, and is not in combat, occupy it
@@ -181,6 +187,15 @@ module.exports = {
         //Blockades
         if (usr.blockaded.blockade_cooldown)
           usr.blockaded.blockade_cooldown--;
+
+        //Civilian/military casualties
+        usr.recent_civilian_casualties.push(0);
+        usr.recent_military_casualties.push(0);
+
+        if (usr.recent_civilian_casualties.length > 10)
+          usr.recent_civilian_casualties.splice(0, 1);
+        if (usr.recent_military_casualties.length > 10)
+          usr.recent_military_casualties.splice(0, 1);
 
         //Delete unnecessary keys
         if (usr.blockaded.blockade_cooldown == 0)

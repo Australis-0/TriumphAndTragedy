@@ -137,6 +137,8 @@ module.exports = {
         } else if (unit_types.has_air_unit && !unit_types.has_land_unit && !unit_types.has_naval_unit) {
           army_obj.type = "air";
           delete army_obj.carrier_capacity;
+        } else {
+          army_obj.type = "empty";
         }
 
         //Return statement
