@@ -1,5 +1,78 @@
 //Functional numbers framework
 module.exports = {
+  arabicise: function (arg0_number) {
+		//Convert from parameters
+		var num = arg0_number;
+
+		//Declare instance variables and reference arrays
+		var array = num.split(""),
+			conversion = { M: 1000, D: 500, C: 100, L: 50, X: 10, V: 5, I: 1, m: 1000, d: 500, c: 100, l: 50, x: 10, v: 5, i: 1 },
+			total = 0,
+			current,
+			current_value,
+			next,
+			next_value;
+
+		//Loop through provided number string
+		for (var i = 0; i < array.length; i++) {
+			current = array[i];
+			current_value = conversion[current];
+
+			next = array[i+1];
+			next_value = conversion[next];
+
+			if (current_value < next_value) {
+				total -= current_value;
+			} else {
+				total += current_value;
+			}
+		}
+
+		//Return statement
+		return total;
+	},
+
+  deordinalise: function (arg0_string) {
+		//Convert from parameters, add reference arrays
+		var deordinalised_string = arg0_string;
+		var ordinals = ["st", "nd", "rd", "th"];
+
+		//Split up into multiple chunks
+		deordinalised_string = (deordinalised_string.includes(" ")) ? deordinalised_string.split(" ") : [deordinalised_string];
+
+		//Remove stray ordinals
+		for (var i = 0; i < deordinalised_string.length; i++) {
+			for (var x = 0; x < ordinals.length; x++) {
+				if (deordinalised_string[i].indexOf(ordinals[x]) == 0) {
+					deordinalised_string[i] = deordinalised_string[i].replace(ordinals[x], "");
+				}
+			}
+			if (deordinalised_string[i] == "") {
+				deordinalised_string.splice(i, 1);
+			}
+		}
+
+		//Iterate over to purge ordinals
+		for (var i = 0; i < deordinalised_string.length; i++) {
+			//Look for ordinal
+			var ordinal_found = false;
+			for (var x = 0; x < ordinals.length; x++) {
+				if (deordinalised_string[i].indexOf(ordinals[x]) != -1) {
+					ordinal_found = true;
+				}
+			}
+
+			var total_ordinal_amount = (ordinal_found) ? 2 : 0;
+			var ordinal_percentage = total_ordinal_amount/deordinalised_string[i].length;
+
+			if (ordinal_percentage > 0.50) { //Ordinal makes up majority of string, so delete
+				deordinalised_string.splice(i, 1);
+			}
+		}
+
+		return deordinalised_string.join(" ").trim();
+	},
+
   generateRandomID: function () {
     //Return statement
     return randomNumber(0, 100000000000).toString();
@@ -82,6 +155,26 @@ module.exports = {
     //Return statement
     return (!isNaN(operation) && isFinite(operation)) ? operation : default_number;
   },
+
+  romanise: function (arg0_number) {
+		//Convert from parameters
+		var num = arg0_number;
+
+		//Declare reference array
+		var lookup = { M: 1000, CM: 900, D: 500, CD: 400, C: 100, XC: 90, L: 50, XL: 40, X: 10, IX: 9, V: 5, IV: 4, I: 1, m: 1000, cm: 900, d: 500, cd: 400, c: 100, xc: 90, l: 50, xl: 40, x: 10, ix: 9, v: 5, iv: 4, i: 1},
+			roman = "",
+			i;
+
+		for (i in lookup) {
+			while (num >= lookup[i]) {
+				roman += i;
+				num -= lookup[i];
+			}
+		}
+
+		//Return statement
+		return roman;
+	},
 
   splitNumber: function (arg0_number, arg1_parts) {
     //Convert from parameters

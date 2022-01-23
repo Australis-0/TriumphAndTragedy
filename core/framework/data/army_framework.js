@@ -642,6 +642,465 @@ module.exports = {
           }
   },
 
+  parseArmies: function (arg0_string) {
+    //Convert from parameters
+		var ordinal_string = arg0_string;
+
+		//Declare instance array and reference variables
+		var numbers = ["-", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "I", "V", "X", "L", "C", "D", "M", "i", "v", "x", "l", "c", "d", "m"],
+			arabic_numerals = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"],
+			ordinals = ["st", "nd", "rd", "th"],
+			roman_numerals = ["I", "V", "X", "L", "C", "D", "M", "i", "v", "x", "l", "c", "d", "m"],
+			midpoint_signifier = [".", " "];
+		var ordinal_array = [];
+		var global_suffix = "",
+			irregular_structure = false;
+
+		//Split up string into multiple ordinal arguments if commas are included
+		ordinal_string = (ordinal_string.includes(",")) ? ordinal_string.split(",") : [ordinal_string];
+
+		//Check for irregular structure (e.g. '23rd-24th, 86th, 88th Field Artillery')
+		var single_field_count = 0;
+		for (var i = 0; i < ordinal_string.length; i++) {
+			if (ordinal_string[i].split(" ").length == 1) {
+				single_field_count++;
+			}
+			//Check for ending index, if multiple args are detected, then set irregular_structure to true
+			if (ordinal_string[i].split(" ").length > 1 && i == ordinal_string.length-1) {
+				irregular_structure = true;
+			}
+		}
+
+		if (irregular_structure) {
+			var current_string = ordinal_string[ordinal_string.length-1].trim().split(" ").join(" ");
+			var global_suffix_index = (current_string.indexOf("-") != -1) ? current_string.indexOf("-") : 0,
+				numbers_stopped = false;
+
+			//Expand global_suffix
+			for (var i = global_suffix_index; i < current_string.length; i++) {
+				if (!numbers.includes(current_string[i]) && current_string[i] != "-") {
+					numbers_stopped = true;
+				}
+				if (numbers_stopped) {
+					if (current_string[i]) {
+						global_suffix += current_string[i];
+					}
+				}
+			}
+		}
+
+		//Iterate through all arguments, taking the index of the dash in between and expanding left right (if dash is present)
+		for (var i = 0; i < ordinal_string.length; i++) {
+			//Error trapping for local argument just in case of invalid inputs
+			try {
+				ordinal_string[i] = ordinal_string[i].trim();
+				ordinal_string[i] = ordinal_string[i].replace(/  /gm, "");
+				ordinal_string[i] = ordinal_string[i].replace(" - ", "-");
+				//Declare local variables for local argument
+				var contains_ordinals = false, //Does this argument contain ordinals such as st, nd, and th? If so, these will be dynamically generated
+					pure_numbers = true,
+					left_number_indices = [],
+					left_numbers = "",
+					leftside_prefix = "",
+					leftside_suffix = "",
+					right_number_indices = [],
+					right_numbers = "",
+					rightside_prefix = "",
+					rightside_suffix = "";
+
+				var dash_index = ordinal_string[i].indexOf("-"),
+					dash_indices = indexesOf("-", ordinal_string[i]),
+					leftside_index,
+					rightside_index;
+
+				//Make it work with negative numbers!
+				if (dash_indices.length > 1) {
+					dash_index = dash_indices[1];
+				}
+
+				if (dash_index != -1) {
+					//Left-side traversal and expansion
+					var started_leftside_traversal = false,
+						stop_leftside_traversal = false,
+						stop_leftside_expansion = false;
+
+					for (var x = dash_index; x >= 0; x--) {
+						if (!stop_leftside_traversal) {
+							if (numbers.includes(ordinal_string[i][x]) && x != dash_index) {
+								started_leftside_traversal = (!started_leftside_traversal) ? true : started_leftside_traversal;
+								leftside_index = x;
+							} else {
+								stop_leftside_traversal = (started_leftside_traversal) ? true : stop_leftside_traversal;
+							}
+						}
+					}
+
+					//Check for all left-side arabic/roman numeral arguments
+					var sub_arguments = ordinal_string[i].split(" ");
+
+					//Initialise local variables
+					for (var x = 0; x < sub_arguments.length; x++) {
+						for (var y = 0; y < ordinals.length; y++) {
+							if (sub_arguments[x].includes(ordinals[y]) && sub_arguments[x].includes("-")) {
+								contains_ordinals = true;
+							}
+						}
+					}
+
+					for (var x = 0; x < sub_arguments.length; x++) {
+						try {
+							var fulfills_conditions = false;
+
+							if (sub_arguments[x].length > 2) {
+								if ((roman_numerals.includes(sub_arguments[x][0]) && roman_numerals.includes(sub_arguments[x][1])) || (arabic_numerals.includes(sub_arguments[x][0]) && arabic_numerals.includes(sub_arguments[x][1]))) {
+									fulfills_conditions = true;
+								}
+							} else {
+								if ((roman_numerals.includes(sub_arguments[x][0]) || arabic_numerals.includes(sub_arguments[x][0])) || roman_numerals.includes(sub_arguments[x][1]) || arabic_numerals.includes(sub_arguments[x][1])) {
+									fulfills_conditions = true;
+								}
+							}
+						} catch {}
+					}
+
+					//Left-side expansion
+					for (var x = leftside_index; x <= dash_index; x++) {
+						if (!stop_leftside_expansion) {
+							if (numbers.includes(ordinal_string[i][x]) && x != dash_index) {
+								left_numbers += ordinal_string[i][x];
+								left_number_indices.push(x);
+							} else {
+								stop_leftside_expansion = true;
+							}
+						}
+					}
+
+					//Begin right-side traversal
+					var started_rightside_traversal = false,
+						stop_rightside_traversal = false;
+
+					//Check for all right-side arabic/roman numeral arguments, only do this if a number is not detected immediately after the dash, however
+					rightside_index = dash_index;
+					var numeric_post_dash_argument = false,
+						post_dash_numbers = 0,
+						post_dash_total = 0;
+
+					for (var x = 0; x < sub_arguments.length; x++) {
+						var local_dash_index = sub_arguments[x].indexOf("-");
+						if (local_dash_index != -1) {
+							//Check to see whether dash is actually valid, or just another negative number
+							var valid_dash = false;
+							var local_dash_indices = [];
+							var total_count = 0;
+
+							for (var y = 0; y < sub_arguments[x].length; y++) {
+								if (sub_arguments[x][y] == "-") {
+									total_count++;
+									local_dash_indices.push(y);
+								}
+							}
+
+							valid_dash = (total_count == 1) ? true : false;
+							if (total_count > 1) local_dash_index = local_dash_indices[1];
+
+							if (valid_dash) {
+								for (var y = local_dash_index+1; y < sub_arguments[x].length; y++) {
+									post_dash_numbers = (numbers.includes(sub_arguments[x][y])) ? post_dash_numbers + 1 : post_dash_numbers;
+									post_dash_total++;
+								}
+								for (var y = 0; y < sub_arguments[x].length; y++) {
+									if (!numbers.includes(sub_arguments[x][y]) && !contains_ordinals && sub_arguments[x][y] != "-") {
+										pure_numbers = false;
+									}
+								}
+							}
+							if (!stop_rightside_traversal) {
+								for (var y = local_dash_index+1; y < sub_arguments[x].length; y++) {
+									if (numbers.includes(sub_arguments[x][y]) && y != local_dash_index) {
+										var local_index_position = 0;
+										started_rightside_traversal = (!started_rightside_traversal) ? true : started_rightside_traversal;
+										right_numbers += sub_arguments[x][y];
+										for (var z = 0; z < sub_arguments.length; z++) local_index_position += sub_arguments[z].length;
+
+										right_number_indices.push(local_index_position + y);
+									} else {
+										stop_rightside_traversal = (started_rightside_traversal) ? true : stop_rightside_traversal;
+									}
+								}
+							}
+						}
+					}
+					numeric_post_dash_argument = ((post_dash_numbers/post_dash_total) < 0.5) ? false : true;
+
+					if (!numeric_post_dash_argument) {
+						for (var x = sub_arguments.length; x >= 0; x--) {
+							try {
+								var fulfills_conditions = false;
+
+								//Check if local split string appears to consist mostly of numerals, of whatever type
+								if (sub_arguments[x].length > 2) {
+									if ((roman_numerals.includes(sub_arguments[x][0]) && roman_numerals.includes(sub_arguments[x][1])) || (arabic_numerals.includes(sub_arguments[x][0]) && arabic_numerals.includes(sub_arguments[x][1]))) {
+										fulfills_conditions = true;
+									}
+								} else {
+									if ((roman_numerals.includes(sub_arguments[x][0]) || arabic_numerals.includes(sub_arguments[x][0])) || roman_numerals.includes(sub_arguments[x][1]) || arabic_numerals.includes(sub_arguments[x][1])) {
+										fulfills_conditions = true;
+									}
+								}
+
+								if (fulfills_conditions) {
+									var total_index = 0;
+									for (var y = 0; y < x; y++) {
+										total_index += sub_arguments[y].length;
+									}
+									rightside_index = Math.max(total_index, rightside_index);
+								}
+							} catch {}
+						}
+					}
+
+					//Fetch leftside_prefix and leftside_suffix
+					//leftside_prefix first
+					if (left_number_indices[0] != 0) {
+						for (var x = 0; x < left_number_indices[0]; x++) {
+							leftside_prefix += ordinal_string[i][x];
+						}
+					}
+					//leftside_suffix next
+					if (left_number_indices[left_number_indices.length-1] != dash_index-1) {
+						for (var x = left_number_indices[left_number_indices.length-1]+1; x < dash_index; x++) {
+							if (ordinal_string[i][x]) {
+								leftside_suffix += ordinal_string[i][x];
+							}
+						}
+					}
+
+					//Fetch rightside_prefix and rightside_suffix
+					//rightside_prefix first
+					var rightside_expansion_ran_into_number = false;
+					var local_rightside_string = "";
+					for (var x = dash_index+1; x < right_number_indices[0]; x++) if (ordinal_string[i][x]) local_rightside_string += ordinal_string[i][x];
+					console.log(local_rightside_string.split(" "));
+					local_rightside_string = local_rightside_string.split(" "); //Remove 1st term
+					local_rightside_string[0] = "";
+					local_rightside_string = local_rightside_string.join(" ").trim();
+
+					//rightside_suffix next
+					/* Deprecated:
+					console.log(right_number_indices);
+					if (right_number_indices[right_number_indices.length-1] != ordinal_string[i].length-1) {
+						for (var x = right_number_indices[right_number_indices.length-1]+1; x < ordinal_string[i].length; x++) {
+							if (ordinal_string[i][x]) {
+								rightside_suffix += ordinal_string[i][x];
+								console.log(ordinal_string[i][x]);
+							}
+						}
+					}
+					*/
+					rightside_suffix = local_rightside_string;
+
+					//Make sure that both left_numbers and right_numbers cannot contain both arabic and roman numerals
+					var leftside_has_roman = false,
+						rightside_has_roman = false;
+
+					for (var x = 0; x < left_numbers.length; x++) {
+						leftside_has_roman = (roman_numerals.includes(left_numbers[x])) ? true : leftside_has_roman;
+					}
+					for (var x = 0; x < right_numbers.length; x++) {
+						rightside_has_roman = (roman_numerals.includes(right_numbers[x])) ? true : rightside_has_roman;
+					}
+
+					//Purge all arabic numerals from left_numbers and right_numbers independently if detected as a roman argument - no arabic numerals are included
+					if (leftside_has_roman && !left_numbers.match(/[0-9]/gm)) {
+						left_numbers = left_numbers.split("");
+						if (!left_numbers.join("").match(/[0-9]/gm)) {
+							for (var x = 0; x < left_numbers.length; x++) {
+								if (!roman_numerals.includes(left_numbers[x])) {
+									left_numbers.splice(x, 1);
+								}
+							}
+						} else {
+							for (var x = 0; x < left_numbers.length; x++) {
+								if (!arabic_numerals.includes(left_numbers[x])) {
+									left_numbers.splice(x, 1);
+								}
+							}
+							leftside_has_roman = false;
+						}
+						left_numbers = left_numbers.join("");
+					}
+					if (rightside_has_roman) {
+						right_numbers = right_numbers.split("");
+						if (!right_numbers.join("").match(/[0-9]/gm)) {
+							for (var x = 0; x < right_numbers.length; x++) {
+								if (!roman_numerals.includes(right_numbers[x])) {
+									right_numbers.splice(x, 1);
+								}
+							}
+						} else {
+							for (var x = 0; x < right_numbers.length; x++) {
+								if (!arabic_numerals.includes(right_numbers[x])) {
+									right_numbers.splice(x, 1);
+								}
+							}
+							rightside_has_roman = false;
+						}
+						right_numbers = right_numbers.join("");
+					}
+
+					//Deordinalise all pefixes and suffixes
+					var new_left_numbers = [], new_right_numbers = [],
+						left_uppercase = (left_numbers[0] == left_numbers[0].toUpperCase()),
+						right_uppercase = (right_numbers[0] == right_numbers[0].toUpperCase());
+
+					console.log(`Left Uppercase: ${left_uppercase}, Right Uppercase: ${right_uppercase}`);
+
+					for (var x = 0; x < left_numbers.length; x++) if ((left_numbers[x] == left_numbers[x].toUpperCase()) == left_uppercase) new_left_numbers.push(left_numbers[x]);
+					for (var x = 0; x < right_numbers.length; x++) if ((right_numbers[x] == right_numbers[x].toUpperCase()) == left_uppercase) new_right_numbers.push(right_numbers[x]);
+
+					left_numbers = new_left_numbers.join("");
+					right_numbers = new_right_numbers.join("");
+
+					console.log(`NUMBERS: ${left_numbers}-${right_numbers}`);
+
+					leftside_prefix = deordinalise(leftside_prefix);
+					leftside_suffix = deordinalise(leftside_suffix);
+					rightside_prefix = deordinalise(rightside_prefix);
+					rightside_suffix = deordinalise(rightside_suffix);
+					global_suffix = deordinalise(global_suffix);
+
+					//Make sure they're compatible with each other, rightside always takes precedent
+					leftside_prefix = (rightside_prefix.indexOf(leftside_prefix) != -1 && leftside_prefix.length > 0) ? rightside_prefix : leftside_prefix;
+					leftside_suffix = (rightside_suffix.indexOf(leftside_suffix) != -1 && leftside_suffix.length > 0) ? rightside_suffix : leftside_suffix;
+
+					//If rightside_prefix is nonexistent or less than leftside_prefix, assign leftside_prefix to it
+					if (leftside_prefix.length > rightside_prefix.length) {
+						if (leftside_prefix.indexOf(rightside_prefix) != -1) {
+							rightside_prefix = leftside_prefix;
+						}
+					}
+
+					//If leftside_suffix is nonexistent, assign rightside_suffix to it
+					if (rightside_suffix.length > leftside_suffix.length) {
+						if (rightside_suffix.indexOf(leftside_suffix) != -1) {
+							leftside_suffix = rightside_suffix;
+						} else if (leftside_suffix.length <= 2 || leftside_suffix[0].toUpperCase() != leftside_suffix[0]) {
+							leftside_suffix = rightside_suffix;
+						}
+					}
+
+					console.log("Leftside Prefix: " + leftside_prefix);
+					console.log("Rightside Prefix: " + rightside_prefix);
+					console.log("Leftside Suffix: " + leftside_suffix);
+					console.log("Rightside Suffix: " + rightside_suffix);
+
+					//Check for global_suffix
+					if (sub_arguments.length == 1) {
+						leftside_suffix = (global_suffix.length > 0) ? global_suffix : leftside_suffix;
+						rightside_suffix = (global_suffix.length > 0) ? global_suffix : rightside_suffix;
+					}
+
+					var parse_type; //arabic, roman
+					if (leftside_has_roman == rightside_has_roman) { //They're the same argument type
+						parse_type = (!isNaN(parseInt(left_numbers))) ? ["arabic", "arabic"] : ["roman", "roman"];
+					} else { //Different argument types, bruv
+						parse_type = (leftside_has_roman) ? ["roman", "arabic"] : ["arabic", "roman"];
+					}
+
+					var number_break = (leftside_prefix.length == 0 && rightside_prefix.length > 0) ? " " : "";
+						number_break = (pure_numbers) ? " " : number_break;
+
+					//Do the same for leftside_prefix after assigning number_break
+					leftside_prefix = (leftside_prefix.length == 0 && rightside_prefix.length > 0) ? rightside_prefix : leftside_prefix;
+
+					console.log(`Pure Numbers: ${pure_numbers}`);
+
+					var local_break = (global_suffix != "" && sub_arguments.length == 1) ? " " : "";
+
+					if (parse_type.toString() == ["roman", "roman"]) {
+						var beginning_argument = Math.min(arabicise(left_numbers), arabicise(right_numbers)),
+							ending_argument = Math.max(arabicise(left_numbers), arabicise(right_numbers));
+
+						for (var x = beginning_argument; x <= ending_argument; x++) {
+							//Carry leftside format all the way up until the ending index
+							var current_ordinal = (contains_ordinals) ? returnOrdinal(x) + " " : "";
+							if (x != ending_argument) {
+								ordinal_array.push(processOrdinalString(`${leftside_prefix}${local_break} ${romanise(x)}${current_ordinal} ${leftside_suffix}`));
+							} else {
+								ordinal_array.push(processOrdinalString(`${rightside_prefix}${local_break} ${romanise(x)}${current_ordinal} ${rightside_suffix}`));
+							}
+						}
+					} else if (parse_type.toString() == ["arabic", "arabic"]) {
+						var beginning_argument = Math.min(parseInt(left_numbers), parseInt(right_numbers)),
+							ending_argument = Math.max(parseInt(left_numbers), parseInt(right_numbers));
+
+						for (var x = beginning_argument; x <= ending_argument; x++) {
+							//Carry leftside format all the way up until the ending index
+							var current_ordinal = (contains_ordinals) ? returnOrdinal(x) + " " : "";
+							if (x != ending_argument) {
+								ordinal_array.push(processOrdinalString(`${leftside_prefix}${number_break}${x}${current_ordinal} ${leftside_suffix}`));
+							} else {
+								ordinal_array.push(processOrdinalString(`${rightside_prefix}${number_break}${x}${current_ordinal} ${rightside_suffix}`));
+							}
+						}
+					} else if (parse_type.toString() == ["roman", "arabic"]) {
+						var beginning_argument = Math.min(arabicise(left_numbers), parseInt(right_numbers)),
+							ending_argument = Math.max(arabicise(left_numbers), parseInt(right_numbers));
+
+						for (var x = beginning_argument; x <= ending_argument; x++) {
+							//Carry leftside format all the way up until the ending index
+							var current_ordinal = (contains_ordinals) ? returnOrdinal(x) + " " : "";
+							if (x != ending_argument) {
+								ordinal_array.push(processOrdinalString(`${leftside_prefix}${local_break} ${romanise(x)}${current_ordinal} ${leftside_suffix}`));
+							} else {
+								ordinal_array.push(processOrdinalString(`${rightside_prefix}${number_break}${x}${current_ordinal} ${rightside_suffix}`));
+							}
+						}
+					} else {
+						var beginning_argument = Math.min(parseInt(left_numbers), arabicise(right_numbers)),
+							ending_argument = Math.max(parseInt(left_numbers), arabicise(right_numbers));
+
+						for (var x = beginning_argument; x <= ending_argument; x++) {
+							//Carry leftside format all the way up until the ending index
+							var current_ordinal = (contains_ordinals) ? returnOrdinal(x) + " " : "";
+							if (x != ending_argument) {
+								ordinal_array.push(processOrdinalString(`${leftside_prefix}${number_break}${x}${current_ordinal} ${leftside_suffix}`));
+							} else {
+								ordinal_array.push(processOrdinalString(`${rightside_prefix}${local_break} ${romanise(x)}${current_ordinal} ${rightside_suffix}`));
+							}
+						}
+					}
+				} else {
+					//Only a single army is being added here, just push it to ordinal_array
+					var global_suffix_display = (ordinal_string[i].trim().split(" ").length == 1) ? deordinalise(global_suffix) : "";
+
+					//If all arguments are of the same length, no global_suffix_display is present, and neither is a local break
+					var lengths_are_same = true;
+					for (var x = 0; x < ordinal_string.length; x++) {
+						lengths_are_same = (ordinal_string[x].trim().split(" ").length != ordinal_string[0].trim().split(" ").length) ? false : lengths_are_same;
+					}
+					global_suffix_display = (lengths_are_same) ? "" : global_suffix_display;
+
+					var local_break = (global_suffix != "") ? " " : "";
+					ordinal_array.push(processOrdinalString(ordinal_string[i].trim() + local_break + global_suffix_display));
+				}
+			} catch (e) {
+				console.log(e);
+			}
+		}
+		//Remove all empty elements
+		for (var i = 0; i < ordinal_array.length; i++) {
+			if (ordinal_array[i] == "") {
+				ordinal_array.splice(i, 1);
+			}
+		}
+
+		console.log(ordinal_array);
+
+		//Return statement
+		return ordinal_array;
+  },
+
   relieveUnits: function (arg0_user, arg1_amount, arg2_unit_name, arg3_army_name) {
     //Convert from parameters
     var user_id = arg0_user;
