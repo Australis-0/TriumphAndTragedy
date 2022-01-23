@@ -200,8 +200,14 @@ module.exports = {
           .setEmoji("716821194891853826"),
         new Discord.MessageButton()
           .setCustomId("military_btn")
-          .setLabel("𝐌𝐢𝐥𝐢𝐭𝐚𝐫𝐲")
-          .setStyle("SECONDARY")
+          .setLabel((!military_pages.includes(game_obj.page)) ?
+            "𝐌𝐢𝐥𝐢𝐭𝐚𝐫𝐲" :
+            " ͟𝐌͟𝐢͟𝐥͟𝐢͟𝐭͟𝐚͟𝐫͟𝐲͟"
+          )
+          .setStyle((!military_pages.includes(game_obj.page)) ?
+            "SECONDARY" :
+            "PRIMARY"
+          )
           .setEmoji("716820390474940426")
       );
 
@@ -295,6 +301,15 @@ module.exports = {
           module.exports.initialiseTopbar(user_id);
         }
         printEconomy(user_id);
+
+        break;
+      case "military_btn":
+        //Print out military menu
+        if (game_obj.page != "military") {
+          game_obj.page = "military";
+          module.exports.initialiseTopbar(user_id);
+        }
+        printMilitary(user_id);
 
         break;
       case "politics_btn":
