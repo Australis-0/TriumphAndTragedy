@@ -70,6 +70,7 @@ FileManager.import("./framework/ui/cities_interface");
 FileManager.import("./framework/ui/colonisation_interface");
 FileManager.import("./framework/ui/country_interface");
 FileManager.import("./framework/ui/culture_interface");
+FileManager.import("./framework/ui/customisation_interface");
 FileManager.import("./framework/ui/economy_interface");
 FileManager.import("./framework/ui/games");
 FileManager.import("./framework/ui/global_market_interface");
