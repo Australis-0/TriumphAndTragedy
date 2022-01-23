@@ -69,7 +69,7 @@ module.exports = {
     visualPrompt(game_obj.alert_embed, user_id, {
       title: `Blockade A Country:`,
       prompts: [
-        [`Which country would you like to blockade?\n\nType **[View Ledger]** to view a ledger of all valid nations`, "mention"],
+        [`Which country would you like to blockade?\n\nType **[View Ledger]** to view a ledger of all valid nations.`, "mention"],
         [`What is the name of the fleet you would like to send to blockade this country?\n\nType **[Army List]** to view a list of all valid armies.`, "string"]
       ]
     },
