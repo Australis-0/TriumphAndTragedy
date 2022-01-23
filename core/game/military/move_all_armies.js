@@ -1,4 +1,23 @@
 module.exports = {
+  initialiseMoveAllArmies: function (arg0_user) {
+    //Convert from parameters
+    var user_id = arg0_user;
+
+    //Declare local instance variables
+    var game_obj = getGameObject(user_id);
+
+    //Initialise visual prompt
+    visualPrompt(game_obj.alert_embed, user_id, {
+      title: `Concentrate All Armies:`,
+      prompts: [
+        [`Which province would you like to concentrate all your armies in? Please specify a numeric Province ID.`, "string"]
+      ]
+    },
+    function (arg) {
+      module.exports.moveAllArmies(user_id, arg[0]);
+    });
+  },
+
   moveAllArmies: function (arg0_user, arg1_province_id) {
     //Convert from parameters
     var user_id = arg0_user;

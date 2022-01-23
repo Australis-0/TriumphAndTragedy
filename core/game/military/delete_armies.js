@@ -32,5 +32,36 @@ module.exports = {
     } else {
       printError(game_obj.id, `You currently have no active armies in service, empty or not!`);
     }
+  },
+
+  initialiseDeleteArmies: function (arg0_user) {
+    //Convert from parameters
+    var user_id = arg0_user;
+
+    //Declare local instance variables
+    var game_obj = getGameObject(user_id);
+
+    //Initialise visual prompt
+    visualPrompt(game_obj.alert_embed, user_id, {
+      title: `Delete Multiple Armies:`,
+      prompts: [
+        [`Please type out the names of the armies you'd like to delete en masse. Their men and equipment will be returned to our reserves.\nYou may specify armies like so: 'I.-XX. Division', '1st-20th Division', '86th-79th, 92nd, 94th Field Artillery'; or any other combination you can imagine.\n\nType **[Army List]** to view a list of all valid armies.\nType 'none' to use available armies instead.`, "string"]
+      ]
+    },
+    function (arg) {
+      module.exports.deleteArmies(user_id, arg[0]);
+    },
+    function (arg) {
+      switch (arg) {
+        case "army list":
+          createPageMenu(game_obj.middle_embed, {
+            embed_pages: printArmyList(user_id),
+            user: game_obj.user
+          });
+          return true;
+
+          break;
+      }
+    });
   }
 }

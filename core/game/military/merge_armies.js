@@ -1,4 +1,36 @@
 module.exports = {
+  initialiseMergeArmies: function (arg0_user) {
+    //Convert from parameters
+    var user_id = arg0_user;
+
+    //Declare local instance variables
+    var game_obj = getGameObject(user_id);
+
+    //Initialise visual prompt
+    visualPrompt(game_obj.alert_embed, user_id, {
+      title: `Merge Multiple Armies:`,
+      prompts: [
+        [`Please type out the names of the armies you'd like to merge.\nYou may specify armies like so: 'I.-XX. Division', '1st-20th Division', '86th-79th, 92nd, 94th Field Artillery'; or any other combination you can imagine.\n\nType **[Army List]** to view a list of all valid armies.`, "string"],
+        [`Which army would you like to merge these combat formations into?\n\nType **[Army List]** to view a list of all valid armies.`, "string"]
+      ]
+    },
+    function (arg) {
+      module.exports.mergeArmies(user_id, arg[0], arg[1]);
+    },
+    function (arg) {
+      switch (arg) {
+        case "army list":
+        createPageMenu(game_obj.middle_embed, {
+          embed_pages: printArmyList(user_id),
+          user: game_obj.user
+        });
+        return true;
+
+        break;
+      }
+    });
+  },
+
   mergeArmies: function (arg0_user, arg1_merging_armies, arg2_merged_army) {
     //Convert from parameters
     var user_id = arg0_user;

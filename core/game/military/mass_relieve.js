@@ -1,4 +1,37 @@
 module.exports = {
+  initialiseMassRelieve: function (arg0_user) {
+    //Convert from parameters
+    var user_id = arg0_user;
+
+    //Declare local instance variables
+    var game_obj = getGameObject(user_id);
+
+    //Initialise visual prompt
+    visualPrompt(game_obj.alert_embed, user_id, {
+      title: `Mass Relieve:`,
+      prompts: [
+        [`Please type out the names of the armies you'd like to relieve troops from en masse.\nYou may specify armies like so: 'I.-XX. Division', '1st-20th Division', '86th-79th, 92nd, 94th Field Artillery'; or any other combination you can imagine.\n\nType **[Army List]** to view a list of all valid armies.`, "string"],
+        [`How many troops would you like to relieve from each of these armies?`, "number", { min: 0 }],
+        [`What type of unit do you wish to relieve from these armies?`, "string"]
+      ]
+    },
+    function (arg) {
+      module.exports.massRelieve(user_id, arg[0], arg[1], arg[2]);
+    },
+    function (arg) {
+      switch (arg) {
+        case "army list":
+          createPageMenu(game_obj.middle_embed, {
+            embed_pages: printArmyList(user_id),
+            user: game_obj.user
+          });
+          return true;
+
+          break;
+      }
+    });
+  },
+  
   massRelieve: function (arg0_user, arg1_armies, arg2_amount, arg3_unit_name) {
     //Convert from parameters
     var user_id = arg0_user;

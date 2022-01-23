@@ -1,5 +1,5 @@
 module.exports = {
-  splitArmy: function (arg0_user, arg1_army_name, arg2_new_army_name) { //[WIP] - Update army list if user is currnetly on it
+  splitArmy: function (arg0_user, arg1_army_name, arg2_new_army_name) { //[WIP] - Update army list if user is currently on it
     //Convert from parameters
     var user_id = arg0_user;
     var army_name = arg1_army_name.trim().toLowerCase();
