@@ -402,11 +402,76 @@ module.exports = {
             });
 
             break;
+          case "view customisation":
+            printCustomisation(user_id);
+            game_obj.page = "view_customisation";
+
+            break;
+        }
+      }
+
+      if (game_obj.page == "view customisation") {
+        //[Back]
+        if (input == "back") {
+          if (interfaces[game_obj.middle_embed.id].page == 0) {
+            printStats(user_id);
+            game_obj.page = "country_interface";
+          } else {
+            printDiplomacy(user_id);
+            game_obj.page = "diplomacy";
+          }
+        }
+
+        //[Rename Country]
+        if (input == "rename country")
+          initialiseRenameCountry(user_id);
+
+        //[Rename Culture]
+        if (input == "rename culture")
+          initialiseRenameCulture(user_id);
+
+        //[Set Colour]
+        if (input == "set colour");
+          initialiseSetColour(user_id);
+
+        //[Set Flag]
+        if (input == "set flag")
+          initialiseSetFlag(user_id);
+
+        //[Set Motto]
+        if (input == "set motto")
+          initialiseSetMotto(user_id);
+
+        //Vassal customisation
+        if (Object.keys(usr.diplomacy.vassals).length > 0) {
+          //[Rename Vassal]
+          if (input == "rename vassal")
+            initialiseRenameVassal(user_id);
+
+          //[Rename Vassal City]
+          if (input == "rename vassal city")
+            initialiseRenameVassalCity(user_id);
+
+          //[Rename Vassal Culture]
+          if (input == "rename vassal culture")
+            initialiseRenameVassalCulture(user_id);
+
+          //[Set Vassal Colour]
+          if (input == "set vassal colour")
+            initialiseSetVassalColour(user_id);
+
+          //[Set Vassal Flag]
+          if (input == "set vassal flag")
+            initialiseSetVassalFlag(user_id);
+
+          //[Set Vassal Motto]
+          if (input == "set vassal motto")
+            initialiseSetVassalMotto(user_id);
         }
       }
     }
 
-    //Diplomacy page handler [WIP] - Add peace treaty handler; war viewer
+    //Diplomacy page handler [WIP] - Add peace treaty handler
     {
       if (game_obj.page == "cb_list") {
         //[Back]
@@ -453,6 +518,13 @@ module.exports = {
         //[Unlock Vassal Customization]
         if (["unlock vassal customisation", "unlock vassal customization"].includes(input))
           lockVassalCustomisation(user_id, "unlock");
+
+        //[Vassal Customisation]
+        if (Object.keys(usr.diplomacy.vassals).length > 0)
+          if (["vassal customisation", "vassal customization"].includes(input)) {
+            printCustomisation(user_id, 1);
+            game_obj.page = "view_customisation";
+          }
 
         //[View CB List]
         if (input == "view cb list") {

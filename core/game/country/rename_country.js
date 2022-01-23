@@ -1,4 +1,23 @@
 module.exports = {
+  initialiseRenameCountry: function (arg0_user) {
+    //Convert from parameters
+    var user_id = arg0_user;
+
+    //Declare local instance variables
+    var game_obj = getGameObject(user_id);
+
+    //Initialise visual prompt
+    visualPrompt(game_obj.alert_embed, user_id, {
+      title: `Rename Your Country:`,
+      prompts: [
+        [`What would you like to rename your country to?`, "string"]
+      ]
+    },
+    function (arg) {
+      module.exports.renameCountry(user_id, arg[0]);
+    });
+  },
+
   renameCountry: function (arg0_user, arg1_new_country_name) {
     //Convert from parameters
     var user_id = arg0_user;
@@ -45,24 +64,5 @@ module.exports = {
     } else {
       printError(game_obj.id, `Your name has been locked in place by moderator action due to prior abuses.`);
     }
-  },
-
-  initialiseRenameCountry: function (arg0_user) {
-    //Convert from parameters
-    var user_id = arg0_user;
-
-    //Declare local instance variables
-    var game_obj = getGameObject(user_id);
-
-    //Initialise visual prompt
-    visualPrompt(game_obj.alert_embed, user_id, {
-      title: `Rename Your Country:`,
-      prompts: [
-        [`What would you like to rename your country to?`, "string"]
-      ]
-    },
-    function (arg) {
-      module.exports.renameCountry(user_id, arg[0]);
-    });
   }
 };

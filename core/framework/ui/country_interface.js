@@ -65,7 +65,7 @@ module.exports = {
     stats_string.push(`${config.icons.prestige} Prestige: **${parseNumber(usr.prestige)}** (${(usr.modifiers.prestige_gain > 0) ? "+" : ""}${usr.modifiers.prestige_gain} per turn)`);
     stats_string.push(`${config.icons.provinces} Provinces: **${parseNumber(usr.provinces)}**`);
     stats_string.push("");
-    stats_string.push(`**[Customisation]**`);
+    stats_string.push(`**[View Customisation]**`);
     if (all_national_modifiers > 0) {
       stats_string.push("");
       stats_string.push(`You currently have **${parseNumber(all_national_modifiers.length)}** National Modifier(s) active.`);

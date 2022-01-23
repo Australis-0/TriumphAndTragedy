@@ -19,6 +19,9 @@ module.exports = {
     customisation_array.push(`${config.icons.old_scroll} Change Your Motto: **[Set Motto]**`);
     customisation_array.push(`A new slogan to inspire the masses.`);
     customisation_array.push("");
+    customisation_array.push(`${config.icons.infamy} Import A New Flag: **[Set Flag]**`);
+    customisation_array.push(`For that flag I die!`);
+    customisation_array.push("");
     customisation_array.push(`${config.icons.government} Set Your Nation's Colour: **[Set Colour]**`);
     customisation_array.push(`Change your nation's colour to something else using RGB colour codes.`);
     customisation_array.push("");
@@ -50,13 +53,13 @@ module.exports = {
 
     const embed_customisation = new Discord.MessageEmbed()
   		.setColor(settings.bot_colour)
-  		.setTitle(`Customisation Menu:\n${config.icons.divider}`)
+  		.setTitle(`[Back] ¦ Customisation Menu:\n${config.icons.divider}`)
   		.setThumbnail(usr.flag)
   		.setDescription(customisation_array.join("\n"));
       .setImage("https://cdn.discordapp.com/attachments/722997700391338046/736141424315203634/margin.png");
     const embed_vassal_customisation = new Discord.MessageEmbed()
   		.setColor(settings.bot_colour)
-  		.setTitle(`Vassal Customisation Menu:\n${config.icons.divider}`)
+  		.setTitle(`[Back] ¦ Vassal Customisation Menu:\n${config.icons.divider}`)
   		.setThumbnail(usr.flag)
   		.setDescription(customisation_array.join("\n"))
       .setImage("https://cdn.discordapp.com/attachments/722997700391338046/736141424315203634/margin.png");

@@ -8,6 +8,10 @@ module.exports = {
   colonisation_pages: [
     "colonisation"
   ],
+  country_interface: [
+    "country_interface",
+    "view_cusotmisation"
+  ],
   diplomacy_pages: [
     "cb_list",
     "diplomacy",
@@ -96,12 +100,12 @@ module.exports = {
         new Discord.MessageButton()
           .setCustomId("country_btn")
           .setLabel(
-            (!["country_interface"].includes(game_obj.page)) ?
+            (!country_interface.includes(game_obj.page)) ?
               "𝐂𝐨𝐮𝐧𝐭𝐫𝐲" :
               " ͟𝐂͟𝐨͟𝐮͟𝐧͟𝐭͟𝐫͟𝐲͟"
           )
           .setStyle(
-            (!["country_interface"].includes(game_obj.page)) ?
+            (!country_interface.includes(game_obj.page)) ?
               "SECONDARY" :
               "PRIMARY"
           )
