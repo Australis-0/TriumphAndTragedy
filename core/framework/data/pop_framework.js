@@ -271,6 +271,9 @@ module.exports = {
           remaining_population -= shuffled_provinces[i].pops[pop_type];
         }
 
+    //Update tracker variables
+    usr.population -= returnSafeNumber(amount);
+
     //Append to either recent_civilian_casualties or recent_military_casualties depending on pop type
     (getMilitaryPops().includes(pop_type)) ?
       usr.recent_military_casualties[usr.recent_military_casualties.length-1] += returnSafeNumber(amount) :

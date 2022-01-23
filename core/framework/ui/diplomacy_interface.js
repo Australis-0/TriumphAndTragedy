@@ -110,7 +110,22 @@ module.exports = {
       diplomacy_string.push(`You currently allow ${allow_cede_names.join(", ")} to cede their provinces to you.`) :
       diplomacy_string.push(`_You are currently not allowing anyone to cede their provinces to you.`);
 
-    //[WIP] - Add sorted ledger of top 10 countries by score
+    //Add sorted ledger of top 10 countries by score
+    diplomacy_string.push("");
+    diplomacy_string.push("`Name ¦ Score ¦ Army Size ¦ Provinces ¦ Population ¦ Technology`");
+    diplomacy_string.push("");
+
+    var sorted_users = getSortedUsers();
+
+    for (var i = 0; i < sorted_users.length; i++) {
+      var local_user = main.users[sorted_users[i][0]];
+
+      if (i < 10)
+        diplomacy_string.push(`**${local_user.name}** ¦ ${parseNumber(sorted_users[i][1])} ¦ ${parseNumber(getTotalActiveDuty(sorted_users[i][0]))} ¦ ${parseNumber(usr.provinces)} ¦ ${parseNumber(usr.population)} ¦ ${parseNumber(usr.researched_technologies.length)}`)
+    }
+
+    if (sorted_users.length > 10)
+      diplomacy_string.push(`+${parseNumber(sorted_users.length - 10)} more ..`);
 
     //Remove control panel if one exists
     removeControlPanel(game_obj.id);
