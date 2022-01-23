@@ -60,9 +60,9 @@ module.exports = {
             var army_status = moveArmy(actual_id, local_army.name, occupation_target_list[i]);
 
             if (army_status)
-              failed_moves++;
-            else
               successful_moves++;
+            else
+              failed_moves++;
 
             targets_to_remove.push(occupation_target_list[i]);
           } else {

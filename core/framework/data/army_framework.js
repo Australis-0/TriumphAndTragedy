@@ -609,12 +609,14 @@ module.exports = {
   moveArmy: function (arg0_user, arg1_army_name, arg2_province_id) {
     //Convert from parameters
     var user_id = arg0_user;
-    var army_name = arg1_army_name.trim().toLowerCase();
+    var army_name = arg1_army_name;
     var province_id = arg2_province_id;
 
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
-    var army_obj = module.exports.getArmy(actual_id, army_name);
+    var army_obj = (typeof army_name != "object") ?
+      module.exports.getArmy(actual_id, army_name.trim().toLowerCase()) :
+      army_name;
     var usr = main.users[actual_id];
 
     //Try moving the army if possible
