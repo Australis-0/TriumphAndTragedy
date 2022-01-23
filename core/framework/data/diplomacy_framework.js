@@ -152,6 +152,10 @@ module.exports = {
       id: actual_ot_user_id,
       overlord: actual_id
     };
+
+    //Lock customisation for new vassal if overlord has it set to locked
+    if (usr.options.vassal_customisation_locked)
+      ot_user.options.customisation_locked = true;
   },
 
   //destroyAllDiplomaticRelations() - Destroys all diplomatic relations other countries have with the target user

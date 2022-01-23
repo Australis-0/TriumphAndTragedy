@@ -446,6 +446,14 @@ module.exports = {
         if (input == "deny ceding")
           initialiseDenyCede(user_id);
 
+        //[Lock Vassal Customisation]
+        if (["lock vassal customisation", "lock vassal customization"].includes(input))
+          lockVassalCustomisation(user_id, "lock");
+
+        //[Unlock Vassal Customization]
+        if (["unlock vassal customisation", "unlock vassal customization"].includes(input))
+          lockVassalCustomisation(user_id, "unlock");
+
         //[View CB List]
         if (input == "view cb list") {
           createPageMenu(game_obj.middle_embed, {
