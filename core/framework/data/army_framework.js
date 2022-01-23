@@ -157,28 +157,35 @@ module.exports = {
     var province_obj = main.provinces[province_id];
     var usr = main.users[actual_id];
 
+    var all_armies = Object.keys(usr.armies);
+
     //Check if province_obj and user exist
     if (usr)
-      if (province_obj) {
-        var army_obj = {
-          id: generateArmyID(actual_id),
-          owner: actual_id,
+      //Check to make sure that the user cannot exceed their overall army limit
+      if (all_armies.length + 1 <= config.defines.combat.max_army_limit)
+        if (province_obj) {
+          var army_obj = {
+            id: generateArmyID(actual_id),
+            owner: actual_id,
 
-          name: army_name,
-          status: "stationed",
-          type: "empty", //Land (air_land, land), Air, Sea (air_sea, sea), Empty
-          province: province_id,
-          moving_to: [],
+            name: army_name,
+            status: "stationed",
+            type: "empty", //Land (air_land, land), Air, Sea (air_sea, sea), Empty
+            province: province_id,
+            moving_to: [],
 
-          in_battle: false,
-          stationary_turns: 0,
+            in_battle: false,
+            stationary_turns: 0,
 
-          units: {}
-        };
+            units: {}
+          };
 
-        //Set new army object in usr.armies
-        usr.armies[army_obj.id] = army_obj;
-      }
+          //Set new army object in usr.armies
+          usr.armies[army_obj.id] = army_obj;
+
+          //Return statement
+          return true;
+        }
   },
 
   deleteArmy: function (arg0_user, arg1_army_name) {
