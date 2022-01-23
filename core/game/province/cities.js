@@ -262,23 +262,33 @@ module.exports = {
     var actual_id = main.global.user_map[user_id];
     var usr = main.users[actual_id];
 
-    if (new_name.length <= 100) {
-      if (new_name.length > 0) {
-        var city_obj = getCity(old_name, { users: actual_id });
+    if (!usr.options.customisation_locked) {
+      if (!usr.options.city_names_locked) {
+        if (new_name.length <= 100) {
+          if (new_name.length > 0) {
+            var city_obj = getCity(old_name, { users: actual_id });
 
-        //Set city_obj.name to a new name
-        if (city_obj) {
-          city_obj.name = new_name;
+            //Set city_obj.name to a new name
+            if (city_obj) {
+              city_obj.name = new_name;
 
-          printAlert(getGame(user_id), `You have renamed **${old_name}** to **${new_game}**!`);
+              printAlert(getGame(user_id), `You have renamed **${old_name}** to **${new_game}**!`);
+            } else {
+              printError(getGame(user_id), `The city that you have specified is not currently in your possession or doesn't exist!`);
+            }
+          } else {
+            printError(getGame(user_id), `You cannot have a nameless city!`);
+          }
         } else {
-          printError(getGame(user_id), `The city that you have specified is not currently in your possession or doesn't exist!`);
+          printError(getGame(user_id), `Your city name exceeded the maximum character limit of **100** characters!`);
         }
       } else {
-        printError(getGame(user_id), `You cannot have a nameless city!`);
+        printError(game_obj.id, `Your city names have been locked in place due to moderation action. Ouch.`);
       }
     } else {
-      printError(getGame(user_id), `Your city name exceeded the maximum character limit of **100** characters!`);
+      var vassal_obj = getVassal(actual_id);
+
+      printError(game_obj.id, `Your overlord, **${main.users[vassal_obj.overlord].name}**, has issued a decree stating that vassals are not allowed to change their city names without prior consent! Petition your overlord first before attempting to change your city name again.`)
     }
   }
 };

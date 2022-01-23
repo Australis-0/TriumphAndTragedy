@@ -303,6 +303,7 @@ module.exports = {
     var usr = main.users[actual_id];
 
     //Delete vassal_obj
+    delete usr.options.customisation_locked; //Customisation can't be locked by their overlords anymore
     delete vassal_obj;
 
     usr.vassal_years = 0;

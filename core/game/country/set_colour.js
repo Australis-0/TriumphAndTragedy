@@ -1,11 +1,12 @@
 module.exports = {
-  setColour: function (arg0_user, arg1_r, arg2_g, arg3_b, arg4_vassal) {
+  setColour: function (arg0_user, arg1_r, arg2_g, arg3_b, arg4_vassal, arg5_do_not_display) {
     //Convert from parameters
     var user_id = arg0_user;
     var r = parseInt(arg1_r);
     var g = parseInt(arg2_g);
     var b = parseInt(arg3_b);
     var is_vassal = arg4_vassal;
+    var do_not_display = arg5_do_not_display;
 
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
@@ -15,7 +16,7 @@ module.exports = {
 
     //Check to make sure that colour is valid
     if (!usr.colour_locked) {
-      if (!usr.options.customisation_locked) {
+      if (!usr.options.customisation_locked || (usr.options.customisation_locked && is_vassal)) {
         if (r >= 20 && g >= 20 && b >= 20) {
           if (!((r > 175 && r < 185) || (g > 175 && g < 185) || (b > 175 && b < 185))) {
             var colour_taken = [false, ""]; //[colour_taken, user_name]
@@ -32,7 +33,10 @@ module.exports = {
                 //Set colour
                 usr.colour = [r, g, b];
 
-                printAlert(game_obj.id, `You have set ${(is_vassal) ? `vassal's` : `your`} RGB colour to **${usr.colour.join(", ")}**.`);
+                if (!do_not_display)
+                  printAlert(game_obj.id, `You have set ${(is_vassal) ? `vassal's` : `your`} RGB colour to **${usr.colour.join(", ")}**.`);
+                if (is_vassal)
+                  return [true, `You have set ${(is_vassal) ? `vassal's` : `your`} RGB colour to **${usr.colour.join(", ")}**.`];
 
                 for (var i = 0; i < all_provinces.length; i++)
                   if (all_provinces[i].owner == all_provinces[i].controller)
@@ -40,19 +44,32 @@ module.exports = {
                   else
                     setProvinceColour("political", all_provinces[i], [Math.min(usr.colour[0] - 20, 0), Math.min(usr.colour[1] - 20, 0), Math.min(usr.colour[2] - 20, 0)]);
               } else {
-                printError(game_obj.id, `The colour you have specified, **${r}**, **${g}**, **${b}**, has already been taken by **${colour_taken[1]}**! Please pick a different colour.`);
+                if (!do_not_display)
+                  printError(game_obj.id, `The colour you have specified, **${r}**, **${g}**, **${b}**, has already been taken by **${colour_taken[1]}**! Please pick a different colour.`);
+                if (is_vassal)
+                  return [false, `The colour you have specified, **${r}**, **${g}**, **${b}**, has already been taken by **${colour_taken[1]}**! Please pick a different colour.`]
               }
           } else {
-            printError(game_obj.id, `Only RGB values between 20-175 and 185-255 are accepted!`);
+            if (!do_not_display)
+              printError(game_obj.id, `Only RGB values between 20-175 and 185-255 are accepted!`);
+            if (is_vassal)
+              return [false, `Only RGB values between 20-175 and 185-255 are accepted!`]
           }
         } else {
-          printError(game_obj.id, `Only RGB values between 20-175 and 185-255 are accepted!`);
+          if (!do_not_display)
+            printError(game_obj.id, `Only RGB values between 20-175 and 185-255 are accepted!`);
+          if (is_vassal)
+            return [false, `Only RGB values between 20-175 and 185-255 are accepted!`];
         }
       } else {
-        printError(game_obj.id, `Your colour has been locked in place by your vassal overlord, and thus you were unable to change it!`);
+        if (!do_not_display)
+          printError(game_obj.id, `Your colour has been locked in place by your vassal overlord, and thus you were unable to change it!`);
+        return [false, `Your colour has been locked in place by your vassal overlord, and thus you were unable to change it!`];
       }
     } else {
-      printError(game_obj.id, `Your colour has been locked into place by moderator action. You are unable to change your colour.`);
+      if (!do_not_display)
+        printError(game_obj.id, `Your colour has been locked into place by moderator action. You are unable to change your colour.`);
+      return [false, `Your colour has been locked into place by moderator action. You are unable to change your colour.`];
     }
   },
 
