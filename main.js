@@ -130,6 +130,7 @@ FileManager.import("./game/market/buy");
 FileManager.import("./game/market/sell");
 
 FileManager.import("./game/military/blockade");
+FileManager.import("./game/military/carpet_siege");
 FileManager.import("./game/military/create_army");
 FileManager.import("./game/military/delete_army");
 FileManager.import("./game/military/demobilise");

@@ -44,7 +44,7 @@ module.exports = {
       ]
     },
     function (arg) {
-      module.exports.moveArmy(user_id, arg[0], arg[1]);
+      module.exports.moveArmyCommand(user_id, arg[0], arg[1]);
     },
     function (arg) {
       switch (arg) {

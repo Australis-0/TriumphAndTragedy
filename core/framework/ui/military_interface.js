@@ -187,7 +187,7 @@ module.exports = {
 		}
 
     options_array.push(`We currently have our policy on **[Ignore Orders When Carpet Sieging]** set to **${reference_string[usr.options.ignore_orders]}**.`);
-    if (usr.ignore_orders_when_carpet_sieging) {
+    if (usr.options.ignore_orders) {
 			options_array.push("Orders given out by you to carpet siege will always override existing orders of armies if no available armies can be found.");
 		} else {
 			options_array.push("Only armies without orders or currently stationed will be requistioned for carpet sieging when ordered to.");
