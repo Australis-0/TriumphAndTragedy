@@ -764,7 +764,16 @@ module.exports = {
                     var local_export = usr.trades[export_to_remove];
                     var local_export_good = getGood(local_export.good_type);
 
-                    returnAlert(game_obj.id, `Your submarines intercepted a shipment of ${parseInt(local_export.amount)} ${(local_export_good.name) ? local_export_good.name : local_export.good_type} to **${main.users[local_export_good.target].name}** at the cost of **${parseNumber(total_submarines_lost)}** of their own.`);
+                    printAlert(game_obj.id, `Your submarines intercepted a shipment of ${parseInt(local_export.amount)} ${(local_export_good.name) ? local_export_good.name : local_export.good_type} to **${main.users[local_export_good.target].name}** at the cost of **${parseNumber(total_submarines_lost)}** of their own.`);
+
+                    //Send submarine embed
+                    var submarine_result_embed = new Discord.MessageEmbed()
+                      .setColor(settings.bot_colour)
+                      .setTitle(`Trade Interdiction - Submarine Report #${generateRandomID()}`)
+                      .setDescription(`**${getPrimaryCultures(actual_id)[0].name}** submarines intercepted a shipment of ${parseInt(local_export.amount)} ${(local_export_good.name) ? local_export_good.name : local_export.good_type} to **${main.users[local_export_good.target].name}** at the cost of **${parseNumber(total_submarines_lost)}** of their own.`);
+
+                    //Send battle_embed to both users as an embed alert
+                    sendEmbedAlert(actual_id, submarine_result_embed);
 
                     delete local_export;
 
@@ -815,6 +824,15 @@ module.exports = {
 
                         defender_losses.push(`${parseNumber(old_attacking_fleet.units[old_defending_units[i]] - army_obj.units[old_defending_units[i]])} ${(local_unit.name) ? local_unit.name : old_defending_units[i]}`);
                       }
+
+                    //Send submarine embed
+                    var submarine_result_embed = new Discord.MessageEmbed()
+                      .setColor(settings.bot_colour)
+                      .setTitle(`Fleet Raid - Submarine Report #${generateRandomID()}`)
+                      .setDescription(`We lost ${parseList(defender_losses)} during a submarine attack on the **${random_fleet.name}**.\n\n${usr.name} also lost **${parseList(attacker_losses)}**.`);
+
+                    //Send battle_embed to both users as an embed alert
+                    sendEmbedAlert(actual_id, submarine_result_embed);
 
                     //Return user feedback
                     printAlert(game_obj.id, `${ot_user.name} lost ${parseList(defender_losses)} during a submarine attack on the **${random_fleet.name}**.\n\n${usr.name} also lost **${parseList(attacker_losses)}**.`);
@@ -883,6 +901,15 @@ module.exports = {
                       }
 
                     army_obj.submarine_cooldown = config.defines.combat.submarine_cooldown;
+
+                    //Send submarine embed
+                    var submarine_result_embed = new Discord.MessageEmbed()
+                      .setColor(settings.bot_colour)
+                      .setTitle(`Harbour Raid - Submarine Report #${generateRandomID()}`)
+                      .setDescription(`We lost ${parseList(defender_losses)} during a submarine attack on their reserves.\n\n${usr.name} also lost **${parseList(attacker_losses)}** themselves.`);
+
+                    //Send battle_embed to both users as an embed alert
+                    sendEmbedAlert(actual_id, submarine_result_embed);
 
                     //Print user feedback
                     printAlert(game_obj.id, `${ot_user.name} lost ${parseList(defender_losses)} during a submarine attack on their reserves.\n\n${usr.name} also lost **${parseList(attacker_losses)}** themselves.`);
