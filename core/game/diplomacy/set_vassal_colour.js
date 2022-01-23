@@ -1,4 +1,35 @@
 module.exports = {
+  initialiseSetVassalColour: function (arg0_user) {
+    //Convert from parameters
+    var user_id = arg0_user;
+
+    //Declare local instance variables
+    var game_obj = getGameObject(user_id);
+
+    //Initialise visual prompt
+    visualPrompt(game_obj.alert_embed, user_id, {
+      title: `Set Vassal Colour:`,
+      prompts: [
+        [`Whom would you like to change the country colour of? The target country in question must be one of your vassals.\n\nType **[Diplomacy]** to view a full list of all your vassals.`, "mention"],
+        [`Please insert the R code of your colour.\n\nOnly RGB values between 20-175 and 185-255 are accepted.`, "number", { min: 20, max: 255 }],
+        [`Please insert the G code of your colour.\n\nOnly RGB values between 20-175 and 185-255 are accepted.`, "number", { min: 20, max: 255 }],
+        [`Please insert the B code of your colour.\n\nOnly RGB values between 20-175 and 185-255 are accepted.`, "number", { min: 20, max: 255 }]
+      ]
+    },
+    function (arg) {
+      module.exports.setVassalColour(user_id, arg[0], arg[1], arg[2], arg[3]);
+    },
+    function (arg) {
+      switch (arg) {
+        case "diplomacy":
+          printDiplomacy(user_id);
+          return true;
+
+          break;
+      }
+    });
+  },
+
   setVassalColour: function (arg0_user, arg1_user, arg2_r, arg3_g, arg4_b) {
     //Convert from parameters
     var user_id = arg0_user;

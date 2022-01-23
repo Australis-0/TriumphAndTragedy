@@ -1,4 +1,34 @@
 module.exports = {
+  initialiseRenameVassalCity: function (arg0_user) {
+    //Convert from parameters
+    var user_id = arg0_user;
+
+    //Declare local instance variables
+    var game_obj = getGameObject(user_id);
+
+    //Initialise visual prompt
+    visualPrompt(game_obj.alert_embed, user_id, {
+      title: `Rename Vassal-Controlled City:`,
+      prompts: [
+        [`What is the current name of the city you would like to rename?`, "string"],
+        [`Which of your vassals currently controls this city?\n\nType **[Diplomacy]** to view a full list of all your vassals.`, "mention"],
+        [`What would you like to rename this vassal to?`, "string"]
+      ]
+    },
+    function (arg) {
+      module.exports.renameVassalCity(user_id, arg[1], arg[0], arg[2]);
+    },
+    function (arg) {
+      switch (arg) {
+        case "diplomacy":
+          printDiplomacy(user_id);
+          return true;
+
+          break;
+      }
+    });
+  },
+
   renameVassalCity: function (arg0_user, arg1_vassal, arg2_old_city_name, arg3_new_city_name) {
     //Convert from parameters
     var user_id = arg0_user;

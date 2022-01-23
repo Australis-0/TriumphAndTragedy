@@ -1,4 +1,33 @@
 module.exports = {
+  initialiseRenameVassalCulture: function (arg0_user) {
+    //Convert from parameters
+    var user_id = arg0_user;
+
+    //Declare local instance variables
+    var game_obj = getGameObject(user_id);
+
+    //Initialise visual prompt
+    visualPrompt(game_obj.alert_embed, user_id, {
+      title: `Rename Vassal Culture:`,
+      prompts: [
+        [`For which of your vassals would you like to change the primary culture name?\n\nType **[Diplomacy]** to view a full list of all your vassals.`, "mention"],
+        [`What would you like to rename this vassal's culture to?`, "string"]
+      ]
+    },
+    function (arg) {
+      module.exports.renameVassalCulture(user_id, arg[0], arg[1]);
+    },
+    function (arg) {
+      switch (arg) {
+        case "diplomacy":
+          printDiplomacy(user_id);
+          return true;
+
+          break;
+      }
+    });
+  },
+
   renameVassalCulture: function (arg0_user, arg1_user, arg2_culture_name) {
     //Convert from parameters
     var user_id = arg0_user;

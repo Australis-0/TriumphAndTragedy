@@ -1,4 +1,33 @@
 module.exports = {
+  initialiseSetVassalFlag: function (arg0_user) {
+    //Convert from parameters
+    var user_id = arg0_user;
+
+    //Declare local instance variables
+    var game_obj = getGameObject(user_id);
+
+    //Initialise visual prompt
+    visualPrompt(game_obj.alert_embed, user_id, {
+      title: `Set Vassal Flag:`,
+      prompts: [
+        [`Whom would you like to change the national standard of? The target in question must be one of your vassals.\n\nType **[Diplomacy]** to view a full list of all your vassals.`, "mention"],
+        [`What would you like to change this country's national standard to? Please insert a valid image URL.`, "string"]
+      ]
+    },
+    function (arg) {
+      module.exports.setVassalFlag(user_id, arg[0], arg[1]);
+    },
+    function (arg) {
+      switch (arg) {
+        case "diplomacy":
+          printDiplomacy(user_id);
+          return true;
+
+          break;
+      }
+    });
+  },
+
   setVassalFlag: function (arg0_user, arg1_user, arg2_flag_url) {
     //Convert from parameters
     var user_id = arg0_user;

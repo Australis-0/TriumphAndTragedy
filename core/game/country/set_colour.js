@@ -1,4 +1,25 @@
 module.exports = {
+  initialiseSetColour: function (arg0_user) {
+    //Convert from parameters
+    var user_id = arg0_user;
+
+    //Declare local instance variables
+    var game_obj = getGameObject(user_id);
+
+    //Initialise visual prompt
+    visualPrompt(game_obj.alert_embed, user_id, {
+      title: `Set National Colour:`,
+      prompts: [
+        [`Please insert the R code of your colour.\n\nOnly RGB values between 20-175 and 185-255 are accepted.`, "number", { min: 20, max: 255 }],
+        [`Please insert the G code of your colour.\n\nOnly RGB values between 20-175 and 185-255 are accepted.`, "number", { min: 20, max: 255 }],
+        [`Please insert the B code of your colour.\n\nOnly RGB values between 20-175 and 185-255 are accepted.`, "number", { min: 20, max: 255 }]
+      ]
+    },
+    function (arg) {
+      module.exports.setColour(user_id, arg[0], arg[1], arg[2]);
+    });
+  },
+
   setColour: function (arg0_user, arg1_r, arg2_g, arg3_b, arg4_vassal, arg5_do_not_display) {
     //Convert from parameters
     var user_id = arg0_user;
@@ -71,26 +92,5 @@ module.exports = {
         printError(game_obj.id, `Your colour has been locked into place by moderator action. You are unable to change your colour.`);
       return [false, `Your colour has been locked into place by moderator action. You are unable to change your colour.`];
     }
-  },
-
-  initialiseSetColour: function (arg0_user) {
-    //Convert from parameters
-    var user_id = arg0_user;
-
-    //Declare local instance variables
-    var game_obj = getGameObject(user_id);
-
-    //Initialise visual prompt
-    visualPrompt(game_obj.alert_embed, user_id, {
-      title: `Set National Colour:`,
-      prompts: [
-        [`Please insert the R code of your colour.\n\nOnly RGB values between 20-175 and 185-255 are accepted.`, "number", { min: 20, max: 255 }],
-        [`Please insert the G code of your colour.\n\nOnly RGB values between 20-175 and 185-255 are accepted.`, "number", { min: 20, max: 255 }],
-        [`Please insert the B code of your colour.\n\nOnly RGB values between 20-175 and 185-255 are accepted.`, "number", { min: 20, max: 255 }]
-      ]
-    },
-    function (arg) {
-      module.exports.setColour(user_id, arg[0], arg[1], arg[2]);
-    });
   }
 };

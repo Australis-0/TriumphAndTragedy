@@ -1,5 +1,34 @@
 module.exports = {
-  renameVassal: function (arg0_user, arg1_user, arg2_new_motto) {
+  initialiseSetVassalMotto: function (arg0_user) {
+    //Convert from parameters
+    var user_id = arg0_user;
+
+    //Declare local instance variables
+    var game_obj = getGameObject(user_id);
+
+    //Initialise visual prompt
+    visualPrompt(game_obj.alert_embed, user_id, {
+      title: `Set Vassal Motto:`,
+      prompts: [
+        [`Which of your vassals would you like to change their motto for?\n\nType **[Diplomacy]** to view a full list of all your vassals.`, "mention"],
+        [`What would you like to decree this country's motto as?`, "string"]
+      ]
+    },
+    function (arg) {
+      module.exports.setVassalMotto(user_id, arg[0], arg[1]);
+    },
+    function (arg) {
+      switch (arg) {
+        case "diplomacy":
+          printDiplomacy(user_id);
+          return true;
+
+          break;
+      }
+    });
+  },
+
+  setVassalMotto: function (arg0_user, arg1_user, arg2_new_motto) {
     //Convert from parameters
     var user_id = arg0_user;
     var ot_user_id = arg1_user;

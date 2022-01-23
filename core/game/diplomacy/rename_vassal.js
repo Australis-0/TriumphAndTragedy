@@ -1,4 +1,33 @@
 module.exports = {
+  initialiseRenameVassal: function (arg0_user) {
+    //Convert from parameters
+    var user_id = arg0_user;
+
+    //Declare local instance variables
+    var game_obj = getGameObject(user_id);
+
+    //Initialise visual prompt
+    visualPrompt(game_obj.alert_embed, user_id, {
+      title: `Rename Vassal:`,
+      prompts: [
+        [`Whom would you like to change the country name of? The target in question must be your vassal.\n\nType **[Diplomacy]** to view a full list of all your vassals.`, "mention"],
+        [`What would you like to rename this vassal to?`, "string"]
+      ]
+    },
+    function (arg) {
+      module.exports.renameVassal(user_id, arg[0], arg[1]);
+    },
+    function (arg) {
+      switch (arg) {
+        case "diplomacy":
+          printDiplomacy(user_id);
+          return true;
+
+          break;
+      }
+    });
+  },
+
   renameVassal: function (arg0_user, arg1_user, arg2_new_name) {
     //Convert from parameters
     var user_id = arg0_user;
