@@ -11,7 +11,8 @@ module.exports = {
   diplomacy_pages: [
     "cb_list",
     "diplomacy",
-    "ledger"
+    "ledger",
+    "war_list"
   ],
   economy_pages: [
     "economy",
@@ -20,6 +21,11 @@ module.exports = {
   map_pages: [
     "founding_map",
     "map"
+  ],
+  military_pages: [
+    "army_list",
+    "military",
+    "reserves"
   ],
   politics_pages: [
     "cultures",

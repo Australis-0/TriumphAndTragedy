@@ -1,15 +1,82 @@
 module.exports = {
-  printWar: function (arg0_user, arg1_war_name, arg2_archived_war) {
+  initialisePrintArchivedWar: function (arg0_user) {
+    var user_id = arg0_user;
+
+    //Declare local instance variables
+    var game_obj = getGameObject(user_id);
+
+    //Initialise visual prompt
+    visualPrompt(game_obj.alert_embed, user_id, {
+      title: `View War Archives:`,
+      prompts: [
+        [`Which archived conflict would you wish to analyse?\n\nType **[War List]** to a view a full list of all ongoing and archived conflicts.`, "string"]
+      ]
+    },
+    function (arg) {
+      var archived_war_to_display = module.exports.printWar(user_id, arg[0], true);
+
+      if (archived_war_to_display)
+        game_obj.page = `view_war_archives_${arg[0]}`;
+    },
+    function (arg) {
+      switch (arg) {
+        case "war list":
+          createPageMenu(game_obj.middle_embed, {
+            embed_pages: printWars(user_id),
+            user: game_obj.user
+          });
+          return true;
+
+          break;
+      }
+    });
+  },
+
+  initialisePrintWar: function (arg0_user) {
+    var user_id = arg0_user;
+
+    //Declare local instance variables
+    var game_obj = getGameObject(user_id);
+
+    //Initialise visual prompt
+    visualPrompt(game_obj.alert_embed, user_id, {
+      title: `View War:`,
+      prompts: [
+        [`What is the name of the war you want to view a report on?\n\nType **[War List]** to a view a full list of all ongoing and archived conflicts.`, "string"]
+      ]
+    },
+    function (arg) {
+      var war_to_display = module.exports.printWar(user_id, arg[0]);
+
+      if (war_to_display)
+        game_obj.page = `view_war_${arg[0]}`;
+    },
+    function (arg) {
+      switch (arg) {
+        case "war list":
+          createPageMenu(game_obj.middle_embed, {
+            embed_pages: printWars(user_id),
+            user: game_obj.user
+          });
+          return true;
+
+          break;
+      }
+    });
+  },
+
+  printWar: function (arg0_user, arg1_war_name, arg2_archived_war, arg3_do_not_display) {
     //Convert from parameters
     var user_id = arg0_user;
     var raw_war_name = arg1_war_name.trim().toLowerCase();
     var is_archived_war = arg2_archived_war;
+    var do_not_display = arg3_do_not_display;
 
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
     var game_obj = getGameObject(user_id);
     var usr = main.users[actual_id];
-    var war_obj = (!is_archived_war) ? getwar(raw_war_name) : getArchivedWar(raw_war_name);
+    var war_obj = (!is_archived_war) ? getWar(raw_war_name) : getArchivedWar(raw_war_name);
 
     //Declare local tracker variables
     var attackers_string = [];
@@ -101,10 +168,15 @@ module.exports = {
           }
         );
 
-      game_obj.main_embed = war_embed;
-      game_obj.main_change = true;
+      if (!do_not_display) {
+        game_obj.main_embed = war_embed;
+        game_obj.main_change = true;
+      }
+
+      return war_embed;
     } else {
-      printError(game_obj.id, `The war you have specified, **${raw_war_name}** is either no longer ongoing, or does not exist!`);
+      if (!do_not_display)
+        printError(game_obj.id, `The war you have specified, **${raw_war_name}** is either no longer ongoing, or does not exist!`);
     }
   },
 
@@ -160,6 +232,12 @@ module.exports = {
     //Return statement
     return splitEmbed(wars_string, {
       title: "[Back] ¦ War List:",
+      description: [
+        `**[View Archived War]** ¦ **[View War]**`,
+        "",
+        config.localisation.divider,
+        ""
+      ],
       title_pages: true,
       fixed_width: true
     });

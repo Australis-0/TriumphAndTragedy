@@ -406,7 +406,7 @@ module.exports = {
       }
     }
 
-    //Diplomacy page handler [WIP] - Add peace treaty handler
+    //Diplomacy page handler [WIP] - Add peace treaty handler; war viewer
     {
       if (game_obj.page == "cb_list") {
         //[Back]
@@ -472,8 +472,13 @@ module.exports = {
         }
 
         //[War List]
-        if (input == "war list")
-          printWars(user_id);
+        if (input == "war list") {
+          createPageMenu(game_obj.middle_embed, {
+            embed_pages: printWars(game_obj.user),
+            user: game_obj.user
+          });
+          game_obj.page = "war_list";
+        }
       }
 
       if (game_obj.page.startsWith("diplomacy_view_")) {
@@ -646,6 +651,43 @@ module.exports = {
         printCBTooltip(user_id, actual_ot_user_id, input);
       }
 
+      if (game_obj.page.startsWith("view_war_")) { //[WIP] - Add button functionality
+        var war_name = game_obj.page.replace("view_war_", "");
+
+        //[Back]
+        if (input == "back") {
+          createPageMenu(game_obj.middle_embed, {
+            embed_pages: printWars(game_obj.user),
+            user: game_obj.user
+          });
+          game_obj.page = "war_list";
+        }
+
+        //[Add Wargoal]
+        //[Remove Wargoal]
+
+        //[Rename War]
+        if (input == "rename_war")
+          initialiseRenameWar(user_id);
+
+        //[Send Peace Offer]
+        //[Sign Peace Treaty]
+        //[View Peace Offer]
+      }
+
+      if (game_obj.page.startsWith("view_war_archives_", "")) {
+        var archived_war = game_obj.page.replace("view_war_archives", "");
+
+        //[Back]
+        if (input == "back") {
+          createPageMenu(game_obj.middle_embed, {
+            embed_pages: printWars(game_obj.user),
+            user: game_obj.user
+          });
+          game_obj.page = "war_list";
+        }
+      }
+
       if (game_obj.page.startsWith("view_wargoal_")) {
         var actual_ot_user_id = game_obj.page.replace("view_cb_", "");
 
@@ -678,6 +720,54 @@ module.exports = {
 
         //Tooltip handler
         printCBTooltip(user_id, actual_ot_user_id, input);
+      }
+
+      if (game_obj.page == "war_list") {
+        //[Back]
+        if (input == "back") {
+          printDiplomacy(user_id);
+          game_obj.page = "diplomacy";
+        }
+
+        //[Jump To Page]
+        if (input == "jump to page")
+          visualPrompt(game_obj.alert_embed, user_id, {
+            title: `Jump To Page:`,
+            prompts: [
+              [`Which page would you like jump to?`, "number", { min: 1, max: printWars(game_obj.user).length }]
+            ]
+          },
+          function (arg) {
+            createPageMenu(game_obj.middle_embed, {
+              embed_pages: printWars(game_obj.user),
+              page: arg[0] - 1,
+              user: game_obj.user
+            });
+          });
+
+        //[View Archived War]
+        if (input == "view archived war")
+          initialisePrintArchivedWar(user_id);
+
+        //[View (War Name)]
+        if (input.startsWith("view ")) {
+          var war_to_view = input.replace("view ", "");
+          var war_report = printWar(user_id, war_to_view, false, true);
+
+          if (war_report) {
+            printWar(user_id, war_to_view);
+            game_obj.page = `view_war_${war_to_view}`;
+          } else {
+            var archived_war_report = printWar(user_id, war_to_view, true);
+
+            if (archived_war_report)
+              game_obj.page = `view_war_archives_${war_to_view}`;
+          }
+        }
+
+        //[View War]
+        if (input == "view war")
+          initialisePrintWar(user_id);
       }
     }
 
