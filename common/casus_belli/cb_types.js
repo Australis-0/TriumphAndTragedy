@@ -62,8 +62,10 @@ config.casus_belli = {
     icon: "infamy",
     infamy: 0,
 
-    limit: {
-      infamy: 8
+    limit: function (usr, ot_user) {
+      //Return statement
+      if (ot_user.modifiers.infamy > 8)
+        return true;
     },
 
     peace_demands: ["status_quo", "war_reparations" , "install_government", "cut_down_to_size"]
@@ -71,15 +73,17 @@ config.casus_belli = {
 
   colonial_integration: {
     name: "Colonial Integration",
-    description: "Attacker's total deployed AP are over 4x that of their target's deployed military. Target is behind on tech.",
+    description: "Attacker's total deployed AP are over 4x that of their target's deployed military. Target is at least 20 techs behind.",
     icon: "globe",
     infamy: 2,
 
-    limit: {
-      AND: {
-        ap_ratio: 0.25,
-        techs_researched_is_less_than: "TO"
-      }
+    limit: function (usr, ot_user) {
+      var ot_user_strength = getMilitaryStrength(ot_user.id);
+      var usr_strength = getMilitaryStrength(usr.id);
+
+      //Return statement
+      if (usr_strength.attack*4 > ot_user_strength.attack && usr.researched_technologies.length >= ot_user.researched_technologies.length + 20)
+        return true;
     },
 
     peace_demands: ["status_quo", "war_reparations", "puppet", "annexation"]
@@ -91,19 +95,13 @@ config.casus_belli = {
     icon: "diplomacy",
     infamy: 2,
 
-    limit: {
-      AND: {
-        TO: {
-          OR: {
-            has_government: ["constitutional_monarchy", "democracy"]
-          }
-        },
-
-        NOT: {
-          has_government: ["constitutional_monarchy", "democracy"]
-        },
-        infamy: 3
-      }
+    limit: function (usr, ot_user) {
+      //Return statement
+      if (
+        ["constitutional_monarchy", "democracy"].includes(usr.government) && !["constitutional_monarchy", "democracy"].includes(ot_user.government) &&
+        ot_user.modifiers.infamy > 3
+      )
+        return true;
     },
 
     peace_demands: ["status_quo", "war_reparations", "install_government"]
@@ -115,13 +113,13 @@ config.casus_belli = {
     icon: "revolt",
     infamy: 2,
 
-    limit: {
-      TO: {
-        is_puppet: {
-          overlord: "FROM",
-          duration: 5
-        }
-      }
+    limit: function (usr, ot_user) {
+      var vassal_obj = getVassal(usr.id);
+
+      //Return statement
+      if (vassal_obj)
+        if (usr.vassal_years > 5 && vassal_obj.overlord == ot_user.id)
+          return true;
     },
 
     peace_demands: ["status_quo", "war_reparations", "liberation"]
@@ -133,8 +131,17 @@ config.casus_belli = {
     icon: "old_map",
     infamy: 2,
 
-    limit: {
-      has_core_of: "TO"
+    limit: function (usr, ot_user) {
+      var all_controlled_provinces = getProvinces(ot_user.id, { include_hostile_occupations: true });
+
+      for (var i = 0; i < all_controlled_provinces.length; i++)
+        if (all_controlled_provinces[i].owner == ot_user.id) {
+          var local_culture = main.global.cultures[all_controlled_provinces[i].culture];
+
+          //Return statement
+          if (local_culture.primary_culture.includes(usr.id))
+            return true;
+        }
     },
 
     peace_demands: ["status_quo", "war_reparations", "retake_cores"]
@@ -166,8 +173,10 @@ config.casus_belli = {
     icon: "land_vehicles",
     infamy: 5,
 
-    limit: {
-      has_government: ["communism", "fascism", "absolute_monarchy"]
+    limit: function (usr, ot_user) {
+      //Return statement
+      if (["communism", "fascism", "absolute_monarchy"].includes(usr.government))
+        return true;
     },
 
     peace_demands: ["puppet", "annexation"]
@@ -179,16 +188,18 @@ config.casus_belli = {
     icon: "provinces",
     infamy: 5,
 
-    limit: {
-      AND: {
-        distance_is_less_than: {
-          target: "FROM.capital_id",
-          value: 15,
+    limit: function (usr, ot_user) {
+      //Return statement
+      var capital_obj = getCapital(usr.id);
+      var ot_capital_obj = getCapital(ot_user.id);
+      var ot_user_strength = getMilitaryStrength(ot_user.id);
+      var usr_strength = getMilitaryStrength(usr.id);
 
-          start: "TO.capital_id"
-        },
-        ap_ratio: 0.5
-      }
+      //Return statement
+      if (capital_obj && ot_capital_obj)
+        if (moveTo(capital_obj.id, ot_capital_obj.id).length < 15)
+          if (usr_strength.attack > ot_user_strength*1.5)
+            return true;
     },
 
     peace_demands: ["puppet", "annexation"]
