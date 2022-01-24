@@ -5,31 +5,27 @@ config.casus_belli = {
     icon: "active_personnel",
     infamy: 0,
 
-    limit: function (usr) {
+    limit: function (usr, ot_user) {
+      var all_armies = Object.keys(ot_user.armies);
       var all_provinces = getProvinces(usr.id, { include_hostile_occupations: true, return_keys: true });
       var all_users = Object.keys(main.users);
+      var has_armies_in_country = false;
+      var is_allowed = (hasAlliance(ot_user.id, usr.id) || hasMilitaryAccess(ot_user.id, usr.id));
       var vassal_obj = getVassal(usr.id);
 
-      //Iterate over all users and their armies
-      for (var i = 0; i < all_users.length; i++) {
-        var has_armies_in_country = false;
-        var is_allowed = (hasAlliance(all_users[i], usr.id) || hasMilitaryAccess(all_users[i], usr.id));
-        var local_user = main.users[all_users[i]];
+      //Iterate over all armies
+      for (var i = 0; i < all_armies.length; i++)
+        if (all_provinces.includes(ot_user.armies[all_armies[i]].province))
+          has_armies_in_country = true;
 
-        var all_armies = Object.keys(local_user.armies);
+      //Check for vassalages
+      if (vassal_obj)
+        if (vassal_obj.overlord == ot_user.id)
+          is_allowed = true;
 
-        for (var x = 0; x < all_armies.length; x++)
-          if (all_provinces.includes(local_user.armies[all_armies[x]].province))
-            has_armies_in_country = true;
-
-        //Check for vassalages
-        if (vassal_obj)
-          if (vassal_obj.overlord == all_users[i])
-            is_allowed = true;
-
-        if (!is_allowed && has_armies_in_country)
-          return true;
-      }
+      //Return statement
+      if (!is_allowed && has_armies_in_country)
+        return true;
     },
 
     peace_demands: ["status_quo", "war_reparations"]
@@ -41,13 +37,20 @@ config.casus_belli = {
     icon: "taxes",
     infamy: 0,
 
-    limit: {
-      AND: {
-        has_blockade: "TO",
-        NOT: {
-          is_at_war: "TO"
+    limit: function (usr, ot_user) {
+      var is_blockading = false;
+
+      if (isBlockaded(usr))
+        for (var i = 0; i < usr.blockaded.fleets.length; x++) {
+          var local_fleet = local_user.blockaded.fleets[x];
+
+          if (local_fleet.owner == ot_user.id)
+            is_blockading = true;
         }
-      }
+
+      //Return statement
+      if (is_blockading && areAtWar(usr.id, ot_user.id))
+        return true;
     },
 
     peace_demands: ["status_quo", "war_reparations"]
