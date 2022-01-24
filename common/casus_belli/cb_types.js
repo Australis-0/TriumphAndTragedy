@@ -5,12 +5,30 @@ config.casus_belli = {
     icon: "active_personnel",
     infamy: 0,
 
-    limit: {
-      AND: {
-        has_armies_in_country: "FROM",
-        NOT: {
-          has_military_access: "TO"
-        }
+    limit: function (usr) {
+      var all_provinces = getProvinces(usr.id, { include_hostile_occupations: true, return_keys: true });
+      var all_users = Object.keys(main.users);
+      var vassal_obj = getVassal(usr.id);
+
+      //Iterate over all users and their armies
+      for (var i = 0; i < all_users.length; i++) {
+        var has_armies_in_country = false;
+        var is_allowed = (hasAlliance(all_users[i], usr.id) || hasMilitaryAccess(all_users[i], usr.id));
+        var local_user = main.users[all_users[i]];
+
+        var all_armies = Object.keys(local_user.armies);
+
+        for (var x = 0; x < all_armies.length; x++)
+          if (all_provinces.includes(local_user.armies[all_armies[x]].province))
+            has_armies_in_country = true;
+
+        //Check for vassalages
+        if (vassal_obj)
+          if (vassal_obj.overlord == all_users[i])
+            is_allowed = true;
+
+        if (!is_allowed && has_armies_in_country)
+          return true;
       }
     },
 

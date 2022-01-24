@@ -315,7 +315,8 @@ module.exports = {
     getProvinces() - Returns an array of provinces for a certain user based on certain options.
     options: {
       include_hostile_occupations: true/false, - Includes occupations by other users of the target user
-      include_occupations: true/false - Includes occupations by the target user
+      include_occupations: true/false, - Includes occupations by the target user
+      return_keys: true/false - Whether to return the keys of the provinces instead of the object
     }
   */
   getProvinces: function (arg0_user, arg1_options) {
@@ -354,7 +355,7 @@ module.exports = {
           )
 
           //Push if any of these options are valid
-        ) all_owned_provinces.push(main.provinces[all_provinces[i]]);
+        ) all_owned_provinces.push((!options.return_keys) ? main.provinces[all_provinces[i]] : all_provinces[i]);
 
       //Return statement
       return all_owned_provinces;
