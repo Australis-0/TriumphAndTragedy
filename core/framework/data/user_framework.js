@@ -41,7 +41,7 @@ module.exports = {
 
         var local_supply = returnSafeNumber(local_province.supply_limit*1000, 0);
 
-        if (options.avoid_attrition != false)
+        if (options.avoid_attrition != "never")
           if (getTroopsInProvince(all_provinces[i]) + army_size > local_supply)
             valid_province = false;
 
