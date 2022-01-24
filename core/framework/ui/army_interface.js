@@ -1,4 +1,45 @@
 module.exports = {
+  initialisePrintArmy: function (arg0_user) {
+    //Convert from parameters
+    var user_id = arg0_user;
+
+    //Declare local instance variables
+    var game_obj = getGameObject(user_id);
+
+    //Initialise visual prompt
+    visualPrompt(game_obj.alert_embed, user_id, {
+      title: `View Army:`,
+      prompts: [
+        [`What is the name of the army you would like to inspect?\n\nType **[Army List]** to view a list of all valid armies.`, "string"]
+      ]
+    },
+    function (arg) {
+      var army_obj = getArmy(user_id, arg[0]);
+      var army_report = module.exports.printArmy(user_id, arg[0]);
+
+      if (army_report) {
+        createPageMenu(game_obj.middle_embed, {
+          embed_pages: army_report,
+          user: game_obj.user
+        });
+
+        game_obj.page = `army_viewer_${army_obj.name}`;
+      }
+    },
+    function (arg) {
+      switch (arg) {
+        case "army list":
+          createPageMenu(game_obj.middle_embed, {
+            embed_pages: printArmyList(user_id),
+            user: game_obj.user
+          });
+          return true;
+
+          break;
+      }
+    });
+  },
+
   printArmy: function (arg0_user, arg1_army_name) { //[WIP] - Finish bulk of function
     //Convert from parameters
     var user_id = arg0_user;

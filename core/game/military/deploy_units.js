@@ -66,7 +66,10 @@ module.exports = {
 
           break;
         case "view reserves":
-          printReserves(game_obj.user);
+          createPageMenu(game_obj.middle_embed, {
+            embed_pages: printReserves(game_obj.user),
+            user: game_obj.user
+          });
 
           break;
       }

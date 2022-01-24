@@ -75,7 +75,10 @@ module.exports = {
 
                 //Update reserves UI if user is currently on it
                 if (game_obj.page == "reserves")
-                  printReserves(user_id);
+                  createPageMenu(game_obj.middle_embed, {
+                    embed_pages: printReserves(user_id),
+                    user: game_obj.user
+                  });
 
                 //Print alert
                 printAlert(game_obj.id, `You have successfully trained **${parseNumber(unit_amount)}** ${(unit_amount == 1) ? "regiment" : "regiments"} of ${unit_name}!`);

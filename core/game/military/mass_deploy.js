@@ -29,14 +29,17 @@ module.exports = {
 
           break;
         case "view reserves":
-          printReserves(user_id);
+          createPageMenu(game_obj.middle_embed, {
+            embed_pages: printReserves(game_obj.user),
+            user: game_obj.user
+          });
           return true;
 
           break;
       }
     });
   },
-  
+
   massDeploy: function (arg0_user, arg1_armies, arg2_amount, arg3_unit_name) {
     //Convert from parameters
     var user_id = arg0_user;
