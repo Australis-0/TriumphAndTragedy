@@ -1121,14 +1121,19 @@ module.exports = {
       }
 
       if (military_pages.includes(game_obj.page)) {
+        //[Attrition Avoidance]
+        if (input == "attrition avoidance")
+          initialiseAttritionAvoidance(user_id);
+
         //[Army List]
-        if (input == "army list") {
-          createPageMenu(game_obj.middle_embed, {
-            embed_pages: printArmyList(user_id),
-            user: game_obj.user
-          });
-          game_obj.page = "army_list";
-        }
+        if (game_obj.page != "army_list")
+          if (input == "army list") {
+            createPageMenu(game_obj.middle_embed, {
+              embed_pages: printArmyList(user_id),
+              user: game_obj.user
+            });
+            game_obj.page = "army_list";
+          }
 
         //[Carpet Siege]
         if (input == "carpet siege")
@@ -1166,6 +1171,10 @@ module.exports = {
         if (input == "garrison provinces")
           initialiseGarrisonProvinces(user_id);
 
+        //[Ignore Orders When Carpet Sieging]
+        if (input == "ignore orders when carpet sieging")
+          initialiseIgnoreOrdersWhenCarpetSieging(user_id);
+
         //[Mass Deploy]
         if (input == "mass deploy")
           initialiseMassDeploy(user_id);
@@ -1201,6 +1210,10 @@ module.exports = {
         //[Split Armies]
         if (input == "split armies")
           initialiseSplitArmies(user_id);
+
+        //[Territorial Violation]
+        if (input == "territorial violation")
+          initialiseAvoidTerritorialViolation(user_id);
 
         //[Transfer Units]
         if (input == "transfer units")
