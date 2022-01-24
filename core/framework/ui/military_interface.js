@@ -117,6 +117,7 @@ module.exports = {
 
       military_status_array.push("");
       military_status_array.push(`- Type **[Army List]** to view a complete list of all your armies.`);
+      military_status_array.push(`- Type **[View Reserves]** to view what units you have in your reserves.`);
     } else {
       military_status_array.push(`_We currently have no armies in active service._`);
     }

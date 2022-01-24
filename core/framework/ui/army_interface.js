@@ -94,7 +94,12 @@ module.exports = {
       if (army_obj.type == "army") {
         army_string.push(`**[Merge Army]** ¦ **[Move]**`);
       } else if (army_obj.type == "navy") { //[WIP] - Work on blockades first, then come back later
-
+        var submarine_string = (army_power.pure_submarines) ?
+          ` ¦ **[Convoy Raid]** ¦ **[Harbour Raid]** ¦ **[Torpedo Fleet]**` :
+          "";
+        (army_obj.is_blockading) ?
+          army_string.push(`**[Blockade]** ¦ **[Challenge Blockade]** ${submarine_string}`) :
+          army_string.push(`**[Challenge Blockade]** ¦ **[Lift Blockade]** ${submarine_string}`)
       } else if (army_obj.type == "air") {
         army_string.push(`**[Merge Army]** ¦ **[Move]** ¦ **[Air Raid]**`);
       }
