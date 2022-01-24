@@ -160,6 +160,7 @@ module.exports = {
 
     //Declare local tracker variables
     var all_armies = Object.keys(usr.armies);
+    var all_casus_belli = Object.keys(config.casus_belli);
     var all_cities = getCities(actual_id);
     var all_enemies = getEnemies(actual_id);
     var all_expeditions = Object.keys(usr.expeditions);
@@ -169,6 +170,7 @@ module.exports = {
     var all_pops = Object.keys(config.pops);
     var all_relations = Object.keys(usr.diplomacy.relations);
     var all_temporary_modifiers = Object.keys(usr.temporary_modifiers);
+    var all_users = Object.keys(main.users);
     var controlled_provinces = getProvinces(actual_id);
     var is_being_justified_on = isBeingJustifiedOn(actual_id);
     var owned_provinces = getProvinces(actual_id, { include_hostile_occupations: true });
@@ -304,7 +306,7 @@ module.exports = {
       }
 
       //Remove all alerts in alerts_to_remove
-      for (var i = 0; i < alerts_to_remove.length; i++)
+      for (var i = alerts_to_remove.length - 1; i >= 0; i--)
         usr.alerts.splice(alerts_to_remove[i], 1);
     }
 
@@ -375,13 +377,59 @@ module.exports = {
       }
 
       //Remove constructed requests
-      for (var i = 0; i < construction_requests_to_remove.length; i++)
-        removeElement(usr.under_construction, i);
+      for (var i = construction_requests_to_remove.length - 1; i >= 0; i--)
+        usr.under_construction.splice(construction_requests_to_remove[i], 1);
     }
 
     //Diplomacy processing
     {
       if (!options.is_simulation) {
+        //Casus Belli
+        var cbs_to_remove = [];
+
+        for (var i = 0; i < usr.diplomacy.casus_belli.length; i++) {
+          var local_casus_belli = usr.diplomacy.casus_belli[i];
+
+          local_casus_belli.duration--;
+
+          if (local_casus_belli.duration <= 0)
+            cbs_to_remove.push(i);
+        }
+
+        //Remove all cbs in cbs_to_remove
+        for (var i = cbs_to_remove.length - 1; i >= 0; i--)
+          usr.diplomacy.casus_belli.splice(cbs_to_remove[i], 1);
+
+        for (var i = 0; i < all_casus_belli.length; i++) {
+          var local_cb = config.casus_belli[all_casus_belli[i]];
+
+          if (local_cb.limit)
+            for (var x = 0; x < all_users.length; x++)
+              if (all_users[x] != actual_id)
+                //Make sure user can't have the same CB twice
+                if (local_cb.limit(usr, main.users[all_users[x]])) {
+                  var already_has_this_cb = false;
+
+                  for (var y = 0; y < usr.diplomacy.casus_belli.length; y++) {
+                    var local_casus_belli = usr.diplomacy.casus_belli[y];
+
+                    if (
+                      local_casus_belli.type == all_casus_belli[i] &&
+                      local_casus_belli.target == all_users[x]
+                    )
+                      already_has_this_cb = true;
+                  }
+
+                  if (!already_has_this_cb)
+                    usr.diplomacy.casus_belli.push({
+                      type: all_casus_belli[i],
+                      target: all_users[x],
+
+                      duration: 1
+                    });
+                }
+        }
+
         //Improve/decrease relations
         for (var i = 0; i < all_relations.length; i++) {
           var local_relation = usr.diplomacy.relations[all_relations[i]];
@@ -462,7 +510,7 @@ module.exports = {
           }
 
           //Remove justifications_to_remove from usr.diplomacy.justifications
-          for (var i = 0; i < justifications_to_remove.length; i++)
+          for (var i = justifications_to_remove.length - 1; i >= 0; i--)
             usr.diplomacy.justifications.splice(justifications_to_remove[i], 1);
         }
       }
@@ -731,13 +779,13 @@ module.exports = {
             var local_culture = getCulture(usr.cultural_integrations[i].culture_id);
 
             local_culture.accepted_culture.push(actual_id);
-            cultural_integrations_to_remove.push(usr.cultural_integrations[i]);
+            cultural_integrations_to_remove.push(i);
           }
         }
 
         //Remove cultural integrations
-        for (var i = 0; i < cultural_integrations_to_remove.length; i++)
-          removeElement(usr.cultural_integrations, cultural_integrations_to_remove[i]);
+        for (var i = cultural_integrations_to_remove.length - 1; i >= 0; i--)
+          usr.assimilations.splice(cultural_integrations_to_remove[i], 1);
 
         //Province assimilations
         for (var i = 0; i < usr.assimilations.length; i++) {
@@ -748,13 +796,13 @@ module.exports = {
           if (usr.assimilations[i].duration <= 0)
             if (local_province.controller == actual_id) {
               local_province.culture = usr.assimilations[i].culture_id;
-              assimilations_to_remove.push(usr.assimilations[i]);
+              assimilations_to_remove.push(i);
             }
         }
 
         //Remove assimilations
-        for (var i = 0; i < assimilations_to_remove.length; i++)
-          removeElement(usr.assimilations, assimilations_to_remove[i]);
+        for (var i = assimilations_to_remove.length - 1; i >= 0; i--)
+          usr.assimilations.splice(assimilations_to_remove[i], 1);
       }
     }
 
