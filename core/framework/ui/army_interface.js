@@ -195,7 +195,7 @@ module.exports = {
       fixed_width: true,
 
       description: [
-        `**[Create Army]** ¦ **[Delete Army]** ¦ **[Merge Army]** ¦ **[View Army]**`,
+        `**[Create Army]** ¦ **[Delete Army]** ¦ **[Merge Army]** ¦ **[Rename Army]** ¦ **[View Army]**`,
         `**[Deploy Units]** ¦ **[Transfer Units]** ¦ **[Relieve Units]**`
       ]
     });
