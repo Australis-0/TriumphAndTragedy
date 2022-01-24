@@ -138,6 +138,7 @@ FileManager.import("./game/market/sell");
 
 FileManager.import("./game/military/blockade");
 FileManager.import("./game/military/carpet_siege");
+FileManager.import("./game/military/convoy_raid");
 FileManager.import("./game/military/create_armies");
 FileManager.import("./game/military/create_army");
 FileManager.import("./game/military/delete_all_armies");
@@ -147,6 +148,7 @@ FileManager.import("./game/military/demobilise");
 FileManager.import("./game/military/deploy_units");
 FileManager.import("./game/military/garrison_cities");
 FileManager.import("./game/military/garrison_provinces");
+FileManager.import("./game/military/harbour_raid");
 FileManager.import("./game/military/lift_blockade");
 FileManager.import("./game/military/mass_deploy");
 FileManager.import("./game/military/mass_relieve");
@@ -160,6 +162,7 @@ FileManager.import("./game/military/relieve_units");
 FileManager.import("./game/military/rename_army");
 FileManager.import("./game/military/split_armies");
 FileManager.import("./game/military/split_army");
+FileManager.import("./game/military/torpedo_fleet");
 FileManager.import("./game/military/transfer_units");
 
 FileManager.import("./game/politics/coup_government");
