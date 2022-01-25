@@ -14,7 +14,7 @@ config.reforms.pensions = {
 			communism_discontent: 7
 		},
 		effects: {
-			stability_modifier: -3,
+			stability_modifier: -0.03,
 			pop_growth_modifier: 0.02,
 			reform_desire_gain: 0.02,
 			tax_efficiency: 0.07,
@@ -38,7 +38,7 @@ config.reforms.pensions = {
 			communism_discontent: 5
 		},
 		effects: {
-			stability_modifier: -1,
+			stability_modifier: -0.01,
 			pop_growth_modifier: 0.04,
 			reform_desire_gain: 0.02,
 			tax_efficiency: 0.05,
@@ -81,7 +81,7 @@ config.reforms.pensions = {
 			communism_discontent: -3
 		},
 		effects: {
-			stability_modifier: 5,
+			stability_modifier: 0.05,
 			pop_growth_modifier: 0.07,
 			reform_desire_gain: -0.02,
 			tax_efficiency: -0.05,
@@ -105,7 +105,7 @@ config.reforms.pensions = {
 			communism_discontent: -10
 		},
 		effects: {
-			stability_modifier: 10,
+			stability_modifier: 0.10,
 			pop_growth_modifier: 0.1,
 			reform_desire_gain: -0.05,
 			tax_efficiency: -0.1,

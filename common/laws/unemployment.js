@@ -14,7 +14,7 @@ config.reforms.unemployment = {
 			communism_discontent: 6
 		},
 		effects: {
-			stability_modifier: -5,
+			stability_modifier: -0.05,
 			pop_growth_modifier: -0.02,
 			reform_desire_gain: 0.05,
 			tax_efficiency: 0.1,
@@ -36,7 +36,7 @@ config.reforms.unemployment = {
 			communism_discontent: 4
 		},
 		effects: {
-			stability_modifier: -3,
+			stability_modifier: -0.03,
 			pop_growth_modifier: -0.02,
 			reform_desire_gain: 0.03,
 			tax_efficiency: 0.08,
@@ -77,7 +77,7 @@ config.reforms.unemployment = {
 			communism_discontent: -3
 		},
 		effects: {
-			stability_modifier: 5,
+			stability_modifier: 0.05,
 			pop_growth_modifier: 0.02,
 			reform_desire_gain: -0.02,
 			production_efficiency: -0.05,
@@ -98,7 +98,7 @@ config.reforms.unemployment = {
 			communism_discontent: -4
 		},
 		effects: {
-			stability_modifier: 10,
+			stability_modifier: 0.10,
 			pop_growth_modifier: 0.05,
 			reform_desire_gain: -0.05,
 			production_efficiency: -0.1,

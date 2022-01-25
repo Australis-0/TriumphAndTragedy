@@ -14,7 +14,7 @@ config.reforms.safety_regulations = {
 			communism_discontent: 6
 		},
 		effects: {
-			stability_modifier: -5,
+			stability_modifier: -0.05,
 			pop_growth_modifier: -0.01,
 			reform_desire_gain: 0.05,
 			production_efficiency: 0.05,
@@ -35,7 +35,7 @@ config.reforms.safety_regulations = {
 			communism_discontent: 5
 		},
 		effects: {
-			stability_modifier: -2,
+			stability_modifier: -0.02,
 			pop_growth_modifier: -0.005,
 			reform_desire_gain: 0.04,
 			production_efficiency: 0.02,
@@ -73,7 +73,7 @@ config.reforms.safety_regulations = {
 			communism_discontent: 1
 		},
 		effects: {
-			stability_modifier: 2,
+			stability_modifier: 0.02,
 			production_efficiency: -0.02,
 			pop_growth_modifier: 0.02,
 			reform_desire_gain:-0.02,
@@ -94,7 +94,7 @@ config.reforms.safety_regulations = {
 			communism_discontent: -7
 		},
 		effects: {
-			stability_modifier: 5,
+			stability_modifier: 0.05,
 			production_efficiency: -0.05,
 			pop_growth_modifier: 0.01,
 			reform_desire_gain: -0.05,

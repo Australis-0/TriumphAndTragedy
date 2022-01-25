@@ -14,7 +14,7 @@ config.reforms.wage = {
 			communism_discontent: 7
 		},
     effects: {
-			stability_modifier: -5,
+			stability_modifier: -0.05,
 			tax_efficiency: -0.03,
 			production_efficiency: -0.05,
 			research_efficiency: 0.02,
@@ -35,7 +35,7 @@ config.reforms.wage = {
   		communism_discontent: 2
 		},
     effects: {
-  		stability_modifier: -3,
+  		stability_modifier: -0.03,
   		tax_efficiency: -0.02,
   		production_efficiency: -0.04,
   		research_efficiency: 0.05,
@@ -56,7 +56,7 @@ config.reforms.wage = {
     	communism_discontent: 3
   	},
     effects: {
-    	stability_modifier: -1,
+    	stability_modifier: -0.01,
     	production_efficiency: -0.02
   	}
   },
@@ -73,7 +73,7 @@ config.reforms.wage = {
   		communism_discontent: 3
 		},
     effects: {
-  		stability_modifier: 2,
+  		stability_modifier: 0.02,
   		tax_efficiency: 0.03,
   		production_efficiency: 0.02,
   		research_efficiency: -0.01,
@@ -97,7 +97,7 @@ config.reforms.wage = {
   		communism_discontent: -6
 		},
     effects: {
-			stability_modifier: 5,
+			stability_modifier: 0.05,
 			tax_efficiency: 0.05,
 			production_efficiency: 0.04,
 			research_efficiency: -0.06,

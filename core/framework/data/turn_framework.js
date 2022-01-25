@@ -727,7 +727,7 @@ module.exports = {
           government_stability_modifier -
           usr.tax_rate -
           usr.modifiers.overextension +
-          usr.boosted_stability +
+          returnSafeNumber(usr.boosted_stability) +
           usr.modifiers.stability_modifier
         );
 

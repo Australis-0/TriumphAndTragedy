@@ -13,7 +13,7 @@ config.reforms.workhours = {
 			communism_discontent: 8
 		},
 		effects: {
-			stability_modifier: -7,
+			stability_modifier: -0.07,
 			tax_efficiency: -0.05,
 			production_efficiency: 0.2,
 			research_efficiency: -0.1,
@@ -34,7 +34,7 @@ config.reforms.workhours = {
 			communism_discontent: 1
 		},
 		effects: {
-			stability_modifier: -5,
+			stability_modifier: -0.05,
 			tax_efficiency: -0.02,
 			production_efficiency: 0.1,
 			reform_desire_gain: 0.02,
@@ -54,7 +54,7 @@ config.reforms.workhours = {
 			communism_discontent: 2
 		},
 		effects: {
-			stability_modifier: -3,
+			stability_modifier: -0.03,
 			research_efficiency: 0.05,
 			production_efficiency: 0.1,
 			reform_desire_gain: 0.01,
@@ -92,7 +92,7 @@ config.reforms.workhours = {
 			communism_discontent: -5
 		},
 		effects: {
-			stability_modifier: 5,
+			stability_modifier: 0.05,
 			research_efficiency: 0.15,
 			tax_efficiency: 0.03,
 			production_efficiency: -0.05,

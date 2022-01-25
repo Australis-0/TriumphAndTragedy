@@ -15,7 +15,7 @@ config.reforms.healthcare = {
 		},
 
 		effects: {
-			stability_modifier: -5,
+			stability_modifier: -0.05,
 			pop_growth_modifier: -0.05,
 			reform_desire_gain: 0.05,
 			tax_efficiency: 0.15
@@ -34,7 +34,7 @@ config.reforms.healthcare = {
 			communism_discontent: 6
 		},
 		effects: {
-			stability_modifier: -2,
+			stability_modifier: -0.02,
 			pop_growth_modifier: -0.04,
 			reform_desire_gain: 0.04,
 			tax_efficiency: 0.12
@@ -71,7 +71,7 @@ config.reforms.healthcare = {
 			communism_discontent: 2
 		},
 		effects: {
-			stability_modifier: 5,
+			stability_modifier: 0.05,
 			pop_growth_modifier: 0.02,
 			tax_efficiency: -0.02
 		}
@@ -89,7 +89,7 @@ config.reforms.healthcare = {
 			communism_discontent: -6
 		},
 		effects: {
-			stability_modifier: 10,
+			stability_modifier: 0.10,
 			pop_growth_modifier: 0.05,
 			tax_efficiency: -0.05,
 			reform_desire_gain: -0.02,
