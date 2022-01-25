@@ -4,7 +4,7 @@ module.exports = {
     var user_id = arg0_user;
 
     //Declare local instance variables
-    var actual_id = main.users[user_id];
+    var actual_id = main.global.user_map[user_id];
     var all_enemies = getEnemies(actual_id);
     var all_wars = Object.keys(main.global.wars);
     var at_war = atWar(actual_id);
