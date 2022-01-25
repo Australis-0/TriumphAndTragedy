@@ -38,7 +38,7 @@ module.exports = {
       politics_string.push("");
       politics_string.push(`${config.icons.consciousness} Reform Desire: **${printPercentage(usr.modifiers.reform_desire, { display_prefix: true })}** (${printPercentage(total_reform_desire_gain, { display_prefix: true })} per turn). Pass Reforms to lower **Reform Desire**.`);
     }
-    
+
     politics_string.push("");
 
     //Print out discontentment per party
@@ -74,7 +74,7 @@ module.exports = {
     politics_string.push(`**Calculated Stability:**`);
     politics_string.push("");
     politics_string.push(`${config.icons.stability} Calculated Stability: **${printPercentage(simulation.modifiers.stability)}**`);
-    politics_string.push(`${config.icons.stability} Current Stability: **${printPercentage(usr.modifiers.stability)}`);
+    politics_string.push(`${config.icons.stability} Current Stability: **${printPercentage(usr.modifiers.stability)}**`);
 
     if (simulation.modifiers.stability < config.defines.politics.revolt_threshold && usr.country_age > 10) {
       var low_party_popularity = false;
