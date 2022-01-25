@@ -23,8 +23,9 @@ module.exports = {
     for (var i = 0; i < all_pops.length; i++) {
       var local_pop = config.pops[all_pops[i]];
 
-      if (local_pop.per_100k.tax_efficiency)
-        budget_string.push(`- ${(local_pop.icon) ? config.icons[local_pop.icon] + " " : ""}${(local_pop.formal_name) ? local_pop.formal_name : all_pops[i]} Modifier: **${printPercentage(getPopModifier(actual_id, all_pops[i], "tax_efficiency"), { display_prefix: true })}** (**${parseNumber(total_actions_gained_per_turn[0])}**)`);
+      if (local_pop.per_100k)
+        if (local_pop.per_100k.tax_efficiency)
+          budget_string.push(`- ${(local_pop.icon) ? local_pop.icon + " " : ""}${(local_pop.formal_name) ? local_pop.formal_name : all_pops[i]} Modifier: **${printPercentage(getPopModifier(actual_id, all_pops[i], "tax_efficiency"), { display_prefix: true })}**`);
     }
 
     //Display actions
@@ -37,7 +38,7 @@ module.exports = {
     budget_string.push("");
     budget_string.push(`**Economic Policy:**`);
     budget_string.push("");
-    budget_string.push(`Current tax: (**${printPercentage(usr.tax_rate)}**/**${printPercentage(usr.modifiers.max_tax)}**) - ${(getIncome(actual_id) < 0) ? "Consider adjusting your tax rate to gain additional income." : ""}`);
+    budget_string.push(`Current tax: (**${printPercentage(usr.tax_rate)}**/**${printPercentage(usr.modifiers.max_tax)}**) ${(getIncome(actual_id) < 0) ? "- Consider adjusting your tax rate to gain additional income." : ""}`);
     budget_string.push("");
     budget_string.push(`**[Set Tax]**`);
     budget_string.push("");
