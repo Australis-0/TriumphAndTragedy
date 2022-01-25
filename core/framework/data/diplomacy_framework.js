@@ -437,7 +437,7 @@ module.exports = {
 
   getSortedUsers: function () {
     //Declare local instance variables
-    var all_users = Object.keys(config.users);
+    var all_users = Object.keys(main.users);
     var final_sorted_user_array = [];
     var sorted_user_array = [];
 

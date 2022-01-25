@@ -70,7 +70,7 @@ module.exports = {
 
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
-    var all_wars = Object.keys(mian.global.wars);
+    var all_wars = Object.keys(main.global.wars);
     var is_at_war = false;
 
     for (var i = 0; i < all_wars.length; i++) {

@@ -76,8 +76,8 @@ module.exports = {
     diplomacy_string.push(`${config.icons.political_capital} Political Capital: **${parseNumber(usr.modifiers.political_capital)}** (${parseNumber(usr.modifiers.political_capital_gain, { display_prefix: true })} per turn)`);
 
     //Check if user has any vassals or accepted cultures dragging down their gain per turn
-    if (Object.keys(usr.vassals).length > 0)
-      diplomacy_string.push(`Our **${parseNumber(Object.keys(usr.vassals).length)}** vassal(s) are costing us **${parseNumber(getVassalMaintenance(actual_id))}** Political Capital per turn.`);
+    if (Object.keys(usr.diplomacy.vassals).length > 0)
+      diplomacy_string.push(`Our **${parseNumber(Object.keys(usr.diplomacy.vassals).length)}** vassal(s) are costing us **${parseNumber(getVassalMaintenance(actual_id))}** Political Capital per turn.`);
     if (accepted_cultures.length > 0)
       diplomacy_string.push(`Our **${parseNumber(accepted_cultures.length)}** accepted culture(s) are costing us **${parseNumber(accepted_cultures*config.defines.politics.accepted_culture_maintenance_cost)}** Political Capital per turn.`);
 
@@ -108,7 +108,7 @@ module.exports = {
 
     (usr.options.allow_ceding.length > 0) ?
       diplomacy_string.push(`You currently allow ${allow_cede_names.join(", ")} to cede their provinces to you.`) :
-      diplomacy_string.push(`_You are currently not allowing anyone to cede their provinces to you.`);
+      diplomacy_string.push(`_You are currently not allowing anyone to cede their provinces to you._`);
 
     //Add sorted ledger of top 10 countries by score
     diplomacy_string.push("");
@@ -118,10 +118,10 @@ module.exports = {
     var sorted_users = getSortedUsers();
 
     for (var i = 0; i < sorted_users.length; i++) {
-      var local_user = main.users[sorted_users[i][0]];
+      var local_user = main.users[sorted_users[i]];
 
       if (i < 10)
-        diplomacy_string.push(`**${local_user.name}** ¦ ${parseNumber(sorted_users[i][1])} ¦ ${parseNumber(getTotalActiveDuty(sorted_users[i][0]))} ¦ ${parseNumber(usr.provinces)} ¦ ${parseNumber(usr.population)} ¦ ${parseNumber(usr.researched_technologies.length)}`)
+        diplomacy_string.push(`**${local_user.name}** ¦ ${parseNumber(getScore(sorted_users[i]))} ¦ ${parseNumber(getTotalActiveDuty(sorted_users[i]))} ¦ ${parseNumber(usr.provinces)} ¦ ${parseNumber(usr.population)} ¦ ${parseNumber(usr.researched_technologies.length)}`)
     }
 
     if (sorted_users.length > 10)
