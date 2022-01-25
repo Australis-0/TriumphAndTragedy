@@ -675,7 +675,7 @@ module.exports = {
         usr.modifiers.political_capital += usr.modifiers.political_capital_gain;
 
         //Accepted cultures maintenance for political capital
-        usr.modifiers.political_capital -= getAcceptedCultures(actual_id)*config.defines.politics.accepted_culture_maintenance_cost;
+        usr.modifiers.political_capital -= getAcceptedCultures(actual_id).length*config.defines.politics.accepted_culture_maintenance_cost;
 
         //Round off political_capital
         usr.modifiers.political_capital = Math.round(usr.modifiers.political_capital);
