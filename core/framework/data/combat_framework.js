@@ -534,7 +534,7 @@ module.exports = {
               randomNumber(110000, 120000) :
               total_casualties;
 
-            for (var i = 0; i < all_pops.length; i+=) {
+            for (var i = 0; i < all_pops.length; i++) {
               var local_value = city_obj.pops[all_pops[i]];
               var local_percentage = local_value/city_obj.pops.population;
 

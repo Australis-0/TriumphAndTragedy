@@ -402,7 +402,7 @@ module.exports = {
     var army_exists = [false, ""]; //[army_exists, army_obj/key];
 
     //Soft match - Reversed
-    for (var i = all_armies.length - 1; >= 0; i--) {
+    for (var i = all_armies.length - 1; i >= 0; i--) {
       var local_army = usr.armies[all_armies[i]];
 
       if (local_army.name.toLowerCase().indexOf(army_name) != -1)
@@ -410,7 +410,7 @@ module.exports = {
     }
 
     //Hard match - Reversed
-    for (var i = all_armies.length - 1; >= 0; i--) {
+    for (var i = all_armies.length - 1; i >= 0; i--) {
       var local_army = usr.armies[all_armies[i]];
 
       if (local_army.name.toLowerCase() == army_name)

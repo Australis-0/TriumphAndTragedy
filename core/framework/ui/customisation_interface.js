@@ -55,7 +55,7 @@ module.exports = {
   		.setColor(settings.bot_colour)
   		.setTitle(`[Back] ¦ Customisation Menu:\n${config.icons.divider}`)
   		.setThumbnail(usr.flag)
-  		.setDescription(customisation_array.join("\n"));
+  		.setDescription(customisation_array.join("\n"))
       .setImage("https://cdn.discordapp.com/attachments/722997700391338046/736141424315203634/margin.png");
     const embed_vassal_customisation = new Discord.MessageEmbed()
   		.setColor(settings.bot_colour)

@@ -46,7 +46,7 @@ module.exports = {
               if (
                 main.users[all_users[i]].colour.every(item => [r, g, b].includes(item)) && [r, g, b].every(item => main.users[all_users[i]].colour.includes(item))
               )
-                colour_taken = [true, main.users[all_users[i].name];
+                colour_taken = [true, main.users[all_users[i]].name];
 
               if (!colour_taken[0]) {
                 var all_provinces = getProvinces(actual_id, { include_occupations: true });

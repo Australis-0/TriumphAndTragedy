@@ -15,7 +15,7 @@ module.exports = {
     var usr = main.users[actual_id];
 
     if (all_provinces.length > 0) {
-      for (var i  0; i < army_list.length; i++) {
+      for (var i = 0; i < army_list.length; i++) {
         //Fetch target province index to divide armies evenly
         var target_province_index = 0;
 

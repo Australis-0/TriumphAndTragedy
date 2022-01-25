@@ -40,7 +40,7 @@ config.casus_belli = {
     limit: function (usr, ot_user) {
       var is_blockading = false;
 
-      if (isBlockaded(usr))
+      if (isBlockaded(usr.id))
         for (var i = 0; i < usr.blockaded.fleets.length; x++) {
           var local_fleet = local_user.blockaded.fleets[x];
 
@@ -139,8 +139,9 @@ config.casus_belli = {
           var local_culture = main.global.cultures[all_controlled_provinces[i].culture];
 
           //Return statement
-          if (local_culture.primary_culture.includes(usr.id))
-            return true;
+          if (local_culture)
+            if (local_culture.primary_culture.includes(usr.id))
+              return true;
         }
     },
 

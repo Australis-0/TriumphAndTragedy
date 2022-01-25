@@ -228,7 +228,7 @@ module.exports = {
       sorted_army_orders.push([army_orders[all_army_orders[i]], all_army_orders[i]]);
 
     //Sort array
-    sorted_army_orders.sort((b[0], a[0]) => b[0] - a[0]);
+    sorted_army_orders.sort((a, b) => b[0] - a[0]);
 
     //Format army_orders_array
     army_orders_array.push(`We have **${parseNumber(all_armies.length)}** combat formations currently in the field. Of these:`);

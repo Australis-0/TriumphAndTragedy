@@ -4,6 +4,7 @@ module.exports = {
     var all_armies = getAllArmies();
     var all_users = Object.keys(main.users);
     var all_enemies = {};
+  	var current_date = new Date().getTime();
 
     main.global.battle_tick = current_date;
     main.last_backup = current_date;
@@ -26,7 +27,7 @@ module.exports = {
 
       //Check for hostile users in the same province
       for (var x = 0; x < all_armies.length; x++)
-        if (local_enemies.includes(all_armies[x].owner) && all_armies[x].province = local_army.province)
+        if (local_enemies.includes(all_armies[x].owner) && all_armies[x].province == local_army.province)
           if (
             local_army.type != "navy" && all_armies[x].type != "navy" &&
             !(local_army.in_combat || all_armies[x].in_combat)
@@ -69,7 +70,7 @@ module.exports = {
 
           attacker_war_exhaustion += returnSafeNumber(local_user.modifiers.war_exhaustion, 1);
         }
-        for (var x = 0; x < local_war.defenders.length; x+=) {
+        for (var x = 0; x < local_war.defenders.length; x++) {
           var local_user = main.users[local_war.defenders[x]];
 
           defender_war_exhaustion += returnSafeNumber(local_user.modifiers.war_exhaustion, 1);
@@ -81,7 +82,7 @@ module.exports = {
         attacker_warscore = (fully_sieged_defenders != local_war.defenders.length) ?
           local_war.attacker_warscore = ((0.75*defender_war_exhaustion) + (
             0.25*returnSafeNumber(main.users[local_war.defenders_war_leader].modifiers.war_exhaustion, 1)
-          ) :
+          )) :
           1;
         defender_warscore = parseInt((attacker_war_exhaustion/local_war.attackers.length).toFixed(2));
 
@@ -123,7 +124,7 @@ module.exports = {
             config.defines.economy.resource_base_stock*0.1
           )
         ) {
-          if (local_market_good.buy_price > 100 && local_market.sell_price > 100) {
+          if (local_market_good.buy_price > 100 && local_market_good.sell_price > 100) {
             local_market_good.buy_price = Math.ceil(local_market_good.buy_price*0.8);
             local_market_good.sell_price = Math.ceil(local_market_good.sell_price*0.8);
           }
@@ -255,7 +256,7 @@ module.exports = {
     {
       var alerts_to_remove = [];
 
-      for (var i = 0; i < usr.alerts.length) {
+      for (var i = 0; i < usr.alerts.length; i++) {
         var ai_chance_sum = 0;
         var ai_chance_ranges = [];
 
@@ -772,11 +773,11 @@ module.exports = {
         var cultural_integrations_to_remove = [];
 
         //Cultural integrations
-        for (var i = 0; i < usr.cultural_integrations.length; i++) {
-          usr.cultural_integrations[i].duration--;
+        for (var i = 0; i < usr.pops.cultural_integrations.length; i++) {
+          usr.pops.cultural_integrations[i].duration--;
 
-          if (usr.cultural_integrations[i].duration <= 0) {
-            var local_culture = getCulture(usr.cultural_integrations[i].culture_id);
+          if (usr.pops.cultural_integrations[i].duration <= 0) {
+            var local_culture = getCulture(usr.pops.cultural_integrations[i].culture_id);
 
             local_culture.accepted_culture.push(actual_id);
             cultural_integrations_to_remove.push(i);
@@ -785,24 +786,24 @@ module.exports = {
 
         //Remove cultural integrations
         for (var i = cultural_integrations_to_remove.length - 1; i >= 0; i--)
-          usr.assimilations.splice(cultural_integrations_to_remove[i], 1);
+          usr.pops.assimilations.splice(cultural_integrations_to_remove[i], 1);
 
         //Province assimilations
-        for (var i = 0; i < usr.assimilations.length; i++) {
-          var local_province = getProvince(usr.assimilations[i].province_id);
+        for (var i = 0; i < usr.pops.assimilations.length; i++) {
+          var local_province = getProvince(usr.pops.assimilations[i].province_id);
 
-          usr.assimilations[i].duration--;
+          usr.pops.assimilations[i].duration--;
 
-          if (usr.assimilations[i].duration <= 0)
+          if (usr.pops.assimilations[i].duration <= 0)
             if (local_province.controller == actual_id) {
-              local_province.culture = usr.assimilations[i].culture_id;
+              local_province.culture = usr.pops.assimilations[i].culture_id;
               assimilations_to_remove.push(i);
             }
         }
 
         //Remove assimilations
         for (var i = assimilations_to_remove.length - 1; i >= 0; i--)
-          usr.assimilations.splice(assimilations_to_remove[i], 1);
+          usr.pops.assimilations.splice(assimilations_to_remove[i], 1);
       }
     }
 

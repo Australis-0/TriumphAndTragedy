@@ -165,7 +165,7 @@ module.exports = {
       for (var i = 0; i < all_units.length; i++) {
         var cache_icon = getUnitCategoryFromUnit(all_units[i]).icon;
 
-        var local_icon = (config.icons[cache_icon) ?
+        var local_icon = (config.icons[cache_icon]) ?
           config.icons[cache_icon] + " " :
           ""
         var unit_obj = getUnit(all_units[i]);

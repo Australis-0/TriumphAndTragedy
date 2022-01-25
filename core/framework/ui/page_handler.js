@@ -651,7 +651,7 @@ module.exports = {
           game_obj.page = `view_cb_${actual_ot_user_id}`;
           createPageMenu(game_obj.middle_embed, {
             embed_pages: printCBs(user_id, actual_ot_user_id),
-            user: game_obj.user;
+            user: game_obj.user
           });
         }
 
@@ -660,7 +660,7 @@ module.exports = {
           game_obj.page = `view_wargoals_${actual_ot_user_id}`;
           createPageMenu(game_obj.middle_embed, {
             embed_pages: printWargoals(user_id, actual_ot_user_id),
-            user: game_obj.user;
+            user: game_obj.user
           });
         }
       }

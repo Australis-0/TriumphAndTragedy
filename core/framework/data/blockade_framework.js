@@ -85,7 +85,7 @@ module.exports = {
     if (actual_id)
       if (isBlockaded(actual_id)) {
         //Go through all fleets that are still blockading
-        for (var i = 0; i < usr.blockaded.fleets.length) {
+        for (var i = 0; i < usr.blockaded.fleets.length; i++) {
           var local_fleet = getArmy(usr.blockaded.fleets[i].id, usr.blockaded.fleets[i].fleet_id);
 
           local_fleet.blockade_recovery_turns = config.defines.combat.blockade_cooldown;
