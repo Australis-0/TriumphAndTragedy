@@ -160,6 +160,58 @@ module.exports = {
           }
 
           break;
+        case "liberation":
+          //Liberates peace_obj.id from their overlord
+          var vassal_obj = getVassal(peace_obj.id);
+
+          if (vassal_obj)
+            if (war_obj.attackers.includes(vassal_obj.overlord) || war_obj.defenders.includes(vassal_obj.overlord))
+              dissolveVassal(peace_obj.id, vassal_obj.overlord);
+
+          break;
+        case "puppet":
+          var local_demands = Object.keys(local_value);
+
+          for (var i = 0; i < local_demands.length; i++) {
+            var local_user = main.users[local_demands[i]];
+            var overlord_id = local_value[local_demands[i]].overlord;
+            var overlord_obj = main.users[overlord_id];
+
+            createVassal(local_demands[i], { target: overlord_id });
+            overlord_obj.diplomacy.used_diplomatic_slots++;
+          }
+
+          break;
+        case "retake_cores":
+          for (var i = 0; i < local_value.length; i++) {
+            var local_user = main.users[local_value[i]];
+
+            //Go through all provinces on opposing side, and if the primary culutre of that province is the primary culture of local_user, set its controller and owner to them
+            for (var x = 0; x < war_obj[opposing_side].length; x++) {
+              var local_provinces = getProvinces(war_obj[opposing_side], { include_hostile_occupations: true });
+
+              for (var y = 0; y < local_provinces.length; y++) {
+                var culture_obj = getCulture(local_provinces[y]);
+
+                if (culture_obj.primary_culture.includes(local_value[i])) {
+                  local_provinces[y].controller = local_value[i];
+                  local_provinces[y].owner = local_value[i];
+                }
+              }
+            }
+          }
+
+          break;
+        case "annexation":
+          var local_demands = Object.keys(local_value);
+
+          for (var i = 0; i < local_demands.length; i++) {
+            if (local_value[local_demands[i]].annex_all) {
+              //var local_provinces =
+            }
+          }
+
+          break;
       }
     }
   }
