@@ -477,6 +477,11 @@ module.exports = {
     //Annex all provinces
     var all_provinces = module.exports.getProvinces(actual_id, { include_occupations: true });
 
+    //Occupation handler
+    for (var i = 0; i < all_provinces.length; i++)
+      if (all_provinces[i].controller != all_provinces[i].owner)
+        all_provinces[i].controller = all_provinces[i].owner;
+
     for (var i = 0; i < all_provinces.length; i++)
       transferProvince(actual_id, { target: actual_ot_user_id, province_id: all_provinces[i].id });
 

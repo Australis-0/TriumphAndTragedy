@@ -22,7 +22,7 @@ module.exports = {
         "actual_user_id": {
           id: "actual_user_id",
           provinces: ["4082", "2179", ...],
-          annex_all:  true/false
+          annex_all: ["ot_user_id", "ot_user_id2"]
         }
       }
     }
@@ -193,10 +193,8 @@ module.exports = {
               for (var y = 0; y < local_provinces.length; y++) {
                 var culture_obj = getCulture(local_provinces[y]);
 
-                if (culture_obj.primary_culture.includes(local_value[i])) {
-                  local_provinces[y].controller = local_value[i];
-                  local_provinces[y].owner = local_value[i];
-                }
+                if (culture_obj.primary_culture.includes(local_value[i]))
+                  transferProvince(local_provinces[y].owner, { target: local_value[i], province_id: local_provinces[y].id });
               }
             }
           }
@@ -206,9 +204,21 @@ module.exports = {
           var local_demands = Object.keys(local_value);
 
           for (var i = 0; i < local_demands.length; i++) {
-            if (local_value[local_demands[i]].annex_all) {
-              //var local_provinces =
-            }
+            if (local_value[local_demands[i]].annex_all)
+              for (var x = 0; x < local_value[local_demands[i]].length; x++)
+                inherit(local_value[local_demands[i]][x], local_demands[i]);
+            if (local_value[local_demands[i]].provinces)
+              for (var x = 0; x < local_value[local_demands[i]].provinces.length; x++) {
+                var is_owned_by_enemy = false;
+                var local_province = main.provinces[local_value[local_demands[i]].provinces[x]];
+
+                //Check if the province is owned by enemy in the same war
+                if (war_obj[opposing_side].includes(local_province.owner))
+                  is_owned_by_enemy = true;
+
+                if (is_owned_by_enemy)
+                  transferProvince(local_province.owner, { target: local_demands[i], province_id: local_province.id });
+              }
           }
 
           break;

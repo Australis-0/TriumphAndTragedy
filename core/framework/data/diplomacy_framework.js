@@ -166,6 +166,7 @@ module.exports = {
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
     var all_users = Object.keys(main.users);
+    var all_wars = Object.keys(main.global.wars);
     var usr = main.users[user_id];
 
     //Iterate over all users, destroying any diplomatic relations that currently exist
@@ -211,6 +212,18 @@ module.exports = {
           local_user.diplomacy.used_diplomatic_slots--;
 
           module.exports.dissolveVassal(all_users[i], actual_id);
+        }
+
+        //Wars
+        for (var i = 0; i < all_wars.length; i++) {
+          var local_war = main.global.wars[all_wars[i]];
+
+          removeElement(local_war.attackers, actual_id);
+          removeElement(local_war.defenders, actual_id);
+
+          //If either attackers or defenders have zero belligerents remaining, archive the war
+          if (local_war.attackers.length == 0 || local_war.defenders.length == 0)
+            archiveWar(local_war.name);
         }
       }
   },
