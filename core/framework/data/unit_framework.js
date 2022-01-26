@@ -11,24 +11,31 @@ module.exports = {
     var unit_obj = module.exports.getUnit(unit_name);
     var usr = main.users[actual_id];
 
+    //Cap off amount so we can't have negative soldiers
+    if (amount >= usr.reserves[raw_unit_name])
+      amount = usr.reserves[raw_unit_name];
+
     if (unit_obj)
-      if (!isNaN(amount))
-        if (usr.reserves[raw_unit_name] >= amount) {
-          //Subtract from current used pop capacities
-          if (unit_obj.manpower_cost) {
-            var all_manpower_costs = Object.keys(unit_obj.manpower_cost);
+      if (!isNaN(amount)) {
+        //Subtract from current used pop capacities
+        if (unit_obj.manpower_cost) {
+          var all_manpower_costs = Object.keys(unit_obj.manpower_cost);
 
-            for (var i = 0; i < all_manpower_costs.length; i++) {
-              usr[`used_${all_manpower_costs[i]}`] -= (unit_obj.manpower_cost[all_manpower_costs[i]]/returnSafeNumber(unit_obj.quantity, 1))*amount;
+          for (var i = 0; i < all_manpower_costs.length; i++) {
+            usr[`used_${all_manpower_costs[i]}`] -= (unit_obj.manpower_cost[all_manpower_costs[i]]/returnSafeNumber(unit_obj.quantity, 1))*amount;
 
-              if (usr[`used_${all_manpower_costs[i]}`] < 0)
-                usr[`used_${all_manpower_costs[i]}`] = 0;
-            }
+            if (usr[`used_${all_manpower_costs[i]}`] < 0)
+              usr[`used_${all_manpower_costs[i]}`] = 0;
           }
-
-          //Remove from reserves
-          usr.reserves[raw_unit_name] -= amount;
         }
+
+        //Remove from reserves
+        usr.reserves[raw_unit_name] -= amount;
+      }
+
+    //Delete unnecessary data
+    if (usr.reserves[raw_unit_name] <= 0)
+      delete usr.reserves[raw_unit_name];
   },
 
   generateColonisationID: function (arg0_user) {

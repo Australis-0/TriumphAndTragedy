@@ -1143,7 +1143,7 @@ module.exports = {
             usr.reserves[raw_unit_name] + amount :
             amount;
 
-          if (army_obj.units[raw_unit_name] == 0)
+          if (army_obj.units[raw_unit_name] <= 0)
             delete army_obj.units[raw_unit_name];
 
           //Recalculate army type
