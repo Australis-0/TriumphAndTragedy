@@ -61,6 +61,29 @@ module.exports = {
     delete war_obj.peace_treaties[actual_id];
   },
 
+  parsePeaceTreatyString: function (arg0_war_obj, arg1_peace_treaty_object) { //[WIP] - Code bulk of function
+    //Convert from parameters
+    var war_obj = arg0_war_obj;
+    var peace_obj = arg1_peace_treaty_object;
+
+    //Declare local instance variables
+    var all_demands = Object.keys(peace_obj.peace_demands);
+    var all_participants = [];
+    var friendly_side = "";
+    var opposing_side = "";
+    var peace_string = [];
+
+    //Fetch friendly side
+    if (war_obj.attackers.includes(peace_obj.id)) {
+      friendly_side = "attackers";
+      opposing_side = "defenders";
+    }
+    if (war_obj.defenders.includes(peace_obj.id)) {
+      friendly_side = "defenders";
+      opposing_side = "attackers";
+    }
+  },
+
   parsePeaceTreaty: function (arg0_war_name, arg1_peace_treaty_object) {
     //Convert from parameters
     var war_name = arg0_war_name.trim().toLowerCase();
