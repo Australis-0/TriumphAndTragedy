@@ -150,14 +150,12 @@ config.alerts.diplomacy = {
   //[WIP] - Rescripting done up to here
   an_offer_to_lay_down_arms: {
     name: "An Offer to Lay Down Arms.",
-    description: "{FROM.name} is offering us peace in exchange for the terms listed below. We have the option to either accept or deny this.",
+    description: "{FROM.name} is offering us peace in exchange for the terms listed below for the **{LOCAL.war_name}**. We have the option to either accept or deny this.\n\n---\n\n{LOCAL.peace_treaty}",
 
     btn_accept_conditional_peace: {
       name: "We accept this offer.",
-      effect: {
-        accept_peace_offer: {
-          target: "LOCAL.peace_treaty_id"
-        }
+      effect: function (options) {
+        parsePeaceTreaty(options.LOCALISATION.war_name, options.LOCALISATION.peace_treaty);
       }
     },
     btn_decline_conditional_peace: {
@@ -183,24 +181,21 @@ config.alerts.diplomacy = {
 
     btn_accept_call_to_arms: {
       name: "Our nation is one of honour!",
-      effect: {
-        join_war: {
-          target: "LOCAL.war_id",
-          side: "LOCAL.friendly_side"
-        }
+      effect: function (options) {
+        joinWar(options.TO, options.LOCAL.friendly_side, options.LOCAL.war_name);
       }
     },
     btn_decline_call_to_arms: {
       name: "We can't afford this war.",
-      effect: {
-        break_alliance: {
-          target: "FROM",
-          add_temporary_modifier: {
-            type: "stability_modifier",
-            value: -0.15,
-            duration: 5
-          }
-        }
+      effect: function (options) {
+        var FROM_USER = main.users[options.FROM];
+        var TO_USER = main.users[options.TO];
+
+        dissolveAlliance(options.TO, options.FROM);
+
+        //Subtract from used_diplomatic_slots
+        FROM_USER.diplomacy.used_diplomatic_slots--;
+        TO_USER.diplomacy.used_diplomatic_slots--;
       }
     }
   },
@@ -229,16 +224,16 @@ config.alerts.diplomacy = {
 
     btn_accept_military_access: {
       name: "Let them march through.",
-      effect: {
-        improve_relations: {
-          target: "FROM",
+      effect: function (options) {
+        modifyRelations(options.TO, {
+          target: options.FROM,
           value: 10
-        },
-        add_temporary_modifier: {
+        });
+        addTemporaryModifier(options.FROM, {
           type: "stability_modifier",
           value: -0.05,
           duration: 10
-        }
+        });
       }
     },
 
@@ -254,16 +249,21 @@ config.alerts.diplomacy = {
     btn_request_support: {
       name: "We need every friend we can get.",
       description: "**{FROM.name}** may join the war.",
-      effect: {
-        every_country: {
-          limit: {
-            is_ally_of: "TO"
-          },
-          send_alert: {
-            target: "FROM",
-            type: "the_promise_we_made"
-          }
-        }
+      effect: function (options) {
+        var TO_USER = main.users[options.TO];
+
+        var all_allies = Object.keys(TO_USER.diplomacy.allies);
+
+        for (var i = 0; i < all_allies.length; i++)
+          sendAlert(all_allies[i], "the_promise_we_made", {
+            TO: all_allies[i],
+            FROM: options.TO,
+
+            LOCAL: {
+              war_name: options.LOCAL.war_name,
+              friendly_side: "defenders"
+            }
+          });
       }
     },
     btn_decline_support: {
@@ -277,12 +277,14 @@ config.alerts.diplomacy = {
 
     btn_accept_anschluss_cb: {
       name: "It was our land anyway,",
-      effect: {
-        add_cb: {
-          target: "FROM",
+      effect: function (options) {
+        var TO_USER = main.users[options.TO];
+
+        TO_USER.diplomacy.casus_belli.push({
+          target: options.FROM,
           type: "anschluss",
           duration: 10
-        }
+        });
       }
     },
     btn_decline_anschluss_cb: {
@@ -296,11 +298,11 @@ config.alerts.diplomacy = {
 
     btn_rival_declared: {
       name: "It's either us or them.",
-      effect: {
-        decrease_relations: {
-          target: "FROM",
-          value: 50
-        }
+      effect: function (options) {
+        modifyRelations(options.TO, {
+          target: options.FROM,
+          value: -50
+        });
       }
     }
   },
@@ -362,32 +364,28 @@ config.alerts.diplomacy = {
 
     btn_accept_vassalisation: {
       name: "This is a diplomatic insult!",
-      effect: {
-        decrease_relations: {
-          target: "FROM",
-          value: 50
-        },
-        FROM: {
-          decrease_relations: {
-            target: "FROM",
-            value: 50
-          }
-        }
+      effect: function (options) {
+        modifyRelations(options.TO, {
+          target: options.FROM,
+          value: -50
+        });
+        modifyRelations(options.FROM, {
+          target: options.TO,
+          value: -50
+        });
       }
     },
     btn_decline_vassalisation: {
       name: "We have no choice but to accept.",
-      effect: {
-        FROM: {
-          add_vassal: {
-            target: "FROM"
-          }
-        },
-        add_temporary_modifier: {
+      effect: function (options) {
+        createVassal(options.FROM, {
+          target: options.TO
+        });
+        addTemporaryModifier(options.FROM, {
           type: "stability_modifier",
           value: -0.15,
           duration: 5
-        }
+        });
       }
     }
   },
@@ -398,27 +396,22 @@ config.alerts.diplomacy = {
 
     btn_accept_call_to_arms: {
       name: "Let the world know we stand by {FROM.name}. Enter the war.",
-      effect: {
-        join_war: {
-          target: "LOCAL.war_id",
-          side: "LOCAL.friendly_side"
-        }
+      effect: function (options) {
+        joinWar(options.TO, options.LOCAL.friendly_side, options.LOCAL.war_name);
       }
     },
     btn_decline_call_to_arms: {
       name: "{FROM.name}!? I've never heard of such a place before!",
-      effect: {
-        FROM: {
-          decrease_relations: {
-            target: "FROM",
-            value: 50
-          }
-        },
-        add_temporary_modifier: {
+      effect: function (options) {
+        modifyRelations(options.FROM, {
+          target: options.TO,
+          value: 50
+        });
+        addTemporaryModifier(options.TO, {
           type: "stability_modifier",
           value: -0.05,
           duration: 5
-        }
+        });
       }
     }
   },

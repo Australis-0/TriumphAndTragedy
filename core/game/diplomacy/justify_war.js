@@ -36,7 +36,7 @@ module.exports = {
                     for (var i = 0; i < usr.diplomacy.casus_belli.length; i++) {
                       var local_cb = usr.diplomacy.casus_belli[i];
 
-                      if (local_cb.type == raw_cb_name)
+                      if (local_cb.target == actual_ot_user_id && local_cb.type == raw_cb_name)
                         has_valid_cb = [true, i];
                     }
 

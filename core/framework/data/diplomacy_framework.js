@@ -133,7 +133,7 @@ module.exports = {
   /*
     createVassal() - Turns the target country into a vassal of another.
     options: {
-      target: "actual_ot_user_id", //Whom should the overlord be?
+      target: "actual_ot_user_id", //Whom should the puppet be?
     }
   */
   createVassal: function (arg0_user, arg1_options) {

@@ -29,10 +29,12 @@ module.exports = {
           var processed_replacement = "";
 
           //Replace scopes
+          local_replacement = local_replacement.replace(`GLOBAL`, `main.global`);
+          local_replacement = local_replacement.replace(`LOCAL`, `options.scopes.LOCAL`);
+
           for (var x = 0; x < all_scopes.length; x++)
             local_replacement = local_replacement.replace(all_scopes[x], `main.users['${options.scopes[all_scopes[x]]}']`);
 
-          local_replacement = local_replacement.replace(`GLOBAL`, `main.global`);
 
           //Evaluate statement, [WIP] - This may pose a security hazard in the future
           processed_replacement = eval(local_replacement);
