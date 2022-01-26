@@ -1115,11 +1115,13 @@ module.exports = {
     var user_id = arg0_user;
     var amount = parseInt(arg1_amount);
     var unit_name = arg2_unit_name.trim().toLowerCase();
-    var army_name = arg3_army_name.trim().toLowerCase();
+    var army_name = arg3_army_name;
 
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
-    var army_obj = module.exports.getArmy(actual_id, army_name);
+    var army_obj = (typeof army_name != "object") ?
+      module.exports.getArmy(actual_id, army_name.trim().toLowerCase()) :
+      army_name;
     var raw_unit_name = getUnit(unit_name, { return_key: true });
     var unit_obj = getUnit(unit_name);
     var usr = main.users[actual_id];
