@@ -269,8 +269,8 @@ module.exports = {
           //Extract value from opposing side
           var total_money = 0;
 
-          for (var i = 0; i < war_obj[opposing_side].length; i++) {
-            var local_user = main.users[war_obj[opposing_side][i]];
+          for (var x = 0; x < war_obj[opposing_side].length; x++) {
+            var local_user = main.users[war_obj[opposing_side][x]];
 
             //Take 15% of their money
             local_user.money -= local_user.money*0.15;
@@ -278,8 +278,8 @@ module.exports = {
           }
 
           //Distribute total_money equally
-          for (var i = 0; i < war_obj[friendly_side].length; i++) {
-            var local_user = main.users[war_obj[friendly_side][i]];
+          for (var x = 0; x < war_obj[friendly_side].length; x++) {
+            var local_user = main.users[war_obj[friendly_side][x]];
 
             local_user.money += Math.ceil(total_money/war_obj[friendly_side].length);
           }
@@ -289,32 +289,32 @@ module.exports = {
           var local_demands = Object.keys(local_value);
 
           //Set government for all local demands
-          for (var i = 0; i < local_demands.length; i++)
-            setGovernment(local_demands[i], local_value[local_demands[i]].type);
+          for (var x = 0; x < local_demands.length; x++)
+            setGovernment(local_demands[x], local_value[local_demands[x]].type);
 
           break;
         case "cut_down_to_size":
           //Cuts down each user to 10% of their military size
-          for (var i = 0; i < local_value.length; i++) {
-            var local_user = main.users[local_value[i]];
+          for (var x = 0; x < local_value.length; x++) {
+            var local_user = main.users[local_value[x]];
             var all_armies = Object.keys(local_user.armies);
             var all_reserve_units = Object.keys(local_user.reserves);
 
             //Disband all troops in reserves first
-            for (var x = 0; x < all_reserve_units.length; x++)
-              disbandUnits(local_value[i], Math.ceil(local_user.reserves[all_reserve_units[x]]*0.9), all_reserve_units[x]);
+            for (var y = 0; y < all_reserve_units.length; y++)
+              disbandUnits(local_value[i], Math.ceil(local_user.reserves[all_reserve_units[y]]*0.9), all_reserve_units[y]);
 
-            for (var x = 0; x < all_armies.length; x++) {
-              var local_army = local_user.armies[all_armies[x]];
+            for (var y = 0; y < all_armies.length; y++) {
+              var local_army = local_user.armies[all_armies[y]];
               var all_units = Object.keys(local_army.units);
 
 
               //Relieve, then disband
-              for (var y = 0; y < all_units.length; y++) {
-                var amount = Math.ceil(local_army.units[all_units[y]]*0.9);
+              for (var z = 0; z < all_units.length; z++) {
+                var amount = Math.ceil(local_army.units[all_units[z]]*0.9);
 
-                relieveUnits(local_value[i], amount, all_units[y], local_army);
-                disbandUnits(local_value[i], amount, all_units[y]);
+                relieveUnits(local_value[i], amount, all_units[z], local_army);
+                disbandUnits(local_value[i], amount, all_units[z]);
               }
             }
           }
@@ -332,9 +332,9 @@ module.exports = {
         case "puppet":
           var local_demands = Object.keys(local_value);
 
-          for (var i = 0; i < local_demands.length; i++) {
-            var local_user = main.users[local_demands[i]];
-            var overlord_id = local_value[local_demands[i]].overlord;
+          for (var x = 0; x < local_demands.length; x++) {
+            var local_user = main.users[local_demands[x]];
+            var overlord_id = local_value[local_demands[x]].overlord;
             var overlord_obj = main.users[overlord_id];
 
             createVassal(local_demands[i], { target: overlord_id });
@@ -343,18 +343,18 @@ module.exports = {
 
           break;
         case "retake_cores":
-          for (var i = 0; i < local_value.length; i++) {
-            var local_user = main.users[local_value[i]];
+          for (var x = 0; x < local_value.length; x++) {
+            var local_user = main.users[local_value[x]];
 
             //Go through all provinces on opposing side, and if the primary culutre of that province is the primary culture of local_user, set its controller and owner to them
-            for (var x = 0; x < war_obj[opposing_side].length; x++) {
-              var local_provinces = getProvinces(war_obj[opposing_side], { include_hostile_occupations: true });
+            for (var y = 0; y < war_obj[opposing_side].length; y++) {
+              var local_provinces = getProvinces(war_obj[opposing_side][y], { include_hostile_occupations: true });
 
-              for (var y = 0; y < local_provinces.length; y++) {
-                var culture_obj = getCulture(local_provinces[y].culture);
+              for (var z = 0; z < local_provinces.length; z++) {
+                var culture_obj = getCulture(local_provinces[z].culture);
 
                 if (culture_obj.primary_culture.includes(local_value[i]))
-                  transferProvince(local_provinces[y].owner, { target: local_value[i], province_id: local_provinces[y].id });
+                  transferProvince(local_provinces[z].owner, { target: local_value[i], province_id: local_provinces[z].id });
               }
             }
           }
@@ -363,21 +363,21 @@ module.exports = {
         case "annexation":
           var local_demands = Object.keys(local_value);
 
-          for (var i = 0; i < local_demands.length; i++) {
-            if (local_value[local_demands[i]].annex_all)
-              for (var x = 0; x < local_value[local_demands[i]].annex_all.length; x++)
-                inherit(local_value[local_demands[i]].annex_all[x], local_demands[i]);
-            if (local_value[local_demands[i]].provinces)
-              for (var x = 0; x < local_value[local_demands[i]].provinces.length; x++) {
+          for (var x = 0; x < local_demands.length; x++) {
+            if (local_value[local_demands[x]].annex_all)
+              for (var y = 0; y < local_value[local_demands[x]].annex_all.length; y++)
+                inherit(local_value[local_demands[x]].annex_all[y], local_demands[x]);
+            if (local_value[local_demands[x]].provinces)
+              for (var y = 0; y < local_value[local_demands[x]].provinces.length; y++) {
                 var is_owned_by_enemy = false;
-                var local_province = main.provinces[local_value[local_demands[i]].provinces[x]];
+                var local_province = main.provinces[local_value[local_demands[x]].provinces[y]];
 
                 //Check if the province is owned by enemy in the same war
                 if (war_obj[opposing_side].includes(local_province.owner))
                   is_owned_by_enemy = true;
 
                 if (is_owned_by_enemy)
-                  transferProvince(local_province.owner, { target: local_demands[i], province_id: local_province.id });
+                  transferProvince(local_province.owner, { target: local_demands[x], province_id: local_province.id });
               }
           }
 
