@@ -58,7 +58,7 @@ module.exports = {
       ]
     },
     function (arg) {
-      if (wargoal_array.includes(arg[0].trim().toLowerCase())) {
+      if (wargoal_array.includes(arg[0].trim().toLowerCase()))
         switch (arg[0].trim().toLowerCase()) {
           //[WIP] - Handle wargoal cases later
           case "status_quo":
@@ -68,42 +68,126 @@ module.exports = {
 
             break;
           case "install_government":
-            visualPrompt(game_obj.id, user_id, {
-              title: `Install Government:`,
-              prompts: [
-                [`Whom would you like to force a change of government for? Please mention one of the following belligerent countries:\n${enemy_countries.join("\n- ")}`, "mention"],
-                [`Which government type would you like to install in place of their current regime?\n\nType **[Back]** to go back to the main Add Wargoal menu.\nType **[View Governments]** for a full list of available governments.`, "string"]
-              ]
-            },
-            function (arg) {
-              var government_type = getGovernment(arg[1].trim().toLowerCase());
-              var has_error = [false, ""]; //[has_error, error_msg];
-
-              
-            },
-            function (arg) {
-              switch (arg) {
-                case "back":
-                  module.exports.initialisePeaceOfferScreen(user_id, peace_obj);
-                  module.exports.initialiseModifyPeaceTreaty(user_id, peace_obj);
-                  return true;
-
-                  break;
-                case "view governments":
-                  createPageMenu(game_obj.middle_embed, {
-                    embed_pages: printGovernmentList(actual_id),
-                    user: game_obj.user
-                  });
-                  return true;
-
-                  break;
-              }
-            });
+            module.exports.initialiseInstallGovernment(user_id, peace_obj);
 
             break;
         }
-      } else {
+      else
+        switch (arg[0].trim().toLowerCase()) {
+          case "back":
+            module.exports.initialisePeaceOfferScreen(user_id, peace_obj);
+            module.exports.initialiseModifyPeaceTreaty(user_id, peace_obj);
 
+            break;
+          default:
+            module.exports.initialiseAddWargoal(user_id, peace_obj);
+
+            break;
+        }
+    });
+  },
+
+  initialiseInstallGovernment: function (arg0_user, arg1_peace_treaty_object) {
+    //Convert from parameters
+    var user_id = arg0_user;
+    var peace_obj = arg1_peace_treaty_object;
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var enemy_side = "";
+    var friendly_side = "";
+    var game_obj = getGameObject(user_id);
+    var usr = main.users[actual_id];
+    var war_obj = main.global.wars[peace_obj.war_id];
+
+    //Fetch friendly_side and enemy_side
+    if (war_obj.attackers.includes(actual_id)) {
+      friendly_side = "attackers";
+      enemy_side = "defenders";
+    }
+    if (war_obj.defenders.includes(actual_id)) {
+      friendly_side = "defenders";
+      enemy_side = "attackers";
+    }
+
+    //Send visual prompt
+    visualPrompt(game_obj.id, user_id, {
+      title: `Install Government:`,
+      prompts: [
+        [`Whom would you like to force a change of government for? Please mention one of the following belligerent countries:\n${enemy_countries.join("\n- ")}`, "mention"],
+        [`Which government type would you like to install in place of their current regime?\n\nType **[Back]** to go back to the main Add Wargoal menu.\nType **[View Governments]** for a full list of available governments.`, "string"]
+      ]
+    },
+    function (arg) {
+      var government_type = getGovernment(arg[1].trim().toLowerCase());
+      var has_error = [false, ""]; //[has_error, error_msg];
+      var raw_government_type = getGovernment(arg[1].trim().toLowerCase(), { return_key: true });
+
+      if (government_type) {
+        if (main.users[arg[0]]) {
+          var local_user = main.users[arg[0]];
+
+          if (war_obj[enemy_side].includes(arg[0])) {
+            if (!government_type.is_anarchy) {
+              if (usr.available_governments.includes(raw_government_type)) {
+                if (!peace_obj.demands.install_government)
+                  peace_obj.demands.install_government = {};
+
+                //Set new regime change
+                peace_obj.demands.install_government[arg[0]] = {
+                  id: arg[0],
+                  type: raw_government_type;
+                };
+
+                //Print user feedback
+                printAlert(game_obj.id, `${config.icons.checkmark} You have succcessfully demanded that **${local_user.name}** change their government type to **${(government_type.name) ? government_type.name : arg[1]}**.`);
+
+                //Go back to the starting wargoal menu after one second
+                setTimeout(function(){
+                  module.exports.initialiseAddWargoal(user_id, peace_obj);
+                }, 1000);
+              } else {
+                has_error = [true, `Your people have never even heard of the concept of **${(government_type.name) ? government_type.name : raw_government_type}** yet, let alone installing it in foreign countries!`];
+              }
+            } else {
+              has_error = [true, `You cannot install anarchy in a foreign country!`];
+            }
+          } else {
+            has_error = [true, `You are not currently at war with **${local_user.name}** in this conflict! Please check for a list of valid belligerents`];
+          }
+        } else {
+          has_error = [true, `The country you are attempting to force a regime change in doesn't even exist!`];
+        }
+      } else {
+        has_error = [true, `The government type you have specified does not exist! Please check your **[View Governments]** list for a full list of valid governments to install.`];
+      }
+
+      //Error handling
+      if (has_error[0]) {
+        printError(game_obj.id, has_error[1]);
+
+        //Wait 3 seconds before reinitialising prompt
+        setTimeout(function(){
+          module.exports.initialiseInstallGovernment(user_id, peace_obj);
+        }, 3000);
+      }
+    },
+    function (arg) {
+      switch (arg) {
+        case "back":
+          module.exports.initialisePeaceOfferScreen(user_id, peace_obj);
+          module.exports.initialiseModifyPeaceTreaty(user_id, peace_obj);
+          return true;
+
+          break;
+        case "view governments":
+          createPageMenu(game_obj.middle_embed, {
+            embed_pages: printGovernmentList(actual_id),
+            user: game_obj.user
+          });
+          return true;
+
+          break;
       }
     });
   },
