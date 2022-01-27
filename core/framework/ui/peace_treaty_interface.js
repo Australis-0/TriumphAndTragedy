@@ -1,5 +1,5 @@
 module.exports = {
-  //closePeaceTreaty() - Closes the peace treaty UI and unloads the cached map
+  //[WIP] - closePeaceTreaty() - Closes the peace treaty UI and unloads the cached map
   closePeaceTreaty: function (arg0_user) {
 
   },
