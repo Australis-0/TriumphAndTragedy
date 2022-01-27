@@ -1,13 +1,29 @@
 module.exports = {
-  //[WIP] - closePeaceTreaty() - Closes the peace treaty UI and unloads the cached map
+  //closePeaceTreaty() - Closes the peace treaty UI and unloads the cached map
   closePeaceTreaty: function (arg0_user) {
+    //Convert from parameters
+    var user_id = arg0_user;
 
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var game_obj = getGameObject(user_id);
+
+    //Close UI
+    removeControlPanel(game_obj.id);
+    printStats(user_id);
+    game_obj.page = "country_interface";
+
+    //Delete map file
+    try {
+      fs.unlinkSync(`./map/${actual_id}_peace_treaty`);
+    } catch {}
   },
 
-  initialiseModifyPeaceTreaty: function (arg0_user, arg1_peace_treaty_object) { //[WIP] - Code bulk of function; move createPageMenu() section up here
+  initialiseModifyPeaceTreaty: function (arg0_user, arg1_peace_treaty_object, arg2_tooltip) { //[WIP] - Code bulk of function; move createPageMenu() section up here
     //Convert from parameters
     var user_id = arg0_user;
     var peace_obj = arg1_peace_treaty_object;
+    var tooltip = (arg2_tooltip) ? arg2_tooltip : "";
 
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
@@ -40,7 +56,7 @@ module.exports = {
             ]
           },
           function (arg) {
-            
+
           });
 
           break;
@@ -49,6 +65,32 @@ module.exports = {
 
           break;
       }
+    });
+  },
+
+  initialisePeaceOfferScreen: function (arg0_user, arg1_peace_treaty_object) {
+    //Convert from parameters
+    var user_id = arg0_user;
+    var peace_obj = arg1_peace_treaty_object;
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var game_obj = getGameObject(user_id);
+    var war_obj = main.global.wars[peace_obj.war_id];
+
+    //Initialise page menu showing peace treaty effects
+    createPageMenu(game_obj.bottom_embed, {
+      embed_pages: splitEmbed(parsePeaceTreatyString(war_obj, peace_obj), {
+        title: `[Back] ¦ Editing Peace Offer For **${war_obj.name}**:`,
+        description: [
+          `---`,
+          "",
+          `**[Add Wargoal]** ¦ **[Remove Wargoal]**`
+        ].join("\n"),
+        title_pages: true,
+        fixed_width: true
+      }),
+      user: user_id
     });
   },
 
@@ -119,34 +161,6 @@ module.exports = {
 
     //Visual interface using visualPrompt() before creating a page menu
     module.exports.initialiseModifyPeaceTreaty(user_id);
-
-    //Create page menu to view the current peace treaty, add [Add Wargoal] and [Remove Wargoal] buttons to description field
-    createPageMenu(game_obj.bottom_embed, {
-      embed_pages: splitEmbed(parsePeaceTreatyString(war_obj, peace_obj), {
-        title: `[Back] ¦ Editing Peace Offer For **${war_obj.name}**:`,
-        description: [
-          `---`,
-          "",
-          `**[Add Wargoal]** ¦ **[Remove Wargoal]**`
-        ].join("\n"),
-        title_pages: true,
-        fixed_width: true
-      }),
-      user: user_id
-    });
-
-    //Visual interface using visualPrompt()
-    /*visualPrompt(game_obj.id, user_id, {
-      title: `Editing Peace Offer for **${war_obj.name}**:`,
-      prompts: [
-        [
-          [
-            `---`,
-            ``,
-            `**[Add Wargoal]** ¦ **[Remove Wargoal]**`
-          ].join("\n"), "string"
-        ]
-      ]
-    });*/
+    module.exports.initialisePeaceOfferScreen(user_id);
   }
 };
