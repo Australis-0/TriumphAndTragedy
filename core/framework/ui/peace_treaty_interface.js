@@ -13,7 +13,7 @@ module.exports = {
     //Convert from parameters
     var user_id = arg0_user;
     var war_name = arg1_war_name.trim().toLowerCase();
-    var peace_treaty_obj = arg2_peace_treaty_object;
+    var peace_obj = arg2_peace_treaty_object;
 
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
@@ -38,11 +38,31 @@ module.exports = {
 
       for (var x = 0; x < local_provinces.length; x++) {
         //Check if province will be annexed (either by retaking cores, or by outright annexation)
+        var new_colour = local_user.colour;
+        var new_owner = hasProvinceOwnerChange(local_provinces[x].id, peace_obj);
 
         //Check if province owner is proposed for vassalisation
+        if (peace_obj.puppet) {
+          var all_demands = Object.keys(peace_obj.puppet);
+
+          for (var y = 0; y < all_demands.length; y++)
+            if (all_demands[y] == local_provinces[x].owner) {
+              var overlord_obj = main.users[peace_obj.puppet[all_demands[y]].overlord];
+
+              new_colour = [
+                Math.max(overlord_obj.colour[0] - 20, 0),
+                Math.max(overlord_obj.colour[1] - 20, 0),
+                Math.max(overlord_obj.colour[2] - 20, 0),
+              ];
+            }
+        }
+
+        //Check for annexation
+        if (new_owner != local_provinces[x].owner)
+          new_colour = main.users[new_owner].colour;
 
         //Shade in province
-        setProvinceColour(map_file, local_provinces[x], local_user.colour);
+        setProvinceColour(map_file, local_provinces[x].id, new_colour);
       }
     }
 
