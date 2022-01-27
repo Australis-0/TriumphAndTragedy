@@ -1,9 +1,39 @@
 //Initialise map viewer framework
 module.exports = {
-  initialiseMapViewer: function (arg0_game_id) {
+  changeImage: function (arg0_game_id, arg1_map) {
+    //Convert from parameters
+    var game_id = arg0_game_id;
+    var map_file = arg1_map;
+
+    //Declare local instance variables
+    var game_obj = interfaces[game_id];
+    var map_obj = game_obj.map;
+
+    if (map_obj) {
+      //Cache SVG first
+      cacheSVG(map_file);
+
+      returnCacheChannel().send({
+        content: `${generateRandomID()}_${game_id}`,
+        files: [`./map/cache/${map_obj.mapmode}.jpg`]
+      }).then((message) => {
+        var Attachment = Array.from(message.attachments);
+
+        Attachment.forEach(function(attachment) {
+          map_obj.original_img = attachment[1].url;
+
+          //Reload map
+          reloadMap(game_id, true);
+        });
+      })
+    }
+  },
+
+  initialiseMapViewer: function (arg0_game_id, arg1_map) {
     //Convert from parameters
     var game_id = arg0_game_id;
     var game_obj = interfaces[game_id];
+    var map = (arg1_map) ? arg1_map : "political";
 
     //Initialise map data and object
     var map_obj = game_obj.map;
@@ -30,7 +60,7 @@ module.exports = {
     map_obj.decrease_pan_speed = false;
 
     //Initialise tracker variables
-    map_obj.mapmode = "political";
+    map_obj.mapmode = map;
     map_obj.original_img = "";
     map_obj.speed = 1000;
     map_obj.x = 0;
@@ -41,7 +71,7 @@ module.exports = {
     initialiseControlPanel(game_id, "map");
 
     //Initialise map and upload it to a separate cache channel
-    cacheSVG("political");
+    cacheSVG(map_obj.mapmode);
 
     //setTimeout() just for safety
     setTimeout(function(){
