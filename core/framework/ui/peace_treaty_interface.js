@@ -69,7 +69,20 @@ module.exports = {
     //Initialise map viewer
     initialiseMapViewer(game_obj.id, map_file);
 
-    //Visual interface using visualPrompt()
+    //Create page menu to view the current peace treaty, add [Add Wargoal] and [Remove Wargoal] buttons to description field
 
+    //Visual interface using visualPrompt()
+    /*visualPrompt(game_obj.id, user_id, {
+      title: `Editing Peace Offer for **${war_obj.name}**:`,
+      prompts: [
+        [
+          [
+            `---`,
+            ``,
+            `**[Add Wargoal]** ¦ **[Remove Wargoal]**`
+          ].join("\n"), "string"
+        ]
+      ]
+    });*/
   }
 };
