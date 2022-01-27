@@ -4,6 +4,50 @@ module.exports = {
 
   },
 
+  initialiseModifyPeaceTreaty: function (arg0_user, arg1_peace_treaty_object) { //[WIP] - Code bulk of function; move createPageMenu() section up here
+    //Convert from parameters
+    var user_id = arg0_user;
+    var peace_obj = arg1_peace_treaty_object;
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var game_obj = getGameObject(user_id);
+    var usr = main.users[actual_id];
+    var war_obj = main.global.wars[peace_obj.war_id];
+
+    //Create invisible visualPrompt()
+    visualPrompt(game_obj.id, user_id, {
+      title: `Editing Peace Offer for **${war_obj.name}**:`,
+      do_not_display: true,
+
+      prompts: [
+        [`Which of the above actions would you like to take?`, "string"]
+      ]
+    },
+    function (arg) {
+      switch (arg[0]) {
+        case "add wargoal":
+          //Fetch a list of all available wargoals
+
+
+          //Bring up a dynamic wargoal handler
+          visualPrompt(game_obj.id, user_id, {
+            title: `Add Wargoal To Peace Treaty:`,
+
+            prompts: [
+              [`Which wargoal would you like to add to this peace treaty?`, "string"]
+            ]
+          });
+
+          break;
+        case "back":
+          module.exports.closePeaceTreaty(user_id);
+
+          break;
+      }
+    });
+  },
+
   /*
     [WIP] - modifyPeaceTreaty() - Opens up the map in a separate mapmode for showing annexed provinces, with an in-depth province selector
 
@@ -69,7 +113,23 @@ module.exports = {
     //Initialise map viewer
     initialiseMapViewer(game_obj.id, map_file);
 
+    //Visual interface using visualPrompt() before creating a page menu
+    module.exports.initialiseModifyPeaceTreaty(user_id);
+
     //Create page menu to view the current peace treaty, add [Add Wargoal] and [Remove Wargoal] buttons to description field
+    createPageMenu(game_obj.bottom_embed, {
+      embed_pages: splitEmbed(parsePeaceTreatyString(war_obj, peace_obj), {
+        title: `[Back] ¦ Editing Peace Offer For **${war_obj.name}**:`,
+        description: [
+          `---`,
+          "",
+          `**[Add Wargoal]** ¦ **[Remove Wargoal]**`
+        ].join("\n"),
+        title_pages: true,
+        fixed_width: true
+      }),
+      user: user_id
+    });
 
     //Visual interface using visualPrompt()
     /*visualPrompt(game_obj.id, user_id, {

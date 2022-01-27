@@ -246,20 +246,21 @@ module.exports = {
     visual_prompt.show_steps = (options.show_steps == false) ? false : true;
 
     //Update visual prompt message
-    message_obj.edit({
-      embeds: [
-        updateVisualPrompt({
-          title: options.title,
-          answers: [],
-          prompts: options.prompts,
-          satisfies_requirements: [true, ""],
-          show_steps: visual_prompt.show_steps,
+    if (!options.do_not_display)
+      message_obj.edit({
+        embeds: [
+          updateVisualPrompt({
+            title: options.title,
+            answers: [],
+            prompts: options.prompts,
+            satisfies_requirements: [true, ""],
+            show_steps: visual_prompt.show_steps,
 
-          colour: options.colour,
-          description: options.description,
-          image: options.image
-        })
-      ]
-    });
+            colour: options.colour,
+            description: options.description,
+            image: options.image
+          })
+        ]
+      });
   }
 };
