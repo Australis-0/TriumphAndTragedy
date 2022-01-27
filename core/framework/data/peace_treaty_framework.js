@@ -42,6 +42,8 @@ module.exports = {
     if (!war_obj.peace_treaties[actual_id]) {
       var peace_treaty_obj = {
         id: actual_id,
+        war_id: war_obj.id,
+
         peace_demands: {}
       };
 
@@ -60,6 +62,60 @@ module.exports = {
 
     //Delete peace treaty object
     delete war_obj.peace_treaties[actual_id];
+  },
+
+  hasProvinceOwnerChange: function (arg0_province_id, arg1_peace_treaty_object) {
+    //Convert from parameters
+    var province_id = arg0_province_id;
+    var peace_obj = arg1_peace_treaty_object;
+
+    //Declare local instance variables
+    var all_demands = Object.keys(peace_obj.demands);
+    var friendly_side = "";
+    var new_owner;
+    var opposing_side = "";
+    var province_obj = main.provinces[province_id];
+    var war_obj = main.global.wars[peace_obj.war_id];
+
+    //Fetch friendly side
+    if (war_obj.attackers.includes(peace_obj.id)) {
+      friendly_side = "attackers";
+      opposing_side = "defenders";
+    }
+    if (war_obj.defenders.includes(peace_obj.id)) {
+      friendly_side = "defenders";
+      opposing_side = "attackers";
+    }
+
+    //Cycle through all demands; only retake_cores and annexation can actually change the owner currently
+    for (var i = 0; i < all_demands.length; i++) {
+      var local_value = peace_obj.demands[all_peace[i]];
+
+      switch (all_demands[i]) {
+        case "retake_cores":
+          for (var x = 0; x < war_obj[opposing_side].length; x++) {
+            var culture_obj = getCulture(province_obj.culture);
+
+            if (culture_obj.primary_culture.includes(local_value[i]))
+              new_owner = local_value[i];
+          }
+
+          break;
+        case "annexation":
+          var local_demands = Object.keys(local_value);
+
+          for (var x = 0; x < local_demands.length; x++) {
+            if (local_value[local_demands[i]].annex_all)
+              if (local_value[local_demands[i]].annex_all.includes(province_obj.owner))
+                new_owner = local_value[local_demands[i]].id;
+            if (local_value[local_demands[i]].provinces.includes(province_obj.id));
+              new_owner = local_value[local_demands[i]].id;
+          }
+      }
+    }
+
+    //Return statement
+    return new_owner;
   },
 
   parsePeaceTreatyString: function (arg0_war_obj, arg1_peace_treaty_object) {
@@ -295,7 +351,7 @@ module.exports = {
               var local_provinces = getProvinces(war_obj[opposing_side], { include_hostile_occupations: true });
 
               for (var y = 0; y < local_provinces.length; y++) {
-                var culture_obj = getCulture(local_provinces[y]);
+                var culture_obj = getCulture(local_provinces[y].culture);
 
                 if (culture_obj.primary_culture.includes(local_value[i]))
                   transferProvince(local_provinces[y].owner, { target: local_value[i], province_id: local_provinces[y].id });
@@ -309,8 +365,8 @@ module.exports = {
 
           for (var i = 0; i < local_demands.length; i++) {
             if (local_value[local_demands[i]].annex_all)
-              for (var x = 0; x < local_value[local_demands[i]].length; x++)
-                inherit(local_value[local_demands[i]][x], local_demands[i]);
+              for (var x = 0; x < local_value[local_demands[i]].annex_all.length; x++)
+                inherit(local_value[local_demands[i]].annex_all[x], local_demands[i]);
             if (local_value[local_demands[i]].provinces)
               for (var x = 0; x < local_value[local_demands[i]].provinces.length; x++) {
                 var is_owned_by_enemy = false;

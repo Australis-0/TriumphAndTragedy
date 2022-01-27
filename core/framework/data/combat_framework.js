@@ -395,17 +395,17 @@ module.exports = {
 
             if (attacker_stackwiped) {
               result_string.push(`${config.icons.retreat} Due to being understrength, the attacking side was completely routed from the battlefield and massacred.`);
-              result_string.push(`${config.icons.prestige} **${getPrimaryCultures(actual_ot_user_id, { return_objects: true }).adjective} Victory**`);
+              result_string.push(`${config.icons.prestige} **${getPrimaryCultures(actual_ot_user_id, { return_objects: true })[0].adjective} Victory**`);
             } else if (defender_stackwiped) {
               result_string.push(`${config.icons.retreat} Due to being understrength, the defending side was completely routed from the battlefield and massacred.`);
-              result_string.push(`${config.icons.prestige} **${getPrimaryCultures(actual_id, { return_objects: true }).adjective} Victory**`);
+              result_string.push(`${config.icons.prestige} **${getPrimaryCultures(actual_id, { return_objects: true })[0].adjective} Victory**`);
             } else {
               if (defender_retreat) {
                 result_string.push(`${config.icons.retreat} Due to heavy losses, the defending side was forced to retreat from the battlefield.`);
-                result_string.push(`${config.icons.prestige} **${getPrimaryCultures(actual_id, { return_objects: true }).adjective} Victory**`);
+                result_string.push(`${config.icons.prestige} **${getPrimaryCultures(actual_id, { return_objects: true })[0].adjective} Victory**`);
               } else if (attacker_retreat) {
                 result_string.push(`${config.icons.retreat} Due to heavy losses, the attacking side was forced to retreat from the battlefield.`);
-                result_string.push(`${config.icons.prestige} **${getPrimaryCultures(actual_ot_user_id, { return_objects: true }).adjective} Victory**`);
+                result_string.push(`${config.icons.prestige} **${getPrimaryCultures(actual_ot_user_id, { return_objects: true })[0].adjective} Victory**`);
               } else {
                 result_string.push(`${config.icons.small_arms} Neither side was forced to retreat from the battle, and the fighting rages on!`);
                 result_string.push(`${config.icons.prestige} **Stalemate**`);
@@ -770,7 +770,7 @@ module.exports = {
                     var submarine_result_embed = new Discord.MessageEmbed()
                       .setColor(settings.bot_colour)
                       .setTitle(`Trade Interdiction - Submarine Report #${generateRandomID()}`)
-                      .setDescription(`**${getPrimaryCultures(actual_id)[0].name}** submarines intercepted a shipment of ${parseInt(local_export.amount)} ${(local_export_good.name) ? local_export_good.name : local_export.good_type} to **${main.users[local_export_good.target].name}** at the cost of **${parseNumber(total_submarines_lost)}** of their own.`);
+                      .setDescription(`**${getPrimaryCultures(actual_id, { return_objects: true })[0].name}** submarines intercepted a shipment of ${parseInt(local_export.amount)} ${(local_export_good.name) ? local_export_good.name : local_export.good_type} to **${main.users[local_export_good.target].name}** at the cost of **${parseNumber(total_submarines_lost)}** of their own.`);
 
                     //Send battle_embed to both users as an embed alert
                     sendEmbedAlert(actual_id, submarine_result_embed);

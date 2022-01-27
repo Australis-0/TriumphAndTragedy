@@ -8,7 +8,7 @@ module.exports = {
     var actual_id = main.global.user_map[user_id];
     var all_cultures = Object.keys(main.global.cultures);
     var duplicate_name = false;
-    var culture_obj = getPrimaryCultures(actual_id)[0];
+    var culture_obj = getPrimaryCultures(actual_id, { return_objects: true })[0];
     var game_obj = getGameObject(user_id);
     var usr = main.users[actual_id];
 
@@ -46,7 +46,7 @@ module.exports = {
 
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
-    var culture_obj = getPrimaryCultures(actual_id)[0];
+    var culture_obj = getPrimaryCultures(actual_id, { return_objects: true })[0];
     var game_obj = getGameObject(user_id);
 
     //Initialise visual prompt
