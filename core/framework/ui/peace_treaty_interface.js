@@ -19,6 +19,95 @@ module.exports = {
     } catch {}
   },
 
+  initialiseAddWargoal: function (arg0_user, arg1_peace_treaty_object) {
+    //Convert from parameters
+    var user_id = arg0_user;
+    var peace_obj = arg1_peace_treaty_object;
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var enemy_countries = [];
+    var enemy_side = "";
+    var friendly_side = "";
+    var game_obj = getGameObject(user_id);
+    var war_obj = main.global.wars[peace_obj.war_id];
+
+    //Fetch a list of all enemies
+    if (war_obj.attackers.includes(actual_id)) {
+      friendly_side = "attackers";
+      enemy_side = "defenders";
+    }
+    if (war_obj.defenders.includes(actual_id)) {
+      friendly_side = "defenders";
+      enemy_side = "attackers";
+    }
+
+    //Add all enemy countries to display
+    for (var i = 0; i < war_obj[enemy_side].length; i++)
+      enemy_countries.push(`**${main.users[war_obj[enemy_side][i]].name}**`);
+
+    //Fetch a list of all available wargoals
+    for (var i = 0; i < war_obj.wargoals.length; i++)
+      wargoal_array.push(`${(war_obj.wargoals.length - 1 == i) ? "or "}**${(config.localisation[war_obj.wargoals[i]]) ? config.localisation[war_obj.wargoals[i]] : war_obj.wargoals[i]}**`);
+
+    //Initialise visual prompt
+    visualPrompt(game_obj.id, user_id, {
+      title: `Add Wargoal To Peace Treaty:`,
+      prompts: [
+        [`Which wargoal would you like to add to this peace treaty?\n\nPlease type either ${wargoal_array.join(", ")}.`, "string"]
+      ]
+    },
+    function (arg) {
+      if (wargoal_array.includes(arg[0].trim().toLowerCase())) {
+        switch (arg[0].trim().toLowerCase()) {
+          //[WIP] - Handle wargoal cases later
+          case "status_quo":
+            peace_obj.demands.status_quo = true;
+            module.exports.initialisePeaceOfferScreen(user_id, peace_obj);
+            module.exports.initialiseModifyPeaceTreaty(user_id, peace_obj);
+
+            break;
+          case "install_government":
+            visualPrompt(game_obj.id, user_id, {
+              title: `Install Government:`,
+              prompts: [
+                [`Whom would you like to force a change of government for? Please mention one of the following belligerent countries:\n${enemy_countries.join("\n- ")}`, "mention"],
+                [`Which government type would you like to install in place of their current regime?\n\nType **[Back]** to go back to the main Add Wargoal menu.\nType **[View Governments]** for a full list of available governments.`, "string"]
+              ]
+            },
+            function (arg) {
+              var government_type = getGovernment(arg[1].trim().toLowerCase());
+              var has_error = [false, ""]; //[has_error, error_msg];
+
+              
+            },
+            function (arg) {
+              switch (arg) {
+                case "back":
+                  module.exports.initialisePeaceOfferScreen(user_id, peace_obj);
+                  module.exports.initialiseModifyPeaceTreaty(user_id, peace_obj);
+                  return true;
+
+                  break;
+                case "view governments":
+                  createPageMenu(game_obj.middle_embed, {
+                    embed_pages: printGovernmentList(actual_id),
+                    user: game_obj.user
+                  });
+                  return true;
+
+                  break;
+              }
+            });
+
+            break;
+        }
+      } else {
+
+      }
+    });
+  },
+
   initialiseModifyPeaceTreaty: function (arg0_user, arg1_peace_treaty_object, arg2_tooltip) { //[WIP] - Code bulk of function; move createPageMenu() section up here
     //Convert from parameters
     var user_id = arg0_user;
@@ -44,20 +133,9 @@ module.exports = {
     function (arg) {
       switch (arg[0]) {
         case "add wargoal":
-          //Fetch a list of all available wargoals
-          for (var i = 0; i < war_obj.wargoals.length; i++)
-            wargoal_array.push(`${(war_obj.wargoals.length - 1 == i) ? "or "}**${(config.localisation[war_obj.wargoals[i]]) ? config.localisation[war_obj.wargoals[i]] : war_obj.wargoals[i]}**`);
 
           //Bring up a dynamic wargoal handler
-          visualPrompt(game_obj.id, user_id, {
-            title: `Add Wargoal To Peace Treaty:`,
-            prompts: [
-              [`Which wargoal would you like to add to this peace treaty?\n\nPlease type either ${wargoal_array.join(", ")}.`, "string"]
-            ]
-          },
-          function (arg) {
 
-          });
 
           break;
         case "back":
