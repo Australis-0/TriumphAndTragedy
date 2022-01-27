@@ -14,6 +14,7 @@ module.exports = {
     var game_obj = getGameObject(user_id);
     var usr = main.users[actual_id];
     var war_obj = main.global.wars[peace_obj.war_id];
+    var wargoal_array = [];
 
     //Create invisible visualPrompt()
     visualPrompt(game_obj.id, user_id, {
@@ -28,15 +29,18 @@ module.exports = {
       switch (arg[0]) {
         case "add wargoal":
           //Fetch a list of all available wargoals
-
+          for (var i = 0; i < war_obj.wargoals.length; i++)
+            wargoal_array.push(`${(war_obj.wargoals.length - 1 == i) ? "or "}**${(config.localisation[war_obj.wargoals[i]]) ? config.localisation[war_obj.wargoals[i]] : war_obj.wargoals[i]}**`);
 
           //Bring up a dynamic wargoal handler
           visualPrompt(game_obj.id, user_id, {
             title: `Add Wargoal To Peace Treaty:`,
-
             prompts: [
-              [`Which wargoal would you like to add to this peace treaty?`, "string"]
+              [`Which wargoal would you like to add to this peace treaty?\n\nPlease type either ${wargoal_array.join(", ")}.`, "string"]
             ]
+          },
+          function (arg) {
+            
           });
 
           break;
