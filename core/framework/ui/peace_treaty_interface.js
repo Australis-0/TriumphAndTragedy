@@ -29,6 +29,7 @@ module.exports = {
     var enemy_countries = [];
     var enemy_side = "";
     var friendly_side = "";
+    var has_error = [false, ""]; //[has_error, error_msg];
     var game_obj = getGameObject(user_id);
     var war_obj = main.global.wars[peace_obj.war_id];
 
@@ -100,6 +101,207 @@ module.exports = {
 
             break;
         }
+    });
+  },
+
+  initialiseAnnexAll: function (arg0_user, arg1_peace_treaty_object, arg2_owner_id) {
+    //Convert from parameters
+    var user_id = arg0_user;
+    var peace_obj = arg1_peace_treaty_object;
+    var owner = arg2_owner_id;
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var enemy_countries = [];
+    var enemy_side = "";
+    var friendly_side = "";
+    var game_obj = getGameObject(user_id);
+    var war_obj = main.global.wars[peace_obj.war_id];
+
+    //Determine enemy_side and friendly_side
+    if (war_obj.attackers.includes(actual_id)) {
+      friendly_side = "attackers";
+      enemy_side = "defenders";
+    }
+    if (war_obj.defenders.includes(actual_id)) {
+      friendly_side = "defenders";
+      enemy_side = "attackers";
+    }
+
+    //Add all enemy countries to display
+    for (var i = 0; i < war_obj[enemy_side].length; i++)
+      enemy_countries.push(`**${main.users[war_obj[enemy_side][i]].name}**`);
+
+    //Send visual prompt
+    visualPrompt(game_obj.id, user_id, {
+      title: `Full Annexation Request For **${main.users[owner].name}**:`,
+      prompts: [
+        [`Which enemy country in this conflict would you like to be fully annexed by **${main.users[owner].name}**?\n${enemy_countries.join("\n- ")}\n\nType **[Back]** to add a different annexation request.`, "mention"]
+      ]
+    },
+    function (arg) {
+      var has_error = [false, ""]; //[has_error, error_msg];
+
+      //Check to make sure the enemy country exists and is a belligerent
+      if (main.users[arg[0]]) {
+        var local_user = main.users[arg[0]];
+
+        if (war_obj[enemy_side].includes(arg[0])) {
+          if (arg[0] != owner) {
+            //Check to make sure that this country is not already going to be fully annexed by another user
+            if (peace_obj.demands.annexation) {
+              var all_demands = Object.keys(peace_obj.demands.annexation);
+
+              for (var i = 0; i < all_demands.length; i++) {
+                var local_demand = peace_obj.demands.annexation[all_demands[i]];
+
+                if (local_demand.annex_all)
+                  if (local_demand.annex_all.includes(arg[0]))
+                    has_error = [true, `**${local_user.name}** is already proposed to be annexed by **${main.users[local_demand.id].name}**! Consider removing this wargoal first before trying again.`];
+              }
+            }
+
+            if (!has_error[0]) {
+              //Add demand
+              if (peace_obj.demands.annexation)
+                if (peace_obj.demands.annexation[owner])
+                  if (peace_obj.demands.annexation[owner].annex_all)
+                    peace_obj.demands.annexation[owner].annex_all.push(arg[0]);
+                  else
+                    peace_obj.demands.annexation[owner].annex_all = [arg[0]];
+                else
+                  peace_obj.demands.annexation[owner] = {
+                    id: owner,
+                    annex_all: [arg[0]]
+                  };
+
+              //Print user feedback
+              printAlert(game_obj.id, `${config.icons.checkmark} Your peace delegation has successfully motioned for a full annexation of **${local_user.name}** on behalf of **${main.users[owner].name}**.`);
+
+              //Go back to the starting menu after one second
+              setTimeout(function(){
+                module.exports.initialiseAddWargoal(user_id, peace_obj);
+              }, 1000);
+            }
+          } else {
+            has_error = [true, `You cannot make **${local_user.name}** annex themselves!`];
+          }
+        } else {
+          has_error = [true, `**${local_user.name}** is not currently fighting you in this conflict! Are you sure they aren't fighting you in a different conflict you're currently in?`];
+        }
+      } else {
+        has_error = [true, `The country you are trying to fully absorb into another nation doesn't even exist!`];
+      }
+
+      //Error handler
+      if (has_error[0]) {
+        printError(game_obj.id, has_error[1]);
+
+        //Wait 3 seconds before reinitialising prompt
+        setTimeout(function(){
+          module.exports.initialiseAnnexAll(user_id, peace_obj);
+        }, 3000);
+      }
+    },
+    function (arg) {
+      switch (arg) {
+        case "back":
+          module.exports.initialiseAnnexation(user_id, peace_obj);
+          return true;
+
+          break;
+      }
+    });
+  },
+
+  initialiseAnnexation: function (arg0_user, arg1_peace_treaty_object) {
+    //Convert from parameters
+    var user_id = arg0_user;
+    var peace_obj = arg1_peace_treaty_object;
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var enemy_countries = [];
+    var enemy_side = "";
+    var friendly_side = "";
+    var game_obj = getGameObject(user_id);
+    var war_obj = main.global.wars[peace_obj.war_id];
+
+    //Determine enemy_side and friendly_side
+    if (war_obj.attackers.includes(actual_id)) {
+      friendly_side = "attackers";
+      enemy_side = "defenders";
+    }
+    if (war_obj.defenders.includes(actual_id)) {
+      friendly_side = "defenders";
+      enemy_side = "attackers";
+    }
+
+    //Add all enemy countries to display
+    for (var i = 0; i < war_obj[enemy_side].length; i++)
+      enemy_countries.push(`**${main.users[war_obj[enemy_side][i]].name}**`);
+
+    //Send visual prompt
+    visualPrompt(game_obj.id, user_id, {
+      title: `Annexation Request:`,
+      prompts: [
+        [`For which country would you like to motion an annexation request for?\nNote: You can choose any country (even if they are currently at war with you), so long as they are not the same country you are annexing provinces from.\n\nType **[Back]** to add a different wargoal to this peace treaty.`, "mention"],
+        [`What type of request would you like to file? Type either 'full annexation' to demand a full annexation, or 'partial annexation' to annex only some provinces off of this country.\n\nType **[Back]** to add a different wargoal to this peace treaty.`, "string"]
+      ]
+    },
+    function (arg) {
+      var has_error = [false, ""]; //[has_error, error_msg];
+
+      //Check to make sure that the annexing country actually exists
+      if (main.users[arg[0]]) {
+        //Check to make sure that they are filing a valid request
+        switch (arg[1].trim().toLowerCase()) {
+          case "full annexation": //[WIP] - Finish initialiseAnnexAll()
+            //Print user feedback
+            printAlert(game_obj.id, `${config.icons.checkmark} You have successfully filed a motion for the full annexation of a belligerent nation to **${local_user.name}**.`);
+
+            setTimeout(function(){
+              module.exports.initialiseAnnexAll(user_id, peace_obj, arg[0]);
+            }, 1000);
+
+            break;
+          case "partial annexation":
+            //Print user feedback
+            printAlert(game_obj.id, `${config.icons.checkmark} You have successfully filed a motion for the partial annexation of a belligerent nation to **${local_user.name}**.`);
+
+            setTimeout(function(){
+              module.exports.initialiseDemandProvinces(user_id, peace_obj, arg[0]);
+            }, 1000);
+
+            break;
+          default:
+            has_error = [true, `You must file a valid request for either the 'partial annexation' or 'full annexation' of a belligerent user!`];
+
+            break;
+        }
+      } else {
+        has_error = [true, `The country you are trying to file an annexation request for doesn't even exist!`];
+      }
+
+      //Error handler
+      if (has_error[0]) {
+        printError(game_obj.id, has_error[1]);
+
+        //Wait 3 seconds before reinitialising prompt
+        setTimeout(function(){
+          module.exports.initialiseAnnexation(user_id, peace_obj);
+        }, 3000);
+      }
+    },
+    function (arg) {
+      switch (arg) {
+        case "back":
+          module.exports.initialisePeaceOfferScreen(user_id, peace_obj);
+          module.exports.initialiseModifyPeaceTreaty(user_id, peace_obj);
+          return true;
+
+          break;
+      }
     });
   },
 
@@ -224,16 +426,17 @@ module.exports = {
     visualPrompt(game_obj.id, user_id, {
       title: `Demand Provinces:`,
       prompts: [
-        [`Which provinces would you like to demand for this nation?\n\nPlease separate each province with a space like so: '4702 4703 4709'.`, "string"]
+        [`Which provinces would you like to demand for this nation?\nPlease separate each province with a space like so: '4702 4703 4709'.\n\nType **[Back]** to add a different annexation request instead.`, "string"]
       ]
     },
     function (arg) {
       var all_provinces = arg[0].trim().split(" ");
-      var has_error = [] //[error_array]
+      var has_error = []; //[error_array]
       var local_user = main.users[owner];
 
       var neutral_provinces = [];
       var nonexistent_provinces = [];
+      var same_country = [];
 
       //Check to make sure that all provinces exist
       for (var i = 0; i < all_provinces.length; i++)
@@ -245,6 +448,10 @@ module.exports = {
           //Check to see whether the owner of the province is actually a valid enemy
           if (!war_obj[enemy_side].includes(local_province.owner))
             neutral_provinces.push(all_provinces[i]);
+
+          //Check to see if the province is going to the same owner
+          if (local_province.owner == owner)
+            same_country.push(all_provinces[i]);
 
           //Check to see whether the province is already included in an existing annexation demand
           if (peace_obj.demands.annexation) {
@@ -261,14 +468,10 @@ module.exports = {
         }
 
       //If no errors are present, set the object to properly demand all provinces from all_provinces
-      if (has_error.length + neutral_provinces.length + nonexistent_provinces.length == 0)
+      if (has_error.length + neutral_provinces.length + nonexistent_provinces.length + same_country.length == 0)
         if (peace_obj.demands.annexation)
           if (peace_obj.demands.annexation[owner])
-            peace_obj.demands.annexation[owner] = {
-              id: owner,
-              provinces: unique(all_provinces),
-              annex_all: peace_obj.demands.annexation[owner].annex_all
-            };
+            peace_obj.demands.provinces = unique(all_provinces);
           else
             peace_obj.demands.annexation[owner] = {
               id: owner,
@@ -291,13 +494,22 @@ module.exports = {
       }, 1000);
 
       //Error handler
-      if (has_error.length + neutral_provinces.length + nonexistent_provinces.length > 0) {
-        printError(game_obj.id, `Your petition to add an annexation request on the behalf of **${local_user.name}** failed for the following reasons:${has_error.join("\n - ")}${(neutral_provinces.length > 0) ? `\n- The following provinces don't even belong to any enemy belligerents! ${neutral_provinces.join(", ")}` : ``}${(nonexistent_provinces.length > 0) ? `\n- Your cartographers are currently puzzling over your maps, as the following provinces don't even exist! ${nonexistent_provinces.join(", ")}` : ``}`);
+      if (has_error.length + neutral_provinces.length + nonexistent_provinces.length + same_country.length > 0) {
+        printError(game_obj.id, `Your petition to add an annexation request on the behalf of **${local_user.name}** failed for the following reasons:${has_error.join("\n - ")}${(neutral_provinces.length > 0) ? `\n- The following provinces don't even belong to any enemy belligerents! ${neutral_provinces.join(", ")}` : ``}${(nonexistent_provinces.length > 0) ? `\n- Your cartographers are currently puzzling over your maps, as the following provinces don't even exist! ${nonexistent_provinces.join(", ")}` : ``}${(same_country.length > 0) ? `\n- You are currently trying to cede the following provinces to the same country! ${same_country.join(", ")}` : ``}`);
 
         //Wait 3 seconds before reinitialising prompt
         setTimeout(function(){
           module.exports.initialiseDemandProvinces(user_id, peace_obj);
         }, 3000);
+      }
+    },
+    function (arg) {
+      switch (arg) {
+        case "back":
+          module.exports.initialiseAnnexation(user_id, peace_obj);
+          return true;
+
+          break;
       }
     });
   },
