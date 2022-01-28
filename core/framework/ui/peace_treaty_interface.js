@@ -192,6 +192,49 @@ module.exports = {
     });
   },
 
+  initialiseDemandProvinces: function (arg0_user, arg1_peace_treaty_object, arg2_owner_id) { //[WIP] - Code bulk of function
+    //Convert from parameters
+    var user_id = arg0_user;
+    var peace_obj = arg1_peace_treaty_object;
+    var owner = arg2_owner_id;
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var enemy_countries = [];
+    var enemy_side = "";
+    var friendly_side = "";
+    var game_obj = getGameObject(user_id);
+    var war_obj = main.global.wars[peace_obj.war_id];
+
+    //Determine enemy_side and friendly_side
+    if (war_obj.attackers.includes(actual_id)) {
+      friendly_side = "attackers";
+      enemy_side = "defenders";
+    }
+    if (war_obj.defenders.includes(actual_id)) {
+      friendly_side = "defenders";
+      enemy_side = "attackers";
+    }
+
+    //Add all enemy countries to display
+    for (var i = 0; i < war_obj[enemy_side].length; i++)
+      enemy_countries.push(`**${main.users[war_obj[enemy_side][i]].name}**`);
+
+    //Send visualPrompt()
+    visualPrompt(game_obj.id, user_id, {
+      title: `Demand Provinces:`,
+      prompts: [
+        [`Which provinces would you like to demand for this nation?\n\nPlease separate each province with a space like so: '4702 4703 4709'.`, "string"]
+      ]
+    },
+    function (arg) {
+      var has_error = [] //[error_array]
+      var local_user = main.users[owner];
+
+      //Error handling
+    })
+  },
+
   initialiseInstallGovernment: function (arg0_user, arg1_peace_treaty_object) {
     //Convert from parameters
     var user_id = arg0_user;
