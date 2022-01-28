@@ -26,12 +26,14 @@ module.exports = {
 
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
+    var actual_wargoal_array = [];
     var enemy_countries = [];
     var enemy_side = "";
     var friendly_side = "";
     var has_error = [false, ""]; //[has_error, error_msg];
     var game_obj = getGameObject(user_id);
     var war_obj = main.global.wars[peace_obj.war_id];
+    var wargoal_array = [];
 
     //Fetch a list of all enemies
     if (war_obj.attackers.includes(actual_id)) {
@@ -50,17 +52,20 @@ module.exports = {
     //Fetch a list of all available wargoals
     for (var i = 0; i < war_obj.wargoals.length; i++)
       wargoal_array.push(`${(war_obj.wargoals.length - 1 == i) ? "or "}**${(config.localisation[war_obj.wargoals[i]]) ? config.localisation[war_obj.wargoals[i]] : war_obj.wargoals[i]}**`);
+    for (var i = 0; i < war_obj.wargoals.length; i++)
+      actual_wargoal_array.push((config.localisation[war_obj.wargoals[i]]) ? config.localisation[war_obj.wargoals[i]] : war_obj.wargoals[i]})
 
     //Initialise visual prompt
     visualPrompt(game_obj.id, user_id, {
       title: `Add Wargoal To Peace Treaty:`,
       prompts: [
-        [`Which wargoal would you like to add to this peace treaty?\n\nPlease type either ${wargoal_array.join(", ")}.`, "string"]
+        [`Which wargoal would you like to add to this peace treaty?\n\nPlease type either ${wargoal_array.join(", ")}.\n\nTo go back to viewing this peace treaty, type **[Back]**.`, "string"]
       ]
     },
     function (arg) {
-      if (wargoal_array.includes(arg[0].trim().toLowerCase()))
-        switch (arg[0].trim().toLowerCase()) {
+      var current_wargoal = arg[0].trim().toLowerCase();
+      if (actual_wargoal_array.includes(current_wargoal))
+        switch (current_wargoal) {
           //[WIP] - Handle wargoal cases later
           case "status_quo":
             peace_obj.demands.status_quo = true;
@@ -94,14 +99,19 @@ module.exports = {
             break;
         }
       else
-        switch (arg[0].trim().toLowerCase()) {
+        switch (current_wargoal) {
           case "back":
             module.exports.initialisePeaceOfferScreen(user_id, peace_obj);
             module.exports.initialiseModifyPeaceTreaty(user_id, peace_obj);
 
             break;
           default:
-            module.exports.initialiseAddWargoal(user_id, peace_obj);
+            //Print error
+            printError(game_obj.id, `**${current_wargoal}** is not a valid wargoal you can add to this conflict!`);
+
+            setTimeout(function(){
+              module.exports.initialiseAddWargoal(user_id, peace_obj);
+            }, 3000);
 
             break;
         }
