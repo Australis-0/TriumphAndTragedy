@@ -88,6 +88,10 @@ module.exports = {
             module.exports.initialiseRetakeCores(user_id, peace_obj);
 
             break;
+          case "annexation":
+            module.exports.initialiseAnnexation(user_id, peace_obj);
+
+            break;
         }
       else
         switch (arg[0].trim().toLowerCase()) {
