@@ -60,7 +60,8 @@ module.exports = {
       title: `Add Wargoal To Peace Treaty:`,
       prompts: [
         [`Which wargoal would you like to add to this peace treaty?\n\nPlease type either ${wargoal_array.join(", ")}.\n\nTo go back to viewing this peace treaty, type **[Back]**.`, "string"]
-      ]
+      ],
+      do_not_cancel: true
     },
     function (arg) {
       var current_wargoal = arg[0].trim().toLowerCase();
@@ -715,6 +716,7 @@ module.exports = {
     //Create invisible visualPrompt()
     visualPrompt(game_obj.id, user_id, {
       title: `Editing Peace Offer for **${war_obj.name}**:`,
+      do_not_cancel: true,
       do_not_display: true,
 
       prompts: [
