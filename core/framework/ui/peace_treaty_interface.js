@@ -83,6 +83,10 @@ module.exports = {
             module.exports.initialisePuppet(user_id, peace_obj);
 
             break;
+          case "retake_cores":
+            module.exports.initialiseRetakeCores(user_id, peace_obj);
+
+            break;
         }
       else
         switch (arg[0].trim().toLowerCase()) {
@@ -525,6 +529,90 @@ module.exports = {
           break;
       }
     });
+  },
+
+  initialiseRetakeCores: function (arg0_user, arg1_peace_treaty_object) {
+    //Convert from parameters
+    var user_id = arg0_user;
+    var peace_obj = arg1_peace_treaty_object;
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var enemy_countries = [];
+    var enemy_side = "";
+    var friendly_countries = [];
+    var friendly_side = "";
+    var game_obj = getGameObject(user_id);
+    var war_obj = main.global.wars[peace_obj.war_id];
+
+    //Determine enemy_side and friendly_side
+    if (war_obj.attackers.includes(actual_id)) {
+      friendly_side = "attackers";
+      enemy_side = "defenders";
+    }
+    if (war_obj.defenders.includes(actual_id)) {
+      friendly_side = "defenders";
+      enemy_side = "attackers";
+    }
+
+    //Add all enemy/friendly countries to display
+    for (var i = 0; i < war_obj[enemy_side].length; i++)
+      enemy_countries.push(`**${main.users[war_obj[enemy_side][i]].name}**`);
+
+    //Send visualPrompt()
+    visualPrompt(game_obj.id, user_id, {
+      title: `Grant Cores:`,
+      mention: [`Whom would you like to grant their cores back to? Please type in the name of a valid nation.\n\nThis country does not have to be a nation associated with this current conflict.`, "mention"]
+    },
+    function (arg) {
+      var has_error = [false, ""]; //[has_error, error_msg];
+
+      if (main.users[arg[0]]) {
+        var local_user = main.users[arg[0]];
+
+        //Check if user is already intending on giving cores back to this user
+        if (peace_obj.demands.retake_cores)
+          if (peace_obj.demands.retake_cores.includes(arg[0]))
+            has_error = [true, `You have already demanded that **${local_user.name}** get their cores back from enemy belligerents in this war!`];
+
+        if (!has_error[0]) {
+          //Add this as a valid demand
+          if (peace_obj.demands.retake_cores)
+            peace_obj.demands.retake_cores.push(arg[0]);
+          else
+            peace_obj.demands.retake_cores = [arg[0]];
+
+          //Print user feedback
+          printAlert(game_obj.id, `${config.icons.checkmark} You have successfully added a demand that **${local_user.name}** receive their cores back from any enemy belligerents engaged in this current conflict.`);
+
+          //Go back to the starting menu after one second
+          setTimeout(function(){
+            module.exports.initialiseAddWargoal(user_id, peace_obj);
+          }, 1000);
+        }
+      } else {
+        has_error = [true, `You can't grant cores back to a nation that never existed!`];
+      }
+
+      //Error handling
+      if (has_error[0]) {
+        printError(game_obj.id, has_error[1]);
+
+        //Wait 3 seconds before reinitialising prompt
+        setTimeout(function(){
+          module.exports.initialiseRetakeCores(user_id, peace_obj);
+        }, 3000);
+      }
+    }, function (arg) {
+      switch (arg) {
+        case "back":
+          module.exports.initialisePeaceOfferScreen(user_id, peace_obj);
+          module.exports.initialiseModifyPeaceTreaty(user_id, peace_obj);
+          return true;
+
+          break;
+      }
+    })
   },
 
   /*
