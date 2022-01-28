@@ -244,6 +244,7 @@ module.exports = {
     //Other parameters
     visual_prompt.colour = options.colour;
     visual_prompt.description = options.description;
+    visual_prompt.do_not_cancel = options.do_not_cancel;
     visual_prompt.do_not_display = options.do_not_display;
     visual_prompt.title = options.title;
     visual_prompt.show_steps = (options.show_steps == false) ? false : true;
