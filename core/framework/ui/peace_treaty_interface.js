@@ -79,6 +79,10 @@ module.exports = {
             module.exports.initialiseLiberation(user_id, peace_obj);
 
             break;
+          case "puppet":
+            module.exports.initialisePuppet(user_id, peace_obj);
+
+            break;
         }
       else
         switch (arg[0].trim().toLowerCase()) {
@@ -102,6 +106,7 @@ module.exports = {
 
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
+    var enemy_countries = [];
     var enemy_side = "";
     var friendly_side = "";
     var game_obj = getGameObject(user_id);
@@ -190,6 +195,7 @@ module.exports = {
 
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
+    var enemy_countries = [];
     var enemy_side = "";
     var friendly_side = "";
     var game_obj = getGameObject(user_id);
@@ -413,6 +419,111 @@ module.exports = {
         fixed_width: true
       }),
       user: user_id
+    });
+  },
+
+  initialisePuppet: function (arg0_user, arg1_peace_treaty_object) {
+    //Convert from parameters
+    var user_id = arg0_user;
+    var peace_obj = arg1_peace_treaty_object;
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var enemy_countries = [];
+    var enemy_side = "";
+    var friendly_countries = [];
+    var friendly_side = "";
+    var game_obj = getGameObject(user_id);
+    var war_obj = main.global.wars[peace_obj.war_id];
+
+    //Determine enemy_side and friendly_side
+    if (war_obj.attackers.includes(actual_id)) {
+      friendly_side = "attackers";
+      enemy_side = "defenders";
+    }
+    if (war_obj.defenders.includes(actual_id)) {
+      friendly_side = "defenders";
+      enemy_side = "attackers";
+    }
+
+    //Add all enemy/friendly countries to display
+    for (var i = 0; i < war_obj[enemy_side].length; i++)
+      enemy_countries.push(`**${main.users[war_obj[enemy_side][i]].name}**`);
+    for (var i = 0; i < war_obj[friendly_side].length; i++)
+      friendly_countries.push(`**${main.users[war_obj[friendly_side][i]].name}**`);
+
+    //Send visual prompt
+    visualPrompt(game_obj.id, user_id, {
+      title: `Puppet A Nation:`,
+      prompts: [
+        [`Which belligerent nation would you like to assign as a puppet? Please choose one of the following countries:\n${enemy_countries.join("\n- ")}\n\nType **[Back]** to go back to the previous wargoal menu.`, "mention"],
+        [`Whom would you like to become their new overlord? Please choose one of the following countries:\n${friendly_countries.join("\n- ")}\n\nType **[Back]** to go back to the previous wargoal menu.`, "mention"]
+      ]
+    },
+    function (arg) {
+      var has_error = [false, ""]; //[has_error, error_msg];
+
+      //Check if user even exists
+      if (main.users[arg[0]]) {
+        var local_user = main.users[arg[0]];
+
+        if (war_obj[enemy_side].includes(arg[0])) {
+          if (main.users[arg[1]]) {
+            var local_overlord = main.users[arg[1]];
+
+            if (war_obj[friendly_side].includes(arg[1])) {
+              if (peace_obj.demands.puppet)
+                peace_obj.demands.puppet = {
+                  [arg[0]]: {
+                    id: arg[0],
+                    overlord: arg[1]
+                  }
+                };
+              else
+                peace_obj.demands.puppet[arg[0]] = {
+                  id: arg[0],
+                  overlord: arg[1]
+                };
+
+              //Print user feedback
+              printAlert(game_obj.id, `${config.icons.checkmark} You have successfully mandated that **${local_user.name}** should become the puppet of **${local_overlord.name}** after the end of the war.`);
+
+              //Go back to the starting menu after one second
+              setTimeout(function(){
+                module.exports.initialiseAddWargoal(user_id, peace_obj);
+              }, 1000);
+            } else {
+              has_error = [true, `You can only give puppets to co-combatants of the conflict you're in, not some random countries!`];
+            }
+          } else {
+            has_error = [true, `The country you are trying to assign as **${local_user.name}**'s overlord doesn't even exist! Please assign a valid co-combatant as their overlord.`];
+          }
+        } else {
+          has_error = [true, `**${local_user.name}** is not currently fighting against you in this war!`];
+        }
+      } else {
+        has_error = [true, `The country you are trying to puppet doesn't even exist! Please choose a valid enemy belligerent next time.`];
+      }
+
+      //Error handler
+      if (has_error[0]) {
+        printError(game_obj.id, has_error[1]);
+
+        //Wait 3 seconds before reinitialising prompt
+        setTimeout(function(){
+          module.exports.initialisePuppet(user_id, peace_obj);
+        }, 3000);
+      }
+    },
+    function (arg) {
+      switch (arg) {
+        case "back":
+          module.exports.initialisePeaceOfferScreen(user_id, peace_obj);
+          module.exports.initialiseModifyPeaceTreaty(user_id, peace_obj);
+          return true;
+
+          break;
+      }
     });
   },
 
