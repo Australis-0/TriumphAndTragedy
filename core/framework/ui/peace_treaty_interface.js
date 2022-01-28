@@ -284,6 +284,67 @@ module.exports = {
     });
   },
 
+  initialiseLiberation: function (arg0_user, arg1_peace_treaty_object) {
+    //Convert from parameters
+    var user_id = arg0_user;
+    var peace_obj = arg1_peace_treaty_object;
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var enemy_side = "";
+    var friendly_side = "";
+    var has_error = [false, ""]; //[has_error, error_msg];
+    var game_obj = getGameObject(user_id);
+    var vassal_obj = getVassal(user_id);
+    var war_obj = main.global.wars[peace_obj.war_id];
+
+    //Determine enemy_side and friendly_side
+    if (war_obj.attackers.includes(actual_id)) {
+      friendly_side = "attackers";
+      enemy_side = "defenders";
+    }
+    if (war_obj.defenders.includes(actual_id)) {
+      friendly_side = "defenders";
+      enemy_side = "attackers";
+    }
+
+    //Add all enemy countries to display
+    for (var i = 0; i < war_obj[enemy_side].length; i++)
+      enemy_countries.push(`**${main.users[war_obj[enemy_side][i]].name}**`);
+
+    //Check if user is already demanding their liberation
+    if (vassal_obj) {
+      if (war_obj[enemy_side].includes(vassal_obj.overlord)) {
+        if (!peace_obj.demands.liberation) {
+          peace_obj.demands.liberation = true;
+
+          //Print user feedback
+          printAlert(game_obj.id, `${config.icons.checkmark} You have successfully demanded your liberation from your current overlord, **${main.users[vassal_obj.overlord].name}**.`);
+
+          //Go back to the starting menu after one second
+          setTimeout(function(){
+            module.exports.initialiseAddWargoal(user_id, peace_obj);
+          }, 1000);
+        } else {
+          has_error = [true, `You have already demanded your liberation from your overlord!`];
+        }
+      } else {
+        has_error = [true, `Your current overlord is not fighting against you in this conflict!`];
+      }
+    } else {
+      has_error = [true, `You can't demand liberation from your overlord if you aren't a puppet of anyone!`];
+    }
+
+    //Error handler
+    if (has_error[0]) {
+      printError(game_obj.id, has_error[1]);
+
+      setTimeout(function(){
+        module.exports.initialiseAddWargoal(user_id, peace_obj);
+      }, 3000);
+    }
+  },
+
   initialiseModifyPeaceTreaty: function (arg0_user, arg1_peace_treaty_object, arg2_tooltip) { //[WIP] - Code bulk of function; move createPageMenu() section up here
     //Convert from parameters
     var user_id = arg0_user;
@@ -309,9 +370,8 @@ module.exports = {
     function (arg) {
       switch (arg[0]) {
         case "add wargoal":
-
           //Bring up a dynamic wargoal handler
-
+          module.exports.initialiseAddWargoal(user_id, peace_obj);
 
           break;
         case "back":
