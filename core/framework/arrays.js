@@ -96,5 +96,16 @@ module.exports = {
 
     //Return statement
     return shuffled_array;
-  }
+  },
+
+  unique: function (arg0_array) {
+    //Convert from parameters
+    var a = arg0_array;
+
+    //Declare local instance variables
+		var seen = {};
+		return a.filter(function(item) {
+			return seen.hasOwnProperty(item) ? false : (seen[item] = true);
+		});
+	}
 };

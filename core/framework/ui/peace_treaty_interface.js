@@ -192,7 +192,7 @@ module.exports = {
     });
   },
 
-  initialiseDemandProvinces: function (arg0_user, arg1_peace_treaty_object, arg2_owner_id) { //[WIP] - Code bulk of function
+  initialiseDemandProvinces: function (arg0_user, arg1_peace_treaty_object, arg2_owner_id) {
     //Convert from parameters
     var user_id = arg0_user;
     var peace_obj = arg1_peace_treaty_object;
@@ -228,11 +228,78 @@ module.exports = {
       ]
     },
     function (arg) {
+      var all_provinces = arg[0].trim().split(" ");
       var has_error = [] //[error_array]
       var local_user = main.users[owner];
 
-      //Error handling
-    })
+      var neutral_provinces = [];
+      var nonexistent_provinces = [];
+
+      //Check to make sure that all provinces exist
+      for (var i = 0; i < all_provinces.length; i++)
+        if (!main.provinces[all_provinces[i]])
+          nonexistent_provinces.push(all_provinces[i]);
+        else {
+          var local_province = main.provinces[all_provinces[i]];
+
+          //Check to see whether the owner of the province is actually a valid enemy
+          if (!war_obj[enemy_side].includes(local_province.owner))
+            neutral_provinces.push(all_provinces[i]);
+
+          //Check to see whether the province is already included in an existing annexation demand
+          if (peace_obj.demands.annexation) {
+            var all_demands = Object.keys(peace_obj.demands.annexation);
+
+            for (var x = 0; x < all_demands.length; x++) {
+              var local_demand = peace_obj.demands.annexation[all_demands[x]];
+
+              if (local_demand.annex_all)
+                if (local_demand.annex_all.includes(local_province.owner))
+                  has_error.push(`**${main.users[local_province.owner].name}** is already going to be fully annexed by **${main.users[local_demand.id].name}** in the current peace treaty!`);
+            }
+          }
+        }
+
+      //If no errors are present, set the object to properly demand all provinces from all_provinces
+      if (has_error.length + neutral_provinces.length + nonexistent_provinces.length == 0)
+        if (peace_obj.demands.annexation)
+          if (peace_obj.demands.annexation[owner])
+            peace_obj.demands.annexation[owner] = {
+              id: owner,
+              provinces: unique(all_provinces),
+              annex_all: peace_obj.demands.annexation[owner].annex_all
+            };
+          else
+            peace_obj.demands.annexation[owner] = {
+              id: owner,
+              provinces: unique(all_provinces)
+            };
+        else
+          peace_obj.demands.annexation = {
+            [owner]: {
+              id: owner,
+              provinces: unique(all_provinces)
+            }
+          };
+
+      //Return user feedback
+      printAlert(game_obj.id, `${config.icons.checkmark} You have successfully added an annexation request on the behalf of **${local_user.name}** for the provinces of **${parseList(unique(all_provinces))}**.`);
+
+      //Go back to the starting menu after one second
+      setTimeout(function(){
+        module.exports.initialiseAddWargoal(user_id, peace_obj);
+      }, 1000);
+
+      //Error handler
+      if (has_error.length + neutral_provinces.length + nonexistent_provinces.length > 0) {
+        printError(game_obj.id, `Your petition to add an annexation request on the behalf of **${local_user.name}** failed for the following reasons:${has_error.join("\n - ")}${(neutral_provinces.length > 0) ? `\n- The following provinces don't even belong to any enemy belligerents! ${neutral_provinces.join(", ")}` : ``}${(nonexistent_provinces.length > 0) ? `\n- Your cartographers are currently puzzling over your maps, as the following provinces don't even exist! ${nonexistent_provinces.join(", ")}` : ``}`);
+
+        //Wait 3 seconds before reinitialising prompt
+        setTimeout(function(){
+          module.exports.initialiseDemandProvinces(user_id, peace_obj);
+        }, 3000);
+      }
+    });
   },
 
   initialiseInstallGovernment: function (arg0_user, arg1_peace_treaty_object) {
