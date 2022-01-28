@@ -33,12 +33,12 @@ module.exports = {
           //If the phrase typed in is not a valid command, continue on
           if (!is_command) {
             //Check if prompt has been cancelled
-            if (input == "back") {
+            if (input == "back" && !local_prompt.do_not_cancel) {
               (current_step > 0) ?
                 local_prompt.answers.pop() :
                   module.exports.clearPrompt(game_obj.user, game_id),
                   printAlert(game_id, `${config.icons.cancel} You have cancelled the current command.`);
-            } else if (input == "cancel") {
+            } else if (input == "cancel" && !local_prompt.do_not_cancel) {
               module.exports.clearPrompt(game_obj.user, game_id);
               printAlert(game_id, `${config.icons.cancel} You have cancelled the current command.`);
             } else {
@@ -98,20 +98,22 @@ module.exports = {
           }
 
           //Update visual prompt
-          if (interfaces[interfaces[game_id].user]) local_prompt.message.edit({
-            embeds: [
-              updateVisualPrompt({
-                title: local_prompt.title,
-                show_steps: local_prompt.show_steps,
-                answers: local_prompt.answers,
-                prompts: local_prompt.prompts,
-                satisfies_requirements: satisfies_requirements,
+          if (local_prompt)
+            if (!local_prompt.do_not_display)
+              local_prompt.message.edit({
+                embeds: [
+                  updateVisualPrompt({
+                    title: local_prompt.title,
+                    show_steps: local_prompt.show_steps,
+                    answers: local_prompt.answers,
+                    prompts: local_prompt.prompts,
+                    satisfies_requirements: satisfies_requirements,
 
-                colour: local_prompt.colour,
-                description: local_prompt.description
-              })
-            ]
-          });
+                    colour: local_prompt.colour,
+                    description: local_prompt.description
+                  })
+                ]
+              });
         } catch (e) {
           log.error(`commandHandler() - visual_prompt ran into an error: ${e}`);
           console.log(e);
@@ -242,6 +244,7 @@ module.exports = {
     //Other parameters
     visual_prompt.colour = options.colour;
     visual_prompt.description = options.description;
+    visual_prompt.do_not_display = options.do_not_display;
     visual_prompt.title = options.title;
     visual_prompt.show_steps = (options.show_steps == false) ? false : true;
 
