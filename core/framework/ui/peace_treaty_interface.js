@@ -71,6 +71,14 @@ module.exports = {
             module.exports.initialiseInstallGovernment(user_id, peace_obj);
 
             break;
+          case "cut down to size":
+            module.exports.initialiseCutDownToSize(user_id, peace_obj);
+
+            break;
+          case "liberation":
+            module.exports.initialiseLiberation(user_id, peace_obj);
+
+            break;
         }
       else
         switch (arg[0].trim().toLowerCase()) {
