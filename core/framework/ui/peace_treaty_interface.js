@@ -51,9 +51,9 @@ module.exports = {
 
     //Fetch a list of all available wargoals
     for (var i = 0; i < war_obj.wargoals.length; i++)
-      wargoal_array.push(`${(war_obj.wargoals.length - 1 == i) ? "or "}**${(config.localisation[war_obj.wargoals[i]]) ? config.localisation[war_obj.wargoals[i]] : war_obj.wargoals[i]}**`);
+      wargoal_array.push(`${(war_obj.wargoals.length - 1 == i) ? "or ": ""}**${(config.localisation[war_obj.wargoals[i]]) ? config.localisation[war_obj.wargoals[i]] : war_obj.wargoals[i]}**`);
     for (var i = 0; i < war_obj.wargoals.length; i++)
-      actual_wargoal_array.push((config.localisation[war_obj.wargoals[i]]) ? config.localisation[war_obj.wargoals[i]] : war_obj.wargoals[i]})
+      actual_wargoal_array.push((config.localisation[war_obj.wargoals[i]]) ? config.localisation[war_obj.wargoals[i]] : war_obj.wargoals[i]);
 
     //Initialise visual prompt
     visualPrompt(game_obj.id, user_id, {
@@ -583,7 +583,7 @@ module.exports = {
                 //Set new regime change
                 peace_obj.demands.install_government[arg[0]] = {
                   id: arg[0],
-                  type: raw_government_type;
+                  type: raw_government_type
                 };
 
                 //Print user feedback
