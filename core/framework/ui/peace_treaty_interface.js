@@ -256,7 +256,7 @@ module.exports = {
       if (main.users[arg[0]]) {
         //Check to make sure that they are filing a valid request
         switch (arg[1].trim().toLowerCase()) {
-          case "full annexation": //[WIP] - Finish initialiseAnnexAll()
+          case "full annexation":
             //Print user feedback
             printAlert(game_obj.id, `${config.icons.checkmark} You have successfully filed a motion for the full annexation of a belligerent nation to **${local_user.name}**.`);
 
@@ -685,7 +685,7 @@ module.exports = {
     }
   },
 
-  initialiseModifyPeaceTreaty: function (arg0_user, arg1_peace_treaty_object, arg2_tooltip) { //[WIP] - Code bulk of function; move createPageMenu() section up here
+  initialiseModifyPeaceTreaty: function (arg0_user, arg1_peace_treaty_object, arg2_tooltip) { //[WIP] - Code bulk of function
     //Convert from parameters
     var user_id = arg0_user;
     var peace_obj = arg1_peace_treaty_object;
@@ -938,7 +938,7 @@ module.exports = {
   },
 
   /*
-    [WIP] - modifyPeaceTreaty() - Opens up the map in a separate mapmode for showing annexed provinces, with an in-depth province selector
+    modifyPeaceTreaty() - Opens up the map in a separate mapmode for showing annexed provinces, with an in-depth province selector
 
     Also creates a new peace treaty SVG file - should be deleted when peace treaty is parsed
   */
