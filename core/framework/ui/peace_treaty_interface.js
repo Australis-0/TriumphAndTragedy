@@ -763,7 +763,7 @@ module.exports = {
         description: [
           `---`,
           "",
-          `**[Add Wargoal]** ¦ **[Remove Wargoal]**`
+          `**[Add Wargoal]**${(Object.keys(peace_obj.demands).length > 0) ? ` ¦ **[Remove Wargoal]**` : ""}`
         ].join("\n"),
         title_pages: true,
         fixed_width: true
@@ -1084,6 +1084,61 @@ module.exports = {
               setTimeout(function(){
                 module.exports.initialiseRemoveWargoal(user_id, peace_obj);
               }, 1000);
+            } else {
+              has_error = [true, `You aren't currently demanding any war reparations from the enemy!`];
+            }
+
+            break;
+          case "install government":
+            if (peace_obj.demands.install_government) {
+              var all_regime_changes = Object.keys(peace_obj.demands.install_government);
+              var regime_change_display = [];
+
+              for (var i = 0; i < all_regime_changes.length; i++)
+                regime_change_display.push(`**${main.users[all_regime_changes[i]].name}**`);
+
+              visualPrompt(game_obj.id, user_id, {
+                title: `Remove Regime Change:`,
+                prompts: [
+                  `Which of these countries would you like to drop a regime change against? ${regime_change_display.join(", ")}.\n\nType **[Back]** to remove a different peace demand.`, "mention"
+                ]
+              },
+              function (subarg) {
+                var has_error = [false, ""]; //[has_error, error_msg];
+
+                if (main.users[subarg[0]]) {
+                  var local_user = main.users[subarg[0]];
+
+                  if (all_regime_changes.includes(subarg[0])) {
+                    var local_demand = peace_obj.demands[subarg[0]];
+
+                    //Remove regime change, but print user feedback first
+                    printAlert(game_obj.id, `${config.icons.cb} You have successfully dropped the demand for **${local_user.name}** to change their government type to **${(getGovernment(local_demand.type).name) ? getGovernment(local_demand.type).name : ""}`);
+
+                    delete local_demand;
+
+                    setTimeout(function(){
+                      module.exports.initialisePeaceOfferScreen(user_id, peace_obj);
+                      module.exports.initialiseModifyPeaceTreaty(user_id, peace_obj);
+                    }, 3000);
+                  } else {
+                    has_error = [true, `You aren't currently demanding a regime change for **${local_user.name}**!`];
+                  }
+                } else {
+                  has_error = [true, `The user you are trying to drop a regime change against doesn't even exist!`];
+                }
+              },
+              function (subarg) {
+                switch (subarg) {
+                  case "back":
+                    module.exports.initialiseRemoveWargoal(user_id, peace_obj);
+                    return true;
+
+                    break;
+                }
+              })
+            } else {
+              has_error = [true, `You aren't currently forcing any regime changes upon the enemy!`];
             }
 
             break;
@@ -1097,15 +1152,20 @@ module.exports = {
             break;
           default:
             //Print error
-            printError(game_obj.id, `**${current_wargoal}** is not a valid wargoal you can remove from this conflict!`);
-
-            setTimeout(function(){
-              module.exports.initialiseAddWargoal(user_id, peace_obj);
-            }, 3000);
+            has_error = [true, `**${current_wargoal}** is not a valid wargoal you can remove from this conflict!`];
 
             break;
         }
-    })
+
+      //Error handler
+      if (has_error[0]) {
+        printError(game_obj.id, has_error[1]);
+
+        setTimeout(function(){
+          module.exports.initialiseRemoveWargoal(user_id, peace_obj);
+        }, 3000);
+      }
+    });
   },
 
   initialiseRetakeCores: function (arg0_user, arg1_peace_treaty_object) {
