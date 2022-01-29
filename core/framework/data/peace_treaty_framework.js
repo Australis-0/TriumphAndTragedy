@@ -239,6 +239,13 @@ module.exports = {
             var local_user = main.users[local_demands[x]];
             var overlord_id = local_value[local_demands[x]].overlord;
             var overlord_obj = main.users[overlord_id];
+            var vassal_obj = getVassal(local_demands[i]);
+
+            //Preexisting vassal handler
+            if (vassal_obj) {
+              main.users[vassal_obj.overlord].diplomacy.used_diplomatic_slots--;
+              dissolveVassal(local_demands[i]);
+            }
 
             createVassal(local_demands[i], { target: overlord_id });
             overlord_obj.diplomacy.used_diplomatic_slots++;

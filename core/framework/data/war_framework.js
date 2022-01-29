@@ -271,14 +271,16 @@ module.exports = {
       var local_vassal = attacker_obj.diplomacy.vassals[i];
 
       if (local_vassal.overlord == attacker_id)
-        war_obj.attackers.push(local_vassal.id);
+        if (!war_obj.defenders.includes(local_vassal.id))
+          war_obj.attackers.push(local_vassal.id);
     }
 
     for (var i = 0; i < defender_obj.diplomacy.vassals.length; i++) {
       var local_vassal = defender_obj.diplomacy.vassals[i];
 
       if (local_vassal.overlord == defender_id)
-        war_obj.defenders.push(local_vassal.id);
+        if (!war_obj.attackers.includes(local_vassal.id))
+          war_obj.defenders.push(local_vassal.id);
     }
 
     //[WIP] - Automatically call in overlords if they exist
