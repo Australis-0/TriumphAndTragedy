@@ -943,6 +943,12 @@ module.exports = {
 
                 delete local_demands.annexation[arg[0]];
 
+                if (Object.keys(local_demands.annexation[arg[0]]).length == 1)
+                  delete local_demands.annexation[arg[0]];
+
+                if (Object.keys(local_demands.annexation).length == 0)
+                  delete local_demands.annexation;
+
                 //Go back to viewing the main removeWargoal() menu after this
                 setTimeout(function(){
                   module.exports.initialisePeaceOfferScreen(user_id, peace_obj);
@@ -972,6 +978,15 @@ module.exports = {
                         printAlert(game_obj.id, `${config.icons.cb} You have successfully removed **${local_user.name}**'s request for the full annexation of **${target_user.name}**.`);
 
                         removeElement(local_demand.annex_all, subarg[0]);
+
+                        if (local_demand.annex_all.length == 0)
+                          delete local_demand.annex_all;
+
+                        if (Object.keys(local_demand).length == 1)
+                          delete local_demand;
+
+                        if (Object.keys(local_demands.annexation).length == 0)
+                          delete local_demands.annexation;
 
                         //Go back to viewing the peace treaty to see new changes
                         setTimeout(function(){
@@ -1005,6 +1020,12 @@ module.exports = {
                   printAlert(game_obj.id, `${config.icons.cb} You have successfully removed **${local_user.name}**'s request for **${parseNumber(local_demand.provinces)}** from the enemy side.`);
 
                   delete local_demand.provinces;
+
+                  if (Object.keys(local_demand).length == 1)
+                    delete local_demand;
+
+                  if (Object.keys(local_demands.annexation).length == 0)
+                    delete local_demands.annexation;
 
                   setTimeout(function(){
                     module.exports.initialisePeaceOfferScreen(user_id, peace_obj);
@@ -1042,7 +1063,7 @@ module.exports = {
         case "back":
           module.exports.initialiseRemoveWargoal(user_id, peace_obj);
           return true;
-          
+
           break;
       }
     });
@@ -1408,6 +1429,95 @@ module.exports = {
         }, 3000);
       }
     });
+  },
+
+  initialiseRemoveRetakeCores: function (arg0_user, arg1_peace_treaty_object) {
+    //Convert from parameters
+    var user_id = arg0_user;
+    var peace_obj = arg1_peace_treaty_object;
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var enemy_side = "";
+    var friendly_side = "";
+    var game_obj = getGameObject(user_id);
+    var has_error = [false, ""]; //[has_error, error_msg]
+    var war_obj = main.global.wars[peace_obj.war_id];
+
+    //Fetch a list of all enemies
+    if (war_obj.attackers.includes(actual_id)) {
+      friendly_side = "attackers";
+      enemy_side = "defenders";
+    }
+    if (war_obj.defenders.includes(actual_id)) {
+      friendly_side = "defenders";
+      enemy_side = "attackers";
+    }
+
+    //Check if the user even has this type of wargoal active
+    if (peace_obj.demands.retake_cores) {
+      var retake_cores = Object.keys(peace_obj.demands.retake_cores);
+      var retake_cores_display = [];
+
+      for (var i = 0; i < retake_cores.length; i++)
+        retake_cores_display.push(`**${main.users[retake_cores[i]].name}**`);
+
+      //Send visual prompt
+      visualPrompt(game_obj.id, user_id, {
+        title: `Revoke Demand To Retake Cores:`,
+        prompts: [
+          [`Which of the following countries would you like to no longer regain their cores as a result of this peace treaty?\n${retake_cores_display.join(", ")}\n\nType **[Back]** to remove a different wargoal from the eventual peace offer.`, "mention"]
+        ],
+        do_not_cancel: true
+      },
+      function (arg) {
+        //Check to see if the user even exists
+        if (main.users[arg[0]]) {
+          var local_user = main.users[arg[0]];
+
+          if (peace_obj.demands.retake_cores.includes(arg[0])) {
+            //Print user feedback first
+            printAlert(game_obj.id, `${config.icons.cb} You have successfully dropped your demand that **${local_user.name}** regain their cores from the enemy.`);
+
+            //Change data structure
+            removeElement(peace_obj.demands.retake_cores, arg[0]);
+
+            if (Object.keys(peace_obj.demands.retake_cores).length == 0)
+              delete peace_obj.demands.retake_cores;
+
+            //Send the user back to the peace negotiation screen
+            setTimeout(function(){
+              module.exports.initialisePeaceOfferScreen(user_id, peace_obj);
+              module.exports.initialiseModifyPeaceTreaty(user_id, peace_obj);
+            }, 1000);
+          } else {
+            has_error = [true, `You aren't currently demanding that **${local_user.name}** receive their core homelands back from the enemy!`];
+          }
+        } else {
+          has_error = [true, `You can't revoke a demand on behalf of a nonexistent nation!`];
+        }
+      },
+      function (arg) {
+        switch (arg) {
+          case "back":
+            module.exports.removeWargoal(user_id, peace_obj);
+            return true;
+
+            break;
+        }
+      })
+    } else {
+      has_error = [true, `You aren't currently looking for anyone to regain their cores!`];
+    }
+
+    //Error handler
+    if (has_error[0]) {
+      printError(game_obj.id, has_error[1]);
+
+      setTimeout(function(){
+        module.exports.initialiseRemoveRetakeCores(user_id, peace_obj);
+      }, 3000);
+    }
   },
 
   initialiseRetakeCores: function (arg0_user, arg1_peace_treaty_object) {
