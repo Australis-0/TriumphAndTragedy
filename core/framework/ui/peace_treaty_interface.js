@@ -151,7 +151,8 @@ module.exports = {
       title: `Full Annexation Request For **${main.users[owner].name}**:`,
       prompts: [
         [`Which enemy country in this conflict would you like to be fully annexed by **${main.users[owner].name}**?\n${enemy_countries.join("\n- ")}\n\nType **[Back]** to add a different annexation request.`, "mention"]
-      ]
+      ],
+      do_not_cancel: true
     },
     function (arg) {
       var has_error = [false, ""]; //[has_error, error_msg];
@@ -261,7 +262,8 @@ module.exports = {
       prompts: [
         [`For which country would you like to motion an annexation request for?\nNote: You can choose any country (even if they are currently at war with you), so long as they are not the same country you are annexing provinces from.\n\nType **[Back]** to add a different wargoal to this peace treaty.`, "mention"],
         [`What type of request would you like to file? Type either 'full annexation' to demand a full annexation, or 'partial annexation' to annex only some provinces off of this country.\n\nType **[Back]** to add a different wargoal to this peace treaty.`, "string"]
-      ]
+      ],
+      do_not_cancel: true
     },
     function (arg) {
       var has_error = [false, ""]; //[has_error, error_msg];
@@ -351,7 +353,8 @@ module.exports = {
       title: `Cut Down To Size:`,
       prompts: [
         [`Which of your enemies would you like to cut down to size? Cutting down to size removes up to **90%** of their military from the equation.\n${enemy_countries.join("\n- ")}\n\nType **[Back]** to go back to the previous wargoal menu.`, "mention"]
-      ]
+      ],
+      do_not_cancel: true
     },
     function (arg) {
       var has_error = [false, ""]; //[has_error, error_msg];
@@ -441,7 +444,8 @@ module.exports = {
       title: `Demand Provinces:`,
       prompts: [
         [`Which provinces would you like to demand for this nation?\nPlease separate each province with a space like so: '4702 4703 4709'.\n\nType **[Back]** to add a different annexation request instead.`, "string"]
-      ]
+      ],
+      do_not_cancel: true
     },
     function (arg) {
       var all_provinces = arg[0].trim().split(" ");
@@ -480,6 +484,10 @@ module.exports = {
             }
           }
         }
+
+      //Check to make sure that user is demanding more than 0 provinces
+      if (all_provinces.length == 0)
+        has_error.push(`You can't demand zero provinces from an enemy country!`);
 
       //If no errors are present, set the object to properly demand all provinces from all_provinces
       if (has_error.length + neutral_provinces.length + nonexistent_provinces.length + same_country.length == 0)
@@ -562,7 +570,8 @@ module.exports = {
       prompts: [
         [`Whom would you like to force a change of government for? Please mention one of the following belligerent countries:\n${enemy_countries.join("\n- ")}`, "mention"],
         [`Which government type would you like to install in place of their current regime?\n\nType **[Back]** to go back to the main Add Wargoal menu.\nType **[View Governments]** for a full list of available governments.`, "string"]
-      ]
+      ],
+      do_not_cancel: true
     },
     function (arg) {
       var government_type = getGovernment(arg[1].trim().toLowerCase());
@@ -799,7 +808,8 @@ module.exports = {
       prompts: [
         [`Which belligerent nation would you like to assign as a puppet? Please choose one of the following countries:\n${enemy_countries.join("\n- ")}\n\nType **[Back]** to go back to the previous wargoal menu.`, "mention"],
         [`Whom would you like to become their new overlord? Please choose one of the following countries:\n${friendly_countries.join("\n- ")}\n\nType **[Back]** to go back to the previous wargoal menu.`, "mention"]
-      ]
+      ],
+      do_not_cancel: true
     },
     function (arg) {
       var has_error = [false, ""]; //[has_error, error_msg];
@@ -868,6 +878,158 @@ module.exports = {
     });
   },
 
+  initialiseRemoveAnnexation: function (arg0_user, arg1_peace_treaty_object) {
+    //Convert from parameters
+    var user_id = arg0_user;
+    var peace_obj = arg1_peace_treaty_object;
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var enemy_countries = [];
+    var enemy_side = "";
+    var friendly_side = "";
+    var game_obj = getGameObject(user_id);
+    var has_annexation_demands = [];
+    var war_obj = main.global.wars[peace_obj.war_id];
+
+    //Determine enemy_side and friendly_side
+    if (war_obj.attackers.includes(actual_id)) {
+      friendly_side = "attackers";
+      enemy_side = "defenders";
+    }
+    if (war_obj.defenders.includes(actual_id)) {
+      friendly_side = "defenders";
+      enemy_side = "attackers";
+    }
+
+    //Initialise enemy_countries
+    for (var i = 0; i < war_obj[enemy_side].length; i++)
+      enemy_countries.push(`**${main.users[war_obj[enemy_side][i]].name}**`);
+
+    //Add all demanding countries to display
+    if (peace_obj.demands.annexation) {
+      var all_demands = Object.keys(peace_obj.demands.annexation);
+
+      for (var i = 0; i < all_demands.length; i++)
+        has_annexation_demands.push(`**${main.users[all_demands[i]].name}**`);
+    }
+
+    //Send visual prompt
+    visualPrompt(game_obj.id, user_id, {
+      title: `Remove Annexation Demand:`,
+      prompts: [
+        [`Which of the following nations would you like to revoke an annexation demand for?${has_annexation_demands.join(", ")}.\n\nType **[Back]** to remove a different wargoal.`, "mention"],
+        [`What type of demand would you like to remove from this annexation wargoal? Type either 'partial annexation', 'full annexation', or 'all' to wipe the slate clean.`, "string"]
+      ],
+      do_not_cancel: true
+    },
+    function (arg) {
+      var has_error = [false, ""]; //[has_error, error_msg];
+
+      //Check to see if the user even exists
+      if (main.users[arg[0]]) {
+        var local_user = main.users[arg[0]];
+        var wargoal_type = arg[1].trim().toLowerCase();
+
+        if (local_demands.annexation)
+          if (local_demands.annexation[arg[0]]) {
+            var local_demand = local_demands.annexation[arg[0]];
+
+            //Make sure that the type is valid
+            switch (wargoal_type) {
+              case "all":
+                //Print user feedback
+                printAlert(game_obj.id, `${config.icons.cb} You have removed **${local_user.name}**'s claim to any territory of any enemy belligerent in this peace offer!`);
+
+                delete local_demands.annexation[arg[0]];
+
+                //Go back to viewing the main removeWargoal() menu after this
+                setTimeout(function(){
+                  module.exports.initialisePeaceOfferScreen(user_id, peace_obj);
+                  module.exports.initialiseModifyPeaceTreaty(user_id, peace_obj);
+                }, 1000);
+
+                break;
+              case "full annexation":
+                if (local_demand.annex_all) {
+                  var full_annex_countries = [];
+
+                  for (var i = 0; i < full_annex_countries.length; i++)
+                    full_annex_countries.push(`**${main.users[full_annex_countries[i]].name}**`);
+
+                  visualPrompt(game_obj.id, user_id, {
+                    title: `Revoke Full Annexation`,
+                    prompts: [
+                      [`Whom would you like to spare from full annexation at the hands of **${local_user.name}**? Please choose one of the following countries: ${full_annex_countries.join(", ")}.\n\nType **[Back]** to remove a different type of annexation demand.`, "mention"]
+                    ]
+                  },
+                  function (subarg) {
+                    if (main.users[subarg[0]]) {
+                      var target_user = main.users[subarg[0]];
+
+                      if (local_demand.annex_all.includes(subarg[0])) {
+                        //Print user feedback
+                        printAlert(game_obj.id, `${config.icons.cb} You have successfully removed **${local_user.name}**'s request for the full annexation of **${target_user.name}**.`);
+
+                        removeElement(local_demand.annex_all, subarg[0]);
+
+                        //Go back to viewing the peace treaty to see new changes
+                        setTimeout(function(){
+                          module.exports.initialisePeaceOfferScreen(user_id, peace_obj);
+                          module.exports.initialiseModifyPeaceTreaty(user_id, peace_obj);
+                        }, 1000);
+                      } else {
+                        has_error = [true, `**${local_user.name}** is not currently demanding the outright annexation of **${target_user.name}**!`];
+                      }
+                    } else {
+                      has_error = [true, `The country you are trying to spare from full annexation doesn't even exist! Please take a second look at the list.`];
+                    }
+                  },
+                  function (subarg) {
+                    switch (subarg) {
+                      case "back":
+                        module.exports.initialiseRemoveAnnexation(user_id, peace_obj);
+
+                        return true;
+                        break;
+                    }
+                  });
+                } else {
+                  has_error = [true, `**${local_user.name}** isn't currently demanding the full annexation of any other country!`];
+                }
+
+                break;
+              case "partial annexation":
+                if (local_demand.provinces) {
+                  //Print user feedback
+                  printAlert(game_obj.id, `${config.icons.cb} You have successfully removed **${local_user.name}**'s request for **${parseNumber(local_demand.provinces)}** from the enemy side.`);
+
+                  delete local_demand.provinces;
+
+                  setTimeout(function(){
+                    module.exports.initialisePeaceOfferScreen(user_id, peace_obj);
+                    module.exports.initialiseModifyPeaceTreaty(user_id, peace_obj);
+                  }, 1000);
+                } else {
+                  has_error = [true, `**${local_user.name}** is not currently demanding a partial annexation!`];
+                }
+
+                break;
+              default:
+                has_error = [true, `Please type either 'all', 'full annexation', or 'partial annexation'! **${arg[1]}** could not be recognised as one of these potential demands.`];
+
+                break;
+            }
+          } else
+            has_error = [true, `**${local_user.name}** doesn't have any annexation demands associated with it!`];
+        else
+          has_error = [true, `I don't even know how you managed to do that, but you can't remove an annexation demand when nobody's demanding one!`];
+      } else {
+        has_error = [true, `The country you are trying to remove an annexation for isn't even on the map!`];
+      }
+    })
+  },
+
   initialiseRemoveWargoal: function (arg0_user, arg1_peace_treaty_object) {
     //Convert from parameters
     var user_id = arg0_user;
@@ -912,6 +1074,7 @@ module.exports = {
 
       if (actual_wargoal_array.includes(current_wargoal))
         switch (current_wargoal) {
+          //[WIP] - Add wargoal handler so that users can't go around removing empty wargoals
           case "status_quo":
             if (peace_obj.demands.status_quo) {
               delete peace_obj.demands.status_quo;
