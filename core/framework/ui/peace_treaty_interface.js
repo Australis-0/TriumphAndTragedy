@@ -27,7 +27,6 @@ module.exports = {
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
     var actual_wargoal_array = [];
-    var enemy_countries = [];
     var enemy_side = "";
     var friendly_side = "";
     var has_error = [false, ""]; //[has_error, error_msg];
@@ -45,10 +44,6 @@ module.exports = {
       enemy_side = "attackers";
     }
 
-    //Add all enemy countries to display
-    for (var i = 0; i < war_obj[enemy_side].length; i++)
-      enemy_countries.push(`**${main.users[war_obj[enemy_side][i]].name}**`);
-
     //Fetch a list of all available wargoals
     for (var i = 0; i < war_obj.wargoals.length; i++)
       wargoal_array.push(`${(war_obj.wargoals.length - 1 == i) ? "or ": ""}**${(config.localisation[war_obj.wargoals[i]]) ? config.localisation[war_obj.wargoals[i]] : war_obj.wargoals[i]}**`);
@@ -65,13 +60,17 @@ module.exports = {
     },
     function (arg) {
       var current_wargoal = arg[0].trim().toLowerCase();
+
       if (actual_wargoal_array.includes(current_wargoal))
         switch (current_wargoal) {
-          //[WIP] - Handle wargoal cases later
           case "status_quo":
             peace_obj.demands.status_quo = true;
-            module.exports.initialisePeaceOfferScreen(user_id, peace_obj);
-            module.exports.initialiseModifyPeaceTreaty(user_id, peace_obj);
+
+            printAlert(game_obj.id, `${config.icons.checkmark} You have successfully demanded that all enemy beligerents should pay **15%** of their cash reserves in reparations to the victor countries at the end of the war.`);
+
+            setTimeout(function(){
+              module.exports.initialiseAddWargoal(user_id, peace_obj);
+            }, 1000);
 
             break;
           case "install_government":
@@ -867,6 +866,83 @@ module.exports = {
           break;
       }
     });
+  },
+
+  initialiseRemoveWargoal: function (arg0_user, arg1_peace_treaty_object) {
+    //Convert from parameters
+    var user_id = arg0_user;
+    var peace_obj = arg1_peace_treaty_object;
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var actual_wargoal_array = [];
+    var enemy_side = "";
+    var friendly_side = "";
+    var has_error = [false, ""]; //[has_error, error_msg];
+    var game_obj = getGameObject(user_id);
+    var war_obj = main.global.wars[peace_obj.war_id];
+    var wargoal_array = [];
+
+    //Fetch a list of all enemies
+    if (war_obj.attackers.includes(actual_id)) {
+      friendly_side = "attackers";
+      enemy_side = "defenders";
+    }
+    if (war_obj.defenders.includes(actual_id)) {
+      friendly_side = "defenders";
+      enemy_side = "attackers";
+    }
+
+    //Fetch a list of available wargoals
+    for (var i = 0; i < war_obj.wargoals.length; i++)
+      wargoal_array.push(`${(war_obj.wargoals.length - 1 == i) ? "or ": ""}**${(config.localisation[war_obj.wargoals[i]]) ? config.localisation[war_obj.wargoals[i]] : war_obj.wargoals[i]}**`);
+    for (var i = 0; i < war_obj.wargoals.length; i++)
+      actual_wargoal_array.push((config.localisation[war_obj.wargoals[i]]) ? config.localisation[war_obj.wargoals[i]] : war_obj.wargoals[i]);
+
+    //Send visual_prompt
+    visualPrompt(game_obj.id, user_id, {
+      title: `Remove Wargoal From Peace Treaty:`,
+      prompts: [
+        [`Which type of wargoal would you like to remove from this peace treaty?\n\nPlease type either ${wargoal_array.join(", ")}.\n\nTo go back to viewing this peace treaty, type **[Back]**.`, "string"]
+      ],
+      do_not_cancel: true
+    },
+    function (arg) {
+      var current_wargoal = arg[0].trim().toLowerCase();
+
+      if (actual_wargoal_array.includes(current_wargoal))
+        switch (current_wargoal) {
+          case "status_quo":
+            if (peace_obj.demands.status_quo) {
+              delete peace_obj.demands.status_quo;
+
+              printAlert(game_obj.id, `${config.icons.cb} You have successfully removed your demand for the enemy to pay **15%** in war reparations to cocombatant countries.`);
+
+              setTimeout(function(){
+                module.exports.initialiseRemoveWargoal(user_id, peace_obj);
+              }, 1000);
+            }
+
+            break;
+        }
+      else
+        switch (current_wargoal) {
+          case "back":
+            module.exports.initialisePeaceOfferScreen(user_id, peace_obj);
+            module.exports.initialiseModifyPeaceTreaty(user_id, peace_obj);
+
+            break;
+          default:
+            //Print error
+            printError(game_obj.id, `**${current_wargoal}** is not a valid wargoal you can remove from this conflict!`);
+
+            setTimeout(function(){
+              module.exports.initialiseAddWargoal(user_id, peace_obj);
+            }, 3000);
+
+            break;
+        }
+    })
   },
 
   initialiseRetakeCores: function (arg0_user, arg1_peace_treaty_object) {
