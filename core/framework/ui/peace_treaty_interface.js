@@ -1030,6 +1030,169 @@ module.exports = {
     })
   },
 
+  initialiseRemoveCutDownToSize: function (arg0_user, arg1_peace_treaty_object) {
+    //Convert from parameters
+    var user_id = arg0_user;
+    var peace_obj = arg1_peace_treaty_object;
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var enemy_side = "";
+    var friendly_side = "";
+    var has_error = [false, ""]; //[has_error, error_msg];
+    var game_obj = getGameObject(user_id);
+    var war_obj = main.global.wars[peace_obj.war_id];
+
+    //Fetch a list of all enemies
+    if (war_obj.attackers.includes(actual_id)) {
+      friendly_side = "attackers";
+      enemy_side = "defenders";
+    }
+    if (war_obj.defenders.includes(actual_id)) {
+      friendly_side = "defenders";
+      enemy_side = "attackers";
+    }
+
+    //Check to make sure that these demands exist in the first place
+    if (peace_obj.demands.cut_down_to_size) {
+      var all_cut_down_to_size_display = [];
+
+      for (var i = 0; i < peace_obj.demands.cut_down_to_size.length; i++)
+        all_cut_down_to_size_display.push(`**${main.users[peace_obj.demands.cut_down_to_size[i]].name}**`);
+
+      //Initialise visualPrompt
+      visualPrompt(game_obj.id, user_id, {
+        title: `Remove Cut Down To Size Demand:`,
+        prompts: [
+          [`Which of these countries would you like to drop a cut down to size wargoal against?${all_cut_down_to_size_display.join(", ")}`, "mention"]
+        ]
+      },
+      function (arg) {
+        //Check to see if the user even exists
+        if (main.users[arg[0]]) {
+          var local_user = main.users[arg[0]];
+
+          if (peace_obj.demands.cut_down_to_size.includes(arg[0])) {
+            //Print user feedback
+            printAlert(game_obj.id, `${config.icons.cb} You have successfully dropped the demand for **${local_user.name}** to cut down the size of their armed forces by **90%**.`);
+
+            //Change data structure
+            removeElement(peace_obj.demands.cut_down_to_size, arg[0]);
+
+            if (peace_obj.demands.cut_down_to_size.length == 0)
+              delete peace_obj.demands.cut_down_to_size;
+
+            //Wait one second before sending the user back to the peace treaty viewer
+            setTimeout(function(){
+              module.exports.initialisePeaceOfferScreen(user_id, peace_obj);
+              module.exports.initialiseModifyPeaceTreaty(user_id, peace_obj);
+            }, 1000);
+          } else {
+            has_error = [true, `You aren't currently attempting to force **${local_user.name}** to get rid of their military!`];
+          }
+        } else {
+          has_error = [true, `You can't force a nonexistent nation to cut down their military size!`];
+        }
+      })
+    } else {
+      has_error = [true, `You aren't currently demanding that anyone cut their military down to size on the opposing end!`];
+    }
+
+    //Error handler
+    if (has_error[0]) {
+      printError(game_obj.id, has_error[1]);
+
+      setTimeout(function(){
+        module.exports.initialiseRemoveWargoal(user_id);
+      }, 3000);
+    }
+  },
+
+  initialiseRemoveInstallGovernment: function (arg0_user, arg1_peace_treaty_object) {
+    //Convert from parameters
+    var user_id = arg0_user;
+    var peace_obj = arg1_peace_treaty_object;
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var enemy_side = "";
+    var friendly_side = "";
+    var game_obj = getGameObject(user_id);
+    var war_obj = main.global.wars[peace_obj.war_id];
+
+    //Fetch a list of all enemies
+    if (war_obj.attackers.includes(actual_id)) {
+      friendly_side = "attackers";
+      enemy_side = "defenders";
+    }
+    if (war_obj.defenders.includes(actual_id)) {
+      friendly_side = "defenders";
+      enemy_side = "attackers";
+    }
+
+    if (peace_obj.demands.install_government) {
+      var all_regime_changes = Object.keys(peace_obj.demands.install_government);
+      var regime_change_display = [];
+
+      for (var i = 0; i < all_regime_changes.length; i++)
+        regime_change_display.push(`**${main.users[all_regime_changes[i]].name}**`);
+
+      visualPrompt(game_obj.id, user_id, {
+        title: `Remove Regime Change:`,
+        prompts: [
+          `Which of these countries would you like to drop a regime change against? ${regime_change_display.join(", ")}.\n\nType **[Back]** to remove a different peace demand.`, "mention"
+        ]
+      },
+      function (subarg) {
+        var error_msg = [false, ""]; //[has_error, error_msg];
+
+        if (main.users[subarg[0]]) {
+          var local_user = main.users[subarg[0]];
+
+          if (all_regime_changes.includes(subarg[0])) {
+            var local_demand = peace_obj.demands.install_government[subarg[0]];
+
+            //Remove regime change, but print user feedback first
+            printAlert(game_obj.id, `${config.icons.cb} You have successfully dropped the demand for **${local_user.name}** to change their government type to **${(getGovernment(local_demand.type).name) ? getGovernment(local_demand.type).name : ""}`);
+
+            delete local_demand;
+
+            if (Object.keys(peace_obj.demands.install_government).length == 0)
+              delete peace_obj.demands.install_government;
+
+            setTimeout(function(){
+              module.exports.initialiseRemoveWargoal(user_id, peace_obj);
+            }, 3000);
+          } else {
+            error_msg = [true, `You aren't currently demanding a regime change for **${local_user.name}**!`];
+          }
+        } else {
+          error_msg = [true, `The user you are trying to drop a regime change against doesn't even exist!`];
+        }
+      },
+      function (subarg) {
+        switch (subarg) {
+          case "back":
+            module.exports.initialiseRemoveWargoal(user_id, peace_obj);
+            return true;
+
+            break;
+        }
+      })
+    } else {
+      error_msg = [true, `You aren't currently forcing any regime changes upon the enemy!`];
+    }
+
+    //Error handling
+    if (error_msg[0]) {
+      printError(game_obj.id, error_msg[1]);
+
+      setTimeout(function(){
+        module.exports.initialiseRemoveWargoal(user_id, peace_obj);
+      }, 3000);
+    }
+  },
+
   initialiseRemoveWargoal: function (arg0_user, arg1_peace_treaty_object) {
     //Convert from parameters
     var user_id = arg0_user;
@@ -1089,91 +1252,12 @@ module.exports = {
             }
 
             break;
-          case "install government": //Consider moving this to a separate function
-            if (peace_obj.demands.install_government) {
-              var all_regime_changes = Object.keys(peace_obj.demands.install_government);
-              var regime_change_display = [];
-
-              for (var i = 0; i < all_regime_changes.length; i++)
-                regime_change_display.push(`**${main.users[all_regime_changes[i]].name}**`);
-
-              visualPrompt(game_obj.id, user_id, {
-                title: `Remove Regime Change:`,
-                prompts: [
-                  `Which of these countries would you like to drop a regime change against? ${regime_change_display.join(", ")}.\n\nType **[Back]** to remove a different peace demand.`, "mention"
-                ]
-              },
-              function (subarg) {
-                var error_msg = [false, ""]; //[has_error, error_msg];
-
-                if (main.users[subarg[0]]) {
-                  var local_user = main.users[subarg[0]];
-
-                  if (all_regime_changes.includes(subarg[0])) {
-                    var local_demand = peace_obj.demands.install_government[subarg[0]];
-
-                    //Remove regime change, but print user feedback first
-                    printAlert(game_obj.id, `${config.icons.cb} You have successfully dropped the demand for **${local_user.name}** to change their government type to **${(getGovernment(local_demand.type).name) ? getGovernment(local_demand.type).name : ""}`);
-
-                    delete local_demand;
-
-                    if (Object.keys(peace_obj.demands.install_government).length == 0)
-                      delete peace_obj.demands.install_government;
-
-                    setTimeout(function(){
-                      module.exports.initialisePeaceOfferScreen(user_id, peace_obj);
-                      module.exports.initialiseModifyPeaceTreaty(user_id, peace_obj);
-                    }, 3000);
-                  } else {
-                    error_msg = [true, `You aren't currently demanding a regime change for **${local_user.name}**!`];
-                  }
-                } else {
-                  error_msg = [true, `The user you are trying to drop a regime change against doesn't even exist!`];
-                }
-
-                //Error handling
-                if (error_msg[0]) {
-                  printError(game_obj.id, error_msg[1]);
-
-                  setTimeout(function(){
-                    module.exports.initialiseRemoveWargoal(user_id, peace_obj);
-                  }, 3000);
-                }
-              },
-              function (subarg) {
-                switch (subarg) {
-                  case "back":
-                    module.exports.initialiseRemoveWargoal(user_id, peace_obj);
-                    return true;
-
-                    break;
-                }
-              })
-            } else {
-              has_error = [true, `You aren't currently forcing any regime changes upon the enemy!`];
-            }
+          case "install government":
+            module.exports.initialiseInstallGovernment(user_id, peace_obj);
 
             break;
           case "cut down to size":
-            if (peace_obj.demands.cut_down_to_size) {
-              var all_cut_down_to_size_display = [];
-
-              for (var i = 0; i < peace_obj.demands.cut_down_to_size.length; i++)
-                all_cut_down_to_size_display.push(`**${main.users[peace_obj.demands.cut_down_to_size[i]].name}**`);
-
-              //Initialise visualPrompt
-              visualPrompt(game_obj.id, user_id, {
-                title: `Remove Cut Down To Size Demand:`,
-                prompts: [
-                  [`Which of these countries would you like to drop a cut down to size wargoal against?${all_cut_down_to_size_display.join(", ")}`, "mention"]
-                ]
-              },
-              function (subarg) {
-
-              })
-            } else {
-              has_error = [true, `You aren't currently demanding that anyone cut their military down to size on the opposing end!`];
-            }
+            module.exports.initialiseCutDownToSize(user_id, peace_obj);
 
             break;
         }
