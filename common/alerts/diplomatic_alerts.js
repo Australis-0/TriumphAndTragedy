@@ -150,12 +150,12 @@ config.alerts.diplomacy = {
   //[WIP] - Rescripting done up to here
   an_offer_to_lay_down_arms: {
     name: "An Offer to Lay Down Arms.",
-    description: "{FROM.name} is offering us peace in exchange for the terms listed below for the **{LOCAL.war_name}**. We have the option to either accept or deny this.\n\n---\n\n{LOCAL.peace_treaty}",
+    description: "{FROM.name} is offering us peace in exchange for the terms listed below for the **{LOCAL.war_name}**. We have the option to either accept or deny this.\n\n---\n\n{LOCAL.peace_treaty_string}",
 
     btn_accept_conditional_peace: {
       name: "We accept this offer.",
       effect: function (options) {
-        parsePeaceTreaty(options.LOCALISATION.war_name, options.LOCALISATION.peace_treaty);
+        parsePeaceTreaty(options.LOCAL.war_name, options.LOCAL.peace_treaty);
       }
     },
     btn_decline_conditional_peace: {

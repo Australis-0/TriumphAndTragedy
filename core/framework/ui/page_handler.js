@@ -764,6 +764,11 @@ module.exports = {
           initialiseRenameWar(user_id);
 
         //[Send Peace Offer]
+        if (input == "send peace offer")
+          (war_obj.peace_treaties[actual_id]) ?
+            sendPeaceTreaty(user_id, war_obj.peace_treaties[actual_id]) :
+            printError(game_obj.id, `You don't currently have a peace treaty active for this conflict! Type **[Sign Peace Treaty]** first to create a new peace treaty.`);
+
         //[Sign Peace Treaty]
         if (input == "sign peace treaty")
           signPeaceTreaty(user_id, war_obj.name);

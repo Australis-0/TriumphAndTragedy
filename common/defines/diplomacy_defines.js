@@ -17,6 +17,7 @@ config.defines.diplomacy = {
   military_access_cancellation_alert_id: "access_cancelled", //Which alert should popup when military access to another country is cancelled?
   military_access_request_alert_id: "other_armies_our_soil", //Which alert should popup for the target user when military access is being requested of them?
   non_aggression_pact_request_alert_id: "a_guaranteed_peace", //Which alert should popup when a user is requesting a non-aggression pact?
+  peace_offer_alert_id: "an_offer_to_lay_down_arms", //Which alert should popup when a user is asked to accept peace terms?
   peacetime_blockade_penalty: 5, //How much infamy should a nation-state get if they blockade another country during peacetime?
   proclaim_guarantee_alert_id: "a_guarantee_for_our_nation", //What alert should popup for the target user when someone is guaranteeing their independence?
   relation_change_speed: 10, //Maximum amount relations can change by per turn
@@ -24,6 +25,7 @@ config.defines.diplomacy = {
   rival_cancellation_alert_id: "the_coming_thaw", //Determines which alert should be triggered when rivals seek mutual reconciliation
   rival_declaration_alert_id: "rival_declared", //Determines which alert should be triggered for the target nation when a rivalry begins
   rival_relations_threshold: 50, //How high is too high in terms of relations for countries to be rivals?
+  unconditional_peace_alert_id: "the_national_disaster", //What is the alert that should popup when a user must accept an unconditional peace?
   vassalisation_request_alert_id: "the_option_to_submit", //What alert should be sent to the target of a vassalisation request?
   vassal_maintenance_cost: 0.2, //What is the factor by which vassals should cost PC?
 
