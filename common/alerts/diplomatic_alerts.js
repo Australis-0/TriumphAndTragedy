@@ -147,7 +147,6 @@ config.alerts.diplomacy = {
     }
   },
 
-  //[WIP] - Rescripting done up to here
   an_offer_to_lay_down_arms: {
     name: "An Offer to Lay Down Arms.",
     description: "{FROM.name} is offering us peace in exchange for the terms listed below for the **{LOCAL.war_name}**. We have the option to either accept or deny this.\n\n---\n\n{LOCAL.peace_treaty_string}",

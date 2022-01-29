@@ -79,8 +79,10 @@ module.exports = {
     var war_obj = (!is_archived_war) ? getWar(raw_war_name) : getArchivedWar(raw_war_name);
 
     //Declare local tracker variables
+    var all_allies = Object.keys(usr.diplomacy.allies);
     var attackers_string = [];
     var attackers_wargoal_string = [];
+    var can_call_allies = false;
     var bottom_war_string = [];
     var defenders_string = [];
     var defenders_wargoal_string = [];
@@ -88,11 +90,17 @@ module.exports = {
 
     //Check if war_obj exists
     if (war_obj) {
+      if (!is_archived_war)
+        for (var i = 0; i < all_allies.length; i++)
+          if (hasAlliance(actual_id, all_allies[i]))
+            if (!(war_obj.attackers.includes(all_allies[i]) || war_obj.defenders.includes(all_allies[i])))
+              can_call_allies = true;
+
       //Peace treaty buttons
       if (!is_archived_war)
         (!war_obj.peace_treaties[actual_id]) ?
-          war_string.push(`**[Sign Peace Treaty]**`) :
-          war_string.push(`**[Add Wargoal]** ¦ **[Remove Wargoal]** ¦ **[View Peace Offer]** ¦ **[Send Peace Offer]**`);
+          war_string.push(`**[Sign Peace Treaty]**${(can_call_allies.length > 0) ? "\n**[Call Ally]**" : ""}`) :
+          war_string.push(`**[Add Wargoal]** ¦ **[Remove Wargoal]** ¦ **[View Peace Offer]** ¦ **[Send Peace Offer]**${(can_call_allies.length > 0) ? "\n**[Call Ally]**" : ""}`);
 
       if (is_archived_war)
         war_string.push(`**${getDate(war_obj.starting_date)}** - **${getDate(war_obj.end_date)}**\n`);

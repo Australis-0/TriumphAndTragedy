@@ -215,6 +215,36 @@ module.exports = {
   },
 
   /*
+    getWars() - Fetches an object/key list of all wars a user is currently involved in.
+    options: {
+      return_key: true/false - Whether or not to return a key instead of the object. False by default
+    }
+  */
+  getWars: function (arg0_user_id, arg1_options) {
+    //Convert from parameters
+    var user_id = arg0_user_id;
+    var options = (arg1_options) ? arg1_options : {};
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var usr = main.users[actual_id];
+    var war_array = [];
+
+    var all_wars = Object.keys(main.global.wars);
+
+    //Iterate through all conflicts
+    for (var i = 0; i < all_wars.length; i++) {
+      var local_war = main.global.wars[all_wars[i]];
+
+      if (local_war.attackers.includes(actual_id) || local_war.defenders.includes(actual_ot_user_id))
+        war_array.push((!options.return_key) ? local_war : all_wars[i]);
+    }
+
+    //Return statement
+    return war_array;
+  },
+
+  /*
     initialiseWar() - Creates a new war data structure with aggressors and all. Make sure users can't declare war on themselves
     options: {
       type: "acquire_state",
@@ -283,8 +313,6 @@ module.exports = {
           war_obj.defenders.push(local_vassal.id);
     }
 
-    //[WIP] - Automatically call in overlords if they exist
-
     //Add wargoals
     if (cb_obj.peace_demands)
       for (var i = 0; i < cb_obj.peace_demands.length; i++)
@@ -292,6 +320,17 @@ module.exports = {
 
     //Set war_obj
     main.global.wars[war_id] = war_obj;
+
+    //[WIP] - Automatically call in overlords if they exist
+    var attacker_vassal_obj = getVassal(attacker_id);
+    var defender_vassal_obj = getVassal(defender_id);
+
+    if (attacker_vassal_obj)
+      if (defender_id != vassal_obj.overlord)
+        module.exports.joinWar(vassal_obj.overlord, "attackers", war_obj.name);
+    if (defender_vassal_obj)
+      if (attacker_id != vassal_obj.overlord)
+        module.exports.joinWar(vassal_obj.overlord, "defenders", war_obj.name);
   },
 
   joinWar: function (arg0_user, arg1_side, arg2_war_name) {

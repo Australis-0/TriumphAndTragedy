@@ -9,6 +9,7 @@ config.defines.diplomacy = {
   alliance_break_alert_id: "alliance_broken", //What alert should popup when an alliance is broken?
   alliance_relation_threshold: 75, //How high should relations need to be before one can propose an alliance?
   annex_alert_id: "the_coming_integration", //Which alert should be printed out when an annexation request is declared?
+  call_to_arms_alert_id: "call_to_arms", //Which alert should be triggered when a call to arms is made?
   guarantee_alert_id: "the_promise_we_made", //Which alert should popup to call in guarantors when a war breaks out?
   infamy_annex_cost: 3, //How much infamy should an annexation request cost?
   infamy_limit: 8, //Total infamy before containment CB kicks in, and bad effects

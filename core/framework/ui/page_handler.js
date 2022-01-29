@@ -753,6 +753,10 @@ module.exports = {
             initialiseAddWargoal(user_id, war_obj.peace_treaties[actual_id]) :
             printError(game_obj.id, `You don't currently have a peace treaty active for this conflict! Type **[Sign Peace Treaty]** first to create a new peace treaty.`);
 
+        //[Call Ally]
+        if (input == "call ally")
+          initialiseCallAlly(user_id);
+
         //[Remove Wargoal]
         if (input == "remove wargoal")
           (war_obj.peace_treaties[actual_id]) ?

@@ -114,6 +114,7 @@ FileManager.import("./game/diplomacy/allow_cede");
 FileManager.import("./game/diplomacy/ally");
 FileManager.import("./game/diplomacy/annex");
 FileManager.import("./game/diplomacy/break_alliance");
+FileManager.import("./game/diplomacy/call_ally");
 FileManager.import("./game/diplomacy/cancel_justification");
 FileManager.import("./game/diplomacy/cancel_military_access");
 FileManager.import("./game/diplomacy/cancel_wargoal");
