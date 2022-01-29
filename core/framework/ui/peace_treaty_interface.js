@@ -101,8 +101,7 @@ module.exports = {
       else
         switch (current_wargoal) {
           case "back":
-            module.exports.initialisePeaceOfferScreen(user_id, peace_obj);
-            module.exports.initialiseModifyPeaceTreaty(user_id, peace_obj);
+            module.exports.modifyPeaceTreaty(user_id, peace_obj, true);
 
             break;
           default:
@@ -312,8 +311,7 @@ module.exports = {
     function (arg) {
       switch (arg) {
         case "back":
-          module.exports.initialisePeaceOfferScreen(user_id, peace_obj);
-          module.exports.initialiseModifyPeaceTreaty(user_id, peace_obj);
+          module.exports.modifyPeaceTreaty(user_id, peace_obj, true);
           return true;
 
           break;
@@ -402,8 +400,7 @@ module.exports = {
     function (arg) {
       switch (arg) {
         case "back":
-          module.exports.initialisePeaceOfferScreen(user_id, peace_obj);
-          module.exports.initialiseModifyPeaceTreaty(user_id, peace_obj);
+          module.exports.modifyPeaceTreaty(user_id, peace_obj, true);
           return true;
 
           break;
@@ -630,8 +627,7 @@ module.exports = {
     function (arg) {
       switch (arg) {
         case "back":
-          module.exports.initialisePeaceOfferScreen(user_id, peace_obj);
-          module.exports.initialiseModifyPeaceTreaty(user_id, peace_obj);
+          module.exports.initialiseAddWargoal(user_id, peace_obj);
           return true;
 
           break;
@@ -738,8 +734,20 @@ module.exports = {
           module.exports.initialiseAddWargoal(user_id, peace_obj);
 
           break;
+        case "remove wargoal":
+          module.exports.initialiseRemoveWargoal(user_id, peace_obj);
+
+          break;
         case "back":
           module.exports.closePeaceTreaty(user_id);
+
+          break;
+        default:
+          printError(game_obj.id, `You must specify a valid action to take! **${arg[0]}** was not recognised as a valid action.`);
+
+          setTimeout(function(){
+            module.exports.modifyPeaceTreaty(user_id, peace_obj, true);
+          }, 3000);
 
           break;
       }
@@ -869,8 +877,7 @@ module.exports = {
     function (arg) {
       switch (arg) {
         case "back":
-          module.exports.initialisePeaceOfferScreen(user_id, peace_obj);
-          module.exports.initialiseModifyPeaceTreaty(user_id, peace_obj);
+          module.exports.initialiseAddWargoal(user_id, peace_obj);
           return true;
 
           break;
@@ -1617,11 +1624,11 @@ module.exports = {
 
     Also creates a new peace treaty SVG file - should be deleted when peace treaty is parsed
   */
-  modifyPeaceTreaty: function (arg0_user, arg1_war_name, arg2_peace_treaty_object) {
+  modifyPeaceTreaty: function (arg0_user, arg1_peace_treaty_object, arg2_change_image) {
     //Convert from parameters
     var user_id = arg0_user;
-    var war_name = arg1_war_name.trim().toLowerCase();
-    var peace_obj = arg2_peace_treaty_object;
+    var peace_obj = arg1_peace_treaty_object;
+    var change_image = arg2_change_image;
 
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
@@ -1629,10 +1636,11 @@ module.exports = {
     var game_obj = getGameObject(user_id);
     var map_file = `${actual_id}_peace_treaty`;
     var usr = main.users[actual_id];
-    var war_obj = getWar(war_name);
+    var war_obj = main.gloabl.wars[peace_obj.war_id];
 
     //Cache a new SVG
-    loadMap(`${map_file}.svg`, map_file);
+    if (!change_image)
+      loadMap(`${map_file}.svg`, map_file);
 
     //Shade in the base provinces - but only for the belligerents currently involved in the war
     for (var i = 0; i < war_obj.attackers.length; i++)
@@ -1675,10 +1683,12 @@ module.exports = {
     }
 
     //Initialise map viewer
-    initialiseMapViewer(game_obj.id, map_file);
+    (!change_image) ?
+      initialiseMapViewer(game_obj.id, map_file) :
+      changeImage(game_obj.id, map_file);
 
     //Visual interface using visualPrompt() before creating a page menu
-    module.exports.initialiseModifyPeaceTreaty(user_id);
-    module.exports.initialisePeaceOfferScreen(user_id);
+    module.exports.initialiseModifyPeaceTreaty(user_id, peace_obj);
+    module.exports.initialisePeaceOfferScreen(user_id, peace_obj);
   }
 };
