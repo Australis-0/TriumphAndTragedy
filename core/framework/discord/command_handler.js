@@ -188,7 +188,7 @@ module.exports = {
       information_prompt_suffix = !(show_error.length == 0 && local_desc.length == 0) ? "\n\n" : "";
     } catch {}
 
-    var information_prompt = information_prompt_suffix + "To go back, type `back`. To cancel the command entirely, type `cancel`.";
+    var information_prompt = (!options.do_not_cancel) ? inform_suffix + "To go back, type `back`. To cancel the command entirely, type `cancel`." : "";
 
     for (var i = 0; i < options.prompts.length; i++) local_fields.push({
       name: options.prompts[i][0],
@@ -262,7 +262,9 @@ module.exports = {
 
             colour: options.colour,
             description: options.description,
-            image: options.image
+            image: options.image,
+
+            do_not_cancel: options.do_not_cancel
           })
         ]
       });
