@@ -1260,6 +1260,20 @@ module.exports = {
             module.exports.initialiseCutDownToSize(user_id, peace_obj);
 
             break;
+          case "liberation":
+            if (peace_obj.demands.liberation) {
+              var vassal_obj = getVassal(actual_id);
+
+              delete peace_obj.demands.liberation;
+
+              printAlert(game_obj.id, `${config.icons.cb} You are no longer demanding your liberation from your overlord, **${main.users[vassal_obj.overlord].name}**.`);
+
+              setTimeout(function(){
+                module.exports.initialiseRemoveWargoal(user_id, peace_obj);
+              }, 1000);
+            } else {
+              has_error = [true, `You aren't currently demanding your liberation from the enemy!`];
+            }
         }
       else
         switch (current_wargoal) {
