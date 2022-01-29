@@ -736,6 +736,7 @@ module.exports = {
 
       if (game_obj.page.startsWith("view_war_")) { //[WIP] - Add button functionality
         var war_name = game_obj.page.replace("view_war_", "");
+        var war_obj = getWar(war_name);
 
         //[Back]
         if (input == "back") {
@@ -747,7 +748,16 @@ module.exports = {
         }
 
         //[Add Wargoal]
+        if (input == "add wargoal")
+          (war_obj.peace_treaties[actual_id]) ?
+            initialiseAddWargoal(user_id, war_obj.peace_treaties[actual_id]) :
+            printError(game_obj.id, `You don't currently have a peace treaty active for this conflict! Type **[Sign Peace Treaty]** first to create a new peace treaty.`);
+
         //[Remove Wargoal]
+        if (input == "remove wargoal")
+          (war_obj.peace_treaties[actual_id]) ?
+            initialiseRemoveWargoal(user_id, war_obj.peace_treaties[actual_id]) :
+            printError(game_obj.id, `You don't currently have a peace treaty active for this conflict! Type **[Sign Peace Treaty]** first to create a new peace treaty.`);
 
         //[Rename War]
         if (input == "rename_war")
