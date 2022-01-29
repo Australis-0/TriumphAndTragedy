@@ -128,9 +128,17 @@ FileManager.import("./game/diplomacy/lock_vassal_customisation");
 FileManager.import("./game/diplomacy/military_access");
 FileManager.import("./game/diplomacy/non_aggression_pact");
 FileManager.import("./game/diplomacy/proclaim_guarantee");
+FileManager.import("./game/diplomacy/rename_vassal_city");
+FileManager.import("./game/diplomacy/rename_vassal_culture");
+FileManager.import("./game/diplomacy/rename_vassal");
 FileManager.import("./game/diplomacy/revoke_guarantee");
 FileManager.import("./game/diplomacy/revoke_military_access");
 FileManager.import("./game/diplomacy/rival");
+FileManager.import("./game/diplomacy/send_peace_treaty");
+FileManager.import("./game/diplomacy/set_vassal_colour");
+FileManager.import("./game/diplomacy/set_vassal_flag");
+FileManager.import("./game/diplomacy/set_vassal_motto");
+FileManager.import("./game/diplomacy/sign_peace_treaty");
 FileManager.import("./game/diplomacy/vassalise");
 
 FileManager.import("./game/laws/enact_reform");

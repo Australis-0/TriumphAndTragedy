@@ -765,7 +765,14 @@ module.exports = {
 
         //[Send Peace Offer]
         //[Sign Peace Treaty]
+        if (input == "sign peace treaty")
+          signPeaceTreaty(user_id, war_obj.name);
+
         //[View Peace Offer]
+        if (input == "view peace treaty")
+          (war_obj.peace_treaties[actual_id]) ?
+            modifyPeaceTreaty(user_id, war_obj.peace_treaties[actual_id]) :
+            printError(game_obj.id, `You don't currently have a peace treaty active for this conflict! Type **[Sign Peace Treaty]** first to create a new peace treaty.`);
       }
 
       if (game_obj.page.startsWith("view_war_archives_", "")) {
