@@ -1027,7 +1027,25 @@ module.exports = {
       } else {
         has_error = [true, `The country you are trying to remove an annexation for isn't even on the map!`];
       }
-    })
+
+      //Error handling
+      if (has_error[0]) {
+        printError(game_obj.id, has_error[1]);
+
+        setTimeout(function(){
+          module.exports.initialiseRemoveAnnexation(user_id, peace_obj);
+        }, 3000);
+      }
+    },
+    function (arg) {
+      switch (arg) {
+        case "back":
+          module.exports.initialiseRemoveWargoal(user_id, peace_obj);
+          return true;
+          
+          break;
+      }
+    });
   },
 
   initialiseRemoveCutDownToSize: function (arg0_user, arg1_peace_treaty_object) {
@@ -1103,7 +1121,7 @@ module.exports = {
       printError(game_obj.id, has_error[1]);
 
       setTimeout(function(){
-        module.exports.initialiseRemoveWargoal(user_id);
+        module.exports.initialiseRemoveCutDownToSize(user_id);
       }, 3000);
     }
   },
@@ -1141,7 +1159,8 @@ module.exports = {
         title: `Remove Regime Change:`,
         prompts: [
           `Which of these countries would you like to drop a regime change against? ${regime_change_display.join(", ")}.\n\nType **[Back]** to remove a different peace demand.`, "mention"
-        ]
+        ],
+        do_not_cancel: true
       },
       function (subarg) {
         var error_msg = [false, ""]; //[has_error, error_msg];
@@ -1161,8 +1180,9 @@ module.exports = {
               delete peace_obj.demands.install_government;
 
             setTimeout(function(){
-              module.exports.initialiseRemoveWargoal(user_id, peace_obj);
-            }, 3000);
+              module.exports.initialisePeaceOfferScreen(user_id, peace_obj);
+              module.exports.initialiseModifyPeaceTreaty(user_id, peace_obj);
+            }, 1000);
           } else {
             error_msg = [true, `You aren't currently demanding a regime change for **${local_user.name}**!`];
           }
@@ -1178,7 +1198,7 @@ module.exports = {
 
             break;
         }
-      })
+      });
     } else {
       error_msg = [true, `You aren't currently forcing any regime changes upon the enemy!`];
     }
@@ -1188,7 +1208,97 @@ module.exports = {
       printError(game_obj.id, error_msg[1]);
 
       setTimeout(function(){
-        module.exports.initialiseRemoveWargoal(user_id, peace_obj);
+        module.exports.initialiseRemoveInstallGovernment(user_id, peace_obj);
+      }, 3000);
+    }
+  },
+
+  initialiseRemovePuppet: function (arg0_user, arg1_peace_treaty_object) {
+    //Convert from parameters
+    var user_id = arg0_user;
+    var peace_obj = arg1_peace_treaty_object;
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var enemy_side = "";
+    var friendly_side = "";
+    var game_obj = getGameObject(user_id);
+    var has_error = [false, ""]; //[has_error, error_msg];
+    var war_obj = main.global.wars[peace_obj.war_id];
+
+    //Fetch a list of all enemies
+    if (war_obj.attackers.includes(actual_id)) {
+      friendly_side = "attackers";
+      enemy_side = "defenders";
+    }
+    if (war_obj.defenders.includes(actual_id)) {
+      friendly_side = "defenders";
+      enemy_side = "attackers";
+    }
+
+    if (peace_obj.demands.puppet) {
+      var all_puppets = Object.keys(peace_obj.demands.puppet);
+      var all_puppet_names = [];
+
+      for (var i = 0; i < all_puppets.length; i++)
+        all_puppet_names.push(`**${main.users[all_puppets[i]].name}**`);
+
+      //Send visual prompt
+      visualPrompt(game_obj.id, user_id, {
+        title: `Remove Puppet Wargoal:`,
+        prompts: [
+          [`Which of the following countries would you like to free from the grips of a potential puppeting?\n${all_puppet_names.join(", ")}\n\nType **[Back]** to remove a different wargoal.`, "mention"]
+        ],
+        do_not_cancel: true
+      },
+      function (arg) {
+        //Check to see if the user even exists
+        if (main.users[arg[0]]) {
+          var local_user = main.users[arg[0]];
+
+          if (peace_obj.demands.puppet[arg[0]]) {
+            var local_demand = peace_obj.demands.puppet[arg[0]];
+
+            //Print feedback
+            printAlert(game_obj.id, `${config.icons.cb} You have successfully dropped a vassalisation request for **${local_user.name}** to become the puppet of **${main.users[local_demand.overlord].name}**.`);
+
+            //Delete puppet request
+            delete local_demand;
+
+            if (Object.keys(peace_obj.demands.puppet).length == 0)
+              delete peace_obj.demands.puppet;
+
+            //Go back to the main peace treaty screen
+            setTimeout(function(){
+              module.exports.initialisePeaceOfferScreen(user_id, peace_obj);
+              module.exports.initialiseModifyPeaceTreaty(user_id, peace_obj);
+            }, 1000);
+          } else {
+            has_error = [true, `**${local_user.name}** isn't currently being held hostage for puppeting!`];
+          }
+        } else {
+          has_error = [true, `What sort of nation is that? You can only pick from extant nations, you know.`];
+        }
+      },
+      function (arg) {
+        switch (arg) {
+          case "back":
+            module.exports.initialiseRemoveWargoal(user_id, peace_obj);
+            return true;
+
+            break;
+        }
+      });
+    } else {
+      has_error = [true, `Your peace offer doesn't currently include any wargoals to puppet anyone!`];
+    }
+
+    //Error handling
+    if (has_error[0]) {
+      printError(game_obj.id, has_error[1]);
+
+      setTimeout(function(){
+        module.exports.initialiseRemovePuppet(user_id, peace_obj);
       }, 3000);
     }
   },
