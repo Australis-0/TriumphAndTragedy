@@ -1405,6 +1405,14 @@ module.exports = {
             } else {
               has_error = [true, `You aren't currently demanding your liberation from the enemy!`];
             }
+          case "retake cores":
+            module.exports.initialiseRemoveRetakeCores(user_id, peace_obj);
+
+            break;
+          case "annexation":
+            module.exports.initialiseRemoveAnnexation(user_id, peace_obj);
+
+            break;
         }
       else
         switch (current_wargoal) {
