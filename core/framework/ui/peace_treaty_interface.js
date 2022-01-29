@@ -738,6 +738,14 @@ module.exports = {
           module.exports.initialiseRemoveWargoal(user_id, peace_obj);
 
           break;
+        case "send peace treaty":
+          sendPeaceTreaty(user_id, peace_obj);
+
+          setTimeout(function(){
+            module.exports.modifyPeaceTreaty(user_id, peace_obj, true);
+          }, 3000);
+
+          break;
         case "back":
           module.exports.closePeaceTreaty(user_id);
 
@@ -771,7 +779,7 @@ module.exports = {
         description: [
           `---`,
           "",
-          `**[Add Wargoal]**${(Object.keys(peace_obj.demands).length > 0) ? ` ¦ **[Remove Wargoal]**` : ""}`
+          `**[Add Wargoal]**${(Object.keys(peace_obj.demands).length > 0) ? ` ¦ **[Remove Wargoal]**` : ""} ¦ **[Send Peace Offer]**`
         ].join("\n"),
         title_pages: true,
         fixed_width: true
