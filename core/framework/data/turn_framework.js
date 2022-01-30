@@ -50,10 +50,26 @@ module.exports = {
   nextGlobalTurn: function () {
     //Declare local instance variables
     var all_market_goods = Object.keys(main.market);
+    var all_provinces = Object.keys(main.provinces);
     var all_wars = Object.keys(main.global.wars);
 
     //War processing
     {
+      //Iterate over all provinces to check occupation risk
+      for (var i = 0; i < all_provinces.length; i++) {
+        var local_province = main.provinces[all_provinces[i]];
+
+        if (local_province.owner)
+          if (local_province.owner != local_province.controller) {
+            var amount_of_troops = getTroopsInProvince(all_provinces[i]);
+            var revolt_risk = Math.min(1 - (amount_of_troops/(local_province.pops.population/100)), 0.5);
+            var revolt_roll = Math.random();
+
+            if (revolt_roll < revolt_risk)
+              local_province.controller = local_province.owner;
+          }
+      }
+
       //Iterate over all wars to process warscore
       for (var i = 0; i < all_wars.length; i++) {
         var local_war = main.global.wars[all_wars[i]];
