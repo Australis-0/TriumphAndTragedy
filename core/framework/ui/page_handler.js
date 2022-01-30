@@ -586,6 +586,10 @@ module.exports = {
         if (input == "cancel military access")
           cancelMilitaryAccess(user_id, actual_ot_user_id);
 
+        //[Call Ally]
+        if (input == "call ally")
+          initialiseCallAlly(user_id, actual_ot_user_id);
+
         //[Cancel Wargoal]
         if (input == "cancel wargoal")
           initialiseCancelWargoal(user_id);

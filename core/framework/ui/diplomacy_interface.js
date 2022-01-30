@@ -218,6 +218,7 @@ module.exports = {
     //Declare and initialise local tracker variables
     var all_pops = Object.keys(config.pops);
     var all_user_keys = Object.keys(main.global.user_map);
+    var all_wars = Object.keys(main.global.wars);
     var capital_obj = getCapital(actual_ot_user_id);
     var current_ot_user_relations = getRelations(actual_ot_user_id, actual_id);
     var current_user_relations = getRelations(actual_id, actual_ot_user_id);
@@ -229,6 +230,7 @@ module.exports = {
     {
       //Diplomatic relation variables
       var allies_array = [];
+      var can_call_ally = [];
       var have_military_access_array = getMilitaryAccesses(actual_ot_user_id);
       var guaranteed_array = [];
       var guarantors_array = [];
@@ -252,6 +254,16 @@ module.exports = {
       for (var i = 0; i < all_allies.length; i++)
         if (hasAlliance(actual_ot_user_id, all_allies[i]))
           allies_array.push(main.users[all_allies[i]].name);
+
+      //Call Ally
+      if (hasAlliance(actual_id, actual_ot_user_id))
+        for (var i = 0; i < all_wars.length; i++) {
+          var local_war = main.global.wars[all_wars[i]];
+
+          if (local_war.attackers.includes(actual_id) || local_war.defenders.includes(actual_id))
+            if (!(local_war.attackers.includes(actual_ot_user_id) || local_war.defenders.includes(actual_ot_user_id)))
+              can_call_ally.push(`**${local_war.name}**`);
+        }
 
       //Guarantees
       for (var i = 0; i < all_guarantees.length; i++)
@@ -379,6 +391,9 @@ module.exports = {
           diplomacy_view_string.push("");
           diplomacy_view_string.push(`**[Cancel Justification]**`);
         }
+
+        if (can_call_ally)
+          diplomacy_view_string.push(`**[Call Ally]** - We can currently call this ally into the following conflicts: ${can_call_ally.join(", ")}`);
 
         diplomacy_view_string.push(`**[Improve Relations]** ${config.icons.political_capital} ${parseNumber(config.defines.diplomacy.improve_relations_cost)} PC`);
         diplomacy_view_string.push(`**[Decrease Relations]** ${config.icons.political_capital} ${parseNumber(config.defines.diplomacy.decrease_relations_cost)} PC`);
