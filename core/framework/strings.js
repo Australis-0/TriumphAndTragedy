@@ -39,7 +39,7 @@ module.exports = {
     var date_obj = arg0_date_obj;
 
     //Return statement
-    return `${date_obj.day} ${module.exports.months[date_obj.month]} ${date_obj.year}`;
+    return `${module.exports.ordinalise(date_obj.day)} ${module.exports.months[date_obj.month]} ${date_obj.year} ${date_obj.hour.toString().padStart(2, "0")}:00`;
   },
 
   ordinalise: function (arg0_number) {

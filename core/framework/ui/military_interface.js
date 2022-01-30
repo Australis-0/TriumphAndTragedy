@@ -253,12 +253,14 @@ module.exports = {
 				{ name: "**Global Orders:**", value: global_orders_array.join("\n") },
 				{ name: "**Army Creation:**", value: army_creation_array.join("\n") },
 				{ name: "**Army Management:**", value: army_management_array.join("\n") }
-			);
+			)
+      .setImage("https://cdn.discordapp.com/attachments/722997700391338046/736141424315203634/margin.png");
     const embed_military_orders = new Discord.MessageEmbed()
 			.setColor(settings.bot_colour)
 			.setTitle(`Order Breakdown:\n${config.localisation.divider}`)
 			.setThumbnail(usr.flag)
-			.setDescription(army_orders_array.join("\n"));
+			.setDescription(army_orders_array.join("\n"))
+      .setImage("https://cdn.discordapp.com/attachments/722997700391338046/736141424315203634/margin.png");
 
     //Remove control panel if one exists
     removeControlPanel(game_obj.id);

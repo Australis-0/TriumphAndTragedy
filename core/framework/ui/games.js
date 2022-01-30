@@ -190,6 +190,16 @@ module.exports = {
           }
         }, 100);
 
+        //Date processing
+        setInterval(function(){
+          const topbar_embed = new Discord.MessageEmbed()
+            .setColor(settings.bot_colour)
+            .setTitle(`${config.icons.time} **${getDate(main.date)}**`)
+            .setImage("https://cdn.discordapp.com/attachments/722997700391338046/736141424315203634/margin.png");
+
+          game_obj.header.edit({ embeds: [topbar_embed] });
+        }, 1000);
+
         //Begin processing page
         if (!["country_interface", "map", "founding_map"].includes(game_obj.page))
           game_obj.page = (main.global.user_map[game_obj.user]) ? "country_interface" : "founding_map";
