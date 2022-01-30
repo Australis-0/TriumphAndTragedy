@@ -321,6 +321,7 @@ setInterval(function(){
 
   //ABRS - Save backups!
 	var current_date = new Date().getTime();
+  var current_turn_time = 0;
   var battle_difference = current_date - returnSafeNumber(main.global.battle_tick);
 	var time_difference = current_date - main.last_backup;
   var turn_time_difference = current_date - main.last_turn;
@@ -337,6 +338,34 @@ setInterval(function(){
     main.last_backup = current_date;
 
     nextBattleTick();
+  }
+
+  //Date processing
+  {
+    if (main.date.year < 1750)
+      current_turn_time = 2;
+    else
+      if (main.date.year >= 1914)
+        current_turn_time = 0.25;
+      else
+        current_turn_time = 1;
+
+    //This is how much time has elapsed in years
+    var time_elapsed = current_turn_time*(turn_time_difference/(settings.turn_timer*1000));
+    var processed_time = getYears(time_elapsed);
+
+    //Add to date
+    main.date.year += processed_time.year;
+    main.date.month += processed_time.month;
+    main.date.day += processed_time.day;
+    main.date.hour += processed_time.hour;
+
+    if (main.date.month > 12)
+      main.date.month = 1;
+    if (main.date.day > processed_time.days_in_months[main.date.month - 1])
+      main.date.day = 1;
+    if (main.date.hour > 23)
+      main.date.hour = 0;
   }
 
   //Turn processing for all users

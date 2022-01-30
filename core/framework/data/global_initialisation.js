@@ -20,6 +20,7 @@ module.exports = {
       if (!main.date.year) main.date.year = (config.defines.common.starting_year) ? config.defines.common.starting_year : 1500;
       if (!main.date.month) main.date.month = (config.defines.common.starting_month) ? config.defines.common.starting_month : 1;
       if (!main.date.day) main.date.day = (config.defines.common.starting_day) ? config.defines.common.starting_day : 1;
+      if (!main.date.hour) main.date.hour = 0;
     if (!main.round_count) main.round_count = 0;
 
     //Market trackers - Initialise buy price/sell price/stock
