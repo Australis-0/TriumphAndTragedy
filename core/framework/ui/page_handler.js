@@ -373,6 +373,10 @@ module.exports = {
             });
 
             break;
+          case "customisation":
+            printCustomisation(user_id);
+
+            break;
           case "government list":
             createPageMenu(game_obj.middle_embed, {
               embed_pages: printGovernmentList(actual_id),
