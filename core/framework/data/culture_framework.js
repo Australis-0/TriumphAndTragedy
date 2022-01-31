@@ -341,7 +341,7 @@ module.exports = {
     for (var i = 0; i < all_cultures.length; i++) {
       var local_culture = main.global.cultures[all_cultures[i]];
 
-      if (!local_culture.primary_culture.includes(actual_id))
+      if (local_culture.primary_culture.includes(actual_id))
         all_primary_cultures.push((!options.return_objects) ? all_cultures[i] : local_culture);
     }
 
