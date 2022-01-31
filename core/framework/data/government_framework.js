@@ -8,8 +8,16 @@ module.exports = {
   */
   getGovernment: function (arg0_government_name, arg1_options) {
     //Convert from parameters; initialise options
-    var government_name = arg0_government_name.toLowerCase();
+    var government_name = arg0_government_name;
     var options = (arg1_options) ? arg1_options : {};
+
+    if (typeof government_name == "string")
+      government_name = government_name.toLowerCase();
+    else {
+      options = government_name;
+      government_name = "all";
+    }
+
 
     //Declare local instance variables
     var all_governments = Object.keys(config.governments);
@@ -17,19 +25,19 @@ module.exports = {
 
     //Soft match first
     for (var i = 0; i < all_governments.length; i++)
-      if (all_governments[i].toLowerCase().indexOf(government_name) != -1)
+      if (all_governments[i].toLowerCase().indexOf(government_name) != -1 || government_name == "all")
         if (
-          (return_anarchy && config.governments[all_governments[i]].is_anarchy) ||
-          (!return_anarchy)
+          (options.return_anarchy && config.governments[all_governments[i]].is_anarchy) ||
+          (!options.return_anarchy)
         )
           government_exists = [true, (!options.return_key) ? config.governments[all_governments[i]] : all_governments[i]];
 
     //Hard match second
     for (var i = 0; i < all_governments.length; i++)
-      if (all_governments[i].toLowerCase() == government_name)
+      if (all_governments[i].toLowerCase() == government_name || government_name == "all")
         if (
-          (return_anarchy && config.governments[all_governments[i]].is_anarchy) ||
-          (!return_anarchy)
+          (options.return_anarchy && config.governments[all_governments[i]].is_anarchy) ||
+          (!options.return_anarchy)
         )
           government_exists = [true, (!options.return_key) ? config.governments[all_governments[i]] : all_governments[i]];
 
