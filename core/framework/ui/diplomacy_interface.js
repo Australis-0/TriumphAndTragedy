@@ -165,7 +165,8 @@ module.exports = {
       var local_user = main.users[sorted_user_array[i]];
 
       //Name, Score, Provinces, Population, Military, Money, Tech
-      ledger_string.push(`**${local_user.name}**`);
+      ledger_string.push("");
+      ledger_string.push(`**${local_user.name}**:`);
       ledger_string.push("---");
       ledger_string.push(`- ${config.icons.prestige} Score: **${parseNumber(local_score)}**`);
       ledger_string.push(`- ${config.icons.provinces} Provinces: ${parseNumber(local_user.provinces)}`);
@@ -173,7 +174,6 @@ module.exports = {
       ledger_string.push(`- ${config.icons.soldiers} Active Soldiers: ${parseNumber(getTotalActiveDuty(sorted_user_array[i]))}`);
       ledger_string.push(`- ${config.icons.money} Money: ${parseNumber(local_user.money)}`);
       ledger_string.push(`- ${config.icons.technology} Techs Researched: (**${parseNumber(local_user.researched_technologies.length)}**/**${parseNumber(tech_sum)}**)`);
-      ledger_string.push("");
     }
 
     //Remove control panel if one exists
@@ -183,7 +183,6 @@ module.exports = {
       title: "[Back] ¦ [Jump To Page] ¦ Diplomatic Ledger:",
       description: [
         `**[View Relations]**`,
-        ``,
         config.localisation.divider,
       ],
       title_pages: true,
