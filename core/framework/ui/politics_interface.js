@@ -52,6 +52,11 @@ module.exports = {
         discontented_stage = Math.max(discontented_stage, 0);
         var discontented_string = discontentment_array[discontented_stage];
 
+        if (local_party.discontent > 0 && !discontented_string)
+          discontented_string = "pleased";
+        if (local_party.discontent < 0 && !discontented_string)
+          discontented_string = "ready to revolt";
+
         politics_string.push(`${printPercentage(local_party.popularity)} of your pop. are ${local_government.adjective.toLowerCase()}. They are **${discontented_string}** (${parseNumber(Math.floor(local_party.discontent))}) with the state of our nation.`);
       }
 
