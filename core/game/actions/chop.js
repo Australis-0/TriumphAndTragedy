@@ -11,7 +11,9 @@ module.exports = {
     //Send visual prompt
     visualPrompt(game_obj.alert_embed, user_id, {
       title: `Chop Wood:`,
-      prompts: [`How much wood would you like to chop down? Each action chops down 5 pieces of wood.`, "number", { min: 1, max: usr.actions }]
+      prompts: [
+        [`How much wood would you like to chop down? Each action chops down 5 pieces of wood.`, "number", { min: 1, max: usr.actions }]
+      ]
     },
     function (arg) {
       mine(actual_id, arg[0], "chop");

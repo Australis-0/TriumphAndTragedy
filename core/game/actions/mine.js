@@ -1,4 +1,25 @@
 module.exports = {
+  initialiseMine: function (arg0_user) {
+    //Convert from parameters
+    var user_id = arg0_user;
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var game_obj = getGameObject(user_id);
+    var usr = main.users[actual_id];
+
+    //Send visual prompt
+    visualPrompt(game_obj.alert_embed, user_id, {
+      title: `Mine:`,
+      prompts: [
+        [`How many times would you like to mine?`, "number", { min: 1, max: usr.actions }]
+      ]
+    },
+    function (arg) {
+      module.exports.mine(actual_id, arg[0], "mine");
+    });
+  },
+
   mine: function (arg0_user, arg1_actions, arg2_mode) {
     //Convert from parameters
     var user_id = arg0_user;
@@ -36,11 +57,11 @@ module.exports = {
           }
 
         for (var i = 0; i < mine_chances.length; i++)
-          mine_chances[i] = mine_chances[i]/total_mine_chance;
+          mine_chances[i][0] = mine_chances[i][0]/total_mine_chance;
 
         //Distribute actions; this is guaranteed to only execute 1-2 times
         while (remaining_actions > 0) {
-          var current_element = randomElement(all_resources);
+          var current_element = randomElement(mine_chances);
 
           var amount_taken = Math.min(
             remaining_actions,
@@ -84,24 +105,5 @@ module.exports = {
     } else {
       printError(game_obj.id, `${(config.localisation[mode + "_invalid_actions"]) ? config.localisation[mode + "_invalid_actions"] : "You have entered an invalid number of actions to mine with!"}`);
     }
-  },
-
-  initialiseMine: function (arg0_user) {
-    //Convert from parameters
-    var user_id = arg0_user;
-
-    //Declare local instance variables
-    var actual_id = main.global.user_map[user_id];
-    var game_obj = getGameObject(user_id);
-    var usr = main.users[actual_id];
-
-    //Send visual prompt
-    visualPrompt(game_obj.alert_embed, user_id, {
-      title: `Mine:`,
-      prompts: [`How many times would you like to mine?`, "number", { min: 1, max: usr.actions }]
-    },
-    function (arg) {
-      module.exports.mine(actual_id, arg[0], "mine");
-    });
   }
 };

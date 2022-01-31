@@ -11,7 +11,9 @@ module.exports = {
     //Send visual prompt
     visualPrompt(game_obj.alert_embed, user_id, {
       title: `Quarry:`,
-      prompts: [`How many times would you like to mine stone?`, "number", { min: 1, max: usr.actions }]
+      prompts: [
+        [`How many times would you like to mine stone?`, "number", { min: 1, max: usr.actions }]
+      ]
     },
     function (arg) {
       mine(actual_id, arg[0], "quarry");
