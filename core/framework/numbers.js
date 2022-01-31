@@ -133,7 +133,7 @@ module.exports = {
 
     //How many days has it been?
     time_elapsed.day = Math.ceil(
-      years_elapsed*((!is_leap_year) ? 365 : 366);
+      years_elapsed*((!is_leap_year) ? 365 : 366)
     );
     years_elapsed -= time_elapsed.day/((!is_leap_year) ? 365 : 366);
 

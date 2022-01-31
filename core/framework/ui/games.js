@@ -197,8 +197,10 @@ module.exports = {
             .setTitle(`${config.icons.time} **${getDate(main.date)}**`)
             .setImage("https://cdn.discordapp.com/attachments/722997700391338046/736141424315203634/margin.png");
 
-          game_obj.header.edit({ embeds: [topbar_embed] });
-        }, 1000);
+          try {
+            game_obj.header.edit({ embeds: [topbar_embed] });
+          } catch {}
+        }, 10000);
 
         //Begin processing page
         if (!["country_interface", "map", "founding_map"].includes(game_obj.page))
@@ -234,17 +236,20 @@ module.exports = {
        //Reinitialise all game embeds
        for (var i = 0; i < all_interfaces.length; i++)
         if (interfaces[all_interfaces[i]].type == "game") {
-           try {
-             var local_ui = interfaces[all_interfaces[i]];
-             var local_messages = returnChannel(local_ui.channel).messages.fetch({ limit: 10 }).then((messages) => {
-               messages.forEach(msg => msg.delete());
-             });
-             initialiseGameEmbeds(all_interfaces[i]);
-           } catch (e) {
-             log.error(`Could not delete messages and reinitialise game embeds: ${e}.`);
-             setTimeout(module.exports.reinitialiseGameEmbeds, 3000);
-           }
-         }
+          var local_ui = interfaces[all_interfaces[i]];
+
+          try {
+            var local_messages = returnChannel(local_ui.channel).messages.fetch({ limit: 10 }).then((messages) => {
+              messages.forEach(msg => msg.delete());
+            });
+            initialiseGameEmbeds(all_interfaces[i]);
+          } catch (e) {
+            if (returnChannel(local_ui.channel)) {
+              log.error(`Could not delete messages and reinitialise game embeds: ${e}.`);
+              setTimeout(module.exports.reinitialiseGameEmbeds, 3000);
+            }
+          }
+        }
 
        //Clear all menus of type page_menu, visual_prompt
        for (var i = 0; i < all_interfaces.length; i++)

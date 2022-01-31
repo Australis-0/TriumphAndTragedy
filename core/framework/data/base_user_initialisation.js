@@ -10,6 +10,25 @@ module.exports = {
     var all_users = Object.keys(main.users);
     var starting_kit = config.defines.common.starting_kit;
 
+    //Auto-catchup
+    {
+      var highest_cost = 0;
+
+      for (var i = 0; i < all_users.length; i++) {
+        var local_user = main.users[all_users[i]];
+
+        if (local_user.country_age >= 20)
+          for (var x = 0; x < usr.researched_technologies.length; x++) {
+            var technology_cost = returnSafeNumber(getTechnology(usr.researched_technologies[x]).research_cost);
+
+            highest_cost = Math.max(highest_cost, technology_cost);
+          }
+      }
+
+      if (highest_cost > 0)
+        researchUpTo(user_id, local_value);
+    }
+
     //Loop over all keys in starting kit and parse them
     for (var i = 0; i < all_starting_keys.length; i++) {
       var local_name = all_starting_keys[i];
@@ -17,25 +36,6 @@ module.exports = {
 
       var local_good = getGood(local_name);
       var local_list = getList(local_value);
-
-      //Auto-catchup
-      {
-        var highest_cost = 0;
-
-        for (var i = 0; i < all_users.length; i++) {
-          var local_user = main.users[all_users[i]];
-
-          if (local_user.country_age >= 20)
-            for (var x = 0; x < usr.researched_technologies.length; x++) {
-              var technology_cost = returnSafeNumber(getTechnology(usr.researched_technologies[x]).research_cost);
-
-              highest_cost = Math.max(highest_cost, technology_cost);
-            }
-        }
-
-        if (highest_cost > 0)
-          researchUpTo(user_id, local_value);
-      }
 
       //Effects handler
       {

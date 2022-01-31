@@ -39,7 +39,7 @@ module.exports = {
     var date_obj = arg0_date_obj;
 
     //Return statement
-    return `${module.exports.ordinalise(date_obj.day)} ${module.exports.months[date_obj.month]} ${date_obj.year} ${date_obj.hour.toString().padStart(2, "0")}:00`;
+    return `${module.exports.ordinalise(date_obj.day)} ${module.exports.months[date_obj.month]} ${date_obj.year}, ${Math.round(date_obj.hour).toString().padStart(2, "0")}:00`;
   },
 
   ordinalise: function (arg0_number) {
@@ -49,7 +49,7 @@ module.exports = {
     //Declare local instance variables
     var negative_suffix = (i < 0) ? "-" : "";
 
-    local_number = Math.abs(local_number);
+    i = Math.abs(i);
     var j = i % 10,
       k = i % 100;
 
