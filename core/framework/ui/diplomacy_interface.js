@@ -158,21 +158,23 @@ module.exports = {
     var tech_sum = getAllTechnologies().length;
 
     //Run through sorted_user_array, appending to ledger_string
+    ledger_string.push("");
+
     for (var i = 0; i < sorted_user_array.length; i++) {
       var local_score = getScore(sorted_user_array[i]);
       var local_user = main.users[sorted_user_array[i]];
 
       //Name, Score, Provinces, Population, Military, Money, Tech
       ledger_string.push(`**${local_user.name}**`);
+      ledger_string.push("---");
       ledger_string.push(`- ${config.icons.prestige} Score: **${parseNumber(local_score)}**`);
       ledger_string.push(`- ${config.icons.provinces} Provinces: ${parseNumber(local_user.provinces)}`);
       ledger_string.push(`- ${config.icons.population} Population: ${parseNumber(local_user.population)}`);
       ledger_string.push(`- ${config.icons.soldiers} Active Soldiers: ${parseNumber(getTotalActiveDuty(sorted_user_array[i]))}`);
       ledger_string.push(`- ${config.icons.money} Money: ${parseNumber(local_user.money)}`);
       ledger_string.push(`- ${config.icons.technology} Techs Researched: (**${parseNumber(local_user.researched_technologies.length)}**/**${parseNumber(tech_sum)}**)`);
+      ledger_string.push("");
     }
-
-    console.log(ledger_string);
 
     //Remove control panel if one exists
     removeControlPanel(game_obj.id);
@@ -183,7 +185,6 @@ module.exports = {
         `**[View Relations]**`,
         ``,
         config.localisation.divider,
-        ``
       ],
       title_pages: true,
       fixed_width: true
