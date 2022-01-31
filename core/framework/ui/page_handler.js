@@ -373,8 +373,10 @@ module.exports = {
             });
 
             break;
+          case "view customisation":
           case "customisation":
             printCustomisation(user_id);
+            game_obj.page = "view_customisation";
 
             break;
           case "government list":
@@ -417,7 +419,7 @@ module.exports = {
         }
       }
 
-      if (game_obj.page == "view customisation") {
+      if (game_obj.page == "view_customisation") {
         //[Back]
         if (input == "back") {
           if (interfaces[game_obj.middle_embed.id].page == 0) {

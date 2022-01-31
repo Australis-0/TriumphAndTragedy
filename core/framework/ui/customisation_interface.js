@@ -37,7 +37,7 @@ module.exports = {
     vassal_customisation_array.push(`${config.icons.globe} Rename Vassal: **[Rename Vassal]**`);
     vassal_customisation_array.push(`Force 'em to change their name, free of charge!'`);
     vassal_customisation_array.push("");
-    vassal_customisation_array.oush(`${config.icons.old_map} Rename Vassal City: **[Rename Vassal City]**`);
+    vassal_customisation_array.push(`${config.icons.old_map} Rename Vassal City: **[Rename Vassal City]**`);
     vassal_customisation_array.push(`Don't like the name of one of their cities? Change it, and assert your dominance.`);
     vassal_customisation_array.push("");
     vassal_customisation_array.push(`${config.icons.culture} Rename Vassal Culture: **[Rename Vassal Culture]**`);
