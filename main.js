@@ -93,6 +93,13 @@ FileManager.import("./framework/ui/unit_interface");
 FileManager.import("./framework/ui/war_interface");
 
 //Game command files
+FileManager.import("./game/actions/chop");
+FileManager.import("./game/actions/mine");
+FileManager.import("./game/actions/quarry");
+
+FileManager.import("./game/buildings/build");
+FileManager.import("./game/buildings/demolish");
+
 FileManager.import("./game/colonisation/cancel_charter");
 FileManager.import("./game/colonisation/settle");
 
