@@ -74,6 +74,14 @@ module.exports = {
           //Add to inventory; subtract from remaining_actions
           usr.inventory[current_element[1]] += amount_taken*5;
           remaining_actions -= amount_taken;
+
+          usr.actions = usr.actions - actions;
+
+          //Update stats/budget menu if user is on it
+          if (game_obj.page == "country_interface")
+            printStats(user_id);
+          if (game_obj.page == "budget")
+            printBudget(user_id);
         }
 
         //Format resource_gain_display

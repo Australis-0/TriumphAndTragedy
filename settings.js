@@ -6,6 +6,7 @@ global.settings = {
   visual_prompt_delay: 5000, //How many milliseconds should the bot wait before moving onto the next visual prompt?
 
   bot_colour: "#a98ac7", //What is the main default colour that should appear on bot embeds?
+  bot_header_colour: "#e22626", //What is the default colour that should appear on the top header?
   cache_channels: [
     "901464985916538880",
     "901465004526686250",
