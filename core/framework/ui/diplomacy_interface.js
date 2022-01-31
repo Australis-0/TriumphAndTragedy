@@ -168,9 +168,11 @@ module.exports = {
       ledger_string.push(`- ${config.icons.provinces} Provinces: ${parseNumber(local_user.provinces)}`);
       ledger_string.push(`- ${config.icons.population} Population: ${parseNumber(local_user.population)}`);
       ledger_string.push(`- ${config.icons.soldiers} Active Soldiers: ${parseNumber(getTotalActiveDuty(sorted_user_array[i]))}`);
-      ledger_string.push(`- ${config.icons.money} Money: ${local_user.money}`);
+      ledger_string.push(`- ${config.icons.money} Money: ${parseNumber(local_user.money)}`);
       ledger_string.push(`- ${config.icons.technology} Techs Researched: (**${parseNumber(local_user.researched_technologies.length)}**/**${parseNumber(tech_sum)}**)`);
     }
+
+    console.log(ledger_string);
 
     //Remove control panel if one exists
     removeControlPanel(game_obj.id);

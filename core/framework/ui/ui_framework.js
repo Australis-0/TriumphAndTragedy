@@ -355,9 +355,9 @@ module.exports = {
               var local_embed = new Discord.MessageEmbed()
                 .setColor("#a98ac7")
                 .setDescription(
-                  (options.description) ?
+                  ((options.description) ?
                     options.description.join("\n") :
-                    "" +
+                    "") +
                   local_array_string.join("\n")
                 );
 
