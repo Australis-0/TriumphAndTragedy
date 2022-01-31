@@ -16,18 +16,22 @@ module.exports = {
     //Check to make sure that the user isn't exceeding their army limit
     if (new_army_array.length <= config.defines.combat.max_army_creation_limit || config.defines.combat.max_army_creation_limit == 0) {
       if (new_army_array.length + all_armies.length <= config.defines.combat.max_army_limit || config.defines.combat.max_army_limit == 0) {
-        if (capital_obj.id) {
-          if (capital_obj.controller == actual_id) {
-            for (var i = 0; i < new_army_array.length; i++)
-              createArmy(actual_id, new_army_array[i], capital_obj.id);
+        if (capital_obj) {
+          if (capital_obj.id) {
+            if (capital_obj.controller == actual_id) {
+              for (var i = 0; i < new_army_array.length; i++)
+                createArmy(actual_id, new_army_array[i], capital_obj.id);
 
-            //Print user feedback
-            printAlert(game_obj.id, `You have successfully created up to **${parseNumber(new_army_array.length)}** new armies in Province **${capital_obj.id.toString()}**!`)
+              //Print user feedback
+              printAlert(game_obj.id, `You have successfully created up to **${parseNumber(new_army_array.length)}** new armies in Province **${capital_obj.id.toString()}**!`)
+            } else {
+              printError(game_obj.id, `Your capital city is currently being occupied by **${main.users[capital_obj.controller].name}**! Regain control of your capital city or move your seat of government first before attempting to create new armies.`);
+            }
           } else {
-            printError(game_obj.id, `Your capital city is currently being occupied by **${main.users[capital_obj.controller].name}**! Regain control of your capital city or move your seat of government first before attempting to create new armies.`);
+            printError(game_obj.id, `You can't create armies without a capital city! Set a seat of government first before attempting to create new armies.`);
           }
         } else {
-          printError(game_obj.id, `You can't create armies without a capital city! Set a seat of government first before attempting to create new armies.`);
+          printError(game_obj.id, `No capital, no armies!`);
         }
       } else {
         printError(game_obj.id, `You have already reached the maximum army limit of **${parseNumber(config.defines.combat.army_limit)}**! You can only create up to **${parseNumber(config.defines.combat.army_limit - all_armies.length)}** new armies, whilst you attempted to create up to **${parseNumber(new_army_array.length)}** new armies.`);
