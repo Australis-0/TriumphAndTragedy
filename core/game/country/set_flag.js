@@ -4,7 +4,7 @@ module.exports = {
     var user_id = arg0_user;
     var flag_url = arg1_flag_url.trim();
     var from_overlord = arg2_vassal;
-    var do_not_display = arg2_do_not_display;
+    var do_not_display = arg3_do_not_display;
 
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];

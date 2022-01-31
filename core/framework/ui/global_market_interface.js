@@ -10,6 +10,9 @@ module.exports = {
     var usr = main.users[actual_id];
 
     //Initialise market_string
+    var market_embeds = [];
+    var market_ending_string = [];
+    var market_fields = [];
     var market_string = [];
 
     //Print out remaining Market Capacity
@@ -21,19 +24,40 @@ module.exports = {
       var local_good = getGood(all_market_goods[i]);
       var local_market_good = main.market[all_market_goods[i]];
 
-      market_string.push(`${(local_good.icon) ? config.icons[local_good.icon] : ""} - ${(local_good.name) ? local_good.name : all_market_goods[i]} (**${parseNumber(local_market_good.stock)}** in stock): Buy Price: £${parseNumber(local_market_good.buy_price)} ¦ Sell Price: £${parseNumber(local_market_good.sell_price)}`);
-      market_string.push(`- **[Buy ${(local_good.name) ? local_good.name : all_market_goods[i]}]** ¦ **[Sell ${(local_good.name) ? local_good.name : all_market_goods[i]}]**`);
-      market_string.push("");
+      market_fields.push({
+        name: `${(local_good.icon) ? config.icons[local_good.icon] : ""} - ${(local_good.name) ? local_good.name : all_market_goods[i]} (**${parseNumber(local_market_good.stock)}** in stock):`,
+        value: `Buy Price: £${parseNumber(local_market_good.buy_price)} ¦ Sell Price: £${parseNumber(local_market_good.sell_price)}\n- **[Buy ${(local_good.name) ? local_good.name : all_market_goods[i]}]** ¦ **[Sell ${(local_good.name) ? local_good.name : all_market_goods[i]}]**`,
+        inline: true
+      });
     }
 
     //Interject ending message
-    market_string.push(`_Our deals are always steals!_`);
+    market_ending_string.push(`Our deals are always steals!`);
+
+    //Begin churning out embeds!
+    var local_market_fields = [];
+
+    if (market_fields.length > 0)
+      for (var i = 0; i < market_fields.length; i++) {
+        local_market_fields.push(market_fields[i]);
+
+        if (i != 0 || market_fields.length == 1)
+          if (i % 25 == 0 || i == market_fields.length - 1) {
+            var market_embed = new Discord.MessageEmbed()
+              .setColor(settings.bot_colour)
+              .setTitle(`[Back] ¦ [Jump To Page] ¦ **World Market:**`)
+              .setDescription(market_string.join("\n"))
+              .setFooter(market_ending_string.join("\n"));
+
+            for (var x = 0; x < local_market_fields.length; x++)
+              market_embed.addField(local_market_fields[x].name, local_market_fields[x].value, local_market_fields[x].inline);
+
+            market_embeds.push(market_embed);
+            local_market_fields = [];
+          }
+      }
 
     //Return statement
-    return splitEmbed(market_string, {
-      title: `**[Back]** ¦ World Market:`,
-      title_pages: true,
-      fixed_width: true
-    });
+    return market_embeds;
   }
 };

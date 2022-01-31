@@ -1802,7 +1802,10 @@ module.exports = {
 
               //[World Market]
               if (["global market", "world market"].includes(input)) {
-                printGlobalMarket(user_id);
+                createPageMenu(game_obj.middle_embed, {
+                  embed_pages: printGlobalMarket(user_id),
+                  user: game_obj.user
+                });
                 game_obj.page = "world_market";
               }
             }
