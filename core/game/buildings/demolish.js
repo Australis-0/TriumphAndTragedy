@@ -41,8 +41,8 @@ module.exports = {
                 }
 
                 //Print user feedback
-                (all_freed_pops.length > 0)
-                  printAlert(game_obj.id, `${parseNumber(amount)} ${(building_obj.name) ? building_obj.name : raw_building_name} were demolished. You were refunded ${parseList(freed_pops)}, and **${amount}** building slots were freed up.`) :
+                (all_freed_pops.length > 0) ?
+                  printAlert(game_obj.id, `${parseNumber(amount)} ${(building_obj.name) ? building_obj.name : raw_building_name} were demolished. You were refunded ${parseList(freed_pops)}, and **${parseNumber(amount)}** building slots were freed up.`) :
                   printAlert(game_obj.id, `${parseNumber(amount)} ${(building_obj.name) ? building_obj.name : raw_building_name} were demolished.`);
               } else if (amount == 0) {
                 printError(game_obj.id, `You can't demolish zero **${(building_obj.name) ? building_obj.name : raw_building_name}! How does that make any sense?`);
