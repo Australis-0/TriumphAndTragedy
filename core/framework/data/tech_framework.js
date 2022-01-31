@@ -142,9 +142,9 @@ module.exports = {
     var final_aot_penalty = 1;
     var has_aot_penalty = false;
 
-    for (var y = 0; y < ahead_of_time_config; y++)
-      if (main.date.year >= ahead_of_time_config[y][0] && main.date.year < ahead_of_time_config[y][1])
-        aot_penalty = 2/ahead_of_time_config[y][2];
+    for (var i = 0; i < ahead_of_time_config; i++)
+      if (main.date.year >= ahead_of_time_config[i][0] && main.date.year < ahead_of_time_config[i][1])
+        aot_penalty = 2/ahead_of_time_config[i][2];
 
     if (tech_obj.year) {
       var aot_years = 0;
@@ -160,6 +160,24 @@ module.exports = {
     return Math.round(tech_obj.research_cost*final_aot_penalty);
   },
 
+  instantResearch: function (arg0_user, arg1_technology_name) {
+    //Convert from parameters
+    var user_id = arg0_user;
+    var technology_name = arg1_technology_name.toLowerCase();
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var tech_obj = module.exports.getTechnology(technology_name);
+    var raw_technology_name = module.exports.getTechnology(technology_name, { return_key: true });
+    var usr = main.users[actual_id];
+
+    //Instant research
+    if (!usr.researched_technologies.includes(raw_technology_name)) {
+      module.exports.parseTechnology(user_id, raw_technology_name);
+      usr.researched_technologies.push(raw_technology_name);
+    }
+  },
+
   //parseTechnology() - Parses the technological effects of a given tech for a given user. (Used primarily after the research of a tech has been finished)
   parseTechnology: function (arg0_user, arg1_technology_name) {
     //Convert from parameters
@@ -168,7 +186,7 @@ module.exports = {
     var raw_technology_name = arg1_technology_name.toLowerCase();
 
     //Declare local instance variables
-    var tech_obj = module.exports.getTechnology(arg1_technology_name);
+    var tech_obj = module.exports.getTechnology(raw_technology_name);
 
     //Parse technology for user!
     var all_effects = Object.keys(tech_obj.unlocks);
@@ -243,5 +261,21 @@ module.exports = {
           break;
       }
     }
+  },
+
+  researchUpTo: function (arg0_user, arg1_technology_cost) {
+    //Convert from parameters
+    var user_id = arg0_user;
+    var technology_cost = Math.ceil(arg1_technology_cost);
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var all_technologies = module.exports.getAllTechnologies();
+    var all_technology_names = module.exports.getAllTechnologies({ return_names: true });
+    var usr = main.users[actual_id];
+
+    for (var i = 0; i < all_technologies.length; i++)
+      if (returnSafeNumber(all_technologies[i].research_cost) <= technology_cost)
+        module.exports.instantResearch(actual_id, all_technology_names[i]);
   }
 };
