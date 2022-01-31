@@ -31,50 +31,59 @@ module.exports = {
       if (interfaces[msg_id]) {
         var ui_obj = interfaces[msg_id];
 
+        console.log(ui_obj);
+
         if (ui_obj.user) {
           //Page menu
           switch (ui_obj.type) {
+            case "game":
             case "page_menu":
-              var current_page = ui_obj.page;
+              if (ui_obj.embed_array) {
+                var current_page = ui_obj.page;
 
-              //Determine arrow direction
-              if (reaction.emoji.name == "⬅️") {
-                ui_obj.page = (current_page-1 >= 0) ? ui_obj.page - 1 : ui_obj.page;
-                current_page = ui_obj.page;
+                //Determine arrow direction
+                if (reaction.emoji.name == "⬅️") {
+                  ui_obj.page = (current_page-1 >= 0) ? ui_obj.page - 1 : ui_obj.page;
+                  current_page = ui_obj.page;
 
-                if (ui_obj.embed_array.length > 2) {
-                  //Check if page is valid; if its at the end, we need both emojis now
-                  if (current_page == ui_obj.embed_array.length-2 && current_page != 0) {
-                    removeAllReactions(msg_obj);
-                    msg_obj.react("⬅️").then(() => msg_obj.react("➡️"));
-                  } else if (current_page == 0) {
+                  if (ui_obj.embed_array.length > 2) {
+                    //Check if page is valid; if its at the end, we need both emojis now
+                    if (current_page == ui_obj.embed_array.length-2 && current_page != 0) {
+                      removeAllReactions(msg_obj);
+                      msg_obj.react("⬅️").then(() => msg_obj.react("➡️"));
+                    } else if (current_page == 0) {
+                      removeAllReactions(msg_obj);
+                      msg_obj.react("➡️");
+                    }
+                  } else {
                     removeAllReactions(msg_obj);
                     msg_obj.react("➡️");
                   }
-                } else {
-                  removeAllReactions(msg_obj);
-                  msg_obj.react("➡️");
-                }
-              } else if (reaction.emoji.name == "➡️") {
-                //Check if page is valid
-                ui_obj.page = (ui_obj.embed_array[current_page+1]) ? ui_obj.page + 1 : ui_obj.page;
+                } else if (reaction.emoji.name == "➡️") {
+                  //Check if page is valid
+                  ui_obj.page = (ui_obj.embed_array[current_page+1]) ? ui_obj.page + 1 : ui_obj.page;
 
-                //If its at the beginning, we need both emojis now
-                if (ui_obj.embed_array.length > 2) {
-                  if (current_page != ui_obj.embed_array.length-1 && current_page == 1) {
-                    removeAllReactions();
-                    msg_obj.react("⬅️").then(() => msg_obj.react("➡️"));
-                  } else if (current_page == ui_obj.embed_arrray.length-1) {
-                    removeAllReactions();
-                    msg_obj.react("⬅️");
-                  }
-                } else {
-                  if (current_page == 1) {
-                    removeAllReactions();
-                    msg_obj.react("⬅️");
+                  //If its at the beginning, we need both emojis now
+                  if (ui_obj.embed_array.length > 2) {
+                    if (current_page != ui_obj.embed_array.length-1 && current_page == 1) {
+                      removeAllReactions();
+                      msg_obj.react("⬅️").then(() => msg_obj.react("➡️"));
+                    } else if (current_page == ui_obj.embed_array.length-1) {
+                      removeAllReactions();
+                      msg_obj.react("⬅️");
+                    }
+                  } else {
+                    if (current_page == 1) {
+                      removeAllReactions();
+                      msg_obj.react("⬅️");
+                    }
                   }
                 }
+
+                //Switch page
+                msg_obj.edit({ embeds: [ui_obj.embed_array[ui_obj.page]] });
               }
+
               break;
           }
 

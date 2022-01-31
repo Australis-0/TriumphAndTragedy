@@ -5,7 +5,7 @@ module.exports = {
 
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
-    var all_market_goods = Object.keys(main.market);
+    var all_market_goods = unique(Object.keys(main.market).sort());
     var game_obj = getGameObject(user_id);
     var usr = main.users[actual_id];
 
@@ -26,9 +26,15 @@ module.exports = {
 
       market_fields.push({
         name: `${(local_good.icon) ? config.icons[local_good.icon] : ""} - ${(local_good.name) ? local_good.name : all_market_goods[i]} (**${parseNumber(local_market_good.stock)}** in stock):`,
-        value: `Buy Price: £${parseNumber(local_market_good.buy_price)} ¦ Sell Price: £${parseNumber(local_market_good.sell_price)}\n- **[Buy ${(local_good.name) ? local_good.name : all_market_goods[i]}]** ¦ **[Sell ${(local_good.name) ? local_good.name : all_market_goods[i]}]**`,
+        value: "```yaml" + `\nBuy Price: £${parseNumber(local_market_good.buy_price)}\nSell Price: £${parseNumber(local_market_good.sell_price)}` + "``````css" + `\n- [Buy ${(local_good.name) ? local_good.name : all_market_goods[i]}]\n- [Sell ${(local_good.name) ? local_good.name : all_market_goods[i]}]` + "\n```",
         inline: true
       });
+
+      if ((i + 1) % 2 == 0)
+        market_fields.push({
+          name: config.icons.blank_1,
+          value: config.localisation.blank
+        });
     }
 
     //Interject ending message
@@ -42,11 +48,12 @@ module.exports = {
         local_market_fields.push(market_fields[i]);
 
         if (i != 0 || market_fields.length == 1)
-          if (i % 25 == 0 || i == market_fields.length - 1) {
+          if (i % 13 == 0 || i == market_fields.length - 1) {
             var market_embed = new Discord.MessageEmbed()
               .setColor(settings.bot_colour)
               .setTitle(`[Back] ¦ [Jump To Page] ¦ **World Market:**`)
               .setDescription(market_string.join("\n"))
+              .setImage("https://cdn.discordapp.com/attachments/722997700391338046/736141424315203634/margin.png")
               .setFooter(market_ending_string.join("\n"));
 
             for (var x = 0; x < local_market_fields.length; x++)

@@ -127,7 +127,7 @@ module.exports = {
     var already_in_game = [false, ""];
 
     //Check if user already has a game open
-    for (var i = 0; i < all_interfaces.length; i++) already_in_game = (interfaces[all_interfaces[i]].type == "game" && interfaces[all_interfaces[i]].user == user_id) ? [true, all_interfaces[i]] : already_in_game;
+    for (var i = 0; i < all_interfaces.length; i++) already_in_game = (interfaces[all_interfaces[i]].type == "game" && interfaces[all_interfaces[i]].user == user_id && !interfaces[all_interfaces[i]].embed_array) ? [true, all_interfaces[i]] : already_in_game;
 
     //Return statement
     return (already_in_game[0]) ? already_in_game[1] : undefined;
