@@ -1,45 +1,4 @@
 module.exports = {
-  /*
-    getGoods() - Returns an array of all good objects unless specified otherwise.
-    options: {
-      exclude_categories: []
-      exclude_hidden: false/true,
-      return_names: false/true
-    }
-  */
-  getGoods: function (arg0_options) {
-    //Convert from parameters
-    var options = (arg0_options) ? arg0_options : {};
-
-    //Declare local instance variables
-    var all_good_categories = Object.keys(config.goods);
-    var goods_array = [];
-
-    //Iterate over all goods categories and push all goods therein to array
-    for (var i = 0; i < all_good_categories.length; i++) {
-      var local_category = config.goods[all_good_categories[i]];
-      var local_goods = Object.keys(local_category);
-
-      //Check if category meets the conditions described in options
-      var category_meets_conditions = true;
-
-      try {
-        if (options.exclude_categories.includes(all_good_categories[i])) category_meets_conditions = false;
-      } catch {}
-      if (options.exclude_hidden && all_good_categories[i] == "hidden") category_meets_conditions = false;
-
-      //If the category meets the conditions, push all the local goods inside of it to goods_array, either with their name, or with their object depending on the options
-      if (category_meets_conditions)
-        for (var x = 0; x < local_goods.length; x++)
-          (options.return_names) ?
-            goods_array.push(local_goods[x]) :
-            goods_array.push(local_category[local_goods[x]]);
-    }
-
-    //Return statement
-    return goods_array;
-  },
-
   getGood: function (arg0_name) {
     //Convert from parameters
     var good_name = arg0_name.toLowerCase();
@@ -105,6 +64,47 @@ module.exports = {
 
     //Return statement
     return (good_exists[0]) ? good_exists[1] : undefined;
+  },
+
+  /*
+    getGoods() - Returns an array of all good objects unless specified otherwise.
+    options: {
+      exclude_categories: []
+      exclude_hidden: false/true,
+      return_names: false/true
+    }
+  */
+  getGoods: function (arg0_options) {
+    //Convert from parameters
+    var options = (arg0_options) ? arg0_options : {};
+
+    //Declare local instance variables
+    var all_good_categories = Object.keys(config.goods);
+    var goods_array = [];
+
+    //Iterate over all goods categories and push all goods therein to array
+    for (var i = 0; i < all_good_categories.length; i++) {
+      var local_category = config.goods[all_good_categories[i]];
+      var local_goods = Object.keys(local_category);
+
+      //Check if category meets the conditions described in options
+      var category_meets_conditions = true;
+
+      try {
+        if (options.exclude_categories.includes(all_good_categories[i])) category_meets_conditions = false;
+      } catch {}
+      if (options.exclude_hidden && all_good_categories[i] == "hidden") category_meets_conditions = false;
+
+      //If the category meets the conditions, push all the local goods inside of it to goods_array, either with their name, or with their object depending on the options
+      if (category_meets_conditions)
+        for (var x = 0; x < local_goods.length; x++)
+          (options.return_names) ?
+            goods_array.push(local_goods[x]) :
+            goods_array.push(local_category[local_goods[x]]);
+    }
+
+    //Return statement
+    return goods_array;
   },
 
   getRawGoods: function (arg0_options) {
