@@ -351,6 +351,10 @@ module.exports = {
     {
       if (["country_interface"].includes(game_obj.page)) {
         switch (input) {
+          case "chop":
+            initialiseChop(user_id);
+
+            break;
           case "coup":
             visualPrompt(game_obj.alert_embed, user_id, {
               title: `Coup Government:`,
@@ -387,6 +391,14 @@ module.exports = {
             game_obj.page = "view_governments";
 
             break;
+          case "mine":
+            initialiseMine(user_id);
+
+            break;
+          case "quarry":
+            initialiseQuarry(user_id);
+
+            break;
           case "set government":
             visualPrompt(game_obj.alert_embed, user_id, {
               title: `Set Government:`,
@@ -409,6 +421,10 @@ module.exports = {
                   break;
               }
             });
+
+            break;
+          case "set tax":
+            initialiseSetTax(user_id);
 
             break;
           case "view customisation":
