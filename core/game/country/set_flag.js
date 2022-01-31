@@ -15,7 +15,7 @@ module.exports = {
     if (!usr.options.flag_locked) {
       if (!usr.options.customisation_locked || (usr.options.customisation_locked && from_overlord)) {
         if (flag_url.length >= 0) {
-          if ([".png", ".jpg", ".jpeg"].includes(flag_url)) {
+          if (flag_url.includes(".png") || flag_url.includes(".jpg") || flag_url.includes(".jpeg")) {
             if (!flag_url.includes("file:")) {
               usr.flag = flag_url;
 
