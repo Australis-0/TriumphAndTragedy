@@ -8,7 +8,7 @@ module.exports = {
 
     //Declare local instance variables
     var all_users = Object.keys(main.users);
-    var label_placement = config.map_label_placement;
+    var label_placement = config.defines.map.map_label_placement;
     var labels = [];
 
     log.info(`cacheSVG() called for ${map_file}!`);
@@ -24,7 +24,7 @@ module.exports = {
         //Regular error trapping just in case
         try {
           switch (map_name) {
-            case "political":
+            default:
               //Political map rendering
               var current_element = 0;
               var counter = 0;
@@ -35,7 +35,18 @@ module.exports = {
 
                 //Only display label if user is not eliminated and has more than zero provinces
                 if (!local_user.eliminated && local_user.provinces > 0)
-                  (labels[current_element]) ? labels.push(all_users[i]) : [all_users[i]];
+                  if (label_placement[current_element]) {
+                    if (counter == label_placement[current_element]) {
+                      counter = 0;
+                      current_element++;
+                    }
+
+                    counter++;
+                    if (labels[current_element])
+                      labels[current_element].push(all_users[i]);
+                    else
+                      labels[current_element] = [all_users[i]];
+                  }
               }
 
               //Initialise canvas and draw key for political map
@@ -64,6 +75,8 @@ module.exports = {
                   province_id_layer.src = `./map/${config.defines.map.map_overlay}`;
                 }
 
+                console.log(labels);
+
                 //Generate key
                 ctx.font = "36px Bahnschrift Condensed";
                 ctx.fillStyle = "#ffffff";
@@ -71,6 +84,7 @@ module.exports = {
 
                 //Generate colour key and accompanying labels
                 ctx.strokeStyle = "#ffffff";
+
                 for (var i = 0; i < labels.length; i++)
                   for (var x = 0; x < labels[i].length; x++) {
                     var local_user = main.users[labels[i][x]];
@@ -92,6 +106,7 @@ module.exports = {
           }
         } catch (e) {
           log.error(`cacheSVG() encountered an error whilst parsing file ${map_file} of map name ${map_name}: ${e}.`);
+          console.log(e);
         }
       }
     });
