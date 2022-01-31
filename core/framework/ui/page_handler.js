@@ -440,7 +440,7 @@ module.exports = {
           initialiseRenameCulture(user_id);
 
         //[Set Colour]
-        if (input == "set colour");
+        if (input == "set colour")
           initialiseSetColour(user_id);
 
         //[Set Flag]
