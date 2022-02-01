@@ -400,7 +400,7 @@ module.exports = {
     //Check how many total soldiers in all military pops there are
     for (var i = 0; i < all_pops.length; i++)
       if (config.pops[all_pops[i]].military_pop)
-        total_sum += usr[`used_${all_pops[i]}`];
+        total_sum += usr.pops[`used_${all_pops[i]}`];
 
     //Add mobilised soldiers to the count
     if (usr.mobilisation.is_mobilised)

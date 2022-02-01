@@ -160,7 +160,7 @@ module.exports = {
   //Returns all unit categories based on order (if it exists)
   getUnitCategories: function () {
     //Declare local instance variables
-    var all_unit_categories = Object.keys(config.buildings);
+    var all_unit_categories = Object.keys(config.units);
     var unit_categories = [];
     var no_order_cache = [];
 

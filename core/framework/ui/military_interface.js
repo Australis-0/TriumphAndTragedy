@@ -114,13 +114,13 @@ module.exports = {
       military_status_array.push(`The rest, some **${parseNumber(returnSafeNumber(reserves_strength.attack))}** Attack and **${parseNumber(returnSafeNumber(reserves_strength.defence))}** Defence are currently in our reserves.`);
       military_status_array.push(`---`);
       military_status_array.push(`This makes for a combined grand total of ${parseNumber(military_strength.attack + returnSafeNumber(reserves_strength.attack))} Attack and ${parseNumber(military_strength.defence + returnSafeNumber(reserves_strength.defence))} Defence, for a total army strength of ${total_troop_count_status.join("\n")}.`);
-
-      military_status_array.push("");
-      military_status_array.push(`- Type **[Army List]** to view a complete list of all your armies.`);
-      military_status_array.push(`- Type **[View Reserves]** to view what units you have in your reserves.`);
     } else {
       military_status_array.push(`_We currently have no armies in active service._`);
     }
+
+    military_status_array.push("");
+    military_status_array.push(`- Type **[Army List]** to view a complete list of all your armies.`);
+    military_status_array.push(`- Type **[View Reserves]** to view what units you have in your reserves.`);
 
     //2nd Field - Casualties counter
     var military_civilian_casualties = [],

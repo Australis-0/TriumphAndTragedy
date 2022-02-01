@@ -28,7 +28,7 @@ module.exports = {
       var units_found_in_category = false;
 
       //Push unit header to reserves_string
-      reserves_string.push(config.localisation.divider);
+      reserves_string.push(`---`);
       reserves_string.push(`${local_unit_category_icon}**${local_unit_category_name}:**`);
       reserves_string.push("");
 
@@ -49,6 +49,8 @@ module.exports = {
 
       if (!units_found_in_category)
         reserves_string.push(`_No units in this category could be found._`);
+
+      reserves_string.push("");
     }
 
     //Print Upkeep
@@ -69,10 +71,10 @@ module.exports = {
       army_display_stats.push(`Total ${parseString(local_combat_modifier)}: ` + "`" + `${parseNumber(army_stats[local_combat_modifier])}` + "`");
     }
 
-    reserves_string.push(`${army_stats.join(" ¦ ")}.`);
+    reserves_string.push(`${army_display_stats.join(" ¦ ")}.`);
 
     //Return embed as splitEmbed
-    return splitEmbed(unit_string, {
+    return splitEmbed(reserves_string, {
       title: "[Back] ¦ [Jump To Page] ¦ Reserves:",
       title_pages: true,
       fixed_width: true
