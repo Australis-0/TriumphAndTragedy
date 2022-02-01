@@ -278,18 +278,21 @@ module.exports = {
     var usr = main.users[user_id];
 
     //Only start appending if the .costs object exists at all
-    if (unit_obj.costs) {
-      var all_costs = Object.keys(unit_obj.costs);
+    if (unit_obj.cost) {
+      var all_costs = Object.keys(unit_obj.cost);
 
       for (var i = 0; i < all_costs.length; i++) {
+        var good_obj = getGood(all_costs[i]);
+
         //Check to make sure that this is an actual resource and not just a pop value
         var unit_cost_modifier = (!Object.keys(config.pops).includes(all_costs[i])) ?
-            (!getGood(all_costs[i]).is_cp) ?
-              returnSafeNumber(usr.modifiers.unit_cost, 1) :
-              returnSafeNumber(usr.modifiers.training_cost, 1)
-            :
-          1;
-        var current_resource_demand = unit_obj.costs[all_costs[i]]*unit_cost_modifier*options.amount;
+            (good_obj) ?
+              (!good_obj.is_cp) ?
+                returnSafeNumber(usr.modifiers.unit_cost, 1) :
+                returnSafeNumber(usr.modifiers.training_cost, 1) :
+              1 :
+            1;
+        var current_resource_demand = unit_obj.cost[all_costs[i]]*unit_cost_modifier*options.amount;
 
         //Fetch resource_type
         var resource_type = {
