@@ -165,7 +165,7 @@ module.exports = {
               manpower_array.push(`${parseNumber(Math.ceil(local_unit_cost))} ${pop_name}`);
 
             //Set costs_string
-            if (costs_string.length > 0)
+            if (costs_array.length > 0)
               costs_string = costs_array.join(", ");
 
             //Set manpower_string
