@@ -57,6 +57,7 @@ module.exports = {
 
       //Even everything out to 100%
       {
+        var iterations = 0;
         var total_popularity = 0;
 
         for (var i = 0; i < all_governments.length; i++)
@@ -74,6 +75,11 @@ module.exports = {
               total_popularity -= local_government.popularity;
               local_government.popularity = 0;
             }
+
+          iterations++;
+
+          if (iterations > 10)
+            break;
         }
       }
     }

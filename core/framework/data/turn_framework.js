@@ -170,10 +170,16 @@ module.exports = {
     var options = (arg1_options) ? arg1_options : {};
 
     //Declare local instance variables; make sure to account for user simulations
-    var actual_id = main.global.user_map[user_id];
-    var usr = (!options.is_simulation) ?
-      main.users[actual_id] :
-      JSON.parse(JSON.stringify(main.users[actual_id]));
+    var actual_id = (options.is_simulation) ?
+      main.global.user_map[user_id] + "_simulation" :
+      main.global.user_map[user_id];
+    if (options.is_simulation) {
+      user_id += "_simulation";
+      main.global.user_map[user_id] = actual_id;
+
+      main.users[actual_id] = JSON.parse(JSON.stringify(main.users[main.global.user_map[user_id]]));
+    }
+    var usr = main.users[actual_id];
 
     //Declare local tracker variables
     var all_armies = Object.keys(usr.armies);
@@ -970,7 +976,18 @@ module.exports = {
       usr.modifiers.war_exhaustion = Math.min(Math.max(usr.modifiers.war_exhaustion, 0), 1);
     }
 
-    //Return statement if simulation
-    return (options.is_simulation) ? usr : undefined;
+    //Simulation handler
+    {
+      if (options.is_simulation) {
+        var simulated_results = JSON.parse(JSON.stringify(usr));
+
+        //Restore presimulation state
+        delete main.users[actual_id];
+        delete main.global.user_map[user_id];
+
+        //Return statement
+        return simulated_results;
+      }
+    }
   }
 }

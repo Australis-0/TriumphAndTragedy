@@ -25,7 +25,6 @@ module.exports = {
 
     total_reform_desire_gain = Math.min(total_reform_desire_gain, 0.15);
 
-
     //Format politics_string
     politics_string.push(`**Ruling Government:**`);
     politics_string.push("");
