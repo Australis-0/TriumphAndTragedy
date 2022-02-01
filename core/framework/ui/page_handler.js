@@ -308,6 +308,9 @@ module.exports = {
           }
 
           //[Create Army]
+          if (input == "create army")
+            initialiseCreateArmy(user_id);
+
           //[Jump To Page]
           if (input == "jump to page")
             visualPrompt(game_obj.alert_embed, user_id, {
@@ -321,7 +324,7 @@ module.exports = {
                 embed_pages: printColonisation(game_obj.user),
                 page: arg[0] - 1,
                 user: game_obj.user
-              })
+              });
             });
 
           //[Train Units]
@@ -330,7 +333,10 @@ module.exports = {
 
           //[Unit List]
           if (["craft list", "unit list"].includes(input)) {
-            printUnitList(user_id);
+            createPageMenu(game_obj.middle_embed, {
+              embed_pages: printUnitList(game_obj.user),
+              user: game_obj.user
+            });
             game_obj.page = "unit_list";
           }
 
@@ -1270,6 +1276,17 @@ module.exports = {
         //[Transfer Units]
         if (input == "transfer units")
           initialiseTransferUnits(user_id);
+
+        //[Unit List]
+        if (input == "unit list") {
+          createPageMenu(game_obj.middle_embed, {
+            embed_pages: printUnitList(game_obj.user),
+            user: game_obj.user
+          });
+
+          game_obj.page = "unit_list";
+        }
+
 
         //[View Army]
         if (input == "view army")

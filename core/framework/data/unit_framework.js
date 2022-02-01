@@ -214,7 +214,7 @@ module.exports = {
 
     //Fetch config object
     if (config.units[unit_category_name]) {
-      return (options.return_key) ? config.units[unit_category_name] : unit_category_name;
+      return (!options.return_key) ? config.units[unit_category_name] : unit_category_name;
     } else {
       //If the unit category cannot be found verbatim, start a soft-hard search by parsed strings
       //Soft match first
@@ -318,7 +318,7 @@ module.exports = {
     }
 
     //Begin appending pops if options.type is either "all" or "pops"
-    if (building_obj.manpower_cost && ["all", "pops"].includes(options.type)) {
+    if (unit_obj.manpower_cost && ["all", "pops"].includes(options.type)) {
       var all_manpower_costs = Object.keys(unit_cost.manpower_cost);
 
       for (var i = 0; i < all_manpower_costs.length; i++) {

@@ -107,6 +107,8 @@ module.exports = {
       var local_unit_category_string = [];
       var local_units = Object.keys(local_unit_category);
 
+      console.log(local_units);
+
       //Print unit category header
       unit_string.push(`${local_unit_category_icon}**${local_unit_category_name}**:`);
       unit_string.push(config.localisation.divider);
