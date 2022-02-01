@@ -319,14 +319,14 @@ module.exports = {
 
     //Begin appending pops if options.type is either "all" or "pops"
     if (unit_obj.manpower_cost && ["all", "pops"].includes(options.type)) {
-      var all_manpower_costs = Object.keys(unit_cost.manpower_cost);
+      var all_manpower_costs = Object.keys(unit_obj.manpower_cost);
 
       for (var i = 0; i < all_manpower_costs.length; i++) {
-        var current_resource_demand = unit_obj.costs[all_manpower_costs[i]]*options.amount;
+        var current_resource_demand = unit_obj.manpower_cost[all_manpower_costs[i]]*options.amount;
 
-        costs_obj[all_costs[i]] = (!costs_obj[all_costs[i]]) ?
+        costs_obj[all_manpower_costs[i]] = (!costs_obj[all_manpower_costs[i]]) ?
           current_resource_demand :
-          costs_obj[all_costs[i]] + current_resource_demand;
+          costs_obj[all_manpower_costs[i]] + current_resource_demand;
       }
     }
 

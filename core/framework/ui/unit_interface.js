@@ -107,8 +107,6 @@ module.exports = {
       var local_unit_category_string = [];
       var local_units = Object.keys(local_unit_category);
 
-      console.log(local_units);
-
       //Print unit category header
       unit_string.push(`${local_unit_category_icon}**${local_unit_category_name}**:`);
       unit_string.push(config.localisation.divider);
@@ -178,8 +176,8 @@ module.exports = {
           //Get colonisation_string
           if (local_unit.colonise_provinces)
             colonisation_string = (local_unit.colonise_provinces <= 1) ?
-              ` ¦ Settles ${parseInteger(local_unit.colonise_provinces)} Province` :
-              ` ¦ Settles ${parseInteger(local_unit.colonise_provinces)} Provinces`;
+              ` ¦ Settles ${parseNumber(local_unit.colonise_provinces)} Province` :
+              ` ¦ Settles ${parseNumber(local_unit.colonise_provinces)} Provinces`;
 
           //Get quantity_string
           quantity_string = ` ¦ x${parseNumber(unit_quantity)} Quantity`;
@@ -187,24 +185,32 @@ module.exports = {
           //Push item to array, followed by unit_stats
           unit_string.push(`${unit_icon}**${unit_name}** - ${costs_string} ${manpower_string}`);
 
-          for (var i = 0; i < config.defines.combat.combat_modifiers.length; i++)
-            if (local_unit[config.defines.combat.combat_modifiers[i]])
-              unit_stats_array.push(`${local_unit[config.defines.combat.combat_modifiers[i]]} ${parseString(config.defines.combat.combat_modifiers[i])}`);
+          var has_combat_modifiers = false;
+
+          for (var y = 0; y < config.defines.combat.combat_modifiers.length; y++)
+            if (local_unit[config.defines.combat.combat_modifiers[y]])
+              has_combat_modifiers = true;
+
+          if (has_combat_modifiers)
+            for (var y = 0; y < config.defines.combat.combat_modifiers.length; y++)
+              unit_stats_array.push(`${returnSafeNumber(local_unit[config.defines.combat.combat_modifiers[y]])} ${parseString(config.defines.combat.combat_modifiers[y])}`);
 
           //Format unit_stats_string
-          unit_stats_string += "`";
+          if (unit_stats_array.length > 0) {
+            unit_stats_string += "`";
 
-          for (var i = 0; i < unit_stats_array.length; i++)
-            unit_stats_string += unit_stats_array[i] + (
-              //Add dash only if i is not equal to unit_stats_array.length-1
-              (i < unit_stats_array.length-1) ?
-                " - " :
-                ""
-            );
+            for (var y = 0; y < unit_stats_array.length; y++)
+              unit_stats_string += unit_stats_array[y] + (
+                //Add dash only if y is not equal to unit_stats_array.length-1
+                (y < unit_stats_array.length-1) ?
+                  " - " :
+                  ""
+              );
 
-          unit_stats_string += "`";
+            unit_stats_string += "`";
 
-          unit_string.push(unit_stats_string);
+            unit_string.push(unit_stats_string);
+          }
         }
       }
 
