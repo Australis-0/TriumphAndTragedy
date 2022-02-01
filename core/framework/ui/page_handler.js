@@ -1747,6 +1747,22 @@ module.exports = {
             initialiseDumbBuy(user_id);
           }
 
+          //[Jump To Page]
+          if (input == "jump to page")
+            visualPrompt(game_obj.alert_embed, user_id, {
+              title: `Jump To Page:`,
+              prompts: [
+                [`Which page would you like jump to?`, "number", { min: 1, max: printGlobalMarket(game_obj.user).length }]
+              ]
+            },
+            function (arg) {
+              createPageMenu(game_obj.middle_embed, {
+                embed_pages: printGlobalMarket(game_obj.user),
+                page: arg[0] - 1,
+                user: game_obj.user
+              })
+            });
+
           //[Sell (Good)]
           if (input.startsWith("sell ")) {
             var good_name = input.trim().replace("sell ", "");

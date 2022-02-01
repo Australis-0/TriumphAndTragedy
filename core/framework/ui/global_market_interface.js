@@ -32,7 +32,7 @@ module.exports = {
 
       if ((i + 1) % 2 == 0)
         market_fields.push({
-          name: config.icons.blank_1,
+          name: config.localisation.blank,
           value: config.localisation.blank
         });
     }

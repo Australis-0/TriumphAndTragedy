@@ -21,7 +21,8 @@ module.exports = {
       //Check if argument provided is a raw name
       if (local_category[good_name]) {
         good_exists = [true, local_category[good_name], good_name];
-      } else {
+      }
+      if (!good_exists[0]) {
         //Search by name matches - Soft match first
         for (var x = 0; x < local_goods.length; x++) {
           var local_good = local_category[local_goods[x]];
