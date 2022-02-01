@@ -600,10 +600,10 @@ module.exports = {
         }
 
         //Stability-cap, cap before re-adding
-        usr.political_instability_modifier = Math.min(usr.political_instability_modifier, -35);
-        usr.political_instability_modifier = Math.max(usr.political_instability_modifier, 50);
+        usr.political_instability_modifier = Math.max(usr.political_instability_modifier, -0.35);
+        usr.political_instability_modifier = Math.min(usr.political_instability_modifier, 0.50);
 
-        usr.political_capital_gain_modifier = Math.min(usr.political_capital_gain_modifier, 0);
+        usr.political_capital_gain_modifier = Math.max(usr.political_capital_gain_modifier, 0);
 
         //Reapply modifiers
         usr.modifiers.political_capital_gain += usr.political_capital_gain_modifier;
@@ -611,11 +611,11 @@ module.exports = {
         usr.modifiers.stability_modifier += usr.political_instability_modifier;
 
         //Institute cap
-        usr.modifiers.political_capital_gain = Math.min(usr.modifiers.political_capital_gain, 5);
-        usr.modifiers.political_capital_gain = Math.max(usr.modifiers.political_capital_gain, 200);
+        usr.modifiers.political_capital_gain = Math.max(usr.modifiers.political_capital_gain, 5);
+        usr.modifiers.political_capital_gain = Math.min(usr.modifiers.political_capital_gain, 200);
 
-        usr.modifiers.reform_desire_gain = Math.min(usr.modifiers.reform_desire_gain, -0.25);
-        usr.modifiers.reform_desire_gain = Math.max(usr.modifiers.reform_desire_gain, 0.2);
+        usr.modifiers.reform_desire_gain = Math.max(usr.modifiers.reform_desire_gain, -0.25);
+        usr.modifiers.reform_desire_gain = Math.min(usr.modifiers.reform_desire_gain, 0.2);
       }
 
       //Coup
@@ -653,9 +653,9 @@ module.exports = {
         for (var i = 0; i < all_governments.length; i++)
           total_percentage += usr.politics[all_governments[i]].popularity;
 
-        if (total_percentage < 100) {
+        if (total_percentage < 1) {
           most_popular_party_obj.popularity += (1 - total_percentage);
-        } else if (total_percentage > 100) {
+        } else if (total_percentage > 1) {
           most_popular_party_obj.popularity += (total_percentage - 1);
         }
 

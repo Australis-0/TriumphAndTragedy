@@ -1407,11 +1407,15 @@ module.exports = {
             });
 
           break;
-        default: //[WIP] - Add remaining buttons
+        default:
           //Button handler
           //[Coup]
           if (input == "coup")
             initialiseCoup(user_id);
+
+          //[Set Government]
+          if (input == "set government")
+            initialiseSetGovernment(user_id);
 
           //[Set Tax]
           if (input == "set tax")

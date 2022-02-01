@@ -46,7 +46,7 @@ module.exports = {
               local_list[0];
 
             break;
-          case "set_government": //[WIP] - Add government effects and set reforms for available fields in future
+          case "set_government":
             usr.government = randomElement(local_list);
 
             break;
@@ -251,7 +251,7 @@ module.exports = {
         if (!local_government.popularity) local_government.popularity = 0;
 
         if (!local_government.discontent) local_government.discontent = 0;
-        if (!local_government.drift) local_government.drift = 1;
+        if (!local_government.drift) local_government.drift = 0.01;
       }
 
     if (!usr.pops) usr.pops = {};
