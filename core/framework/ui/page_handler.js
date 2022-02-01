@@ -496,7 +496,7 @@ module.exports = {
       }
     }
 
-    //Diplomacy page handler [WIP] - Add peace treaty handler
+    //Diplomacy page handler
     {
       if (game_obj.page == "cb_list") {
         //[Back]
@@ -510,12 +510,12 @@ module.exports = {
           visualPrompt(game_obj.alert_embed, user_id, {
             title: `Jump To Page:`,
             prompts: [
-              [`Which page would you like jump to?`, "number", { min: 1, max: printCBs(game_obj.user).length }]
+              [`Which page would you like jump to?`, "number", { min: 1, max: printCBList(game_obj.user).length }]
             ]
           },
           function (arg) {
             createPageMenu(game_obj.middle_embed, {
-              embed_pages: printCBs(game_obj.user),
+              embed_pages: printCBList(game_obj.user),
               page: arg[0] - 1,
               user: game_obj.user
             });
@@ -567,7 +567,7 @@ module.exports = {
         }
 
         //[View Relations]
-        if (input == "view relations") {
+        if (["view diplomacy", "view relations"].includes(input)) {
           initialiseViewDiplomacy(user_id);
         } else if (input.startsWith("view relations ")) {
           var ot_user_id = returnMention(game_obj.page.replace("view relations ", ""));
@@ -676,7 +676,7 @@ module.exports = {
         if (input == "view cbs") {
           game_obj.page = `view_cb_${actual_ot_user_id}`;
           createPageMenu(game_obj.middle_embed, {
-            embed_pages: printCBs(user_id, actual_ot_user_id),
+            embed_pages: printCBList(user_id, actual_ot_user_id),
             user: game_obj.user
           });
         }
@@ -716,7 +716,7 @@ module.exports = {
           });
 
         //[View Relations]
-        if (input == "view relations") {
+        if (["view diplomacy", "view relations"].includes(input)) {
           initialiseViewDiplomacy(user_id);
         } else if (input.startsWith("view relations ")) {
           var ot_user_id = returnMention(game_obj.page.replace("view relations ", ""));
@@ -741,12 +741,12 @@ module.exports = {
           visualPrompt(game_obj.alert_embed, user_id, {
             title: `Jump To Page:`,
             prompts: [
-              [`Which page would you like jump to?`, "number", { min: 1, max: printCBs(game_obj.user, actual_ot_user_id).length }]
+              [`Which page would you like jump to?`, "number", { min: 1, max: printCBList(game_obj.user, actual_ot_user_id).length }]
             ]
           },
           function (arg) {
             createPageMenu(game_obj.middle_embed, {
-              embed_pages: printCBs(game_obj.user, actual_ot_user_id),
+              embed_pages: printCBList(game_obj.user, actual_ot_user_id),
               page: arg[0] - 1,
               user: game_obj.user
             });

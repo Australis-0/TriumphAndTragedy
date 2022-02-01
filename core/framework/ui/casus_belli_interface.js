@@ -50,7 +50,7 @@ module.exports = {
     });
   },
 
-  printCBs: function (arg0_user, arg1_user) {
+  printCBList: function (arg0_user, arg1_user) {
     //Convert from parameters
     var user_id = arg0_user;
     var ot_user_id = arg1_user;
