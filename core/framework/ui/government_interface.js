@@ -26,7 +26,11 @@ module.exports = {
       var government_name = getGovernment(usr.available_governments[i], { return_key: true });
       var government_obj = getGovernment(usr.available_governments[i]);
 
-      government_string.push(`${(government_obj.icon) ? config.icons[government_obj.icon] + " " : ""} ¦ **${(government_obj.name) ? government_obj.name : government_name}** ¦ ${(government_obj.description) ? government_obj.description : ""}`);
+      government_string.push(`${(government_obj.icon) ? config.icons[government_obj.icon] + " " : ""} **${(government_obj.name) ? government_obj.name : government_name}**`);
+
+      if (government_obj.description);
+        government_string.push(`> _${government_obj.description}_`);
+        
       government_string.push("");
 
       //Parse all effects
@@ -51,7 +55,7 @@ module.exports = {
 
             break;
           case "famine_penalty":
-            government_string.push(`- Famine Penalty: ${printPercentage(famine_penalty)}`);
+            government_string.push(`- Famine Penalty: ${printPercentage(local_value)}`);
 
             break;
           case "maximum_manpower":
@@ -79,6 +83,8 @@ module.exports = {
 
             break;
         }
+
+        government_string.push("");
       }
     }
 
