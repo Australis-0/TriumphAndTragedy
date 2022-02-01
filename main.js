@@ -391,6 +391,8 @@ setInterval(function(){
 
     for (var i = 0; i < all_users.length; i++)
       nextTurn(all_users[i]);
+
+    main.round_count++;
   }
 
   //Write to database.js

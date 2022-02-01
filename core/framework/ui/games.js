@@ -194,7 +194,7 @@ module.exports = {
         setInterval(function(){
           const topbar_embed = new Discord.MessageEmbed()
             .setColor(settings.bot_colour)
-            .setTitle(`${config.icons.time} **${getDate(main.date)}**`)
+            .setTitle(`${config.icons.time} **${getDate(main.date)}** - Round ${parseNumber(main.round_count)}`)
             .setImage("https://cdn.discordapp.com/attachments/722997700391338046/736141424315203634/margin.png");
 
           try {
