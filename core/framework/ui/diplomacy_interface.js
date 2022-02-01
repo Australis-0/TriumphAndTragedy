@@ -320,7 +320,7 @@ module.exports = {
       //Push main statistics
       diplomacy_view_string.push(`**${ot_user.name}** ¦ ${parseList(user_keys)}`);
       diplomacy_view_string.push(`${config.icons.political_capital} Government: **${(government_obj.name) ? government_obj.name : ot_user.government}**`);
-      diplomacy_view_string.push(`${config.icons.provinces} Provinces: ${parseNumber(user_provinces.length)} (${(capital_obj.id) ? `Capital ID: Province ${capital_obj.id}` : `No set capital`})`);
+      diplomacy_view_string.push(`${config.icons.provinces} Provinces: ${parseNumber(user_provinces.length)} (${(capital_obj) ? (capital_obj.id) ? `Capital ID: Province ${capital_obj.id}` : `No set capital` : `No set capital`})`);
       diplomacy_view_string.push(`${config.icons.population} Population: **${parseNumber(ot_user.population)}**`);
       diplomacy_view_string.push(`${config.icons.technology} Techs Researched: **${parseNumber(ot_user.researched_technologies.length)}**`);
       diplomacy_view_string.push("");
@@ -496,7 +496,7 @@ module.exports = {
       //Begin formatting stats_string
       stats_string.push(`**${ot_user.name}** ¦ ${parseList(user_keys)}`);
       stats_string.push(`${config.icons.political_capital} Government: **${(government_obj.name) ? government_obj.name : ot_user.government}**`);
-      stats_string.push(`${config.icons.provinces} Provinces: ${parseNumber(user_provinces.length)} (${(capital_obj.id) ? `Capital ID: Province ${capital_obj.id}` : `No set capital`})`);
+      stats_string.push(`${config.icons.provinces} Provinces: ${parseNumber(user_provinces.length)} (${(capital_obj) ? (capital_obj.id) ? `Capital ID: Province ${capital_obj.id}` : `No set capital` : `No set capital`})`);
       stats_string.push(`${config.icons.population} Population: **${parseNumber(ot_user.population)}**`);
       stats_string.push(`${config.icons.technology} Techs Researched: **${parseNumber(ot_user.researched_technologies.length)}**`);
       stats_string.push("");
@@ -514,7 +514,7 @@ module.exports = {
         var local_pop = config.pops[all_pops[i]];
 
         if (local_pop.stats_display && !local_pop.military_pop)
-          stats_string.push(`${(local_pop.icon) ? local_pop.icon + " " : ""}${(local_pop.name) ? local_pop.name : all_pops[i]}: (**${parseNumber(ot_user.pops["used_" + all_pops[i]])}**/**${parseNumber(getTotalManpower(actual_ot_user_id, all_pops[i]))})`);
+          stats_string.push(`${(local_pop.icon) ? local_pop.icon + " " : ""}${(local_pop.name) ? local_pop.name : all_pops[i]}: (**${parseNumber(ot_user.pops["used_" + all_pops[i]])}**/**${parseNumber(getTotalPopManpower(actual_ot_user_id, all_pops[i]))})`);
       }
 
       stats_string.push("");
@@ -534,7 +534,7 @@ module.exports = {
         var local_pop = config.pops[all_pops[i]];
 
         if (local_pop.stats_display && local_pop.military_pop)
-          stats_string.push(`${(local_pop.icon) ? local_pop.icon + " " : ""}${(local_pop.name) ? local_pop.name : all_pops[i]}: (**${parseNumber(ot_user.pops["used_" + all_pops[i]])}**/**${parseNumber(getTotalManpower(actual_ot_user_id, all_pops[i]))}) ¦ (**${printPercentage(getTotalManpower(actual_ot_user_id, all_pops[i], true))}** Recruitable Population)`);
+          stats_string.push(`${(local_pop.icon) ? local_pop.icon + " " : ""}${(local_pop.name) ? local_pop.name : all_pops[i]}: (**${parseNumber(ot_user.pops["used_" + all_pops[i]])}**/**${parseNumber(getTotalPopManpower(actual_ot_user_id, all_pops[i]))}) ¦ (**${printPercentage(getTotalPopManpower(actual_ot_user_id, all_pops[i], true))}** Recruitable Population)`);
       }
     }
 
