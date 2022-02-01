@@ -38,20 +38,14 @@ module.exports = {
       //Scale after summing
       var all_simulated_parties = Object.keys(simulated_politics);
       var missing_popularity = usr.politics[government_name].popularity;
-      var scalar = 1/missing_popularity;
-
-      for (var i = 0; i < all_simulated_parties.length; i++) {
-        var local_government = usr.politics[all_simulated_parties[i]];
-
-        local_government.popularity = local_government.popularity*scalar;
-      }
+      var scalar = 1 - options.amount;
 
       //Now reduce from simulated governments by options.amount, proportionally
       for (var i = 0; i < all_simulated_parties.length; i++) {
-        var local_government = usr.politics[all_simulated_parties[i]];
+        var local_government = simulated_politics[all_simulated_parties[i]];
 
         local_government.popularity = local_government.popularity*
-          (1 - (options.amount*local_government.popularity));
+          (1 - (options.amount/all_simulated_parties.length));
       }
 
       //Override all .popularity keys in real politics
@@ -60,6 +54,28 @@ module.exports = {
 
       //Add to beginning party
       usr.politics[government_name].popularity += options.amount;
+
+      //Even everything out to 100%
+      {
+        var total_popularity = 0;
+
+        for (var i = 0; i < all_governments.length; i++)
+          total_popularity += usr.politics[all_governments[i]].popularity;
+
+        while (total_popularity > 1) {
+          var random_government = randomElement(all_governments);
+          var local_government = usr.politics[random_government];
+
+          if (random_government != options.ideology)
+            if (local_government.popularity > (total_popularity - 1)) {
+              local_government.popularity -= (total_popularity - 1);
+              total_popularity = 1;
+            } else {
+              total_popularity -= local_government.popularity;
+              local_government.popularity = 0;
+            }
+        }
+      }
     }
   },
 
@@ -83,12 +99,12 @@ module.exports = {
       //Soft match
       for (var i = 0; i < all_governments.length; i++)
         if (all_governments[i].toLowerCase().indexOf(government_name) != -1)
-          government_exists = [true, (!options.return_key) ? all_governments[i] : config.governments[all_governments[i]]];
+          government_exists = [true, (options.return_key) ? all_governments[i] : config.governments[all_governments[i]]];
 
       //Hard match
       for (var i = 0; i < all_governments.length; i++)
         if (all_governments[i].toLowerCase() == government_name)
-          government_exists = [true, (!options.return_key) ? all_governments[i] : config.governments[all_governments[i]]];
+          government_exists = [true, (options.return_key) ? all_governments[i] : config.governments[all_governments[i]]];
     }
 
     //Name search
@@ -98,7 +114,7 @@ module.exports = {
         var local_government = config.governments[all_governments[i]];
 
         if (local_government.name.toLowerCase().indexOf(government_name) != -1)
-          government_exists = [true, (!options.return_key) ? all_governments[i] : config.governments[all_governments[i]]];
+          government_exists = [true, (options.return_key) ? all_governments[i] : config.governments[all_governments[i]]];
       }
 
       //Hard search
@@ -106,7 +122,7 @@ module.exports = {
         var local_government = config.governments[all_governments[i]];
 
         if (local_government.name.toLowerCase() == government_name)
-          government_exists = [true, (!options.return_key) ? all_governments[i] : config.governments[all_governments[i]]];
+          government_exists = [true, (options.return_key) ? all_governments[i] : config.governments[all_governments[i]]];
       }
     }
 
@@ -117,7 +133,7 @@ module.exports = {
         var local_government = config.governments[all_governments[i]];
 
         if (local_government.adjective.toLowerCase().indexOf(government_name) != -1)
-          government_exists = [true, (!options.return_key) ? all_governments[i] : config.governments[all_governments[i]]];
+          government_exists = [true, (options.return_key) ? all_governments[i] : config.governments[all_governments[i]]];
       }
 
       //Hard search
@@ -125,7 +141,7 @@ module.exports = {
         var local_government = config.governments[all_governments[i]];
 
         if (local_government.adjective.toLowerCase() == government_name)
-          government_exists = [true, (!options.return_key) ? all_governments[i] : config.governments[all_governments[i]]];
+          government_exists = [true, (options.return_key) ? all_governments[i] : config.governments[all_governments[i]]];
       }
     }
 

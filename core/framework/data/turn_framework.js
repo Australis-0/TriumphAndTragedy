@@ -641,23 +641,13 @@ module.exports = {
 
           if (usr.available_governments.includes(all_governments[i])) {
             total_change += local_government.drift;
-            local_government.popularity += local_government.drift;
+
+            if (local_government.drift)
+              addPartyPopularity(actual_id, { ideology: all_governments[i], amount: local_government.drift });
           }
         }
 
         var most_popular_party_obj = usr.politics[most_popular_party[1]];
-
-        //Make sure all percentages equal 100%
-        var total_percentage = 0;
-
-        for (var i = 0; i < all_governments.length; i++)
-          total_percentage += usr.politics[all_governments[i]].popularity;
-
-        if (total_percentage < 1) {
-          most_popular_party_obj.popularity += (1 - total_percentage);
-        } else if (total_percentage > 1) {
-          most_popular_party_obj.popularity += (total_percentage - 1);
-        }
 
         most_popular_party_obj.popularity = Math.max(most_popular_party_obj.popularity, 0);
 
