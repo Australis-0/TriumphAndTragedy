@@ -554,7 +554,7 @@ module.exports = {
         //[View CB List]
         if (input == "view cb list") {
           createPageMenu(game_obj.middle_embed, {
-            embed_pages: prinCBList(user_id),
+            embed_pages: printCBList(user_id),
             user: game_obj.user
           });
           game_obj.page = "cb_list";

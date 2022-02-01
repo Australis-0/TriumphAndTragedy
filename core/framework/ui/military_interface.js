@@ -231,8 +231,14 @@ module.exports = {
     sorted_army_orders.sort((a, b) => b[0] - a[0]);
 
     //Format army_orders_array
-    army_orders_array.push(`We have **${parseNumber(all_armies.length)}** combat formations currently in the field. Of these:`);
-    army_orders_array.push("");
+    if (all_armies.length > 0) {
+      army_orders_array.push(`We have **${parseNumber(all_armies.length)}** combat formations currently in the field. Of these:`);
+      army_orders_array.push("");
+    } else {
+      army_orders_array.push(`_We don't have any armies in the field currently!_`);
+      army_orders_array.push("");
+      army_orders_array.push(`- Try creating a new army by typing **[Create Army]**.`);
+    }
 
     for (var i = 0; i < sorted_army_orders.length; i++)
       (i != sorted_army_orders.length - 1) ?
