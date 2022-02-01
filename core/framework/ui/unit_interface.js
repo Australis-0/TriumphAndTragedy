@@ -14,8 +14,9 @@ module.exports = {
     //Format reserves_string
     reserves_string.push(`${config.icons.globe} Country: **${usr.name}**`);
     reserves_string.push(`**[Create Army]** ¦ **[Disband Units]** ¦ **[Train Units]** ¦ **[Unit List]**`);
+    reserves_string.push("");
     reserves_string.push(config.localisation.divider);
-    reserves_string.push(`${config.icons.manpower} **Reserves:**`)
+    reserves_string.push(`${config.icons.manpower} **Reserves:**`);
 
     //Iterate over all valid units
     var all_unit_categories = getUnitCategories();
@@ -28,7 +29,7 @@ module.exports = {
       var units_found_in_category = false;
 
       //Push unit header to reserves_string
-      reserves_string.push(`---`);
+      reserves_string.push("");
       reserves_string.push(`${local_unit_category_icon}**${local_unit_category_name}:**`);
       reserves_string.push("");
 
@@ -51,10 +52,13 @@ module.exports = {
         reserves_string.push(`_No units in this category could be found._`);
 
       reserves_string.push("");
+      reserves_string.push(`---`);
     }
 
     //Print Upkeep
+    reserves_string.push("");
     reserves_string.push(config.localisation.divider);
+    reserves_string.push("");
     reserves_string.push(`${config.icons.money} **Upkeep:**`);
     reserves_string.push("");
 
