@@ -1,5 +1,5 @@
 module.exports = {
-  printCBList: function (arg0_user) {
+  printCBs: function (arg0_user) {
     //Convert from parameters
     var user_id = arg0_user;
 
