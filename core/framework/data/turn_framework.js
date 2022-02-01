@@ -177,7 +177,7 @@ module.exports = {
       user_id += "_simulation";
       main.global.user_map[user_id] = actual_id;
 
-      main.users[actual_id] = JSON.parse(JSON.stringify(main.users[main.global.user_map[user_id]]));
+      main.users[actual_id] = JSON.parse(JSON.stringify(main.users[main.global.user_map[user_id.replace("_simulation", "")]]));
     }
     var usr = main.users[actual_id];
 
