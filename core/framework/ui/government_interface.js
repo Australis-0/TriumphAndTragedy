@@ -29,8 +29,8 @@ module.exports = {
       government_string.push(`${(government_obj.icon) ? config.icons[government_obj.icon] + " " : ""} **${(government_obj.name) ? government_obj.name : government_name}**`);
 
       if (government_obj.description);
-        government_string.push(`> _${government_obj.description}_`);
-        
+        government_string.push(`\n> _${government_obj.description}_`);
+
       government_string.push("");
 
       //Parse all effects
@@ -83,9 +83,9 @@ module.exports = {
 
             break;
         }
-
-        government_string.push("");
       }
+
+      government_string.push("");
     }
 
     //Return statement

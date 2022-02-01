@@ -41,6 +41,27 @@ module.exports = {
         )
           government_exists = [true, (!options.return_key) ? config.governments[all_governments[i]] : all_governments[i]];
 
+    //Name search
+    if (!government_exists[0]) {
+      //Soft match
+      for (var i = 0; i < all_governments.length; i++) {
+        var local_government = config.governments[all_governments[i]];
+
+        if (local_government.name)
+          if (local_government.name.toLowerCase().indexOf(government_name) != -1)
+            government_exists = [true, (!options.return_key) ? config.governments[all_governments[i]] : all_governments[i]];
+      }
+
+      //Hard match
+      for (var i = 0; i < all_governments.length; i++) {
+        var local_government = config.governments[all_governments[i]];
+
+        if (local_government.name)
+          if (local_government.name.toLowerCase() == government_name)
+            government_exists = [true, (!options.return_key) ? config.governments[all_governments[i]] : all_governments[i]];
+      }
+    }
+
     //Return statement
     return (government_exists[0]) ? government_exists[1] : undefined;
   },
@@ -65,7 +86,7 @@ module.exports = {
     });
     var usr = main.users[actual_id];
     var game_obj = getGameObject(user_id);
-    var government_name = module.exports.getGovernment({ return_key: true });
+    var government_name = module.exports.getGovernment(government_type, { return_key: true });
     var government_obj = module.exports.getGovernment(government_type);
 
     //Apply effects

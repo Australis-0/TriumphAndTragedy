@@ -24,6 +24,10 @@ module.exports = {
           if (usr.available_governments.includes(government_name)) {
             setGovernment(actual_id, raw_government_type, { set_party_popularity: 100 });
 
+            //Update stats page if user is currently on it
+            if (game_obj.page == "country_interface")
+              printStats(user_id);
+
             //Update politics page if user is currently on it
             if (game_obj.page == "politics")
               createPageMenu(game_obj.middle_embed, {
