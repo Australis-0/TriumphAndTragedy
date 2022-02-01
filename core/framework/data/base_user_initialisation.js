@@ -75,12 +75,12 @@ module.exports = {
             break;
           case "unlock_government":
             for (var x = 0; x < local_list.length; x++)
-              usr.available_buildings.push(local_list[x]);
+              usr.available_governments.push(local_list[x]);
 
             break;
           case "unlock_unit":
             for (var x = 0; x < local_list.length; x++)
-              usr.available_buildings.push(local_list[x]);
+              usr.available_units.push(local_list[x]);
 
             break;
         }

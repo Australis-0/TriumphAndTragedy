@@ -84,7 +84,7 @@ module.exports = {
 
     //Return statement
     return splitEmbed(government_string, {
-      title: `**Government List:**`,
+      title: `Government List:`,
       title_pages: true,
       fixed_width: true
     });
