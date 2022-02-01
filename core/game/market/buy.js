@@ -98,7 +98,7 @@ module.exports = {
         printError(game_obj.id, `You can't buy items whilst blockaded! Relieve the blockade on your home country first before attempting to make purchases from the Global Market.`);
       }
     } else {
-      printError(game_obj.id, `**${good_type}** isn't for sale!`);
+      printError(game_obj.id, `**${good_name}** isn't for sale!`);
     }
   },
 

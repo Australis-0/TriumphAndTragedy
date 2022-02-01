@@ -1,7 +1,14 @@
 module.exports = {
-  getGood: function (arg0_name) {
+  /*
+    getGood() - Fetches a good's key/object based on its options.
+    options: {
+      return_key: true/false - Whether or not to return the key instead of the object. False by default.
+    }
+  */
+  getGood: function (arg0_name, arg1_options) {
     //Convert from parameters
     var good_name = arg0_name.toLowerCase();
+    var options = (arg1_options) ? arg1_options : {};
 
     //Declare local instance variables
     var all_good_categories = Object.keys(config.goods);
@@ -63,7 +70,9 @@ module.exports = {
     if (good_exists[0]) good_exists[1].id = good_exists[2];
 
     //Return statement
-    return (good_exists[0]) ? good_exists[1] : undefined;
+    return (good_exists[0]) ?
+      (!options.return_key) ? good_exists[1] : good_exists[2] :
+    undefined;
   },
 
   /*
