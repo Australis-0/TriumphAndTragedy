@@ -35,7 +35,7 @@ module.exports = {
       } catch {}
 
       //Format CB
-      cb_list_string.push(`${local_cb_icon}${local_cb_name}`);
+      cb_list_string.push(`${local_cb_icon}**__${local_cb_name}__**:`);
       cb_list_string.push(`- ${config.icons.old_scroll} Requirement: ${local_cb_description}`);
       cb_list_string.push(`- ${config.icons.diplomacy} Peace Demands: ${peace_demands_array.join(", ")}`);
       cb_list_string.push(`- ${config.icons.infamy} Infamy: ${parseNumber(local_cb_infamy)}`);
