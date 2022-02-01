@@ -386,65 +386,65 @@ module.exports = {
       if (actual_id != actual_ot_user_id) {
         if (!isJustifying(actual_id, actual_ot_user_id)) {
           if (!hasWargoal(actual_id, actual_ot_user_id)) {
-            diplomacy_view_string.push(`**[Justify Wargoal]** ${config.icons.political_capital} ${parseNumber(config.defines.diplomacy.justify_wargoal_cost)} PC`);
-            diplomacy_view_string.push(`- **[View CBs]**`);
+            diplomacy_view_string.push(`> **[Justify Wargoal]** - ${config.icons.political_capital} ${parseNumber(config.defines.diplomacy.justify_wargoal_cost)} PC`);
+            diplomacy_view_string.push(`> - **[View CBs]**`);
           } else {
-            diplomacy_view_string.push(`**[Declare War]**`);
-            diplomacy_view_string.push(`- **[Cancel Wargoal]**`);
-            diplomacy_view_string.push(`- **[View Wargoals]**`);
+            diplomacy_view_string.push(`> **[Declare War]**`);
+            diplomacy_view_string.push(`> - **[Cancel Wargoal]**`);
+            diplomacy_view_string.push(`> - **[View Wargoals]**`);
           }
         } else {
-          diplomacy_view_string.push(`We are currently justifying ${(justifying_wargoals.length > 1) ? "wars of" : "a war of"} ${justifying_wargoals.join(", ")} against this nation.`);
-          diplomacy_view_string.push("");
-          diplomacy_view_string.push(`**[Cancel Justification]**`);
+          diplomacy_view_string.push(`> We are currently justifying ${(justifying_wargoals.length > 1) ? "wars of" : "a war of"} ${justifying_wargoals.join(", ")} against this nation.`);
+          diplomacy_view_string.push("> ");
+          diplomacy_view_string.push(`> **[Cancel Justification]**`);
         }
 
-        if (can_call_ally)
-          diplomacy_view_string.push(`**[Call Ally]** - We can currently call this ally into the following conflicts: ${can_call_ally.join(", ")}`);
+        if (can_call_ally.length > 0)
+          diplomacy_view_string.push(`> **[Call Ally]** - We can currently call this ally into the following conflicts: ${can_call_ally.join(", ")}`);
 
-        diplomacy_view_string.push(`**[Improve Relations]** ${config.icons.political_capital} ${parseNumber(config.defines.diplomacy.improve_relations_cost)} PC`);
-        diplomacy_view_string.push(`**[Decrease Relations]** ${config.icons.political_capital} ${parseNumber(config.defines.diplomacy.decrease_relations_cost)} PC`);
-        diplomacy_view_string.push("");
+        diplomacy_view_string.push(`> **[Improve Relations]** - ${config.icons.political_capital} ${parseNumber(config.defines.diplomacy.improve_relations_cost)} PC`);
+        diplomacy_view_string.push(`> **[Decrease Relations]** - ${config.icons.political_capital} ${parseNumber(config.defines.diplomacy.decrease_relations_cost)} PC`);
+        diplomacy_view_string.push("> ");
 
         (hasAlliance(actual_id, actual_ot_user_id)) ?
-          diplomacy_view_string.push(`**[Break Alliance]** ${config.icons.political_capital} ${parseNumber(config.defines.diplomacy.break_alliance_cost)} PC`) :
-          diplomacy_view_string.push(`**[Request Alliance]** ${config.icons.political_capital} ${parseNumber(config.defines.diplomacy.form_alliance_cost)} PC`);
+          diplomacy_view_string.push(`> **[Break Alliance]** - ${config.icons.political_capital} ${parseNumber(config.defines.diplomacy.break_alliance_cost)} PC`) :
+          diplomacy_view_string.push(`> **[Request Alliance]** - ${config.icons.political_capital} ${parseNumber(config.defines.diplomacy.form_alliance_cost)} PC`);
 
         (hasRivalry(actual_id, actual_ot_user_id)) ?
-          diplomacy_view_string.push(`**[End Rivalry]**`) :
-          diplomacy_view_string.push(`**[Declare Rivalry]** ${config.icons.political_capital} ${parseNumber(config.defines.diplomacy.declare_rival_cost)} PC`);
+          diplomacy_view_string.push(`> **[End Rivalry]**`) :
+          diplomacy_view_string.push(`> **[Declare Rivalry]** - ${config.icons.political_capital} ${parseNumber(config.defines.diplomacy.declare_rival_cost)} PC`);
 
         (hasGuarantee(actual_id, actual_ot_user_id)) ?
-          diplomacy_view_string.push(`**[Revoke Guarantee]**`) :
-          diplomacy_view_string.push(`**[Guarantee Independence]** ${config.icons.political_capital} ${parseNumber(config.defines.diplomacy.guarantee_independence_cost)} PC`);
+          diplomacy_view_string.push(`> **[Revoke Guarantee]**`) :
+          diplomacy_view_string.push(`> **[Guarantee Independence]** - ${config.icons.political_capital} ${parseNumber(config.defines.diplomacy.guarantee_independence_cost)} PC`);
 
         if (hasMilitaryAccess(actual_ot_user_id, actual_id))
-          diplomacy_view_string.push(`**[Revoke Military Access]**`);
+          diplomacy_view_string.push(`> **[Revoke Military Access]**`);
 
         if (hasMilitaryAccess(actual_id, actual_ot_user_id))
-          diplomacy_view_string.push(`**[Cancel Military Access]**`);
+          diplomacy_view_string.push(`> **[Cancel Military Access]**`);
 
         if (!hasMilitaryAccess(actual_id, actual_ot_user_id))
-          diplomacy_view_string.push(`**[Request Military Access]** ${config.icons.political_capital} ${parseNumber(config.defines.diplomacy.request_military_access_cost)} PC`);
+          diplomacy_view_string.push(`> **[Request Military Access]** - ${config.icons.political_capital} ${parseNumber(config.defines.diplomacy.request_military_access_cost)} PC`);
 
         if (!hasNonAggressionPact(actual_id, actual_ot_user_id))
-          diplomacy_view_string.push(`**[Sign Non-Aggression Pact]** ${config.icons.political_capital} ${parseNumber(config.defines.diplomacy.sign_non_aggression_pact_cost)} PC`);
+          diplomacy_view_string.push(`> **[Sign Non-Aggression Pact]** - ${config.icons.political_capital} ${parseNumber(config.defines.diplomacy.sign_non_aggression_pact_cost)} PC`);
 
         if (vassal_obj) {
           if (vassal_obj.overlord == actual_id) {
-            diplomacy_view_string.push("");
+            diplomacy_view_string.push("> ");
             diplomacy_view_string.push(config.localisation.divider);
-            diplomacy_view_string.push("");
-            diplomacy_view_string.push(`**Subject Actions:**`);
-            diplomacy_view_string.push("");
-            diplomacy_view_string.push(`**[Liberate]**`);
-            diplomacy_view_string.push(`**[Demand Annexation]** ${config.icons.political_capital} ${parseNumber(config.defines.diplomacy.annex_cost)} PC`);
+            diplomacy_view_string.push("> ");
+            diplomacy_view_string.push(`> **Subject Actions:**`);
+            diplomacy_view_string.push("> ");
+            diplomacy_view_string.push(`> **[Liberate]**`);
+            diplomacy_view_string.push(`> **[Demand Annexation]** - ${config.icons.political_capital} ${parseNumber(config.defines.diplomacy.annex_cost)} PC`);
           }
         } else {
-          diplomacy_view_string.push(`**[Demand Vassalisation]** ${config.icons.political_capital} ${parseNumber(config.defines.diplomacy.vassalise_cost)} PC`);
+          diplomacy_view_string.push(`> **[Demand Vassalisation]** - ${config.icons.political_capital} ${parseNumber(config.defines.diplomacy.vassalise_cost)} PC`);
         }
       } else {
-        diplomacy_view_string.push(`_You can't conduct diplomatic relations with yourself!_`);
+        diplomacy_view_string.push(`> _You can't conduct diplomatic relations with yourself!_`);
       }
     }
 
