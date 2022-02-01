@@ -358,7 +358,7 @@ setInterval(function(){
         current_turn_time = 1;
 
     //This is how much time has elapsed in years
-    var time_elapsed = current_turn_time*(turn_time_difference/(settings.turn_timer*1000));
+    var time_elapsed = current_turn_time*(1000/(settings.turn_timer*1000));
     var processed_time = parseYears(time_elapsed);
 
     //Add to date
@@ -367,14 +367,18 @@ setInterval(function(){
     main.date.day += processed_time.day;
     main.date.hour += processed_time.hour;
 
-    if (main.date.month > 12)
+    if (main.date.month > 12) {
       main.date.month = 1;
-    if (main.date.day > processed_time.days_in_months[main.date.month - 1])
+      main.date.year++;
+    }
+    if (main.date.day > processed_time.days_in_months[main.date.month - 1]) {
       main.date.day = 1;
-    if (main.date.hour < 0)
-      main.date.hour = Math.abs(main.date.hour);
-    if (main.date.hour > 23)
+      main.date.month++;
+    }
+    if (main.date.hour > 23) {
       main.date.hour = 0;
+      main.date.day++;
+    }
   }
 
   //Turn processing for all users
