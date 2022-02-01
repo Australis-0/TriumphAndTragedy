@@ -37,47 +37,49 @@ module.exports = {
 
           //Check if user actually has enough money for the purchase
           if (usr.money >= total_cost) {
-            if (good_amount < market[good_name].stock) {
+            if (good_amount < main.market[good_name].stock) {
               if (good_amount <= 1000) {
                 //Check if user has enough market capacity remaining
                 if (getMarketCapacity(actual_id) - good_amount > 0) {
                   //Check with stock limitations
                   if (
-                    (market[good_name].stock < 50) ||
-                    (market[good_name].stock >= 50 && good_amount < market[good_name].stock*0.2)
+                    (main.market[good_name].stock < 50) ||
+                    (main.market[good_name].stock >= 50 && good_amount < main.market[good_name].stock*0.2)
                   ) {
                     //Make the purchase now that all checks have been cleared
                     var total_buy_price = 0;
 
                     usr.transactions_this_turn += good_amount;
                     for (var i = 0; i < good_amount; i++) {
-                      var previous_stock = JSON.parse(JSON.stringify(market[good_name].stock));
+                      var previous_stock = JSON.parse(JSON.stringify(main.market[good_name].stock));
 
-                      usr.money -= market[good_name].buy_price;
-                      total_buy_price += market[good_name].buy_price;
+                      usr.money -= main.market[good_name].buy_price;
+                      total_buy_price += main.market[good_name].buy_price;
                       usr.inventory[good_name]++;
 
                       //Increase buy/sell price
-                      market[good_name].buy_price =
-                        market[good_name].buy_price*
-                        (previous_stock/market[good_name].stock);
-                      market[good_name].sell_price =
-                        market[good_name].sell_price*
-                        (previous_stock/market[good_name].stock);
-                      market[good_name].stock--;
+                      main.market[good_name].buy_price =
+                        main.market[good_name].buy_price*
+                        (previous_stock/main.market[good_name].stock);
+                      main.market[good_name].sell_price =
+                        main.market[good_name].sell_price*
+                        (previous_stock/main.market[good_name].stock);
+                      main.market[good_name].stock--;
                     }
 
                     //Increase amount sold
-                    market[good_name].amount_sold += good_amount;
+                    main.market[good_name].amount_sold += good_amount;
 
-                    //Update global market UI if page is still on world_market
+                    //Update global market UI if page is still on world_market or trade
+                    if (game_obj.page == "trade")
+                      printTrade(game_obj.user);
                     if (game_obj.page == "world_market")
                       printGlobalMarket(game_obj.user);
 
                     //Print out alert
                     printAlert(game_obj.id, `You bought **${parseNumber(good_amount)}** ${(good_obj.icon) ? config.icons[good_obj.icon] + " " : ""}${(good_obj.name) ? good_obj.name : good_name} for **£${parseNumber(total_buy_price)}**.`);
                   } else {
-                    printError(game_obj.id, `You can only buy/sell up to **20%** of the goods in a large market at once! This equates to about **${parseNumber(Math.floor(market[good_name].stock*0.2))}** ${(good_obj.name) ? good_obj.name : good_name}.`);
+                    printError(game_obj.id, `You can only buy/sell up to **20%** of the goods in a large market at once! This equates to about **${parseNumber(Math.floor(main.market[good_name].stock*0.2))}** ${(good_obj.name) ? good_obj.name : good_name}.`);
                   }
                 } else {
                   printError(game_obj.id, `You do not have enough Market Capacity remaining to make this purchase! You need at least **${parseNumber(good_amount - getMarketCapacity(actual_id))} more remaining Market Capacity in order to fulfil this purchase request.`);

@@ -106,24 +106,26 @@ module.exports = {
 
             //Process sale
             for (var i = 0; i < good_amount; i++) {
-              var previous_stock = JSON.parse(JSON.stringify(market[good_name].stock));
+              var previous_stock = JSON.parse(JSON.stringify(main.market[good_name].stock));
 
-              usr.money += market[good_name].sell_price;
-              total_cost += market[good_name].sell_price;
+              usr.money += main.market[good_name].sell_price;
+              total_cost += main.market[good_name].sell_price;
 
-              market[good_name].stock++;
+              main.market[good_name].stock++;
 
               //Decrease buy/sell price
-              market[good_name].buy_price =
-                market[good_name].buy_price*(previous_stock/market[good_name].stock);
-              market[good_name].sell_price =
-                market[good_name].sell_price*(previous_stock/market[good_name].stock);
+              main.market[good_name].buy_price =
+                main.market[good_name].buy_price*(previous_stock/main.market[good_name].stock);
+              main.market[good_name].sell_price =
+                main.market[good_name].sell_price*(previous_stock/main.market[good_name].stock);
             }
 
-            market[good_name].amount_sold += good_amount;
+            main.market[good_name].amount_sold += good_amount;
             usr.inventory[good_name] -= good_amount;
 
-            //Update market UI if game_obj.page == "world_market"
+            //Update market UI if game_obj.page == "world_market" || "trade"
+            if (game_obj.page == "trade")
+              printTrade(game_obj.user);
             if (game_obj.page == "world_market")
               printGlobalMarket(game_obj.user);
 
