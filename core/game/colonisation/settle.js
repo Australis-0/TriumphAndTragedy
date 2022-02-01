@@ -34,7 +34,8 @@ module.exports = {
       title: "Choose Your Starting Province(s):",
       prompts: [
         [`Please input the Province ID's in which you would like to settle the peoples of ${usr.name}. You may choose up to **${parseNumber(config.defines.common.starting_provinces)}** province(s).`, "string"]
-      ]
+      ],
+      do_not_cancel: true
     },
     function (arg) {
       settleStartingProvinces(user_id, arg[0]);

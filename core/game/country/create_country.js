@@ -84,7 +84,8 @@ module.exports = {
       title: "Creating A New Nation ..",
       prompts: [
         [`What would you like to name your country?`, "string"]
-      ]
+      ],
+      do_not_cancel: true
     },
     function (arg) {
       foundCountry(user_id, arg[0]);
