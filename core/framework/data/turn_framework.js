@@ -668,10 +668,11 @@ module.exports = {
 
         //Conduct election if more than 5 turns have passed since the last one
         if (main.global.round_count >= usr.last_election + 5) {
-          var election_winner = most_popular_party[0];
+          var election_winner = most_popular_party[1];
 
-          if (config.governments[usr.government].effect.has_elections)
-            setGovernment(actual_id, election_winner);
+          if (config.governments[usr.government].effect)
+            if (config.governments[usr.government].effect.has_elections)
+              setGovernment(actual_id, election_winner);
 
           //Set last election
           usr.last_election = main.global.round_count;

@@ -76,7 +76,7 @@ module.exports = {
     //Convert from parameters
     var user_id = arg0_user;
     var government_type = arg1_government_type;
-    var options = arg2_options;
+    var options = (arg2_options) ? arg2_options : {};
 
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];

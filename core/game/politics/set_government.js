@@ -22,7 +22,7 @@ module.exports = {
         //Check if government type is valid
         if (government_name) {
           if (usr.available_governments.includes(government_name)) {
-            setGovernment(actual_id, raw_government_type, { set_party_popularity: 100 });
+            setGovernment(actual_id, raw_government_type, { set_party_popularity: 1 });
 
             //Update stats page if user is currently on it
             if (game_obj.page == "country_interface")
@@ -40,7 +40,7 @@ module.exports = {
             printError(game_obj.id, `The government you have specified, **${government_name}** has not yet been unlocked by your country! Consider researching new technologies in order to unlock this form of government.`);
           }
         } else {
-          printError(game_obj.id, `The government you have specified, **${government_name}** does not exist!`);
+          printError(game_obj.id, `The government you have specified, **${raw_government_type}** does not exist!`);
         }
       } else {
         printError(game_obj.id, `You can't just change your government on a whim like that! Try couping your current government instead for ${config.icons.political_capital} **${parseNumber(config.defines.politics.coup_cost)}** Political Capital.`);

@@ -1514,6 +1514,10 @@ module.exports = {
             printPops(user_id);
 
             break;
+          case "found city":
+            initialiseFoundCity(user_id);
+
+            break;
         }
       } else if (game_obj.page.startsWith("view_province_")) {
         var province_name = game_obj.page.replace("view_province_", "");

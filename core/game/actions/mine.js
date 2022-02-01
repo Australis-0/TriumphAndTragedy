@@ -74,15 +74,9 @@ module.exports = {
           //Add to inventory; subtract from remaining_actions
           usr.inventory[current_element[1]] += amount_taken*5;
           remaining_actions -= amount_taken;
-
-          usr.actions = usr.actions - actions;
-
-          //Update stats/budget menu if user is on it
-          if (game_obj.page == "country_interface")
-            printStats(user_id);
-          if (game_obj.page == "budget")
-            printBudget(user_id);
         }
+
+        usr.actions -= actions;
 
         //Format resource_gain_display
         var all_resources_gained = Object.keys(mined_resources);
@@ -99,6 +93,12 @@ module.exports = {
 
         if (no_energy)
           output_string.push(`${(config.localisation[mode + "_no_energy"]) ? config.localisation[mode + "_no_energy"] : "Your miners were too exhausted to continue mining!\nYou then proceeded to run out of actions."}`);
+
+        //Update stats/budget menu if user is on it
+        if (game_obj.page == "country_interface")
+          printStats(user_id);
+        if (game_obj.page == "budget")
+          printBudget(user_id);
 
         //Print user alert
         printAlert(game_obj.id, output_string.join("\n"));
