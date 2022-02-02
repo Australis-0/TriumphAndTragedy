@@ -258,7 +258,7 @@ module.exports = {
       //Increment cached_amount to ensure recursion
       cached_amount++;
 
-      pc_price += Math.floor(config.defines.economy.urbanisation_cost*Math.pow(config.defines.economy.urbanurbanisation_cost_percentile_growth, city_obj.development + cached_amount)*average_cities);
+      pc_price += Math.floor(config.defines.economy.urbanisation_cost*Math.pow(config.defines.economy.urbanisation_cost_percentile_growth, city_obj.development + cached_amount)*average_cities);
     }
 
     //Return statement
