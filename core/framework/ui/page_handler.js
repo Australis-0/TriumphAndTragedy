@@ -1380,15 +1380,15 @@ module.exports = {
 
           //[Remove Accepted Culture]
           if (input == "remove accepted culture")
-            initialiseRemoveAcceptedCulture();
+            initialiseRemoveAcceptedCulture(user_id);
 
           //[Rename Culture]
           if (input == "rename culture")
-            initialiseRenameCulture();
+            initialiseRenameCulture(user_id);
 
           //[Rename Culture Adjective]
           if (input == "rename culture adjective")
-            initialiseRenameCultureAdjective();
+            initialiseRenameCultureAdjective(user_id);
 
           //[View Population]
           if (input == "view population") {
