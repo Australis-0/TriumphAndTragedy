@@ -37,8 +37,8 @@ module.exports = {
 
     for (var i = 0; i < sorted_culture_array.length; i++) {
       var culture_description = "";
-      var is_accepted_culture = accepted_cultures.includes(sorted_culture_array[i]);
-      var is_primary_culture = all_primary_cultures.includes(sorted_culture_array[i]);
+      var is_accepted_culture = accepted_cultures.includes(sorted_culture_array[i].id);
+      var is_primary_culture = all_primary_cultures.includes(sorted_culture_array[i].id);
 
       if (is_primary_culture)
         culture_description = `our primary culture. ¦ **[Rename Culture]** ¦ **[Rename Culture Adjective]**`;
