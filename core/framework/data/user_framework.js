@@ -334,8 +334,10 @@ module.exports = {
         if (
           (
             //Complex boolean to parse options field; core provinces
-            (main.provinces[all_provinces[i]].owner == user_id && main.provinces[all_provinces[i]].controller == user_id ||
-                options.include_hostile_occupations
+            (main.provinces[all_provinces[i]].owner == user_id &&
+                (
+                  main.provinces[all_provinces[i]].controller == user_id || options.include_hostile_occupations
+                )
             ) ||
 
             //Complex boolean to parse options field; provinces occupied by user

@@ -327,7 +327,7 @@ module.exports = {
 
       //Other trackers
       if (!usr.at_war) usr.at_war = [];
-      if (!usr.city_cap) usr.city_cap = 0;
+      if (!usr.city_cap) usr.city_cap = 1;
       if (!usr.city_count) usr.city_count = 0;
       if (!usr.country_age) usr.country_age = 0;
       if (!usr.coup_this_turn) usr.coup_this_turn = "";

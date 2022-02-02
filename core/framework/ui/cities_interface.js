@@ -1,6 +1,5 @@
 module.exports = {
-  printCities: function (arg0_user) { //[WIP]
-    //TODO: Display occupied status for cities
+  printCities: function (arg0_user) {
     //Convert from parameters
     var user_id = arg0_user;
 
@@ -55,6 +54,7 @@ module.exports = {
       city_string.push(`_You currently don't have any cities in your possession!_`);
       city_string.push("");
       city_string.push(`_Consider founding a new city to start building up your country._`);
+      city_string.push(`- You can found a new city by typing **[Found City]**.`);
     }
 
     //Return statement
