@@ -28,6 +28,8 @@ module.exports = {
 
     try {
       local_map.querySelector(`#${province_id}`).setAttribute("style", `fill:${RGBToHex(colour[0], colour[1], colour[2])};${getDefaultProvinceStyling()}`);
-    } catch {}
+    } catch (e) {
+      console.log(e);
+    }
   }
 };

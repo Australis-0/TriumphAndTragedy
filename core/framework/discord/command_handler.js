@@ -49,14 +49,16 @@ module.exports = {
                 if (!isNaN(parseInt(input))) {
                   var satisfies_requirements = [true, ""];
 
-                  //Minimum check
-                  if (local_prompt.prompts[current_step][2].min)
-                    if (parseInt(input) < local_prompt.prompts[current_step][2].min)
-                      satisfies_requirements = [false, `The lowest number you can specify for this command is ${local_prompt.prompts[current_step][2].min}!`];
-                  //Maximum check
-                  if (local_prompt.prompts[current_step][2].max)
-                    if (parseInt(input) > local_prompt.prompts[current_step][2].max)
-                      satisfies_requirements = [false, `The highest number you can specify for this command is ${local_prompt.prompts[current_step][2].max}!`];
+                  if (local_prompt.prompts[current_step].length > 2) {
+                    //Minimum check
+                    if (local_prompt.prompts[current_step][2].min)
+                      if (parseInt(input) < local_prompt.prompts[current_step][2].min)
+                        satisfies_requirements = [false, `The lowest number you can specify for this command is ${local_prompt.prompts[current_step][2].min}!`];
+                    //Maximum check
+                    if (local_prompt.prompts[current_step][2].max)
+                      if (parseInt(input) > local_prompt.prompts[current_step][2].max)
+                        satisfies_requirements = [false, `The highest number you can specify for this command is ${local_prompt.prompts[current_step][2].max}!`];
+                  }
 
                   if (satisfies_requirements[0]) local_prompt.answers.push(parseInt(input));
                 } else {
@@ -192,7 +194,7 @@ module.exports = {
 
     for (var i = 0; i < options.prompts.length; i++) local_fields.push({
       name: options.prompts[i][0],
-      value: (options.answers[i]) ? options.answers[i] : "-"
+      value: (options.answers[i]) ? options.answers[i].toString() : "-"
     });
 
     var visual_prompt_embed = {
