@@ -83,7 +83,31 @@ module.exports = {
                 //Print alert
                 printAlert(game_obj.id, `You have successfully trained **${parseNumber(unit_amount)}** ${(unit_amount == 1) ? "regiment" : "regiments"} of ${unit_name}!`);
               } else {
-                //[WIP] - Print out resource shortages
+                //Print out resource shortages
+                var shortage_array = [];
+
+                for (var i = 0; i < all_resource_shortages.length; i++) {
+                  var local_good = getGood(all_resource_shortages[i]);
+                  var local_icon = "";
+                  var local_shortage = resource_shortages[all_resource_shortages[i]];
+
+                  //Determine icon
+                  if (!usr.inventory[all_resource_shortages[i]]) {
+                    if (all_resource_shortages[i] == "money")
+                      local_icon = config.icons.money;
+                  } else if (config.pops[all_resource_shortages[i]]) {
+                    var local_pop = config.pops[all_resource_shortages[i]];
+
+                    if (local_pop.icon)
+                      local_icon = config.icons[local_pop.icon];
+                  } else {
+                    local_icon = (local_good.icon) ? config.icons[local_good.icon] : "";
+                  }
+
+                  shortage_array.push(`- ${local_icon} ${parseNumber(local_shortage)} ${(local_good) ? (local_good.name) ? local_good.name : all_resource_shortages[i] : ""}`);
+                }
+
+                printError(game_obj.id, `You don't have enough resources to train **${parseNumber(unit_amount)}** regiment(s) of ${(unit_obj.name) ? unit_obj.name : raw_unit_name}! You still require the following resources:\n\n${shortage_array.join("\n")}`);
               }
             } else if (unit_amount == 0) {
               printError(game_obj.id, `You can't train your units as alternate personalities of yourself. I say this as an alternate personality.`);
