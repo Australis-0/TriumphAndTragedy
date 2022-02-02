@@ -130,7 +130,7 @@ module.exports = {
               printGlobalMarket(game_obj.user);
 
             //Print out feedback
-            printAlert(`You sold **${parseNumber(good_amount)}** ${(good_obj.icon) ? config.icons[good_obj.icon] + " " : ""}${(good_obj.name) ? good_obj.name : good_name} for **£${parseNumber(total_cost)}**.`);
+            printAlert(game_obj.id, `You sold **${parseNumber(good_amount)}** ${(good_obj.icon) ? config.icons[good_obj.icon] + " " : ""}${(good_obj.name) ? good_obj.name : good_name} for **£${parseNumber(total_cost)}**.`);
           } else {
             printError(game_obj.id, `You do not have enough Market Capacity remaining to sell this much **${(good_obj.name) ? good_obj.name : good_name}**! You need at least **${parseNumber(good_amount - getMarketCapacity(actual_id))} more remaining Market Capacity in order to fulfil this purchase request.`);
           }

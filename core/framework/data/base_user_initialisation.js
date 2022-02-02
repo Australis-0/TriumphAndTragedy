@@ -46,6 +46,12 @@ module.exports = {
               local_list[0];
 
             break;
+          case "money":
+            usr.money = (local_list.length == 1) ? 
+              local_list[0] :
+              randomNumber(local_list[0], local_list[1]);
+
+            break;
           case "set_government":
             usr.government = randomElement(local_list);
 

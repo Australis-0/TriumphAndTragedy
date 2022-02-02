@@ -55,6 +55,7 @@ module.exports = {
     var actual_id = main.global.user_map[user_id];
     var all_building_categories = Object.keys(config.buildings);
     var all_provinces = getProvinces(user_id);
+    var game_obj = getGameObject(user_id);
     var usr = main.users[actual_id];
 
     //Check whether user has enough resources to found a city
@@ -88,6 +89,8 @@ module.exports = {
             //If user has no other cities, set it to their capital
 
             local_province.city_type = (getCities(user_id).length == 0) ? "capital" : "city";
+            local_province.culture = getPrimaryCultures(user_id)[0];
+            local_province.name = city_name;
             local_province.type = "urban";
 
             var population_amount = (local_province.city_type == "capital") ?
@@ -101,7 +104,7 @@ module.exports = {
             });
 
             //Set city RGO
-            local_province.resource = randomElement(getRawGoods({ return_names: true })).id;
+            local_province.resource = randomElement(getRawGoods({ return_names: true }));
 
             //Set building objects
             local_province.buildings = [];
@@ -111,25 +114,26 @@ module.exports = {
             //Set building slot capacity per category
             for (var i = 0; i < all_building_categories.length; i++)
               local_province[`${all_building_categories[i]}_building_slots`] = usr.modifiers[`${all_building_categories[i]}_building_slots`];
-
             //Increase city_count tracker variable
             usr.city_count++;
 
-            printAlert(getGame(user_id), (local_province.city_type == "capital") ?
+            printAlert(game_obj.id, (local_province.city_type == "capital") ?
               `Capital city founded as **${city_name}** in Province **${province_id}**! Over **${parseNumber(local_province.pops.population)}** are now legally residents of the capital city of **${usr.name}**!` :
               `A new city was founded as **${city_name}** in Province **${province_id}**! Over **${parseNumber(local_province.pops.population)}** are now legally residents of the city of **${city_name}** in Province **${province_id}**.`
             );
           } else {
-            printError(getGame(user_id, `You cannot have a city name that overlaps with the name of an existing province!`));
+            printError(game_obj.id, `You cannot have a city name that overlaps with the name of an existing province!`);
           }
         } else {
-          printError(getGame(user_id), `Province **${province_id}** is already an urban province belonging to **${local_province.name}**!`);
+          printError(game_obj.id, `Province **${province_id}** is already an urban province belonging to **${local_province.name}**!`);
         }
       } else {
         var is_occupied = (local_province.owner != local_province.controller);
 
         //Print actual province controller/occupation status
-        printError(getGame(user_id), `You don't own Province **${province_id}**!\n\nProvince **${province_id}** is a${(is_occupied) ? "n occupied" : ""} province of the ${main.users[local_province.controller].name} of ${local_province.culture} culture${(is_occupied) ? " that rightfully belongs to " + main.users[local_province.owner].name : ""}.`);
+        (local_province.owner) ?
+          printError(game_obj.id, `You don't own Province **${province_id}**!\n\nProvince **${province_id}** is a${(is_occupied) ? "n occupied" : ""} province of the ${main.users[local_province.controller].name} of ${local_province.culture} culture${(is_occupied) ? " that rightfully belongs to " + main.users[local_province.owner].name : ""}.`) :
+          printError(game_obj.id, `You don't own Province **${province_id}**!\n\Province **${province_id}** is currently uncolonised.`);
       }
     } else {
       //Resource shortages encountered, print them out

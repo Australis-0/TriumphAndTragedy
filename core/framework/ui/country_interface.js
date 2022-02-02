@@ -44,9 +44,10 @@ module.exports = {
       if (i < 15) {
         if (cities[i].type == "capital") {
           capital_included = true;
-          name_array.push(`**${local_city.name}**`);
+          name_array.push(`**${cities[i].name}**`);
+        } else {
+          name_array.push(cities[i].name);
         }
-        name_array.push(local_city.name);
       }
 
     if (name_array.length >= 2) {
