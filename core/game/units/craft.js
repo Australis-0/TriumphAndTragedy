@@ -103,7 +103,7 @@ module.exports = {
                       local_icon = config.icons[local_pop.icon];
                   }
 
-                  console.log(local_icon);
+                  console.log(`Detected local icon as: ${local_icon}.`);
 
                   shortage_array.push(`- ${local_icon} ${parseNumber(local_shortage)} ${(local_good) ? (local_good.name) ? local_good.name : all_resource_shortages[i] : ""}`);
                 }
