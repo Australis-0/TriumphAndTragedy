@@ -283,7 +283,6 @@ module.exports = {
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
     var all_provinces = Object.keys(main.provinces);
-    var culture_name = getCulture(culture_name, { return_key: true });
     var province_list = [];
 
     //Parse through all provinces the user controls for unique cultures
