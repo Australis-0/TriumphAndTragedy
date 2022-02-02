@@ -94,7 +94,7 @@ module.exports = {
               parseString(all_produced_goods[y]);
 
             //Parse debug name; two-fold array with random minimum to maximum production, one-fold array with the same production value all the time
-            if (local_building_production[0] >= 0 && local_building_production[0] >= 0) {
+            if (local_building_production[0] != local_building_production[1]) {
               (all_produced_goods[y] != "money") ?
                 production_array.push(`${parseNumber(Math.ceil(local_building_production[0]))} - ${parseNumber(Math.ceil(local_building_production[1]))} ${resource_name}`) :
                 production_array.push(`£${parseNumber(Math.ceil(local_building_production[0]))} - £${parseNumber(Math.ceil(local_building_production[1]))}`);

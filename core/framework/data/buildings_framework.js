@@ -490,58 +490,64 @@ module.exports = {
     //Only start appending if the user and building_obj.produces is actually defined
     if (usr)
       try {
-        var all_produced_goods = Object.keys(building_obj.produces);
-        for (var i = 0; i < all_produced_goods.length; i++) {
-          var actual_resource = getGood(all_produced_goods[i]);
-          var is_knowledge = false;
+        if (building_obj.produces) {
+          var all_produced_goods = Object.keys(building_obj.produces);
 
-          if (actual_resource)
-            is_knowledge = (actual_resource.research_good);
+          for (var i = 0; i < all_produced_goods.length; i++) {
+            var actual_resource = getGood(all_produced_goods[i]);
+            var is_knowledge = false;
 
-          //Get actual production efficiency
-          var actual_production_efficiency = (building_obj.maintenance) ?
-            usr.modifiers.production_efficiency : 1;
-          var actual_rgo_throughput = (usr.modifiers.rgo_throughput < 1) ?
-            usr.modifiers.rgo_throughput : 1;
+            if (actual_resource)
+              is_knowledge = (actual_resource.research_good);
 
-          //Apply local RGO throughput to the building's production if the resource lines up
-          actual_rgo_throughput = (city_obj.resource == building_obj.produces[i][1]) ?
-            getCityRGOThroughput(city_obj.name) : actual_rgo_throughput;
+            //Get actual production efficiency
+            var actual_production_efficiency = (building_obj.maintenance) ?
+              usr.modifiers.production_efficiency : 1;
+            var actual_rgo_throughput = (usr.modifiers.rgo_throughput < 1) ?
+              usr.modifiers.rgo_throughput : 1;
 
-          //This is the only actual modifier that affects the production value of this good for this building
-          {
-            actual_production_efficiency = (building_obj.maintenance) ?
-              actual_production_efficiency :
-              actual_rgo_throughput;
+            //Apply local RGO throughput to the building's production if the resource lines up
+            actual_rgo_throughput = (city_obj.resource == all_produced_goods[i]) ?
+              getCityRGOThroughput(city_obj.name) : actual_rgo_throughput;
 
-            //research_efficiency modifier is used if good is of type knowledge
-            if (is_knowledge)
-              actual_production_efficiency = usr.modifiers.research_efficiency;
-          }
+            //This is the only actual modifier that affects the production value of this good for this building
+            {
+              actual_production_efficiency = (building_obj.maintenance) ?
+                actual_production_efficiency :
+                actual_rgo_throughput;
 
-          //Add production value of good to matrix
-          var production_list = getList(building_obj.produces[all_produced_goods[i]]);
-
-          if (production_list.length >= 2) {
-            if (!actual_resource) {
-              changeProductionValue(all_produced_goods[i], "minimum", production_list[0]*actual_production_efficiency);
-              changeProductionValue(all_produced_goods[i], "maximum", production_list[0]*actual_production_efficiency);
-            } else {
-              if (!is_knowledge) {
-                changeProductionValue(all_produced_goods[i], "minimum", production_list[0]*usr.modifiers[`${all_produced_goods[i]}_gain`]*actual_production_efficiency);
-                changeProductionValue(all_produced_goods[i], "maximum", production_list[0]*usr.modifiers[`${all_produced_goods[i]}_gain`]*actual_production_efficiency);
-              } else {
-                changeProductionValue(all_produced_goods[i], "minimum", production_list[0]*actual_production_efficiency*usr.modifiers[`${all_produced_goods[i]}_gain`]);
-                changeProductionValue(all_produced_goods[i], "maximum", production_list[0]*actual_production_efficiency*usr.modifiers[`${all_produced_goods[i]}_gain`]);
-              }
+              //research_efficiency modifier is used if good is of type knowledge
+              if (is_knowledge)
+                actual_production_efficiency = usr.modifiers.research_efficiency;
             }
-          } else {
-            (!is_knowledge) ?
-              changeProductionValue(all_produced_goods[i], "all", production_list[0]*actual_production_efficiency) :
-              changeProductionValue(all_produced_goods[i], "all", production_list[0]);
+
+            //Add production value of good to matrix
+            var production_list = getList(building_obj.produces[all_produced_goods[i]]);
+
+            if (production_list.length >= 2) {
+              if (!actual_resource) {
+                changeProductionValue(all_produced_goods[i], "minimum", production_list[0]*actual_production_efficiency);
+                changeProductionValue(all_produced_goods[i], "maximum", production_list[0]*actual_production_efficiency);
+              } else {
+                if (!is_knowledge) {
+                  changeProductionValue(all_produced_goods[i], "minimum", production_list[0]*usr.modifiers[`${all_produced_goods[i]}_gain`]*actual_production_efficiency);
+                  changeProductionValue(all_produced_goods[i], "maximum", production_list[0]*usr.modifiers[`${all_produced_goods[i]}_gain`]*actual_production_efficiency);
+                } else {
+                  changeProductionValue(all_produced_goods[i], "minimum", production_list[0]*actual_production_efficiency*usr.modifiers[`${all_produced_goods[i]}_gain`]);
+                  changeProductionValue(all_produced_goods[i], "maximum", production_list[0]*actual_production_efficiency*usr.modifiers[`${all_produced_goods[i]}_gain`]);
+                }
+              }
+            } else {
+              (!is_knowledge) ?
+                changeProductionValue(all_produced_goods[i], "all", production_list[0]*actual_production_efficiency) :
+                changeProductionValue(all_produced_goods[i], "all", production_list[0]);
+            }
           }
         }
-      } catch {}
+      } catch (e) {
+        log.error(`getBuildingProduction() encountered an error whilst parsing for building type ${building_name}.`);
+        console.log(e);
+      }
 
     //Return statement
     return production_obj;

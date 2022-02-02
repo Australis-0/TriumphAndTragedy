@@ -378,6 +378,16 @@ module.exports = {
         }
     }
 
+    //[WIP] - Building processing
+    {
+      for (var i = 0; i < all_cities.length; i++)
+        for (var x = 0; x < all_cities[i].buildings.length; x++) {
+          var local_building = all_cities[i].buildings[x];
+          //var local_consumption = 
+
+        }
+    }
+
     //Construction processing
     {
       var construction_requests_to_remove = [];
