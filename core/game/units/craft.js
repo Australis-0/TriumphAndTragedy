@@ -82,6 +82,8 @@ module.exports = {
 
                 //Print alert
                 printAlert(game_obj.id, `You have successfully trained **${parseNumber(unit_amount)}** ${(unit_amount == 1) ? "regiment" : "regiments"} of ${unit_name}!`);
+              } else {
+                //[WIP] - Print out resource shortages
               }
             } else if (unit_amount == 0) {
               printError(game_obj.id, `You can't train your units as alternate personalities of yourself. I say this as an alternate personality.`);
