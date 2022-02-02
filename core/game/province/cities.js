@@ -320,7 +320,7 @@ module.exports = {
             if (city_obj) {
               city_obj.name = new_name;
 
-              printAlert(getGame(user_id), `You have renamed **${old_name}** to **${new_game}**!`);
+              printAlert(getGame(user_id), `You have renamed **${old_name}** to **${new_name}**!`);
 
               //Update UIs
               if (game_obj.page == "cities_list")
