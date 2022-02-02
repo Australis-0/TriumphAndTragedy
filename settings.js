@@ -1,7 +1,7 @@
 global.settings = {
   //General settings
-  bot_token: "NDAwNDQ4MDIzNDQ2MTU5MzYx.WlVgSA._CQbdQlFb8nYtYPIx2zpCCG-1NM",
-  prefix: "+",
+  bot_token: "Njg4OTYyMTQ1MTU2NTk1NzQz.Xm77_w.U_hKJbmAOqBcLtJkCVAhi_jvmJk",
+  prefix: "$",
   no_space: true,
   visual_prompt_delay: 5000, //How many milliseconds should the bot wait before moving onto the next visual prompt?
 
@@ -29,7 +29,7 @@ global.settings = {
     "901465198018306099",
     "901465207006691378"
   ], //What are the ID's of all the cache channels to which the bot may randomly upload? (This helps increase 'bandwidth' and reduces rate limiting)
-  tt_category_id: "856049598178656257", //What is the ID of the category where new games should be created?
+  tt_category_id: "711295102877958195", //What is the ID of the category where new games should be created?
 
   backup_limit: 15, //How many concurrent backups should be saved before old ones are purged?
   backup_timer: 600, //Save every 10 minutes

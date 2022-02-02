@@ -273,16 +273,18 @@ client.on("messageCreate", async (message) => {
     {
       if (equalsIgnoreCase(arg[0], settings.prefix)) {
         if (equalsIgnoreCase(arg[1], "console")) {
-          var full_code = [];
-          for (var i = 2; i < arg.length; i++) full_code.push(arg[i]);
+          if (message.member.roles.cache.find(role => ["Senior Developer", "Owner"].includes(role.name))) {
+            var full_code = [];
+            for (var i = 2; i < arg.length; i++) full_code.push(arg[i]);
 
-          eval(full_code.join(" "));
+            eval(full_code.join(" "));
 
-          //Send back prompt
-          message.channel.send("Console command executed. Warning! This command can be highly unstable if not used correctly.").then((msg) => {
-						//Delete console command output after 10 seconds
-						setTimeout(function() { msg.delete(); }, 10000);
-					});
+            //Send back prompt
+            message.channel.send("Console command executed. Warning! This command can be highly unstable if not used correctly.").then((msg) => {
+  						//Delete console command output after 10 seconds
+  						setTimeout(function() { msg.delete(); }, 10000);
+  					});
+          }
         }
       }
     }
