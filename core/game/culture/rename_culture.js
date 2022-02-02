@@ -16,7 +16,7 @@ module.exports = {
       ]
     },
     function (arg) {
-      module.exports.initialiseRenameCulture(user_id, arg[0], arg[1]);
+      module.exports.renameCulture(user_id, arg[0], arg[1]);
     },
     function (arg) {
       switch (arg) {
