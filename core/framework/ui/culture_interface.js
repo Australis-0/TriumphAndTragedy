@@ -22,7 +22,9 @@ module.exports = {
 
     //Format culture_string
     culture_string.push(`${config.icons.culture} Primary Culture(s): **${getCultureNames(all_primary_cultures).join(", ")}**.`);
-    culture_string.push(`${config.icons.consciousness} Accepted Culture(s): ${getCultureNames(accepted_cultures).join(", ")}`);
+    (accepted_cultures.length > 0)
+      culture_string.push(`${config.icons.consciousness} Accepted Culture(s): ${getCultureNames(accepted_cultures).join(", ")}`) :
+      culture_string.push(`${config.icons.consciousness} Accepted Culture(s): _We have no accepted cultures apart from our primary culture at this moment._`);
     culture_string.push("");
     culture_string.push(`${config.icons.political_capital} Political Capital: **${parseNumber(usr.modifiers.political_capital)}**`);
 
@@ -35,7 +37,7 @@ module.exports = {
 
     for (var i = 0; i < sorted_culture_array.length; i++) {
       var culture_description = "";
-      var is_accepted_culture = accepted_cultures.includes(sorted_culture_array[i]);
+      var is_accepted_culture = (accepted_cultures.includes(sorted_culture_array[i]) || all_primary_cultures.includes(sorted_culture_array));
       var is_primary_culture = all_primary_cultures.includes(sorted_culture_array[i]);
 
       if (is_primary_culture)
