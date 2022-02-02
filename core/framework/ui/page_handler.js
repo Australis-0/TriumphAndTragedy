@@ -328,7 +328,7 @@ module.exports = {
             });
 
           //[Train Units]
-          if (input == "craft")
+          if (["craft", "train units"].includes(input))
             initialiseCraft(user_id);
 
           //[Unit List]
@@ -1310,11 +1310,14 @@ module.exports = {
         }
 
         //[View Reserves]
-        if (input == "view reserves")
+        if (input == "view reserves") {
           createPageMenu(game_obj.middle_embed, {
             embed_pages: printReserves(user_id),
             user: game_obj.user
           });
+
+          game_obj.page = "reserves";
+        }
       }
     }
 
