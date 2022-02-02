@@ -6,8 +6,6 @@ module.exports = {
 
     var map_file = global[`${map_name}_file`];
 
-    console.log(map_file);
-
     //Declare local instance variables
     var all_users = Object.keys(main.users);
     var label_placement = config.defines.map.map_label_placement;

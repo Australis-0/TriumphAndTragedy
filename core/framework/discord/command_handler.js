@@ -18,8 +18,9 @@ module.exports = {
     var local_input = input.toLowerCase();
 
     //Visual prompt processing
-    try {
-      if (interfaces[interfaces[game_id].user].type == "visual_prompt") {
+    if (interfaces[game_id].user)
+      if (interfaces[interfaces[game_id].user])
+        if (interfaces[interfaces[game_id].user].type == "visual_prompt") {
         try {
           //Declare local instance variables
           var is_command = false;
@@ -119,7 +120,6 @@ module.exports = {
           console.log(e);
         }
       }
-    } catch {}
 
     //Traditional commands - Make sure this goes after visual prompt processing!
     {
