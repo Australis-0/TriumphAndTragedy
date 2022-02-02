@@ -21,10 +21,7 @@ module.exports = {
 
         //Update politics page if user is currently on it
         if (game_obj.page == "politics")
-          createPageMenu(game_obj.middle_embed, {
-            embed_pages: printPolitics(user_id),
-            user: game_obj.user
-          });
+          printPolitics(user_id);
 
         //Print user feedback
         printAlert(game_obj.id, `${config.icons.stability} You have raised your stability by **${printPercentage(config.defines.politics.stability_boost)}**! (-1% per turn).`);

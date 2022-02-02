@@ -32,7 +32,7 @@ module.exports = {
     //Convert from parameters
     var user_id = arg0_user;
     var raw_amount = arg1_amount;
-    var amount = parseInt(Math.round(arg1_amount/100));
+    var amount = arg1_amount/100;
 
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
@@ -55,11 +55,10 @@ module.exports = {
                 printBudget(user_id);
 
               //Update politics page if user is currently on it
+              if (game_obj.page == "country_interface")
+                printStats(user_id);
               if (game_obj.page == "politics")
-                createPageMenu(game_obj.middle_embed, {
-                  embed_pages: printPolitics(user_id),
-                  user: game_obj.user
-                });
+                printPolitics(user_id);
             } else {
               printError(game_obj.id, `Your government currently only allows for a maximum tax rate of ${printPercentage(usr.modifiers.max_tax)}! If you wish to raise your taxes this high, consider switching governments.`);
             }

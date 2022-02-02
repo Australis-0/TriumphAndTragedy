@@ -30,10 +30,7 @@ module.exports = {
 
             //Update politics page if user is currently on it
             if (game_obj.page == "politics")
-              createPageMenu(game_obj.middle_embed, {
-                embed_pages: printPolitics(user_id),
-                user: game_obj.user
-              });
+              printPolitics(user_id);
 
             printAlert(game_obj.id, `You have successfully set your government type to **${(getGovernment(usr.government).name) ? getGovernment(usr.government).name : usr.government}**.`);
           } else {

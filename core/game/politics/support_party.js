@@ -57,10 +57,7 @@ module.exports = {
 
           //Update politics page if user is currently on it
           if (game_obj.page == "politics")
-            createPageMenu(game_obj.middle_embed, {
-              embed_pages: printPolitics(user_id),
-              user: game_obj.user
-            });
+            printPolitics(user_id);
 
           //Print user feedback
           printAlert(game_obj.id, `You boosted **${government_obj.adjective}** by **${printPercentage(config.defines.politics.support_boost)}** for ${config.icons.political_capital} ${parseNumber(config.defines.politics.support_cost)} Political Capital.`);
