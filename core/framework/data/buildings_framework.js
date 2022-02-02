@@ -623,6 +623,8 @@ module.exports = {
     var building_category = module.exports.getBuildingCategory(building_category_name);
     var building_obj = module.exports.getBuilding(building_category_name);
     var city_obj = getCity(city_name, { users: user_id });
+    var raw_building_category_name = module.exports.getBuildingCategory(building_category_name, { return_key: true });
+    var raw_building_name = module.exports.getBuilding(building_category_name, { return_key: true });
     var usr = main.users[user_id];
 
     //Check to see whether building_category_name is of type building or building_category
@@ -687,6 +689,21 @@ module.exports = {
 
         available_building_slots[0] = true;
       }
+    } catch {}
+
+    //under_construction handler
+    try {
+      for (var i = 0; i < usr.under_construction.length; i++)
+        if (usr.under_construction[i].province_id == city_obj.id)
+          if (building_category) {
+            var local_building_category = module.exports.getBuildingCategoryFromBuilding(usr.under_construction[i].building_type, { return_key: true });
+
+            if (local_building_category == raw_building_category_name)
+              available_building_slots[1].total_buildings_under_construction++;
+          } else if (building_obj) {
+            if (usr.under_construction[i].building_type == raw_building_name)
+              available_building_slots[1].total_buildings_under_construction++;
+          }
     } catch {}
 
     //Return statement
