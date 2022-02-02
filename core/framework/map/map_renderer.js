@@ -88,9 +88,9 @@ module.exports = {
                     var local_user = main.users[labels[i][x]];
 
                     ctx.fillStyle = RGBToHex(parseInt(local_user.colour[0]), parseInt(local_user.colour[1]), parseInt(local_user.colour[2]));
-                    ctx.fillRect(config.defines.map.map_label_coords[0] + 15 + i*320, config.defines.map.map_label_coords[1] + 15 + x*40, 36, 36);
+                    ctx.fillRect(config.defines.map.map_label_coords[0] + i*320, config.defines.map.map_label_coords[1] + x*40, 36, 36);
                     ctx.beginPath();
-                    ctx.rect(config.defines.map.map_label_coords[0] + 15 + i*320, config.defines.map.map_label_coords[1] + 15 + x*40, 36, 36);
+                    ctx.rect(config.defines.map.map_label_coords[0] + i*320, config.defines.map.map_label_coords[1] + x*40, 36, 36);
                     ctx.stroke();
 
                     ctx.fillStyle = "#ffffff";
