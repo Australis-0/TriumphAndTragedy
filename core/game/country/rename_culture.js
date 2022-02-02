@@ -14,7 +14,7 @@ module.exports = {
 
     //Check to make sure that the new culture name is less than 100 characters
     if (parseString(raw_culture_name).length <= 100) {
-      var new_culture_name = parseString(new_culture_name);
+      var new_culture_name = parseString(raw_culture_name);
 
       //Check if the new name is a duplicate one
       for (var i = 0; i < all_cultures.length; i++) {
