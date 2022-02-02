@@ -63,7 +63,7 @@ module.exports = {
 
         //Set culture and other modifiers/trackers
         province_obj.pops.population = total_population;
-        province_obj.culture = usr.pops.primary_culture;
+        province_obj.culture = getPrimaryCultures(actual_id)[0];
         usr.population += total_population;
         usr.provinces++;
 
