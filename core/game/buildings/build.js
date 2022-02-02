@@ -84,7 +84,7 @@ module.exports = {
 
                       //Check if resource cost is good, pop, or other
                       if (all_goods.includes(all_building_costs[i])) {
-                        usr.inventory[all_unit_costs[i]] -= local_cost;
+                        usr.inventory[all_building_costs[i]] -= local_cost;
                       } else if (all_pops.includes(all_building_costs[i])) {
                         usr.pops[`used_${all_building_costs[i]}`] += local_cost;
                       } else {

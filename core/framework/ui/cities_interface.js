@@ -146,11 +146,11 @@ module.exports = {
         if (local_building_category)
           if (local_building_slots.total_buildings > 0 || local_building_category.always_display) {
             //Generate and push header to page
-            (local_building_slots != -1) ?
+            (local_building_slots.available_slots != -1) ?
               city_string.push(`- **${parseString(all_building_categories[i])}:** (${parseNumber(local_building_slots.total_buildings)}/${parseNumber(local_building_slots.total_slots)}) ${special_string}`) :
               city_string.push(` - **${parseString(all_building_categories[i])}:** ${special_string}`);
 
-            //iterate over all building objects in array
+            //Iterate over all building objects in array
             for (var x = 0; x < all_buildings_in_category.length; x++)
               if (!ignore_building_keys.includes(all_buildings_in_category[x])) {
                 var all_buildings = 0;
@@ -173,7 +173,7 @@ module.exports = {
 
       //Return statement
       return splitEmbed(city_string, {
-        title: `**${city_obj.name}**:`,
+        title: `${city_obj.name}:`,
         title_pages: true,
         fixed_width: true
       });
