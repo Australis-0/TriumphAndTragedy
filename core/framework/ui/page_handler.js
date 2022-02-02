@@ -1307,7 +1307,7 @@ module.exports = {
         }
 
         //[View Reserves]
-        if (input == "view reserves") {
+        if (["reserves", "view reserves"].includes(input)) {
           createPageMenu(game_obj.middle_embed, {
             embed_pages: printReserves(user_id),
             user: game_obj.user
