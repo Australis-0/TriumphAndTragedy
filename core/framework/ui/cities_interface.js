@@ -145,6 +145,8 @@ module.exports = {
         //Display category and all buildings inside only if the local building category should either always be displayed or buildings are present inside of the building category
         if (local_building_category)
           if (local_building_slots.total_buildings > 0 || local_building_slots.total_buildings_under_construction > 0 || local_building_category.always_display) {
+            var all_buildings_in_category = Object.keys(local_building_category);
+
             //Generate and push header to page
             (local_building_slots.available_slots != -1) ?
               city_string.push(`- **${parseString(all_building_categories[i])}:** (${parseNumber(local_building_slots.total_buildings)}/${parseNumber(local_building_slots.total_slots)}) ${special_string}`) :
@@ -163,8 +165,10 @@ module.exports = {
                     all_buildings++;
 
                 if (all_buildings > 0 || local_slots.total_buildings_under_construction > 0)
-                  city_string.push(` - ${local_building_name}: ${parseNumber(all_buildings)}${(local_slots) ? " (" + parseNumber(all_buildings) + "/" + parseNumber(local_slots.total_slots) + ")" : ""} ${(total_buildings_under_construction > 0) ? `(+${parseNumber(local_slots.total_buildings_under_construction)} under construction)` : ""}`);
+                  city_string.push(` - ${local_building_name}: ${parseNumber(all_buildings)}${(local_building.separate_building_slots && !local_building_category.disable_slots) ? " (" + parseNumber(all_buildings) + "/" + parseNumber(local_slots.total_slots) + ")" : ""} ${(local_slots.total_buildings_under_construction > 0) ? `(+${parseNumber(local_slots.total_buildings_under_construction)} under construction)` : ""}`);
               }
+
+            city_string.push("");
           }
       }
 

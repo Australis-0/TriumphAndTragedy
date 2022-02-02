@@ -645,7 +645,7 @@ module.exports = {
 
           //Fetch total available slots in city for building_category
           available_building_slots[1].total_slots =
-            city_obj[`${building_category_name}_building_slots`] +
+            city_obj[`${raw_building_category_name}_building_slots`] +
             usr.modifiers.extra_building_slots;
 
           //Set .available_slots
