@@ -37,25 +37,34 @@ module.exports = {
     var modifiers = arg1_scope;
 
     //Declare local instance variables
-    var actual_id = main.global.user_map[user_id];
-    var all_modifiers = Object.keys(modifiers);
-    var usr = main.users[user_id];
+    try {
+      var actual_id = main.global.user_map[user_id];
+      var all_modifiers = Object.keys(modifiers);
+      var usr = main.users[user_id];
 
-    //Begin parsing
-    for (var i = 0; i < all_modifiers.length; i++)
-      //Check if the modifier in question actually exists before incrementing
-      if (usr.modifiers[all_modifiers[i]]) {
-        usr.modifiers[all_modifiers[i]] += modifiers[all_modifiers[i]];
-      } else if (usr[all_modifiers[i]]) {
-        var is_government = Object.keys(config.governments).includes(all_modifiers[i]);
-        var modifier_value = modifiers[all_modifiers[i]];
+      //Begin parsing
+      for (var i = 0; i < all_modifiers.length; i++)
+        //Check if the modifier in question actually exists before incrementing
+        if (usr.modifiers[all_modifiers[i]]) {
+          usr.modifiers[all_modifiers[i]] += modifiers[all_modifiers[i]];
+        } else if (usr[all_modifiers[i]]) {
+          var is_government = Object.keys(config.governments).includes(all_modifiers[i]);
+          var modifier_value = modifiers[all_modifiers[i]];
 
-        if (is_government) {
-          usr.politics[all_modifiers[i]].drift += modifier_value;
-        } else {
-          usr[all_modifiers[i]] += modifier_value;
+          if (is_government) {
+            usr.politics[all_modifiers[i]].drift += modifier_value;
+          } else {
+            usr[all_modifiers[i]] += modifier_value;
+          }
         }
-      }
+    } catch (e) {
+      log.error(`applyModifiers() ran into an error:`);
+      console.log(e);
+      log.info(`Unparsed Modifier Dump:`);
+      console.log(modifiers);
+      log.info(`Parsed Modifier Dump:`);
+      console.log(all_modifiers);
+    }
   },
 
   generateTemporaryModifierID: function (arg0_user) {

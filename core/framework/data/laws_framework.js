@@ -54,7 +54,7 @@ module.exports = {
       for (var x = 0; x < local_reforms.length; x++)
         if (!["icon", "name", "order"].includes(local_reforms[x]))
           if (local_reforms[x].toLowerCase().indexOf(reform_name) != -1)
-            unit_exists = [true, (!options.return_key) ? local_reform_category[local_reforms[x]] : local_reforms[x]];
+            reform_exists = [true, (!options.return_key) ? local_reform_category[local_reforms[x]] : local_reforms[x]];
     }
 
     //Reform key, hard match
@@ -65,7 +65,7 @@ module.exports = {
       for (var x = 0; x < local_reforms.length; x++)
         if (!["icon", "name", "order"].includes(local_reforms[x]))
           if (local_reforms[x].toLowerCase() == reform_name)
-            unit_exists = [true, (!options.return_key) ? local_reform_category[local_reforms[x]] : local_reforms[x]];
+            reform_exists = [true, (!options.return_key) ? local_reform_category[local_reforms[x]] : local_reforms[x]];
     }
 
     if (!reform_exists[0]) {
@@ -153,7 +153,7 @@ module.exports = {
 
     //Fetch config object
     if (config.reforms[reform_category_name]) {
-      return (options.return_key) ? config.reforms[reform_category_name] : reform_category_name;
+      return (!options.return_key) ? config.reforms[reform_category_name] : reform_category_name;
     } else {
       //If the reform category cannot be found verbatim, start a soft-hard search by parsed strings
       //Soft match first
@@ -167,7 +167,7 @@ module.exports = {
           reform_category_exists = [true, (!options.return_key) ? config.reforms[all_reform_categories[i]] : all_reform_categories[i]];
 
       //Return statement after soft-hard search
-      return (reform_category_name[0]) ? reform_category_name[1] : undefined;
+      return (reform_category_exists[0]) ? reform_category_exists[1] : undefined;
     }
   },
 
@@ -246,34 +246,43 @@ module.exports = {
     var usr = main.users[user_id];
 
     //Current reform is decided based on ruling party
-    var all_reforms_in_category = Object.keys(reform_category_obj);
-    var chosen_reform = ["", -1000]; //[current_law, political_appeasement]
+    try {
+      var all_reforms_in_category = Object.keys(reform_category_obj);
+      var chosen_reform = ["", -1000]; //[current_law, political_appeasement]
 
-    for (var i = 0; i < all_reforms_in_category.length; i++) {
-      var local_reform = reform_category_obj[all_reforms_in_category[i]];
-      var local_reform_appeasement = 0;
+      for (var i = 0; i < all_reforms_in_category.length; i++)
+        if (!all_reforms_in_category[i].includes("name", "icon", "order")) {
+          var local_reform = reform_category_obj[all_reforms_in_category[i]];
+          var local_reform_appeasement = 0;
 
-      //Set local_reform_appeasement
-      if (local_reform.political_appeasement)
-        if (local_reform.political_appeasement[usr.government])
-          local_reform_appeasement = local_reform.political_appeasement[usr.government];
+          //Set local_reform_appeasement
+          if (local_reform.political_appeasement)
+            if (local_reform.political_appeasement[usr.government])
+              local_reform_appeasement = local_reform.political_appeasement[usr.government];
 
-      //Check political_appeasement
-      chosen_reform = (local_reform_appeasement > chosen_reform[1]) ?
-        [all_reforms_in_category[i], local_reform_appeasement] :
-        chosen_reform;
+          //Check political_appeasement
+          chosen_reform = (local_reform_appeasement > chosen_reform[1]) ?
+            [all_reforms_in_category[i], local_reform_appeasement] :
+            chosen_reform;
+        }
+
+      //Unlock current chosen_reform
+      var reform_obj = getReform(chosen_reform[0]);
+
+      usr.laws[reform_category_name] = chosen_reform[0];
+
+      //Apply effects
+      if (reform_obj.effects)
+        applyModifiers(user_id, reform_obj.effects);
+
+      //Push reform to available_reforms
+      usr.available_reforms.push(reform_category_name);
+    } catch (e) {
+      log.error(`unlockReform() ran into an error: ${e} whilst trying to unlock reform category ${reform_category}; raw form: ${arg1_reform_category_name}.`);
+      log.info(`Chosen Reform dump:`);
+      console.log(chosen_reform);
     }
 
-    //Unlock current chosen_reform
-    var reform_obj = getReform(chosen_reform[0]);
 
-    usr.laws[reform_category_name] = chosen_reform[0];
-
-    //Apply effects
-    if (reform_obj.effects)
-      applyModifiers(reform_obj.effects);
-
-    //Push reform to available_reforms
-    usr.available_reforms.push(reform_category_name);
   }
 };

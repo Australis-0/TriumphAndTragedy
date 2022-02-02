@@ -3,7 +3,7 @@ config.defines.common = {
   event_timeout: 5, //How many turns should events last before they timeout?
 
   starting_provinces: 1,
-  starting_year: 1815,
+  starting_year: 1861,
 
   starting_kit: {
     set_government: "anarchy",
@@ -18,6 +18,7 @@ config.defines.common = {
     stone: 15,
     machine_parts: 50,
     food: 50,
+    research_to: 1800,
 
     magnates: [3, 15],
     unlock_building: [

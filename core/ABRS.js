@@ -109,6 +109,9 @@ module.exports = {
     loadMap("supply_limit_map.svg", "supply");
 
     //Load province adjacencies
+    if (!main.provinces)
+      initGlobal();
+
     setTimeout(module.exports.initialiseGraph, 500);
   },
 

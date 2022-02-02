@@ -1,4 +1,4 @@
-config.icons.penal_system = {
+config.reforms.penal_system = {
   name: "Penal System",
 
   capital_punishment: {

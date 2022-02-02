@@ -18,8 +18,8 @@ module.exports = {
         var local_user = main.users[all_users[i]];
 
         if (local_user.country_age >= 20)
-          for (var x = 0; x < usr.researched_technologies.length; x++) {
-            var technology_cost = returnSafeNumber(getTechnology(usr.researched_technologies[x]).research_cost);
+          for (var x = 0; x < local_user.researched_technologies.length; x++) {
+            var technology_cost = returnSafeNumber(getTechnology(local_user.researched_technologies[x]).research_cost);
 
             highest_cost = Math.max(highest_cost, technology_cost);
           }
@@ -116,8 +116,9 @@ module.exports = {
     if (!usr) {
       already_registered = false;
 
-      main.users[arg0_user] = {};
-      usr = main.users[arg0_user];
+      main.global.user_map[user_id] = user_id;
+      main.users[user_id] = {};
+      usr = main.users[user_id];
     }
 
     //Customisation
