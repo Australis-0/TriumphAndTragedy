@@ -46,18 +46,22 @@ module.exports = {
     //Check to see if culture exists
     if (culture_obj) {
       if (culture_obj.accepted_culture.includes(actual_id)) {
-        //Remove actual_id from list of accepted cultures
-        removeElement(culture_obj.accepted_culture, actual_id);
+        if (getPrimaryCultures(actual_id)[0] != getCulture(culture_name, { return_key: true })) {
+          //Remove actual_id from list of accepted cultures
+          removeElement(culture_obj.accepted_culture, actual_id);
 
-        //Update culture page if user is currently on it
-        if (game_obj.page == "culture")
-          createPageMenu(game_obj.middle_embed, {
-            embed_pages: printCultures(user_id),
-            user: game_obj.user
-          });
+          //Update culture page if user is currently on it
+          if (game_obj.page == "culture")
+            createPageMenu(game_obj.middle_embed, {
+              embed_pages: printCultures(user_id),
+              user: game_obj.user
+            });
 
-        //Print user feedback
-        printAlert(game_obj.id, `We have begun oppressing the **${culture_obj.adjective}** minority in our country, and as such they have been removed from the list of accepted cultures.`);
+          //Print user feedback
+          printAlert(game_obj.id, `We have begun oppressing the **${culture_obj.adjective}** minority in our country, and as such they have been removed from the list of accepted cultures.`);
+        } else {
+          printError(game_obj.id, `You can't remove your own primary culture as an accepted culture!`);
+        }
       } else {
         printError(game_obj.id, `**${culture_obj.adjective}** is already an unaccepted culture in your country!`);
       }
