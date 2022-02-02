@@ -110,11 +110,15 @@ module.exports = {
                       var local_shortage = resource_shortages[all_resource_shortages[i]];
 
                       //Determine icon
-                      if (!usr.inventory[all_resource_shortages[i]]) {
-                        if (all_resource_shortages[i] == "money")
-                          local_icon = config.icons.money;
-                      } else {
+                      if (local_good)
                         local_icon = (local_good.icon) ? config.icons[local_good.icon] : "";
+                      if (all_resource_shortages[i] == "money")
+                        local_icon = config.icons.money;
+                      if (config.pops[all_resource_shortages[i]]) {
+                        var local_pop = config.pops[all_resource_shortages[i]];
+
+                        if (local_pop.icon)
+                          local_icon = config.icons[local_pop.icon];
                       }
 
                       shortage_array.push(`- ${local_icon} ${parseNumber(local_shortage)} ${(local_good) ? (local_good.name) ? local_good.name : all_resource_shortages[i] : ""}`);
