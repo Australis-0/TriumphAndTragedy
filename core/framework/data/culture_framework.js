@@ -51,7 +51,7 @@ module.exports = {
         var local_province = main.provinces[all_provinces[i]];
 
         if (local_province.culture == raw_culture_name)
-          total_culture_population += local_province.population;
+          total_culture_population += local_province.pops.population;
       }
 
     //Return percentage as number
@@ -76,7 +76,7 @@ module.exports = {
         var local_province = main.provinces[all_provinces[i]];
 
         if (local_province.culture == raw_culture_name)
-          total_culture_population += local_province.population;
+          total_culture_population += local_province.pops.population;
       }
 
     //Return total cultural population
@@ -283,6 +283,7 @@ module.exports = {
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
     var all_provinces = Object.keys(main.provinces);
+    var culture_name = getCulture(culture_name, { return_key: true });
     var province_list = [];
 
     //Parse through all provinces the user controls for unique cultures
