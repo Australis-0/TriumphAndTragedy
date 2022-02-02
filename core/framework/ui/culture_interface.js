@@ -22,7 +22,7 @@ module.exports = {
 
     //Format culture_string
     culture_string.push(`${config.icons.culture} Primary Culture(s): **${getCultureNames(all_primary_cultures).join(", ")}**.`);
-    (accepted_cultures.length > 0)
+    (accepted_cultures.length > 0) ?
       culture_string.push(`${config.icons.consciousness} Accepted Culture(s): ${getCultureNames(accepted_cultures).join(", ")}`) :
       culture_string.push(`${config.icons.consciousness} Accepted Culture(s): _We have no accepted cultures apart from our primary culture at this moment._`);
     culture_string.push("");
