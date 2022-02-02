@@ -44,7 +44,8 @@ module.exports = {
 
             for (var i = 0; i < all_users.length; i++)
               if (
-                main.users[all_users[i]].colour.every(item => [r, g, b].includes(item)) && [r, g, b].every(item => main.users[all_users[i]].colour.includes(item))
+                main.users[all_users[i]].colour.every(item => [r, g, b].includes(item)) && [r, g, b].every(item => main.users[all_users[i]].colour.includes(item)) &&
+                all_users[i] != actual_id
               )
                 colour_taken = [true, main.users[all_users[i]].name];
 
@@ -61,9 +62,9 @@ module.exports = {
 
                 for (var i = 0; i < all_provinces.length; i++)
                   if (all_provinces[i].owner == all_provinces[i].controller)
-                    setProvinceColour("political", all_provinces[i], usr.colour);
+                    setProvinceColour("political", all_provinces[i].id, usr.colour);
                   else
-                    setProvinceColour("political", all_provinces[i], [Math.min(usr.colour[0] - 20, 0), Math.min(usr.colour[1] - 20, 0), Math.min(usr.colour[2] - 20, 0)]);
+                    setProvinceColour("political", all_provinces[i].id, [Math.min(usr.colour[0] - 20, 0), Math.min(usr.colour[1] - 20, 0), Math.min(usr.colour[2] - 20, 0)]);
               } else {
                 if (!do_not_display)
                   printError(game_obj.id, `The colour you have specified, **${r}**, **${g}**, **${b}**, has already been taken by **${colour_taken[1]}**! Please pick a different colour.`);

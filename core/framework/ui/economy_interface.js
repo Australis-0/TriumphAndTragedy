@@ -57,7 +57,7 @@ module.exports = {
       var local_throughput = getCityRGOThroughput(city_obj.name) - (usr.modifiers.rgo_throughput - 1);
 
       local_element.count++;
-      local_element.push(`${city_obj.name}` + (
+      local_element.cities.push(`${city_obj.name}` + (
         (!isNaN(city_obj.supply_limit)) ?
           `**${printPercentage(Math.ceil(local_throughput), { display_prefix: true })}**` : ``
       ));
@@ -69,7 +69,7 @@ module.exports = {
       var processed_good_icon = (local_good.icon) ? config.icons[local_good.icon] + " " : "";
 
       if (local_resource_modifiers[all_good_names[i]].count != 0) {
-        economy_string.push(`${processed_good_icon}Base **${printPercentage(usr.modifiers.rgo_throughput, { display_prefix: true })}** ${processed_good_name} Gain in ${local_resource_modifiers[all_good_names[i]].count}** citie(s):`);
+        economy_string.push(`${processed_good_icon}Base **${printPercentage(usr.modifiers.rgo_throughput, { display_prefix: true })}** ${processed_good_name} Gain in **${local_resource_modifiers[all_good_names[i]].count}** citie(s):`);
         economy_string.push(`- ${local_resource_modifiers[all_good_names[i]].cities.join(", ")}.`);
       }
     }

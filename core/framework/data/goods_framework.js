@@ -119,12 +119,14 @@ module.exports = {
 
   getRawGoods: function (arg0_options) {
     //Declare local instance variables
-    var all_goods = module.exports.getGoods(arg0_options);
+    var all_good_names = module.exports.getGoods({ return_names: true });
+    var all_goods = module.exports.getGoods();
+    var options = (arg0_options) ? arg0_options : {};
     var raw_goods = [];
 
     for (var i = 0; i < all_goods.length; i++)
       if (all_goods[i].mine_action_chance || all_goods[i].quarry_action_chance || all_goods[i].chop_action_chance)
-        raw_goods.push(all_goods[i]);
+        raw_goods.push((!options.return_names) ? all_goods[i] : all_good_names[i]);
 
     //Return statement
     return raw_goods;

@@ -10,6 +10,7 @@ module.exports = {
 
     //Declare local tracker variables
     var all_expeditions = Object.keys(usr.expeditions);
+    var capital_id = getCapital(actual_id);
     var game_obj = getGameObject(user_id);
     var provinces_can_colonise = 0;
     var total_colonial_units = 0;
@@ -18,7 +19,7 @@ module.exports = {
     var colonisation_string = [];
 
     //Format embed
-    colonisation_string.push(`${config.icons.provinces} **Capital Province:** ${(main.provinces[usr.capital_id]) ? usr.capital_id : "_No capital set._"}`);
+    colonisation_string.push(`${config.icons.provinces} **Capital Province:** ${(capital_id) ? capital_id.id : "_No capital set._"}`);
     colonisation_string.push(`${config.icons.colonisation} **Maximum Expedition Limit:** ${parseNumber(usr.modifiers.maximum_expeditions)}`);
     colonisation_string.push(`${config.icons.taxes} **Colonisation Speed:** Your colonists can move at a rate of **${parseNumber(getColonisationSpeed(actual_id))}** province(s) per turn.`);
 

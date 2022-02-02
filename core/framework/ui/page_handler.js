@@ -1415,7 +1415,7 @@ module.exports = {
 
           //[Set Government]
           if (input == "set government")
-            initialiseSetGovernment(user_id);
+            setGovernmentCommand(user_id);
 
           //[Set Tax]
           if (input == "set tax")

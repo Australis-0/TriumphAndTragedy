@@ -47,7 +47,7 @@ module.exports = {
 
             break;
           case "money":
-            usr.money = (local_list.length == 1) ? 
+            usr.money = (local_list.length == 1) ?
               local_list[0] :
               randomNumber(local_list[0], local_list[1]);
 
@@ -174,7 +174,7 @@ module.exports = {
       if (!usr.modifiers.production_efficiency) usr.modifiers.production_efficiency = 1;
       if (!usr.modifiers.research_efficiency) usr.modifiers.research_efficiency = 0.20;
       if (!usr.modifiers.research_slots) usr.modifiers.research_slots = 3;
-      if (!usr.modifiers.rgo_throughput) usr.modifiers.rgo_throughput = config.rgo_modifier;
+      if (!usr.modifiers.rgo_throughput) usr.modifiers.rgo_throughput = config.defines.economy.rgo_modifier;
       if (!usr.modifiers.shipment_capacity) usr.modifiers.shipment_capacity = 50;
       if (!usr.modifiers.shipment_time) usr.modifiers.shipment_time = 1;
       if (!usr.modifiers.tax_efficiency) usr.modifiers.tax_efficiency = 0.15;

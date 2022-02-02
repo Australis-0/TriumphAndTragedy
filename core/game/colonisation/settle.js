@@ -52,6 +52,7 @@ module.exports = {
     var all_expeditions = Object.keys(usr.expeditions);
     var all_pops = Object.keys(config.pops);
     var all_units = getAllUnits({ return_names: true });
+    var capital_obj = getCapital(actual_id);
     var game_obj = getGameObject(user_id);
     var unit_type = "";
     var usr = main.users[actual_id];
@@ -128,7 +129,7 @@ module.exports = {
           var random_prov_id = randomElement(provinces);
 
           try {
-            prov_distance = moveTo(usr.capital_id.toString(), random_prov_id.toString()).length;
+            prov_distance = moveTo(capital_obj.id, random_prov_id.toString()).length;
 
             prov_colonisation_turns = Math.ceil(
               prov_distance/
@@ -157,7 +158,7 @@ module.exports = {
             //Print user alert feedback
             printAlert(game_obj.id, `Settlers from **${usr.name}** have set out to colonise the province(s) of ${provinces.join(", ")}. They will arrive in **${parseNumber(prov_colonisation_turns)}**. They will then take an additional **${parseNumber(config.defines.colonisation.base_colonisation_turns)} turn(s) to colonise.`);
           } catch (e) {
-            if (usr.capital_id == 0 || isNaN(usr.capital_id))
+            if (!capital_obj)
               printError(game_obj.id, `You need to have a set capital city in order to start colonising provinces!`);
 
             log.error(`settle() command by User ID ${user_id}, Actual ID ${actual_id}, Country ${usr.name} was noted: ${e}.`);
