@@ -950,6 +950,7 @@ module.exports = {
             })
 
             break;
+          case "building list":
           case "build list":
             createPageMenu(game_obj.middle_embed, {
               embed_pages: printBuildList(actual_id),

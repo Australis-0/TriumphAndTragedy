@@ -434,7 +434,7 @@ config.technology.administrative_technology = {
     research_cost: 1400,
     year: 1787,
     unlocks: {
-      unlock_building: "political_parties"
+      unlock_reform: "political_parties"
     }
   },
   intervention: {

@@ -3,7 +3,7 @@ config.buildings.resource_extraction = {
   quarries: {
     name: "Quarries",
     singular: "Quarry",
-    icon: "<:quarries:772296532606451724>",
+    icon: "quarries",
 
     construction_turns: 2,
     cost: {
@@ -21,7 +21,7 @@ config.buildings.resource_extraction = {
   lumberjacks: {
     name: "Lumberjacks",
     singular: "Lumberjack",
-    icon: "<:wood:716791408928751636>",
+    icon: "wood",
 
     construction_turns: 2,
     cost: {

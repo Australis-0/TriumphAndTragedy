@@ -3,7 +3,7 @@ config.buildings.research_buildings = {
   schools: {
     name: "Schools",
     singular: "School",
-    icon: "<:knowledge:716797747193446441>",
+    icon: "knowledge",
 
     construction_turns: 2,
     cost: {
@@ -24,7 +24,7 @@ config.buildings.research_buildings = {
   libraries: {
     name: "Libraries",
     singular: "Library",
-    icon: "<:old_scroll:716828676880334881>",
+    icon: "old_scroll",
 
     construction_turns: 4,
     cost: {
@@ -45,7 +45,7 @@ config.buildings.research_buildings = {
   universities: {
     name: "Universities",
     singular: "University",
-    icon: "<:faculty:732730754911436830>",
+    icon: "faculty",
 
     construction_turns: 8,
     cost: {
@@ -66,7 +66,7 @@ config.buildings.research_buildings = {
   research_labs: {
     name: "Research Labs",
     singular: "Research Lab",
-    icon: "<:government:716817688693047306>",
+    icon: "government",
 
     construction_turns: 10,
     cost: {
@@ -89,7 +89,7 @@ config.buildings.research_buildings = {
   research_complexes: {
     name: "Research Complexes",
     singular: "Research Complex",
-    icon: "<:technology:716812861514711040>",
+    icon: "technology",
 
     construction_turns: 10,
     cost: {

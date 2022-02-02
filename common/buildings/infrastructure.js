@@ -5,7 +5,7 @@ config.buildings.infrastructure = {
   canals: {
     name: "Canals",
     singular: "Canal",
-    icon: "<:canals:773451853786251274>",
+    icon: "canals",
 
     cost: {
       stone: 15,
@@ -27,7 +27,7 @@ config.buildings.infrastructure = {
   ports: {
     name: "Ports",
     singular: "Port",
-    icon: "<:ports:773451853933051904>",
+    icon: "ports",
 
     cost: {
       stone: 30,
@@ -50,7 +50,7 @@ config.buildings.infrastructure = {
     name: "Railways",
     singular: "Railway",
     aliases: ["railroad"],
-    icon: "<:railways:773451853534986241>",
+    icon: "railways",
 
     cost: {
       steel: 10,
@@ -73,7 +73,7 @@ config.buildings.infrastructure = {
     name: "Motorways",
     singular: "Motorway",
     aliases: ["highway", "interstate"],
-    icon: "<:motorways:773451853408108545>",
+    icon: "motorways",
 
     cost: {
       concrete: 20,
@@ -96,7 +96,7 @@ config.buildings.infrastructure = {
     name: "Aeroports",
     singular: "Aeroport",
     aliases: ["airport"],
-    icon: "<:aeroports:773451853751910400>",
+    icon: "aeroports",
 
     construction_turns: 5,
     cost: {

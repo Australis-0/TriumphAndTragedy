@@ -267,7 +267,7 @@ module.exports = {
 
     //Fetch config object
     if (config.buildings[building_category_name]) {
-      return (options.return_key) ? config.buildings[building_category_name] : building_category_name;
+      return (!options.return_key) ? config.buildings[building_category_name] : building_category_name;
     } else {
       //If the building category cannot be found verbatim, start a soft-hard search by parsed strings
       //Soft match first
@@ -281,7 +281,7 @@ module.exports = {
           building_category_exists = [true, (!options.return_key) ? config.buildings[all_building_categories[i]] : all_building_categories[i]];
 
       //Return statement after soft-hard search
-      return (building_category_name[0]) ? building_category_name[1] : undefined;
+      return (building_category_exists[0]) ? building_category_exists[1] : undefined;
     }
   },
 
@@ -340,6 +340,12 @@ module.exports = {
               maintenance_obj[all_maintenance_costs[i]][1]
             ];
         }
+
+        //Sort in ascending order
+        if (maintenance_obj[all_maintenance_costs])
+          maintenance_obj[all_maintenance_costs].sort(function(a, b){
+            return a - b;
+          });
       }
     }
 
@@ -369,14 +375,14 @@ module.exports = {
     var costs_obj = {};
     var usr = main.users[user_id];
 
-    //Only start appending if the .costs object exists at all
-    if (building_obj.costs) {
-      var all_costs = Object.keys(building_obj.costs);
+    //Only start appending if the .cost object exists at all
+    if (building_obj.cost) {
+      var all_costs = Object.keys(building_obj.cost);
 
       for (var i = 0; i < all_costs.length; i++) {
         //Check to make sure that this is an actual resource, and not just a pop value
         var building_cost_modifier = (!Object.keys(config.pops).includes(all_costs[i])) ? returnSafeNumber(usr.modifiers.building_cost, 1) : 1;
-        var current_resource_demand = building_obj.costs[all_costs[i]]*building_cost_modifier*options.amount;
+        var current_resource_demand = building_obj.cost[all_costs[i]]*building_cost_modifier*options.amount;
 
         //Fetch resource_type
         var resource_type = {
@@ -409,11 +415,11 @@ module.exports = {
       var all_manpower_costs = Object.keys(building_obj.manpower_cost);
 
       for (var i = 0; i < all_manpower_costs.length; i++) {
-        var current_resource_demand = building_obj.costs[all_manpower_costs[i]]*options.amount;
+        var current_resource_demand = building_obj.manpower_cost[all_manpower_costs[i]]*options.amount;
 
-        costs_obj[all_costs[i]] = (!costs_obj[all_costs[i]]) ?
+        costs_obj[all_manpower_costs[i]] = (!costs_obj[all_manpower_costs[i]]) ?
           current_resource_demand :
-          costs_obj[all_costs[i]] + current_resource_demand;
+          costs_obj[all_manpower_costs[i]] + current_resource_demand;
       }
     }
 

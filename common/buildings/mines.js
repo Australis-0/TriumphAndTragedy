@@ -3,7 +3,7 @@ config.buildings.mines = {
   bauxite_mines: {
     name: "Bauxite Mines",
     singular: "Bauxite Mine",
-    icon: "<:bauxite_mines:772296532794933248>",
+    icon: "bauxite_mines",
 
     construction_turns: 3,
     cost: {
@@ -21,7 +21,7 @@ config.buildings.mines = {
   coal_mines: {
     name: "Coal Mines",
     singular: "Coal Mine",
-    icon: "<:coal_mines:772296532795195395>",
+    icon: "coal_mines",
 
     construction_turns: 2,
     cost: {
@@ -39,7 +39,7 @@ config.buildings.mines = {
   copper_mines: {
     name: "Copper Mines",
     singular: "Copper Mine",
-    icon: "<:copper_mines:772296532854571008>",
+    icon: "copper_mines",
 
     construction_turns: 3,
     cost: {
@@ -57,7 +57,7 @@ config.buildings.mines = {
   gold_mines: {
     name: "Gold Mines",
     singular: "Gold Mine",
-    icon: "<:gold_mines:772296532930068540>",
+    icon: "gold_mines",
 
     construction_turns: 4,
     cost: {
@@ -75,7 +75,7 @@ config.buildings.mines = {
   iron_mines: {
     name: "Iron Mines",
     singular: "Iron Mine",
-    icon: "<:iron_mines:772296533194440754>",
+    icon: "iron_mines",
 
     construction_turns: 3,
     cost: {
@@ -93,7 +93,7 @@ config.buildings.mines = {
   lead_mines: {
     name: "Lead Mines",
     singular: "Lead Mine",
-    icon: "<:lead_mines:772296533533523988>",
+    icon: "lead_mines",
 
     construction_turns: 2,
     cost: {
@@ -111,7 +111,7 @@ config.buildings.mines = {
   silver_mines: {
     name: "Silver Mines",
     singular: "Silver Mine",
-    icon: "<:silver_mines:772296533302968331>",
+    icon: "silver_mines:772296533302968331>",
 
     construction_turns: 4,
     cost: {
@@ -130,7 +130,7 @@ config.buildings.mines = {
     name: "Sulphur Mines",
     singular: "Sulphur Mine",
     aliases: ["sulfur_mines", "sulfur_mine"],
-    icon: "<:sulphur_mines:772296533277409311>",
+    icon: "sulphur_mines",
 
     construction_turns: 4,
     cost: {

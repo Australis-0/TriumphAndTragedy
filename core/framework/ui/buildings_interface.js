@@ -44,6 +44,7 @@ module.exports = {
           //Display variables
           var building_icon = (local_building.icon) ? config.icons[local_building.icon] + " " : "";
           var building_name = (local_building.name) ? local_building.name : local_buildings[x];
+          var building_obj = local_building;
 
           //Run through all building costs
           var all_building_costs = Object.keys(building_costs);
@@ -64,12 +65,12 @@ module.exports = {
               parseString(all_building_costs[y]);
 
             //Parse debug name
-            (all_building_costs[y] != "money") ?
-              costs_array.push(`${parseNumber(Math.ceil(local_building_cost))} ${resource_name}`) :
-              costs_array.push(`£${parseNumber(Math.ceil(local_building_cost))}`);
-
             if (Object.keys(config.pops).includes(all_building_costs[y]))
               manpower_array.push(`${parseNumber(Math.ceil(local_building_cost))} ${pop_name}`);
+            else
+              (all_building_costs[y] != "money") ?
+                costs_array.push(`${parseNumber(Math.ceil(local_building_cost))} ${resource_name}`) :
+                costs_array.push(`£${parseNumber(Math.ceil(local_building_cost))}`);
 
             //Set costs_string
             if (costs_array.length > 0)
@@ -108,7 +109,7 @@ module.exports = {
           var all_maintenance_costs = Object.keys(building_maintenance);
 
           for (var y = 0; y < all_maintenance_costs.length; y++) {
-            var local_building_consumption = building_production[all_maintenance_costs[y]];
+            var local_building_consumption = building_maintenance[all_maintenance_costs[y]];
             var resource_obj = getGood(all_maintenance_costs[y]);
 
             //Fetch resource_name
@@ -117,7 +118,7 @@ module.exports = {
               parseString(all_maintenance_costs[y]);
 
             //Parse debug name; two-fold array with random minimum to maximum production, one-fold array with the same production value all the time
-            if (local_building_consumption[0] >= 0 && local_building_consumption[0] >= 0) {
+            if (local_building_consumption.length > 1) {
               (all_maintenance_costs[y] != "money") ?
                 maintenance_array.push(`${parseNumber(Math.ceil(local_building_consumption[0]))} - ${parseNumber(Math.ceil(local_building_consumption[1]))} ${resource_name}`) :
                 maintenance_array.push(`£${parseNumber(Math.ceil(local_building_consumption[0]))} - £${parseNumber(Math.ceil(local_building_consumption[1]))}`);

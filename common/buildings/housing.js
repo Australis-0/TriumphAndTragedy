@@ -8,7 +8,7 @@ config.buildings.housing = {
     name: "Neighbourhoods",
     singular: "Neighbourhood",
     aliases: ["neighborhood", "neighborhoods"],
-    icon: "<:neighbourhoods:772296532958642186>",
+    icon: "neighbourhoods",
 
     construction_turns: 4,
     cost: {
@@ -22,7 +22,7 @@ config.buildings.housing = {
   suburbs: {
     name: "Suburbs",
     singular: "Suburb",
-    icon: "<:suburbs:772296532908310549>",
+    icon: "suburbs",
 
     construction_turns: 4,
     cost: {
@@ -37,7 +37,7 @@ config.buildings.housing = {
     name: "Flats",
     singular: "Flat",
     aliases: ["apartment", "apartments"],
-    icon: "<:flats:772296533004910622>",
+    icon: "flats",
 
     construction_turns: 4,
     cost: {
@@ -51,7 +51,7 @@ config.buildings.housing = {
   districts: {
     name: "Districts",
     singular: "District",
-    icon: "<:districts:772296533113700352>",
+    icon: "districts",
 
     construction_turns: 8,
     cost: {
@@ -67,7 +67,7 @@ config.buildings.housing = {
     name: "CBDs",
     singular: "Central Business District",
     aliases: ["cbd", "downtown", "downtowns"],
-		icon: "<:financial_districts:772296532492812298>",
+		icon: "financial_districts",
 
     construction_turns: 10,
     cost: {

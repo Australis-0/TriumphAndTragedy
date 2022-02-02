@@ -4,7 +4,7 @@ config.buildings.processing_facilities = {
     name: "Aluminium Factories",
     singular: "Aluminium Factory",
     aliases: ["aluminum_factories", "aluminium_factory", "aluminium_refinery", "aluminum_factory"],
-    icon: "<:aluminium_factories:772296532534755348>",
+    icon: "aluminium_factories",
 
     cost: {
       steel: 15,
@@ -26,7 +26,7 @@ config.buildings.processing_facilities = {
     name: "Ammunition Factories",
     singular: "Ammunition Factory",
     aliases: ["ammunition_factory"],
-    icon: "<:ammunition_factories:772296532358725673>",
+    icon: "ammunition_factories",
 
     cost: {
       iron: 10,
@@ -52,7 +52,7 @@ config.buildings.processing_facilities = {
     name: "Artillery Factories",
     singular: "Artillery Factory",
     aliases: ["artillery_factory"],
-    icon: "<:artillery_factories:772296532601995285>",
+    icon: "artillery_factories",
 
     cost: {
       iron: 10,
@@ -75,7 +75,7 @@ config.buildings.processing_facilities = {
     name: "Concrete Factories",
     singular: "Concrete Factory",
     aliases: ["concrete_factory"],
-    icon: "<:concrete_factories:772296532383891478>",
+    icon: "concrete_factories",
 
     cost: {
       steel: 10,
@@ -97,7 +97,7 @@ config.buildings.processing_facilities = {
     name: "Fertiliser Factories",
     singular: "Fertiliser Factory",
     aliases: ["fertilizer_factories", "fertilizer_factory", "fertilizer_factory"],
-    icon: "<:fertiliser_factories:772296533038858261>",
+    icon: "fertiliser_factories",
 
     cost: {
       stone: 15,
@@ -118,7 +118,7 @@ config.buildings.processing_facilities = {
   forgeries: {
     name: "Forgeries",
     singular: "Forgery",
-    icon: "<:forgeries:773334400506265641>",
+    icon: "forgeries",
 
     cost: {
       iron: 5,
@@ -141,7 +141,7 @@ config.buildings.processing_facilities = {
     name: "Food Processing Facilities",
     singular: "Food Processing Facility",
     aliases: ["food_processing_facility"],
-    icon: "<:food_processing_facilities:772296532900577281>",
+    icon: "food_processing_facilities",
 
     cost: {
       stone: 5,
@@ -164,7 +164,7 @@ config.buildings.processing_facilities = {
     name: "Machine Parts Factories",
     singular: "Machine Parts Factory",
     aliases: ["machine_parts_factory"],
-    icon: "<:machine_parts_factories:772296532778811392>",
+    icon: "machine_parts_factories",
 
     cost: {
       steel: 5,
@@ -186,7 +186,7 @@ config.buildings.processing_facilities = {
   sawmills: {
     name: "Sawmills",
     singular: "Sawmill",
-    icon: "<:sawmills:772296532539080714>",
+    icon: "sawmills",
 
     cost: {
       wood: 10,
@@ -207,7 +207,7 @@ config.buildings.processing_facilities = {
     name: "Small Arms Factories",
     singular: "Small Arms Factory",
     aliases: ["small_arms_factory"],
-    icon: "<:small_arms_factories:773339719093452810>",
+    icon: "small_arms_factories",
 
     cost: {
       stone: 15,
@@ -229,7 +229,7 @@ config.buildings.processing_facilities = {
   steelworks: {
     name: "Steelworks",
     singular: "Steelwork",
-    icon: "<:steelworks:772296532941602847>",
+    icon: "steelworks",
 
     cost: {
       stone: 20,
@@ -250,7 +250,7 @@ config.buildings.processing_facilities = {
   textile_mills: {
     name: "Textile Mills",
     singular: "Textile Mill",
-    icon: "<:textile_mills:772296532959166474>",
+    icon: "textile_mills",
 
     cost: {
       iron: 20,

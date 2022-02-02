@@ -4,7 +4,7 @@ config.buildings.military_buildings = {
     name: "Ack-Ack Guns",
     singular: "Ack-Ack Gun",
     aliases: ["aa_guns", "anti_aircraft_guns", "anti_aircraft"],
-    icon: "<:artillery_piece:759161240999952445>",
+    icon: "artillery_piece",
 
     construction_turns: 1,
     cost: {
@@ -20,7 +20,7 @@ config.buildings.military_buildings = {
   air_bases: {
     name: "Air Bases",
     singular: "Air Base",
-    icon: "<:aeroplanes:716821195407884358>",
+    icon: "aeroplanes",
 
     construction_turns: 2,
     cost: {
@@ -39,7 +39,7 @@ config.buildings.military_buildings = {
   artillery_encampments: {
     name: "Artillery Encampments",
     singular: "Artillery Encampment",
-    icon: "<:artillery:716821195055431681>",
+    icon: "artillery",
 
     construction_turns: 2,
     cost: {
@@ -58,7 +58,7 @@ config.buildings.military_buildings = {
   auto_plants: {
     name: "Auto Plants",
     singular: "Auto Plant",
-    icon: "<:land_vehicles:716821195215077406>",
+    icon: "land_vehicles",
 
     construction_turns: 3,
     cost: {
@@ -78,7 +78,7 @@ config.buildings.military_buildings = {
   barracks: {
     name: "Barracks",
     singular: "Barracks",
-    icon: "<:manpower:716817688705499177>",
+    icon: "manpower",
 
     construction_turns: 2,
     cost: {
@@ -96,7 +96,7 @@ config.buildings.military_buildings = {
   dockyards: {
     name: "Dockyards",
     singular: "Dockyard",
-    icon: "<:naval_units:716821195277729832>",
+    icon: "naval_units",
 
     construction_turns: 5,
     cost: {

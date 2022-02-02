@@ -3,7 +3,7 @@ config.buildings.agriculture = {
   farms: {
     name: "Farms",
     singular: "Farm",
-    icon: "<:farms:772296532275757087>",
+    icon: "farms",
 
     construction_turns: 1,
     cost: {
@@ -22,7 +22,7 @@ config.buildings.agriculture = {
   centralised_farms: {
     name: "Farms",
     singular: "Centralised Farm",
-    icon: "<:centralised_farms:773289015839162368>",
+    icon: "centralised_farms",
 
     construction_turns: 2,
     cost: {
@@ -42,7 +42,7 @@ config.buildings.agriculture = {
   modern_farms: {
     name: "Modern Farms",
     singular: "Modern Farm",
-    icon: "<:modern_farms:773289015415668746>",
+    icon: "modern_farms",
 
     construction_turns: 2,
     cost: {
@@ -63,7 +63,7 @@ config.buildings.agriculture = {
   industrial_farms: {
     name: "Industrial Farms",
     singular: "Industrial Farm",
-    icon: "<:industrial_farms:773289015440834611>",
+    icon: "industrial_farms",
 
     construction_turns: 3,
     cost: {
@@ -88,7 +88,7 @@ config.buildings.agriculture = {
   vertical_farms: {
     name: "Vertical Farms",
     singular: "Vertical Farm",
-    icon: "<:vertical_farms:773289015440572467>",
+    icon: "vertical_farms",
 
     construction_turns: 5,
     cost: {
@@ -112,7 +112,7 @@ config.buildings.agriculture = {
   pastures: {
     name: "Pastures",
     singular: "Pasture",
-    icon: "<:pastures:772296532648132638>",
+    icon: "pastures",
 
     construction_turns: 1,
     cost: {
@@ -129,7 +129,7 @@ config.buildings.agriculture = {
   fisheries: {
     name: "Fisheries",
     singular: "Fishery",
-    icon: "<:fisheries:771983852373409793>",
+    icon: "fisheries",
 
     construction_turns: 1,
     cost: {
@@ -147,7 +147,7 @@ config.buildings.agriculture = {
   plantations: {
     name: "Plantations",
     singular: "Plantation",
-    icon: "<:plantations:772296532883013643>",
+    icon: "plantations",
 
     construction_turns: 2,
     cost: {

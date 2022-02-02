@@ -3,7 +3,7 @@ config.buildings.industry = {
   guilds: {
     name: "Guilds",
     singular: "Guild",
-    icon: "<:workers:732730754735276124>",
+    icon: "workers",
 
     construction_turns: 2,
     cost: {
@@ -23,7 +23,7 @@ config.buildings.industry = {
     name: "Workshops",
     singular: "Workshop",
     aliases: ["shop"],
-    icon: "<:trade:716828677115084812>",
+    icon: "trade",
 
     construction_turns: 3,
     cost: {
@@ -44,7 +44,7 @@ config.buildings.industry = {
     name: "Watermills",
     singular: "Watermill",
     aliases: ["windmill"],
-    icon: "<:paper:759161240987369522>",
+    icon: "paper",
 
     construction_turns: 3,
     cost: {
@@ -64,7 +64,7 @@ config.buildings.industry = {
     name: "Manufactories",
     singular: "Manufactory",
     aliases: ["manufact", "manufacturing"],
-    icon: "<:development:716811992421367869>",
+    icon: "development",
 
     construction_turns: 5,
     cost: {
@@ -83,7 +83,7 @@ config.buildings.industry = {
   mills: {
     name: "Mills",
     singular: "Mill",
-    icon: "<:government:716817688693047306>",
+    icon: "government",
 
     construction_turns: 4,
     cost: {
@@ -103,7 +103,7 @@ config.buildings.industry = {
   factories: {
     name: "Factories",
     singular: "Factory",
-    icon: "<:factory:759161240601493525>",
+    icon: "factory",
 
     construction_turns: 3,
     cost: {
@@ -123,7 +123,7 @@ config.buildings.industry = {
   arsenals: {
     name: "Arsenals",
     singular: "Arsenal",
-    icon: "<:coal:716791408714973204>",
+    icon: "coal",
 
     construction_turns: 4,
     cost: {
@@ -144,7 +144,7 @@ config.buildings.industry = {
   assembly_plants: {
     name: "Assembly Plants",
     singular: "Assembly Plant",
-    icon: "<:artillery_piece:759161240999952445>",
+    icon: "artillery_piece",
 
     construction_turns: 4,
     cost: {
@@ -161,7 +161,7 @@ config.buildings.industry = {
     name: "Industrial Complexes",
     singular: "Industrial Complex",
     aliases: ["industrial_facilities"],
-    icon: "<:actions:716817688244256770>",
+    icon: "actions",
 
     construction_turns: 5,
     cost: {
@@ -181,7 +181,7 @@ config.buildings.industry = {
     name: "Civilian Industries",
     singular: "Civilian Industry",
     aliases: ["civilian_industry"],
-    icon: "<:government_scroll:716828975175041054>",
+    icon: "government_scroll",
 
     construction_turns: 3,
     cost: {
@@ -202,7 +202,7 @@ config.buildings.industry = {
     name: "Wartime Industries",
     singular: "Wartime Industry",
     aliases: ["wartime_industry"],
-    icon: "<:land_vehicles:716821195215077406>",
+    icon: "land_vehicles",
 
     construction_turns: 2,
     cost: {
@@ -226,7 +226,7 @@ config.buildings.industry = {
   production_facilities: {
     name: "Production Facilities",
     singular: "Production Facility",
-    icon: "<:building:716827579650408538>",
+    icon: "building",
 
     construction_turns: 3,
     cost: {
@@ -245,7 +245,7 @@ config.buildings.industry = {
   modern_financial_centres: {
     name: "Modern Financial Centres",
     singular: "Modern Financial Centre",
-    icon: "<:taxes:716817688781127810>",
+    icon: "taxes",
 
     construction_turns: 5,
     cost: {
@@ -264,7 +264,7 @@ config.buildings.industry = {
   ai_hubs: {
     name: "AI Hubs",
     singular: "AI Hub",
-    icon: "<:money:716817688718213192>",
+    icon: "money",
 
     construction_turns: 7,
     cost: {

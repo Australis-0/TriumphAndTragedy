@@ -3,7 +3,7 @@ config.buildings.petrochemicals = {
   derricks: {
     name: "Derricks",
     singular: "Derrick",
-    icon: "<:derricks:772296533320007681>",
+    icon: "derricks",
 
     construction_turns: 2,
     cost: {
@@ -24,7 +24,7 @@ config.buildings.petrochemicals = {
   refineries: {
     name: "Refineries",
     singular: "Refinery",
-    icon: "<:refinery:772296533152235580>",
+    icon: "refinery",
     category: "petrochemicals",
 
     construction_turns: 4,
