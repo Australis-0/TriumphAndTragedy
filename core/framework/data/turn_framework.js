@@ -378,13 +378,51 @@ module.exports = {
         }
     }
 
-    //[WIP] - Building processing
+    //Building processing
     {
       for (var i = 0; i < all_cities.length; i++)
         for (var x = 0; x < all_cities[i].buildings.length; x++) {
           var local_building = all_cities[i].buildings[x];
-          //var local_consumption = 
+          var local_consumption = getBuildingConsumption(actual_id, local_building.building_type);
 
+          //Check if user can even produce anything; resource check
+          var all_costs = Object.keys(local_consumption);
+          var meets_cost_requirements = true;
+
+          for (var y = 0; y < all_costs.length; y++) {
+            var local_resource_cost = local_consumption[all_costs[y]];
+
+            if (local_resource_cost.length >= 2)
+              local_resource_cost = randomNumber(local_resource_cost[0], local_resource_cost[1]);
+            else
+              local_resource_cost = local_resource_cost[0];
+
+            if (usr.inventory[all_costs[y]])
+              if (usr.inventory[all_costs[y]] < local_resource_cost)
+                meets_cost_requirements = false;
+              else
+                usr.inventory[all_costs[y]] -= local_resource_cost;
+            if (usr[all_costs[y]])
+              if (usr[all_costs[y]] < local_resource_cost)
+                meets_cost_requirements = false;
+              else
+                usr[all_costs[y]] -= local_resource_cost;
+          }
+
+          if (meets_cost_requirements) {
+            var local_building_production = getBuildingProduction(actual_id, local_building.building_type, all_cities[i]);
+
+            var all_production = Object.keys(local_building_production);
+
+            for (var y = 0; y < all_production.length; y++) {
+              var local_production = local_building_production[all_production[y]];
+
+              if (usr.inventory[all_production[y]])
+                usr.inventory += randomNumber(local_production[0], local_production[1]);
+              if (usr[all_production[y]])
+                usr[all_production[y]] += randomNumber(local_production[0], local_production[1]);
+            }
+          }
         }
     }
 

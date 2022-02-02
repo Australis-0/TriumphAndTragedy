@@ -439,9 +439,11 @@ module.exports = {
 
     //Declare local instance variables
     var building_obj = module.exports.getBuilding(building_name);
-    var city_obj = (city_name) ?
-      getCity(city_name, { users: user_id }) :
-      { name: "No city provided." };
+    var city_obj = (typeof city_name != "object") ?
+      (city_name) ?
+        getCity(city_name, { users: user_id }) :
+        { name: "No city provided." } :
+      city_name;
     var production_obj = {};
     var usr = main.users[user_id];
 
