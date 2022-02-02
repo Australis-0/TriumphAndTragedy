@@ -297,14 +297,11 @@ module.exports = {
 
           break;
         case "reserves":
-          //Button handler [WIP]
+          //Button handler
           //[Back]
           if (input == "back") {
-            createPageMenu(game_obj.middle_embed, {
-              embed_pages: printColonisation(game_obj.user),
-              user: game_obj.user
-            });
-            game_obj.page = "colonisation";
+            printMilitary(user_id);
+            game_obj.page = "military";
           }
 
           //[Create Army]
@@ -502,7 +499,7 @@ module.exports = {
       }
     }
 
-    //Diplomacy page handler [WIP] - Add peace treaty handler
+    //Diplomacy page handler
     {
       if (game_obj.page == "cb_list") {
         //[Back]
@@ -1318,6 +1315,31 @@ module.exports = {
 
           game_obj.page = "reserves";
         }
+      }
+
+      if (game_obj.page == "unit_list") {
+        //Button handler
+        //[Back]
+        if (input == "back") {
+          printMilitary(user_id);
+          game_obj.page = "military";
+        }
+
+        //[Jump To Page]
+        if (input == "jump to page")
+          visualPrompt(game_obj.alert_embed, user_id, {
+            title: `Jump To Page:`,
+            prompts: [
+              [`Which page would you like to jump to?`, "number", { min: 1, max: printUnitList(game_obj.user).length }]
+            ]
+          },
+          function (arg) {
+            createPageMenu(game_obj.middle_embed, {
+              embed_pages: printUnitList(game_obj.user),
+              page: arg[0] - 1,
+              user: game_obj.user
+            });
+          });
       }
     }
 

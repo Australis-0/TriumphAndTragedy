@@ -93,13 +93,14 @@ module.exports = {
 
                   //Determine icon
                   if (!usr.inventory[all_resource_shortages[i]]) {
-                    if (all_resource_shortages[i] == "money")
+                    if (all_resource_shortages[i] == "money") {
                       local_icon = config.icons.money;
-                  } else if (config.pops[all_resource_shortages[i]]) {
-                    var local_pop = config.pops[all_resource_shortages[i]];
+                    } else if (config.pops[all_resource_shortages[i]]) {
+                      var local_pop = config.pops[all_resource_shortages[i]];
 
-                    if (local_pop.icon)
-                      local_icon = config.icons[local_pop.icon];
+                      if (local_pop.icon)
+                        local_icon = config.icons[local_pop.icon];
+                    }
                   } else {
                     local_icon = (local_good.icon) ? config.icons[local_good.icon] : "";
                   }

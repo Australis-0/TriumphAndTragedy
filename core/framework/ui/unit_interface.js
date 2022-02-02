@@ -220,7 +220,7 @@ module.exports = {
 
     //Return statement
     return splitEmbed(unit_string, {
-      title: "Unit List",
+      title: "[Back] Unit List",
       title_pages: true,
       fixed_width: true
     });
