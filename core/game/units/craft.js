@@ -105,6 +105,8 @@ module.exports = {
                     local_icon = (local_good.icon) ? config.icons[local_good.icon] : "";
                   }
 
+                  console.log(local_icon);
+
                   shortage_array.push(`- ${local_icon} ${parseNumber(local_shortage)} ${(local_good) ? (local_good.name) ? local_good.name : all_resource_shortages[i] : ""}`);
                 }
 
