@@ -334,18 +334,21 @@ module.exports = {
             ];
         } else {
           maintenance_obj[all_maintenance_costs[i]] = (!maintenance_obj[all_maintenance_costs[i]]) ?
-            [local_consumption_value[0], 0] :
+            [local_consumption_value[0], local_consumption_value[0]] :
             [
               maintenance_obj[all_maintenance_costs[i]][0] + local_consumption_value[0],
-              maintenance_obj[all_maintenance_costs[i]][1]
+              maintenance_obj[all_maintenance_costs[i]][1] + local_consumption_value[0]
             ];
         }
 
         //Sort in ascending order
-        if (maintenance_obj[all_maintenance_costs])
-          maintenance_obj[all_maintenance_costs].sort(function(a, b){
+        if (maintenance_obj[all_maintenance_costs[i]])
+          maintenance_obj[all_maintenance_costs[i]].sort(function(a, b){
             return a - b;
           });
+
+        if (maintenance_obj[all_maintenance_costs[i]][0] == maintenance_obj[all_maintenance_costs[i]][1])
+          maintenance_obj[all_maintenance_costs[i]] = [maintenance_obj[all_maintenance_costs[i]][0]];
       }
     }
 
