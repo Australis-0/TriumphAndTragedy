@@ -1481,6 +1481,14 @@ module.exports = {
     {
       if (population_pages.includes(game_obj.page)) {
         switch (input) {
+          case "culture":
+            createPageMenu(game_obj.middle_embed, {
+              embed_pages: printCultures(user_id),
+              user: game_obj.user
+            });
+            game_obj.page = "culture";
+
+            break;
           case "view provinces":
             game_obj.page = "provinces_list";
             createPageMenu(game_obj.middle_embed, {

@@ -75,7 +75,7 @@ module.exports = {
     for (var i = 0; i < all_pops.length; i++) {
       var local_pop = config.pops[all_pops[i]];
 
-      pops_string.push(`- ${(local_pop.icon) ? local_pop.icon + " " : ""}${(local_pop.name) ? local_pop.name : all_pops[i]}: **${parseNumber(rural_pops[all_pops[i]])}**`);
+      pops_string.push(`- ${(local_pop.icon) ? local_pop.icon + " " : ""}${(local_pop.name) ? local_pop.name : all_pops[i]}: **${parseNumber(returnSafeNumber(rural_pops[all_pops[i]]))}**`);
     }
 
     pops_string.push("");
