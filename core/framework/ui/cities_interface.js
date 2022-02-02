@@ -104,7 +104,7 @@ module.exports = {
       city_string.push(`**Province:** ${config.icons.provinces} ${city_obj.id}`);
       city_string.push(`**Population:** ${config.icons.population} ${parseNumber(city_obj.pops.population)}`);
       city_string.push(`**RGO:** ${rgo_icon}${rgo_name}`);
-      city_string.push(`- **${(usr.modifiers.rgo_throughput-1 >= 0) ? "+" : ""}${printPercentage(usr.modifiers.rgo_throughput-1)}** modifier to ${rgo_icon}${rgo_name} production in this province.`);
+      city_string.push(`- **${(usr.modifiers.rgo_throughput-1 >= 0) ? "+" : ""}${printPercentage(usr.modifiers.rgo_throughput)}** modifier to ${rgo_icon}${rgo_name} production in this province.`);
       city_string.push(`**Development:** ${config.icons.development} ${parseNumber(city_obj.development)}`);
 
       city_string.push("");
@@ -149,7 +149,7 @@ module.exports = {
 
             //Generate and push header to page
             (local_building_slots.available_slots != -1) ?
-              city_string.push(`- **${parseString(all_building_categories[i])}:** (${parseNumber(local_building_slots.total_buildings)}/${parseNumber(local_building_slots.total_slots)}) ${special_string}`) :
+              city_string.push(`- **${parseString(all_building_categories[i])}:** (${parseNumber(local_building_slots.total_buildings + local_building_slots.total_buildings_under_construction)}/${parseNumber(local_building_slots.total_slots)}) ${special_string}`) :
               city_string.push(` - **${parseString(all_building_categories[i])}:** ${special_string}`);
 
             //Iterate over all building objects in array

@@ -218,7 +218,7 @@ module.exports = {
     } catch {}
 
     return returnSafeNumber(
-      (usr.modifiers.rgo_throughput) +
+      (1 + usr.modifiers.rgo_throughput) +
         (
           returnSafeNumber(city_obj.supply_limit, config.defines.combat.base_supply_limit)/
           config.defines.economy.supply_limit_rgo_modifier

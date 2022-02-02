@@ -704,6 +704,9 @@ module.exports = {
             if (usr.under_construction[i].building_type == raw_building_name)
               available_building_slots[1].total_buildings_under_construction++;
           }
+
+      //Update .available_slots
+      available_building_slots[1].available_slots -= available_building_slots[1].total_buildings_under_construction;
     } catch {}
 
     //Return statement
@@ -713,7 +716,7 @@ module.exports = {
 
         break;
       case "available_slots":
-        return (available_building_slots[0]) ? available_building_slots[1].available_slots : undefined;
+        return (available_building_slots[0]) ? available_building_slots[1].available_slots  : undefined;
 
         break;
       case "total_buildings":
