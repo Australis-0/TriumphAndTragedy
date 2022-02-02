@@ -148,7 +148,7 @@ module.exports = {
 
             break;
           case "found city":
-            initialiseFoundCity(game_obj.user, game_obj.id);
+            initialiseFoundCity(game_obj.user);
 
             break;
           case "jump to page":
@@ -965,10 +965,10 @@ module.exports = {
             game_obj.page = "view_constructions";
 
             break;
-          case "found_city":
+          case "found city":
             //Make sure that user is actually able to found a city before authorising the command, otherwise print an error
             (usr.city_cap-usr.city_count > 0) ?
-              initialiseFoundCity(user_id, game_obj.id) :
+              initialiseFoundCity(user_id) :
               printError(game_obj.id, `You don't have enough city slots remaining to found a new city!`);
 
             break;
