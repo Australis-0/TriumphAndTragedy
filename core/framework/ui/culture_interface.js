@@ -37,13 +37,13 @@ module.exports = {
 
     for (var i = 0; i < sorted_culture_array.length; i++) {
       var culture_description = "";
-      var is_accepted_culture = (accepted_cultures.includes(sorted_culture_array[i]) || all_primary_cultures.includes(sorted_culture_array));
+      var is_accepted_culture = accepted_cultures.includes(sorted_culture_array[i]);
       var is_primary_culture = all_primary_cultures.includes(sorted_culture_array[i]);
 
       if (is_primary_culture)
         culture_description = `our primary culture. ¦ **[Rename Culture]** ¦ **[Rename Culture Adjective]**`;
 
-      culture_description = (is_accepted_culture) ?
+      culture_description = (is_accepted_culture && !is_primary_culture) ?
         `an accepted culture. ¦ **[Remove Accepted Culture]**` :
         `an unaccepted culture. Either assimilate their provinces in **[View Population]**, or add them as an accepted culture for **${parseNumber(config.defines.politics.accepted_culture_cost)}** ${config.icons.political_capital} Political Capital.`;
 
