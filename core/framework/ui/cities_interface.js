@@ -146,7 +146,7 @@ module.exports = {
         if (local_building_category)
           if (local_building_slots.total_buildings > 0 || local_building_category.always_display) {
             //Generate and push header to page
-            (local_building_slots) ?
+            (local_building_slots != -1) ?
               city_string.push(`- **${parseString(all_building_categories[i])}:** (${parseNumber(local_building_slots.total_buildings)}/${parseNumber(local_building_slots.total_slots)}) ${special_string}`) :
               city_string.push(` - **${parseString(all_building_categories[i])}:** ${special_string}`);
 

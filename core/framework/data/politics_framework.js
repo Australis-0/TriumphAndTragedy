@@ -56,31 +56,29 @@ module.exports = {
       usr.politics[government_name].popularity += options.amount;
 
       //Even everything out to 100%
-      {
-        var iterations = 0;
-        var total_popularity = 0;
+      module.exports.balanceParties(actual_id);
+    }
+  },
 
-        for (var i = 0; i < all_governments.length; i++)
-          total_popularity += usr.politics[all_governments[i]].popularity;
+  balanceParties: function (arg0_user) {
+    //Convert from parameters
+    var user_id = arg0_user;
 
-        while (total_popularity > 1) {
-          var random_government = randomElement(all_governments);
-          var local_government = usr.politics[random_government];
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var all_governments = Object.keys(config.governments);
+    var total_party_popularity = 0;
+    var usr = main.users[actual_id];
 
-          if (random_government != options.ideology)
-            if (local_government.popularity > (total_popularity - 1)) {
-              local_government.popularity -= (total_popularity - 1);
-              total_popularity = 1;
-            } else {
-              total_popularity -= local_government.popularity;
-              local_government.popularity = 0;
-            }
+    //Fetch total party popularity
+    for (var i = 0; i < all_governments.length; i++)
+      total_party_popularity += usr.politics[all_governments[i]].popularity;
 
-          iterations++;
+    if (total_party_popularity > 1) {
+      for (var i = 0; i < all_governments.length; i++) {
+        var local_government = usr.politics[all_governments[i]];
 
-          if (iterations > 10)
-            break;
-        }
+        local_government.popularity = local_government.popularity*(1/total_party_popularity);
       }
     }
   },
