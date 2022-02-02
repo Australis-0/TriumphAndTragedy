@@ -106,7 +106,7 @@ FileManager.import("./game/colonisation/settle");
 
 FileManager.import("./game/country/create_country");
 FileManager.import("./game/country/rename_country");
-FileManager.import("./game/country/rename_culture");
+FileManager.import("./game/country/rename_primary_culture");
 FileManager.import("./game/country/set_colour");
 FileManager.import("./game/country/set_flag");
 FileManager.import("./game/country/set_motto");

@@ -1,5 +1,5 @@
 module.exports = {
-  renameCulture: function (arg0_user, arg1_new_culture_name) {
+  renamePrimaryCulture: function (arg0_user, arg1_new_culture_name) {
     //Convert from parameters
     var user_id = arg0_user;
     var raw_culture_name = arg1_new_culture_name.trim().toLowerCase();
@@ -40,7 +40,7 @@ module.exports = {
     }
   },
 
-  initialiseRenameCulture: function (arg0_user) {
+  initialiseRenamePrimaryCulture: function (arg0_user) {
     //Convert from parameters
     var user_id = arg0_user;
 
@@ -51,13 +51,13 @@ module.exports = {
 
     //Initialise visual prompt
     visualPrompt(game_obj.alert_embed, user_id, {
-      title: `Change Cultural Name:`,
+      title: `Change Primary Culture Name:`,
       prompts: [
         [`What would you like to rename the **${culture_obj.name}** culture to?`, "string"]
       ]
     },
     function (arg) {
-      module.exports.renameCulture(user_id, arg[0]);
+      module.exports.renamePrimaryCulture(user_id, arg[0]);
     });
   }
 };
