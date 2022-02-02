@@ -37,7 +37,7 @@ module.exports = {
 
     if (cities.length != 0) {
       for (var i = 0; i < cities.length; i++) {
-        city_string.push(`[View **${cities[i].name}**] - ${(cities[i].city_type == "capital") ? " - Capital City" : ""}`);
+        city_string.push(`[View **${cities[i].name}**] ${(cities[i].city_type == "capital") ? " - Capital City" : ""}`);
 
         //Display occupation status
         if (cities[i].owner != cities[i].controller)
@@ -46,7 +46,7 @@ module.exports = {
             city_string.push(`- This city is currently occupied by us in a war! We won't be able to gain resources from it until it is legally annexed by us.`);
 
         city_string.push(`- ${config.icons.provinces} Province: ${cities[i].id}`);
-        city_string.push(`- ${config.icons.population} Population: ${cities[i].pops.population}/${cities[i].housing}`);
+        city_string.push(`- ${config.icons.population} Population: ${parseNumber(cities[i].pops.population)}/${parseNumber(cities[i].housing)}`);
         city_string.push(`- RGO: ${(getGood(cities[i].resource).icon) ? config.icons[getGood(cities[i].resource).icon] + " " : ""} ${(getGood(cities[i].resource).name) ? getGood(cities[i].resource).name : cities[i].resource}`);
       }
     } else {

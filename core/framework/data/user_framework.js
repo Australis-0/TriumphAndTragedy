@@ -247,7 +247,7 @@ module.exports = {
 
     //Declare local instance variables
     var cached_amount = 0;
-    var city_obj = getCity(city_name, options);
+    var city_obj = getCity(city_name);
     var usr = main.users[user_id];
 
     //Declare local tracker variables
