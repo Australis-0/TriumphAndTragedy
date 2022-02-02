@@ -38,18 +38,20 @@ module.exports = {
 
     //Load map or initialise file if it doesn't exist
     if (fs.existsSync("./map/" + map_file)) {
-      global[map_name] = (fs.readFileSync("./map/" + map_file, "utf8").toString().length > 0 && !backup_loaded) ? fs.readFileSync("./map/" + map_file, "utf8") : fs.readFileSync("./map/" + config.defines.map.map_definition, "utf8");
-    } else {
-      global[map_name] = fs.readFileSync("./map/" + config.defines.map.map_definition, "utf8");
-      fs.closeSync(fs.openSync("./map/" + map_file, "w"));
-    }
+      global[map_name] = (fs.readFileSync("./map/" + map_file, "utf8").toString().length > 0 && !backup_loaded) ?
+        fs.readFileSync("./map/" + map_file, "utf8") :
+        fs.readFileSync("./map/" + config.defines.map.map_definition, "utf8");
 
-    //Try parsing map file
-    try {
-      global[`${map_name}_file`] = map_file;
-      global[`${map_name}_parsed`] = HTML.parse(global[map_name].toString());
-    } catch (e) {
-      log.error(`Could not parse map file ${map_file}: ${e}.`);
+      //Try parsing map file
+      try {
+        global[`${map_name}_file`] = map_file;
+        global[`${map_name}_parsed`] = HTML.parse(global[map_name].toString());
+      } catch (e) {
+        log.error(`Could not parse map file ${map_file}: ${e}.`);
+      }
+    } else {
+      fs.copyFileSync(`./map/${config.defines.map.map_definition}`, `./map/${map_file}`);
+      loadMap(map_file, map_name);
     }
   },
 
