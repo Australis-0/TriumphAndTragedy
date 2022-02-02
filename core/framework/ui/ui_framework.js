@@ -245,6 +245,10 @@ module.exports = {
     //Declare local instance variables
     var game_obj = interfaces[game_id];
 
+    //Remove map viewer
+    if (game_obj.map)
+      delete game_obj.map;
+
     //Remove all reactions
     try {
       game_obj.middle_embed.reactions.removeAll();

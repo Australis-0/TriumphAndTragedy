@@ -517,7 +517,7 @@ config.technology.economic_technology = {
     year: 1770,
     unlocks: {
       unlock_building: ["artillery_factories", "concrete_factories", "factories"],
-      unlock_reform: "minimum_wage"
+      unlock_reform: "wage"
     }
   },
   cast_iron_construction: {

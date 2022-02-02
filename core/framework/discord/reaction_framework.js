@@ -31,8 +31,6 @@ module.exports = {
       if (interfaces[msg_id]) {
         var ui_obj = interfaces[msg_id];
 
-        console.log(ui_obj);
-
         if (ui_obj.user) {
           //Page menu
           switch (ui_obj.type) {

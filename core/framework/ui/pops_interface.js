@@ -47,8 +47,6 @@ module.exports = {
     //Initialise pops_string
     var pops_string = [];
 
-    console.log(rural_pops);
-
     //Format embed
     pops_string.push(`**[Back]**`);
     pops_string.push("");
@@ -56,8 +54,6 @@ module.exports = {
     pops_string.push("");
     pops_string.push("**Urban Population:**");
     pops_string.push("");
-
-    console.log(`rural_pops.population ${rural_pops.population}, usr.pops.population: ${usr.pops.population}, printPercentage() dummy test: ${printPercentage(1)}`)
 
     pops_string.push(`${config.icons.development} Urban Population: **${printPercentage(urban_pops.population/getPopulation(actual_id))}**`);
 

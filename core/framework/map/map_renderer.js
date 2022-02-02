@@ -75,8 +75,6 @@ module.exports = {
                   province_id_layer.src = `./map/${config.defines.map.map_overlay}`;
                 }
 
-                console.log(labels);
-
                 //Generate key
                 ctx.font = "36px Bahnschrift Condensed";
                 ctx.fillStyle = "#ffffff";
@@ -91,6 +89,8 @@ module.exports = {
 
                     ctx.fillStyle = RGBToHex(parseInt(local_user.colour[0]), parseInt(local_user.colour[1]), parseInt(local_user.colour[2]));
                     ctx.fillRect(config.defines.map.map_label_coords[0] + 15 + i*320, config.defines.map.map_label_coords[1] + 15 + x*40, 36, 36);
+                    ctx.beginPath();
+                    ctx.rect(config.defines.map.map_label_coords[0] + 15 + i*320, config.defines.map.map_label_coords[1] + 15 + x*40, 36, 36);
                     ctx.stroke();
 
                     ctx.fillStyle = "#ffffff";

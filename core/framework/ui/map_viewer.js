@@ -36,7 +36,10 @@ module.exports = {
     var map = (arg1_map) ? arg1_map : "political";
 
     //Initialise map data and object
+    if (!game_obj.map)
+      game_obj.map = {};
     var map_obj = game_obj.map;
+
     map_obj.embed_history = [];
     map_obj.objects = [];
 

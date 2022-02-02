@@ -889,23 +889,11 @@ module.exports = {
 					var rightside_expansion_ran_into_number = false;
 					var local_rightside_string = "";
 					for (var x = dash_index+1; x < right_number_indices[0]; x++) if (ordinal_string[i][x]) local_rightside_string += ordinal_string[i][x];
-					console.log(local_rightside_string.split(" "));
 					local_rightside_string = local_rightside_string.split(" "); //Remove 1st term
 					local_rightside_string[0] = "";
 					local_rightside_string = local_rightside_string.join(" ").trim();
 
 					//rightside_suffix next
-					/* Deprecated:
-					console.log(right_number_indices);
-					if (right_number_indices[right_number_indices.length-1] != ordinal_string[i].length-1) {
-						for (var x = right_number_indices[right_number_indices.length-1]+1; x < ordinal_string[i].length; x++) {
-							if (ordinal_string[i][x]) {
-								rightside_suffix += ordinal_string[i][x];
-								console.log(ordinal_string[i][x]);
-							}
-						}
-					}
-					*/
 					rightside_suffix = local_rightside_string;
 
 					//Make sure that both left_numbers and right_numbers cannot contain both arabic and roman numerals
@@ -962,15 +950,11 @@ module.exports = {
 						left_uppercase = (left_numbers[0] == left_numbers[0].toUpperCase()),
 						right_uppercase = (right_numbers[0] == right_numbers[0].toUpperCase());
 
-					console.log(`Left Uppercase: ${left_uppercase}, Right Uppercase: ${right_uppercase}`);
-
 					for (var x = 0; x < left_numbers.length; x++) if ((left_numbers[x] == left_numbers[x].toUpperCase()) == left_uppercase) new_left_numbers.push(left_numbers[x]);
 					for (var x = 0; x < right_numbers.length; x++) if ((right_numbers[x] == right_numbers[x].toUpperCase()) == left_uppercase) new_right_numbers.push(right_numbers[x]);
 
 					left_numbers = new_left_numbers.join("");
 					right_numbers = new_right_numbers.join("");
-
-					console.log(`NUMBERS: ${left_numbers}-${right_numbers}`);
 
 					leftside_prefix = deordinalise(leftside_prefix);
 					leftside_suffix = deordinalise(leftside_suffix);
@@ -998,11 +982,6 @@ module.exports = {
 						}
 					}
 
-					console.log("Leftside Prefix: " + leftside_prefix);
-					console.log("Rightside Prefix: " + rightside_prefix);
-					console.log("Leftside Suffix: " + leftside_suffix);
-					console.log("Rightside Suffix: " + rightside_suffix);
-
 					//Check for global_suffix
 					if (sub_arguments.length == 1) {
 						leftside_suffix = (global_suffix.length > 0) ? global_suffix : leftside_suffix;
@@ -1021,8 +1000,6 @@ module.exports = {
 
 					//Do the same for leftside_prefix after assigning number_break
 					leftside_prefix = (leftside_prefix.length == 0 && rightside_prefix.length > 0) ? rightside_prefix : leftside_prefix;
-
-					console.log(`Pure Numbers: ${pure_numbers}`);
 
 					var local_break = (global_suffix != "" && sub_arguments.length == 1) ? " " : "";
 
