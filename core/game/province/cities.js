@@ -117,6 +117,27 @@ module.exports = {
             //Increase city_count tracker variable
             usr.city_count++;
 
+            //Update UIs
+            if (game_obj.page == "country_interface")
+              printStats(game_obj.user);
+
+            if (game_obj.page == "economy")
+              printEconomy(game_obj.user);
+
+            if (game_obj.page == "provinces_list")
+              createPageMenu(game_obj.middle_embed, {
+                embed_pages: printProvinces(game_obj.user),
+                page: interfaces[game_obj.middle_embed.id].page,
+                user: game_obj.user
+              });
+
+            if (game_obj.page == "cities_list")
+              createPageMenu(game_obj.middle_embed, {
+                embed_pages: printCities(game_obj.user),
+                page: interfaces[game_obj.middle_embed.id].page,
+                user: game_obj.user
+              });
+
             printAlert(game_obj.id, (local_province.city_type == "capital") ?
               `Capital city founded as **${city_name}** in Province **${province_id}**! Over **${parseNumber(local_province.pops.population)}** are now legally residents of the capital city of **${usr.name}**!` :
               `A new city was founded as **${city_name}** in Province **${province_id}**! Over **${parseNumber(local_province.pops.population)}** are now legally residents of the city of **${city_name}** in Province **${province_id}**.`
@@ -246,7 +267,28 @@ module.exports = {
           //Set new capital and print feedback
           city_obj.city_type = "capital";
 
-          printAlert(getGame(user_id), `You have successfully moved your capital to **${city_obj.name}** for **${config.defines.politics.move_capital_cost}** ${config.icons.political_capital} Political Capital.`)
+          printAlert(getGame(user_id), `You have successfully moved your capital to **${city_obj.name}** for **${config.defines.politics.move_capital_cost}** ${config.icons.political_capital} Political Capital.`);
+
+          //Update UIs
+          if (game_obj.page == "country_interface")
+            printStats(game_obj.user);
+
+          if (game_obj.page == "economy")
+            printEconomy(game_obj.user);
+
+          if (game_obj.page == "provinces_list")
+            createPageMenu(game_obj.middle_embed, {
+              embed_pages: printProvinces(game_obj.user),
+              page: interfaces[game_obj.middle_embed.id].page,
+              user: game_obj.user
+            });
+
+          if (game_obj.page == "cities_list")
+            createPageMenu(game_obj.middle_embed, {
+              embed_pages: printCities(game_obj.user),
+              page: interfaces[game_obj.middle_embed.id].page,
+              user: game_obj.user
+            });
         } else {
           printError(getGame(user_id), `**${city_obj.name}** must at least be of one of your accepted cultures before you can consider moving your capital there!`);
         }
@@ -279,6 +321,37 @@ module.exports = {
               city_obj.name = new_name;
 
               printAlert(getGame(user_id), `You have renamed **${old_name}** to **${new_game}**!`);
+
+              //Update UIs
+              if (game_obj.page == "cities_list")
+                createPageMenu(game_obj.middle_embed, {
+                  embed_pages: printCities(game_obj.user),
+                  page: interfaces[game_obj.middle_embed.id].page,
+                  user: game_obj.user
+                });
+
+              if (game_obj.page == "country_interface")
+                printStats(game_obj.user);
+
+              if (game_obj.page == "economy")
+                printEconomy(game_obj.user);
+
+              if (game_obj.page == "provinces_list")
+                createPageMenu(game_obj.middle_embed, {
+                  embed_pages: printProvinces(game_obj.user),
+                  page: interfaces[game_obj.middle_embed.id].page,
+                  user: game_obj.user
+                });
+
+              if (game_obj.page.startsWith("view_city_")) {
+                var viewed_city = game_obj.page.replace("view_city_", "");
+
+                createPageMenu(game_obj.middle_embed, {
+                  embed_pages: printCity(game_obj.user, viewed_city),
+                  page: interfaces[game_obj.middle_embed.id].page,
+                  user: game_obj.user
+                });
+              }
             } else {
               printError(getGame(user_id), `The city that you have specified is not currently in your possession or doesn't exist!`);
             }
