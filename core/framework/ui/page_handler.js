@@ -403,27 +403,7 @@ module.exports = {
 
             break;
           case "set government":
-            visualPrompt(game_obj.alert_embed, user_id, {
-              title: `Set Government:`,
-              prompts: [
-                [`What would you like to set your current government to?\n\nType **[Government List]** for a list of valid governments.`, "string"]
-              ]
-            },
-            function (arg) {
-              setGovernmentCommand(user_id, arg[0]);
-            },
-            function (arg) {
-              switch (arg) {
-                case "government list":
-                  createPageMenu(game_obj.middle_embed, {
-                    embed_pages: printGovernmentList(actual_id),
-                    user: game_obj.user
-                  });
-                  return true;
-
-                  break;
-              }
-            });
+            initialiseSetGovernmentCommand(user_id);
 
             break;
           case "set tax":
@@ -1441,7 +1421,7 @@ module.exports = {
 
           //[Set Government]
           if (input == "set government")
-            setGovernmentCommand(user_id);
+            initialiseSetGovernmentCommand(user_id);
 
           //[Set Tax]
           if (input == "set tax")

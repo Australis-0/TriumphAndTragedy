@@ -126,7 +126,7 @@ module.exports = {
   parseString: function (arg0_string) {
     var processed_string = arg0_string;
 
-    return processed_string.replace(/(^| )(\w)/g, s => s.toUpperCase());
+    return processed_string.split("_").join(" ").replace(/(^| )(\w)/g, s => s.toUpperCase());
   },
 
   truncateString: function (arg0_string, arg1_number, arg2_do_not_show_dots) {

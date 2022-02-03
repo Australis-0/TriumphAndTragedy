@@ -405,7 +405,7 @@ module.exports = {
             default:
               modifier_string.push(`• **${printPercentage(local_value[0], {
                 display_prefix: true,
-                base_zero: true
+                base_zero: (local_value[0] > 0)
               })}** ${local_modifier_name}`);
 
               break;
