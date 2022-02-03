@@ -92,10 +92,18 @@ module.exports = {
 
       if (local_good) {
         //Deduct upkeep from good production
-        local_value = [
-          local_value[0] - returnSafeNumber(all_production[`${all_produced_goods[i]}_upkeep`][0]),
-          local_value[1] - returnSafeNumber(all_production[`${all_produced_goods[i]}_upkeep`][1]),
-        ].sort();
+        if (Array.isArray(local_value)) {
+          var upkeep_array = (all_production[`${all_produced_goods[i]}_upkeep`]) ?
+            all_production[`${all_produced_goods[i]}_upkeep`] :
+            [0, 0];
+
+          upkeep_array.sort(function (a, b) { return a - b; });
+
+          local_value = [
+            local_value[0] - upkeep_array[1]),
+            local_value[1] - upkeep_array[0]),
+          ].sort(function (a, b) { return a - b; });
+        }
 
         //Push to string
         economy_string.push(`- **${(local_value[0] == local_value[1]) ? parseNumber(local_value[0]) : parseNumber(local_value[0]) + " - " + parseNumber(local_value[1])}** ${(local_good.name) ? local_good.name : all_produced_goods[i]}.`);
