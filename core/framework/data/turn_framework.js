@@ -982,6 +982,9 @@ module.exports = {
               usr.researching[i].current_investment*knowledge_investment :
               Math.floor(usr.inventory.knowledge/usr.researching.length);
 
+            console.log(Math.floor(usr.inventory.knowledge/usr.researching.length));
+            console.log(max_knowledge_investment);
+
             //Check if tech has finished researching
             if (usr.researching[i].total_research_cost + max_knowledge_investment >= usr.researching[i].current_investment) {
               var local_tech_obj = usr.researching[i].technology;
