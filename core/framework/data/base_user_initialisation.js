@@ -36,6 +36,8 @@ module.exports = {
 
       var local_good = getGood(local_name);
       var local_list = getList(local_value);
+      var local_unit = getUnit(local_name);
+      var local_unit_name = getUnit(local_name, { return_key: true });
 
       //Effects handler
       {
@@ -105,6 +107,16 @@ module.exports = {
           usr.money += (local_list.length) ?
             randomNumber(local_list[0], local_list[1]) :
             local_list[0];
+      }
+
+      //Units handler
+      {
+        //Check if local_name is of type unit
+        if (local_unit)
+          if (local_name == local_unit_name)
+            usr.reserves[local_unit_name] += (local_list.length >= 2) ?
+              randomNumber(local_list[0], local_list[1]) :
+              local_list[0];
       }
     }
   },
