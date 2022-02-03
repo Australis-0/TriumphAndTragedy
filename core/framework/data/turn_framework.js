@@ -864,16 +864,19 @@ module.exports = {
             var total_pop_growth = 0;
 
             if (owned_provinces[i].pops.population > 500000) //-3% per million
-              scalar -= Math.ceil((owned_provinces[i].pops.population - 500000)/1000000)*0.03;
+              scalar -= Math.ceil(
+                (owned_provinces[i].pops.population - 500000)/1000000
+              )*0.03;
             scalar = Math.max(0.775, scalar);
 
             //Calculate urban pop growth for all pops
             if (owned_provinces[i].housing > owned_provinces[i].pops.population)
               for (var x = 0; x < all_pops.length; i++) {
                 var local_pop_growth =
-                  Math.ceil(owned_provinces[i].pops[all_pops[x]]*usr.pops[`${all_pops[x]}_growth_modifier`]*scalar*usr.modifiers.pop_growth_modifier);
+                  owned_provinces[i].pops[all_pops[x]] - Math.ceil(owned_provinces[i].pops[all_pops[x]]*usr.pops[`${all_pops[x]}_growth_modifier`]*scalar*usr.modifiers.pop_growth_modifier);
 
                 usr.pops[all_pops[x]] += local_pop_growth;
+                usr.population += local_pop_growth;
                 owned_provinces[i].pops[all_pops[x]] += local_pop_growth;
                 owned_provinces[i].pops.population += local_pop_growth;
               }
@@ -890,11 +893,13 @@ module.exports = {
             //Calculate rural pop growth for all pops
             for (var x = 0; x < all_pops.length; x++) {
               var local_pop_growth =
-                Math.ceil(owned_provinces[i].pops[all_pops[x]]*usr.pops[`${all_pops[x]}_growth_modifier`]*usr.modifiers.pop_growth_modifier);
+                owned_provinces[i].pops[all_pops[x]] - Math.ceil(owned_provinces[i].pops[all_pops[x]]*usr.pops[`${all_pops[x]}_growth_modifier`]*usr.modifiers.pop_growth_modifier);
 
               if (owned_provinces[i].pops.population < owned_provinces[i].pop_cap) {
                 usr.pops[all_pops[x]] += local_pop_growth;
+                usr.population += local_pop_growth;
                 owned_provinces[i].pops[all_pops[x]] += local_pop_growth;
+                owned_provinces[i].population += local_pop_growth;
               }
             }
           }
@@ -971,18 +976,20 @@ module.exports = {
             config.defines.technology.max_knowledge_investment*usr.modifiers.knowledge_investment_limit :
             1;
           var research_removal_array = [];
+          var total_knowledge_gain = getKnowledgeGain(actual_id);
+            total_knowledge_gain = randomNumber(total_knowledge_gain[0], total_knowledge_gain[1]);
 
           for (var i = 0; i < usr.researching.length; i++) {
-            var local_knowledge_gain = Math.floor(usr.inventory.knowledge/usr.researching.length);
+            var local_knowledge_gain = Math.floor(total_knowledge_gain/usr.researching.length);
             var max_knowledge_investment = (local_knowledge_gain > usr.researching[i].current_investment) ?
               usr.researching[i].current_investment*knowledge_investment :
               local_knowledge_gain;
 
             var max_knowledge_investment = (max_knowledge_investment > usr.researching[i].current_investment) ?
               usr.researching[i].current_investment*knowledge_investment :
-              Math.floor(usr.inventory.knowledge/usr.researching.length);
+              Math.floor(total_knowledge_gain/usr.researching.length);
 
-            console.log(Math.floor(usr.inventory.knowledge/usr.researching.length));
+            console.log(Math.floor(total_knowledge_gain/usr.researching.length));
             console.log(max_knowledge_investment);
 
             //Check if tech has finished researching
