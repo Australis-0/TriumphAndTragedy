@@ -61,7 +61,10 @@ module.exports = {
 
                 log.info(`Crafting ${unit_amount}*${unit_quantity} ${raw_unit_name} for ${usr.name}!`);
 
-                usr.reserves[raw_unit_name] += (unit_amount*unit_quantity);
+                if (usr.reserves[raw_unit_name])
+                  usr.reserves[raw_unit_name] += (unit_amount*unit_quantity);
+                else
+                  usr.reserves[raw_unit_name] = (unit_amount*unit_quantity);
 
                 //Deduct unit_costs from inventory and other user metrics
                 for (var i = 0; i < all_unit_costs.length; i++) {
