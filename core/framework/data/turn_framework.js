@@ -430,7 +430,7 @@ module.exports = {
           if (local_city_obj.buildings)
             for (var x = 0; x < usr.under_construction[i].building_amount; x++)
               //Individual buildings are treated as objects in an array here because this allows for further granularity in the future
-              constructBuilding(usr.under_construction[i].building_amount, usr.under_construction[i].building_type, usr.under_construction[i].province);
+              constructBuilding(usr.under_construction[i].building_amount, usr.under_construction[i].building_type, usr.under_construction[i].province_id);
 
           //Remove element from array
           construction_requests_to_remove.push(i);
