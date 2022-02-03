@@ -424,7 +424,7 @@ module.exports = {
         usr.under_construction[i].construction_turns--;
 
         //Check if building(s) are done being built
-        if (usr.under_construction[i] <= 0) {
+        if (usr.under_construction[i].construction_turns <= 0) {
           var local_city_obj = getProvince(usr.under_construction[i].province_id);
 
           if (local_city_obj.buildings)
