@@ -410,6 +410,13 @@ module.exports = {
             initialiseSetTax(user_id);
 
             break;
+          case "settle starting provinces":
+            var has_no_provinces = (getProvinces(actual_id, { include_hostile_occupations: true, include_occupations: true }).length == 0);
+
+            if (has_no_provinces && !atWar(actual_id))
+              initialiseSettleStartingProvinces(user_id);
+
+            break;
           case "view customisation":
             printCustomisation(user_id);
             game_obj.page = "view_customisation";

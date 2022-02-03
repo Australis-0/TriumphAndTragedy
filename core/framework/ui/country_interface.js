@@ -12,6 +12,7 @@ module.exports = {
     var all_cities = [];
     var all_national_modifiers = Object.keys(usr.national_modifiers);
     var all_pops = Object.keys(config.pops);
+    var has_no_provinces = (getProvinces(actual_id, { include_hostile_occupations: true, include_occupations: true }).length == 0);
 
     //Initialise stats_string
     var stats_string = [];
@@ -61,7 +62,11 @@ module.exports = {
 
     //Format embed
     stats_string.push(`${config.icons.globe} Country: **${usr.name}**`);
-    stats_string.push(`<@${user_id}> ¦ _${(usr.motto) ? usr.motto : "No motto set."}_`)
+    stats_string.push(`<@${user_id}> ¦ _${(usr.motto) ? usr.motto : "No motto set."}_`);
+
+    if (has_no_provinces && !atWar(actual_id))
+      stats_string.push(`- Your country doesn't have any provinces currently! Consider typing **[Settle Starting Provinces]** to settle down your peoples.`);
+
     stats_string.push("");
     stats_string.push(`${config.icons.prestige} Prestige: **${parseNumber(usr.prestige)}** (${(usr.modifiers.prestige_gain > 0) ? "+" : ""}${usr.modifiers.prestige_gain} per turn)`);
     stats_string.push(`${config.icons.provinces} Provinces: **${parseNumber(usr.provinces)}**`);
