@@ -35,6 +35,9 @@ module.exports = {
     var game_obj = interfaces[game_id];
     var map = (arg1_map) ? arg1_map : "political";
 
+    //Declare local instance variables
+    var map_defines = config.defines.map;
+
     //Initialise map data and object
     if (!game_obj.map)
       game_obj.map = {};
@@ -65,7 +68,7 @@ module.exports = {
     //Initialise tracker variables
     map_obj.mapmode = map;
     map_obj.original_img = "";
-    map_obj.speed = 1000;
+    map_obj.speed = ((map_defines.map_resolution[0]*map_defines.map_resolution[1])/2)*0.25;
     map_obj.x = 0;
     map_obj.y = 0;
     map_obj.zoom = 1;

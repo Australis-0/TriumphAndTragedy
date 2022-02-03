@@ -85,6 +85,7 @@ module.exports = {
                 if (game_obj.page == "reserves")
                   createPageMenu(game_obj.middle_embed, {
                     embed_pages: printReserves(user_id),
+                    page: interfaces[game_obj.middle_embed.id].page,
                     user: game_obj.user
                   });
 
