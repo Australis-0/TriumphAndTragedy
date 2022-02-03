@@ -26,6 +26,8 @@ module.exports = {
               var resource_shortages = {};
               var unit_costs = getUnitCost(actual_id, raw_unit_name, { amount: unit_amount });
 
+              console.log(unit_costs);
+
               //Iterate over all keys in unit_costs and check for prospective shortages
               var all_goods = getGoods({ return_names: true });
               var all_pops = Object.keys(config.pops);
