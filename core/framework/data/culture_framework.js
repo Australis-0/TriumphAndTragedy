@@ -43,6 +43,7 @@ module.exports = {
     var culture_obj = module.exports.getCulture(culture_name);
     var raw_culture_name = module.exports.getCulture(culture_name, { return_key: true });
     var total_culture_population = 0;
+    var total_population = 0;
     var usr = main.users[user_id];
 
     //Iterate over all provincs controlled by the target user
@@ -52,10 +53,13 @@ module.exports = {
 
         if (local_province.culture == raw_culture_name)
           total_culture_population += local_province.pops.population;
+        total_population += local_province.pops.population;
       }
 
+    usr.population = total_population;
+
     //Return percentage as number
-    return (total_culture_population/usr.population);
+    return (total_culture_population/total_population);
   },
 
   calculateCulturalTotal: function (arg0_user, arg1_culture) {
