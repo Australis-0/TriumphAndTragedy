@@ -215,7 +215,7 @@ module.exports = {
           getGood(local_export.good_type).name :
           local_export.good_type;
 
-        export_string.push(`Exporting ${local_good_icon}${parseNumber(local_export.amount)} ${local_good_name} to **${main.users[local_export.target].name}**.\nThe shipment will arrive in ${parseNumber(local_export[i].duration)}** turn(s).`);
+        export_string.push(`Exporting ${local_good_icon}${parseNumber(local_export.amount)} ${local_good_name} to **${main.users[local_export.target].name}**.\nThe shipment will arrive in ${parseNumber(local_export.duration)}** turn(s).`);
       }
 
     if (all_exports.length > 10)

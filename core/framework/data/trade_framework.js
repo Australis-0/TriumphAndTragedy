@@ -32,12 +32,11 @@ module.exports = {
     var ot_user = main.users[ot_actual_id];
     var usr = main.users[actual_id];
 
-    var local_id_suffix;
+    var local_id_suffix = generateRandomID();
 
     //While loop to find ID, just in-case of conflicting random ID's:
     while (true) {
       var full_id = `${actual_id}-${ot_actual_id}-${local_id_suffix}`;
-      local_id_suffix = generateRandomID();
 
       //Return and break once a true ID is found
       if (!usr.trades[full_id]) {
