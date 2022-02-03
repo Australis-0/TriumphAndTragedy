@@ -859,8 +859,10 @@ module.exports = {
               var all_building_production = Object.keys(building_production);
 
               for (var y = 0; y < all_building_production.length; y++) {
-                changeProductionValue(`${all_building_production[y]}`, "minimum", current_amount);
-                changeProductionValue(`${all_building_production[y]}`, "maximum", current_amount);
+                var current_amount = building_production[all_building_production[y]];
+
+                changeProductionValue(`${all_building_production[y]}`, "minimum", current_amount[0]);
+                changeProductionValue(`${all_building_production[y]}`, "maximum", current_amount[1]);
               }
             }
           }

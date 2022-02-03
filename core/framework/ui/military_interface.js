@@ -1,5 +1,5 @@
 module.exports = {
-  printMilitary: function (arg0_user) { //[WIP] - Add army/navy/air force sub-breakdown for army orders in the future
+  printMilitary: function (arg0_user) {
     //Convert from parameters
     var user_id = arg0_user;
 
