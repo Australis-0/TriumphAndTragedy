@@ -68,7 +68,7 @@ module.exports = {
     stats_string.push(`<@${user_id}> ¦ _${(usr.motto) ? usr.motto : "No motto set."}_`);
 
     if (has_no_provinces && !atWar(actual_id))
-      stats_string.push(`- Your country doesn't have any provinces currently! Consider typing **[Settle Starting Provinces]** to settle down your peoples.`);
+      stats_string.push(`\n- Your country doesn't have any provinces currently! Consider typing **[Settle Starting Provinces]** to settle down your peoples.`);
 
     stats_string.push("");
     stats_string.push(`${config.icons.prestige} Prestige: **${parseNumber(usr.prestige)}** (${(usr.modifiers.prestige_gain > 0) ? "+" : ""}${usr.modifiers.prestige_gain} per turn)`);

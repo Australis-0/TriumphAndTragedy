@@ -12,6 +12,7 @@ module.exports = {
     var all_expeditions = Object.keys(usr.expeditions);
     var capital_id = getCapital(actual_id);
     var game_obj = getGameObject(user_id);
+    var has_no_provinces = (getProvinces(actual_id, { include_hostile_occupations: true, include_occupations: true }).length == 0);
     var provinces_can_colonise = 0;
     var total_colonial_units = 0;
 
@@ -22,6 +23,9 @@ module.exports = {
     colonisation_string.push(`${config.icons.provinces} **Capital Province:** ${(capital_id) ? capital_id.id : "_No capital set._"}`);
     colonisation_string.push(`${config.icons.colonisation} **Maximum Expedition Limit:** ${parseNumber(usr.modifiers.maximum_expeditions)}`);
     colonisation_string.push(`${config.icons.taxes} **Colonisation Speed:** Your colonists can move at a rate of **${parseNumber(getColonisationSpeed(actual_id))}** province(s) per turn.`);
+
+    if (has_no_provinces && !atWar(actual_id))
+      colonisation_string.push(`\n- Your country doesn't have any provinces currently! Consider typing **[Settle Starting Provinces]** to settle down your peoples.`);
 
     colonisation_string.push(config.localisation.divider);
     colonisation_string.push(`**Available Colonial Units:**`);

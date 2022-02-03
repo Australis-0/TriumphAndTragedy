@@ -295,6 +295,14 @@ module.exports = {
           if (input == "settle")
             initialiseSettle(user_id);
 
+          //[Settle Starting Provinces]
+          if (input == "settle starting provinces") {
+            var has_no_provinces = (getProvinces(actual_id, { include_hostile_occupations: true, include_occupations: true }).length == 0);
+
+            if (has_no_provinces && !atWar(actual_id))
+              initialiseSettleStartingProvinces(user_id);
+          }
+
           break;
         case "reserves":
           //Button handler
