@@ -296,7 +296,7 @@ module.exports = {
             initialiseSettle(user_id);
 
           //[Settle Starting Provinces]
-          if (input == "settle starting provinces") {
+          if (["settle starting province", "settle starting provinces"].includes(input)) {
             var has_no_provinces = (getProvinces(actual_id, { include_hostile_occupations: true, include_occupations: true }).length == 0);
 
             if (has_no_provinces && !atWar(actual_id))
@@ -418,6 +418,7 @@ module.exports = {
             initialiseSetTax(user_id);
 
             break;
+          case "settle starting province":
           case "settle starting provinces":
             var has_no_provinces = (getProvinces(actual_id, { include_hostile_occupations: true, include_occupations: true }).length == 0);
 
