@@ -1847,6 +1847,8 @@ config.technology.military_technology = {
     icon: "land_vehicles",
     description: "Improved medium tanks, the forerunner to modern tanks, were built with increased precision sighting and armament, such that they were capable of piercing enemy targets from long distances.",
     prerequisite_techs: ["tank_destroyers"],
+    research_cost: 8500,
+    year: 1943,
     unlocks: {
       unlock_unit: "improved_medium_tanks"
     }

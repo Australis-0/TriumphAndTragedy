@@ -170,14 +170,6 @@ module.exports = {
           //Only edit the message if the message is not a prompt.
           if (!message_is_prompt) {
             if (game_obj.alert_change) {
-              //initialiseFoundCountry(), settleStartingProvinces() handler
-              if (main.global.user_map[game_obj.user])
-                if (main.users[main.global.user_map[game_obj.user]].settle_starting_provinces)
-                  initialiseSettleStartingProvinces(game_obj.user);
-
-              if (!main.global.user_map[game_obj.user])
-                initialiseFoundCountry(game_obj.user);
-
               if (game_obj.alert_array.length == 0) {
                 const new_alert_embed = new Discord.MessageEmbed()
                   .setColor(settings.bot_colour)
@@ -207,6 +199,14 @@ module.exports = {
 
           try {
             game_obj.header.edit({ embeds: [topbar_embed] });
+
+            //Starting prompt handler
+            if (main.global.user_map[game_obj.user])
+              if (main.users[main.global.user_map[game_obj.user]].settle_starting_provinces)
+                initialiseSettleStartingProvinces(game_obj.user);
+
+            if (!main.global.user_map[game_obj.user])
+              initialiseFoundCountry(game_obj.user);
           } catch {}
         }, 10000);
 

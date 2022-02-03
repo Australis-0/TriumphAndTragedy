@@ -216,19 +216,25 @@ module.exports = {
       );
 
     //Edit message to include new top row buttons
-    game_obj.header.edit({
-      content: config.localisation.blank,
-      components: []
-    }).then(() => {
+    try {
       game_obj.header.edit({
         content: config.localisation.blank,
-        components: [
-          main_menu_row,
-          country_row_1,
-          country_row_2
-        ]
+        components: []
+      }).then(() => {
+        game_obj.header.edit({
+          content: config.localisation.blank,
+          components: [
+            main_menu_row,
+            country_row_1,
+            country_row_2
+          ]
+        });
       });
-    });
+    } catch {
+      setTimeout(reinitialiseGameEmbeds, 1000);
+
+      log.warn(`initialiseTopbar() was unable to function correctly! Reinitialising all game embeds ..`);
+    }
 
     game_obj.header_change = true;
   },

@@ -20,108 +20,107 @@ module.exports = {
     //Visual prompt processing
     if (interfaces[game_id].user)
       if (interfaces[interfaces[game_id].user])
-        if (interfaces[interfaces[game_id].user].type == "visual_prompt") {
-        try {
-          //Declare local instance variables
-          var is_command = false;
-          var local_prompt = interfaces[interfaces[game_id].user];
-          var current_step = local_prompt.answers.length;
+        if (interfaces[interfaces[game_id].user].type == "visual_prompt")
+          try {
+            //Declare local instance variables
+            var is_command = false;
+            var local_prompt = interfaces[interfaces[game_id].user];
+            var current_step = local_prompt.answers.length;
 
-          //Check for command function first
-          if (local_prompt.command_function)
-            is_command = local_prompt.command_function(input.toLowerCase());
+            //Check for command function first
+            if (local_prompt.command_function)
+              is_command = local_prompt.command_function(input.toLowerCase());
 
-          //If the phrase typed in is not a valid command, continue on
-          if (!is_command) {
-            //Check if prompt has been cancelled
-            if (input == "back" && !local_prompt.do_not_cancel) {
-              (current_step > 0) ?
-                local_prompt.answers.pop() :
-                  module.exports.clearPrompt(game_obj.user, game_id),
-                  printAlert(game_id, `${config.icons.cancel} You have cancelled the current command.`);
-            } else if (input == "cancel" && !local_prompt.do_not_cancel) {
-              module.exports.clearPrompt(game_obj.user, game_id);
-              printAlert(game_id, `${config.icons.cancel} You have cancelled the current command.`);
-            } else {
-              //Check if new answer is valid or not for the current prompt
-              if (local_prompt.prompts[current_step][1] == "number") {
-                //Check to make sure that the input is actually a number
-                if (!isNaN(parseInt(input))) {
-                  var satisfies_requirements = [true, ""];
-
-                  if (local_prompt.prompts[current_step].length > 2) {
-                    //Minimum check
-                    if (local_prompt.prompts[current_step][2].min)
-                      if (parseInt(input) < local_prompt.prompts[current_step][2].min)
-                        satisfies_requirements = [false, `The lowest number you can specify for this command is ${local_prompt.prompts[current_step][2].min}!`];
-                    //Maximum check
-                    if (local_prompt.prompts[current_step][2].max)
-                      if (parseInt(input) > local_prompt.prompts[current_step][2].max)
-                        satisfies_requirements = [false, `The highest number you can specify for this command is ${local_prompt.prompts[current_step][2].max}!`];
-                  }
-
-                  if (satisfies_requirements[0]) local_prompt.answers.push(parseInt(input));
-                } else {
-                  satisfies_requirements = [false, `You must input a valid number for this command! ${input} is not a valid number.`];
-                }
-              } else if (local_prompt.prompts[current_step][1] == "string") {
-                local_prompt.answers.push(input);
-              } else if (local_prompt.prompts[current_step][1] == "mention") {
-                var parsed_mention = parseMention(input);
-
-                if (parsed_mention) {
-                  local_prompt.answers.push(parsed_mention);
-                } else {
-                  satisfies_requirements = [false, `You must type out a valid nation name or ping a valid user! ${input} was not a valid nation/user.`];
-                }
+            //If the phrase typed in is not a valid command, continue on
+            if (!is_command) {
+              //Check if prompt has been cancelled
+              if (input == "back" && !local_prompt.do_not_cancel) {
+                (current_step > 0) ?
+                  local_prompt.answers.pop() :
+                    module.exports.clearPrompt(game_obj.user, game_id),
+                    printAlert(game_id, `${config.icons.cancel} You have cancelled the current command.`);
+              } else if (input == "cancel" && !local_prompt.do_not_cancel) {
+                module.exports.clearPrompt(game_obj.user, game_id);
+                printAlert(game_id, `${config.icons.cancel} You have cancelled the current command.`);
               } else {
-                log.error(`The argument type ${local_prompt.prompts[current_step][1]} specified with the visual prompt at User ID ${user_id} does not exist!`);
+                //Check if new answer is valid or not for the current prompt
+                if (local_prompt.prompts[current_step][1] == "number") {
+                  //Check to make sure that the input is actually a number
+                  if (!isNaN(parseInt(input))) {
+                    var satisfies_requirements = [true, ""];
+
+                    if (local_prompt.prompts[current_step].length > 2) {
+                      //Minimum check
+                      if (local_prompt.prompts[current_step][2].min)
+                        if (parseInt(input) < local_prompt.prompts[current_step][2].min)
+                          satisfies_requirements = [false, `The lowest number you can specify for this command is ${local_prompt.prompts[current_step][2].min}!`];
+                      //Maximum check
+                      if (local_prompt.prompts[current_step][2].max)
+                        if (parseInt(input) > local_prompt.prompts[current_step][2].max)
+                          satisfies_requirements = [false, `The highest number you can specify for this command is ${local_prompt.prompts[current_step][2].max}!`];
+                    }
+
+                    if (satisfies_requirements[0]) local_prompt.answers.push(parseInt(input));
+                  } else {
+                    satisfies_requirements = [false, `You must input a valid number for this command! ${input} is not a valid number.`];
+                  }
+                } else if (local_prompt.prompts[current_step][1] == "string") {
+                  local_prompt.answers.push(input);
+                } else if (local_prompt.prompts[current_step][1] == "mention") {
+                  var parsed_mention = parseMention(input);
+
+                  if (parsed_mention) {
+                    local_prompt.answers.push(parsed_mention);
+                  } else {
+                    satisfies_requirements = [false, `You must type out a valid nation name or ping a valid user! ${input} was not a valid nation/user.`];
+                  }
+                } else {
+                  log.error(`The argument type ${local_prompt.prompts[current_step][1]} specified with the visual prompt at User ID ${user_id} does not exist!`);
+                }
               }
             }
-          }
 
-          //Keep at end, execute the function and delete the key only if all prompts have been filled out so far.
-          if (local_prompt.answers.length == local_prompt.prompts.length) {
-            if (local_prompt.evaluate_function) {
-              local_prompt.evaluate_function(local_prompt.answers);
-            } else {
-              log.error(`local_prompt.evaluate_function() turned out to be nonexistent! See below for a full log of the local_prompt object:`);
-              console.log(local_prompt);
+            //Keep at end, execute the function and delete the key only if all prompts have been filled out so far.
+            if (local_prompt.answers.length == local_prompt.prompts.length) {
+              if (local_prompt.evaluate_function) {
+                local_prompt.evaluate_function(local_prompt.answers);
+              } else {
+                log.error(`local_prompt.evaluate_function() turned out to be nonexistent! See below for a full log of the local_prompt object:`);
+                console.log(local_prompt);
+              }
+
+              //Print final text or reset alert array to what it was before
+              if (local_prompt.final_text) {
+                printAlert(game_id, local_prompt.final_text);
+              } else {
+                game_obj.alert_change = true;
+              }
+
+              //Clear it from the interface!
+              delete interfaces[interfaces[game_id].user];
             }
 
-            //Print final text or reset alert array to what it was before
-            if (local_prompt.final_text) {
-              printAlert(game_id, local_prompt.final_text);
-            } else {
-              game_obj.alert_change = true;
-            }
+            //Update visual prompt
+            if (local_prompt)
+              if (!local_prompt.do_not_display)
+                local_prompt.message.edit({
+                  embeds: [
+                    updateVisualPrompt({
+                      title: local_prompt.title,
+                      show_steps: local_prompt.show_steps,
+                      answers: local_prompt.answers,
+                      prompts: local_prompt.prompts,
+                      satisfies_requirements: satisfies_requirements,
 
-            //Clear it from the interface!
-            delete interfaces[interfaces[game_id].user];
+                      colour: local_prompt.colour,
+                      description: local_prompt.description
+                    })
+                  ]
+                });
+          } catch (e) {
+            log.error(`commandHandler() - visual_prompt ran into an error: ${e}`);
+            console.log(e);
           }
-
-          //Update visual prompt
-          if (local_prompt)
-            if (!local_prompt.do_not_display)
-              local_prompt.message.edit({
-                embeds: [
-                  updateVisualPrompt({
-                    title: local_prompt.title,
-                    show_steps: local_prompt.show_steps,
-                    answers: local_prompt.answers,
-                    prompts: local_prompt.prompts,
-                    satisfies_requirements: satisfies_requirements,
-
-                    colour: local_prompt.colour,
-                    description: local_prompt.description
-                  })
-                ]
-              });
-        } catch (e) {
-          log.error(`commandHandler() - visual_prompt ran into an error: ${e}`);
-          console.log(e);
-        }
-      }
 
     //Traditional commands - Make sure this goes after visual prompt processing!
     {
