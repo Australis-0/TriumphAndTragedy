@@ -22,7 +22,10 @@ module.exports = {
     var ending_string = "";
     var name_array = [];
     var name_string = "";
+    var owned_provinces = getProvinces(actual_id, { include_hostile_occupations: true });
     var usr_provinces = getProvinces(actual_id);
+
+    usr.provinces = owned_provinces.length;
 
     //Append cities to list
     for (var i = 0; i < usr_provinces.length; i++)

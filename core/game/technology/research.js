@@ -21,6 +21,8 @@ module.exports = {
         usr.researching.splice(slot_number, 1);
 
         //Update UI
+        if (game_obj.page == "technology")
+          printTechnology(user_id);
         if (game_obj.page == "research")
           printResearch(user_id);
       } else {
