@@ -100,8 +100,8 @@ module.exports = {
           upkeep_array.sort(function (a, b) { return a - b; });
 
           local_value = [
-            local_value[0] - upkeep_array[1]),
-            local_value[1] - upkeep_array[0]),
+            local_value[0] - upkeep_array[1],
+            local_value[1] - upkeep_array[0],
           ].sort(function (a, b) { return a - b; });
         }
 
