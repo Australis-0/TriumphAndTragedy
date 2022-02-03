@@ -115,7 +115,7 @@ module.exports = {
 		minutes = Math.floor((duration / (1000 * 60)) % 60),
 		hours = Math.floor((duration / (1000 * 60 * 60)) % 24);
 
-		return `${(hours > 0) ? parseNumber(hours) + " hours," : ""} ${(hours > 0) ? parseNumber(minutes) + " minutes," : ""} ${(hours > 0) ? parseNumber(seconds) + " seconds" : ""}`;
+		return `${(hours > 0) ? parseNumber(hours) + " hours" : ""}${(minutes > 0) ? ((hours > 0) ? ", " : "") + parseNumber(minutes) + " minutes" : ""}${(seconds > 0) ? ((minutes > 0) ? ", " : "") + parseNumber(seconds) + " seconds" : ""}`;
 	},
 
   /*

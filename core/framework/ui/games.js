@@ -193,11 +193,12 @@ module.exports = {
         //Date processing
         setInterval(function(){
           var current_date = new Date().getTime();
-          
+          var time_remaining = settings.turn_timer*1000 - (current_date - main.last_turn);
+
           const topbar_embed = new Discord.MessageEmbed()
             .setColor(settings.bot_colour)
             .setTitle(`${config.icons.time} **${getDate(main.date)}** - Round ${parseNumber(main.round_count)}`)
-            .setDescription(`- Each round is ${parseMilliseconds(settings.turn_timer*1000)}. ${parseMilliseconds((settings.turn_timer*1000) - (current_date - main.last_turn))}`)
+            .setDescription(`- Each round is approximately ${parseMilliseconds(settings.turn_timer*1000)}. ${parseMilliseconds(time_remaining)} remaining until the next turn.`)
             .setImage("https://cdn.discordapp.com/attachments/722997700391338046/736141424315203634/margin.png");
 
           try {
