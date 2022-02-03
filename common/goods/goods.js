@@ -1,4 +1,4 @@
-config.goods = { //WIP, REFACTOR
+config.goods = {
   //Special scope - these goods are entirely hidden from public view
   hidden: {
     knowledge: {

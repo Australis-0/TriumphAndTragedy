@@ -929,10 +929,9 @@ module.exports = {
             var all_pop_modifiers = Object.keys(local_pop.per_100k);
 
             for (var x = 0; x < all_pop_modifiers.length; x++)
-              if (usr.modifiers[all_pop_modifiers[x]])
-                modifier_scope[usr.modifiers[all_pop_modifiers[x]]] = (modifier_scope[usr.modifiers[all_pop_modifiers[x]]]) ?
-                  modifier_scope[usr.modifiers[all_pop_modifiers[x]]] + local_pop.per_100k[all_pop_modifiers[x]] :
-                  local_pop.per_100k[all_pop_modifiers[x]];
+              modifier_scope[all_pop_modifiers[x]] = (modifier_scope[all_pop_modifiers[x]]) ?
+                modifier_scope[all_pop_modifiers[x]] + local_pop.per_100k[all_pop_modifiers[x]]*(usr.pops[all_pops[i]]/100000) :
+                local_pop.per_100k[all_pop_modifiers[x]]*(usr.pops[all_pops[i]]/100000);
           }
 
           if (local_pop.max_modifier_limit) {
@@ -940,8 +939,10 @@ module.exports = {
 
             for (var x = 0; x < all_pop_modifiers.length; x++)
               modifier_scope[all_pop_modifiers[x]] =
-                Math.min(modifier_scope[all_pop_modifiers[x]], local_pop.max_modifier_limit[x]);
+                Math.min(modifier_scope[all_pop_modifiers[x]], local_pop.max_modifier_limit[all_pop_modifiers[x]]);
           }
+
+          usr.pops[`${all_pops[i]}_cached_modifiers`] = modifier_scope;
 
           //Apply modifiers
           applyModifiers(actual_id, modifier_scope);

@@ -8,7 +8,7 @@ config.pops = {
     chance: 0.02,
     max_modifier_limit: {
       tax_efficiency: 0.60,
-      stability_efficiency: 0.50
+      stability_modifier: 0.50
     },
     per_100k: {
       tax_efficiency: 0.03,
