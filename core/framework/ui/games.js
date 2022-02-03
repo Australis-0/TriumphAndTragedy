@@ -171,12 +171,12 @@ module.exports = {
           if (!message_is_prompt) {
             if (game_obj.alert_change) {
               //initialiseFoundCountry(), settleStartingProvinces() handler
-              if (main.global.user_map[user_id])
-                if (main.users[main.global.user_map[user_id]].settle_starting_provinces)
-                  initialiseSettleStartingProvinces(user_id);
+              if (main.global.user_map[game_obj.user])
+                if (main.users[main.global.user_map[game_obj.user]].settle_starting_provinces)
+                  initialiseSettleStartingProvinces(game_obj.user);
 
-              if (!main.global.user_map[user_id])
-                initialiseFoundCountry(user_id);
+              if (!main.global.user_map[game_obj.user])
+                initialiseFoundCountry(game_obj.user);
 
               if (game_obj.alert_array.length == 0) {
                 const new_alert_embed = new Discord.MessageEmbed()
