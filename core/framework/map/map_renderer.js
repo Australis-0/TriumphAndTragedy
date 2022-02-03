@@ -72,7 +72,7 @@ module.exports = {
               }
 
               //Generate key
-              ctx.font = "36px Bahnschrift Condensed";
+              ctx.font = "36px Oswald";
               ctx.fillStyle = "#ffffff";
               ctx.fillText("Nations of the World: ", config.defines.map.map_label_coords[0], config.defines.map.map_label_coords[1]);
 
