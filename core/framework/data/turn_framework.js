@@ -1067,7 +1067,7 @@ module.exports = {
             target_user.money += local_export.amount;
 
           //Remove local_export
-          delete local_export;
+          delete usr.trades[all_exports[i]];
         }
       }
     }
