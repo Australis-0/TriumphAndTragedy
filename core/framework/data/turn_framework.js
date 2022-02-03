@@ -372,7 +372,7 @@ module.exports = {
           //Process special effects
           var special_effect_to_process = all_produced_goods[i].replace("_special_effect", "");
 
-          var building_obj = getBuilding(all_produced_goods[i]);
+          var building_obj = getBuilding(special_effect_to_process);
 
           if (building_obj.special_effect)
             building_obj.special_effect(usr);
