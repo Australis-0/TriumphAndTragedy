@@ -105,6 +105,19 @@ module.exports = {
     return name_string;
   },
 
+  parseMilliseconds: function (arg0_milliseconds) {
+    //Convert from parameters
+    var duration = arg0_milliseconds;
+
+    //Declare local instance variables
+		var milliseconds = parseInt((duration % 1000) / 100),
+		seconds = Math.floor((duration / 1000) % 60),
+		minutes = Math.floor((duration / (1000 * 60)) % 60),
+		hours = Math.floor((duration / (1000 * 60 * 60)) % 24);
+
+		return `${(hours > 0) ? parseNumber(hours) + " hours," : ""} ${(hours > 0) ? parseNumber(minutes) + " minutes," : ""} ${(hours > 0) ? parseNumber(seconds) + " seconds" : ""}`;
+	},
+
   /*
     parseNumber() - Formats a number to a string whilst displaying decimal separators (e.g. 1.567,23 instead of 1567.23).
     options: {
