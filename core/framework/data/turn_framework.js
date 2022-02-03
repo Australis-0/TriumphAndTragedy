@@ -900,9 +900,52 @@ module.exports = {
           }
       }
 
-      //[WIP] - Population modifiers
+      //Population modifiers
       {
+        for (var i = 0; i < all_pops.length; i++) {
+          var local_pop = config.pops[all_pops[i]];
+          var modifier_scope = {};
 
+          //Remove previous modifiers!
+          if (usr.pops[`${all_pops[i]}_cached_modifiers`]) {
+            var local_modifier_scope = usr.pops[`${all_pops[i]}_cached_modifiers`];
+            var all_previous_modifiers = Object.keys(local_modifier_scope);
+
+            for (var x = 0; x < all_previous_modifiers.length; x++)
+              if (usr.modifiers[all_previous_modifiers[x]])
+                local_modifier_scope[all_previous_modifiers[x]] =
+                  local_modifier_scope[all_previous_modifiers[x]]*-1;
+              else
+                //Delete to make sure resources and other thingies don't get applied twice!
+                delete local_modifier_scope[all_previous_modifiers[x]];
+
+            applyModifiers(actual_id, local_modifier_scope);
+
+            delete usr.pops[`${all_pops[i]}_cached_modifiers`];
+          }
+
+          if (local_pop.per_100k) {
+            //Add to modifier_scope
+            var all_pop_modifiers = Object.keys(local_pop.per_100k);
+
+            for (var x = 0; x < all_pop_modifiers.length; x++)
+              if (usr.modifiers[all_pop_modifiers[x]])
+                modifier_scope[usr.modifiers[all_pop_modifiers[x]]] = (modifier_scope[usr.modifiers[all_pop_modifiers[x]]]) ?
+                  modifier_scope[usr.modifiers[all_pop_modifiers[x]]] + local_pop.per_100k[all_pop_modifiers[x]] :
+                  local_pop.per_100k[all_pop_modifiers[x]];
+          }
+
+          if (local_pop.max_modifier_limit) {
+            var all_pop_modifiers = Object.keys(local_pop.max_modifier_limit);
+
+            for (var x = 0; x < all_pop_modifiers.length; x++)
+              modifier_scope[all_pop_modifiers[x]] =
+                Math.min(modifier_scope[all_pop_modifiers[x]], local_pop.max_modifier_limit[x]);
+          }
+
+          //Apply modifiers
+          applyModifiers(actual_id, modifier_scope);
+        }
       }
     }
 
