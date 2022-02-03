@@ -129,6 +129,35 @@ module.exports = {
     return processed_string.split("_").join(" ").replace(/(^| )(\w)/g, s => s.toUpperCase());
   },
 
+  processOrdinalString: function (arg0_string) {
+		//Convert from parameters
+		var current_string = arg0_string.toString().trim();
+		var trim_patterns = [
+			[/  /gm, " "],
+			[" . ", ". "],
+			[/^M{0,3}(CM|CD|D?C{0,3})(XC|XL|L?X{0,3})(IX|IV|V?I{0,3}) [a-z]*/gm]
+		];
+		var alphabet = "abcdefghijklmnopqrstuvwxyz";
+		for (var i = 0; i < alphabet.split("").length; i++) {
+			trim_patterns.push([` ${alphabet.split("")[i]} `, `${alphabet.split("")[i]} `]);
+		}
+
+		//Trim out, well, trim patterns
+		for (var i = 0; i < trim_patterns.length; i++) {
+			if (trim_patterns[i].length > 1) {
+				current_string = current_string.replace(trim_patterns[i][0], trim_patterns[i][1]);
+			} else {
+				var current_roman_array = current_string.match(trim_patterns[i][0]);
+				if (current_roman_array != null) {
+					current_string = current_string.replace(current_roman_array[0], current_roman_array[0].split(" ").join(" "));
+				}
+			}
+		}
+
+		//Return statement
+		return current_string;
+	},
+
   truncateString: function (arg0_string, arg1_number, arg2_do_not_show_dots) {
     //Convert from parameters
     var string = arg0_string;
