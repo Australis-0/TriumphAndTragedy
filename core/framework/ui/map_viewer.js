@@ -68,7 +68,7 @@ module.exports = {
     //Initialise tracker variables
     map_obj.mapmode = map;
     map_obj.original_img = "";
-    map_obj.speed = ((map_defines.map_resolution[0] + map_defines.map_resolution[1])/2)*0.25;
+    map_obj.speed = ((map_defines.map_resolution[0] + map_defines.map_resolution[1])/2)*0.1;
     map_obj.x = 0;
     map_obj.y = 0;
     map_obj.zoom = 1;
@@ -206,7 +206,7 @@ module.exports = {
         map_obj.title = "Map Viewer:" //Temporary, rename to 'Map of the World, ${getDateString()} later' [WIP]
         map_obj.interface_string = [
           `You are now viewing the **${map_obj.mapmode}** mapmode.`,
-          `Zoom: ${map_obj.zoom} ¦ Speed: ${map_obj.speed/1000} ¦ X: ${Math.round(map_obj.x)} ¦ Y: ${Math.round(map_obj.y)}`,
+          `Zoom: ${map_obj.zoom} ¦ Speed: ${map_obj.speed} ¦ X: ${Math.round(map_obj.x)} ¦ Y: ${Math.round(map_obj.y)}`,
           "",
           "Use the arrow keys and magnifying icons at the bottom to navigate around the map."
         ];
