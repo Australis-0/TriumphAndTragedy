@@ -96,7 +96,7 @@ module.exports = {
     //Only process sell request if good is actually valid
     if (main.market[good_name]) {
       if (!isNaN(good_amount)) {
-        if (usr.inventory[good_name] <= good_amount) {
+        if (usr.inventory[good_name] >= good_amount) {
           var total_cost = 0;
 
           //Make sure that user has enough market capacity remaining to process the sale
@@ -127,7 +127,11 @@ module.exports = {
             if (game_obj.page == "trade")
               printTrade(game_obj.user);
             if (game_obj.page == "world_market")
-              printGlobalMarket(game_obj.user);
+              createPageMenu(game_obj.middle_embed, {
+                embed_pages: printGlobalMarket(game_obj.user),
+                page: main.interfaces[game_obj.middle_embed.id].page - 1,
+                user: game_obj.user
+              });
 
             //Print out feedback
             printAlert(game_obj.id, `You sold **${parseNumber(good_amount)}** ${(good_obj.icon) ? config.icons[good_obj.icon] + " " : ""}${(good_obj.name) ? good_obj.name : good_name} for **£${parseNumber(total_cost)}**.`);

@@ -74,7 +74,11 @@ module.exports = {
                     if (game_obj.page == "trade")
                       printTrade(game_obj.user);
                     if (game_obj.page == "world_market")
-                      printGlobalMarket(game_obj.user);
+                      createPageMenu(game_obj.middle_embed, {
+                        embed_pages: printGlobalMarket(game_obj.user),
+                        page: main.interfaces[game_obj.middle_embed.id].page - 1,
+                        user: game_obj.user
+                      });
 
                     //Print out alert
                     printAlert(game_obj.id, `You bought **${parseNumber(good_amount)}** ${(good_obj.icon) ? config.icons[good_obj.icon] + " " : ""}${(good_obj.name) ? good_obj.name : good_name} for **£${parseNumber(total_buy_price)}**.`);
