@@ -1,4 +1,37 @@
 module.exports = {
+  initialiseSetGovernmentCommand: function (arg0_user) {
+    //Convert from parameters
+    var user_id = arg0_user;
+
+    //Declare local instance variables
+    var actual_id = main.users[user_id];
+    var game_obj = getGameObject(user_id);
+    var usr = main.users[actual_id];
+
+    //Send visual_prompt
+    visualPrompt(game_obj.alert_embed, user_id, {
+      title: `Set Government:`,
+      prompts: [
+        [`What would you like to set your current government to?\n\nType **[Government List]** for a list of valid governments.`, "string"]
+      ]
+    },
+    function (arg) {
+      setGovernmentCommand(user_id, arg[0]);
+    },
+    function (arg) {
+      switch (arg) {
+        case "government list":
+          createPageMenu(game_obj.middle_embed, {
+            embed_pages: printGovernmentList(actual_id),
+            user: game_obj.user
+          });
+          return true;
+
+          break;
+      }
+    });
+  },
+
   setGovernmentCommand: function (arg0_user, arg1_government_type) {
     //Convert from parameters
     var user_id = arg0_user;
