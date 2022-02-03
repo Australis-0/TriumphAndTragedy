@@ -210,6 +210,8 @@ module.exports = {
       var all_cities = Object.keys(construction_obj).sort();
       var raw_city_names = [];
 
+      console.log(all_cities);
+
       for (var i = 0; i < all_cities.length; i++)
         raw_city_names.push(`${getCity(all_cities[i], { users: actual_id }).name},${all_cities[i]}`);
       raw_city_names.sort();
