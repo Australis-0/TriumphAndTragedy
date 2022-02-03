@@ -78,7 +78,7 @@ module.exports = {
                               all_imports[i].good_type;
 
                             if (!options.hide_display)
-                              printAlert(`Your transports have begun to ship ${parseNumber(raw_amount)} ${local_good_icon}${local_good_name} to **${ot_user.name}**. They will arrive in **${parseNumber(amount_of_turns)}** turn(s).`);
+                              printAlert(game_obj.id, `Your transports have begun to ship ${parseNumber(raw_amount)} ${local_good_icon}${local_good_name} to **${ot_user.name}**. They will arrive in **${parseNumber(amount_of_turns)}** turn(s).`);
                           } else {
                             if (!options.hide_display)
                               printError(game_obj.id, `You may only ship inventory goods or money!`);
