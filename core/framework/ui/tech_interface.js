@@ -401,7 +401,7 @@ module.exports = {
         var local_tech_name = (local_tech_obj.name) ? local_tech_obj.name : usr.researching[i].technology;
 
         tech_string.push(`**[Cancel Research]**`);
-        tech_string.push(`Currently researching ${local_tech_icon}**${local_tech_name}**.`);
+        tech_string.push(`**${i + 1}.** Currently researching ${local_tech_icon}**${local_tech_name}**.`);
         tech_string.push(`- Research Progress: **${parseNumber(usr.researching[i].current_investment)}/${parseNumber(usr.researching[i].total_research_cost)}**`);
         tech_string.push("");
       }
