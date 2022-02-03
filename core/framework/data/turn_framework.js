@@ -348,6 +348,40 @@ module.exports = {
       }
     }
 
+    //Building processing
+    {
+      var all_production = getProduction(actual_id);
+      var all_produced_goods = Object.keys(all_production);
+
+      for (var i = 0; i < all_produced_goods.length; i++) {
+        var local_value = all_production[all_produced_goods[i]];
+
+        //Process upkeep
+        if (all_produced_goods[i].includes("_upkeep")) {
+          var upkeep_to_process = all_produced_goods[i].replace("_upkeep", "");
+
+          if (usr.inventory[upkeep_to_process])
+            usr.inventory[upkeep_to_process] -= randomNumber(local_value[0], local_value[1]);
+          else
+            usr[upkeep_to_process] -= randomNumber(local_value[0], local_value[1]);
+        } else if (all_produced_goods[i].includes("_special_effect")) {
+          //Process special effects
+          var special_effect_to_process = all_produced_goods[i].replace("_special_effect", "");
+
+          var building_obj = getBuilding(all_produced_goods[i]);
+
+          if (building_obj.special_effect)
+            building_obj.special_effect(usr);
+        } else {
+          //Process goods
+          if (usr.inventory[all_produced_goods[i]])
+            usr.inventory[all_produced_goods[i]] += randomNumber(local_value[0], local_value[1]);
+          else
+            usr[all_produced_goods[i]] += randomNumber(local_value[0], local_value[1]);
+        }
+      }
+    }
+
     //Budget processing
     {
       //Add money based on calculated user income
@@ -373,54 +407,6 @@ module.exports = {
 
               //Remove expedition key
               delete local_expedition;
-            }
-          }
-        }
-    }
-
-    //Building processing
-    {
-      for (var i = 0; i < all_cities.length; i++)
-        for (var x = 0; x < all_cities[i].buildings.length; x++) {
-          var local_building = all_cities[i].buildings[x];
-          var local_consumption = getBuildingConsumption(actual_id, local_building.building_type);
-
-          //Check if user can even produce anything; resource check
-          var all_costs = Object.keys(local_consumption);
-          var meets_cost_requirements = true;
-
-          for (var y = 0; y < all_costs.length; y++) {
-            var local_resource_cost = local_consumption[all_costs[y]];
-
-            if (local_resource_cost.length >= 2)
-              local_resource_cost = randomNumber(local_resource_cost[0], local_resource_cost[1]);
-            else
-              local_resource_cost = local_resource_cost[0];
-
-            if (usr.inventory[all_costs[y]])
-              if (usr.inventory[all_costs[y]] < local_resource_cost)
-                meets_cost_requirements = false;
-              else
-                usr.inventory[all_costs[y]] -= local_resource_cost;
-            if (usr[all_costs[y]])
-              if (usr[all_costs[y]] < local_resource_cost)
-                meets_cost_requirements = false;
-              else
-                usr[all_costs[y]] -= local_resource_cost;
-          }
-
-          if (meets_cost_requirements) {
-            var local_building_production = getBuildingProduction(actual_id, local_building.building_type, all_cities[i]);
-
-            var all_production = Object.keys(local_building_production);
-
-            for (var y = 0; y < all_production.length; y++) {
-              var local_production = local_building_production[all_production[y]];
-
-              if (usr.inventory[all_production[y]])
-                usr.inventory += randomNumber(local_production[0], local_production[1]);
-              if (usr[all_production[y]])
-                usr[all_production[y]] += randomNumber(local_production[0], local_production[1]);
             }
           }
         }

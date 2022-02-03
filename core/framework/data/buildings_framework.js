@@ -24,6 +24,10 @@ module.exports = {
       if (province_obj.buildings)
         if (building_obj)
           if (!isNaN(amount)) {
+            //Modifier handler
+            if (building_obj.modifiers)
+              applyModifiers(local_province.owner, building_obj.modifiers);
+
             //Supply limit handler
             if (building_obj.supply_limit) {
               var supplied_provinces = getProvincesInRange(province_id, config.defines.combat.infrastructure_range);
@@ -740,7 +744,7 @@ module.exports = {
   getProduction: function (arg0_user, arg1_good) {
     //Convert from parameters
     var user_id = arg0_user;
-    var good_type = arg1_good;
+    var good_type = (arg1_good) ? arg1_good : "all";
 
     //Declare local instance variables, corresponding functions
     var all_goods = getGoods({ return_names: true });
