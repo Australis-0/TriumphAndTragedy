@@ -57,6 +57,8 @@ module.exports = {
                 var unit_name = (unit_obj.name) ? unit_obj.name : raw_unit_name;
                 var unit_quantity = returnSafeNumber(unit_obj.quantity, 1);
 
+                log.info(`Crafting ${unit_amount}*${unit_quantity} ${raw_unit_name} for ${usr.name}!`);
+
                 usr.reserves[raw_unit_name] += (unit_amount*unit_quantity);
 
                 //Deduct unit_costs from inventory and other user metrics
