@@ -258,22 +258,34 @@ module.exports = {
 
     //Update visual prompt message
     if (!options.do_not_display)
-      message_obj.edit({
-        embeds: [
-          updateVisualPrompt({
-            title: options.title,
-            answers: [],
-            prompts: options.prompts,
-            satisfies_requirements: [true, ""],
-            show_steps: visual_prompt.show_steps,
+      try {
+        message_obj.edit({
+          embeds: [
+            updateVisualPrompt({
+              title: options.title,
+              answers: [],
+              prompts: options.prompts,
+              satisfies_requirements: [true, ""],
+              show_steps: visual_prompt.show_steps,
 
-            colour: options.colour,
-            description: options.description,
-            image: options.image,
+              colour: options.colour,
+              description: options.description,
+              image: options.image,
 
-            do_not_cancel: options.do_not_cancel
-          })
-        ]
-      });
+              do_not_cancel: options.do_not_cancel
+            })
+          ]
+        });
+      } catch {
+        log.error(`updateVisualPrompt() ran into an error whilst attempting to create a new visual prompt! .. Reinitialising all game embeds to call again!`);
+
+        reinitialiseGameEmbeds();
+
+        setTimeout(function(){
+          var game_obj = getGameObject(usr);
+
+          module.exports.visualPrompt(game_obj.alert_embed, game_obj.user, options, exec_function, cmd_function);
+        }, 3000);
+      }
   }
 };

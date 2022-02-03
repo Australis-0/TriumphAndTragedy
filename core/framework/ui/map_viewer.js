@@ -68,7 +68,7 @@ module.exports = {
     //Initialise tracker variables
     map_obj.mapmode = map;
     map_obj.original_img = "";
-    map_obj.speed = ((map_defines.map_resolution[0]*map_defines.map_resolution[1])/2)*0.25;
+    map_obj.speed = ((map_defines.map_resolution[0] + map_defines.map_resolution[1])/2)*0.25;
     map_obj.x = 0;
     map_obj.y = 0;
     map_obj.zoom = 1;

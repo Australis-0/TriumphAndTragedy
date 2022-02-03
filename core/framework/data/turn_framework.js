@@ -873,6 +873,7 @@ module.exports = {
                 var local_pop_growth =
                   Math.ceil(owned_provinces[i].pops[all_pops[x]]*usr.pops[`${all_pops[x]}_growth_modifier`]*scalar*usr.modifiers.pop_growth_modifier);
 
+                usr.pops[all_pops[x]] += local_pop_growth;
                 owned_provinces[i].pops[all_pops[x]] += local_pop_growth;
                 owned_provinces[i].pops.population += local_pop_growth;
               }
@@ -891,8 +892,10 @@ module.exports = {
               var local_pop_growth =
                 Math.ceil(owned_provinces[i].pops[all_pops[x]]*usr.pops[`${all_pops[x]}_growth_modifier`]*usr.modifiers.pop_growth_modifier);
 
-              if (owned_provinces[i].pops.population < owned_provinces[i].pop_cap)
+              if (owned_provinces[i].pops.population < owned_provinces[i].pop_cap) {
+                usr.pops[all_pops[x]] += local_pop_growth;
                 owned_provinces[i].pops[all_pops[x]] += local_pop_growth;
+              }
             }
           }
       }
