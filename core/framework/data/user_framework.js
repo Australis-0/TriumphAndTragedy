@@ -251,6 +251,9 @@ module.exports = {
     var usr = main.users[user_id];
 
     //Declare local tracker variables
+    if (usr.total_cities < 1)
+      usr.total_cities += getCities(actual_id, { include_hostile_occupations: true }).length;
+    
     var average_cities = Math.ceil(usr.total_cities/usr.country_age);
     var pc_price = 0;
 
