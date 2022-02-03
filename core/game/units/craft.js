@@ -81,7 +81,9 @@ module.exports = {
                   }
                 }
 
-                //Update reserves UI if user is currently on it
+                //Update military; reserves UI if user is currently on it
+                if (game_obj.page == "military")
+                  printMilitary(user_id);
                 if (game_obj.page == "reserves")
                   createPageMenu(game_obj.middle_embed, {
                     embed_pages: printReserves(user_id),
