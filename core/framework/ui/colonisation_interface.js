@@ -43,7 +43,7 @@ module.exports = {
     } else {
       colonisation_string.push(`You have **${parseNumber(total_colonial_units)}** total units capable of colonising **${parseNumber(provinces_can_colonise)}** province(s).`);
       colonisation_string.push("");
-      colonisation_string.push(`**[Reserves]** ¦ **[Settle]**`);
+      colonisation_string.push(`**[Reserves]** ¦ **[Settle]** ¦ **[Train Units]**`);
     }
 
     //Print out ongoing expeditions tab

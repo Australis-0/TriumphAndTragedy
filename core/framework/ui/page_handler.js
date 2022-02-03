@@ -1134,7 +1134,6 @@ module.exports = {
         //[Torpedo Fleet]
         if (input == "torpedo fleet")
           initialiseTorpedoFleet(user_id);
-
         //[Transfer Units]
         if (input == "transfer units")
           initialiseTransferUnits(user_id);
@@ -1279,12 +1278,16 @@ module.exports = {
         if (input == "territorial violation")
           initialiseAvoidTerritorialViolation(user_id);
 
+        //[Train Units]
+        if (["train units", "craft"].includes(input))
+          initialiseCraft(user_id);
+
         //[Transfer Units]
         if (input == "transfer units")
           initialiseTransferUnits(user_id);
 
         //[Unit List]
-        if (input == "unit list") {
+        if (["craft list", "unit list"].includes(input)) {
           createPageMenu(game_obj.middle_embed, {
             embed_pages: printUnitList(game_obj.user),
             user: game_obj.user

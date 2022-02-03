@@ -120,6 +120,8 @@ module.exports = {
 
     military_status_array.push("");
     military_status_array.push(`- Type **[Army List]** to view a complete list of all your armies.`);
+    military_status_array.push(`- Type **[Train Units]** to recruit more units into your army.`);
+    military_status_array.push(`- Type **[Unit List]** to view a full list of units available for recruitment.`);
     military_status_array.push(`- Type **[View Reserves]** to view what units you have in your reserves.`);
 
     //2nd Field - Casualties counter
