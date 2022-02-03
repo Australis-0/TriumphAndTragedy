@@ -74,5 +74,6 @@ config.defines.economy = {
   resource_max_percentile: 0.20, //Maximum percentage of shipment capacity that you can use per turn on buying/selling goods from the World Market
   resource_min_buy_price: 150, //Minimum purchasing price for a resource
   resource_min_sell_price: 100, //Minimum sell price for a resource
+  rural_pop_cap: [120000, 140000], //What should the soft cap for population growth in rural provinces be?
   starting_actions: 5, //Base actions per turn, and base starting actions
 };

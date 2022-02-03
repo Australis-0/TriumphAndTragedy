@@ -71,6 +71,10 @@ module.exports = {
         accepted_culture: []
       };
 
+      //Modify pops object
+      usr.pops.accepted_culture.push(culture_id);
+      usr.pops.primary_culture = culture_id;
+
       return usr;
     }
   },

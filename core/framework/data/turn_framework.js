@@ -401,7 +401,7 @@ module.exports = {
           //Decrease duration
           local_expedition.duration--;
 
-          if (local_expedition.duration < 1) {
+          if (local_expedition.duration < 1)
             for (var x = 0; x < local_expedition.provinces.length; x++) {
               //Check to see if province already has an owner, if not, settle it
               var local_province = main.provinces[local_expedition.provinces[x]];
@@ -412,7 +412,6 @@ module.exports = {
               //Remove expedition key
               delete local_expedition;
             }
-          }
         }
     }
 
@@ -855,6 +854,52 @@ module.exports = {
         //Remove assimilations
         for (var i = assimilations_to_remove.length - 1; i >= 0; i--)
           usr.pops.assimilations.splice(assimilations_to_remove[i], 1);
+      }
+
+      //Population growth
+      {
+        for (var i = 0; i < owned_provinces.length; i++)
+          if (owned_provinces[i].type == "urban") {
+            var scalar = 1;
+            var total_pop_growth = 0;
+
+            if (owned_provinces[i].pops.population > 500000) //-3% per million
+              scalar -= Math.ceil((owned_provinces[i].pops.population - 500000)/1000000)*0.03;
+            scalar = Math.max(0.775, scalar);
+
+            //Calculate urban pop growth for all pops
+            if (owned_provinces[i].housing > owned_provinces[i].pops.population)
+              for (var x = 0; x < all_pops.length; i++) {
+                var local_pop_growth =
+                  Math.ceil(owned_provinces[i].pops[all_pops[x]]*usr.pops[`${all_pops[x]}_growth_modifier`]*scalar*usr.modifiers.pop_growth_modifier);
+
+                owned_provinces[i].pops[all_pops[x]] += local_pop_growth;
+                owned_provinces[i].pops.population += local_pop_growth;
+              }
+
+          } else {
+            var total_pop_growth = 0;
+
+            //Make sure .pop_cap is a thing
+            if (!owned_provinces[i].pop_cap)
+              owned_provinces[i].pop_cap = (config.defines.economy.rural_pop_cap) ?
+                randomNumber(config.defines.economy.rural_pop_cap[0], config.defines.economy.rural_pop_cap[1]) :
+                randomNumber(120000, 140000);
+
+            //Calculate rural pop growth for all pops
+            for (var x = 0; x < all_pops.length; x++) {
+              var local_pop_growth =
+                Math.ceil(owned_provinces[i].pops[all_pops[x]]*usr.pops[`${all_pops[x]}_growth_modifier`]*usr.modifiers.pop_growth_modifier);
+
+              if (owned_provinces[i].pops.population < owned_provinces[i].pop_cap)
+                owned_provinces[i].pops[all_pops[x]] += local_pop_growth;
+            }
+          }
+      }
+
+      //[WIP] - Population modifiers
+      {
+
       }
     }
 
