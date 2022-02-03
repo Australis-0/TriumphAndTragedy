@@ -29,7 +29,7 @@ module.exports = {
 
           //Check for command function first
           if (local_prompt.command_function)
-            is_command = local_prompt.command_function(input);
+            is_command = local_prompt.command_function(input.toLowerCase());
 
           //If the phrase typed in is not a valid command, continue on
           if (!is_command) {
