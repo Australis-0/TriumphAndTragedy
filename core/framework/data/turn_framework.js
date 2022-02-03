@@ -973,31 +973,36 @@ module.exports = {
           var research_removal_array = [];
 
           for (var i = 0; i < usr.researching.length; i++) {
+            var local_knowledge_gain = Math.floor(usr.inventory.knowledge/usr.researching.length);
+            var max_knowledge_investment = (local_knowledge_gain > usr.researching[i].current_investment) ?
+              usr.researching[i].current_investment*knowledge_investment :
+              local_knowledge_gain;
+
             var max_knowledge_investment = (max_knowledge_investment > usr.researching[i].current_investment) ?
               usr.researching[i].current_investment*knowledge_investment :
               Math.floor(usr.inventory.knowledge/usr.researching.length);
 
             //Check if tech has finished researching
             if (usr.researching[i].total_research_cost + max_knowledge_investment >= usr.researching[i].current_investment) {
+              var local_tech_obj = usr.researching[i].technology;
 
               //Make sure that tech is not already researched
               if (!usr.researched_technologies.includes(usr.researching[i].technology)) {
-                var local_tech_obj = usr.researching[i].technology;
                 //Technology effect
                 usr.researched_technologies.push(usr.researching[i].technology);
 
                 //Parse technology effects
                 parseTechnology(actual_id, usr.researching[i].technology);
-
-                //Set highest_tier tracking variable if tech cost exceeds previous highest_tier
-                usr.highest_tier = (returnSafeNumber(local_tech_obj.research_cost) > usr.highest_tier) ?
-                  local_tech_obj.research_cost :
-                  usr.highest_tier;
-
-                //Empty research slots
-                emptied_research_slots++;
-                research_removal_array.push(i);
               }
+
+              //Set highest_tier tracking variable if tech cost exceeds previous highest_tier
+              usr.highest_tier = (returnSafeNumber(local_tech_obj.research_cost) > usr.highest_tier) ?
+                local_tech_obj.research_cost :
+                usr.highest_tier;
+
+              //Empty research slots
+              emptied_research_slots++;
+              research_removal_array.push(i);
             } else {
               usr.researching[i].current_investment += Math.round(max_knowledge_investment);
             }
