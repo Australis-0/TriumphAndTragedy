@@ -121,7 +121,15 @@ module.exports = {
                           local_icon = config.icons[local_pop.icon];
                       }
 
-                      shortage_array.push(`- ${local_icon} ${parseNumber(local_shortage)} ${(local_good) ? (local_good.name) ? local_good.name : all_resource_shortages[i] : ""}`);
+                      if (all_resource_shortages[i] == "money")
+                        shortage_array.push(`- ${local_icon} ${parseNumber(local_shortage)} Money`);
+                      if (local_good)
+                        shortage_array.push(`- ${local_icon} ${parseNumber(local_shortage)} ${(local_good.name) ? local_good.name : all_resource_shortages[i]}`);
+                      if (config.pops[all_resource_shortages[i]]) {
+                        var local_pop = config.pops[all_resource_shortages[i]];
+
+                        shortage_array.push(`- ${local_icon} ${parseNumber(local_shortage)} ${(local_pop.name) ? local_pop.name : all_resource_shortages[i]}`)
+                      }
                     }
 
                     printError(game_obj.id, `You don't have enough resources to construct **${parseNumber(building_amount)}** ${(building_obj.name) ? building_obj.name : raw_building_name}! You still require the following resources:\n\n${shortage_array.join("\n")}`);

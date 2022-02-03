@@ -116,8 +116,16 @@ module.exports = {
                     if (local_pop.icon)
                       local_icon = config.icons[local_pop.icon];
                   }
+                  
+                  if (all_resource_shortages[i] == "money")
+                    shortage_array.push(`- ${local_icon} ${parseNumber(local_shortage)} Money`);
+                  if (local_good)
+                    shortage_array.push(`- ${local_icon} ${parseNumber(local_shortage)} ${(local_good.name) ? local_good.name : all_resource_shortages[i]}`);
+                  if (config.pops[all_resource_shortages[i]]) {
+                    var local_pop = config.pops[all_resource_shortages[i]];
 
-                  shortage_array.push(`- ${local_icon} ${parseNumber(local_shortage)} ${(local_good) ? (local_good.name) ? local_good.name : all_resource_shortages[i] : ""}`);
+                    shortage_array.push(`- ${local_icon} ${parseNumber(local_shortage)} ${(local_pop.name) ? local_pop.name : all_resource_shortages[i]}`)
+                  }
                 }
 
                 printError(game_obj.id, `You don't have enough resources to train **${parseNumber(unit_amount)}** regiment(s) of ${(unit_obj.name) ? unit_obj.name : raw_unit_name}! You still require the following resources:\n\n${shortage_array.join("\n")}`);
