@@ -127,6 +127,42 @@ module.exports = {
       if (!options.hide_display)
         printError(game_obj.id, `The receiving country you have specified turned out to be nonexistent!`);
     }
+  },
 
+  initialiseGive: function (arg0_user) {
+    //Convert from parameters
+    var user_id = arg0_user;
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var game_obj = getGameObject(user_id);
+    var usr = main.users[actual_id];
+
+    //Initialise visual prompt
+    visualPrompt(game_obj.alert_embed, user_id, {
+      title: `Export Goods:`,
+      prompts: [
+        [`Which resource would you like to export?\n\nCheck your **[Inventory]** for a full list of your current goods.`, "string"],
+        [`How many units of this good would you like to start transferring?`, "number", { min: 1 }],
+        [`Whom would you like to give these goods to?\n\Type **[View Ledger]** for a full list of countries.`, "mention"]
+      ]
+    },
+    function (arg) {
+      module.exports.give(user_id, arg[1], arg[0]);
+    },
+    function (arg) {
+      switch (arg) {
+        case "inventory":
+          printInventory(user_id);
+          return true;
+
+          break;
+        case "view ledger":
+          printLedger(user_id);
+          return true;
+
+          break;
+      }
+    });
   }
 };

@@ -1819,7 +1819,7 @@ module.exports = {
                 embed_pages: printGlobalMarket(game_obj.user),
                 page: arg[0] - 1,
                 user: game_obj.user
-              })
+              });
             });
 
           //[Sell (Good)]
@@ -1838,7 +1838,6 @@ module.exports = {
           if (trade_pages.includes(game_obj.page)) {
             if (game_obj.page == "trade") {
               //Button Handler
-
               //[Buy (Good)]
               if (input.startsWith("buy ")) {
                 var good_name = input.trim().replace("buy ", "");
@@ -1850,19 +1849,32 @@ module.exports = {
 
               //[Export List]
               if (input == "export list") {
-                printExports(user_id);
+                createPageMenu(game_obj.middle_embed, {
+                  embed_pages: printExports(game_obj.user),
+                  user: game_obj.user
+                });
                 game_obj.page = "exports";
               }
 
+              //[Give]
+              if (["give", "transfer", "transfer goods"].includes(input))
+                initialiseGive(user_id);
+
               //[Import List]
               if (input == "import list") {
-                printImports(user_id);
+                createPageMenu(game_obj.middle_embed, {
+                  embed_pages: printImports(game_obj.user),
+                  user: game_obj.user
+                });
                 game_obj.page = "imports";
               }
 
               //[Manage Auto-Trades]
               if (["auto-trades", "autotrades", "manage auto-trades", "manage autotrades"].includes(game_obj.page)) {
-                printAutoTrades(user_id);
+                createPageMenu(game_obj.middle_embed, {
+                  embed_pages: printAutoTrades(game_obj.user),
+                  user: game_obj.user
+                });
                 game_obj.page = "auto_trades";
               }
 

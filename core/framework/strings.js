@@ -124,11 +124,9 @@ module.exports = {
   },
 
   parseString: function (arg0_string) {
-    var processed_string = arg0_string.split("_");
-    for (var i = 0; i < processed_string.length; i++) {
-      processed_string[i] = processed_string[i][0].toUpperCase() + processed_string[i].substring(1);
-    }
-    return processed_string.join(" ");
+    var processed_string = arg0_string;
+
+    return processed_string.replace(/(^| )(\w)/g, s => s.toUpperCase());
   },
 
   truncateString: function (arg0_string, arg1_number, arg2_do_not_show_dots) {

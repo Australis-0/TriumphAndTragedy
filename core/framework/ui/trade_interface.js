@@ -166,7 +166,7 @@ module.exports = {
 
     //Import/Export list
     trade_string.push(config.localisation.divider);
-    trade_string.push(`**Imports/Exports:**`);
+    trade_string.push(`**Imports/Exports:** ¦ **[Transfer Goods]**`);
     trade_string.push("");
 
     (number_of_autotrades > 0) ?
