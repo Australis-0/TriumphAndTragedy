@@ -202,6 +202,10 @@ module.exports = {
     {
       //Generic trackers
       usr.country_age++;
+      usr.provinces = getProvinces(actual_id, { include_hostile_occupations: true }).length;
+
+      //Base action gain
+      usr.actions += config.defines.economy.starting_actions;
 
       //City modifiers/trackers
       usr.city_cap = getCitiesCap(actual_id);
