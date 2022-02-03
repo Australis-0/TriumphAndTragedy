@@ -26,6 +26,7 @@ module.exports = {
               var resource_shortages = {};
               var unit_costs = getUnitCost(actual_id, raw_unit_name, { amount: unit_amount });
 
+              log.info(`craft() invoked, Unit Cost Dump:`);
               console.log(unit_costs);
 
               //Iterate over all keys in unit_costs and check for prospective shortages
@@ -97,6 +98,9 @@ module.exports = {
                   var local_good = getGood(all_resource_shortages[i]);
                   var local_icon = "";
                   var local_shortage = resource_shortages[all_resource_shortages[i]];
+
+                  if (local_shortage == 0)
+                    local_shortage = 1;
 
                   //Determine icon
                   if (local_good)

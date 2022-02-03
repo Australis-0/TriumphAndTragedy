@@ -55,7 +55,7 @@ module.exports = {
     var game_obj = getGameObject(user_id);
     var unit_type = "";
     var usr = main.users[actual_id];
-    
+
     var all_expeditions = Object.keys(usr.expeditions);
 
     //Error tracker variables
@@ -81,7 +81,7 @@ module.exports = {
       //Check if unit_type even exists
       if (usr.reserves[unit_type] > 0) {
         //Get unit_costs so that we can subtract the needed manpower from the used pile
-        var unit_costs = getUnitCost(local_unit);
+        var unit_costs = getUnitCost(actual_id, unit_type);
 
         var all_unit_costs = Object.keys(unit_costs);
 
@@ -142,7 +142,7 @@ module.exports = {
               prov_colonisation_turns = Math.min(config.defines.combat.max_colonisation_speed, prov_colonisation_turns);
 
             //Generate new colonisation ID
-            var local_colonisation_id = generateColonisationID();
+            var local_colonisation_id = generateColonisationID(actual_id);
 
             //Push to expeditions
             usr.expeditions[local_colonisation_id] = {
@@ -163,6 +163,7 @@ module.exports = {
               printError(game_obj.id, `You need to have a set capital city in order to start colonising provinces!`);
 
             log.error(`settle() command by User ID ${user_id}, Actual ID ${actual_id}, Country ${usr.name} was noted: ${e}.`);
+            console.log(e);
           }
         }
       }

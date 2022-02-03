@@ -43,40 +43,42 @@ module.exports = {
                 module.exports.clearPrompt(game_obj.user, game_id);
                 printAlert(game_id, `${config.icons.cancel} You have cancelled the current command.`);
               } else {
-                //Check if new answer is valid or not for the current prompt
-                if (local_prompt.prompts[current_step][1] == "number") {
-                  //Check to make sure that the input is actually a number
-                  if (!isNaN(parseInt(input))) {
-                    var satisfies_requirements = [true, ""];
+                try {
+                  //Check if new answer is valid or not for the current prompt
+                  if (local_prompt.prompts[current_step][1] == "number") {
+                    //Check to make sure that the input is actually a number
+                    if (!isNaN(parseInt(input))) {
+                      var satisfies_requirements = [true, ""];
 
-                    if (local_prompt.prompts[current_step].length > 2) {
-                      //Minimum check
-                      if (local_prompt.prompts[current_step][2].min)
-                        if (parseInt(input) < local_prompt.prompts[current_step][2].min)
-                          satisfies_requirements = [false, `The lowest number you can specify for this command is ${local_prompt.prompts[current_step][2].min}!`];
-                      //Maximum check
-                      if (local_prompt.prompts[current_step][2].max)
-                        if (parseInt(input) > local_prompt.prompts[current_step][2].max)
-                          satisfies_requirements = [false, `The highest number you can specify for this command is ${local_prompt.prompts[current_step][2].max}!`];
+                      if (local_prompt.prompts[current_step].length > 2) {
+                        //Minimum check
+                        if (local_prompt.prompts[current_step][2].min)
+                          if (parseInt(input) < local_prompt.prompts[current_step][2].min)
+                            satisfies_requirements = [false, `The lowest number you can specify for this command is ${local_prompt.prompts[current_step][2].min}!`];
+                        //Maximum check
+                        if (local_prompt.prompts[current_step][2].max)
+                          if (parseInt(input) > local_prompt.prompts[current_step][2].max)
+                            satisfies_requirements = [false, `The highest number you can specify for this command is ${local_prompt.prompts[current_step][2].max}!`];
+                      }
+
+                      if (satisfies_requirements[0]) local_prompt.answers.push(parseInt(input));
+                    } else {
+                      satisfies_requirements = [false, `You must input a valid number for this command! ${input} is not a valid number.`];
                     }
+                  } else if (local_prompt.prompts[current_step][1] == "string") {
+                    local_prompt.answers.push(input);
+                  } else if (local_prompt.prompts[current_step][1] == "mention") {
+                    var parsed_mention = parseMention(input);
 
-                    if (satisfies_requirements[0]) local_prompt.answers.push(parseInt(input));
+                    if (parsed_mention) {
+                      local_prompt.answers.push(parsed_mention);
+                    } else {
+                      satisfies_requirements = [false, `You must type out a valid nation name or ping a valid user! ${input} was not a valid nation/user.`];
+                    }
                   } else {
-                    satisfies_requirements = [false, `You must input a valid number for this command! ${input} is not a valid number.`];
+                    log.error(`The argument type ${local_prompt.prompts[current_step][1]} specified with the visual prompt at User ID ${user_id} does not exist!`);
                   }
-                } else if (local_prompt.prompts[current_step][1] == "string") {
-                  local_prompt.answers.push(input);
-                } else if (local_prompt.prompts[current_step][1] == "mention") {
-                  var parsed_mention = parseMention(input);
-
-                  if (parsed_mention) {
-                    local_prompt.answers.push(parsed_mention);
-                  } else {
-                    satisfies_requirements = [false, `You must type out a valid nation name or ping a valid user! ${input} was not a valid nation/user.`];
-                  }
-                } else {
-                  log.error(`The argument type ${local_prompt.prompts[current_step][1]} specified with the visual prompt at User ID ${user_id} does not exist!`);
-                }
+                } catch {}
               }
             }
 
