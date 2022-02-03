@@ -403,10 +403,7 @@ module.exports = {
 
             //Default parser
             default:
-              modifier_string.push(`• **${printPercentage(local_value[0], {
-                display_prefix: true,
-                base_zero: (local_value[0] > 0)
-              })}** ${local_modifier_name}`);
+              modifier_string.push(`• **${printPercentage(local_value[0], { display_prefix: true })}** ${local_modifier_name}`);
 
               break;
           }
@@ -442,7 +439,7 @@ module.exports = {
     if (returnSafeNumber(usr.boosted_stability) > 0)
       stability_string.push(`• **${printPercentage(usr.boosted_stability, { display_prefix: true })}** from boosted stability. (**-1%** per turn).`);
     if (usr.modifiers.overextension != 0)
-      stability_string.push(`• **${printPercentage(Math.ceil(usr.modifiers.overextension*-1, { display_prefix: true }))}** from overextension.`);
+      stability_string.push(`• **${printPercentage(usr.modifiers.overextension, { display_prefix: true })}** from overextension.`);
 
     //Print base stability
     stability_string.push(`• **${printPercentage(usr.modifiers.stability_modifier, { display_prefix: true })}** base stability modifier.`);

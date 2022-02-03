@@ -34,6 +34,18 @@ module.exports = {
     return (Array.isArray(list)) ? list : [list];
   },
 
+  indexesOf: function (arg0_substring, arg1_string) {
+		//Convert from parameters
+		var substring = arg0_substring;
+		var string = arg1_string;
+
+		var a = [], i = -1;
+		while ((i = string.indexOf(substring, i+1)) >= 0) a.push(i);
+
+		//Return statement
+		return a;
+	},
+
   moveElement: function (arg0_array, arg1_old_index, arg2_new_index) {
     //Convert from parameters
     var array = arg0_array;
