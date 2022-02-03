@@ -23,7 +23,7 @@ module.exports = {
       var local_army = all_armies[i];
       var local_enemies = all_enemies[local_army.owner];
       var local_user = main.users[local_army.owner];
-      var province_obj = main.provinces[army_obj.province];
+      var province_obj = main.provinces[local_army.province];
 
       //Check for hostile users in the same province
       for (var x = 0; x < all_armies.length; x++)
@@ -41,7 +41,7 @@ module.exports = {
           }
 
       //If army is in a hostile province with an army that has more than 0,5% of the local population, and is not in combat, occupy it
-      if (!in_combat && local_enemies.includes(province_obj.controller))
+      if (!local_army.in_combat && local_enemies.includes(province_obj.controller))
         if (getArmySize(local_army) > province_obj.pops.population*0.005)
           province_obj.controller = local_army.owner;
     }
