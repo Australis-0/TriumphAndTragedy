@@ -49,13 +49,14 @@ module.exports = {
 
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
-    var all_expeditions = Object.keys(usr.expeditions);
     var all_pops = Object.keys(config.pops);
     var all_units = getAllUnits({ return_names: true });
     var capital_obj = getCapital(actual_id);
     var game_obj = getGameObject(user_id);
     var unit_type = "";
     var usr = main.users[actual_id];
+    
+    var all_expeditions = Object.keys(usr.expeditions);
 
     //Error tracker variables
     var colonised_provinces = [];
