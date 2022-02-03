@@ -211,7 +211,7 @@ module.exports = {
       var raw_city_names = [];
 
       for (var i = 0; i < all_cities.length; i++)
-        raw_city_names.push(`${provinces[all_cities[i]].name},${all_cities[i]}`);
+        raw_city_names.push(`${getCity(all_cities[i], { users: actual_id }).name},${all_cities[i]}`);
       raw_city_names.sort();
       all_cities = [];
 
@@ -224,7 +224,7 @@ module.exports = {
 
         //Only display city if constructions are currently ongoing there
         if (local_constructions.length > 0) {
-          construction_string.push(`**${provinces[all_cities[i]].name}**:`);
+          construction_string.push(`**${getCity(all_cities[i], { users: actual_id }).name}**:`);
           for (var x = 0; x < local_constructions.length; x++) {
             var local_building_obj = getBuilding(local_constructions[x].building_type);
 
