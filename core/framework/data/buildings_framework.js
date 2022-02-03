@@ -389,7 +389,7 @@ module.exports = {
       for (var i = 0; i < all_costs.length; i++) {
         //Check to make sure that this is an actual resource, and not just a pop value
         var building_cost_modifier = (!Object.keys(config.pops).includes(all_costs[i])) ? returnSafeNumber(usr.modifiers.building_cost, 1) : 1;
-        var current_resource_demand = building_obj.cost[all_costs[i]]*building_cost_modifier*options.amount;
+        var current_resource_demand = Math.ceil(building_obj.cost[all_costs[i]]*building_cost_modifier*options.amount);
 
         //Fetch resource_type
         var resource_type = {

@@ -292,7 +292,7 @@ module.exports = {
                 returnSafeNumber(usr.modifiers.training_cost, 1) :
               1 :
             1;
-        var current_resource_demand = unit_obj.cost[all_costs[i]]*unit_cost_modifier*options.amount;
+        var current_resource_demand = Math.ceil(unit_obj.cost[all_costs[i]]*unit_cost_modifier*options.amount);
 
         //Fetch resource_type
         var resource_type = {
