@@ -754,6 +754,8 @@ module.exports = {
     //Note that deep copies are made to make sure not to effect the actual user variable and to run a valid simulation to simply fetch values instead of alter them
     var goods_production = {};
     var virtual_usr = JSON.parse(JSON.stringify(usr));
+    
+    var virtual_inventory = virtual_usr.inventory;
 
     function changeProductionValue (arg0_key, arg1_min_max_argument, arg2_value) {
       //Convert from parameters
@@ -872,7 +874,7 @@ module.exports = {
         for (var i = 0; i < all_good_keys.length; i++)
           if (Array.isArray(all_good_keys[i]))
             goods_production[all_good_keys[i]].sort();
-      } catch {
+      } catch (e) {
         log.error(`getProduction() - ran into an error whilst trying to parse production for User ID: ${e}.`);
         console.error(e);
       }
