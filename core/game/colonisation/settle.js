@@ -225,6 +225,8 @@ module.exports = {
           display_provinces.push(`**${provinces[i]}**`);
         }
 
+        delete usr.settle_starting_provinces;
+
         //Output successful feedback
         printAlert(game_obj.id, `Your peoples have successfully settled the lands of ${display_provinces.join(", ")} and have claimed it for the fledgling country of **${usr.name}**!`);
 

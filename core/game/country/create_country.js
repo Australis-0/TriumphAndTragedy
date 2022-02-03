@@ -16,6 +16,9 @@ module.exports = {
       if (usr && game_obj) {
         printAlert(game_obj.id, `You have successfully founded the nation of **${country_name}**!`);
 
+        //Set settling flag
+        usr.settle_starting_provinces = true;
+
         setTimeout(function(){
           initialiseSettleStartingProvinces(user_id);
         }, settings.visual_prompt_delay);
