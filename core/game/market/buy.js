@@ -56,6 +56,8 @@ module.exports = {
                       usr.money -= main.market[good_name].buy_price;
                       total_buy_price += main.market[good_name].buy_price;
                       usr.inventory[good_name]++;
+                      
+                      main.market[good_name].stock--;
 
                       //Increase buy/sell price
                       main.market[good_name].buy_price =
@@ -64,7 +66,6 @@ module.exports = {
                       main.market[good_name].sell_price =
                         main.market[good_name].sell_price*
                         (previous_stock/main.market[good_name].stock);
-                      main.market[good_name].stock--;
                     }
 
                     //Increase amount sold
