@@ -78,6 +78,8 @@ module.exports = {
 
                     //Print out alert
                     printAlert(game_obj.id, `You bought **${parseNumber(good_amount)}** ${(good_obj.icon) ? config.icons[good_obj.icon] + " " : ""}${(good_obj.name) ? good_obj.name : good_name} for **£${parseNumber(total_buy_price)}**.`);
+
+                    console.log(main.market[good_name]);
                   } else {
                     printError(game_obj.id, `You can only buy/sell up to **20%** of the goods in a large market at once! This equates to about **${parseNumber(Math.floor(main.market[good_name].stock*0.2))}** ${(good_obj.name) ? good_obj.name : good_name}.`);
                   }

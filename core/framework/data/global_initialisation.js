@@ -26,23 +26,24 @@ module.exports = {
     //Market trackers - Initialise buy price/sell price/stock
     if (!main.market) main.market = {};
       for (var i = 0; i < all_goods.length; i++)
-        if (all_goods[i].buy_price || all_goods[i].sell_price) {
-          var local_good_name = all_good_names[i];
+        if (!main.market[all_good_names[i]])
+          if (all_goods[i].buy_price || all_goods[i].sell_price) {
+            var local_good_name = all_good_names[i];
 
-          //Initialise good object
-          main.market[local_good_name] = {
-            amount_sold: 0, //Used as a tracker variable; reset each turn
-            buy_price: (all_goods[i].buy_price) ?
-              all_goods[i].buy_price :
-              all_goods[i].sell_price*2,
-            sell_price: (all_goods[i].sell_price) ?
-              all_goods[i].sell_price :
-              all_goods[i].buy_price*0.5,
-            stock: (all_goods[i].stock) ?
-              all_goods[i].stock :
-              config.defines.economy.resource_base_stock
-          };
-        }
+            //Initialise good object
+            main.market[local_good_name] = {
+              amount_sold: 0, //Used as a tracker variable; reset each turn
+              buy_price: (all_goods[i].buy_price) ?
+                all_goods[i].buy_price :
+                all_goods[i].sell_price*2,
+              sell_price: (all_goods[i].sell_price) ?
+                all_goods[i].sell_price :
+                all_goods[i].buy_price*0.5,
+              stock: (all_goods[i].stock) ?
+                all_goods[i].stock :
+                config.defines.economy.resource_base_stock
+            };
+          }
 
     //Declare tracker variables
     if (!main.last_backup) main.last_backup = new Date().getTime();

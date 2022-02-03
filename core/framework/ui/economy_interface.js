@@ -124,7 +124,7 @@ module.exports = {
     game_obj.main_change = true;
   },
 
-  printInventory: function (arg0_user) { //[WIP]
+  printInventory: function (arg0_user) {
     //Convert from parameters
     var user_id = arg0_user;
 
@@ -143,6 +143,8 @@ module.exports = {
 
     //Format embed
     inventory_string.push(`**[Back]**`);
+    inventory_string.push("");
+    inventory_string.push(`${config.icons.money} Money: **${parseNumber(usr.money)}**`);
     inventory_string.push("");
     inventory_string.push(`${config.icons.trade} **Current Goods:**`);
     inventory_string.push(`${config.localisation.divider}`);
