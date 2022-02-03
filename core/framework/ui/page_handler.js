@@ -423,6 +423,27 @@ module.exports = {
 
             break;
         }
+
+        //[Chop (#)]
+        if (input.startsWith("chop ")) {
+          var amount_to_chop = parseInt(input.replace("chop ", "").trim());
+
+          mine(actual_id, amount_to_chop, "chop");
+        }
+
+        //[Mine (#)]
+        if (input.startsWith("mine ")) {
+          var amount_to_mine = parseInt(input.replace("mine ", "").trim());
+
+          mine(actual_id, amount_to_mine, "mine");
+        }
+
+        //[Quarry (#)]
+        if (input.startsWith("quarry ")) {
+          var amount_to_quarry = parseInt(input.replace("quarry ", "").trim());
+
+          mine(actual_id, amount_to_quarry, "quarry");
+        }
       }
 
       if (game_obj.page == "view_customisation") {
