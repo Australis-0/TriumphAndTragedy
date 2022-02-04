@@ -118,7 +118,9 @@ module.exports = {
 
           if (!alert_obj.buttons[i].hide_description)
             if (alert_obj.buttons[i].description)
-              alert_string.push(`\n${parseLocalisation(alert_obj.buttons[i].description.join("\n• "))}`);
+              (typeof alert_obj.buttons[i].description == "array") ?
+                alert_string.push(`\n${parseLocalisation(alert_obj.buttons[i].description.join("\n• "))}`) :
+                alert_string.push(`\n${parseLocalisation(alert_obj.buttons[i].description)}`);
         }
 
       //Format embed

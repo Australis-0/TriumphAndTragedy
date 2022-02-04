@@ -32,8 +32,8 @@ module.exports = {
                 getBuildingSlots(actual_id, city_name, raw_building_name) :
                 getBuildingSlots(actual_id, city_name, raw_category_name);
 
-              if (building_slots.available_slots > 0 || building_slots.available_slots == -1) {
-                if (building_slots.available_slots >= building_amount || building_slots.available_slots == -1) {
+              if (building_slots.available_slots > 0 || building_slots.total_slots == -1) {
+                if (building_slots.available_slots >= building_amount || building_slots.total_slots == -1) {
                   //Check if user has enough resources to construct the specified buildings
                   var building_costs = getBuildingCost(actual_id, raw_building_name, { amount: building_amount });
                   var resource_shortages = {};
