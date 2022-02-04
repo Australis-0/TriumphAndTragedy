@@ -117,10 +117,13 @@ module.exports = {
           alert_string.push(`**[${alert_obj.buttons[i].name}]**`);
 
           if (!alert_obj.buttons[i].hide_description)
-            if (alert_obj.buttons[i].description)
-              (typeof alert_obj.buttons[i].description == "array") ?
-                alert_string.push(`\n${parseLocalisation(alert_obj.buttons[i].description.join("\n• "))}`) :
-                alert_string.push(`\n${parseLocalisation(alert_obj.buttons[i].description)}`);
+            if (alert_obj.buttons[i].description) {
+              console.log(alert_obj.buttons[i].description);
+
+              (Array.isArray(alert_obj.buttons[i].description)) ?
+                alert_string.push(`\n${parseLocalisation(alert_obj.buttons[i].description.join("\n• "), { scopes: alert_obj.options })}`) :
+                alert_string.push(`\n${parseLocalisation(alert_obj.buttons[i].description, { scopes: alert_obj.options })}`);
+            }
         }
 
       //Format embed
