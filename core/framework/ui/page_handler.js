@@ -213,7 +213,7 @@ module.exports = {
               ]
             },
             function (arg) {
-              build(user_id, getCity(city_name).name, arg[1], arg[0]);
+              demolish(user_id, getCity(city_name).name, arg[1], arg[0]);
             });
 
             break;
