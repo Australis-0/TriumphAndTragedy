@@ -10,6 +10,7 @@ module.exports = {
     var actual_id = main.global.user_map[user_id];
     var building_category = getBuildingCategory(raw_building_category, { return_key: true });
     var city_obj = getCity(city_name, { users: actual_id });
+    var usr = main.users[actual_id];
 
     //Check if city exists in the first place
     if (city_obj) {
