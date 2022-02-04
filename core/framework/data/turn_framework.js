@@ -808,7 +808,7 @@ module.exports = {
 
         if (usr.country_age > 10) {
           //Check for dice roll and low party popularity
-          var dice_roll = randomNumber(0, 100);
+          var dice_roll = randomNumber(0, 100)/100;
 
           for (var i = 0; i < all_governments.length; i++)
             if (usr.politics[all_governments[i]].popularity >= 0.30)
