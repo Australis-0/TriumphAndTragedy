@@ -7,12 +7,13 @@ module.exports = {
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
     var all_governments = Object.keys(config.governments);
-    var current_government = config.governments[usr.government];
     var game_obj = getGameObject(user_id);
     var options = (arg2_options) ? arg2_options: {};
     var raw_reform_name = getReform(reform_name, { return_key: true });
     var reform_obj = getReform(reform_name);
     var usr = main.users[actual_id];
+    
+    var current_government = config.governments[usr.government];
 
     //Check if government can actually pass a reform or not
     if (!current_government.effect.disabled_reforms) {

@@ -168,6 +168,7 @@ module.exports = {
         }
       } else if (game_obj.page.startsWith("view_city")) {
         var city_name = game_obj.page.replace("view_city_", "");
+        var city_obj = getCity(city_name);
 
         switch (input) {
           case "back":
@@ -180,10 +181,10 @@ module.exports = {
             break;
           case "build":
             visualPrompt(game_obj.alert_embed, user_id, {
-              title: `Constructing Building(s) in ${getCity(city_name).name}:`,
+              title: `Constructing Building(s) in ${city_obj.name}:`,
               prompts: [
                 [`What would you like to build in your city?\n\nType **[Build List]** for a list of valid buildings.`, "string"],
-                [`How many buildings of this type would you like to begin building?`, "number", { min: 0 }]
+                [`How many buildings of this type would you like to begin building?`, "number", { min: 1 }]
               ]
             },
             function (arg) {
@@ -200,6 +201,19 @@ module.exports = {
 
                   break;
               }
+            });
+
+            break;
+          case "demolish":
+            visualPrompt(game_obj.alert_embed, user_id, {
+              title: `Demolishing Building(s) in ${city_obj.name}:`,
+              prompts: [
+                [`What sort of building would you like to demolish in **${city_obj.name}**?`, "string"],
+                [`How many buildings of this type would you like to get rid of?`, "number", { min: 1 }]
+              ]
+            },
+            function (arg) {
+              build(user_id, getCity(city_name).name, arg[1], arg[0]);
             });
 
             break;
