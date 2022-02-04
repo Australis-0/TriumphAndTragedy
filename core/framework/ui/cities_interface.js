@@ -65,7 +65,7 @@ module.exports = {
     });
   },
 
-  printCity: function (arg0_user, arg1_name) { //[WIP] - Add under_construction later
+  printCity: function (arg0_user, arg1_name) {
     //Convert from parameters
     var user_id = arg0_user;
     var city_name = arg1_name;
@@ -148,7 +148,7 @@ module.exports = {
             var all_buildings_in_category = Object.keys(local_building_category);
 
             //Generate and push header to page
-            (local_building_slots.available_slots != -1) ?
+            (!local_building_category.disable_slots) ?
               city_string.push(`- **${parseString(all_building_categories[i])}:** (${parseNumber(local_building_slots.total_buildings + local_building_slots.total_buildings_under_construction)}/${parseNumber(local_building_slots.total_slots)}) ${special_string}`) :
               city_string.push(` - **${parseString(all_building_categories[i])}:** ${special_string}`);
 
