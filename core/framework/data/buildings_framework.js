@@ -66,6 +66,8 @@ module.exports = {
       if (province_obj.buildings)
         if (building_obj)
           if (!isNaN(amount)) {
+            var usr = main.users[province_obj.owner];
+            
             //Supply limit handler
             if (building_obj.supply_limit) {
               var local_user = main.users[province_obj.controller];
@@ -101,16 +103,16 @@ module.exports = {
                 }
               }
             }
+
+            //Make sure user's available pops can't be less than zero
+            var all_pops = Object.keys(config.pops);
+
+            for (var i = 0; i < all_pops.length; i++)
+              usr.pops[`used_${all_pops[i]}`] = Math.max(0, usr.pops[`used_${all_pops[i]}`]);
+
+            //Return statement
+            return freed_manpower;
           }
-
-      //Make sure user's available pops can't be less than zero
-      var all_pops = Object.keys(config.pops);
-
-      for (var i = 0; i < all_pops.length; i++)
-        usr.pops[`used_${all_pops[i]}`] = Math.max(0, usr.pops[`used_${all_pops[i]}`]);
-
-      //Return statement
-      return freed_manpower;
   },
 
   /*
