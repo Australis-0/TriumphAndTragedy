@@ -699,6 +699,12 @@ module.exports = {
           }
         }
 
+        //Party popularity handler
+        if (most_popular_party[1] == "") {
+          usr.politics[usr.government].popularity = 1;
+          most_popular_party = [1, usr.government];
+        }
+
         var most_popular_party_obj = usr.politics[most_popular_party[1]];
 
         most_popular_party_obj.popularity = Math.max(most_popular_party_obj.popularity, 0);

@@ -135,7 +135,7 @@ module.exports = {
           capital_index = i;
 
       if (capital_index)
-        moveElement(all_owned_cities, i, 0);
+        moveElement(all_owned_cities, capital_index, 0);
 
       //Return statement
       return all_owned_cities;
