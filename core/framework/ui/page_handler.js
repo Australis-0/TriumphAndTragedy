@@ -30,7 +30,7 @@ module.exports = {
               var alert_obj = usr.alerts[local_alert_id];
 
               //Print alert and set page
-              printAlert(user_id, alert_obj);
+              printUserAlert(user_id, alert_obj);
               game_obj.page = `alert_${local_alert_id}`;
             }
           }
@@ -38,24 +38,29 @@ module.exports = {
           //[Back]
           if (input == "back") {
             game_obj.page = "country_interface";
-            module.exports.initialiseTopbar(user_id);
+            initialiseTopbar(user_id);
             printStats(user_id);
           }
 
           //[Jump To Page]
-          visualPrompt(game_obj.alert_embed, user_id, {
-            title: `Jump To Page:`,
-            prompts: [
-              [`Which page would you like to jump to?`, "number", { min: 1, max: printAlerts(game_obj.user).length }]
-            ]
-          },
-          function (arg) {
-            createPageMenu(game_obj.middle_embed, {
-              embed_pages: printAlerts(game_obj.user),
-              page: arg[0] - 1,
-              user: game_obj.user
+          if (input == "jump to page")
+            visualPrompt(game_obj.alert_embed, user_id, {
+              title: `Jump To Page:`,
+              prompts: [
+                [`Which page would you like to jump to?`, "number", { min: 1, max: printAlerts(game_obj.user).length }]
+              ]
+            },
+            function (arg) {
+              createPageMenu(game_obj.middle_embed, {
+                embed_pages: printAlerts(game_obj.user),
+                page: arg[0] - 1,
+                user: game_obj.user
+              });
             });
-          });
+
+          //[View Alert]
+          if (input == "view alert")
+            initialisePrintAlert(user_id);
 
         } else if (game_obj.page.startsWith("alert_")) {
           var current_alert_id = game_obj.page.replace("alert_", "");
