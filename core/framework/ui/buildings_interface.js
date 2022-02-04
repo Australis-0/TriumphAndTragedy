@@ -148,10 +148,12 @@ module.exports = {
           }
 
           //Custom localisation
-          if (building_obj.houses)
-            production_string += ` ¦ Houses ${parseNumber(building_obj.houses)}`;
           if (building_obj.description)
             production_string += ` ¦ ${building_obj.description}`;
+          if (building_obj.houses)
+            production_string += ` ¦ Houses ${parseNumber(building_obj.houses)}`;
+          if (building_obj.modifiers)
+            production_string += ` ¦ ${parseModifiers(building_obj.modifiers, true)}`;
 
           //Manpower string
           if (manpower_array.length > 0)

@@ -28,6 +28,12 @@ module.exports = {
             if (building_obj.modifiers)
               applyModifiers(local_province.owner, building_obj.modifiers);
 
+            //Housing modifier
+            if (building_obj.housing)
+              local_province.housing = (local_province.housing) ?
+                local_province.housing + building_obj.housing*amount :
+                building_obj.housing*amount;
+
             //Supply limit handler
             if (building_obj.supply_limit) {
               var supplied_provinces = getProvincesInRange(province_id, config.defines.combat.infrastructure_range);

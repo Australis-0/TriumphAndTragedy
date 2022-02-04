@@ -272,13 +272,15 @@ module.exports = {
   },
 
   //Parses modifiers to a string
-  parseModifiers: function (arg0_modifier_obj) {
+  parseModifiers: function (arg0_modifier_obj, arg1_exclude_bullets) {
     //Convert from parameters
     var modifier_obj = arg0_modifier_obj;
+    var exclude_bullets = arg1_exclude_bullets;
 
     //Declare local instance variables
     var all_modifier_keys = Object.keys(modifier_obj);
     var modifier_string = [];
+    var prefix = (!exclude_bullets) ? "• " : "";
 
     //Format modifier_string
     for (var i = 0; i < all_modifier_keys.length; i++) {
@@ -298,7 +300,7 @@ module.exports = {
       switch (local_modifier.type) {
         case "integer":
           //Parse modifier as integer
-          modifier_string.push(`• **${parseNumber(local_value[0], { display_prefix: true })}** ${local_modifier_name}`);
+          modifier_string.push(`${prefix}**${parseNumber(local_value[0], { display_prefix: true })}** ${local_modifier_name}`);
 
           break;
         case "percentage":
@@ -315,7 +317,7 @@ module.exports = {
                     local_value[i]
                 )
 
-              modifier_string.push(`• Obsoletes **${building_names.join(", ")}**`);
+              modifier_string.push(`${prefix}Obsoletes **${building_names.join(", ")}**`);
 
               break;
             case "obsolete_government":
@@ -327,7 +329,7 @@ module.exports = {
                     local_value[i]
                 )
 
-              modifier_string.push(`• Obsoletes **${government_names.join(", ")}**`);
+              modifier_string.push(`${prefix}Obsoletes **${government_names.join(", ")}**`);
 
               break;
             case "obsolete_reform":
@@ -339,7 +341,7 @@ module.exports = {
                     local_value[i]
                 );
 
-              modifier_string.push(`• Obsoletes **${reform_names.join(", ")}**`);
+              modifier_string.push(`${prefix}Obsoletes **${reform_names.join(", ")}**`);
 
               break;
             case "obsolete_unit":
@@ -351,7 +353,7 @@ module.exports = {
                     local_value[i]
                 );
 
-              modifier_string.push(`• Obsoletes **${unit_names.join(", ")}**`);
+              modifier_string.push(`${prefix}Obsoletes **${unit_names.join(", ")}**`);
 
               break;
 
@@ -364,7 +366,7 @@ module.exports = {
                     local_value[i]
                 );
 
-              modifier_string.push(`• Enables **${building_names.join(", ")}**`);
+              modifier_string.push(`${prefix}Enables **${building_names.join(", ")}**`);
 
               break;
             case "unlock_government":
@@ -376,7 +378,7 @@ module.exports = {
                     local_value[i]
                 );
 
-              modifier_string.push(`• Unlocks **${government_names.join(", ")}**`);
+              modifier_string.push(`${prefix}Unlocks **${government_names.join(", ")}**`);
 
               break;
             case "unlock_reform":
@@ -388,7 +390,7 @@ module.exports = {
                     local_value[i]
                 );
 
-              modifier_string.push(`• Unlocks **${reform_names.join(", ")}**`);
+              modifier_string.push(`${prefix}Unlocks **${reform_names.join(", ")}**`);
 
               break;
             case "unlock_unit":
@@ -400,13 +402,13 @@ module.exports = {
                     local_value[i]
                 );
 
-              modifier_string.push(`• Enables **${unit_names.join(", ")}**`);
+              modifier_string.push(`${prefix}Enables **${unit_names.join(", ")}**`);
 
               break;
 
             //Default parser
             default:
-              modifier_string.push(`• **${printPercentage(local_value[0], { display_prefix: true })}** ${local_modifier_name}`);
+              modifier_string.push(`${prefix}**${printPercentage(local_value[0], { display_prefix: true })}** ${local_modifier_name}`);
 
               break;
           }
