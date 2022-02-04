@@ -12,8 +12,19 @@ module.exports = {
     //Check if Colonial Charter ID even exists
     if (!isNaN(parseInt(charter_id))) {
       if (usr.expeditions[charter_id]) {
+        var local_expedition = usr.expeditions[charter_id];
+        var unit_obj = getUnit(local_expedition.unit_type);
+
         //Print user feedback
         printAlert(game_obj.id, `You have removed Colonial Charter **#${charter_id}** from your current colonisation efforts.`);
+
+        //Remove any manpower_cost
+        if (unit_obj.manpower_cost) {
+          var all_manpower_costs = Object.keys(unit_obj.manpower_cost);
+
+          for (var i = 0; i < all_manpower_costs.length; i++)
+            usr.pops[`used_${all_manpower_costs[i]]}`] -= unit_obj.manpower_cost[all_manpower_costs[i]];
+        }
 
         //Delete from expeditions object
         delete usr.expeditions[charter_id];
