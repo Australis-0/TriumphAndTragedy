@@ -11,12 +11,12 @@ module.exports = {
     visualPrompt(game_obj.alert_embed, user_id, {
       title: `Rename Culture Adjective:`,
       prompts: [
-        [`Which primary culture inside of your country would you like to change the demonym of? Please specify the name, not the adjective.\n\nType **[View Cultures]** for a full list of domestic cultures. Please note that you may only change the adjective of your primary culture(s).`, "string"],
+        [`Which primary culture inside of your country would you like to change the demonym of?\n\nType **[View Cultures]** for a full list of domestic cultures. You may only change the adjective of your primary culture(s).`, "string"],
         [`What would you like to rename this culture's adjective to?`, "string"]
       ]
     },
     function (arg) {
-      module.exports.initialiseRenameCultureAdjective(user_id, arg[0], arg[1]);
+      module.exports.renameCultureAdjective(user_id, arg[0], arg[1]);
     },
     function (arg) {
       switch (arg) {

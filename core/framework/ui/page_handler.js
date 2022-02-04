@@ -1387,6 +1387,7 @@ module.exports = {
     //Politics page handler
     {
       switch (game_obj.page) {
+        case "cultures":
         case "culture":
           //Button handler
           //[Add Accepted Culture]
