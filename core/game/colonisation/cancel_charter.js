@@ -11,16 +11,16 @@ module.exports = {
 
     //Check if Colonial Charter ID even exists
     if (!isNaN(parseInt(charter_id))) {
-      if (usr.expeditions[actual_id]) {
+      if (usr.expeditions[charter_id]) {
         //Print user feedback
         printAlert(game_obj.id, `You have removed Colonial Charter **#${charter_id}** from your current colonisation efforts.`);
+
+        //Delete from expeditions object
+        delete usr.expeditions[charter_id];
 
         //Update colonisation UI if currently active
         if (game_obj.page == "colonisation")
           printColonisation(user_id);
-
-        //Delete from expeditions object
-        delete usr.expeditions[actual_id];
       } else {
         printError(game_obj.id, `The Colonial Charter you have specified, **#${charter_id}**, turned out to be nonexistent! Try checking your list of ongoing colonial expeditions before issuing this command again.`);
       }

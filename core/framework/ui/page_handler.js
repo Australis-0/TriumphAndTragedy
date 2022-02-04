@@ -277,9 +277,10 @@ module.exports = {
           //Button handler
           //[Cancel Charter #(Charter ID)]
           if (input.startsWith("cancel charter ")) {
-            var charter_to_cancel = input
-              .replace("cancel charter ", "")
+            var charter_to_cancel = input.replace("cancel charter ", "")
               .replace("#", "");
+
+            console.log(charter_to_cancel);
 
             cancelCharter(user_id, charter_to_cancel);
           } else if (input == "cancel charter") {
