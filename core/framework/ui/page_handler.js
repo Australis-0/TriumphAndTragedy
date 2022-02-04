@@ -31,7 +31,7 @@ module.exports = {
 
               //Print alert and set page
               printUserAlert(user_id, alert_obj);
-              game_obj.page = `alert_${local_alert_id}`;
+              game_obj.page = `alert_${local_alert_id - 1}`;
             }
           }
 
@@ -63,7 +63,7 @@ module.exports = {
             initialisePrintAlert(user_id);
 
         } else if (game_obj.page.startsWith("alert_")) {
-          var current_alert_id = game_obj.page.replace("alert_", "");
+          var current_alert_id = parseInt(game_obj.page.replace("alert_", ""));
 
           var alert_obj = usr.alerts[current_alert_id];
 

@@ -104,8 +104,12 @@ module.exports = {
     var alert_string = [];
 
     //Add date string instead of just time remaining
-    alert_string.push(` - ${getDate(alert_obj.date)}`);
+    alert_string.push(`---`);
+    alert_string.push("");
+    alert_string.push(` - **${getDate(alert_obj.date)}**`);
     alert_string.push(` - ${config.icons.time} **${parseNumber(alert_obj.duration)}** turn(s) remaining`);
+    alert_string.push("");
+    alert_string.push(`---`);
     alert_string.push("");
 
     if (!alert_obj.news_alert) {
