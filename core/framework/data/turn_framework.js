@@ -408,17 +408,18 @@ module.exports = {
           //Decrease duration
           local_expedition.duration--;
 
-          if (local_expedition.duration < 1)
+          if (local_expedition.duration < 1) {
             for (var x = 0; x < local_expedition.provinces.length; x++) {
               //Check to see if province already has an owner, if not, settle it
               var local_province = main.provinces[local_expedition.provinces[x]];
 
               if (!local_province.owner)
                 settleProvince(local_expedition.provinces[x], actual_id);
-
-              //Remove expedition key
-              delete local_expedition;
             }
+
+            //Remove expedition key
+            delete usr.expeditions[all_expeditions[i]];
+          }
         }
     }
 
