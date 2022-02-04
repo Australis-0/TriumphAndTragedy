@@ -67,7 +67,7 @@ module.exports = {
         if (building_obj)
           if (!isNaN(amount)) {
             var usr = main.users[province_obj.owner];
-            
+
             //Supply limit handler
             if (building_obj.supply_limit) {
               var local_user = main.users[province_obj.controller];
@@ -80,27 +80,29 @@ module.exports = {
                   local_province.supply_limit - building_obj.supply_limit*amount :
                   0;
               }
+            }
 
-              //Splice from buildings array
-              for (var i = province_obj.buildings.length - 1; i >= 0; i--)
-                if (amount > 0)
-                  if (province_obj.buildings[i].building_type == raw_building_name)
-                    province_obj.buildings.splice(i, 1);
-
-              //Free up manpower
-              if (building_obj.manpower_cost) {
-                var all_manpower_costs = Object.keys(building_obj.manpower_cost);
-
-                for (var i = 0; i < all_manpower_costs.length; i++) {
-                  var local_manpower_cost = building_obj.manpower_cost[all_manpower_costs[i]];
-
-                  local_user.pops[`used_${all_manpower_costs[i]}`] -= local_manpower_cost*amount;
-
-                  //Add to tracker variable
-                  freed_manpower[all_manpower_costs[i]] = (freed_manpower[all_manpower_costs[i]]) ?
-                    freed_manpower[all_manpower_costs[i]] + local_manpower_cost*amount :
-                    local_manpower_cost*amount;
+            //Splice from buildings array
+            for (var i = province_obj.buildings.length - 1; i >= 0; i--)
+              if (amount > 0)
+                if (province_obj.buildings[i].building_type == raw_building_name) {
+                  province_obj.buildings.splice(i, 1);
+                  amount--;
                 }
+
+            //Free up manpower
+            if (building_obj.manpower_cost) {
+              var all_manpower_costs = Object.keys(building_obj.manpower_cost);
+
+              for (var i = 0; i < all_manpower_costs.length; i++) {
+                var local_manpower_cost = building_obj.manpower_cost[all_manpower_costs[i]];
+
+                local_user.pops[`used_${all_manpower_costs[i]}`] -= local_manpower_cost*amount;
+
+                //Add to tracker variable
+                freed_manpower[all_manpower_costs[i]] = (freed_manpower[all_manpower_costs[i]]) ?
+                  freed_manpower[all_manpower_costs[i]] + local_manpower_cost*amount :
+                  local_manpower_cost*amount;
               }
             }
 

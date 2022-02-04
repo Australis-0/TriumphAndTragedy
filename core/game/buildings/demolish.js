@@ -25,7 +25,7 @@ module.exports = {
             for (var i = 0; i < city_obj.buildings.length; i++)
               if (city_obj.buildings[i].building_type == raw_building_name)
                 total_buildings++;
-            
+
             if (total_buildings >= amount) {
               if (amount > 0) {
                 var demolished_buildings = destroyBuilding(amount, raw_building_name, city_obj.id);
@@ -50,8 +50,8 @@ module.exports = {
 
                 //Print user feedback
                 (all_freed_pops.length > 0) ?
-                  printAlert(game_obj.id, `${parseNumber(amount)} ${(building_obj.name) ? building_obj.name : raw_building_name} were demolished. You were refunded ${parseList(freed_pops)}, and **${parseNumber(amount)}** building slots were freed up.`) :
-                  printAlert(game_obj.id, `${parseNumber(amount)} ${(building_obj.name) ? building_obj.name : raw_building_name} were demolished.`);
+                  printAlert(game_obj.id, `${(building_obj.icon) ? config.icons[building_obj.icon] + " " : ""}**${parseNumber(amount)}** ${(building_obj.name) ? building_obj.name : raw_building_name} were demolished. You were refunded ${parseList(freed_pops)}, and **${parseNumber(amount)}** building slots were freed up.`) :
+                  printAlert(game_obj.id, `${(building_obj.icon) ? config.icons[building_obj.icon] + " " : ""}**${parseNumber(amount)}** ${(building_obj.name) ? building_obj.name : raw_building_name} were demolished.`);
               } else if (amount == 0) {
                 printError(game_obj.id, `You can't demolish zero **${(building_obj.name) ? building_obj.name : raw_building_name}! How does that make any sense?`);
               } else {
