@@ -425,9 +425,7 @@ module.exports = {
 
     //Construction processing
     {
-      var construction_requests_to_remove = [];
-
-      for (var i = 0; i < usr.under_construction.length; i++) {
+      for (var i = usr.under_construction.length - 1; i >= 0; i--) {
         usr.under_construction[i].construction_turns--;
 
         //Check if building(s) are done being built
@@ -440,13 +438,9 @@ module.exports = {
               constructBuilding(usr.under_construction[i].building_amount, usr.under_construction[i].building_type, usr.under_construction[i].province_id);
 
           //Remove element from array
-          construction_requests_to_remove.push(i);
+          usr.under_construction.splice(i, 1);
         }
       }
-
-      //Remove constructed requests
-      for (var i = construction_requests_to_remove.length - 1; i >= 0; i--)
-        usr.under_construction.splice(construction_requests_to_remove[i], 1);
     }
 
     //Diplomacy processing
