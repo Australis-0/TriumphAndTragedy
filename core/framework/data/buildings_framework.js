@@ -60,6 +60,7 @@ module.exports = {
     var freed_manpower = {};
     var province_obj = main.provinces[province_id];
     var raw_building_name = module.exports.getBuilding(building_name, { return_key: true });
+    var remaining_amount = JSON.parse(JSON.stringify(amount));
 
     //Remove buildings from local province
     if (province_obj)
@@ -84,10 +85,10 @@ module.exports = {
 
             //Splice from buildings array
             for (var i = province_obj.buildings.length - 1; i >= 0; i--)
-              if (amount > 0)
+              if (remaining_amount > 0)
                 if (province_obj.buildings[i].building_type == raw_building_name) {
                   province_obj.buildings.splice(i, 1);
-                  amount--;
+                  remaining_amount--;
                 }
 
             //Free up manpower
@@ -97,7 +98,7 @@ module.exports = {
               for (var i = 0; i < all_manpower_costs.length; i++) {
                 var local_manpower_cost = building_obj.manpower_cost[all_manpower_costs[i]];
 
-                local_user.pops[`used_${all_manpower_costs[i]}`] -= local_manpower_cost*amount;
+                usr.pops[`used_${all_manpower_costs[i]}`] -= local_manpower_cost*amount;
 
                 //Add to tracker variable
                 freed_manpower[all_manpower_costs[i]] = (freed_manpower[all_manpower_costs[i]]) ?

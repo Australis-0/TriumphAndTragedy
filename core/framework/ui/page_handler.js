@@ -132,10 +132,16 @@ module.exports = {
           if (arg.length > 1) {
             //Process city_name by removing initial argument and print city
             var city_name = input.replace("view", "").trim();
-            createPageMenu(game_obj.middle_embed, {
-              embed_pages: printCity(game_obj.user, city_name),
-              user: game_obj.user
-            });
+            var city_obj = getCity(city_name, { users: actual_id });
+
+            if (city_obj) {
+              createPageMenu(game_obj.middle_embed, {
+                embed_pages: printCity(game_obj.user, city_name),
+                user: game_obj.user
+              });
+
+              game_obj.page = `view_city_${city_obj.name}`;
+            }
           } else {
             initialisePrintCity(game_obj.user, game_obj.id);
           }
