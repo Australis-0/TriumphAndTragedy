@@ -53,11 +53,6 @@ module.exports = {
     var all_provinces = Object.keys(main.provinces);
     var all_wars = Object.keys(main.global.wars);
 
-    //Map rendering
-    {
-      forceRender("political");
-    }
-
     //War processing
     {
       //Iterate over all provinces to check occupation risk
@@ -253,6 +248,11 @@ module.exports = {
         //War exhaustion
         if (all_enemies.length == 0 && !usr.blockaded.is_blockaded && !usr.mobilisation.is_mobilised)
           usr.modifiers.war_exhaustion -= config.defines.combat.war_exhaustion_tickdown_rate;
+      }
+
+      //Economic modifiers
+      {
+        usr.transactions_this_turn = 0;
       }
 
       //Population modifiers/trackers

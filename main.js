@@ -398,6 +398,8 @@ setInterval(function(){
     for (var i = 0; i < all_users.length; i++)
       nextTurn(all_users[i]);
 
+    //Force render maps after turn processing
+    forceRender("political");
     main.round_count++;
   }
 
