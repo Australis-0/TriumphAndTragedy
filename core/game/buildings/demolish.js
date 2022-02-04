@@ -23,10 +23,10 @@ module.exports = {
             var total_buildings = 0;
 
             for (var i = 0; i < city_obj.buildings.length; i++)
-              if (city_obj.buiildings[i].building_type == raw_building_name)
+              if (city_obj.buildings[i].building_type == raw_building_name)
                 total_buildings++;
-
-            if (total_buildings < amount) {
+            
+            if (total_buildings >= amount) {
               if (amount > 0) {
                 var demolished_buildings = destroyBuilding(amount, raw_building_name, city_obj.id);
 
