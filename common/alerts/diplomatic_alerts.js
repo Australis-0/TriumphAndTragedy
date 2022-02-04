@@ -40,7 +40,7 @@ config.alerts.diplomacy = {
       }
     },
     btn_guarantee_negative_relations: {
-      name: "How patronising!"
+      title: "How patronising!"
     }
   },
 
@@ -65,7 +65,7 @@ config.alerts.diplomacy = {
       }
     },
     btn_decline_non_aggression: {
-      name: "We respectfully decline the offer.",
+      title: "We respectfully decline the offer.",
       ai_chance: 100,
       effect: function (options) {
         sendAlert(options.FROM, "an_uneasy_peace", {
@@ -81,7 +81,7 @@ config.alerts.diplomacy = {
     description: "{TO.name} is cheering her new friend, {FROM.name} tonight. It comes as our diplomatic standing in the world is beginning to increase, and we hope that these well-made connections with other foreign powers can help protect our own people.",
 
     btn_alliance_accepted: {
-      name: "We shall accomplish much together.",
+      title: "We shall accomplish much together.",
       ai_chance: 100,
       effect: function (options) {
         addTemporaryModifier(options.FROM, {
@@ -98,7 +98,7 @@ config.alerts.diplomacy = {
     description: "We were informed by a diplomatic envoy from {FROM.name} that our alliance has expired today. Our government worries, however, that it could be the start of colder diplomatic relations between our two nations.",
 
     btn_alliance_broken: {
-      name: "What could we have done?"
+      title: "What could we have done?"
     }
   },
 
@@ -116,7 +116,7 @@ config.alerts.diplomacy = {
     description: "We have received an official diplomatic delegation from {FROM.name}. They are requesting our mutual aid and support in military and economic affairs, and a formal agreement regarding an alliance. How should our government respond?",
 
     btn_accept_alliance: {
-      name: "It is in our best interest to conclude an alliance.",
+      title: "It is in our best interest to conclude an alliance.",
       effect: function (options) {
         var TO_USER = main.users[options.TO];
 
@@ -129,7 +129,7 @@ config.alerts.diplomacy = {
       }
     },
     btn_decline_alliance: {
-      name: "Respectfully decline the offer for now.",
+      title: "Respectfully decline the offer for now.",
       effect: function (options) {
         var FROM_USER = main.users[options.FROM];
 
@@ -152,13 +152,13 @@ config.alerts.diplomacy = {
     description: "{FROM.name} is offering us peace in exchange for the terms listed below for the **{LOCAL.war_name}**. We have the option to either accept or deny this.\n\n---\n\n{LOCAL.peace_treaty_string}",
 
     btn_accept_conditional_peace: {
-      name: "We accept this offer.",
+      title: "We accept this offer.",
       effect: function (options) {
         parsePeaceTreaty(options.LOCAL.war_name, options.LOCAL.peace_treaty);
       }
     },
     btn_decline_conditional_peace: {
-      name: "And they call it ''peace''?",
+      title: "And they call it ''peace''?",
       description: [
         "The war rages on .."
       ]
@@ -170,7 +170,7 @@ config.alerts.diplomacy = {
     description: "An uneasy peace is now forming between us and {FROM.name} as the former has refused our requests for a non-aggression pact, which would surely be mutually beneficial to us both! Perhaps they have something to hide, and if they do, we'd better be ready ...",
 
     btn_an_uneasy_peace: {
-      name: "Stand vigilant."
+      title: "Stand vigilant."
     }
   },
 
@@ -185,7 +185,7 @@ config.alerts.diplomacy = {
       }
     },
     btn_decline_call_to_arms: {
-      name: "We can't afford this war.",
+      title: "We can't afford this war.",
       effect: function (options) {
         var FROM_USER = main.users[options.FROM];
         var TO_USER = main.users[options.TO];
@@ -204,7 +204,7 @@ config.alerts.diplomacy = {
     description: "{FROM.name} has rescinded their guarantee for our nation. It seems that they no longer wish to be friends with our great and mighty nation. Whatever the case, our military and our diplomats shall always be standing by at your service.",
 
     btn_guarantee_broken: {
-      name: "Shame."
+      title: "Shame."
     }
   },
 
@@ -213,7 +213,7 @@ config.alerts.diplomacy = {
     description: "Our non-aggression pact with {0} has expired, and our secretaries are urging for you to renew the pact with **{0}** in order to preserve peace and stability in the region and for our peoples. On the other hand, we could use it as an opportunity to attack, if we so desire ...",
 
     btn_non_aggression_pact_expired: {
-      name: "Alright. Next brief, please!"
+      title: "Alright. Next brief, please!"
     }
   },
 
@@ -222,7 +222,7 @@ config.alerts.diplomacy = {
     description: "{FROM.name} is proposing to be able to move troops through our territory! Our advisors believe that it will likely have a negative impact on the stability of certain regions of our country, however, some advisors also say that the best option may simply be to yield into {FROM.name}'s demands. How should we respond?",
 
     btn_accept_military_access: {
-      name: "Let them march through.",
+      title: "Let them march through.",
       effect: function (options) {
         modifyRelations(options.TO, {
           target: options.FROM,
@@ -237,7 +237,7 @@ config.alerts.diplomacy = {
     },
 
     btn_decline_military_access: {
-      name: "They'll march through when we're dead!"
+      title: "They'll march through when we're dead!"
     }
   },
 
@@ -246,7 +246,7 @@ config.alerts.diplomacy = {
     description: "Our nation is now locked in a state of war that threatens to consume our country. Our old friend, {FROM.name}, has promised to help us in this struggle. Our diplomats and envoys are standing by. What should we do?",
 
     btn_request_support: {
-      name: "We need every friend we can get.",
+      title: "We need every friend we can get.",
       description: "**{FROM.name}** may join the war.",
       effect: function (options) {
         var TO_USER = main.users[options.TO];
@@ -266,12 +266,12 @@ config.alerts.diplomacy = {
       }
     },
     btn_decline_support: {
-      name: "We shall fight alone."
+      title: "We shall fight alone."
     }
   },
 
   pouring_over_the_maps: {
-    name: "Pouring Over The Maps.",
+    title: "Pouring Over The Maps.",
     description: "Somewhere in High Command sits a map that countless generals have spent years working on, that countless agents of our intelligence have been working for, a map littered with arrows stabbing into the heart of the {FROM.name} nation. They've refused to be rightfully incorporated into our burgeoning nation, so now we must give them war.",
 
     btn_accept_anschluss_cb: {
@@ -287,7 +287,7 @@ config.alerts.diplomacy = {
       }
     },
     btn_decline_anschluss_cb: {
-      name: "Call it off."
+      title: "Call it off."
     }
   },
 
@@ -296,7 +296,7 @@ config.alerts.diplomacy = {
     description: "Relations between us and {FROM.name} have never been colder. Diplomatic relations have been suspended, and our forces are marching to the border immediately. Our citizens are growing more and more eager to view them, if not as rivals, then at least as enemies.",
 
     btn_rival_declared: {
-      name: "It's either us or them.",
+      title: "It's either us or them.",
       effect: function (options) {
         modifyRelations(options.TO, {
           target: options.FROM,
@@ -311,7 +311,7 @@ config.alerts.diplomacy = {
     description: "Although we were the protectorate of {FROM.name}, the last thing we expected them to do was to betray that trust and request our annexation! However, we have just received word that their armies on our doorstep, and refusing their request to annex us could result in open conflict. What shall we do?",
 
     btn_decline_annexation: {
-      name: "Those bloody backstabbers!",
+      title: "Those bloody backstabbers!",
       effect: function (options) {
         var FROM_USER = main.users[options.FROM];
 
@@ -338,7 +338,7 @@ config.alerts.diplomacy = {
     },
 
     btn_accept_annexation: {
-      name: "We have no choice. Goodbye, cruel world!",
+      title: "We have no choice. Goodbye, cruel world!",
       effect: function (options) {
         inherit(options.TO, options.FROM);
       }
@@ -350,7 +350,7 @@ config.alerts.diplomacy = {
     description: "War exhaustion in our countries and in those of our allies have finally reached record highs. With the enemy willing to talk peace terms, we have no choice but to concede to their demands, whatever they may be. Let us hope that they shall be merciful.",
 
     btn_the_national_disaster: {
-      name: "It's over ... I can't believe it's over.",
+      title: "It's over ... I can't believe it's over.",
       description: [
         "We now have to obey the diktats of our enemies."
       ]
@@ -362,7 +362,7 @@ config.alerts.diplomacy = {
     description: "Diplomats in our country are hastily screening over {FROM.name}'s proposal, which if accepted, could drastically change the future of our nation. {FROM.name} promises to deliver us economic and military support in exchange for, well let's just say ... our independence. We would have to be a subservient client state to {FROM.name} in order for them to provide this aid. We could of course decline, but that might anger {FROM.name}'s envoys.",
 
     btn_accept_vassalisation: {
-      name: "This is a diplomatic insult!",
+      title: "This is a diplomatic insult!",
       effect: function (options) {
         modifyRelations(options.TO, {
           target: options.FROM,
@@ -375,7 +375,7 @@ config.alerts.diplomacy = {
       }
     },
     btn_decline_vassalisation: {
-      name: "We have no choice but to accept.",
+      title: "We have no choice but to accept.",
       effect: function (options) {
         createVassal(options.FROM, {
           target: options.TO
@@ -394,13 +394,13 @@ config.alerts.diplomacy = {
     description: "A nation we had previously announced our intention to protect, {FROM.name} has been attacked in a perfidious act of war! Although we could simply opt out of risking both our resources and armies to protect {FROM.name}, such an action would likely ruin our diplomatic reputation on the world stage. What should we do?",
 
     btn_accept_call_to_arms: {
-      name: "Let the world know we stand by {FROM.name}. Enter the war.",
+      title: "Let the world know we stand by {FROM.name}. Enter the war.",
       effect: function (options) {
         joinWar(options.TO, options.LOCAL.friendly_side, options.LOCAL.war_name);
       }
     },
     btn_decline_call_to_arms: {
-      name: "{FROM.name}!? I've never heard of such a place before!",
+      title: "{FROM.name}!? I've never heard of such a place before!",
       effect: function (options) {
         modifyRelations(options.FROM, {
           target: options.TO,
@@ -420,7 +420,7 @@ config.alerts.diplomacy = {
     description: "{FROM.name} has refused to give up their independence, even in the face of our combined economic and military assets. Either they treat us as a laughing stock, or they hold the means to protect their independence at all costs. Either way, our military is preparing to move in.",
 
     btn_they_stand_defiant: {
-      name: "How dare they defy us!?"
+      title: "How dare they defy us!?"
     }
   },
 
@@ -429,7 +429,7 @@ config.alerts.diplomacy = {
     description: "Our nation has recently gained independence from {FROM.name} after our overlord announced that our vassalisation treaties and contractual obligations had been annulled. Their given reason for doing this is unclear, but our diplomats are speculating that they might have lost the economic and military strength needed to enforce such a policy. As such we have once again become an independent nation.",
 
     btn_we_are_free: {
-      name: "Long live our new country!"
+      title: "Long live our new country!"
     }
   }
 };

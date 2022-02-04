@@ -26,8 +26,8 @@ module.exports = {
           if (!isNaN(parseInt(input.trim()))) {
             var local_alert_id = parseInt(input.trim());
 
-            if (usr.alerts[local_alert_id]) {
-              var alert_obj = usr.alerts[local_alert_id];
+            if (usr.alerts[local_alert_id - 1]) {
+              var alert_obj = usr.alerts[local_alert_id - 1];
 
               //Print alert and set page
               printUserAlert(user_id, alert_obj);
@@ -65,7 +65,7 @@ module.exports = {
         } else if (game_obj.page.startsWith("alert_")) {
           var current_alert_id = game_obj.page.replace("alert_", "");
 
-          var alert_obj = usr.alerts[local_alert_id];
+          var alert_obj = usr.alerts[current_alert_id];
 
           //Button Handler
           //[Back]

@@ -16,29 +16,28 @@ module.exports = {
       ]
     },
     function (arg) {
-      var all_alerts = Object.keys(usr.alerts);
-      var has_alert = [false, ""]; //[has_alert, alert_name];
+      var has_alert = [false, ""]; //[has_alert, alert_index];
       var requested_alert = arg[0].trim().toLowerCase();
 
-      for (var i = 0; i < all_alerts.length; i++)
-        if (all_alerts[i] == requested_alert)
-          has_alert = [true, all_alerts[i]];
+      if (!isNaN(parseInt(arg[0])))
+        if (usr.alerts[parseInt(arg[0]) - 1])
+          has_alert = [true, i];
 
       //Name search
       if (!has_alert[0]) {
         //Soft match
-        for (var i = 0; i < all_alerts.length; i++)
-          if (usr.alerts[all_alerts[i]].name.toLowerCase().indexOf(requested_alert) != -1)
-            has_alert = [true, all_alerts[i]];
+        for (var i = 0; i < usr.alerts.length; i++)
+          if (usr.alerts[i].name.toLowerCase().indexOf(requested_alert) != -1)
+            has_alert = [true, i];
 
         //Hard match
-        for (var i = 0; i < all_alerts.length; i++)
-          if (usr.alerts[all_alerts[i]].name.toLowerCase() == requested_alert)
-            has_alert = [true, all_alerts[i]];
+        for (var i = 0; i < usr.alerts.length; i++)
+          if (usr.alerts[i].name.toLowerCase() == requested_alert)
+            has_alert = [true, i];
       }
 
       if (has_alert[0]) {
-        printUserAlert(user_id, usr.alerts[all_alerts[i]]);
+        printUserAlert(user_id, usr.alerts[has_alert[1]]);
         game_obj.page = `alert_${has_alert[1]}`;
       } else {
         printError(game_obj.id, `The alert you have specified, **${arg[0]}**, is not an alert you currently have to deal with!`);
@@ -90,7 +89,7 @@ module.exports = {
     });
   },
 
-  printUserAlert: function (arg0_user, arg1_alert) { //[WIP] - Add date string to printAlert()
+  printUserAlert: function (arg0_user, arg1_alert) {
     //Convert from parameters
     var user_id = arg0_user;
     var alert_obj = arg1_alert;
@@ -104,8 +103,10 @@ module.exports = {
     var alert_embed;
     var alert_string = [];
 
-    //[WIP] - Add date string instead of just time remaining
+    //Add date string instead of just time remaining
+    alert_string.push(` - ${getDate(alert_obj.date)}`);
     alert_string.push(` - ${config.icons.time} **${parseNumber(alert_obj.duration)}** turn(s) remaining`);
+    alert_string.push("");
 
     if (!alert_obj.news_alert) {
       if (alert_obj.description)
@@ -122,7 +123,7 @@ module.exports = {
       //Format embed
       alert_embed = new Discord.MessageEmbed()
         .setColor(settings.bot_colour)
-        .setTitle(`[Back] ¦ ${alert_obj.title}:`)
+        .setTitle(`[Back] ¦ ${alert_obj.name}:`)
         .setThumbnail(alert_obj.thumbnail ? alert_obj.thumbnail : usr.flag)
         .setImage(alert_obj.image ? alert_obj.image : "https://cdn.discordapp.com/attachments/722997700391338046/736141424315203634/margin.png")
         .setDescription(alert_string.join("\n"));
