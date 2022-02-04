@@ -21,7 +21,7 @@ module.exports = {
 
       for (var x = 0; x < local_alerts.length; x++)
         if (local_alerts[x].indexOf(alert_name) != -1)
-          alert_found = [true, (!options.return_key) ? lcoal_alert_category[local_alerts[x]] : local_alerts[x]];
+          alert_found = [true, (!options.return_key) ? local_alert_category[local_alerts[x]] : local_alerts[x]];
     }
 
     //Hard-match second
@@ -31,7 +31,7 @@ module.exports = {
 
       for (var x = 0; x < local_alerts.length; x++)
         if (local_alerts[x] == alert_name)
-          alert_found = [true, (!options.return_key) ? lcoal_alert_category[local_alerts[x]] : local_alerts[x]];
+          alert_found = [true, (!options.return_key) ? local_alert_category[local_alerts[x]] : local_alerts[x]];
     }
   },
 

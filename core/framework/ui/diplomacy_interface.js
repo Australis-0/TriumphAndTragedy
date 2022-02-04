@@ -545,14 +545,14 @@ module.exports = {
     const diplomacy_embed = new Discord.MessageEmbed()
       .setColor(settings.bot_colour)
       .setTitle(`[Back] ¦ **Diplomatic Overview:**`)
-      .setThumbnail(usr.flag)
+      .setThumbnail(ot_user.flag)
       .setImage("https://cdn.discordapp.com/attachments/722997700391338046/736141424315203634/margin.png")
       .setDescription(diplomacy_view_string.join("\n"));
 
     const stats_embed = new Discord.MessageEmbed()
       .setColor(settings.bot_colour)
       .setTitle(`[Back] ¦ **Diplomatic Overview:**`)
-      .setThumbnail(usr.flag)
+      .setThumbnail(ot_user.flag)
       .setImage("https://cdn.discordapp.com/attachments/722997700391338046/736141424315203634/margin.png")
       .setDescription(stats_string.join("\n"));
 
