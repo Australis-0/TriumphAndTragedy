@@ -107,6 +107,42 @@ module.exports = {
     }
   },
 
+  forceRender: function (arg0_map_name) {
+    //Convert from parameters
+    var map_name = arg0_map_name;
+
+    //Map case handler
+    switch (map_name) {
+      case "political":
+        var all_provinces = Object.keys(main.provinces);
+
+        for (var i = 0; i < all_provinces.length; i++) {
+          var local_province = main.provinces[all_provinces[i]];
+
+          if (local_province.controller) {
+            var local_user = main.users[local_province.controller];
+
+            if (local_province.controller == local_province.owner)
+              setProvinceColour(map_name, all_provinces[i], local_user.colour);
+            else
+              setProvinceColour(map_name, all_provinces[i], [
+                Math.max(local_user.colour[0] - 20, 0),
+                Math.max(local_user.colour[1] - 20, 0),
+                Math.max(local_user.colour[2] - 20, 0)
+              ]);
+          }
+        }
+
+        break;
+    }
+
+    //Cache SVG
+    module.exports.cacheSVG(map_name);
+
+    //Reload all maps
+    module.exports.reloadAllMaps(map_name);
+  },
+
   reloadAllMaps: function (arg0_map_name) {
     //Convert from parameters
     var map_name = arg0_map_name;

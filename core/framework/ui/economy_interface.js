@@ -118,18 +118,22 @@ module.exports = {
     economy_string.push(`- **[Inventory]** View your **current resources**.`);
 
     //Remove control panel if one exists
-    removeControlPanel(game_obj.id);
+    if (game_obj) {
+      removeControlPanel(game_obj.id);
 
-    //Create embed and edit to message
-    const economy_embed = new Discord.MessageEmbed()
-      .setColor(settings.bot_colour)
-      .setTitle(`**Economy:**`)
-      .setThumbnail(usr.flag)
-      .setImage("https://cdn.discordapp.com/attachments/722997700391338046/736141424315203634/margin.png")
-      .setDescription(economy_string.join("\n"));
+      //Create embed and edit to message
+      const economy_embed = new Discord.MessageEmbed()
+        .setColor(settings.bot_colour)
+        .setTitle(`**Economy:**`)
+        .setThumbnail(usr.flag)
+        .setImage("https://cdn.discordapp.com/attachments/722997700391338046/736141424315203634/margin.png")
+        .setDescription(economy_string.join("\n"));
 
-    game_obj.main_embed = economy_embed;
-    game_obj.main_change = true;
+      game_obj.main_embed = economy_embed;
+      game_obj.main_change = true;
+    }
+
+    return economy_string;
   },
 
   printInventory: function (arg0_user) {

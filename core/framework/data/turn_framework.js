@@ -53,6 +53,11 @@ module.exports = {
     var all_provinces = Object.keys(main.provinces);
     var all_wars = Object.keys(main.global.wars);
 
+    //Map rendering
+    {
+      forceRender("political");
+    }
+
     //War processing
     {
       //Iterate over all provinces to check occupation risk
