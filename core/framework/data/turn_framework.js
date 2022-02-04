@@ -433,9 +433,8 @@ module.exports = {
           var local_city_obj = getProvince(usr.under_construction[i].province_id);
 
           if (local_city_obj.buildings)
-            for (var x = 0; x < usr.under_construction[i].building_amount; x++)
-              //Individual buildings are treated as objects in an array here because this allows for further granularity in the future
-              constructBuilding(usr.under_construction[i].building_amount, usr.under_construction[i].building_type, usr.under_construction[i].province_id);
+            //Individual buildings are treated as objects in an array here because this allows for further granularity in the future
+            constructBuilding(usr.under_construction[i].building_amount, usr.under_construction[i].building_type, usr.under_construction[i].province_id);
 
           //Remove element from array
           usr.under_construction.splice(i, 1);
