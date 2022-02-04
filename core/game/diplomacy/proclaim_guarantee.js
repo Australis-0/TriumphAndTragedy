@@ -25,7 +25,7 @@ module.exports = {
               if (usr.diplomacy.used_diplomatic_slots < usr.modifiers.diplomatic_slots) {
                 if (!getVassal(actual_id)) {
                   if (!getVassal(actual_ot_user_id)) {
-                    //Deduct Political Capital and send request
+                    //Deduct Political Capital and send alert
                     usr.modifiers.political_capital -= config.defines.diplomacy.guarantee_independence_cost;
                     usr.diplomacy.used_diplomatic_slots++;
 
@@ -33,6 +33,8 @@ module.exports = {
                       FROM: actual_id,
                       TO: actual_ot_user_id
                     });
+
+                    createGuarantee(actual_id, actual_ot_user_id);
 
                     //Status updater
                     if (game_obj.page.startsWith("diplomacy_view_")) {
