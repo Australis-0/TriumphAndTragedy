@@ -87,7 +87,7 @@ module.exports = {
                 button_obj.effect(alert_obj.options);
 
                 //Send user feedback
-                printAlert(game_obj.id, `${config.icons.checkmark} You have successfully resolved **${alert_obj.name}** by choosing **${button_obj.name}**.`);
+                printAlert(game_obj.id, `${config.icons.checkmark} You have successfully resolved **${alert_obj.name}** by choosing **${button_obj.title}**.`);
 
                 //Delete alert key
                 usr.alerts.splice(local_alert_id, 1);

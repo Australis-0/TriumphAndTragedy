@@ -429,12 +429,15 @@ module.exports = {
     var actual_id = main.global.user_map[user_id];
     var usr = main.users[actual_id];
 
+    var all_temporary_modifiers = Object.keys(usr.temporary_modifiers);
+
     //Declare stability_string
     var stability_string = [];
 
     //Same variable calculation from turn_framework.js
     var government_stability_modifier = module.exports.getGovernmentStabilityModifier(actual_id);
     var popularity_stability_modifier = usr.politics[usr.government].popularity*0.75;
+    var temporary_stability_modifier = 0;
 
     //Print out all individual modifiers first
     if (government_stability_modifier != 0)
@@ -448,6 +451,17 @@ module.exports = {
 
     //Print base stability
     stability_string.push(`• **${printPercentage(usr.modifiers.stability_modifier, { display_prefix: true })}** base stability modifier.`);
+
+    //Print temporary modifiers
+    for (var i = 0; i < all_temporary_modifiers.length; i++) {
+      var local_modifier = usr.temporary_modifiers[all_temporary_modifiers[i]];
+
+      if (local_modifier.type == "stability_modifier")
+        temporary_stability_modifier += local_modifier.value;
+    }
+
+    if (temporary_stability_modifier != 0)
+      stability_string.push(`• **${printPercentage(temporary_stability_modifier, { display_prefix: true })}** from temporary modifiers.`);
 
     //Return statement
     return stability_string.join("\n");

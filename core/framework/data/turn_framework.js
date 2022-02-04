@@ -276,7 +276,7 @@ module.exports = {
           //If the temporary_modifier's duration is now zero, apply the inverse modifier to the user and delete the key
           if (local_temporary_modifier.duration == 0) {
             applyModifiers(actual_id, {
-              [local_temporary_modifier.type]: local_temporary_modifier.value
+              [local_temporary_modifier.type]: local_temporary_modifier.value*-1
             });
 
             delete usr.temporary_modifiers[all_temporary_modifiers[i]];

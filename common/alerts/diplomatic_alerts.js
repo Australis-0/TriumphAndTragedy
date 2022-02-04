@@ -4,7 +4,7 @@ config.alerts.diplomacy = {
     description: "{FROM.name} has cancelled our right to passage through their territorial claims for our military assets. Oh, well, we didn't need those traitorious scum anyway.",
 
     btn_access_cancelled: {
-      name: "We really should have beaten them to it",
+      title: "We really should have beaten them to it",
       description: [
         "Your military access has been cancelled by **{FROM.name}**!"
       ]
@@ -16,7 +16,7 @@ config.alerts.diplomacy = {
     description: "{FROM.name} has denied our requests for military access repeatedly. If we can't get our way, we may just have to circumvent them ... one way or the other.",
 
     btn_unfortunate: {
-      name: "Unfortunate."
+      title: "Unfortunate."
     }
   },
 
@@ -33,7 +33,7 @@ config.alerts.diplomacy = {
       ],
       effect: function (options) {
         console.log(options);
-        
+
         addTemporaryModifier(options.TO, {
           type: "stability_modifier",
           value: 0.10,
