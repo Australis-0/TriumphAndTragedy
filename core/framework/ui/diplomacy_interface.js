@@ -126,7 +126,7 @@ module.exports = {
       var local_user = main.users[sorted_users[i]];
 
       if (i < 10)
-        diplomacy_string.push(`**${local_user.name}** ¦ ${parseNumber(getScore(sorted_users[i]))} ¦ ${parseNumber(getTotalActiveDuty(sorted_users[i]))} ¦ ${parseNumber(usr.provinces)} ¦ ${parseNumber(usr.population)} ¦ ${parseNumber(usr.researched_technologies.length)}`)
+        diplomacy_string.push(`**${local_user.name}** ¦ ${parseNumber(getScore(sorted_users[i]))} ¦ ${parseNumber(getTotalActiveDuty(sorted_users[i]))} ¦ ${parseNumber(local_user.provinces)} ¦ ${parseNumber(local_user.population)} ¦ ${parseNumber(local_user.researched_technologies.length)}`)
     }
 
     if (sorted_users.length > 10)
