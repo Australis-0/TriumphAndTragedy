@@ -132,6 +132,8 @@ module.exports = {
       province_string.push("");
       if (cities.length != 0) {
         for (var i = 0; i < cities.length; i++) {
+          var culture_obj = getCulture(cities[i].culture);
+
           province_string.push(`**${cities[i].name}**:`);
           province_string.push(`**[View ${cities[i].name}]**`);
           province_string.push("");
@@ -142,7 +144,7 @@ module.exports = {
             province_string.push(`- ${(config.pops[all_pops[x]].icon) ? config.pops[all_pops[x]].icon : ""} ${(config.pops[all_pops[x]].name) ? config.pops[all_pops[x]].name : all_pops[x]}: ${parseNumber(cities[i].pops[all_pops[x]])}`);
 
           //Print culture
-          province_string.push(`- ${config.icons.culture} Culture: ${cities[i].culture}`);
+          province_string.push(`- ${config.icons.culture} Culture: ${culture_obj.name}`);
 
           if (!accepted_cultures.includes(cities[i].culture))
             province_string.push(`- **[Assimilate]**`);
