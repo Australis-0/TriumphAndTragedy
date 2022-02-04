@@ -23,8 +23,8 @@ module.exports = {
           var all_manpower_costs = Object.keys(unit_obj.manpower_cost);
 
           for (var i = 0; i < all_manpower_costs.length; i++)
-            usr.pops[`used_${all_manpower_costs[i]]}`] =
-              Math.max(usr.pops[`used_${all_manpower_costs[i]]}`] - unit_obj.manpower_cost[all_manpower_costs[i]], 0);
+            usr.pops[`used_${all_manpower_costs[i]}`] =
+              Math.max(usr.pops[`used_${all_manpower_costs[i]}`] - unit_obj.manpower_cost[all_manpower_costs[i]], 0);
         }
 
         //Delete from expeditions object
