@@ -56,6 +56,11 @@ config.alerts.diplomacy = {
 
     btn_accept_non_aggression: {
       title: "We shall accept the offer.",
+      description: [
+        `**+20** Relations with **{FROM.name}**.`,
+        `Signs non-aggression pact with **{FROM.name}** for the next **10** turns.`,
+        `**+1** Used Diplomatic Slot.`
+      ],
       effect: function (options) {
         var FROM_USER = main.users[options.FROM];
 
@@ -73,6 +78,9 @@ config.alerts.diplomacy = {
     btn_decline_non_aggression: {
       title: "We respectfully decline the offer.",
       ai_chance: 100,
+      description: [
+        `**{FROM.name}** will be notified of our rejection of their proposal for a non-aggression pact.`
+      ],
       effect: function (options) {
         sendAlert(options.FROM, "an_uneasy_peace", {
           TO: options.FROM,
@@ -89,6 +97,9 @@ config.alerts.diplomacy = {
     btn_alliance_accepted: {
       title: "We shall accomplish much together.",
       ai_chance: 100,
+      description: [
+        `**+5%** Stability Modifier for **3** turns.`
+      ],
       effect: function (options) {
         addTemporaryModifier(options.FROM, {
           type: "stability_modifier",
@@ -123,6 +134,11 @@ config.alerts.diplomacy = {
 
     btn_accept_alliance: {
       title: "It is in our best interest to conclude an alliance.",
+      description: [
+        `We will sign an alliance with **{FROM.name}**.`,
+        `**{FROM.name}** will be notified of our acceptance of their alliance proposal.`,
+        `**+1** Used Diplomatic Slot.`
+      ],
       effect: function (options) {
         var TO_USER = main.users[options.TO];
 
@@ -159,6 +175,9 @@ config.alerts.diplomacy = {
 
     btn_accept_conditional_peace: {
       title: "We accept this offer.",
+      description: [
+        `The war will end immediately, and we will accept **{FROM.name}**'s peace offer.`
+      ],
       effect: function (options) {
         parsePeaceTreaty(options.LOCAL.war_name, options.LOCAL.peace_treaty);
       }
@@ -186,12 +205,23 @@ config.alerts.diplomacy = {
 
     btn_accept_call_to_arms: {
       name: "Our nation is one of honour!",
+      ai_chance: 80,
+      description: [
+        [`We will join the **{LOCAL.war_name}** on the side of the **{LOCAL.friendly_side}**!`]
+      ],
       effect: function (options) {
         joinWar(options.TO, options.LOCAL.friendly_side, options.LOCAL.war_name);
       }
     },
     btn_decline_call_to_arms: {
       title: "We can't afford this war.",
+      ai_chance: 20,
+      description: [
+        [
+          `Our alliance with **{FROM.name}** will be immediately terminated.`,
+          `**-1** Used Diplomatic Slot.`
+        ]
+      ],
       effect: function (options) {
         var FROM_USER = main.users[options.FROM];
         var TO_USER = main.users[options.TO];
@@ -229,6 +259,10 @@ config.alerts.diplomacy = {
 
     btn_accept_military_access: {
       title: "Let them march through.",
+      description: [
+        `**+10** Relations with {FROM.name}`,
+        `**-5%** Stability Modifier for **10** turns.`
+      ],
       effect: function (options) {
         modifyRelations(options.TO, {
           target: options.FROM,
@@ -243,17 +277,21 @@ config.alerts.diplomacy = {
     },
 
     btn_decline_military_access: {
-      title: "They'll march through when we're dead!"
+      title: "They'll march through when we're dead!",
+      ai_chance: 100
     }
   },
 
   our_hour_of_need: {
     name: "Our Hour of Need",
-    description: "Our nation is now locked in a state of war that threatens to consume our country. Our old friend, {FROM.name}, has promised to help us in this struggle. Our diplomats and envoys are standing by. What should we do?",
+    description: "Our nation is now locked in a state of war that threatens to consume our country. Our old friends, {LOCAL.name}, have promised to help us in this struggle. Our diplomats and envoys are standing by. What should we do?",
 
     btn_request_support: {
       title: "We need every friend we can get.",
-      description: "**{FROM.name}** may join the war.",
+      ai_chance: 100,
+      description: [
+        "**{LOCAL.name}** may join the war."
+      ],
       effect: function (options) {
         var TO_USER = main.users[options.TO];
 
@@ -281,7 +319,12 @@ config.alerts.diplomacy = {
     description: "Somewhere in High Command sits a map that countless generals have spent years working on, that countless agents of our intelligence have been working for, a map littered with arrows stabbing into the heart of the {FROM.name} nation. They've refused to be rightfully incorporated into our burgeoning nation, so now we must give them war.",
 
     btn_accept_anschluss_cb: {
-      name: "It was our land anyway,",
+      name: "It was our land anyway.",
+      ai_chance: 90,
+      description: [
+        `We will gain an **Anschluss** CB on {FROM.name} for the next **10** turns.`
+      ],
+
       effect: function (options) {
         var TO_USER = main.users[options.TO];
 
@@ -293,7 +336,8 @@ config.alerts.diplomacy = {
       }
     },
     btn_decline_anschluss_cb: {
-      title: "Call it off."
+      title: "Call it off.",
+      ai_chance: 10
     }
   },
 
@@ -303,6 +347,9 @@ config.alerts.diplomacy = {
 
     btn_rival_declared: {
       title: "It's either us or them.",
+      description: [
+        `**-50** Relations with {FROM.name}.`
+      ],
       effect: function (options) {
         modifyRelations(options.TO, {
           target: options.FROM,
@@ -318,6 +365,14 @@ config.alerts.diplomacy = {
 
     btn_decline_annexation: {
       title: "Those bloody backstabbers!",
+      description: [
+        `**-30** Relations with **{FROM.name}**.`,
+        `**{FROM.name}**'s relations with us will decrease by **30**.`,
+        `We will no longer be the vassal of **{FROM.name}**.`,
+        "",
+        `**{FROM.name}**: **-1** Used Diplomatic Slot.`
+        `**{FROM.name}**: Receives **Pouring Over The Maps**.`
+      ],
       effect: function (options) {
         var FROM_USER = main.users[options.FROM];
 
@@ -345,6 +400,10 @@ config.alerts.diplomacy = {
 
     btn_accept_annexation: {
       title: "We have no choice. Goodbye, cruel world!",
+      ai_chance: 100,
+      description: [
+        `We will be annexed by **{FROM.name}**, and the game will immediately end.`
+      ],
       effect: function (options) {
         inherit(options.TO, options.FROM);
       }
@@ -369,6 +428,11 @@ config.alerts.diplomacy = {
 
     btn_accept_vassalisation: {
       title: "This is a diplomatic insult!",
+      description: [
+        `**-50** relations with **{FROM.name}**.`,
+        `**{FROM.name}**'s relations with us will decrease by **50**.`
+      ],
+      ai_chance: 100,
       effect: function (options) {
         modifyRelations(options.TO, {
           target: options.FROM,
@@ -382,6 +446,10 @@ config.alerts.diplomacy = {
     },
     btn_decline_vassalisation: {
       title: "We have no choice but to accept.",
+      description: [
+        `We will become the vassal of **{FROM.name}**.`,
+        `**-15%** Stability Modifier for **5** turns.`
+      ],
       effect: function (options) {
         createVassal(options.FROM, {
           target: options.TO
@@ -401,16 +469,25 @@ config.alerts.diplomacy = {
 
     btn_accept_call_to_arms: {
       title: "Let the world know we stand by {FROM.name}. Enter the war.",
+      description: [
+        `We shall join the **{LOCAL.war_name}** on the **{LOCAL.friendly_side}** side.`
+      ],
+      ai_chance: 90,
       effect: function (options) {
         joinWar(options.TO, options.LOCAL.friendly_side, options.LOCAL.war_name);
       }
     },
     btn_decline_call_to_arms: {
       title: "{FROM.name}!? I've never heard of such a place before!",
+      ai_chance: 10,
+      description: [
+        `**{FROM.name}**'s relations with us will decrease by **50**.`
+        `**-5%** Stability Modifier for **5** turns.`
+      ],
       effect: function (options) {
         modifyRelations(options.FROM, {
           target: options.TO,
-          value: 50
+          value: -50
         });
         addTemporaryModifier(options.TO, {
           type: "stability_modifier",
