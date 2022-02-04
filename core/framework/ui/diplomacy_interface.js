@@ -251,7 +251,7 @@ module.exports = {
       //Initialise diplomatic relation variables
       var all_allies = Object.keys(ot_user.diplomacy.allies);
       var all_guarantees = Object.keys(ot_user.diplomacy.guarantees);
-      var all_guarantors = getGuarantees(user_id);
+      var all_guarantors = getGuarantees(actual_ot_user_id);
       var all_military_accesses = Object.keys(ot_user.diplomacy.military_access);
       var all_non_aggression_pacts = Object.keys(ot_user.diplomacy.non_aggression_pacts);
       var all_rivals = Object.keys(ot_user.diplomacy.rivals);
