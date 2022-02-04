@@ -9,6 +9,7 @@ module.exports = {
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
     var building_category = getBuildingCategory(raw_building_category, { return_key: true });
+    var building_category_obj = getBuildingCategory(building_category);
     var city_obj = getCity(city_name, { users: actual_id });
     var game_obj = getGame(user_id);
     var usr = main.users[actual_id];
@@ -21,25 +22,32 @@ module.exports = {
       if (usr.country_age != 0) {
         if (usr.modifiers.political_capital >= development_cost) {
           if (amount > 0) {
-            if (building_category)
-            //Effect changes to political_capital and building category development
-            usr.modifiers.political_capital -= development_cost;
-            city_obj.development += amount;
-            city_obj[`${building_category}_building_slots`] += amount;
+            if (building_category_obj) {
+              if (!building_category_obj.disable_slots) {
+                //Effect changes to political_capital and building category development
+                usr.modifiers.political_capital -= development_cost;
+                city_obj.development += amount;
+                city_obj[`${building_category}_building_slots`] += amount;
 
-            city_obj[`${building_category}_development`] = (city_obj[`${building_category}_development`]) ?
-              city_obj[`${building_category}_development`] + amount :
-              amount;
+                city_obj[`${building_category}_development`] = (city_obj[`${building_category}_development`]) ?
+                  city_obj[`${building_category}_development`] + amount :
+                  amount;
 
-            //Update UI
-            if (game_obj.page == `view_city_${city_obj.name}`)
-              createPageMenu(game_obj.middle_embed, {
-                embed_pages: printCity(game_obj.user, city_obj.name),
-                page: interfaces[game_obj.middle_embed.id].page,
-                user: game_obj.user
-              });
+                printAlert(game_obj.id, `You have issued **${parseNumber(amount)}** urbanisation edicts for the **${parseNumber(development_cost)}** Political Capital! People have begun flocking to **${city_obj.name}** to start working and constructing new buildings, thereby expanding the overall building cap in the city for **${parseString(building_category).toLowerCase()}**.`);
 
-            printAlert(game_obj.id, `You have issued **${parseNumber(amount)}** urbanisation edicts for the **${parseNumber(development_cost)}** Political Capital! People have begun flocking to **${city_obj.name}** to start working and constructing new buildings, thereby expanding the overall building cap in the city for **${parseString(building_category).toLowerCase()}**.`);
+                //Update UI
+                if (game_obj.page == `view_city_${city_obj.name}`)
+                  createPageMenu(game_obj.middle_embed, {
+                    embed_pages: printCity(game_obj.user, city_obj.name),
+                    page: interfaces[game_obj.middle_embed.id].page,
+                    user: game_obj.user
+                  });
+              } else {
+                printError(game_obj.id, `**${parseString(building_category)}** doesn't have any slots to develop!`);
+              }
+            } else {
+              printError(game_obj.id, `You can't issue urbanisation edicts targeting a nonexistent building category!`);
+            }
           } else {
             (amount == 0) ?
               printError(game_obj.id, `You can't issue zero urbanisation edicts!`) :
