@@ -32,6 +32,8 @@ config.alerts.diplomacy = {
         "**+25** Relations with **{FROM.name}**."
       ],
       effect: function (options) {
+        console.log(options);
+        
         addTemporaryModifier(options.TO, {
           type: "stability_modifier",
           value: 0.10,

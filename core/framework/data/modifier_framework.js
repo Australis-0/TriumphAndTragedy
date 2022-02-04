@@ -17,7 +17,7 @@ module.exports = {
     var usr = main.users[user_id];
 
     //Push temporary modifier to object
-    var modifier_id = module.exports.generateTemporaryModifierID();
+    var modifier_id = module.exports.generateTemporaryModifierID(actual_id);
 
     usr.temporary_modifiers[modifier_id] = {
       type: options.type,
