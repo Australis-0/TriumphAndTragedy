@@ -136,9 +136,6 @@ module.exports = {
         break;
     }
 
-    //Cache SVG
-    module.exports.cacheSVG(map_name);
-
     //Reload all maps
     module.exports.reloadAllMaps(map_name);
   },
