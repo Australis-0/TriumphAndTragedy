@@ -238,6 +238,25 @@ module.exports = {
       }
     }
 
+    //Adjective search
+    if (!culture_exists[0]) {
+      //Soft-search
+      for (var i = 0; i < all_cultures.length; i++) {
+        var local_culture = main.global.cultures[all_cultures[i]];
+
+        if (local_culture.adjective.toLowerCase().indexOf(culture_name) != -1)
+          culture_exists = [true, (!options.return_key) ? local_culture : all_cultures[i]];
+      }
+
+      //Hard-search
+      for (var i = 0; i < all_cultures.length; i++) {
+        var local_culture = main.global.cultures[all_cultures[i]];
+
+        if (local_culture.adjective.toLowerCase() == culture_name)
+          culture_exists = [true, (!options.return_key) ? local_culture : all_cultures[i]];
+      }
+    }
+
     //Return key
     return (culture_exists[0]) ? culture_exists[1] : undefined;
   },
