@@ -62,6 +62,27 @@ module.exports = {
       }
     }
 
+    //Adjective search
+    if (!government_exists[0]) {
+      //Soft match
+      for (var i = 0; i < all_governments.length; i++) {
+        var local_government = config.governments[all_governments[i]];
+
+        if (local_government.adjective)
+          if (local_government.adjective.toLowerCase().indexOf(government_name) != -1)
+            government_exists = [true, (!options.return_key) ? config.governments[all_governments[i]] : all_governments[i]];
+      }
+
+      //Hard match
+      for (var i = 0; i < all_governments.length; i++) {
+        var local_government = config.governments[all_governments[i]];
+
+        if (local_government.adjective)
+          if (local_government.adjective.toLowerCase() == government_name)
+            government_exists = [true, (!options.return_key) ? config.governments[all_governments[i]] : all_governments[i]];
+      }
+    }
+
     //Return statement
     return (government_exists[0]) ? government_exists[1] : undefined;
   },
