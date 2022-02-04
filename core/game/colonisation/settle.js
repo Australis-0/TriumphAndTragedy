@@ -88,7 +88,7 @@ module.exports = {
         //Deduct from used pops
         for (var i = 0; i < all_unit_costs.length; i++)
           if (all_pops.includes(all_unit_costs[i]))
-            usr[`used_${all_unit_costs[i]}`] = Math.max(usr[`used_${all_unit_costs[i]}`] - all_unit_costs[i], 0);
+            usr.pops[`used_${all_unit_costs[i]}`] = Math.max(usr.pops[`used_${all_unit_costs[i]}`] - all_unit_costs[i], 0);
 
         //Check for errors
         var local_checks = 0;

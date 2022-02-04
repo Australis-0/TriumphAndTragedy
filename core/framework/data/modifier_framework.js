@@ -54,7 +54,7 @@ module.exports = {
           if (is_government) {
             usr.politics[all_modifiers[i]].drift += modifier_value;
           } else {
-            if (usr.inventory[all_modifiers[i]])
+            if (usr.inventory[all_modifiers[i]] != undefined)
               usr.inventory[all_modifiers[i]] += modifier_value;
             else
               usr[all_modifiers[i]] += modifier_value;

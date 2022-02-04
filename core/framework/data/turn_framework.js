@@ -371,7 +371,7 @@ module.exports = {
         if (all_produced_goods[i].includes("_upkeep")) {
           var upkeep_to_process = all_produced_goods[i].replace("_upkeep", "");
 
-          if (usr.inventory[upkeep_to_process])
+          if (usr.inventory[upkeep_to_process] != undefined)
             usr.inventory[upkeep_to_process] -= randomNumber(local_value[0], local_value[1]);
           else
             usr[upkeep_to_process] -= randomNumber(local_value[0], local_value[1]);
@@ -385,7 +385,7 @@ module.exports = {
             building_obj.special_effect(usr);
         } else {
           //Process goods
-          if (usr.inventory[all_produced_goods[i]])
+          if (usr.inventory[all_produced_goods[i]] != undefined)
             usr.inventory[all_produced_goods[i]] += randomNumber(local_value[0], local_value[1]);
           else
             usr[all_produced_goods[i]] += randomNumber(local_value[0], local_value[1]);
