@@ -145,11 +145,13 @@ module.exports = {
             production_string = ` ¦ Produces ${production_array.join(", ")} per turn`;
           } else if (maintenance_array.length > 0) {
             production_string = ` ¦ Consumes ${maintenance_array.join(", ")} per turn`;
-          } else {
-            //Custom localisation
-            if (building_obj.description)
-              production_string = ` ¦ ${building_obj.description}`;
           }
+
+          //Custom localisation
+          if (building_obj.houses)
+            production_string += ` ¦ Houses ${parseNumber(building_obj.houses)}`;
+          if (building_obj.description)
+            production_string += ` ¦ ${building_obj.description}`;
 
           //Manpower string
           if (manpower_array.length > 0)
