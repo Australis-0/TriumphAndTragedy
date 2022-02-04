@@ -24,6 +24,7 @@ module.exports = {
             //Check if building is unlocked or not
             if (usr.available_buildings.includes(raw_building_name)) {
               //Fetch raw building category of building
+              var building_category = getBuildingCategoryFromBuilding(raw_building_name);
               var raw_category_name = getBuildingCategoryFromBuilding(raw_building_name, { return_key: true });
 
               //Check if building slots are available for the building
@@ -136,10 +137,10 @@ module.exports = {
                     printError(game_obj.id, `You don't have enough resources to construct **${parseNumber(building_amount)}** ${(building_obj.name) ? building_obj.name : raw_building_name}! You still require the following resources:\n\n${shortage_array.join("\n")}`);
                   }
                 } else {
-                  printError(game_obj.id, `**${raw_category_name}** in **${city_obj.name}** does not have enough building slots remaining to construct **${parseString(building_amount)}** new building(s)! Only **${parseString(building_slots.available_slots)}** available building slot(s) for **${raw_category_name}** could be found in **${city_obj.name}**. Consider promoting urbanisation in this province to gain extra building slots, or researching additional technologies.`);
+                  printError(game_obj.id, `**${(building_category.name) ? building_category.name : raw_category_name}** in **${city_obj.name}** does not have enough building slots remaining to construct **${parseNumber(building_amount)}** new building(s)! Only **${parseNumber(building_slots.available_slots)}** available building slot(s) for **${raw_category_name}** could be found in **${city_obj.name}**. Consider promoting urbanisation in this province to gain extra building slots, or researching additional technologies.`);
                 }
               } else {
-                printError(game_obj.id, `**${raw_category_name}** in **${city_obj.name}** does not have any remaining building slots left for you to construct any buildings in! Consider promoting urbanisation in this province in order to gain extra building slots, or researching additional technologies.`);
+                printError(game_obj.id, `**${(building_category.name) ? building_category.name : raw_category_name}** in **${city_obj.name}** does not have any remaining building slots left for you to construct any buildings in! Consider promoting urbanisation in this province in order to gain extra building slots, or researching additional technologies.`);
               }
             } else {
               printError(game_obj.id, `**${(building_obj.name) ? building_obj.name : raw_building_name}** is either obsolete or has not yet currently been unlocked by your nation! Check your building list for a valid list of buildings.`);
