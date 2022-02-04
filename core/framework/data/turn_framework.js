@@ -771,12 +771,13 @@ module.exports = {
           usr.modifiers.reform_desire = 0;
 
         //Check if reform desire is at 100%, if so, add discontent to all parties with a popularity greater than 0%
-        for (var i = 0; i < all_governments.length; i++) {
-          var local_government = usr.politics[all_governments[i]];
+        if (usr.modifiers.reform_desire >= 1)
+          for (var i = 0; i < all_governments.length; i++) {
+            var local_government = usr.politics[all_governments[i]];
 
-          if (local_government.popularity > 0)
-            local_government.discontent = Math.min(local_government.discontent + 10, 100);
-        }
+            if (local_government.popularity > 0)
+              local_government.discontent = Math.min(local_government.discontent + 10, 100);
+          }
       }
 
       //Stability
