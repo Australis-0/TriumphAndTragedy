@@ -33,6 +33,9 @@ module.exports = {
         if (local_alerts[x] == alert_name)
           alert_found = [true, (!options.return_key) ? local_alert_category[local_alerts[x]] : local_alerts[x]];
     }
+
+    //Return statement
+    return (alert_found[0]) ? alert_found[1] : undefined;
   },
 
   /*

@@ -199,7 +199,7 @@ module.exports = {
 
     for (var i = 0; i < options.prompts.length; i++) local_fields.push({
       name: options.prompts[i][0],
-      value: (options.answers[i]) ? options.answers[i].toString() : "-"
+      value: (options.answers[i]) ? `${(!main.users[options.answers[i].toString()]) ? options.answers[i].toString() : main.users[options.answers[i]].name}` : "-"
     });
 
     var visual_prompt_embed = {
