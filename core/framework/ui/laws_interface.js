@@ -139,7 +139,7 @@ module.exports = {
         //Format embed
         var embed_reform_page = new Discord.MessageEmbed()
           .setColor(settings.bot_colour)
-          .setTitle(`Political Reforms: (Page ${i + 1} of ${usr.available_reforms.length})\n${config.localisation.divider}`)
+          .setTitle(`Political Reforms: (Page ${reform_embeds.length + 1} of ${usr.available_reforms.length})\n${config.localisation.divider}`)
           .setDescription(local_reform_string.join("\n"));
 
         //Push formatted embed to reform_embeds
@@ -147,7 +147,7 @@ module.exports = {
         local_reform_string = [];
       }
 
-    //Displauy default embed if no reforms are available
+    //Display default embed if no reforms are available
     if (usr.available_reforms.length == 0) {
       local_reform_string.push(config.localisation.divider);
       local_reform_string.push("");
@@ -157,7 +157,7 @@ module.exports = {
       //Format embed
       var embed_reform_page = new Discord.MessageEmbed()
         .setColor(settings.bot_colour)
-        .setTitle(`[Back] ¦ [Jump To Page] ¦ Political Reforms: (Page ${i + 1} of ${usr.available_reforms.length})\n${config.localisation.divider}`)
+        .setTitle(`[Back] ¦ [Jump To Page] ¦ Political Reforms: (Page 1 of 1)\n${config.localisation.divider}`)
         .setDescription(local_reform_string.join("\n"));
 
       //Push formatted embed to reform_embeds

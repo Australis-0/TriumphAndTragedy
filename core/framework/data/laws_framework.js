@@ -226,7 +226,8 @@ module.exports = {
 
       //Push no_order_cache onto end
       for (var i = 0; i < no_order_cache.length; i++)
-        reform_list.push(no_order_cache[i]);
+        if (!["name", "icon", "order"].includes(no_order_cache[i]))
+          reform_list.push(no_order_cache[i]);
 
       //Return statement
       return reform_list;
