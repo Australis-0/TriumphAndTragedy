@@ -1126,6 +1126,8 @@ module.exports = {
     {
       usr.modifiers.infamy = Math.min(Math.max(usr.modifiers.infamy, 0), 1);
       usr.modifiers.war_exhaustion = Math.min(Math.max(usr.modifiers.war_exhaustion, 0), 1);
+
+      balanceParties(actual_id);
     }
 
     //Simulation handler
