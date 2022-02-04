@@ -117,7 +117,8 @@ module.exports = {
           alert_string.push(`**[${alert_obj.buttons[i].name}]**`);
 
           if (!alert_obj.buttons[i].hide_description)
-            alert_string.push(`\n${alert_obj.buttons[i].description}`);
+            if (alert_obj.buttons[i].description)
+              alert_string.push(`\n${parseLocalisation(alert_obj.buttons[i].description.join("\n• "))}`);
         }
 
       //Format embed

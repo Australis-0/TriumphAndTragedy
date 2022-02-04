@@ -27,6 +27,10 @@ config.alerts.diplomacy = {
     btn_guarantee_positive_relations: {
       title: "They must be proud to offer this arrangement to such a noble nation.",
       ai_chance: 100,
+      description: [
+        "**+10%** Stability Modifier for **5** turns.",
+        "**+25** Relations with **{FROM.name}**."
+      ],
       effect: function (options) {
         addTemporaryModifier(options.TO, {
           type: "stability_modifier",
