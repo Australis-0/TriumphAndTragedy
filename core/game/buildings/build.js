@@ -98,6 +98,7 @@ module.exports = {
                     if (game_obj.page == `view_city_${city_obj.name}`)
                       createPageMenu(game_obj.middle_embed, {
                         embed_pages: printCity(game_obj.user, city_obj.name),
+                        page: interfaces[game_obj.middle_embed.id].page,
                         user: game_obj.user
                       });
                   } else {

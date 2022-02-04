@@ -188,7 +188,7 @@ module.exports = {
               ]
             },
             function (arg) {
-              build(user_id, getCity(city_name).name, arg[1], arg[0]);
+              build(user_id, city_obj.name, arg[1], arg[0]);
             },
             function (arg) {
               switch (arg) {
@@ -213,7 +213,7 @@ module.exports = {
               ]
             },
             function (arg) {
-              demolish(user_id, getCity(city_name).name, arg[1], arg[0]);
+              demolish(user_id, arg[1], arg[0], city_obj.name);
             });
 
             break;

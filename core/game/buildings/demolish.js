@@ -40,6 +40,14 @@ module.exports = {
                   freed_pops.push(`**${parseNumber(demolished_buildings[all_freed_pops[i]])}** ${(local_pop.name) ? local_pop.name : all_freed_pops[i]}`);
                 }
 
+                //Update UI
+                if (game_obj.page == `view_city_${city_obj.name}`)
+                  createPageMenu(game_obj.middle_embed, {
+                    embed_pages: printCity(game_obj.user, city_obj.name),
+                    page: interfaces[game_obj.middle_embed.id].page,
+                    user: game_obj.user
+                  });
+
                 //Print user feedback
                 (all_freed_pops.length > 0) ?
                   printAlert(game_obj.id, `${parseNumber(amount)} ${(building_obj.name) ? building_obj.name : raw_building_name} were demolished. You were refunded ${parseList(freed_pops)}, and **${parseNumber(amount)}** building slots were freed up.`) :
