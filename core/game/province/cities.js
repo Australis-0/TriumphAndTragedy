@@ -10,6 +10,7 @@ module.exports = {
     var actual_id = main.global.user_map[user_id];
     var building_category = getBuildingCategory(raw_building_category, { return_key: true });
     var city_obj = getCity(city_name, { users: actual_id });
+    var game_obj = getGame(user_id);
     var usr = main.users[actual_id];
 
     //Check if city exists in the first place
@@ -20,29 +21,40 @@ module.exports = {
       if (usr.country_age != 0) {
         if (usr.modifiers.political_capital >= development_cost) {
           if (amount > 0) {
-            //[WIP]
             if (building_category)
             //Effect changes to political_capital and building category development
             usr.modifiers.political_capital -= development_cost;
             city_obj.development += amount;
-            city_obj[`${building_category}_development`] += amount;
+            city_obj[`${building_category}_building_slots`] += amount;
 
-            printAlert(`You have issued **${parseNumber(amount)}** urbanisation edicts for the **${parseNumber(development_cost)}** Political Capital! People have begun flocking to **${city_obj.name}** to start working and constructing new buildings, thereby expanding the overall building cap in the city for **${parseString(building_category).toLowerCase()}**.`);
+            city_obj[`${building_category}_development`] = (city_obj[`${building_category}_development`]) ?
+              city_obj[`${building_category}_development`] + amount :
+              amount;
+
+            //Update UI
+            if (game_obj.page == `view_city_${city_obj.name}`)
+              createPageMenu(game_obj.middle_embed, {
+                embed_pages: printCity(game_obj.user, city_obj.name),
+                page: interfaces[game_obj.middle_embed.id].page,
+                user: game_obj.user
+              });
+
+            printAlert(game_obj.id, `You have issued **${parseNumber(amount)}** urbanisation edicts for the **${parseNumber(development_cost)}** Political Capital! People have begun flocking to **${city_obj.name}** to start working and constructing new buildings, thereby expanding the overall building cap in the city for **${parseString(building_category).toLowerCase()}**.`);
           } else {
             (amount == 0) ?
-              printError(getGame(user_id), `You can't issue zero urbanisation edicts!`) :
-              printError(getGame(user_id), `You can't issue negative urbanisation edicts! Who are you anyway, Pol Pot?`);
+              printError(game_obj.id, `You can't issue zero urbanisation edicts!`) :
+              printError(game_obj.id, `You can't issue negative urbanisation edicts! Who are you anyway, Pol Pot?`);
           }
         } else {
           (total_pc_price.toString().indexOf("e") != -1) ?
-            printError(getGame(user_id), `You do not currently have enough Political Capital to issue this many urbanisation edicts! You need **infinite** ${config.icons.political_capital} Political Capital before being able to develop your city further to the extent that you have requested.`) :
-            printError(getGame(user_id), `You don't have enough Political Capital to issue this many urbanisation edicts! You need another **${parseNumber(development_cost)}** ${config.icons.political_capital} Political Capital before being able to develop your city further to the extent that you have requested.`);
+            printError(game_obj.id, `You do not currently have enough Political Capital to issue this many urbanisation edicts! You need **infinite** ${config.icons.political_capital} Political Capital before being able to develop your city further to the extent that you have requested.`) :
+            printError(game_obj.id, `You don't have enough Political Capital to issue this many urbanisation edicts! You need another **${parseNumber(development_cost)}** ${config.icons.political_capital} Political Capital before being able to develop your city further to the extent that you have requested.`);
         }
       } else {
-        printError(getGame(user_id), `You must wait until next turn for your new government to start issuing edicts!`);
+        printError(game_obj.id, `You must wait until next turn for your new government to start issuing edicts!`);
       }
     } else {
-      printError(getGame(user_id), `The city you have specified, **${truncateString(city_name, )}**, could not be found anywhere inside of your controlled territories!`);
+      printError(game_obj.id, `The city you have specified, **${truncateString(city_name, )}**, could not be found anywhere inside of your controlled territories!`);
     }
   },
 
