@@ -392,12 +392,6 @@ setInterval(function(){
     //Process nextGlobalTurn() for global processes and calculations
     nextGlobalTurn();
 
-    //Iterate over all users and process their turns
-    var all_users = Object.keys(main.users);
-
-    for (var i = 0; i < all_users.length; i++)
-      nextTurn(all_users[i]);
-
     //Force render maps after turn processing
     forceRender("political");
     main.round_count++;

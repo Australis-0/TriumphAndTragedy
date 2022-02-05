@@ -51,6 +51,7 @@ module.exports = {
     //Declare local instance variables
     var all_market_goods = Object.keys(main.market);
     var all_provinces = Object.keys(main.provinces);
+    var all_users = Object.keys(main.users);
     var all_wars = Object.keys(main.global.wars);
 
     //War processing
@@ -126,6 +127,10 @@ module.exports = {
       }
     }
 
+    //Iterate over all users and process their turns
+    for (var i = 0; i < all_users.length; i++)
+      nextTurn(all_users[i]);
+
     //World Market Down-Logic
     {
       for (var i = 0; i < all_market_goods.length; i++) {
@@ -141,8 +146,8 @@ module.exports = {
           )
         ) {
           if (local_market_good.buy_price > 100 && local_market_good.sell_price > 100) {
-            local_market_good.buy_price = Math.ceil(local_market_good.buy_price*0.8);
-            local_market_good.sell_price = Math.ceil(local_market_good.sell_price*0.8);
+            local_market_good.buy_price = Math.ceil(local_market_good.buy_price*0.95);
+            local_market_good.sell_price = Math.ceil(local_market_good.sell_price*0.95);
           }
         } else {
           //Randomly increase the buy_price of the good by anywhere from 3-8%, and decrease the sell_price of the good by anywhere from 3-8%.
