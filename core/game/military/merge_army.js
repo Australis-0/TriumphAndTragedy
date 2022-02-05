@@ -7,9 +7,9 @@ module.exports = {
 
     //Declare local inbstance variables
     var actual_id = main.global.user_map[user_id];
-    var army_obj = getArmy(user_id, army_name);
+    var army_obj = getArmy(actual_id, army_name);
     var game_obj = getGameObject(user_id);
-    var merged_army_obj = getArmy(user_id, merged_army);
+    var merged_army_obj = getArmy(actual_id, merged_army);
     var usr = main.users[actual_id];
 
     //Check for the usual

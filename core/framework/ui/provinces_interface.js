@@ -38,7 +38,7 @@ module.exports = {
       var province_string = [];
 
       //Initialise tracker variables
-      var culture_obj = main.global.cultures[getCulture(province_obj.culture)];
+      var culture_obj = main.global.cultures[province_obj.culture];
 
       //Format embed
       province_string.push(`**[Back]** ¦ **[Jump To Page]**`);
