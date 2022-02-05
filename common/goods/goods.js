@@ -199,11 +199,13 @@ config.goods = {
         if (usr.food < Math.ceil(usr.population/1000000)) {
           usr.food = 0;
           usr.has_famine = true;
-          
+
           killPops(usr.id, {
             type: "all",
             amount: getFaminePenalty(usr.id)
           });
+        } else {
+          usr.food -= Math.ceil(usr.population/1000000);
         }
       }
     },
