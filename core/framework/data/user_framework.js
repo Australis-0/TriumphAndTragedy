@@ -254,7 +254,7 @@ module.exports = {
     if (usr.total_cities < 1)
       usr.total_cities += getCities(user_id, { include_hostile_occupations: true }).length;
 
-    var average_cities = Math.ceil(usr.total_cities/usr.country_age);
+    var average_cities = Math.ceil(usr.total_cities/Math.max(usr.country_age, 1));
     var pc_price = 0;
 
     for (var i = 0; i < amount; i++) {
