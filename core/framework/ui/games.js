@@ -203,6 +203,11 @@ module.exports = {
 
           try {
             game_obj.header.edit({ embeds: [topbar_embed] });
+
+            if (game_obj.page == "founding_map")
+              (!main.global.user_map[game_obj.user]) ?
+                initialiseFoundCountry(game_obj.user) :
+                initialiseSettleStartingProvinces(game_obj.user);
           } catch {}
         }, 10000);
 

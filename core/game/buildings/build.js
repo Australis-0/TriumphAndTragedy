@@ -116,12 +116,6 @@ module.exports = {
                         local_icon = (local_good.icon) ? config.icons[local_good.icon] : "";
                       if (all_resource_shortages[i] == "money")
                         local_icon = config.icons.money;
-                      if (config.pops[all_resource_shortages[i]]) {
-                        var local_pop = config.pops[all_resource_shortages[i]];
-
-                        if (local_pop.icon)
-                          local_icon = config.icons[local_pop.icon];
-                      }
 
                       if (all_resource_shortages[i] == "money")
                         shortage_array.push(`- ${local_icon} ${parseNumber(local_shortage)} Money`);
@@ -130,7 +124,7 @@ module.exports = {
                       if (config.pops[all_resource_shortages[i]]) {
                         var local_pop = config.pops[all_resource_shortages[i]];
 
-                        shortage_array.push(`- ${local_icon} ${parseNumber(local_shortage)} ${(local_pop.name) ? local_pop.name : all_resource_shortages[i]}`)
+                        shortage_array.push(`- ${(local_pop.icon) ? config.icons[local_pop.icon] : ""} ${parseNumber(local_shortage)} ${(local_pop.name) ? local_pop.name : all_resource_shortages[i]}`);
                       }
                     }
 
