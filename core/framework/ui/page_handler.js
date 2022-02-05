@@ -1383,6 +1383,9 @@ module.exports = {
             game_obj.page = "military";
           }
 
+          if (input == "craft")
+            initialiseCraft(user_id);
+
           //[Jump To Page]
           if (input == "jump to page")
             visualPrompt(game_obj.alert_embed, user_id, {

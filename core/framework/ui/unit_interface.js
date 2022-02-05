@@ -220,8 +220,15 @@ module.exports = {
 
     //Return statement
     return splitEmbed(unit_string, {
-      title: "[Back] Unit List",
+      title: "[Back] ¦ [Jump To Page] Unit List",
       title_pages: true,
+      description: [
+        "",
+        `**[Craft]**`,
+        "",
+        config.localisation.divider,
+        ""
+      ],
       fixed_width: true
     });
   }

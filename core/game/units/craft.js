@@ -116,7 +116,7 @@ module.exports = {
                     if (local_pop.icon)
                       local_icon = config.icons[local_pop.icon];
                   }
-                  
+
                   if (all_resource_shortages[i] == "money")
                     shortage_array.push(`- ${local_icon} ${parseNumber(local_shortage)} Money`);
                   if (local_good)
@@ -173,7 +173,10 @@ module.exports = {
       switch (arg) {
         case "craft list":
         case "unit list":
-          printUnitList(user_id);
+          createPageMenu(game_obj.middle_embed, {
+            embed_pages: printUnitList(game_obj.user),
+            user: game_obj.user
+          });
           return true;
 
           break;
