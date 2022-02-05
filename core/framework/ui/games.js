@@ -229,7 +229,10 @@ module.exports = {
           case "founding_map":
             //Initialise map viewer and found country dialogue prompt
             initialiseMapViewer(game_id);
-            if (game_obj.page == "founding_map") initialiseFoundCountry(game_obj.user);
+            if (game_obj.page == "founding_map")
+              (!main.global.user_map[game_obj.user]) ?
+                initialiseFoundCountry(game_obj.user) :
+                initialiseSettleStartingProvinces(game_obj.user);
             if (["map"].includes(game_obj.page)) initialiseTopbar(game_obj.user);
 
             break;
