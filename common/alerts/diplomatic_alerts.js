@@ -370,7 +370,7 @@ config.alerts.diplomacy = {
         `**{FROM.name}**'s relations with us will decrease by **30**.`,
         `We will no longer be the vassal of **{FROM.name}**.`,
         "",
-        `**{FROM.name}**: **-1** Used Diplomatic Slot.`
+        `**{FROM.name}**: **-1** Used Diplomatic Slot.`,
         `**{FROM.name}**: Receives **Pouring Over The Maps**.`
       ],
       effect: function (options) {
@@ -481,7 +481,7 @@ config.alerts.diplomacy = {
       title: "{FROM.name}!? I've never heard of such a place before!",
       ai_chance: 10,
       description: [
-        `**{FROM.name}**'s relations with us will decrease by **50**.`
+        `**{FROM.name}**'s relations with us will decrease by **50**.`,
         `**-5%** Stability Modifier for **5** turns.`
       ],
       effect: function (options) {
