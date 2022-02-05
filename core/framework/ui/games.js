@@ -260,8 +260,10 @@ module.exports = {
 
        //Clear all menus of type page_menu, visual_prompt
        for (var i = 0; i < all_interfaces.length; i++)
-         if (["page_menu", "visual_prompt"].includes(interfaces[all_interfaces[i]].type))
-          delete interfaces[all_interfaces[i]];
+         if (["page_menu", "visual_prompt"].includes(interfaces[all_interfaces[i]].type)) {
+           delete interfaces[all_interfaces[i]];
+           delete main.interfaces[all_interfaces[i]];
+         }
     } catch (e) {
       log.error(`reinitialiseGameEmbeds() ran into an error: ${e}.`);
     }

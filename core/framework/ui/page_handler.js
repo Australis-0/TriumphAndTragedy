@@ -14,8 +14,7 @@ module.exports = {
     var in_visual_prompt = main.interfaces[user_id];
 
     if (in_visual_prompt)
-      if (in_visual_prompt.type == "visual_prompt")
-        in_visual_prompt = true;
+      in_visual_prompt = (in_visual_prompt.type == "visual_prompt");
 
     if (!in_visual_prompt) {
       //Alerts page handler
@@ -1552,7 +1551,7 @@ module.exports = {
             case "view provinces":
               game_obj.page = "provinces_list";
               createPageMenu(game_obj.middle_embed, {
-                embed_pages: printProvinces(game_obj.user),
+                embed_pages: printProvinces(user_id),
                 user: game_obj.user
               });
 
