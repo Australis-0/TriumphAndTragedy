@@ -173,12 +173,11 @@ module.exports = {
           var researching_status = "";
 
           for (var y = 0; y < usr.researching.length; y++)
-            if (usr.researching[y].technology_name == local_tech_category[x])
+            if (usr.researching[y].technology == local_tech_category[x])
               researching_status = `__Researching__`;
 
-          for (var y = 0; y < usr.research_queue.length; y++)
-            if (usr.research_queue[y].technology_name == local_tech_category[x])
-              researching_status = `__Queued (#${y+1})__`;
+          if (usr.research_queue.includes(local_tech_category[x]))
+            researching_status = `__Queued (#${usr.research_queue.indexOf(local_tech_category[x])+1})__`;
 
           if (researching_status == "")
             researching_status = `¦ **[Research ${(local_tech.name) ? local_tech.name : local_tech_category[x]}]**`;
