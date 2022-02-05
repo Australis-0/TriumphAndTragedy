@@ -203,14 +203,6 @@ module.exports = {
 
           try {
             game_obj.header.edit({ embeds: [topbar_embed] });
-
-            //Starting prompt handler
-            if (main.global.user_map[game_obj.user])
-              if (main.users[main.global.user_map[game_obj.user]].settle_starting_provinces)
-                initialiseSettleStartingProvinces(game_obj.user);
-
-            if (!main.global.user_map[game_obj.user])
-              initialiseFoundCountry(game_obj.user);
           } catch {}
         }, 10000);
 
