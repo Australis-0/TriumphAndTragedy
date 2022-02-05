@@ -202,7 +202,7 @@ module.exports = {
               visualPrompt(game_obj.alert_embed, user_id, {
                 title: `Constructing Building(s) in ${city_obj.name}:`,
                 prompts: [
-                  [`What would you like to build in your city?\n\nType **[Build List]** for a list of valid buildings.`, "string"],
+                  [`What would you like to build in your city?\n\nType **[Build List]** for a list of valid buildings.\nType **[Build List]** to view your inventory.`, "string"],
                   [`How many buildings of this type would you like to begin building?`, "number", { min: 1 }]
                 ]
               },
@@ -216,6 +216,11 @@ module.exports = {
                       embed_pages: printBuildList(actual_id),
                       user: game_obj.user
                     });
+                    return true;
+
+                    break;
+                  case "inventory":
+                    printInventory(user_id);
                     return true;
 
                     break;
