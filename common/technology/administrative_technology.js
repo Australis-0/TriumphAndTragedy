@@ -261,7 +261,8 @@ config.technology.administrative_technology = {
     research_cost: 750,
     year: 1756,
     unlocks: {
-      maximum_expeditions: 1
+      maximum_expeditions: 1,
+      obsolete_unit: "conquistadors"
     }
   },
   national_sovereignty: {
