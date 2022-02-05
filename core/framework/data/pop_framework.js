@@ -211,10 +211,12 @@ module.exports = {
     var options = arg1_options;
 
     //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
     var decimation_obj = {};
     var pop_obj = config.pops[options.type];
     var pop_types = getList(options.type);
     var remaining_population = options.amount;
+    var usr = main.users[actual_id];
 
     //Parse 'all' argument as well
     pop_types = (pop_types.includes("all")) ? Object.keys(config.pops) : pop_types;
@@ -230,10 +232,15 @@ module.exports = {
       removePops(user_id, Math.ceil(decimation_obj[pop_types[i]]*remaining_population), pop_types[i]);
 
     //Add to civilian/military casualties tracker
-    if (pop_obj.military_pop)
-      usr.recent_military_casualties[usr.recent_military_casualties.length - 1] += options.amount;
-    else
+    if (!getList(options.type).includes("all"))
+      if (pop_obj.military_pop)
+        usr.recent_military_casualties[usr.recent_military_casualties.length - 1] += options.amount;
+      else
+        usr.recent_civilian_casualties[usr.recent_civilian_casualties.length - 1] += options.amount;
+    else {
       usr.recent_civilian_casualties[usr.recent_civilian_casualties.length - 1] += options.amount;
+      usr.recent_military_casualties[usr.recent_military_casualties.length - 1] += options.amount;
+    }
   },
 
   parsePops: function () {
