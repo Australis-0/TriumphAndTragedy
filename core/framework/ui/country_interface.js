@@ -14,6 +14,12 @@ module.exports = {
     var all_pops = Object.keys(config.pops);
     var has_no_provinces = (getProvinces(actual_id, { include_hostile_occupations: true, include_occupations: true }).length == 0);
 
+    //Fix negative pops
+    {
+      for (var i = 0; i < all_pops.length; i++)
+        usr.pops[`used_${all_pops[i]}`] = Math.max(usr.pops[`used_${all_pops[i]}`], 0);
+    }
+
     //Initialise stats_string
     var stats_string = [];
 
