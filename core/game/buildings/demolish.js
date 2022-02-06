@@ -37,7 +37,7 @@ module.exports = {
                 for (var i = 0; i < all_freed_pops.length; i++) {
                   var local_pop = config.pops[all_freed_pops[i]];
 
-                  freed_pops.push(`**${parseNumber(demolished_buildings[all_freed_pops[i]])}** ${(local_pop.name) ? local_pop.name : all_freed_pops[i]}`);
+                  freed_pops.push(`${(local_pop.icon) ? local_pop.icon + " " : ""}**${parseNumber(demolished_buildings[all_freed_pops[i]])}** ${(local_pop.name) ? local_pop.name : all_freed_pops[i]}`);
                 }
 
                 //Update UI

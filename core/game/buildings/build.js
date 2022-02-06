@@ -124,7 +124,7 @@ module.exports = {
                       if (config.pops[all_resource_shortages[i]]) {
                         var local_pop = config.pops[all_resource_shortages[i]];
 
-                        shortage_array.push(`- ${(local_pop.icon) ? config.icons[local_pop.icon] : ""} ${parseNumber(local_shortage)} ${(local_pop.name) ? local_pop.name : all_resource_shortages[i]}`);
+                        shortage_array.push(`- ${(local_pop.icon) ? local_pop.icon : ""} ${parseNumber(local_shortage)} ${(local_pop.name) ? local_pop.name : all_resource_shortages[i]}`);
                       }
                     }
 
