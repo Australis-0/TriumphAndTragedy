@@ -56,7 +56,7 @@ module.exports = {
                       usr.money -= main.market[good_name].buy_price;
                       total_buy_price += main.market[good_name].buy_price;
                       usr.inventory[good_name]++;
-                      
+
                       main.market[good_name].stock--;
 
                       //Increase buy/sell price
@@ -89,7 +89,7 @@ module.exports = {
                     printError(game_obj.id, `You can only buy/sell up to **20%** of the goods in a large market at once! This equates to about **${parseNumber(Math.floor(main.market[good_name].stock*0.2))}** ${(good_obj.name) ? good_obj.name : good_name}.`);
                   }
                 } else {
-                  printError(game_obj.id, `You do not have enough Market Capacity remaining to make this purchase! You need at least **${parseNumber(good_amount - getMarketCapacity(actual_id))} more remaining Market Capacity in order to fulfil this purchase request.`);
+                  printError(game_obj.id, `You do not have enough Market Capacity remaining to make this purchase! You need at least **${parseNumber(good_amount - getMarketCapacity(actual_id))}** remaining Market Capacity in order to fulfil this purchase request.`);
                 }
               } else {
                 printError(game_obj.id, `You may not make purchases larger than **1.000** on the Global Market!`);

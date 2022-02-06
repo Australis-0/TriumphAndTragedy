@@ -20,7 +20,7 @@ config.buildings.agriculture = {
     }
   },
   centralised_farms: {
-    name: "Farms",
+    name: "Centralised Farms",
     singular: "Centralised Farm",
     icon: "centralised_farms",
 

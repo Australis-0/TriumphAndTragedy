@@ -895,7 +895,7 @@ module.exports = {
               if (owned_provinces[i].housing > owned_provinces[i].pops.population)
                 for (var x = 0; x < all_pops.length; x++) {
                   var local_pop_growth =
-                    owned_provinces[i].pops[all_pops[x]] - Math.ceil(owned_provinces[i].pops[all_pops[x]]*usr.pops[`${all_pops[x]}_growth_modifier`]*scalar*usr.modifiers.pop_growth_modifier);
+                    Math.ceil(owned_provinces[i].pops[all_pops[x]]*usr.pops[`${all_pops[x]}_growth_modifier`]*scalar*usr.modifiers.pop_growth_modifier);
 
                   usr.pops[all_pops[x]] += local_pop_growth;
                   usr.population += local_pop_growth;
@@ -915,7 +915,7 @@ module.exports = {
               //Calculate rural pop growth for all pops
               for (var x = 0; x < all_pops.length; x++) {
                 var local_pop_growth =
-                  owned_provinces[i].pops[all_pops[x]] - Math.ceil(owned_provinces[i].pops[all_pops[x]]*usr.pops[`${all_pops[x]}_growth_modifier`]*usr.modifiers.pop_growth_modifier);
+                  Math.ceil(owned_provinces[i].pops[all_pops[x]]*usr.pops[`${all_pops[x]}_growth_modifier`]*usr.modifiers.pop_growth_modifier);
 
                 if (owned_provinces[i].pops.population < owned_provinces[i].pop_cap) {
                   usr.pops[all_pops[x]] += local_pop_growth;
