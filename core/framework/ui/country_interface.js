@@ -106,7 +106,7 @@ module.exports = {
     stats_string.push("");
     stats_string.push(`${config.icons.technology} Techs Researched: (**${parseNumber(usr.researched_technologies.length)}**/**${parseNumber(getAllTechnologies().length)}**)`);
 
-    var money_string = (user_income[0] == user_income[1]) ?
+    var money_string = (user_income[0] != user_income[1]) ?
       `${parseNumber(user_income[0])} - ${parseNumber(user_income[1])}` :
       parseNumber(user_income[0]);
 
