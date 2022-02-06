@@ -30,8 +30,8 @@ module.exports = {
 
             //Housing modifier
             if (building_obj.housing)
-              local_province.housing = (local_province.housing) ?
-                local_province.housing + building_obj.housing*amount :
+              province_obj.housing = (province_obj.housing) ?
+                province_obj.housing + building_obj.housing*amount :
                 building_obj.housing*amount;
 
             //Supply limit handler
@@ -39,10 +39,10 @@ module.exports = {
               var supplied_provinces = getProvincesInRange(province_id, config.defines.combat.infrastructure_range);
 
               for (var i = 0; i < supplied_provinces.length; i++) {
-                var local_province = main.provinces[supplied_provinces[i]];
+                var province_obj = main.provinces[supplied_provinces[i]];
 
-                local_province.supply_limit = (local_province.supply_limit) ?
-                  local_province.supply_limit + building_obj.supply_limit*amount :
+                province_obj.supply_limit = (province_obj.supply_limit) ?
+                  province_obj.supply_limit + building_obj.supply_limit*amount :
                   building_obj.supply_limit*amount;
               }
             }

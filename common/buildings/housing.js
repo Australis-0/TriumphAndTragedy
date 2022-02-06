@@ -16,7 +16,7 @@ config.buildings.housing = {
       iron: 6,
       money: 2500
     },
-    houses: 500000,
+    houses: 50000,
     unlimited_slots: true
   },
   suburbs: {
