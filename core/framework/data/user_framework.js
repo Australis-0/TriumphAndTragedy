@@ -287,7 +287,7 @@ module.exports = {
         *config.defines.economy.money_per_action
         *usr.tax_rate
         *usr.modifiers.tax_efficiency
-      );
+      ) - module.exports.getUnitUpkeep(user_id);
 
       return calculated_income;
     } catch (e) {

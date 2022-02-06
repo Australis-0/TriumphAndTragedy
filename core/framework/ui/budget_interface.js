@@ -11,7 +11,17 @@ module.exports = {
 
     //Initialise budget_string
     var budget_string = [];
-    var total_actions_gained_per_turn = getProduction(actual_id, "actions");
+    var total_production = getProduction(actual_id);
+
+    var total_actions_gained_per_turn = [
+      config.defines.economy.starting_actions + ((total_production.actions) ? total_production.actions[0] : 0),
+      config.defines.economy.starting_actions + ((total_production.actions) ? total_production.actions[1] : 0)
+    ].sort(function (a, b) { return a - b });
+    var total_maintenance = [
+      (total_production.money_upkeep) ? total_production.money_upkeep[0] : 0,
+      (total_production.money_upkeep) ? total_production.money_upkeep[1] : 0
+    ].sort(function (a, b) { return a - b });
+    var unit_upkeep = getUnitUpkeep(actual_id);
 
     //Push to budget_string
     budget_string.push(`**Economic Statistics:**`);
@@ -32,6 +42,18 @@ module.exports = {
     budget_string.push("");
     budget_string.push(`${config.icons.actions} Actions (**${parseNumber(total_actions_gained_per_turn[0], { display_prefix: true })}**-**${parseNumber(total_actions_gained_per_turn[1])}** per turn)`);
     budget_string.push(`- **${printPercentage(usr.modifiers.civilian_actions)}** of your actions will be used up as ${config.icons.trade} **Civilian Goods** next turn.`);
+
+    if (unit_upkeep > 0)
+      budget_string.push(`- ${(unit_upkeep < 0) ? "-" : "+"}**£${parseNumber(unit_upkeep)}** from unit maintenance.`);
+    if (total_maintenance[0] + total_maintenance[1] > 0)
+      if (total_maintenance[0] == total_maintenance[1])
+        budget_string.push(`- ${(total_maintenance[0] < 0) ? "-" : "+"}**£${parseNumber(total_maintenance[0])}** from building maintenance.`);
+      else
+        budget_string.push(`- ${(total_maintenance[0] < 0) ? "-" : "+"}**£${parseNumber(total_maintenance[0])}** - ${(total_maintenance[1] < 0) ? "-" : "+"}**£${parseNumber(total_maintenance[1])}** from building maintenance.`);
+
+    budget_string.push("");
+    budget_string.push(`Note: Buildings that lack requisite goods or maintenance will not produce anything.`);
+    budget_string.push("");
     budget_string.push(`Your economic advisor estimates that you will gain ${config.icons.money} **${parseNumber(getIncome(actual_id))}** in tax income next turn.`);
     budget_string.push("");
     budget_string.push(config.localisation.divider);
@@ -56,8 +78,10 @@ module.exports = {
       .setImage("https://cdn.discordapp.com/attachments/722997700391338046/736141424315203634/margin.png")
       .setDescription(budget_string.join("\n"));
 
-    game_obj.main_embed = budget_embed;
-    game_obj.main_change = true;
+    if (game_obj) {
+      game_obj.main_embed = budget_embed;
+      game_obj.main_change = true;
+    }
 
     //Return statement
     return budget_embed;
