@@ -117,21 +117,15 @@ module.exports = {
       var people_housed = 0;
 
       //Fetch housing amount first
-      for (var i = 0; i < all_building_categories.length; i++) {
-        var local_building_category = getBuildingCategory(all_building_categories[i]);
+      for (var i = 0; i < city_obj.buildings.length; i++) {
+        var local_building = getBuilding(city_obj.buildings[i].building_type);
 
-        //Iterate over all building objects in array
-        var all_buildings_in_category = Object.keys(local_building_category);
-
-        //Fetch housing amount
-        for (var x = 0; x < all_buildings_in_category.length; x++)
-          for (var y = 0; y < city_obj.buildings.length; y++) {
-            var local_building = getBuilding(city_obj.buildings[y].building_type);
-
-            if (local_building.houses)
-              people_housed += local_building.houses;
-          }
+        if (local_building.houses)
+          people_housed += local_building.houses;
       }
+
+      //Fix province housing [REMOVE IN FUTURE]
+      city_obj.housing = people_housed;
 
       for (var i = 0; i < all_building_categories.length; i++) {
         var local_building_category = getBuildingCategory(all_building_categories[i]);

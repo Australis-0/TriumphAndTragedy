@@ -29,10 +29,12 @@ module.exports = {
               applyModifiers(local_province.owner, building_obj.modifiers);
 
             //Housing modifier
-            if (building_obj.housing)
-              province_obj.housing = (province_obj.housing) ?
-                province_obj.housing + building_obj.housing*amount :
-                building_obj.housing*amount;
+            if (building_obj.houses) {
+              console.log(building_obj);
+                province_obj.housing = (province_obj.housing) ?
+                  province_obj.housing + building_obj.houses*amount :
+                  building_obj.houses*amount;
+            }
 
             //Supply limit handler
             if (building_obj.supply_limit) {
