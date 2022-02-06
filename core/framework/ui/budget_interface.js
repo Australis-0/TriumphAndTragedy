@@ -45,7 +45,8 @@ module.exports = {
     budget_string.push(`${config.icons.blockade} Blockade status: ${(isBlockaded(actual_id)) ? "you are currently blockaded!" : "you are currently not blockaded."}`);
 
     //Remove control panel if one exists
-    removeControlPanel(game_obj.id);
+    if (game_obj)
+      removeControlPanel(game_obj.id);
 
     //Create embed and edit to message
     const budget_embed = new Discord.MessageEmbed()
@@ -57,5 +58,8 @@ module.exports = {
 
     game_obj.main_embed = budget_embed;
     game_obj.main_change = true;
+
+    //Return statement
+    return budget_embed;
   }
 };
