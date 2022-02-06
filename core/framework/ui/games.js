@@ -12,6 +12,14 @@ module.exports = {
       log.warn(`clearGame() - Game channel for Game ID ${game_id} could not be found: ${e}`);
     }
 
+    //Declare local instance variables
+    var all_interfaces = Object.keys(interfaces);
+
+    //Iterate over all games to delete game
+    for (var i = 0; i < all_interfaces.length; i++)
+      if (interfaces[all_interfaces[i]].id == game_id)
+        delete interfaces[all_interfaces[i]];
+
     //Delete game object
     delete interfaces[game_id];
   },
