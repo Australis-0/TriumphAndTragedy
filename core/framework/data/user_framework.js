@@ -282,6 +282,13 @@ module.exports = {
 
     //Regular error trapping just in case!
     try {
+      var total_production = getProduction(user_id);
+
+      var total_maintenance = [
+        (total_production.money_upkeep) ? total_production.money_upkeep[0] : 0,
+        (total_production.money_upkeep) ? total_production.money_upkeep[1] : 0
+      ].sort(function (a, b) { return a - b });
+
       calculated_income = Math.ceil(
           (usr.actions - civilian_actions)
         *config.defines.economy.money_per_action
@@ -289,7 +296,7 @@ module.exports = {
         *usr.modifiers.tax_efficiency
       ) - module.exports.getUnitUpkeep(user_id);
 
-      return calculated_income;
+      return [calculated_income - total_maintenance[0], calculated_income - total_maintenance[1]];
     } catch (e) {
       log.error(`getIncome() ran into an error whilst processing User ID: ${user_id}: ${e}.`);
       console.log(e);

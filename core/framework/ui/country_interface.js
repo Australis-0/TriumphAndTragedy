@@ -13,6 +13,7 @@ module.exports = {
     var all_national_modifiers = Object.keys(usr.national_modifiers);
     var all_pops = Object.keys(config.pops);
     var has_no_provinces = (getProvinces(actual_id, { include_hostile_occupations: true, include_occupations: true }).length == 0);
+    var user_income = getIncome(actual_id);
 
     //Fix negative pops
     {
@@ -104,7 +105,12 @@ module.exports = {
     stats_string.push("**Economy:**");
     stats_string.push("");
     stats_string.push(`${config.icons.technology} Techs Researched: (**${parseNumber(usr.researched_technologies.length)}**/**${parseNumber(getAllTechnologies().length)}**)`);
-    stats_string.push(`${config.icons.money} Money: **${parseNumber(usr.money)}** (${config.icons.money} **${parseNumber(getIncome(actual_id))}** per turn).`);
+
+    var money_string = (user_income[0] == user_income[1]) ?
+      `${parseNumber(user_income[0])} - ${parseNumber(user_income[1])}` :
+      parseNumber(user_income[0]);
+
+    stats_string.push(`${config.icons.money} Money: **${parseNumber(usr.money)}** (${config.icons.money} **${money_string}** per turn).`);
     stats_string.push(config.localisation.divider);
     stats_string.push("");
     stats_string.push(`**Internal Politics:**`);

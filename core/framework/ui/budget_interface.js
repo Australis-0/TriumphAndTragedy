@@ -12,6 +12,7 @@ module.exports = {
     //Initialise budget_string
     var budget_string = [];
     var total_production = getProduction(actual_id);
+    var user_income = getIncome(actual_id);
 
     var total_actions_gained_per_turn = [
       config.defines.economy.starting_actions + ((total_production.actions) ? total_production.actions[0] : 0),
@@ -44,23 +45,28 @@ module.exports = {
     budget_string.push(`- **${printPercentage(usr.modifiers.civilian_actions)}** of your actions will be used up as ${config.icons.trade} **Civilian Goods** next turn.`);
 
     if (unit_upkeep > 0)
-      budget_string.push(`- ${(unit_upkeep < 0) ? "-" : "+"}**£${parseNumber(unit_upkeep)}** from unit maintenance.`);
+      budget_string.push(`- ${(unit_upkeep > 0) ? "-" : "+"}**£${parseNumber(unit_upkeep)}** from unit maintenance.`);
     if (total_maintenance[0] + total_maintenance[1] > 0)
       if (total_maintenance[0] == total_maintenance[1])
-        budget_string.push(`- ${(total_maintenance[0] < 0) ? "-" : "+"}**£${parseNumber(total_maintenance[0])}** from building maintenance.`);
+        budget_string.push(`- ${(total_maintenance[0] > 0) ? "-" : "+"}**£${parseNumber(total_maintenance[0])}** from building maintenance.`);
       else
-        budget_string.push(`- ${(total_maintenance[0] < 0) ? "-" : "+"}**£${parseNumber(total_maintenance[0])}** - ${(total_maintenance[1] < 0) ? "-" : "+"}**£${parseNumber(total_maintenance[1])}** from building maintenance.`);
+        budget_string.push(`- ${(total_maintenance[0] > 0) ? "-" : "+"}**£${parseNumber(total_maintenance[0])}** - ${(total_maintenance[1] < 0) ? "-" : "+"}**£${parseNumber(total_maintenance[1])}** from building maintenance.`);
 
     budget_string.push("");
     budget_string.push(`Note: Buildings that lack requisite goods or maintenance will not produce anything.`);
     budget_string.push("");
-    budget_string.push(`Your economic advisor estimates that you will gain ${config.icons.money} **${parseNumber(getIncome(actual_id))}** in tax income next turn.`);
+
+    var money_string = (user_income[0] == user_income[1]) ?
+      `${parseNumber(user_income[0])} - ${parseNumber(user_income[1])}` :
+      parseNumber(user_income[0]);
+
+    budget_string.push(`Your economic advisor estimates that you will gain ${config.icons.money} **${parseNumber(money_string)}** in total income next turn.`);
     budget_string.push("");
     budget_string.push(config.localisation.divider);
     budget_string.push("");
     budget_string.push(`**Economic Policy:**`);
     budget_string.push("");
-    budget_string.push(`Current tax: (**${printPercentage(usr.tax_rate)}**/**${printPercentage(usr.modifiers.max_tax)}**) ${(getIncome(actual_id) < 0) ? "- Consider adjusting your tax rate to gain additional income." : ""}`);
+    budget_string.push(`Current tax: (**${printPercentage(usr.tax_rate)}**/**${printPercentage(usr.modifiers.max_tax)}**) ${(getIncome(actual_id)[0] < 0) ? "- Consider adjusting your tax rate to gain additional income." : ""}`);
     budget_string.push("");
     budget_string.push(`**[Set Tax]**`);
     budget_string.push("");
