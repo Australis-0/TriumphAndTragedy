@@ -401,7 +401,8 @@ module.exports = {
     //Budget processing
     {
       //Add money based on calculated user income
-      usr.money += randomNumber(getIncome(actual_id));
+      var user_income = getIncome(actual_id);
+      usr.money += randomNumber(user_income[0], user_income[1]);
     }
 
     //Colonisation processing
