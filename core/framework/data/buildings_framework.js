@@ -26,15 +26,13 @@ module.exports = {
           if (!isNaN(amount)) {
             //Modifier handler
             if (building_obj.modifiers)
-              applyModifiers(local_province.owner, building_obj.modifiers);
+              applyModifiers(province_obj.owner, building_obj.modifiers);
 
             //Housing modifier
-            if (building_obj.houses) {
-              console.log(building_obj);
-                province_obj.housing = (province_obj.housing) ?
-                  province_obj.housing + building_obj.houses*amount :
-                  building_obj.houses*amount;
-            }
+            if (building_obj.houses)
+              province_obj.housing = (province_obj.housing) ?
+                province_obj.housing + building_obj.houses*amount :
+                building_obj.houses*amount;
 
             //Supply limit handler
             if (building_obj.supply_limit) {
@@ -50,6 +48,9 @@ module.exports = {
             }
 
             //Push to buildings array
+            if (!province_obj.buildings)
+              province_obj.buildings = [];
+            
             for (var i = 0; i < amount; i++)
               province_obj.buildings.push({
                 building_type: raw_building_name

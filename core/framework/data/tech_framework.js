@@ -226,6 +226,11 @@ module.exports = {
 
             break;
 
+          case "set_mobilisation_unit":
+            usr.modifiers.set_mobilisation_unit = effect_value[0];
+
+            break;
+
           //Unlocking
           case "unlock_building":
             for (var x = 0; x < effect_value.length; x++)

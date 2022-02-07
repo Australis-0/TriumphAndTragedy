@@ -215,8 +215,8 @@ module.exports = {
         }
 
         //Wars
-        for (var i = 0; i < all_wars.length; i++) {
-          var local_war = main.global.wars[all_wars[i]];
+        for (var x = 0; x < all_wars.length; x++) {
+          var local_war = main.global.wars[all_wars[x]];
 
           removeElement(local_war.attackers, actual_id);
           removeElement(local_war.defenders, actual_id);
