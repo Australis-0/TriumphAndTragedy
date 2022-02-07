@@ -885,7 +885,6 @@ module.exports = {
           for (var i = 0; i < owned_provinces.length; i++)
             if (owned_provinces[i].type == "urban") {
               var scalar = 1;
-              var total_pop_growth = 0;
 
               if (owned_provinces[i].pops.population > 500000) //-3% per million
                 scalar -= Math.ceil(
@@ -897,7 +896,7 @@ module.exports = {
               if (owned_provinces[i].housing > owned_provinces[i].pops.population)
                 for (var x = 0; x < all_pops.length; x++) {
                   var local_pop_growth =
-                    Math.ceil(owned_provinces[i].pops[all_pops[x]]*usr.pops[`${all_pops[x]}_growth_modifier`]*scalar*usr.modifiers.pop_growth_modifier);
+                    Math.ceil(owned_provinces[i].pops[all_pops[x]]*usr.pops[`${all_pops[x]}_growth_modifier`]*scalar*usr.modifiers.pop_growth_modifier) - owned_provinces[i].pops[all_pops[x]];
 
                   usr.pops[all_pops[x]] += local_pop_growth;
                   usr.population += local_pop_growth;
@@ -906,8 +905,6 @@ module.exports = {
                 }
 
             } else {
-              var total_pop_growth = 0;
-
               //Make sure .pop_cap is a thing
               if (!owned_provinces[i].pop_cap)
                 owned_provinces[i].pop_cap = (config.defines.economy.rural_pop_cap) ?
@@ -917,13 +914,13 @@ module.exports = {
               //Calculate rural pop growth for all pops
               for (var x = 0; x < all_pops.length; x++) {
                 var local_pop_growth =
-                  Math.ceil(owned_provinces[i].pops[all_pops[x]]*usr.pops[`${all_pops[x]}_growth_modifier`]*usr.modifiers.pop_growth_modifier);
+                  Math.ceil(owned_provinces[i].pops[all_pops[x]]*usr.pops[`${all_pops[x]}_growth_modifier`]*usr.modifiers.pop_growth_modifier) - owned_provinces[i].pops[all_pops[x]];
 
                 if (owned_provinces[i].pops.population < owned_provinces[i].pop_cap) {
                   usr.pops[all_pops[x]] += local_pop_growth;
                   usr.population += local_pop_growth;
                   owned_provinces[i].pops[all_pops[x]] += local_pop_growth;
-                  owned_provinces[i].population += local_pop_growth;
+                  owned_provinces[i].pops.population += local_pop_growth;
                 }
               }
             }
