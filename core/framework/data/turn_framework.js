@@ -374,12 +374,14 @@ module.exports = {
 
         //Process upkeep
         if (all_produced_goods[i].includes("_upkeep")) {
-          var upkeep_to_process = all_produced_goods[i].replace("_upkeep", "");
+          if (!all_produced_goods[i].includes("money")) {
+            var upkeep_to_process = all_produced_goods[i].replace("_upkeep", "");
 
-          if (usr.inventory[upkeep_to_process] != undefined)
-            usr.inventory[upkeep_to_process] -= randomNumber(local_value[0], local_value[1]);
-          else
-            usr[upkeep_to_process] -= randomNumber(local_value[0], local_value[1]);
+            if (usr.inventory[upkeep_to_process] != undefined)
+              usr.inventory[upkeep_to_process] -= randomNumber(local_value[0], local_value[1]);
+            else
+              usr[upkeep_to_process] -= randomNumber(local_value[0], local_value[1]);
+          }
         } else if (all_produced_goods[i].includes("_special_effect")) {
           //Process special effects
           var special_effect_to_process = all_produced_goods[i].replace("_special_effect", "");

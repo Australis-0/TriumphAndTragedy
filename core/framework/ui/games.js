@@ -52,10 +52,16 @@ module.exports = {
     var msg = arg1_message;
 
     //Declare local instance variables
+    var has_game = (getGameObject(user_id));
     var server = msg.guild;
 
+    try {
+      if (!returnChannel(has_game.channel))
+        has_game = false;
+    } catch {}
+
     //Create new game channel
-    if (!getGame(user_id)) {
+    if (!has_game) {
       var game_id = generateRandomID();
 
       //Create new game interface object
