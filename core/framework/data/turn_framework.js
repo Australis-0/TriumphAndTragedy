@@ -1000,7 +1000,7 @@ module.exports = {
           var total_knowledge_gain = getKnowledgeGain(actual_id);
             total_knowledge_gain = randomNumber(total_knowledge_gain[0], total_knowledge_gain[1]);
 
-          for (var i = 0; i < usr.researching.length; i++) {
+          for (var i = usr.researching.length - 1; i >= 0; i--) {
             var local_knowledge_gain = Math.floor(total_knowledge_gain/usr.researching.length);
             var max_knowledge_investment = (local_knowledge_gain > usr.researching[i].current_investment) ?
               usr.researching[i].current_investment*knowledge_investment :
@@ -1012,6 +1012,8 @@ module.exports = {
 
             //Check if tech has finished researching
             if (usr.researching[i].total_research_cost <= usr.researching[i].current_investment + max_knowledge_investment) {
+              console.log(`Researching ${usr.researching[i].technology}!`);
+
               var local_tech_obj = usr.researching[i].technology;
 
               //Make sure that tech is not already researched
@@ -1030,7 +1032,7 @@ module.exports = {
 
               //Empty research slots
               emptied_research_slots++;
-              research_removal_array.push(i);
+              usr.researching.splice(i, 1);
             } else {
               usr.researching[i].current_investment += Math.round(max_knowledge_investment);
             }
