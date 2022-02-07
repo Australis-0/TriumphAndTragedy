@@ -1012,8 +1012,6 @@ module.exports = {
 
             //Check if tech has finished researching
             if (usr.researching[i].total_research_cost <= usr.researching[i].current_investment + max_knowledge_investment) {
-              console.log(`Researching ${usr.researching[i].technology}!`);
-
               var local_tech_obj = usr.researching[i].technology;
 
               //Make sure that tech is not already researched
