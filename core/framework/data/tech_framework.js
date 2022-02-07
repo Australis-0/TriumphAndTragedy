@@ -261,7 +261,9 @@ module.exports = {
                 usr.politics[effect_name].drift += effect_value[0];
             } else {
               //Process all other effects here
-              usr.modifiers[effect_name] += effect_value[0];
+              usr.modifiers[effect_name] = (usr.modifiers[effect_name]) ?
+                usr.modifiers[effect_name] + effect_value[0] :
+                effect_value[0];
             }
 
             break;
