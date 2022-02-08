@@ -50,7 +50,7 @@ module.exports = {
             //Push to buildings array
             if (!province_obj.buildings)
               province_obj.buildings = [];
-            
+
             for (var i = 0; i < amount; i++)
               province_obj.buildings.push({
                 building_type: raw_building_name
@@ -761,9 +761,10 @@ module.exports = {
     var good_type = (arg1_good) ? arg1_good : "all";
 
     //Declare local instance variables, corresponding functions
+    var actual_id = main.global.user_map[user_id];
     var all_goods = getGoods({ return_names: true });
     var cities = getCities(user_id);
-    var usr = main.users[user_id];
+    var usr = main.users[actual_id];
 
     //Note that deep copies are made to make sure not to effect the actual user variable and to run a valid simulation to simply fetch values instead of alter them
     var goods_production = {};

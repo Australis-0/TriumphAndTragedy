@@ -51,7 +51,7 @@ module.exports = {
                         config.defines.diplomacy.justify_wargoal_time;
                       var actual_infamy = (cb_obj.infamy) ? cb_obj.infamy : 0;
 
-                      usr.justifications.push({
+                      usr.diplomacy.justifications.push({
                         type: raw_cb_name,
                         target: actual_ot_user_id,
 

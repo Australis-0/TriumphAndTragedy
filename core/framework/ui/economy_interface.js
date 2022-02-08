@@ -57,7 +57,7 @@ module.exports = {
       var local_throughput = getCityRGOThroughput(city_obj.name) - (usr.modifiers.rgo_throughput - 1);
 
       local_element.count++;
-      local_element.cities.push(`${city_obj.name}` + (
+      local_element.cities.push(`${city_obj.name} ` + (
         (!isNaN(city_obj.supply_limit)) ?
           `**${printPercentage(Math.ceil(local_throughput), { display_prefix: true })}**` : ``
       ));

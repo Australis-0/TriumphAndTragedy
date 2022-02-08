@@ -109,7 +109,7 @@ module.exports = {
                     for (var i = 0; i < all_resource_shortages.length; i++) {
                       var local_good = getGood(all_resource_shortages[i]);
                       var local_icon = "";
-                      var local_shortage = resource_shortages[all_resource_shortages[i]];
+                      var local_shortage = Math.ceil(resource_shortages[all_resource_shortages[i]]);
 
                       //Determine icon
                       if (local_good)

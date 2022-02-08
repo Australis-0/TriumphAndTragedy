@@ -41,7 +41,7 @@ module.exports = {
 
     //Display actions
     budget_string.push("");
-    (total_actions_gained_per_turn[0] == total_actions_gained_per_turn) ?
+    (total_actions_gained_per_turn[0] == total_actions_gained_per_turn[1]) ?
       budget_string.push(`${config.icons.actions} Actions (**${parseNumber(total_actions_gained_per_turn[0], { display_prefix: true })}** per turn)`) :
       budget_string.push(`${config.icons.actions} Actions (**${parseNumber(total_actions_gained_per_turn[0], { display_prefix: true })}**-**${parseNumber(total_actions_gained_per_turn[1])}** per turn)`);
     budget_string.push(`- **${printPercentage(usr.modifiers.civilian_actions)}** of your actions will be used up as ${config.icons.trade} **Civilian Goods** next turn.`);
@@ -62,7 +62,7 @@ module.exports = {
       `${parseNumber(user_income[0])} - ${parseNumber(user_income[1])}` :
       parseNumber(user_income[0]);
 
-    budget_string.push(`Your economic advisor estimates that you will gain ${config.icons.money} **${parseNumber(money_string)}** in total income next turn.`);
+    budget_string.push(`Your economic advisor estimates that you will gain ${config.icons.money} **${money_string}** in total income next turn.`);
     budget_string.push("");
     budget_string.push(config.localisation.divider);
     budget_string.push("");

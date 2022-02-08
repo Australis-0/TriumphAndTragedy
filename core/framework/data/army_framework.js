@@ -337,20 +337,23 @@ module.exports = {
     }
   },
 
-  //Gets an object array of every army in the world =
+  //Gets an object array of every army in the world
   getAllArmies: function () {
     //Declare local instance variables
     var all_armies = [];
     var all_users = Object.keys(main.users);
 
     //Loop over all users
-    for (var i = 0; i < all_users.length; i++) {
-      var local_user = main.users[all_users[i]];
-      var local_user_armies = Object.keys(local_user.armies);
+    try {
+      for (var i = 0; i < all_users.length; i++) {
+        var local_user = main.users[all_users[i]];
 
-      for (var x = 0; x < local_user_armies.length; x++)
-        all_armies.push(local_user.armies[local_user_armies[x]]);
-    }
+        var local_user_armies = Object.keys(local_user.armies);
+
+        for (var x = 0; x < local_user_armies.length; x++)
+          all_armies.push(local_user.armies[local_user_armies[x]]);
+      }
+    } catch {}
 
     //Return statement
     return all_armies;

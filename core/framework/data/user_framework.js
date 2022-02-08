@@ -513,12 +513,14 @@ module.exports = {
     for (var i = 0; i < all_users.length; i++) {
       var local_user = main.users[all_users[i]];
 
-      for (var x = 0; x < local_user.diplomacy.justifications.length; x++) {
-        var local_justification = local_user.diplomacy.justifications[x];
+      try {
+        for (var x = 0; x < local_user.diplomacy.justifications.length; x++) {
+          var local_justification = local_user.diplomacy.justifications[x];
 
-        if (local_justification.target == user_id)
-          return true;
-      }
+          if (local_justification.target == user_id)
+            return true;
+        }
+      } catch {}
     }
   },
 
