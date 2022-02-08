@@ -168,7 +168,7 @@ module.exports = {
       ]
     },
     function (arg) {
-      module.exports.buy(user_id, arg[0], arg[1]);
+      module.exports.buy(user_id, arg[1], arg[0]);
     },
     function (arg) {
       switch (arg) {
