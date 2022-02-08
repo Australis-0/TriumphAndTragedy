@@ -401,8 +401,11 @@ module.exports = {
     var options = (arg2_options) ? arg2_options : {};
 
     //Declare local instance variables
-    var all_armies = Object.keys(usr.armies);
+    var actual_id = main.global.user_map[user_id];
     var army_exists = [false, ""]; //[army_exists, army_obj/key];
+    var usr = main.users[actual_id];
+
+    var all_armies = Object.keys(usr.armies);
 
     //Soft match - Reversed
     for (var i = all_armies.length - 1; i >= 0; i--) {
@@ -537,7 +540,7 @@ module.exports = {
 
     //Iterate over local armies
     for (var i = 0; i < local_armies.length; i++)
-      total_troop_count += module.exports.getArmySize(local_armies[i]);
+      total_troop_count += module.exports.getArmySize(local_armies[i].owner, local_armies[i]);
 
     //Return statement
     return total_troop_count;

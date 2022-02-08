@@ -297,8 +297,6 @@ module.exports = {
               var charter_to_cancel = input.replace("cancel charter ", "")
                 .replace("#", "");
 
-              console.log(charter_to_cancel);
-
               cancelCharter(user_id, charter_to_cancel);
             } else if (input == "cancel charter") {
               initialiseCancelCharter(user_id);
@@ -1121,6 +1119,22 @@ module.exports = {
                 user: game_obj.user
               });
             });
+
+          //[View (Army Name)]
+          if (input.startsWith("view ")) {
+            var army_to_view = input.replace("view ", "");
+            var viewed_army = printArmy(actual_id, army_to_view);
+
+            if (viewed_army) {
+              createPageMenu(game_obj.middle_embed, {
+                embed_pages: viewed_army,
+                user: game_obj.user
+              });
+              game_obj.page = `army_viewer_${getArmy(actual_id, army_to_view, { return_key: true })}`;
+            } else {
+              printError(game_obj.id, `**${army_to_view}** isn't a valid army you can inspect! Take a look at your **[Army List]** first to see which armies you can view.`);
+            }
+          }
         }
 
         if (game_obj.page == "army_list" || game_obj.page.startsWith("army_viewer_")) {
@@ -1181,9 +1195,14 @@ module.exports = {
           //[Torpedo Fleet]
           if (input == "torpedo fleet")
             initialiseTorpedoFleet(user_id);
+
           //[Transfer Units]
           if (input == "transfer units")
             initialiseTransferUnits(user_id);
+
+          //[View Army]
+          if (input == "view army")
+            initialisePrintArmy(user_id);
         }
 
         if (game_obj.page.startsWith("army_viewer_", "")) { //[WIP] - Add auto-complete in the future; remember to remove previous order handlers from the top if you do!

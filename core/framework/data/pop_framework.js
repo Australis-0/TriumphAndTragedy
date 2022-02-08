@@ -232,12 +232,12 @@ module.exports = {
       removePops(user_id, Math.ceil(decimation_obj[pop_types[i]]*remaining_population), pop_types[i]);
 
     //Add to civilian/military casualties tracker
-    if (!getList(options.type).includes("all"))
+    if (!getList(options.type).includes("all")) {
       if (pop_obj.military_pop)
         usr.recent_military_casualties[usr.recent_military_casualties.length - 1] += options.amount;
       else
         usr.recent_civilian_casualties[usr.recent_civilian_casualties.length - 1] += options.amount;
-    else {
+    } else {
       usr.recent_civilian_casualties[usr.recent_civilian_casualties.length - 1] += options.amount;
       usr.recent_military_casualties[usr.recent_military_casualties.length - 1] += options.amount;
     }
