@@ -273,7 +273,12 @@ module.exports = {
 
     if (city_obj) {
       if (usr.modifiers.political_capital >= config.defines.politics.move_capital_cost) {
-        if (usr.pops.accepted_cultures.includes(city_obj.culture)) {
+        var culture_obj = main.global.cultures[city_obj.culture];
+
+        if (
+          culture_obj.primary_culture.includes(actual_id) ||
+          culture_obj.accepted_cultures.includes(actual_id)
+        ) {
           //Get rid of old capital
           var all_cities = getCities(actual_id, {
             include_hostile_occupations: true
