@@ -2,7 +2,6 @@ module.exports = {
   initialiseDumbSell: function (arg0_user) {
     //Convert from parameters
     var user_id = arg0_user;
-    var raw_good_name = arg1_good_type;
 
     //Declare local instance variables
     var game_obj = getGameObject(user_id);
@@ -12,7 +11,7 @@ module.exports = {
       title: `Sell Goods To The World Market:`,
       prompts: [
         [`What type of good would you like to sell to the World Market?`, "string"],
-        [`How much ${(good_obj.icon) ? config.icons[good_obj.icon] + " " : ""}${good_obj.name} would you like to buy?\n\nType **[Inventory]** to view your current inventory.\nType **[World Market]** for a list of valid goods.`, "number", { min: 1 }]
+        [`How much of this material would you like to sell?\n\nType **[Inventory]** to view your current inventory.\nType **[World Market]** for a list of valid goods.`, "number", { min: 1 }]
       ]
     },
     function (arg) {
