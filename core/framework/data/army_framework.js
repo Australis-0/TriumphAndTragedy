@@ -1015,7 +1015,7 @@ module.exports = {
 
 						for (var x = beginning_argument; x <= ending_argument; x++) {
 							//Carry leftside format all the way up until the ending index
-							var current_ordinal = (contains_ordinals) ? returnOrdinal(x) + " " : "";
+							var current_ordinal = (contains_ordinals) ? ordinalise(x) + " " : "";
 							if (x != ending_argument) {
 								ordinal_array.push(processOrdinalString(`${leftside_prefix}${local_break} ${romanise(x)}${current_ordinal} ${leftside_suffix}`));
 							} else {
@@ -1028,7 +1028,7 @@ module.exports = {
 
 						for (var x = beginning_argument; x <= ending_argument; x++) {
 							//Carry leftside format all the way up until the ending index
-							var current_ordinal = (contains_ordinals) ? returnOrdinal(x) + " " : "";
+							var current_ordinal = (contains_ordinals) ? ordinalise(x) + " " : "";
 							if (x != ending_argument) {
 								ordinal_array.push(processOrdinalString(`${leftside_prefix}${number_break}${x}${current_ordinal} ${leftside_suffix}`));
 							} else {
@@ -1041,7 +1041,7 @@ module.exports = {
 
 						for (var x = beginning_argument; x <= ending_argument; x++) {
 							//Carry leftside format all the way up until the ending index
-							var current_ordinal = (contains_ordinals) ? returnOrdinal(x) + " " : "";
+							var current_ordinal = (contains_ordinals) ? ordinalise(x) + " " : "";
 							if (x != ending_argument) {
 								ordinal_array.push(processOrdinalString(`${leftside_prefix}${local_break} ${romanise(x)}${current_ordinal} ${leftside_suffix}`));
 							} else {
@@ -1054,7 +1054,7 @@ module.exports = {
 
 						for (var x = beginning_argument; x <= ending_argument; x++) {
 							//Carry leftside format all the way up until the ending index
-							var current_ordinal = (contains_ordinals) ? returnOrdinal(x) + " " : "";
+							var current_ordinal = (contains_ordinals) ? ordinalise(x) + " " : "";
 							if (x != ending_argument) {
 								ordinal_array.push(processOrdinalString(`${leftside_prefix}${number_break}${x}${current_ordinal} ${leftside_suffix}`));
 							} else {

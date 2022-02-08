@@ -239,7 +239,6 @@ module.exports = {
         usr.recent_civilian_casualties[usr.recent_civilian_casualties.length - 1] += options.amount;
     } else {
       usr.recent_civilian_casualties[usr.recent_civilian_casualties.length - 1] += options.amount;
-      usr.recent_military_casualties[usr.recent_military_casualties.length - 1] += options.amount;
     }
   },
 

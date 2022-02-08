@@ -1,5 +1,5 @@
 module.exports = {
-  printEconomy: function (arg0_user) { //[WIP]
+  printEconomy: function (arg0_user) {
     //Convert from parameters
     var user_id = arg0_user;
 
@@ -83,7 +83,7 @@ module.exports = {
     economy_string.push("");
 
     //Dynamically push resource production to economy_string
-    var all_production = getProduction(user_id);
+    var all_production = getProduction(actual_id);
     var all_produced_goods = Object.keys(all_production);
 
     for (var i = 0; i < all_produced_goods.length; i++) {
