@@ -1,12 +1,12 @@
 module.exports = {
-  createArmyCommand: function (arg0_user, arg1_army_name) { //[WIP] - Update army_list if user is currently viewing it
+  createArmyCommand: function (arg0_user, arg1_army_name) {
     //Convert from parameters
     var user_id = arg0_user;
     var army_name = parseString(arg1_army_name.trim());
 
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
-    var game_obj = getGameObject(actual_id);
+    var game_obj = getGameObject(user_id);
     var usr = main.users[actual_id];
 
     //Check if an army by this name already exists
@@ -26,6 +26,14 @@ module.exports = {
 
         if (capital_obj.id) {
           createArmy(actual_id, army_name, capital_obj.id);
+
+          //Update army_list if user is currently viewing it
+          if (game_obj.page == "army_list")
+            createPageMenu(game_obj.middle_embed, {
+              embed_pages: printArmyList(user_id),
+              page: main.interfaces[game_obj.middle_embed.id].page,
+              user: game_obj.user
+            });
 
           printAlert(game_obj.id, `You have created the **${army_name}**! Make sure to check your **[Army List]** for a complete list of all your active field armies.`);
         } else {
@@ -53,7 +61,7 @@ module.exports = {
       ]
     },
     function (arg) {
-      module.exports.createArmy(user_id, arg[0]);
+      module.exports.createArmyCommand(user_id, arg[0]);
     });
   }
 };

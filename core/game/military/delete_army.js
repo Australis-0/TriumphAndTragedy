@@ -1,5 +1,5 @@
 module.exports = {
-  deleteArmyCommand: function (arg0_user, arg1_army_name) { //Update army_list if user is currently viewing it
+  deleteArmyCommand: function (arg0_user, arg1_army_name) {
     //Convert from parameters
     var user_id = arg0_user;
     var army_name = arg1_army_name;
@@ -15,6 +15,14 @@ module.exports = {
       var old_name = JSON.parse(JSON.stringify(army_obj.name));
 
       deleteArmy(actual_id, army_name);
+
+      //Update army_list if user is currently viewing it
+      if (game_obj.page == "army_list")
+        createPageMenu(game_obj.middle_embed, {
+          embed_pages: printArmyList(user_id),
+          page: main.interfaces[game_obj.middle_embed.id].page,
+          user: game_obj.user
+        });
 
       printAlert(game_obj.id, `You have demobilised the **${old_name}**! All their units and equipment have been returned to your **[Reserves]**.`);
     } else {
@@ -35,7 +43,7 @@ module.exports = {
       ]
     },
     function (arg) {
-      module.exports.deleteArmy(user_id, arg[0]);
+      module.exports.deleteArmyCommand(user_id, arg[0]);
     },
     function (arg) {
       switch (arg) {

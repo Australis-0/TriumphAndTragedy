@@ -21,6 +21,16 @@ module.exports = {
         (move_command[0]) ?
           printAlert(game_obj.id, move_command[1]) :
           printError(game_obj.id, move_command[1]);
+
+        if (game_obj.page.includes("army_viewer_")) {
+          var army_to_view = game_obj.page.replace("army_viewer_", "");
+
+          createPageMenu(game_obj.middle_embed, {
+            embed_pages: printArmy(user_id, army_to_view),
+            page: main.interfaces[game_obj.middle_embed.id].page,
+            user: game_obj.user
+          });
+        }
       } else {
         printError(game_obj.id, `Your cartographers are still struggling from overwork from just trying to find the nonexistent province of **${province_id}**! Please specify a valid province to move to on the map. `);
       }
