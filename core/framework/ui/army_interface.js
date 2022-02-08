@@ -227,7 +227,7 @@ module.exports = {
     }
 
     //Default message if no armies can be found
-    if (all_armies.length > 0) {
+    if (all_armies.length == 0) {
       armies_string.push("");
       armies_string.push(`_You currently have no armies in active service._`);
       armies_string.push("");
@@ -242,7 +242,9 @@ module.exports = {
 
       description: [
         `**[Create Army]** ¦ **[Delete Army]** ¦ **[Merge Army]** ¦ **[Rename Army]** ¦ **[View Army]**`,
-        `**[Deploy Units]** ¦ **[Transfer Units]** ¦ **[Relieve Units]**`
+        `**[Deploy Units]** ¦ **[Transfer Units]** ¦ **[Relieve Units]**`,
+        ``,
+        ``,
       ]
     });
   }
