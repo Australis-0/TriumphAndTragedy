@@ -1274,7 +1274,7 @@ module.exports = {
 
           //[Create Army]
           if (input == "create army")
-            initialiseCreateArmy(user_id);
+            initialiseCreateArmyCommand(user_id);
 
           //[Delete All Armies]
           if (input == "delete all armies")
@@ -1286,7 +1286,7 @@ module.exports = {
 
           //[Delete Army]
           if (input == "delete army")
-            initialiseDeleteArmy(user_id);
+            initialiseDeleteArmyCommand(user_id);
 
           //[Deploy Units]
           if (input == "deploy units")
@@ -1322,7 +1322,7 @@ module.exports = {
 
           //[Move All]
           if (input == "move army")
-            initialiseMoveArmy(user_id);
+            initialiseMoveArmyCommand(user_id);
 
           //[Move Armies]
           if (input == "move armies")
