@@ -447,7 +447,7 @@ module.exports = {
       }
 
       //Remove glitched constructions
-      for (var i = 0; i < usr.under_construction.length - 1; i >= 0; i--)
+      for (var i = usr.under_construction.length - 1; i >= 0; i--)
         if (usr.under_construction[i].construction_turns <= 0)
           usr.under_construction.splice(i, 1);
     }
