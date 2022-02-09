@@ -445,6 +445,11 @@ module.exports = {
             constructBuilding(usr.under_construction[i].building_amount, usr.under_construction[i].building_type, usr.under_construction[i].province_id, i);
         }
       }
+
+      //Remove glitched constructions
+      for (var i = 0; i < usr.under_construction.length - 1; i >= 0; i--)
+        if (usr.under_construction[i].construction_turns <= 0)
+          usr.under_construction.splice(i, 1);
     }
 
     //Diplomacy processing

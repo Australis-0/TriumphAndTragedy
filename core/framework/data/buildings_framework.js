@@ -29,7 +29,9 @@ module.exports = {
             if (construction_index) {
               var local_user = main.users[province_obj.owner];
 
+              console.log(local_user.under_construction.length);
               local_user.under_construction.splice(construction_index, 1);
+              console.log(local_user.under_construction.length);
             }
 
             //Modifier handler
