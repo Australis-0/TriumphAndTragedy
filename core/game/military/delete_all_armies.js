@@ -8,21 +8,24 @@ module.exports = {
     var game_obj = getGameObject(user_id);
     var usr = main.users[actual_id];
 
-    var all_armies = Object.keys(usr.armies);
-
     //Make sure user has armies to delete to begin with
-    if (all_armies.length > 0) {
+    if (Object.keys(usr.armies).length > 0) {
       //Begin removing all armies
-      var old_army_count = all_armies.length;
+      var old_army_count = Object.keys(usr.armies).length;
 
       while (true) {
-        if (Object.keys(usr.armies).length > 0)
-          for (var i = 0; i < Object.keys(usr.armies).length; i++) {
-            var local_army = usr.armies[Object.keys(usr.armies)[i]];
+        var all_armies = Object.keys(usr.armies);
+
+        if (all_armies.length > 0) {
+          for (var i = 0; i < all_armies.length; i++) {
+            var local_army = usr.armies[all_armies[i]];
             deleteArmy(actual_id, local_army.name);
           }
-        else
+
+          console.log(all_armies);
+        } else {
           break;
+        }
       }
 
       //Print user feedback

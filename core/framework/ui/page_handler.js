@@ -1278,7 +1278,7 @@ module.exports = {
 
           //[Delete All Armies]
           if (input == "delete all armies")
-            initialiseDeleteAllArmies(user_id);
+            deleteAllArmies(user_id);
 
           //[Delete Armies]
           if (input == "delete armies")

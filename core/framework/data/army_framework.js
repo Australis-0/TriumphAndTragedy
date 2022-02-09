@@ -195,8 +195,10 @@ module.exports = {
 
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
-    var army_obj = module.exports.getArmy(actual_id, army_name);
+    var army_id = module.exports.getArmy(actual_id, army_name, { return_key: true });
     var usr = main.users[actual_id];
+
+    var army_obj = usr.armies[army_id];
 
     //Return all units to reserves
     if (army_obj) {
@@ -229,7 +231,7 @@ module.exports = {
         }
 
       //Delete army
-      delete army_obj;
+      delete usr.armies[army_id];
     }
   },
 
