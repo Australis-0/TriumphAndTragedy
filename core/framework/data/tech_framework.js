@@ -31,6 +31,7 @@ module.exports = {
     var user_id = arg0_user;
 
     //Declare local tracker variables
+    var actual_id = main.global.user_map[user_id];
     var all_pops = Object.keys(config.pops);
     var local_knowledge_production = (getProduction(user_id, "knowledge")) ?
       getProduction(user_id, "knowledge") :
@@ -43,7 +44,7 @@ module.exports = {
 
       if (local_pop.per_100k)
         if (local_pop.per_100k.knowledge)
-          pop_knowledge_gain += (getTotalPopManpower(user_id, all_pops[i])/100000)*local_pop.per_100k.knowledge;
+          pop_knowledge_gain += (getTotalPopManpower(actual_id, all_pops[i])/100000)*local_pop.per_100k.knowledge;
     }
 
     //Make sure you can't just gain unlimited knowledge from faculty (hard cap)

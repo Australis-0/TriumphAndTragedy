@@ -1290,7 +1290,7 @@ module.exports = {
 
           //[Deploy Units]
           if (input == "deploy units")
-            initialiseDeployUnits(user_id);
+            initialiseDeployUnitsCommand(user_id);
 
           //[Garrison Cities]
           if (input == "garrison cities")
