@@ -362,6 +362,9 @@ module.exports = {
   },
 
   getMutualRelations: function (arg0_user, arg1_user) {
+    var user_id = arg0_user;
+    var ot_user_id = arg1_user;
+
     return [
       module.exports.getRelations(user_id, ot_user_id)[0],
       module.exports.getRelations(ot_user_id, user_id)[0]

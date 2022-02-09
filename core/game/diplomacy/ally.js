@@ -71,7 +71,7 @@ module.exports = {
                       printError(game_obj.id, `You do not have enough diplomatic slots remaining to propose an alliance!`);
                     }
                   } else {
-                    printError(game_obj.id, `You must have at leas **${parseNumber(config.defines.diplomacy.alliance_relation_threshold, { display_prefix: true })}** Relations with **${ot_user.name}** in order to propose an alliance!`);
+                    printError(game_obj.id, `You must have at least **${parseNumber(config.defines.diplomacy.alliance_relation_threshold, { display_prefix: true })}** Relations with **${ot_user.name}** in order to propose an alliance!`);
                   }
                 } else {
                   printError(game_obj.id, `**${ot_user.name}** already has an alliance pending with you! Accept their alliance request in your Alerts screen to ally with them.`);
