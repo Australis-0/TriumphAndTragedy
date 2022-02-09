@@ -23,13 +23,13 @@ module.exports = {
               var ot_user_has_alliance_pending = false;
 
               //Check if current user has a pending alliance
-              if (usr.allies[actual_ot_user_id])
-                if (usr.allies[actual_ot_user_id].status == "pending")
+              if (usr.diplomacy.allies[actual_ot_user_id])
+                if (usr.diplomacy.allies[actual_ot_user_id].status == "pending")
                   alliance_is_pending = true;
 
               //Check if ot_user has a pending alliance
-              if (ot_user.allies[actual_id])
-                if (ot_user.allies[actual_id].status == "pending")
+              if (ot_user.diplomacy.allies[actual_id])
+                if (ot_user.diplomacy.allies[actual_id].status == "pending")
                   ot_user_has_alliance_pending = true;
 
               if (!alliance_is_pending) {
@@ -50,11 +50,11 @@ module.exports = {
                           });
 
                           //Declare pending alliance object
-                          usr.allies[actual_ot_user_id] = {
+                          usr.diplomacy.allies[actual_ot_user_id] = {
                             id: actual_id,
                             status: "pending"
                           };
-                          ot_user.allies[actual_id] = {
+                          ot_user.diplomacy.allies[actual_id] = {
                             id: actual_id,
                             status: "pending"
                           };
