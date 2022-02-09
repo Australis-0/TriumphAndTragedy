@@ -27,7 +27,7 @@ module.exports = {
 
               modifyRelations(actual_ot_user_id, {
                 target: actual_id,
-                value: -50,
+                value: getRelations(actual_ot_user_id, actual_id)[0] - 50,
                 duration: 5
               });
 

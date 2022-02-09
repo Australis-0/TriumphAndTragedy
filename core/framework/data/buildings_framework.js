@@ -9,11 +9,12 @@ module.exports = {
     "order"
   ],
 
-  constructBuilding: function (arg0_amount, arg1_building_name, arg2_province) {
+  constructBuilding: function (arg0_amount, arg1_building_name, arg2_province, arg3_index) {
     //Convert from parameters
     var amount = Math.ceil(parseInt(arg0_amount));
     var building_name = arg1_building_name.trim();
     var province_id = arg2_province;
+    var construction_index = arg3_index;
 
     //Declare local instance variables
     var building_obj = module.exports.getBuilding(building_name);
@@ -24,6 +25,13 @@ module.exports = {
       if (province_obj.buildings)
         if (building_obj)
           if (!isNaN(amount)) {
+            //Remove index
+            if (construction_index) {
+              var local_user = main.users[province_obj.owner];
+
+              local_user.under_construction.splice(construction_index, 1);
+            }
+
             //Modifier handler
             if (building_obj.modifiers)
               applyModifiers(province_obj.owner, building_obj.modifiers);
