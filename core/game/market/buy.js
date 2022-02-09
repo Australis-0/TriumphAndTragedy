@@ -1,5 +1,5 @@
 module.exports = {
-  buy: function (arg0_user, arg1_amount, arg2_good_type) { //[WIP] - Update market page if current user page is set to there
+  buy: function (arg0_user, arg1_amount, arg2_good_type) {
     //Convert from parameters
     var user_id = arg0_user;
     var good_amount = parseInt(arg1_amount);
@@ -40,11 +40,11 @@ module.exports = {
             if (good_amount < main.market[good_name].stock) {
               if (good_amount <= 1000) {
                 //Check if user has enough market capacity remaining
-                if (getMarketCapacity(actual_id) - good_amount > 0) {
+                if (getMarketCapacity(actual_id) - good_amount >= 0) {
                   //Check with stock limitations
                   if (
                     (main.market[good_name].stock < 50) ||
-                    (main.market[good_name].stock >= 50 && good_amount < main.market[good_name].stock*0.2)
+                    (main.market[good_name].stock >= 50 && good_amount <= main.market[good_name].stock*0.2)
                   ) {
                     //Make the purchase now that all checks have been cleared
                     var total_buy_price = 0;
@@ -83,10 +83,8 @@ module.exports = {
 
                     //Print out alert
                     printAlert(game_obj.id, `You bought **${parseNumber(good_amount)}** ${(good_obj.icon) ? config.icons[good_obj.icon] + " " : ""}${(good_obj.name) ? good_obj.name : good_name} for **£${parseNumber(total_buy_price)}**.`);
-
-                    console.log(main.market[good_name]);
                   } else {
-                    printError(game_obj.id, `You can only buy/sell up to **20%** of the goods in a large market at once! This equates to about **${parseNumber(Math.floor(main.market[good_name].stock*0.2))}** ${(good_obj.name) ? good_obj.name : good_name}.`);
+                    printError(game_obj.id, `You can only buy up to **20%** of the goods in a large market at once! This equates to about **${parseNumber(Math.floor(main.market[good_name].stock*0.2))}** ${(good_obj.name) ? good_obj.name : good_name}.`);
                   }
                 } else {
                   printError(game_obj.id, `You do not have enough Market Capacity remaining to make this purchase! You need at least **${parseNumber(good_amount - getMarketCapacity(actual_id))}** remaining Market Capacity in order to fulfil this purchase request.`);
