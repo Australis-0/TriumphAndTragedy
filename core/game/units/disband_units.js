@@ -32,5 +32,40 @@ module.exports = {
     } else {
       printError(game_obj.id, `**${unit_name}** are not a valid type of unit!`);
     }
+  },
+
+  initialiseDisbandUnitsCommand: function (arg0_user) {
+    //Convert from parameters
+    var user_id = arg0_user;
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var game_obj = getGameObject(user_id);
+    var usr = main.users[actual_id];
+
+    //Initialise visual prompt
+    visualPrompt(game_obj.alert_embed, user_id, {
+      title: `Disband Units:`,
+      prompts: [
+        [`Which type of unit would you like to disband?\n\nCheck your **[Reserves]** for a full list of available units to disband.`, "string"],
+        [`How many units would you like to demobilise?`, "number", { min: 1 }]
+      ]
+    },
+    function (arg) {
+      module.exports.disbandUnitsCommand(user_id, arg[1], arg[0]);
+    },
+    function (arg) {
+      switch (arg) {
+        case "reserves":
+        case "view reserves":
+          createPageMenu(game_obj.middle_embed, {
+            embed_pages: printReserves(game_obj.user),
+            user: game_obj.user
+          });
+          return true;
+
+          break;
+      }
+    });
   }
 };

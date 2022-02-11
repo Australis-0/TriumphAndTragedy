@@ -175,6 +175,6 @@ module.exports = {
 
           break;
       }
-    })
+    });
   }
 };
