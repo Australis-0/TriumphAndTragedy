@@ -1,5 +1,5 @@
 module.exports = {
-  transferUnits: function (arg0_user, arg1_amount, arg2_unit_name, arg3_army_name, arg4_army_name) { //[WIP] - Update army UI if user is currently on it
+  transferUnits: function (arg0_user, arg1_amount, arg2_unit_name, arg3_army_name, arg4_army_name) {
     //Convert from parameters
     var user_id = arg0_user;
     var amount = Math.ceil(parseInt(arg1_amount));
@@ -34,6 +34,17 @@ module.exports = {
 
                     if (army_obj.units[raw_unit_name] == 0)
                       delete army_obj.units[raw_unit_name];
+
+                    //Update army page
+                    if (game_obj.page.includes("army_viewer_")) {
+                      var army_to_view = game_obj.page.replace("army_viewer_", "");
+
+                      createPageMenu(game_obj.middle_embed, {
+                        embed_pages: printArmy(user_id, army_to_view),
+                        page: interfaces[game_obj.middle_embed.id].page,
+                        user: game_obj.user
+                      });
+                    }
 
                     //Print user feedback
                     printAlert(game_obj.id, `You have successfully transferred **${parseNumber(amount)}** ${(unit_obj.name) ? unit_obj.name : raw_unit_name} from the **${army_obj.name}** to the **${ot_army_obj.name}**.`);

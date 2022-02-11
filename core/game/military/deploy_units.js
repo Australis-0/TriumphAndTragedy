@@ -1,5 +1,5 @@
 module.exports = {
-  deployUnitsCommand: function (arg0_user, arg1_amount, arg2_units, arg3_army_name) { //[WIP] - Update army page if user is currently viewing it
+  deployUnitsCommand: function (arg0_user, arg1_amount, arg2_unit_name, arg3_army_name) {
     //Convert from parameters
     var user_id = arg0_user;
     var amount = Math.ceil(parseInt(arg1_amount));
@@ -18,7 +18,18 @@ module.exports = {
     if (army_obj) {
       if (amount > 0) {
         if (unit_obj) {
-          var deploy_units = deployUnits(actual_id, amount, raw_unit_name);
+          var deploy_units = deployUnits(actual_id, amount, raw_unit_name, army_obj);
+
+          //Update army page
+          if (game_obj.page.includes("army_viewer_")) {
+            var army_to_view = game_obj.page.replace("army_viewer_", "");
+
+            createPageMenu(game_obj.middle_embed, {
+              embed_pages: printArmy(user_id, army_to_view),
+              page: interfaces[game_obj.middle_embed.id].page,
+              user: game_obj.user
+            });
+          }
 
           //Print out error message if one exists
           (deploy_units[0]) ?
@@ -53,7 +64,7 @@ module.exports = {
       ]
     },
     function (arg) {
-      module.exports.deployUnits(user_id, arg[1], arg[2], arg[0]);
+      module.exports.deployUnitsCommand(user_id, arg[1], arg[2], arg[0]);
     },
     function (arg) {
       switch (arg) {

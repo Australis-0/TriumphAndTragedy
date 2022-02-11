@@ -1121,9 +1121,9 @@ module.exports = {
             });
 
           //[View (Army Name)]
-          if (input.startsWith("view ")) {
+          if (input.startsWith("view ") && input != "view army") {
             var army_to_view = input.replace("view ", "");
-            var viewed_army = printArmy(actual_id, army_to_view);
+            var viewed_army = printArmy(user_id, army_to_view);
 
             if (viewed_army) {
               createPageMenu(game_obj.middle_embed, {
@@ -1160,6 +1160,14 @@ module.exports = {
           if (input == "convoy raid")
             initialiseConvoyRaid(user_id);
 
+          //[Delete Army]
+          if (input == "delete army")
+            initialiseDeleteArmy(user_id);
+
+          //[Deploy Units]
+          if (input == "deploy units")
+            initialiseDeployUnits(user_id);
+
           //[Harbour Raid]
           if (input == "harbour raid")
             initialiseHarbourRaid(user_id);
@@ -1168,13 +1176,33 @@ module.exports = {
           if (input == "lift blockade")
             initialiseLiftBlockade(user_id);
 
+          //[Merge Army]
+          if (input == "merge army")
+            initialiseMergeArmy(user_id);
+
           //[Move]
           if (input == "move")
             initialiseMoveArmy(user_id);
 
+          //[Relieve Units]
+          if (input == "relieve units")
+            initialiseRelieveUnits(user_id);
+
+          //[Rename Army]
+          if (input == "rename army")
+            initialiseRenameArmy(user_id);
+
+          //[Split Army]
+          if (input == "split army")
+            initialiseSplitArmy(user_id);
+
           //[Torpedo Fleet]
           if (input == "torpedo fleet")
             initialiseTorpedoFleet(user_id);
+
+          //[Transfer Units]
+          if (input == "transfer units")
+            initialiseTransferUnits(user_id);
         }
 
         if (game_obj.page.startsWith("army_viewer_", "")) { //[WIP] - Add auto-complete in the future; remember to remove previous order handlers from the top if you do!
@@ -1308,6 +1336,10 @@ module.exports = {
           if (input == "rename army")
             initialiseRenameArmy(user_id);
 
+          //[Split Army]
+          if (input == "split army")
+            initialiseSplitArmy(user_id);
+
           //[Split Armies]
           if (input == "split armies")
             initialiseSplitArmies(user_id);
@@ -1333,7 +1365,6 @@ module.exports = {
 
             game_obj.page = "unit_list";
           }
-
 
           //[View Army]
           if (input == "view army")

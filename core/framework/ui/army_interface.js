@@ -40,7 +40,7 @@ module.exports = {
     });
   },
 
-  printArmy: function (arg0_user, arg1_army_name) { //[WIP] - Finish bulk of function
+  printArmy: function (arg0_user, arg1_army_name) {
     //Convert from parameters
     var user_id = arg0_user;
     var army_name = arg1_army_name.trim();
