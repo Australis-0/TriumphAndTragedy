@@ -71,7 +71,7 @@ config.units.armour = {
       food: 5,
       money: 1000,
 
-      ground_vehicles: 5,
+      ground_vehicles_cp: 5,
     },
     manpower_cost: {
       soldiers: 35000
@@ -328,7 +328,7 @@ config.units.armour = {
       food: 3,
       money: 4000,
 
-      ground_vehicles: 15
+      ground_vehicles_cp: 15
     },
     manpower_cost: {
       soldiers: 35000

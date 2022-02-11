@@ -1160,14 +1160,6 @@ module.exports = {
           if (input == "convoy raid")
             initialiseConvoyRaid(user_id);
 
-          //[Delete Army]
-          if (input == "delete army")
-            initialiseDeleteArmy(user_id);
-
-          //[Deploy Units]
-          if (input == "deploy units")
-            initialiseDeployUnits(user_id);
-
           //[Harbour Raid]
           if (input == "harbour raid")
             initialiseHarbourRaid(user_id);
@@ -1176,33 +1168,13 @@ module.exports = {
           if (input == "lift blockade")
             initialiseLiftBlockade(user_id);
 
-          //[Merge Army]
-          if (input == "merge army")
-            initialiseMergeArmy(user_id);
-
           //[Move]
           if (input == "move")
             initialiseMoveArmy(user_id);
 
-          //[Relieve Units]
-          if (input == "relieve units")
-            initialiseRelieveUnits(user_id);
-
-          //[Rename Army]
-          if (input == "rename army")
-            initialiseRenameArmy(user_id);
-
           //[Torpedo Fleet]
           if (input == "torpedo fleet")
             initialiseTorpedoFleet(user_id);
-
-          //[Transfer Units]
-          if (input == "transfer units")
-            initialiseTransferUnits(user_id);
-
-          //[View Army]
-          if (input == "view army")
-            initialisePrintArmy(user_id);
         }
 
         if (game_obj.page.startsWith("army_viewer_", "")) { //[WIP] - Add auto-complete in the future; remember to remove previous order handlers from the top if you do!
@@ -1274,7 +1246,7 @@ module.exports = {
 
           //[Create Army]
           if (input == "create army")
-            initialiseCreateArmyCommand(user_id);
+            initialiseCreateArmy(user_id);
 
           //[Delete All Armies]
           if (input == "delete all armies")
@@ -1286,11 +1258,11 @@ module.exports = {
 
           //[Delete Army]
           if (input == "delete army")
-            initialiseDeleteArmyCommand(user_id);
+            initialiseDeleteArmy(user_id);
 
           //[Deploy Units]
           if (input == "deploy units")
-            initialiseDeployUnitsCommand(user_id);
+            initialiseDeployUnits(user_id);
 
           //[Garrison Cities]
           if (input == "garrison cities")
@@ -1322,7 +1294,7 @@ module.exports = {
 
           //[Move All]
           if (input == "move army")
-            initialiseMoveArmyCommand(user_id);
+            initialiseMoveArmy(user_id);
 
           //[Move Armies]
           if (input == "move armies")

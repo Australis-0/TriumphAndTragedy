@@ -48,7 +48,7 @@ module.exports = {
       title: `Deploy Units:`,
       prompts: [
         [`What is the name of the army you would like to deploy your units in?\n\nType **[Army List]** to view a list of all valid armies.`, "string"],
-        [`Which type of unit would you like to deploy?\n\nType **[View Reserves]** to view a list of all valid units.`],
+        [`Which type of unit would you like to deploy?\n\nType **[View Reserves]** to view a list of all valid units.`, "string"],
         [`How many soldiers would you like to deploy?`, "number", { min: 0 }]
       ]
     },

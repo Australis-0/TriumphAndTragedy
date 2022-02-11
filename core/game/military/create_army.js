@@ -47,7 +47,7 @@ module.exports = {
     }
   },
 
-  initialiseCreateArmyCommand: function (arg0_user) {
+  initialiseCreateArmy: function (arg0_user) {
     var user_id = arg0_user;
 
     //Declare local instance variables
