@@ -147,7 +147,7 @@ module.exports = {
 
       //Display additional statistics
       army_string.push(`${config.icons.manpower} Army Size: ${parseNumber(Math.ceil((getArmySize(actual_id, army_obj.name)/1000)*100)/100)}`);
-      army_string.push(`${config.icons.provinces} Current Province: **${army_obj.province}** (${config.icons.railways} Supply Limit: **${parseNumber(Math.ceil(getTroopsInProvince(army_obj.province)))}/${parseNumber(returnSafeNumber(province_obj.supply_limit))}**)`);
+      army_string.push(`${config.icons.provinces} Current Province: **${army_obj.province}** (${config.icons.railways} Supply Limit: **${parseNumber(Math.ceil(getTroopsInProvince(army_obj.province)/1000))}/${parseNumber(returnSafeNumber(province_obj.supply_limit))}**)`);
       army_string.push("");
 
       army_string.push(`**Army Strength:**`);

@@ -352,6 +352,10 @@ module.exports = {
             if (input == "create army")
               initialiseCreateArmy(user_id);
 
+            //[Disband Units]
+            if (input == "disband units")
+              initialiseDisbandUnitsCommand(user_id);
+
             //[Jump To Page]
             if (input == "jump to page")
               visualPrompt(game_obj.alert_embed, user_id, {

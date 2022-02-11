@@ -76,7 +76,7 @@ module.exports = {
     }
   },
 
-  initialiseRelieveUnits: function (arg0_user) {
+  initialiseTransferUnits: function (arg0_user) {
     var user_id = arg0_user;
 
     //Declare local instance variables
