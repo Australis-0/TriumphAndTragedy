@@ -1130,7 +1130,7 @@ module.exports = {
                 embed_pages: viewed_army,
                 user: game_obj.user
               });
-              game_obj.page = `army_viewer_${getArmy(actual_id, army_to_view, { return_key: true })}`;
+              game_obj.page = `army_viewer_${getArmy(actual_id, army_to_view).name}`;
             } else {
               printError(game_obj.id, `**${army_to_view}** isn't a valid army you can inspect! Take a look at your **[Army List]** first to see which armies you can view.`);
             }
@@ -1370,8 +1370,8 @@ module.exports = {
           if (input == "view army")
             initialisePrintArmy(user_id);
 
-          //[View Army (Army Name)]
-          if (input.startsWith("view army ")) {
+          //[View (Army Name)]
+          if (input.startsWith("view ") && input != "view army") {
             var army_obj = getArmy(user_id, arg[0]);
             var army_to_view = input.replace("view army ", "");
             var army_report = printArmy(user_id, arg[0]);

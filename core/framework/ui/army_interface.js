@@ -170,7 +170,7 @@ module.exports = {
           ""
         var unit_obj = getUnit(all_units[i]);
 
-        army_string.push(`${local_icon}${(unit_obj.name) ? unit_obj.name : all_units[i]}: ${parseNumber(army_obj.units(all_units[i]))}`);
+        army_string.push(`${local_icon}${(unit_obj.name) ? unit_obj.name : all_units[i]}: ${parseNumber(army_obj.units[all_units[i]])}`);
       }
 
       if (all_units.length == 0) {

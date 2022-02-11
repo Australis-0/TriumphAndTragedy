@@ -9,6 +9,9 @@ module.exports = {
     //Convert from parameters
     var user_id = arg0_user;
     var army_name = arg1_army_name;
+    var options = (arg2_options) ? arg2_options : {};
+    if (!options.mode)
+      options.mode = "default";
 
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
@@ -42,12 +45,12 @@ module.exports = {
           var unit_attack_modifier = 1;
           var unit_defence_modifier = 1;
 
-          if (mode == "air_raid")
+          if (options.mode == "air_raid")
             if (unit_obj.type)
               if (unit_obj.type.includes("can_bomb"))
                 unit_counts = true;
 
-          if (mode == "submarine_defence")
+          if (options.mode == "submarine_defence")
             if (unit_obj.type)
               if (unit_obj.type.includes("destroyer") || unit_obj.type.includes("helicopter")) {
                 unit_counts = true;
@@ -56,7 +59,7 @@ module.exports = {
                 unit_attack_modifier = 0.5;
               }
 
-          if (mode == "submarine_naval_defence")
+          if (options.mode == "submarine_naval_defence")
             if (unit_obj.type)
               if (unit_obj.type.includes("destroyer")) {
                 unit_counts = true;
@@ -65,12 +68,12 @@ module.exports = {
                 unit_attack_modifier = 0.5;
               }
 
-          if (mode == "submarine_raid")
+          if (options.mode == "submarine_raid")
             if (unit_obj.type)
               if (unit_obj.type.includes("submarine"))
                 unit_counts = true;
 
-          if (mode == "default")
+          if (options.mode == "default")
             unit_counts = true;
 
 
