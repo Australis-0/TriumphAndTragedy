@@ -93,7 +93,7 @@ module.exports = {
           var raw_cb_name = getCB(local_cb.type, { return_key: true });
 
           //Push to casus_belli_string
-          casus_belli_string.push(`${(cb_obj.icon) ? config.icons[cb_obj.icon] + " " : ""}**[${(cb_obj.name) ? cb_obj.name : raw_cb_name}]**`);
+          casus_belli_string.push(`${(cb_obj.icon) ? config.icons[cb_obj.icon] + " " : ""}[${(cb_obj.name) ? cb_obj.name : raw_cb_name}]`);
         }
       }
     } else {

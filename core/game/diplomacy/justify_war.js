@@ -77,7 +77,7 @@ module.exports = {
                       printAlert(`You have begun justifying a war of **${(cb_obj.name) ? cb_obj.name : raw_cb_name}** against **${ot_user.name}**!\n\nYou may cancel this justification at any time before its completion by typing **[Cancel Justification]**`);
 
                       //Remove CB
-                      usr.casus_belli.splice(has_valid_cb[1], 1);
+                      usr.diplomacy.casus_belli.splice(has_valid_cb[1], 1);
                     } else {
                       printError(game_obj.id, `**${cb_name}** is not a valid CB for **${ot_user.name}**! View a list of valid CB's by typing **[View Casus Belli]**.`);
                     }

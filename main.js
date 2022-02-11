@@ -131,6 +131,7 @@ FileManager.import("./game/diplomacy/decrease_relations");
 FileManager.import("./game/diplomacy/deny_cede");
 FileManager.import("./game/diplomacy/end_rivalry");
 FileManager.import("./game/diplomacy/improve_relations");
+FileManager.import("./game/diplomacy/justify_war");
 FileManager.import("./game/diplomacy/liberate");
 FileManager.import("./game/diplomacy/lock_vassal_customisation");
 FileManager.import("./game/diplomacy/military_access");
