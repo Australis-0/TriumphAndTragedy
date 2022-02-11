@@ -453,13 +453,20 @@ module.exports = {
 
   getSortedUsers: function () {
     //Declare local instance variables
-    var all_users = Object.keys(main.users);
+    var all_users = Object.keys(main.global.user_map);
+    var appended_users = [];
     var final_sorted_user_array = [];
     var sorted_user_array = [];
 
     //Iterate over all users and append their respective scores and ID's
-    for (var i = 0; i < all_users.length; i++)
-      sorted_user_array.push([all_users[i], module.exports.getScore(all_users[i])]);
+    for (var i = 0; i < all_users.length; i++) {
+      var local_id = main.global.user_map[all_users[i]];
+
+      if (!appended_users.includes(local_id)) {
+        sorted_user_array.push([local_id, module.exports.getScore(all_users[i])]);
+        appended_users.push(local_id);
+      }
+    }
 
     //Sort sorted_user_array and push final result to final_sorted_user_array
     sorted_user_array = sorted_user_array.sort(function (a, b) { return b[1] - a[1] });
