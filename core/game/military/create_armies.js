@@ -52,7 +52,7 @@ module.exports = {
     visualPrompt(game_obj.alert_embed, user_id, {
       title: `Create Multiple Armies:`,
       prompts: [
-        [`Please type out the names of the new armies you'd like to create en masse.\nYou may specify armies like so: 'I.-XX. Division', '1st-20th Division', '86th-79th, 92nd, 94th Field Artillery'; or any other combination you can imagine.`, "string"]
+        [`Please type out the names of the new armies you'd like to create en masse.\nYou may specify armies like so: 'I.-XX. Division', '1st-20th Division', '86th-79th, 92nd, 94th Field Artillery'.`, "string"]
       ]
     },
     function (arg) {

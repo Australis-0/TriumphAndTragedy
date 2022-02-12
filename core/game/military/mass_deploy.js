@@ -10,7 +10,7 @@ module.exports = {
     visualPrompt(game_obj.alert_embed, user_id, {
       title: `Mass Deploy:`,
       prompts: [
-        [`Please type out the names of the armies you'd like to deploy troops to en masse.\nYou may specify armies like so: 'I.-XX. Division', '1st-20th Division', '86th-79th, 92nd, 94th Field Artillery'; or any other combination you can imagine.\n\nType **[Army List]** to view a list of all valid armies.`, "string"],
+        [`Please type out the names of the armies you'd like to deploy troops to en masse.\nYou may specify armies like so: 'I.-XX. Division', '1st-20th Division', '86th-79th, 92nd, 94th Field Artillery'.\n\nType **[Army List]** to view a list of all valid armies.`, "string"],
         [`How many troops would you like to deploy in each of these armies?\n\nType **[View Reserves]** to see how many troops you can currently deploy.`, "number", { min: 0 }],
         [`What type of unit do you wish to deploy in these armies?`, "string"]
       ]
@@ -67,16 +67,20 @@ module.exports = {
             //Get old number of units in reserves, and compare it to the new number to see how many units have been successfully deployed
             var old_unit_count = JSON.parse(JSON.stringify(returnSafeNumber(usr.reserves[raw_unit_name])));
 
-            for (var i = 0; i < deploy_in_armies.length; i++)
-              deployUnits(actual_id, unit_amount, raw_unit_name, deploy_in_armies[i]);
+            if (unit_amount*deploy_in_armies.length <= old_unit_count) {
+              for (var i = 0; i < deploy_in_armies.length; i++)
+                deployUnits(actual_id, unit_amount, raw_unit_name, deploy_in_armies[i]);
 
-            var new_unit_count = old_unit_count - returnSafeNumber(usr.reserves[raw_unit_name]);
-            var successful_deployments = old_unit_count - new_unit_count;
+              var new_unit_count = old_unit_count - returnSafeNumber(usr.reserves[raw_unit_name]);
+              var successful_deployments = old_unit_count - new_unit_count;
 
-            //Return success/error messages
-            (successful_deployments != 0) ?
-              printAlert(game_obj.id, `You have successfully deployed up to **${parseNumber(successful_deployments)}** ${(unit_obj.name) ? unit_obj.name : raw_unit_name} in **${parseNumber(deploy_in_armies.length)}** armies.`) :
-              printError(game_obj.id, `The armies you have specified could not be found! Please double-check your spelling and type **[Army List]** for a full list of your armies.`);
+              //Return success/error messages
+              (successful_deployments > 0) ?
+                printAlert(game_obj.id, `You have successfully deployed up to **${parseNumber(successful_deployments)}** ${(unit_obj.name) ? unit_obj.name : raw_unit_name} in **${parseNumber(deploy_in_armies.length)}** armies.`) :
+                printError(game_obj.id, `The armies you have specified could not be found! Please double-check your spelling and type **[Army List]** for a full list of your armies.`);
+            } else {
+              printError(game_obj.id, `You don't have this many **${(unit_obj.name) ? unit_obj.name : unit_obj.name}** to deploy! You may only deploy up to **${parseNumber(Math.floor(old_unit_count/deploy_in_armies.length))}** ${(unit_obj.name) ? unit_obj.name : unit_obj.name} over **${parseNumber(deploy_in_armies.length)}** armies, for a total of **${parseNumber(old_unit_count)}** ${(unit_obj.name) ? unit_obj.name : unit_obj.name}.`);
+            }
           } else {
             printError(game_obj.id, `The names you have specified could not turn up any valid armies! Please double-check your spelling and type **[Army List]** for a full list of your armies.`);
           }

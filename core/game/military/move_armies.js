@@ -10,7 +10,7 @@ module.exports = {
     visualPrompt(game_obj.alert_embed, user_id, {
       title: `Move Multiple Armies:`,
       prompts: [
-        [`Please type out the names of the armies you'd like to move.\nYou may specify armies like so: 'I.-XX. Division', '1st-20th Division', '86th-79th, 92nd, 94th Field Artillery'; or any other combination you can imagine.\n\nType **[Army List]** to view a list of all valid armies.`, "string"],
+        [`Please type out the names of the armies you'd like to move.\nYou may specify armies like so: 'I.-XX. Division', '1st-20th Division', '86th-79th, 92nd, 94th Field Artillery'.\n\nType **[Army List]** to view a list of all valid armies.`, "string"],
         [`Which province would you like to merge these combat formations into? Please specify a valid numeric Province ID.`, "string"]
       ]
     },

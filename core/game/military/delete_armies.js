@@ -45,7 +45,7 @@ module.exports = {
     visualPrompt(game_obj.alert_embed, user_id, {
       title: `Delete Multiple Armies:`,
       prompts: [
-        [`Please type out the names of the armies you'd like to delete en masse. Their men and equipment will be returned to our reserves.\nYou may specify armies like so: 'I.-XX. Division', '1st-20th Division', '86th-79th, 92nd, 94th Field Artillery'; or any other combination you can imagine.\n\nType **[Army List]** to view a list of all valid armies.\nType 'none' to use available armies instead.`, "string"]
+        [`Please type out the names of the armies you'd like to delete en masse. Their men and equipment will be returned to our reserves.\nYou may specify armies like so: 'I.-XX. Division', '1st-20th Division', '86th-79th, 92nd, 94th Field Artillery'.\n\nType **[Army List]** to view a list of all valid armies.\nType 'none' to use available armies instead.`, "string"]
       ]
     },
     function (arg) {
