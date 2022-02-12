@@ -100,11 +100,11 @@ module.exports = {
   calculateArmyType: function (arg0_user, arg1_army_name) {
     //Convert from parameters
     var user_id = arg0_user;
-    var army_name = arg1_army_name.trim().toLowerCase();
+    var army_name = arg1_army_name;
 
     //Declare local intsance variables
     var actual_id = main.global.user_map[user_id];
-    var army_obj = module.exports.getArmy(actual_id, army_name);
+    var army_obj = (typeof army_name != "object") ? module.exports.getArmy(actual_id, army_name) : army_name;
     var usr = main.users[actual_id];
 
     //Check to make sure that both usr and army_obj are actually extant
@@ -124,7 +124,7 @@ module.exports = {
             var unit_obj = getUnit(all_units[i]);
 
             //Check for unit type
-            unit_types[`has_${getUnitCategoryFromUnit(all_units[i])}_unit`] = true;
+            unit_types[`has_${getUnitCategoryFromUnit(all_units[i]).type}_unit`] = true;
 
             //Check for carrier capacity
             unit_types.carrier_capacity += returnSafeNumber(unit_obj.carrier_capacity);
@@ -271,7 +271,7 @@ module.exports = {
             var category_obj = getUnitCategoryFromUnit(raw_unit_name);
             var province_obj = getProvince(army_obj.province);
             var receiving_unit_type = category_obj.type;
-            var unit_types = module.exports.calculateArmyType(actual_id, army_obj.name);
+            var unit_types = module.exports.calculateArmyType(actual_id, army_obj);
 
             var culture_obj = getCulture(province_obj.culture);
 
@@ -316,7 +316,7 @@ module.exports = {
             return [true, `**${parseNumber(amount)}** ${(unit_obj.name) ? unit_obj.name : raw_unit_name} were ${(!options.spawn_units) ? "transferred to" : "deployed in"} the **${army_obj.name}**.`];
 
             //Recalculate army type
-            module.exports.calculateArmyType(actual_id, army_obj.name);
+            module.exports.calculateArmyType(actual_id, army_obj);
           }
   },
 

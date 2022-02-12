@@ -58,7 +58,7 @@ module.exports = {
     visualPrompt(game_obj.alert_embed, user_id, {
       title: `Garrison Cities:`,
       prompts: [
-        [`Please type out the names of the armies you'd like to garrison your cities with. They should be distributed evenly between your cities, should they be able to find a path home.\nYou may specify armies like so: 'I.-XX. Division', '1st-20th Division', '86th-79th, 92nd, 94th Field Artillery'.\n\nType **[Army List]** to view a list of all valid armies.\nType 'none' to use available armies instead.`, "string"]
+        [`Please type out the names of the armies you'd like to garrison your cities with. They should be distributed evenly between your cities.\n\nType **[Army List]** to view a list of all valid armies.\nType 'none' to use available armies instead.`, "string"]
       ]
     },
     function (arg) {
