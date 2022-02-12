@@ -22,13 +22,15 @@ module.exports = {
         for (var x = 0; x < all_provinces.length; x++)
           target_province_index = (i % x == 0) ? x : target_province_index;
 
+        console.log(`${army_list[i]} assigned to ${target_province_index}!`);
+
         try {
           var local_army = getArmy(actual_id, army_list[i]);
 
           if (local_army) {
             var army_status = moveArmy(actual_id, local_army.name, all_provinces[target_province_index].id);
 
-            if (army_status)
+            if (army_status[0])
               successful_moves++;
             else
               failed_moves++;

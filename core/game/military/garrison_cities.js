@@ -28,7 +28,7 @@ module.exports = {
           if (local_army) {
             var army_status = moveArmy(actual_id, local_army.name, all_cities[target_city_index].id);
 
-            if (army_status)
+            if (army_status[0])
               successful_moves++;
             else
               failed_moves++;

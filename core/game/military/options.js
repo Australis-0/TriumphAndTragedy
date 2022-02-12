@@ -10,7 +10,7 @@ module.exports = {
     visualPrompt(game_obj.alert_embed, user_id, {
       title: `Attrition Avoidance Policy:`,
       prompts: [
-        [`What would you like to set our policy on attrition avoidance to?\n\nPlease type either 'always', 'if possible', or 'never'.\n\n'Always' means that units will use the shortest path regardless of attrition, whilst 'if possible' means that they will avoid walking through the province if at all possible, and 'never' means that your armies should never take attrition whilst moving.`, "string"]
+        [`What would you like to set our policy on attrition avoidance to?\n\nPlease type either 'always', 'if possible', or 'never'.`, "string"]
       ]
     },
     function (arg) {
@@ -35,7 +35,7 @@ module.exports = {
     visualPrompt(game_obj.alert_embed, user_id, {
       title: `Territorial Violation Policy:`,
       prompts: [
-        [`What would you like to set our policy on territorial violation avoidance to?\n\nPlease type either 'always', 'if possible', or 'never'.\n\n'Always' means that units will use the shortest path regardless of territorial violation, whilst 'if possible' means that they will only walk through the given territory if unavoidable, and 'never' means that your armies will no longer be capable of violating the territory of other nations.`, "string"]
+        [`What would you like to set our policy on attrition avoidance to?\n\nPlease type either 'always', 'if possible', or 'never'.`, "string"]
       ]
     },
     function (arg) {

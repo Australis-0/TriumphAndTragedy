@@ -597,7 +597,7 @@ module.exports = {
     var ending_province = arg3_ending_province;
 
     //Declare local instance variables
-    var actual_id = main.global.user_map[actual_id];
+    var actual_id = main.global.user_map[user_id];
     var all_provinces = Object.keys(main.provinces);
     var army_obj = getArmy(actual_id, army_name);
     var at_war = getEnemies(actual_id);
