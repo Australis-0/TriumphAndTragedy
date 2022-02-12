@@ -71,7 +71,7 @@ module.exports = {
               for (var i = 0; i < deploy_in_armies.length; i++)
                 deployUnits(actual_id, unit_amount, raw_unit_name, deploy_in_armies[i]);
 
-              var new_unit_count = old_unit_count - returnSafeNumber(usr.reserves[raw_unit_name]);
+              var new_unit_count = returnSafeNumber(usr.reserves[raw_unit_name]);
               var successful_deployments = old_unit_count - new_unit_count;
 
               //Return success/error messages
