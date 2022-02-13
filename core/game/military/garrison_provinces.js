@@ -22,8 +22,6 @@ module.exports = {
         for (var x = 0; x < all_provinces.length; x++)
           target_province_index = (i % x == 0) ? x : target_province_index;
 
-        console.log(`${army_list[i]} assigned to ${target_province_index}!`);
-
         try {
           var local_army = getArmy(actual_id, army_list[i]);
 

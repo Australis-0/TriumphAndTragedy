@@ -581,8 +581,8 @@ module.exports = {
             return [false, `Your ships are not capable of going on land!`];
 
           //Fetch stats of both armies
-          var army_obj_stats = module.exports.calculateArmyType(actual_id, army_obj.name);
-          var merged_army_obj_stats = module.exports.calculateArmyType(actual_id, merged_army_obj.name);
+          var army_obj_stats = module.exports.calculateArmyType(actual_id, army_obj);
+          var merged_army_obj_stats = module.exports.calculateArmyType(actual_id, merged_army_obj);
 
           var total_carrier_capacity = army_obj_stats.carrier_capacity + merged_army_obj_stats.carrier_capacity;
 
@@ -1135,7 +1135,7 @@ module.exports = {
             delete army_obj.units[raw_unit_name];
 
           //Recalculate army type
-          module.exports.calculateArmyType(actual_id, army_obj.name);
+          module.exports.calculateArmyType(actual_id, army_obj);
 
           //Print out return statement
           return [true, `You placed **${parseNumber(amount)}** ${(unit_obj.name) ? unit_obj.name : raw_unit_name} from the **${army_obj.name}** back into reserve.`];

@@ -24,10 +24,37 @@ module.exports = {
       var local_enemies = all_enemies[local_army.owner];
       var local_user = main.users[local_army.owner];
       var province_obj = main.provinces[local_army.province];
+      var speed_sample = [local_army.province];
 
-      //Check for hostile users in the same province
+      //Army cooldowns
+      if (local_army.blockade_recovery_turns) {
+        local_army.blockade_recovery_turns--;
+        if (local_army.blockade_recovery_turns <= 0)
+          delete local_army.blockade_recovery_turns;
+      }
+      if (local_army.submarine_cooldown) {
+        local_army.submarine_cooldown--;
+        if (local_army.submarine_cooldown <= 0)
+          delete local_army.submarine_cooldown;
+      }
+
+      //Army movement
+      if (local_army.moving_to) {
+        var current_element = local_army.moving_to.indexOf(local_army.province);
+        var current_speed = Math.ceil(config.defines.combat.army_speed*local_user.modifiers.army_travel_speed);
+
+        for (var x = 0; x < current_speed; x++)
+          if (local_army.moving_to[x + current_element]) {
+            var current_province = local_army.moving_to[x + current_element];
+
+            speed_sample.push(current_province);
+            local_army.province = current_province;
+          }
+      }
+
+      //Check for hostile users in the same province/colliding provinces
       for (var x = 0; x < all_armies.length; x++)
-        if (local_enemies.includes(all_armies[x].owner) && all_armies[x].province == local_army.province)
+        if (local_enemies.includes(all_armies[x].owner) && speed_sample.includes(all_armies[x].province))
           if (
             local_army.type != "navy" && all_armies[x].type != "navy" &&
             !(local_army.in_combat || all_armies[x].in_combat)
@@ -984,8 +1011,12 @@ module.exports = {
       for (var i = 0; i < all_good_names.length; i++)
         usr.modifiers[`${all_good_names[i]}_gain`] = 1;
 
-      for (var i = 0; i < all_cities.length; i++)
+      for (var i = 0; i < all_cities.length; i++) {
+        //Clear city modifiers
+        delete all_cities[i].bombed_this_turn;
+
         usr.modifiers[`${all_cities[i].resource}_gain`] += getCityRGOThroughput(all_cities[i].name);
+      }
     }
 
     //Technology
