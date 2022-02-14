@@ -61,20 +61,20 @@ module.exports = {
       for (var x = 0; x < local_war.attackers.length; x++)
         if (local_war.attackers[x] == actual_id) {
           usr_war_side = "attackers";
-        } else if (local_war.defenders[x] == actual_ot_user_id) {
+        } else if (local_war.attackers[x] == actual_ot_user_id) {
           ot_user_war_side = "attackers";
         }
 
       for (var x = 0; x < local_war.defenders.length; x++)
-      if (local_war.attackers[x] == actual_id) {
-        usr_war_side = "defenders";
-      } else if (local_war.defenders[x] == actual_ot_user_id) {
-        ot_user_war_side = "defenders";
-      }
+        if (local_war.defenders[x] == actual_id) {
+          usr_war_side = "defenders";
+        } else if (local_war.defenders[x] == actual_ot_user_id) {
+          ot_user_war_side = "defenders";
+        }
 
       //Return statement
       if (usr_war_side != "none")
-        if (usr_war_side == ot_user_war_side)
+        if (usr_war_side != ot_user_war_side)
           return true;
     }
   },

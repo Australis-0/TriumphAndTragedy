@@ -73,7 +73,7 @@ module.exports = {
 
       //If army is in a hostile province with an army that has more than 0,5% of the local population, and is not in combat, occupy it
       if (!local_army.in_combat && local_enemies.includes(province_obj.controller))
-        if (getArmySize(local_army) > province_obj.pops.population*0.005)
+        if (getArmySize(local_army.owner, local_army) > province_obj.pops.population*0.005)
           province_obj.controller = local_army.owner;
     }
   },

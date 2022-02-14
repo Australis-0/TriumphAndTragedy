@@ -7,10 +7,9 @@ module.exports = {
     var is_reserves = arg3_is_reserves;
 
     //Declare local instance variables
-    var attacker_roll = module.exports.calculateRoll(attacking_army_obj);
     var defender_units = (!is_reserves) ?
-      Object.keys(army_obj.units) :
-      Object.keys(army_obj);
+      Object.keys(defending_army_obj.units) :
+      Object.keys(defending_army_obj);
     var total_losses = 0;
     var usr = main.users[user_id];
 
@@ -54,7 +53,7 @@ module.exports = {
           Math.ceil((attacker_roll/local_defence)*unit_loss_rate);
 
         //Kill units
-        module.exports.killUnitPops(actual_id, total_casualties, defender_units[i]);
+        module.exports.killUnitPops(user_id, total_casualties, defender_units[i]);
       }
 
       if (!is_reserves)
@@ -111,19 +110,19 @@ module.exports = {
   initialiseBattle: function (arg0_user, arg1_army_name, arg2_user, arg3_army_name) {
     //Convert from parameters
     var user_id = arg0_user;
-    var attacking_army_name = arg1_army_name.trim();
+    var attacking_army_name = arg1_army_name;
     var ot_user_id = arg2_user;
-    var defending_army_name = arg3_army_name.trim();
+    var defending_army_name = arg3_army_name;
 
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
     var actual_ot_user_id = main.global.user_map[ot_user_id];
     var all_wars = Object.keys(main.global.wars);
     var attacking_army_obj = (typeof attacking_army_name != "object") ?
-      getArmy(actual_id, attacking_army_name) :
+      getArmy(actual_id, attacking_army_name.trim()) :
       attacking_army_name;
     var defending_army_obj = (typeof defending_army_name != "object") ?
-      getArmy(actual_ot_user_id, defending_army_name) :
+      getArmy(actual_ot_user_id, defending_army_name.trim()) :
       defending_army_name;
     var ot_user = main.users[actual_ot_user_id];
     var usr = main.users[actual_id];
@@ -169,7 +168,7 @@ module.exports = {
             //Calculate army stats
             var attacking_army_stats = calculateArmyStats(actual_id, attacking_army_obj);
             var attacker_losses = 0;
-            var defender_stackwiped = false;
+            var attacker_stackwiped = false;
             var attacker_understrength = false;
             var attacker_units = Object.keys(attacking_army_obj.units);
             var defending_army_stats = calculateArmyStats(actual_ot_user_id, defending_army_obj);
@@ -221,11 +220,11 @@ module.exports = {
             if (!attacker_stackwiped && !defender_stackwiped)
               for (var i = 0; i < combat_order.length; i++)
                 if (combat_order[i] == "attack") {
-                  defender_casualties = module.exports.calculateCausalties(actual_ot_user_id, defending_army_obj,
+                  defender_casualties = module.exports.calculateCasualties(actual_ot_user_id, defending_army_obj,
                       attacker_dice_roll
                   );
                 } else if (combat_order[i] == "defence") {
-                  attacker_casualties = module.exports.calculateCausalties(actual_id, attacking_army_obj,
+                  attacker_casualties = module.exports.calculateCasualties(actual_id, attacking_army_obj,
                       defender_dice_roll
                   );
                 }
@@ -280,11 +279,11 @@ module.exports = {
             //Add warscore, casualties
             var attacking_war_exhaustion = Math.round(
               attacker_casualties/
-                (getTotalActiveDuty(actual_id) + returnSafeNumber(usr.mobilised.current_manpower_mobilised))
+                (getTotalActiveDuty(actual_id) + returnSafeNumber(usr.mobilisation.current_manpower_mobilised))
             );
             var defending_war_exhaustion = Math.round(
               defender_casualties/
-                (getTotalActiveDuty(actual_ot_user_id) + returnSafeNumber(ot_user.mobilised.current_manpower_mobilised))
+                (getTotalActiveDuty(actual_ot_user_id) + returnSafeNumber(ot_user.mobilisation.current_manpower_mobilised))
             );
 
             attacking_war_exhaustion = Math.min(attacking_war_exhaustion, 0.25);
@@ -360,7 +359,7 @@ module.exports = {
                     "";
               var unit_name = (unit_obj.name) ? unit_obj.name : attacker_units[i];
 
-              attacker_string.push(`${icon}${parseNumber(attacking_army_obj.units[attacker_units[i]])} ${unit_name} ${(attacking_army_obj.units[attacker_units[i]] < old_attacking_army_obj.units[attacker_units[i]]) ? `(-${parseNumber(Math.ceil(old_attacking_army_obj.units[attacker_units[i]] - attacking_army_obj.units[attacker_units[i]]))})` : ""}`);
+              attacker_string.push(`${unit_icon}${parseNumber(attacking_army_obj.units[attacker_units[i]])} ${unit_name} ${(attacking_army_obj.units[attacker_units[i]] < old_attacking_army_obj.units[attacker_units[i]]) ? `(-${parseNumber(Math.ceil(old_attacking_army_obj.units[attacker_units[i]] - attacking_army_obj.units[attacker_units[i]]))})` : ""}`);
             }
 
             attacker_string.push("");
@@ -383,7 +382,7 @@ module.exports = {
                     "";
               var unit_name = (unit_obj.name) ? unit_obj.name : defender_units[i];
 
-              defender_string.push(`${icon}${parseNumber(defending_army_obj.units[defender_units[i]])} ${unit_name} ${(defending_army_obj.units[defender_units[i]] < old_defending_army_obj.units[defender_units[i]]) ? `(-${parseNumber(Math.ceil(old_defending_army_obj.units[defender_units[i]] - defending_army_obj.units[defender_units[i]]))})` : ""}`);
+              defender_string.push(`${unit_icon}${parseNumber(defending_army_obj.units[defender_units[i]])} ${unit_name} ${(defending_army_obj.units[defender_units[i]] < old_defending_army_obj.units[defender_units[i]]) ? `(-${parseNumber(Math.ceil(old_defending_army_obj.units[defender_units[i]] - defending_army_obj.units[defender_units[i]]))})` : ""}`);
             }
 
             defender_string.push("");
@@ -938,6 +937,8 @@ module.exports = {
     //Check to make sure that the unit_obj exists
     if (usr)
       if (unit_obj) {
+        var local_unit = unit_obj;
+
         var local_manpower_costs = (local_unit.manpower_cost) ?
           Object.keys(local_unit.manpower_cost) :
           [];
