@@ -37,7 +37,7 @@ module.exports = {
             returnSafeNumber(unit_obj.attack)*
             returnSafeNumber(usr.modifiers[`${getUnitCategoryFromUnit(all_units[i], { return_key: true })}_attack`], 1);
           var default_defence = army_obj.units[all_units[i]]*
-            returnSafeNumber(unit_obj.attack)*
+            returnSafeNumber(unit_obj.defence)*
             returnSafeNumber(usr.modifiers[`${getUnitCategoryFromUnit(all_units[i], { return_key: true })}_defence`], 1);
 
           //Check to see if unit_counts according to the current mode

@@ -105,6 +105,8 @@ module.exports = {
 
     //Add date string instead of just time remaining
 
+    console.log(alert_obj);
+
     if (!alert_obj.news_alert) {
       alert_string.push(`---`);
       alert_string.push("");
