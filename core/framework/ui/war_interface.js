@@ -105,9 +105,9 @@ module.exports = {
       if (is_archived_war)
         war_string.push(`**${getDate(war_obj.starting_date)}** - **${getDate(war_obj.end_date)}**\n`);
 
-      war_string.push(`Attacker Warscore: **${printPercentage(war_obj.attacker_warscore)}** ¦ Defender Warscore: **${printPercentage(war_obj.defender_warscore)}`);
+      war_string.push(`Attacker Warscore: **${printPercentage(war_obj.attacker_warscore)}** ¦ Defender Warscore: **${printPercentage(war_obj.defender_warscore)}**`);
       war_string.push("");
-      war_string.push(`**${main.users[attackers_war_leader].name}** is the war leader for the attacking faction, whilst **${main.users[defenders_war_leader].name}** is the war leader for the defending faction.`);
+      war_string.push(`**${main.users[war_obj.attackers_war_leader].name}** is the war leader for the attacking faction, whilst **${main.users[war_obj.defenders_war_leader].name}** is the war leader for the defending faction.`);
       war_string.push("");
 
       //Format attacker wargoal string
@@ -133,7 +133,7 @@ module.exports = {
       for (var i = 0; i < war_obj.defenders.length; i++) {
         var local_defender = main.users[war_obj.defenders[i]];
 
-        defenders_string.push(`**${local_defender.name}** ¦ **${parseNumber(war_obj[war_obj.defenders[i] + "_casualties"])}`);
+        defenders_string.push(`**${local_defender.name}** ¦ **${parseNumber(war_obj[war_obj.defenders[i] + "_casualties"])}**`);
       }
 
       //Bottom war string (Total Casualties)
