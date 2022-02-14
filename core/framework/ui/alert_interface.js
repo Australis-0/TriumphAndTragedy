@@ -104,15 +104,16 @@ module.exports = {
     var alert_string = [];
 
     //Add date string instead of just time remaining
-    alert_string.push(`---`);
-    alert_string.push("");
-    alert_string.push(` - **${getDate(alert_obj.date)}**`);
-    alert_string.push(` - ${config.icons.time} **${parseNumber(alert_obj.duration)}** turn(s) remaining`);
-    alert_string.push("");
-    alert_string.push(`---`);
-    alert_string.push("");
 
     if (!alert_obj.news_alert) {
+      alert_string.push(`---`);
+      alert_string.push("");
+      alert_string.push(` - **${getDate(alert_obj.date)}**`);
+      alert_string.push(` - ${config.icons.time} **${parseNumber(alert_obj.duration)}** turn(s) remaining`);
+      alert_string.push("");
+      alert_string.push(`---`);
+      alert_string.push("");
+
       if (alert_obj.description)
         alert_string.push(alert_obj.description);
 
@@ -139,8 +140,6 @@ module.exports = {
         .setDescription(alert_string.join("\n"));
     } else {
       alert_embed = alert_obj.embed;
-      alert_embed.setTitle(`[Back] ¦ ${alert_embed.title}`);
-      alert_embed.setDescription(`${alert_embed.description}\n\n**[OK]**`);
     }
 
     game_obj.main_embed = alert_embed;

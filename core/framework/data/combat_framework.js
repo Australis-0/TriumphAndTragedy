@@ -49,8 +49,8 @@ module.exports = {
             attacker_roll >
             defending_army_obj[defender_units[i]]*local_defence
         ) ?
-          Math.ceil(total_casualties*0.5*unit_loss_rate) :
-          Math.ceil((attacker_roll/local_defence)*unit_loss_rate);
+          Math.abs(Math.ceil(total_casualties*0.5*unit_loss_rate)) :
+          Math.abs(Math.ceil((attacker_roll/local_defence)*unit_loss_rate));
 
         //Kill units
         total_losses += total_casualties;
@@ -87,7 +87,7 @@ module.exports = {
       var unit_obj = getUnit(all_units[i]);
 
       //Implement minimum AP roll
-      var local_attack = returnSafeNumber(unit_obj.attack);
+      var local_attack = returnSafeNumber(unit_obj.attack)*army_obj.units[all_units[i]];
       var local_category = getUnitCategoryFromUnit(all_units[i]);
       var local_initiative = returnSafeNumber(unit_obj.initiative);
 
@@ -105,7 +105,7 @@ module.exports = {
     }
 
     //Return statement
-    return current_roll;
+    return Math.abs(current_roll);
   },
 
   initialiseBattle: function (arg0_user, arg1_army_name, arg2_user, arg3_army_name) {
@@ -152,8 +152,8 @@ module.exports = {
             switch (battle_type) {
               case "land":
                 battle_name = (province_name == province_obj.id) ?
-                  `${(province_obj.battle_ordinal) ? ordinalise(province_obj.battle_ordinal) + " " : ""} of ${randomElement(config.localisation.battle_prefixes)} ${province_obj.id}` :
-                  `${(province_obj.battle_ordinal) ? ordinalise(province_obj.battle_ordinal) + " " : ""} of ${province_name}`;
+                  `${(province_obj.battle_ordinal) ? ordinalise(province_obj.battle_ordinal) + " " : ""} Battle of ${randomElement(config.localisation.battle_prefixes)} ${province_obj.id}` :
+                  `${(province_obj.battle_ordinal) ? ordinalise(province_obj.battle_ordinal) + " " : ""} Battle of ${province_name}`;
 
                 break;
               case "sea":
@@ -214,9 +214,9 @@ module.exports = {
 
             //Process stackwipes
             if (attacker_stackwiped)
-              attacker_casualties = module.exports.calculateCasualties(actual_id, attacking_army_obj, attacking_army_stats.defence);
+              attacker_casualties = module.exports.calculateCasualties(actual_id, attacking_army_obj, defender_dice_roll);
             if (defender_stackwiped)
-              defender_casualties = module.exports.calculateCasualties(actual_id, defending_army_obj, defending_army_stats.defence);
+              defender_casualties = module.exports.calculateCasualties(actual_id, defending_army_obj, attacker_dice_roll);
 
             if (!attacker_stackwiped && !defender_stackwiped)
               for (var i = 0; i < combat_order.length; i++)
@@ -938,15 +938,13 @@ module.exports = {
     //Check to make sure that the unit_obj exists
     if (usr)
       if (unit_obj) {
-        var local_unit = unit_obj;
-
-        var local_manpower_costs = (local_unit.manpower_cost) ?
-          Object.keys(local_unit.manpower_cost) :
+        var local_manpower_costs = (unit_obj.manpower_cost) ?
+          Object.keys(unit_obj.manpower_cost) :
           [];
 
         for (var i = 0; i < local_manpower_costs.length; i++) {
           //Check to see if local_manpower_cost is of a military pop or not
-          var local_value = local_unit.manpower_cost[local_manpower_costs[i]]/returnSafeNumber(unit_obj.quantity, 1);
+          var local_value = unit_obj.manpower_cost[local_manpower_costs[i]]/returnSafeNumber(unit_obj.quantity, 1);
           var pop_obj = config.pops[local_manpower_costs[i]];
 
           //Kill off pops; mobilisation handler

@@ -76,7 +76,7 @@ module.exports = {
 
     if (at_war) {
       military_hq_description.push(`${config.icons.cb} We are currently involved in a **state of war** with **${parseNumber(enemies.length)}** countries, including ${parseList(enemies)}.`);
-      military_hq_description.push(`This entails a grand total of **${parseNumber(attacking_wars + defending_wars)}** wars, **${parseNumber(defending_wars)} defensive, and **${parseNumber(attacking_wars)} offensive.`);
+      military_hq_description.push(`This entails a grand total of **${parseNumber(attacking_wars + defending_wars)}** wars, **${parseNumber(defending_wars)}** defensive, and **${parseNumber(attacking_wars)}** offensive.`);
       military_hq_description.push("");
     }
 
