@@ -155,6 +155,10 @@ module.exports = {
                   `${(province_obj.battle_ordinal) ? ordinalise(province_obj.battle_ordinal) + " " : ""} Battle of ${randomElement(config.localisation.battle_prefixes)} ${province_obj.id}` :
                   `${(province_obj.battle_ordinal) ? ordinalise(province_obj.battle_ordinal) + " " : ""} Battle of ${province_name}`;
 
+                province_obj.battle_ordinal = (province_obj.battle_ordinal) ?
+                  province_obj.battle_ordinal + 1 :
+                  2;
+                  
                 break;
               case "sea":
                 battle_name = `Battle of ${randomElement(config.localisation.bathymetric_names)}`;
