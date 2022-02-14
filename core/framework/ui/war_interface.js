@@ -116,11 +116,12 @@ module.exports = {
 
       //Format attacker description
       attackers_string.push(`Participant Name ¦ Military Casualties`);
+      attackers_string.push("");
 
       for (var i = 0; i < war_obj.attackers.length; i++) {
         var local_attacker = main.users[war_obj.attackers[i]];
 
-        attackers_string.push(`**${local_attacker.name}** ¦ **${parseNumber(war_obj[war_obj.attackers[i] + "_casualties"])}`);
+        attackers_string.push(`**${local_attacker.name}** ¦ **${parseNumber(war_obj[war_obj.attackers[i] + "_casualties"])}**`);
       }
 
       //Format defender wargoal string; this is put here for future flexibility
@@ -129,6 +130,7 @@ module.exports = {
 
       //Format defender description
       defenders_string.push(`Participant Name ¦ User ¦ Military Casualties`);
+      defenders_string.push("");
 
       for (var i = 0; i < war_obj.defenders.length; i++) {
         var local_defender = main.users[war_obj.defenders[i]];

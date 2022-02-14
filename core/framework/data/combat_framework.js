@@ -53,8 +53,7 @@ module.exports = {
           Math.abs(Math.ceil((attacker_roll/local_defence)*unit_loss_rate));
 
         //Kill units
-        total_losses += total_casualties;
-        module.exports.killUnitPops(user_id, total_casualties, defender_units[i]);
+        total_losses += module.exports.killUnitPops(user_id, total_casualties, defender_units[i]);
       }
 
       if (!is_reserves)
@@ -158,7 +157,7 @@ module.exports = {
                 province_obj.battle_ordinal = (province_obj.battle_ordinal) ?
                   province_obj.battle_ordinal + 1 :
                   2;
-                  
+
                 break;
               case "sea":
                 battle_name = `Battle of ${randomElement(config.localisation.bathymetric_names)}`;
