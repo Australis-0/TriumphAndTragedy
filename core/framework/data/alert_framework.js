@@ -166,10 +166,11 @@ module.exports = {
     });
   },
 
-  sendEmbedAlert: function (arg0_user, arg1_embed_obj) {
+  sendEmbedAlert: function (arg0_user, arg1_embed_obj, arg2_alert_name) {
     //Convert from parameters
     var user_id = arg0_user;
     var embed_obj = arg1_embed_obj;
+    var alert_name = (arg2_alert_name) ? arg2_alert_name : "News Alert";
 
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
@@ -177,6 +178,7 @@ module.exports = {
 
     //Push embed_obj to usr.alerts
     usr.alerts.push({
+      name: alert_name,
       news_alert: true,
       embed: embed_obj,
 

@@ -139,9 +139,9 @@ module.exports = {
             var province_name = (province_obj.name) ? province_obj.name : province_obj.id;
 
             //Check for battle type
-            if (attacking_army_obj.type == "land" && defending_army_obj.type == "land") {
+            if (attacking_army_obj.type == "army" && defending_army_obj.type == "army") {
               battle_type = "land";
-            } else if (attacking_army_obj.type == "sea" && defending_army_obj.type == "sea") {
+            } else if (attacking_army_obj.type == "navy" && defending_army_obj.type == "navy") {
               battle_type = "sea";
             } else {
               battle_type = "air";
@@ -277,14 +277,14 @@ module.exports = {
             }
 
             //Add warscore, casualties
-            var attacking_war_exhaustion = Math.round(
+            var attacking_war_exhaustion = returnSafeNumber(Math.round(
               attacker_casualties/
                 (getTotalActiveDuty(actual_id) + returnSafeNumber(usr.mobilisation.current_manpower_mobilised))
-            );
-            var defending_war_exhaustion = Math.round(
+            ));
+            var defending_war_exhaustion = returnSafeNumber(Math.round(
               defender_casualties/
                 (getTotalActiveDuty(actual_ot_user_id) + returnSafeNumber(ot_user.mobilisation.current_manpower_mobilised))
-            );
+            ));
 
             attacking_war_exhaustion = Math.min(attacking_war_exhaustion, 0.25);
             attacking_war_exhaustion = Math.max(attacking_war_exhaustion, 0);
@@ -346,7 +346,7 @@ module.exports = {
             attacker_string.push(`**${usr.name}** (${attacking_army_obj.name}):`);
             attacker_string.push("");
             attacker_string.push(`**Strength:**`);
-            attacker_string.push(`${parseNumber(attacking_army_stats.attack)} Attack ¦ ${parseNumber(attacking_army_obj.defence)} Defence`);
+            attacker_string.push(`${parseNumber(attacking_army_stats.attack)} Attack ¦ ${parseNumber(attacking_army_stats.defence)} Defence`);
 
             for (var i = 0; i < attacker_units.length; i++) {
               var unit_category = getUnitCategoryFromUnit(attacker_units[i]);
@@ -366,10 +366,10 @@ module.exports = {
             attacker_string.push(`${config.icons.death} Casualties: **${parseNumber(attacker_casualties)}**`);
 
             //Format embed contents - Defender
-            defender_string.push(`**${usr.name}** (${attacking_army_obj.name}):`);
+            defender_string.push(`**${ot_user.name}** (${defending_army_obj.name}):`);
             defender_string.push("");
             defender_string.push(`**Strength:**`);
-            defender_string.push(`${parseNumber(defending_army_stats.attack)} Attack ¦ ${parseNumber(defending_army_obj.defence)} Defence`);
+            defender_string.push(`${parseNumber(defending_army_stats.attack)} Attack ¦ ${parseNumber(defending_army_stats.defence)} Defence`);
 
             for (var i = 0; i < defender_units.length; i++) {
               var unit_category = getUnitCategoryFromUnit(defender_units[i]);
@@ -390,7 +390,7 @@ module.exports = {
 
             //Format embed contents - Results
             result_string.push(`**Dice Rolls:** ${usr.name} - ${config.icons.dice} **${parseNumber(attacker_dice_roll)}** ¦ ${ot_user.name} - ${config.icons.dice} **${parseNumber(defender_dice_roll)}**`);
-            result_string.push(`${config.icons.death} Total Casualties: **${parseNumber(attacker_casualties + defender_casualties)}`);
+            result_string.push(`${config.icons.death} Total Casualties: **${parseNumber(attacker_casualties + defender_casualties)}**`);
 
             if (attacker_stackwiped) {
               result_string.push(`${config.icons.retreat} Due to being understrength, the attacking side was completely routed from the battlefield and massacred.`);
@@ -420,24 +420,24 @@ module.exports = {
               .setTitle(`**${battle_name}:\n${config.localisation.divider}**`)
               .addFields(
                 {
-                  name: `${config.icons.attacker} __**Attacker:**_\n---\n`,
+                  name: `${config.icons.attacker} __**Attacker:**__\n---\n`,
                   value: attacker_string.join("\n"),
                   inline: true
                 },
                 {
-                  name: `${config.icons.defender} __**Defender:**_\n---\n`,
+                  name: `${config.icons.defender} __**Defender:**__\n---\n`,
                   value: defender_string.join("\n"),
                   inline: true
                 },
                 {
-                  name: `${config.icons.attacker} __**Results:**_\n---\n`,
+                  name: `${config.icons.attacker} __**Results:**__\n---\n`,
                   value: result_string.join("\n")
                 },
               );
 
             //Send battle_embed to both users as an embed alert
-            sendEmbedAlert(actual_id, battle_embed);
-            sendEmbedAlert(actual_ot_user_id, battle_embed);
+            sendEmbedAlert(actual_id, battle_embed, battle_name);
+            sendEmbedAlert(actual_ot_user_id, battle_embed, battle_name);
           }
   },
 
