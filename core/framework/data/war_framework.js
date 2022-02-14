@@ -213,6 +213,8 @@ module.exports = {
       if (local_war.name.trim().toLowerCase() == war_name)
         war_found = [true, (!options.return_key) ? local_war : all_wars[i]];
     }
+
+    return (war_found[0]) ? war_found[1] : undefined;
   },
 
   /*
