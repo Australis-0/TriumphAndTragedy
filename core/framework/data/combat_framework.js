@@ -53,6 +53,7 @@ module.exports = {
           Math.ceil((attacker_roll/local_defence)*unit_loss_rate);
 
         //Kill units
+        total_losses += total_casualties;
         module.exports.killUnitPops(user_id, total_casualties, defender_units[i]);
       }
 
@@ -359,7 +360,7 @@ module.exports = {
                     "";
               var unit_name = (unit_obj.name) ? unit_obj.name : attacker_units[i];
 
-              attacker_string.push(`${unit_icon}${parseNumber(attacking_army_obj.units[attacker_units[i]])} ${unit_name} ${(attacking_army_obj.units[attacker_units[i]] < old_attacking_army_obj.units[attacker_units[i]]) ? `(-${parseNumber(Math.ceil(old_attacking_army_obj.units[attacker_units[i]] - attacking_army_obj.units[attacker_units[i]]))})` : ""}`);
+              attacker_string.push(`${unit_icon}${parseNumber(attacking_army_obj.units[attacker_units[i]])} ${unit_name} ${(returnSafeNumber(attacking_army_obj.units[attacker_units[i]]) < old_attacking_army_obj.units[attacker_units[i]]) ? `(-${parseNumber(Math.ceil(old_attacking_army_obj.units[attacker_units[i]] - returnSafeNumber(attacking_army_obj.units[attacker_units[i]])))})` : ""}`);
             }
 
             attacker_string.push("");
@@ -382,7 +383,7 @@ module.exports = {
                     "";
               var unit_name = (unit_obj.name) ? unit_obj.name : defender_units[i];
 
-              defender_string.push(`${unit_icon}${parseNumber(defending_army_obj.units[defender_units[i]])} ${unit_name} ${(defending_army_obj.units[defender_units[i]] < old_defending_army_obj.units[defender_units[i]]) ? `(-${parseNumber(Math.ceil(old_defending_army_obj.units[defender_units[i]] - defending_army_obj.units[defender_units[i]]))})` : ""}`);
+              defender_string.push(`${unit_icon}${parseNumber(defending_army_obj.units[defender_units[i]])} ${unit_name} ${(returnSafeNumber(defending_army_obj.units[defender_units[i]]) < old_defending_army_obj.units[defender_units[i]]) ? `(-${parseNumber(Math.ceil(old_defending_army_obj.units[defender_units[i]] - returnSafeNumber(defending_army_obj.units[defender_units[i]])))})` : ""}`);
             }
 
             defender_string.push("");
@@ -918,10 +919,10 @@ module.exports = {
 
               }
         }
-  }, //[WIP] - Code bulk of function
+  },
 
   //killUnitPops() - Kills unit pops without killing the player unit.
-  killUnitPops: function (arg0_user, arg1_amount, arg2_unit_name) { //[WIP] - Code bulk of function
+  killUnitPops: function (arg0_user, arg1_amount, arg2_unit_name) {
     //Convert from parameters
     var user_id = arg0_user;
     var amount = Math.ceil(parseInt(arg1_amount));
