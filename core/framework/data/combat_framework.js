@@ -363,7 +363,7 @@ module.exports = {
                     "";
               var unit_name = (unit_obj.name) ? unit_obj.name : attacker_units[i];
 
-              attacker_string.push(`${unit_icon}${parseNumber(attacking_army_obj.units[attacker_units[i]])} ${unit_name} ${(returnSafeNumber(attacking_army_obj.units[attacker_units[i]]) < old_attacking_army_obj.units[attacker_units[i]]) ? `(-${parseNumber(Math.ceil(old_attacking_army_obj.units[attacker_units[i]] - returnSafeNumber(attacking_army_obj.units[attacker_units[i]])))})` : ""}`);
+              attacker_string.push(`${unit_icon}${parseNumber(returnSafeNumber(attacking_army_obj.units[attacker_units[i]]))} ${unit_name} ${(returnSafeNumber(attacking_army_obj.units[attacker_units[i]]) < old_attacking_army_obj.units[attacker_units[i]]) ? `(-${parseNumber(Math.ceil(old_attacking_army_obj.units[attacker_units[i]] - returnSafeNumber(attacking_army_obj.units[attacker_units[i]])))})` : ""}`);
             }
 
             attacker_string.push("");
@@ -386,7 +386,7 @@ module.exports = {
                     "";
               var unit_name = (unit_obj.name) ? unit_obj.name : defender_units[i];
 
-              defender_string.push(`${unit_icon}${parseNumber(defending_army_obj.units[defender_units[i]])} ${unit_name} ${(returnSafeNumber(defending_army_obj.units[defender_units[i]]) < old_defending_army_obj.units[defender_units[i]]) ? `(-${parseNumber(Math.ceil(old_defending_army_obj.units[defender_units[i]] - returnSafeNumber(defending_army_obj.units[defender_units[i]])))})` : ""}`);
+              defender_string.push(`${unit_icon}${parseNumber(returnSafeNumber(defending_army_obj.units[defender_units[i]]))} ${unit_name} ${(returnSafeNumber(defending_army_obj.units[defender_units[i]]) < old_defending_army_obj.units[defender_units[i]]) ? `(-${parseNumber(Math.ceil(old_defending_army_obj.units[defender_units[i]] - returnSafeNumber(defending_army_obj.units[defender_units[i]])))})` : ""}`);
             }
 
             defender_string.push("");
