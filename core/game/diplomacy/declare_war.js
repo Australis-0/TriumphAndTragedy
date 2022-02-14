@@ -23,8 +23,8 @@ module.exports = {
           var actual_raw_cb_name = getCB(raw_cb_name, { return_key: true });
           var has_wargoal = [false, -1]; //[has_wargoal, wargoal_index];
 
-          for (var i = 0; i < usr.diplomacy.wargoals.length; i++) {
-            var local_wargoal = usr.diplomacy.wargoals[i];
+          for (var i = 0; i < attacker_obj.diplomacy.wargoals.length; i++) {
+            var local_wargoal = attacker_obj.diplomacy.wargoals[i];
 
             if (local_wargoal.type == actual_raw_cb_name && local_wargoal.target == defender_id)
               has_wargoal = [true, i];
@@ -62,10 +62,10 @@ module.exports = {
                         });
 
                     //Remove from wargoals
-                    usr.diplomacy.wargoals.splice(has_wargoal[1], 1);
+                    attacker_obj.diplomacy.wargoals.splice(has_wargoal[1], 1);
 
                     //Print out user feedback
-                    printAlert(game_obj.id, `${config.icons.defender} You are now at war with **${ot_user.name}**. In order to call in allies, type **[Call Ally]** from the diplomacy screen. In order to a view a list of ongoing wars, type **[View Wars]**.`);
+                    printAlert(game_obj.id, `${config.icons.defender} You are now at war with **${defender_obj.name}**. In order to call in allies, type **[Call Ally]** from the diplomacy screen. In order to a view a list of ongoing wars, type **[View Wars]**.`);
                   } else {
                     printError(game_obj.id, `You can't declare war on a country you are already at war with!`);
                   }
@@ -79,7 +79,7 @@ module.exports = {
               printError(game_obj.id, `You can't declare war on someone you're already allied to!`);
             }
           } else {
-            printError(game_obj.id, `You don't have any **${(cb_obj.name) ? cb_obj.name : actual_raw_cb_name}** on **${ot_user.name}**! Consider justifying a new wargoal on ${ot_user.name} using **[Justify Wargoal]** first in order to use this CB.`);
+            printError(game_obj.id, `You don't have any **${(cb_obj.name) ? cb_obj.name : actual_raw_cb_name}** on **${defender_obj.name}**! Consider justifying a new wargoal on ${defender_obj.name} using **[Justify Wargoal]** first in order to use this CB.`);
           }
         } else {
           printError(game_obj.id, `The country you are trying to declare war on doesn't even exist!`);
@@ -113,7 +113,7 @@ module.exports = {
       switch (arg) {
         case "view cb list":
           createPageMenu(game_obj.middle_embed, {
-            embed_pages: printCBList(user_id),
+            embed_pages: printCBs(user_id),
             user: game_obj.user
           });
           return true;

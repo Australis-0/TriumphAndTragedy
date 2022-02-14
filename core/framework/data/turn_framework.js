@@ -50,6 +50,10 @@ module.exports = {
             speed_sample.push(current_province);
             local_army.province = current_province;
           }
+
+        //Clear movement array if army has arrived
+        if (local_army.province == local_army.moving_to[local_army.moving_to.length - 1])
+          delete local_army.moving_to;
       }
 
       //Check for hostile users in the same province/colliding provinces

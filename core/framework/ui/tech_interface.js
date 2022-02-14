@@ -220,7 +220,7 @@ module.exports = {
                     (modifier_obj.type == "percentage") ?
                       //Percentage is true, but is it negative or positive?
                       (local_modifier[0] < 0) ?
-                        tech_string.push(` • **${printPercentage(local_modifier[0] - 1, { display_prefix: true, base_zero: true })}** ${modifier_name}`) :
+                        tech_string.push(` • **${printPercentage(local_modifier[0], { display_prefix: true, base_zero: true })}** ${modifier_name}`) :
                         tech_string.push(` • **${printPercentage(local_modifier[0], { display_prefix: true, base_zero: true })}** ${modifier_name}`) :
                       tech_string.push(` • **${parseNumber(local_modifier[0], { display_prefix: true })}** ${modifier_name}`);
                   }

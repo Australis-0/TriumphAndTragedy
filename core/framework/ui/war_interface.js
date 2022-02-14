@@ -212,7 +212,7 @@ module.exports = {
         var number_of_nations = local_war.attackers.length + local_war.defenders.length;
         var total_casualties = local_war.attacker_total_casualties + local_war.defender_total_casualties;
 
-        wars_string.push(`**${local_war.name}** ¦ ${parseNumber(number_of_nations)} ¦ **${parsePercentage(local_war.attacker_warscore)}** - **${parsePercentage(local_war.defender_warscore)}** ¦ ${parseNumber(total_casualties)}`);
+        wars_string.push(`**${local_war.name}** ¦ ${parseNumber(number_of_nations)} ¦ **${printPercentage(local_war.attacker_warscore)}** - **${printPercentage(local_war.defender_warscore)}** ¦ ${parseNumber(total_casualties)}`);
         wars_string.push(`- **[View ${local_war.name}]**`);
       }
     } else {

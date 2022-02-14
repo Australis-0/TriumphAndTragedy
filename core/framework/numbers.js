@@ -157,6 +157,7 @@ module.exports = {
     options: {
       base_zero: true/false - Whether to start at a base zero instead of one
       display_prefix: true/false - Whether or not to display a starting prefix
+      is_modifier: true/false - Used for parsing negative modifiers
     }
   */
   printPercentage: function (arg0_number, arg1_options) {

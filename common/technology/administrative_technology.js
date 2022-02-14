@@ -713,8 +713,8 @@ config.technology.administrative_technology = {
       unlock_reform: "press_rights"
     }
   },
-  international_trade_agreements: {
-    name: "International Trade Agreements",
+  international_diplomatic_immunity: {
+    name: "International Diplomatic Immunity",
     icon: "diplomacy",
     description: "Increasingly, with the power projection of the countries that dominate this world, even uncivilised nations have to accept the sovereign immunity of diplomats.",
     prerequisite_techs: ["universal_suffrage"],

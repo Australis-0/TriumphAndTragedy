@@ -167,9 +167,10 @@ module.exports = {
       if (local_war.defenders.includes(actual_id))
         opposing_side = "attackers";
 
-      for (var i = 0; i < local_war[opposing_side].length; i++)
-        if (!enemies.includes(local_war[opposing_side][i]))
-          enemies.push(local_war[opposing_side][i]);
+      if (opposing_side != "")
+        for (var x = 0; x < local_war[opposing_side].length; x++)
+          if (!enemies.includes(local_war[opposing_side][x]))
+            enemies.push(local_war[opposing_side][x]);
     }
 
     //Return statement
@@ -262,10 +263,10 @@ module.exports = {
     var attacker_obj = main.users[attacker_id];
     var cb_obj = getCB(options.type);
     var defender_id = main.global.user_map[options.defender];
-    var defender_obj = main.users[defender_obj];
+    var defender_obj = main.users[defender_id];
 
     //Declare local tracker variables
-    var attacker_culture_adjective = main.global.cultures[getPrimaryCultures(defender_id)[1]].adjective;
+    var attacker_culture_adjective = main.global.cultures[getPrimaryCultures(defender_id)[0]].adjective;
     var defender_culture_adjective = main.global.cultures[getPrimaryCultures(attacker_id)[0]].adjective;
 
     //Declare war_obj and format
