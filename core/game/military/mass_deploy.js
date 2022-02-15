@@ -77,7 +77,7 @@ module.exports = {
               //Return success/error messages
               (successful_deployments > 0) ?
                 printAlert(game_obj.id, `You have successfully deployed up to **${parseNumber(successful_deployments)}** ${(unit_obj.name) ? unit_obj.name : raw_unit_name} in **${parseNumber(deploy_in_armies.length)}** armies.`) :
-                printError(game_obj.id, `The armies you have specified could not be found! Please double-check your spelling and type **[Army List]** for a full list of your armies.`);
+                printError(game_obj.id, `The armies you have specified could not have units deployed in them! Please double-check your spelling and that the armies are stationary in core provinces.\n\nType **[Army List]** for a full list of your armies.`);
             } else {
               printError(game_obj.id, `You don't have this many **${(unit_obj.name) ? unit_obj.name : unit_obj.name}** to deploy! You may only deploy up to **${parseNumber(Math.floor(old_unit_count/deploy_in_armies.length))}** ${(unit_obj.name) ? unit_obj.name : unit_obj.name} over **${parseNumber(deploy_in_armies.length)}** armies, for a total of **${parseNumber(old_unit_count)}** ${(unit_obj.name) ? unit_obj.name : unit_obj.name}.`);
             }
