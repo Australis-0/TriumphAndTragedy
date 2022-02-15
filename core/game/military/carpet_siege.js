@@ -57,7 +57,7 @@ module.exports = {
           var local_army = getArmy(actual_id, acceptable_armies[i]);
 
           if (local_army) {
-            var army_status = moveArmy(actual_id, local_army.name, occupation_target_list[i]);
+            var army_status = moveArmy(actual_id, local_army, occupation_target_list[i]);
 
             if (army_status)
               successful_moves++;

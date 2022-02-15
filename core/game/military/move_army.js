@@ -15,7 +15,7 @@ module.exports = {
     //Check to see if the army actually exists
     if (army_obj) {
       if (province_obj) {
-        var move_command = moveArmy(actual_id, army_obj.name, province_id);
+        var move_command = moveArmy(actual_id, army_obj, province_id);
 
         //Print user feedback
         (move_command[0]) ?
