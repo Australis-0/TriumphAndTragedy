@@ -1085,14 +1085,13 @@ module.exports = {
 				console.log(e);
 			}
 		}
+    
 		//Remove all empty elements
 		for (var i = 0; i < ordinal_array.length; i++) {
 			if (ordinal_array[i] == "") {
 				ordinal_array.splice(i, 1);
 			}
 		}
-
-		console.log(ordinal_array);
 
 		//Return statement
 		return ordinal_array;

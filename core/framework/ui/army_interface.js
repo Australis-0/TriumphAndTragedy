@@ -199,7 +199,16 @@ module.exports = {
     var game_obj = getGameObject(user_id);
     var usr = main.users[actual_id];
 
-    var all_armies = Object.keys(usr.armies);
+    //Sort user armies
+    var all_armies = Object.keys(
+      Object.fromEntries(
+        Object.entries(usr.armies).sort(function (a, b) {
+            return (a[1].name.toLowerCase() <  b[1].name.toLowerCase()) ? -1 :
+              (a[1].name.toLowerCase() > b[1].name.toLowerCase()) ? 1 : 0;
+            }
+          )
+        )
+      );
     var armies_string = [];
 
     //Format armies_string

@@ -38,24 +38,6 @@ module.exports = {
           delete local_army.submarine_cooldown;
       }
 
-      //Army movement
-      if (local_army.moving_to) {
-        var current_element = local_army.moving_to.indexOf(local_army.province);
-        var current_speed = Math.ceil(config.defines.combat.army_speed*local_user.modifiers.army_travel_speed);
-
-        for (var x = 0; x < current_speed; x++)
-          if (local_army.moving_to[x + current_element]) {
-            var current_province = local_army.moving_to[x + current_element];
-
-            speed_sample.push(current_province);
-            local_army.province = current_province;
-          }
-
-        //Clear movement array if army has arrived
-        if (local_army.province == local_army.moving_to[local_army.moving_to.length - 1])
-          delete local_army.moving_to;
-      }
-
       //Check for hostile users in the same province/colliding provinces
       for (var x = 0; x < all_armies.length; x++)
         if (local_enemies.includes(all_armies[x].owner) && speed_sample.includes(all_armies[x].province))
@@ -80,6 +62,7 @@ module.exports = {
 
   nextGlobalTurn: function () {
     //Declare local instance variables
+    var all_armies = getAllArmies();
     var all_market_goods = Object.keys(main.market);
     var all_provinces = Object.keys(main.provinces);
     var all_users = Object.keys(main.users);
@@ -390,6 +373,26 @@ module.exports = {
     {
       for (var i = 0; i < all_armies.length; i++) {
         var local_army = usr.armies[all_armies[i]];
+
+        //Army movement
+        if (local_army.moving_to) {
+          var current_element = local_army.moving_to.indexOf(local_army.province);
+          var current_speed = Math.ceil(config.defines.combat.army_speed*usr.modifiers.army_travel_speed);
+
+          for (var x = 0; x < current_speed; x++)
+            if (local_army.moving_to[x + current_element]) {
+              var current_province = local_army.moving_to[x + current_element];
+
+              speed_sample.push(current_province);
+              local_army.province = current_province;
+            }
+
+          //Clear movement array if army has arrived
+          if (local_army.province == local_army.moving_to[local_army.moving_to.length - 1]) {
+            local_army.moving_to = [];
+            local_army.status = "stationed";
+          }
+        }
 
         //Naval processing
         if (local_army.blockade_recovery_turns > 0)
