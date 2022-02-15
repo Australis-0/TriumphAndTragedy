@@ -267,9 +267,10 @@ module.exports = {
   },
 
   //Fetches user income before production costs
-  getIncome: function (arg0_user) {
+  getIncome: function (arg0_user, arg1_production) {
     //Convert from parameters
     var user_id = arg0_user;
+    var raw_production = arg1_production;
 
     //Declare local instance variables
     var calculated_income = 0;
@@ -280,7 +281,7 @@ module.exports = {
 
     //Regular error trapping just in case!
     try {
-      var total_production = getProduction(user_id);
+      var total_production = (!raw_production) ? getProduction(user_id) : raw_production;
 
       var total_maintenance = [
         (total_production.money_upkeep) ? total_production.money_upkeep[0] : 0,

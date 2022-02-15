@@ -223,11 +223,12 @@ module.exports = {
     var all_cities = getCities(actual_id);
     var all_enemies = getEnemies(actual_id);
     var all_expeditions = Object.keys(usr.expeditions);
-    var all_goods = getGoods();
-    var all_good_names = getGoods({ return_names: true });
+    var all_goods = lookup.all_goods_array;
+    var all_good_names = lookup.all_good_names;
     var all_governments = Object.keys(config.governments);
     var all_non_aggression_pacts = Object.keys(usr.diplomacy.non_aggression_pacts);
     var all_pops = Object.keys(config.pops);
+    var all_production = getProduction(actual_id);
     var all_relations = Object.keys(usr.diplomacy.relations);
     var all_temporary_modifiers = Object.keys(usr.temporary_modifiers);
     var all_users = Object.keys(main.users);
@@ -236,7 +237,7 @@ module.exports = {
     var owned_provinces = getProvinces(actual_id, { include_hostile_occupations: true });
 
     //Modifier and tracker variable processing
-    log.info(`Modifier and tracker variable processing!`);
+    console.time(`Modifier and tracker variable processing!`);
     {
       //Generic trackers
       usr.country_age++;
@@ -321,8 +322,9 @@ module.exports = {
         }
       }
     }
+    console.timeEnd(`Modifier and tracker variable processing!`);
 
-    log.info(`Alert processing!`);
+    console.time(`Alert processing!`);
     //Alert processing
     {
       var alerts_to_remove = [];
@@ -381,8 +383,9 @@ module.exports = {
       for (var i = alerts_to_remove.length - 1; i >= 0; i--)
         usr.alerts.splice(alerts_to_remove[i], 1);
     }
+    console.timeEnd(`Alert processing!`);
 
-    log.info(`Army processing!`);
+    console.time(`Army processing!`);
     //Army processing
     {
       for (var i = 0; i < all_armies.length; i++) {
@@ -397,11 +400,11 @@ module.exports = {
           delete local_army.blockade_recovery_turns;
       }
     }
+    console.timeEnd(`Army processing!`);
 
-    log.info(`Building processing!`);
+    console.time(`Building processing!`);
     //Building processing
     {
-      var all_production = getProduction(actual_id);
       var all_produced_goods = Object.keys(all_production);
 
       for (var i = 0; i < all_produced_goods.length; i++) {
@@ -434,16 +437,18 @@ module.exports = {
         }
       }
     }
+    console.timeEnd(`Building processing!`);
 
-    log.info(`Budget processing!`);
+    console.time(`Budget processing!`);
     //Budget processing
     {
       //Add money based on calculated user income
-      var user_income = getIncome(actual_id);
+      var user_income = getIncome(actual_id, all_production);
       usr.money += randomNumber(user_income[0], user_income[1]);
     }
+    console.timeEnd(`Budget processing!`);
 
-    log.info(`Colonisation processing!`);
+    console.time(`Colonisation processing!`);
     //Colonisation processing
     {
       if (!options.is_simulation)
@@ -467,8 +472,9 @@ module.exports = {
           }
         }
     }
+    console.timeEnd(`Colonisation processing!`);
 
-    log.info(`Construction processing!`);
+    console.time(`Construction processing!`);
     //Construction processing
     {
       for (var i = usr.under_construction.length - 1; i >= 0; i--) {
@@ -489,8 +495,9 @@ module.exports = {
         if (usr.under_construction[i].construction_turns <= 0)
           usr.under_construction.splice(i, 1);
     }
+    console.timeEnd(`Construction processing!`);
 
-    log.info(`Diplomacy processing!`);
+    console.time(`Diplomacy processing!`);
     //Diplomacy processing
     {
       if (!options.is_simulation) {
@@ -625,24 +632,27 @@ module.exports = {
         }
       }
     }
+    console.timeEnd(`Diplomacy processing!`);
 
-    log.info(`Goods processing!`);
+    console.time(`Goods processing!`);
     //Goods processing
     {
       for (var i = 0; i < all_goods.length; i++)
         if (all_goods[i].special_effect)
           all_goods[i].special_effect(usr);
     }
+    console.timeEnd(`Goods processing!`);
 
-    log.info(`Market processing!`);
+    console.time(`Market processing!`);
     //Market processing
     {
       //Reduce maximum transaction amount from the Global Market to 20% of total Shipment Capacity after 10 turns, or whatever it is set to in defines
       if (usr.country_age > 10)
         usr.modifiers.maximum_transaction_amount = config.defines.economy.resource_max_percentile;
     }
+    console.timeEnd(`Market processing!`);
 
-    log.info(`Military processing!`);
+    console.time(`Military processing!`);
     //Military processing
     {
       //Mobilisation processing
@@ -670,8 +680,9 @@ module.exports = {
         }
       }
     }
+    console.timeEnd(`Military processing!`);
 
-    log.info(`Politics processing!`);
+    console.time(`Politics processing!`);
     //Politics processing
     {
       //Political Discontent Modifiers - Keep at top, applies political modifiers
@@ -882,8 +893,9 @@ module.exports = {
         }
       }
     }
+    console.timeEnd(`Politics processing!`);
 
-    log.info(`Pop processing!`);
+    console.time(`Pop processing!`);
     //Pop processing
     {
       //Cultural assimilations
@@ -1021,8 +1033,9 @@ module.exports = {
         }
       }
     }
+    console.timeEnd(`Pop processing!`);
 
-    log.info(`Resources and RGO processing!`);
+    console.time(`Resources and RGO processing!`);
     //Resources and RGO
     {
       //Reset all good modifiers first so that local RGO buffs from cities can be applied
@@ -1033,11 +1046,12 @@ module.exports = {
         //Clear city modifiers
         delete all_cities[i].bombed_this_turn;
 
-        usr.modifiers[`${all_cities[i].resource}_gain`] += getCityRGOThroughput(all_cities[i].name);
+        usr.modifiers[`${all_cities[i].resource}_gain`] += getCityRGOThroughput(all_cities[i]);
       }
     }
+    console.timeEnd(`Resources and RGO processing!`);
 
-    log.info(`Tech processing!`);
+    console.time(`Tech processing!`);
     //Technology
     {
       //Research processing
@@ -1049,7 +1063,7 @@ module.exports = {
             config.defines.technology.max_knowledge_investment*usr.modifiers.knowledge_investment_limit :
             1;
           var research_removal_array = [];
-          var total_knowledge_gain = getKnowledgeGain(actual_id);
+          var total_knowledge_gain = getKnowledgeGain(actual_id, all_production.knowledge);
             total_knowledge_gain = randomNumber(total_knowledge_gain[0], total_knowledge_gain[1]);
 
           for (var i = usr.researching.length - 1; i >= 0; i--) {
@@ -1113,8 +1127,9 @@ module.exports = {
           removeElement(usr.research_queue, research_queue_removal_array[i]);
       }
     }
+    console.timeEnd(`Tech processing!`);
 
-    log.info(`Trade processing!`);
+    console.time(`Trade processing!`);
     //Trade
     {
       //Autotrade processing
@@ -1157,8 +1172,9 @@ module.exports = {
         }
       }
     }
+    console.timeEnd(`Trade processing!`);
 
-    log.info(`War exhaustion processing!`);
+    console.time(`War exhaustion processing!`);
     //War Exhaustion
     {
       //Blockades
@@ -1186,8 +1202,9 @@ module.exports = {
       //A full siege of the target user ticks up warscore by 10% per turn
       usr.modifiers.war_exhaustion += parseInt(((occupied_provinces/owned_provinces.length)*0.1).toFixed(2));
     }
+    console.timeEnd(`War exhaustion processing!`);
 
-    log.info(`Modifier cap processing!`);
+    console.time(`Modifier cap processing!`);
     //Modifier cap handlers - KEEP AT BOTTOM!
     {
       usr.modifiers.infamy = Math.min(Math.max(usr.modifiers.infamy, 0), 1);
@@ -1195,8 +1212,9 @@ module.exports = {
 
       balanceParties(actual_id);
     }
+    console.timeEnd(`Modifier cap processing!`);
 
-    log.info(`Simulation processing!`);
+    console.time(`Simulation processing!`);
     //Simulation handler
     {
       if (options.is_simulation) {
@@ -1210,5 +1228,6 @@ module.exports = {
         return simulated_results;
       }
     }
+    console.timeEnd(`Simulation processing!`);
   }
 }
