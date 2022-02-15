@@ -40,6 +40,7 @@ FileManager.import("./framework/data/government_framework");
 FileManager.import("./framework/data/laws_framework");
 FileManager.import("./framework/data/localisation_framework");
 FileManager.import("./framework/data/modifier_framework");
+FileManager.import("./framework/data/optimisation_framework");
 FileManager.import("./framework/data/peace_treaty_framework");
 FileManager.import("./framework/data/politics_framework");
 FileManager.import("./framework/data/pop_framework");
@@ -232,6 +233,7 @@ global.visual_prompts = {};
 client.login(settings.bot_token);
 
 //Load DB from JSON
+initOptimisation();
 loadBackupArray();
 loadMostRecentSave();
 

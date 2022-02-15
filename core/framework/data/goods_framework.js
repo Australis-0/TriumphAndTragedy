@@ -81,7 +81,8 @@ module.exports = {
     options: {
       exclude_categories: []
       exclude_hidden: false/true,
-      return_names: false/true
+      return_names: false/true,
+      return_object: false/true
     }
   */
   getGoods: function (arg0_options) {
@@ -91,6 +92,7 @@ module.exports = {
     //Declare local instance variables
     var all_good_categories = Object.keys(config.goods);
     var goods_array = [];
+    var goods_object = {};
 
     //Iterate over all goods categories and push all goods therein to array
     for (var i = 0; i < all_good_categories.length; i++) {
@@ -107,14 +109,17 @@ module.exports = {
 
       //If the category meets the conditions, push all the local goods inside of it to goods_array, either with their name, or with their object depending on the options
       if (category_meets_conditions)
-        for (var x = 0; x < local_goods.length; x++)
+        for (var x = 0; x < local_goods.length; x++) {
           (options.return_names) ?
             goods_array.push(local_goods[x]) :
             goods_array.push(local_category[local_goods[x]]);
+
+          goods_object[local_goods[x]] = local_category[local_goods[x]];
+        }
     }
 
     //Return statement
-    return goods_array;
+    return (!options.return_object) ? goods_array : goods_object;
   },
 
   getRawGoods: function (arg0_options) {

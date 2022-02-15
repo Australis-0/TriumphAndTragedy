@@ -236,6 +236,7 @@ module.exports = {
     var owned_provinces = getProvinces(actual_id, { include_hostile_occupations: true });
 
     //Modifier and tracker variable processing
+    log.info(`Modifier and tracker variable processing!`);
     {
       //Generic trackers
       usr.country_age++;
@@ -321,6 +322,7 @@ module.exports = {
       }
     }
 
+    log.info(`Alert processing!`);
     //Alert processing
     {
       var alerts_to_remove = [];
@@ -380,6 +382,7 @@ module.exports = {
         usr.alerts.splice(alerts_to_remove[i], 1);
     }
 
+    log.info(`Army processing!`);
     //Army processing
     {
       for (var i = 0; i < all_armies.length; i++) {
@@ -395,6 +398,7 @@ module.exports = {
       }
     }
 
+    log.info(`Building processing!`);
     //Building processing
     {
       var all_production = getProduction(actual_id);
@@ -431,6 +435,7 @@ module.exports = {
       }
     }
 
+    log.info(`Budget processing!`);
     //Budget processing
     {
       //Add money based on calculated user income
@@ -438,6 +443,7 @@ module.exports = {
       usr.money += randomNumber(user_income[0], user_income[1]);
     }
 
+    log.info(`Colonisation processing!`);
     //Colonisation processing
     {
       if (!options.is_simulation)
@@ -462,6 +468,7 @@ module.exports = {
         }
     }
 
+    log.info(`Construction processing!`);
     //Construction processing
     {
       for (var i = usr.under_construction.length - 1; i >= 0; i--) {
@@ -483,6 +490,7 @@ module.exports = {
           usr.under_construction.splice(i, 1);
     }
 
+    log.info(`Diplomacy processing!`);
     //Diplomacy processing
     {
       if (!options.is_simulation) {
@@ -618,6 +626,7 @@ module.exports = {
       }
     }
 
+    log.info(`Goods processing!`);
     //Goods processing
     {
       for (var i = 0; i < all_goods.length; i++)
@@ -625,6 +634,7 @@ module.exports = {
           all_goods[i].special_effect(usr);
     }
 
+    log.info(`Market processing!`);
     //Market processing
     {
       //Reduce maximum transaction amount from the Global Market to 20% of total Shipment Capacity after 10 turns, or whatever it is set to in defines
@@ -632,6 +642,7 @@ module.exports = {
         usr.modifiers.maximum_transaction_amount = config.defines.economy.resource_max_percentile;
     }
 
+    log.info(`Military processing!`);
     //Military processing
     {
       //Mobilisation processing
@@ -660,6 +671,7 @@ module.exports = {
       }
     }
 
+    log.info(`Politics processing!`);
     //Politics processing
     {
       //Political Discontent Modifiers - Keep at top, applies political modifiers
@@ -871,6 +883,7 @@ module.exports = {
       }
     }
 
+    log.info(`Pop processing!`);
     //Pop processing
     {
       //Cultural assimilations
@@ -1009,6 +1022,7 @@ module.exports = {
       }
     }
 
+    log.info(`Resources and RGO processing!`);
     //Resources and RGO
     {
       //Reset all good modifiers first so that local RGO buffs from cities can be applied
@@ -1023,6 +1037,7 @@ module.exports = {
       }
     }
 
+    log.info(`Tech processing!`);
     //Technology
     {
       //Research processing
@@ -1099,6 +1114,7 @@ module.exports = {
       }
     }
 
+    log.info(`Trade processing!`);
     //Trade
     {
       //Autotrade processing
@@ -1142,6 +1158,7 @@ module.exports = {
       }
     }
 
+    log.info(`War exhaustion processing!`);
     //War Exhaustion
     {
       //Blockades
@@ -1170,6 +1187,7 @@ module.exports = {
       usr.modifiers.war_exhaustion += parseInt(((occupied_provinces/owned_provinces.length)*0.1).toFixed(2));
     }
 
+    log.info(`Modifier cap processing!`);
     //Modifier cap handlers - KEEP AT BOTTOM!
     {
       usr.modifiers.infamy = Math.min(Math.max(usr.modifiers.infamy, 0), 1);
@@ -1178,6 +1196,7 @@ module.exports = {
       balanceParties(actual_id);
     }
 
+    log.info(`Simulation processing!`);
     //Simulation handler
     {
       if (options.is_simulation) {

@@ -967,10 +967,10 @@ module.exports = {
                   amount: amount_killed
                 });
 
-                usr.pops[`used_${local_manpower_costs[i]}`] = Math.max(
+                usr.pops[`used_${local_manpower_costs[i]}`] = returnSafeNumber(Math.max(
                   usr.pops[`used_${local_manpower_costs[i]}`] - amount_killed,
                   0
-                );
+                ));
 
                 total_losses += amount_killed;
               } else {
@@ -994,10 +994,10 @@ module.exports = {
               amount: amount_killed
             });
 
-            usr.pops[`used_${local_manpower_costs[i]}`] = Math.max(
+            usr.pops[`used_${local_manpower_costs[i]}`] = returnSafeNumber(Math.max(
               usr.pops[`used_${local_manpower_costs[x]}`] - amount_killed,
               0
-            );
+            ));
 
             total_losses += Math.ceil(amount_killed);
           }

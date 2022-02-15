@@ -212,10 +212,8 @@ module.exports = {
     var city_name = arg0_name;
 
     //Declare local instance variables
-    try {
-      var city_obj = getCity(city_name);
-      var usr = main.users[city_obj.controller];
-    } catch {}
+    var city_obj = (typeof city_name != "object") ? getCity(city_name) : city_name;
+    var usr = main.users[city_obj.controller];
 
     return returnSafeNumber(
       (1 + usr.modifiers.rgo_throughput) +
