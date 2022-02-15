@@ -1,5 +1,8 @@
 module.exports = {
-  nextBattleTick: function () {
+  nextBattleTick: function (arg0_new_turn) {
+    //Convert from parameters
+    var is_new_turn = arg0_new_turn;
+
     //Declare local instance variables
     var all_armies = getAllArmies();
     var all_users = Object.keys(main.users);
@@ -26,16 +29,39 @@ module.exports = {
       var province_obj = main.provinces[local_army.province];
       var speed_sample = [local_army.province];
 
-      //Army cooldowns
-      if (local_army.blockade_recovery_turns) {
-        local_army.blockade_recovery_turns--;
-        if (local_army.blockade_recovery_turns <= 0)
-          delete local_army.blockade_recovery_turns;
-      }
-      if (local_army.submarine_cooldown) {
-        local_army.submarine_cooldown--;
-        if (local_army.submarine_cooldown <= 0)
-          delete local_army.submarine_cooldown;
+      //Per turn updates
+      if (is_new_turn) {
+        //Army cooldowns
+        if (local_army.blockade_recovery_turns) {
+          local_army.blockade_recovery_turns--;
+          if (local_army.blockade_recovery_turns <= 0)
+            delete local_army.blockade_recovery_turns;
+        }
+        if (local_army.submarine_cooldown) {
+          local_army.submarine_cooldown--;
+          if (local_army.submarine_cooldown <= 0)
+            delete local_army.submarine_cooldown;
+        }
+
+        //Army movement
+        if (local_army.moving_to) {
+          var current_element = local_army.moving_to.indexOf(local_army.province);
+          var current_speed = Math.ceil(config.defines.combat.army_speed*usr.modifiers.army_travel_speed);
+
+          for (var x = 0; x < current_speed; x++)
+            if (local_army.moving_to[x + current_element]) {
+              var current_province = local_army.moving_to[x + current_element];
+
+              speed_sample.push(current_province);
+              local_army.province = current_province;
+            }
+
+          //Clear movement array if army has arrived
+          if (local_army.province == local_army.moving_to[local_army.moving_to.length - 1]) {
+            local_army.moving_to = [];
+            local_army.status = "stationed";
+          }
+        }
       }
 
       //Check for hostile users in the same province/colliding provinces
@@ -367,43 +393,6 @@ module.exports = {
         usr.alerts.splice(alerts_to_remove[i], 1);
     }
     console.timeEnd(`Alert processing!`);
-
-    console.time(`Army processing!`);
-    //Army processing
-    {
-      for (var i = 0; i < all_armies.length; i++) {
-        var local_army = usr.armies[all_armies[i]];
-
-        //Army movement
-        if (local_army.moving_to) {
-          var current_element = local_army.moving_to.indexOf(local_army.province);
-          var current_speed = Math.ceil(config.defines.combat.army_speed*usr.modifiers.army_travel_speed);
-
-          for (var x = 0; x < current_speed; x++)
-            if (local_army.moving_to[x + current_element]) {
-              var current_province = local_army.moving_to[x + current_element];
-
-              speed_sample.push(current_province);
-              local_army.province = current_province;
-            }
-
-          //Clear movement array if army has arrived
-          if (local_army.province == local_army.moving_to[local_army.moving_to.length - 1]) {
-            local_army.moving_to = [];
-            local_army.status = "stationed";
-          }
-        }
-
-        //Naval processing
-        if (local_army.blockade_recovery_turns > 0)
-          local_army.blockade_recovery_turns--;
-
-        //Delete unneeded keys
-        if (local_army.blockade_recovery_turns == 0)
-          delete local_army.blockade_recovery_turns;
-      }
-    }
-    console.timeEnd(`Army processing!`);
 
     console.time(`Building processing!`);
     //Building processing
@@ -1203,7 +1192,7 @@ module.exports = {
       var occupied_provinces = owned_provinces.length - controlled_provinces.length;
 
       //A full siege of the target user ticks up warscore by 10% per turn
-      usr.modifiers.war_exhaustion += parseInt(((occupied_provinces/owned_provinces.length)*0.1).toFixed(2));
+      usr.modifiers.war_exhaustion += parseFloat(((occupied_provinces/owned_provinces.length)*0.1).toFixed(2));
     }
     console.timeEnd(`War exhaustion processing!`);
 

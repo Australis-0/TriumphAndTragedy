@@ -62,7 +62,7 @@ module.exports = {
       }
 
       if (local_war.defenders.includes(actual_id)) {
-        for (var x = 0; x < local_war.attackes.length; x++)
+        for (var x = 0; x < local_war.attackers.length; x++)
           enemies.push(main.users[local_war.attackers[x]].name);
 
         defensive_wars++;
@@ -87,8 +87,6 @@ module.exports = {
       diplomacy_string.push(`Our **${parseNumber(accepted_cultures.length)}** accepted culture(s) are costing us **${parseNumber(accepted_cultures*config.defines.politics.accepted_culture_maintenance_cost)}** Political Capital per turn.`);
 
     diplomacy_string.push(`${config.icons.infamy} Infamy: **${parseNumber(usr.modifiers.infamy)}** (${parseNumber(usr.modifiers.infamy_loss, { display_prefix: true })} per turn)`);
-
-    //[WIP] - Insert At War status here
 
     diplomacy_string.push("");
     diplomacy_string.push(`**[View CB List]** ¦ **[War List]**`);
