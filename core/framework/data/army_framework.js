@@ -384,8 +384,9 @@ module.exports = {
         //Append owner for identification
         local_army.owner = all_users[i];
 
-        if (local_army.type != "navy")
-          armies_in_province.push(local_army);
+        if (local_army.province == province_id)
+          if (local_army.type != "navy")
+            armies_in_province.push(local_army);
       }
     }
 
@@ -1085,7 +1086,7 @@ module.exports = {
 				console.log(e);
 			}
 		}
-    
+
 		//Remove all empty elements
 		for (var i = 0; i < ordinal_array.length; i++) {
 			if (ordinal_array[i] == "") {

@@ -64,6 +64,7 @@ module.exports = {
     getAllUnits() - Fetches an object/key list of all units.
     options: {
       return_names: true/false - Whether or not to return the keys instead.
+      return_object: true/false - Whether or not to return a single object instead.
     }
   */
   getAllUnits: function (arg0_options) {
@@ -73,6 +74,7 @@ module.exports = {
     //Declare local instance variables
     var all_unit_categories = Object.keys(config.units);
     var all_units = [];
+    var unit_obj = {};
 
     //Iterate over all_unit_categories and push their respective objects into array
     for (var i = 0; i < all_unit_categories.length; i++) {
@@ -80,16 +82,19 @@ module.exports = {
       var local_units = Object.keys(local_unit_category);
 
       for (var x = 0; x < local_units.length; x++)
-        if (!["icon", "name", "order", "type"].includes(local_units[x]))
+        if (!["icon", "name", "order", "type"].includes(local_units[x])) {
           all_units.push(
             (!options.return_names) ?
               local_unit_category[local_units[x]] :
               local_units[x]
           );
+
+          unit_obj[local_units[x]] = local_unit_category[local_units[x]];
+        }
     }
 
     //Return statement
-    return all_units;
+    return (!options.return_object) ? all_units : unit_obj;
   },
 
   /*

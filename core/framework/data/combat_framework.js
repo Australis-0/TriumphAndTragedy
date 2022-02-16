@@ -929,13 +929,13 @@ module.exports = {
     //Convert from parameters
     var user_id = arg0_user;
     var amount = Math.ceil(parseInt(arg1_amount));
-    var unit_name = arg2_unit_name.trim().toLowerCase();
+    var unit_name = arg2_unit_name;
 
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
     var raw_unit_name = getUnit(unit_name, { return_key: true });
     var total_losses = 0;
-    var unit_obj = getUnit(unit_name);
+    var unit_obj = (typeof unit_name != "object") ? getUnit(unit_name.trim().toLowerCase()) : unit_name;
     var usr = main.users[actual_id];
 
     //Check to make sure that the unit_obj exists

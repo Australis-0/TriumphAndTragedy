@@ -6,6 +6,7 @@ module.exports = {
     //Declare local instance variables
     var all_armies = getAllArmies();
     var all_users = Object.keys(main.users);
+    var all_capitals = {};
     var all_enemies = {};
   	var current_date = new Date().getTime();
 
@@ -17,7 +18,9 @@ module.exports = {
     for (var i = 0; i < all_armies.length; i++)
       delete all_armies[i].in_combat;
 
-    //Create lookup table of all enemies
+    //Create lookup table of all capitals/enemies
+    for (var i = 0; i < all_users.length; i++)
+      all_capitals[all_users[i]] = getCapital(all_users[i]);
     for (var i = 0; i < all_users.length; i++)
       all_enemies[all_users[i]] = getEnemies(all_users[i]);
 
@@ -31,7 +34,9 @@ module.exports = {
 
       //Per turn updates
       if (is_new_turn) {
-        //Army cooldowns
+        //Army cooldowns - KEEP AT TOP!
+        delete local_army.taking_attrition;
+
         if (local_army.blockade_recovery_turns) {
           local_army.blockade_recovery_turns--;
           if (local_army.blockade_recovery_turns <= 0)
@@ -42,6 +47,38 @@ module.exports = {
           if (local_army.submarine_cooldown <= 0)
             delete local_army.submarine_cooldown;
         }
+
+        //Army attrition
+        if (returnSafeNumber(lookup[province_troop_strengths]) > returnSafeNumber(province_obj.supply_limit)*1000)
+          if (local_enemies.length > 0)
+            if (local_army.type != "navy") {
+              var is_capital = false;
+
+              if (all_capitals[local_army.owner])
+                if (local_army.province == all_capitals[local_army.owner].id)
+                  is_capital = true;
+
+              //Take attrition at a certain percentage
+              if (!is_capital) {
+                var local_units = Object.keys(local_army.units);
+
+                for (var x = 0; x < local_units.length; x++) {
+                  var lost_units = local_army.units[local_units[x]] - Math.ceil(
+                    local_army.units[local_units[x]]*config.defines.combat.base_attrition_rate*local_user.modifiers.attrition_rate
+                  );
+
+                  //Subtract attrition casualties
+                  local_army.units[local_units[x]] -= lost_units;
+                  killUnitPops(local_army.owner, lost_units, lookup.all_units[local_units[x]]);
+
+                  if (local_army.units[local_units[x]] <= 0)
+                    delete local_army.units[local_units[x]];
+
+                  //Add tracker variable
+                  local_army.taking_attrition = true;
+                }
+              }
+            }
 
         //Army movement
         if (local_army.moving_to) {
@@ -93,6 +130,14 @@ module.exports = {
     var all_provinces = Object.keys(main.provinces);
     var all_users = Object.keys(main.users);
     var all_wars = Object.keys(main.global.wars);
+
+    //Optimisation processing
+    {
+      lookup.province_troop_strengths = {};
+
+      for (var i = 0; i < all_provinces.length; i++)
+        lookup.province_troop_strengths[all_provinces[i]] = getTroopsInProvince(all_provinces[i]);
+    }
 
     //War processing
     {
