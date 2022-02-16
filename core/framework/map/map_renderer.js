@@ -127,9 +127,9 @@ module.exports = {
                 setProvinceColour(map_name, all_provinces[i], local_user.colour);
               else
                 setProvinceColour(map_name, all_provinces[i], [
-                  Math.max(local_user.colour[0] - 20, 0),
-                  Math.max(local_user.colour[1] - 20, 0),
-                  Math.max(local_user.colour[2] - 20, 0)
+                  Math.min(local_user.colour[0] + 20, 255),
+                  Math.min(local_user.colour[1] + 20, 255),
+                  Math.min(local_user.colour[2] + 20, 255)
                 ]);
             }
           } catch {}

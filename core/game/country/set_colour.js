@@ -64,7 +64,7 @@ module.exports = {
                   if (all_provinces[i].owner == all_provinces[i].controller)
                     setProvinceColour("political", all_provinces[i].id, usr.colour);
                   else
-                    setProvinceColour("political", all_provinces[i].id, [Math.min(usr.colour[0] - 20, 0), Math.min(usr.colour[1] - 20, 0), Math.min(usr.colour[2] - 20, 0)]);
+                    setProvinceColour("political", all_provinces[i].id, [Math.min(usr.colour[0] + 20, 255), Math.min(usr.colour[1] + 20, 255), Math.min(usr.colour[2] + 20, 255)]);
               } else {
                 if (!do_not_display)
                   printError(game_obj.id, `The colour you have specified, **${r}**, **${g}**, **${b}**, has already been taken by **${colour_taken[1]}**! Please pick a different colour.`);

@@ -19,6 +19,17 @@ module.exports = {
         if (amount > 0) {
           var relieved_units = relieveUnits(actual_id, amount, raw_unit_name, army_obj.name);
 
+          //Update army page
+          if (game_obj.page.includes("army_viewer_")) {
+            var army_to_view = game_obj.page.replace("army_viewer_", "");
+
+            createPageMenu(game_obj.middle_embed, {
+              embed_pages: printArmy(user_id, army_to_view),
+              page: interfaces[game_obj.middle_embed.id].page,
+              user: game_obj.user
+            });
+          }
+
           //Print out user feedback
           (relieved_units[0]) ?
             printAlert(game_obj.id, relieved_units[1]) :
@@ -47,7 +58,7 @@ module.exports = {
       title: `Relieve Units:`,
       prompts: [
         [`What is the name of the army you would like to relieve your units from?\n\nType **[Army List]** to view a list of all valid armies.`, "string"],
-        [`Which type of unit would you like to relieve?`],
+        [`Which type of unit would you like to relieve?`, "string"],
         [`How many soldiers would you like to put back in your reserves?`, "number", { min: 0 }]
       ]
     },

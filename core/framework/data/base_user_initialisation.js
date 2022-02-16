@@ -179,6 +179,7 @@ module.exports = {
       if (!usr.modifiers.construction_time) usr.modifiers.construction_time = 1;
       if (!usr.modifiers.extra_building_slots) usr.modifiers.extra_building_slots = 0;
       if (!usr.modifiers.isolation) usr.modifiers.isolation = 0.50;
+      if (!usr.modifiers.knowledge_investment_limit) usr.modifiers.knowledge_investment_limit = 1;
       if (!usr.modifiers.max_tax) usr.modifiers.max_tax = 0;
       if (!usr.modifiers.maximum_expeditions) usr.modifiers.maximum_expeditions = 1;
       if (!usr.modifiers.maximum_transaction_amount) usr.modifiers.maximum_transaction_amount = config.defines.economy.resource_init_max_percentile;

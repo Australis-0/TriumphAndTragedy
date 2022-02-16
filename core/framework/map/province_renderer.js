@@ -14,9 +14,9 @@ module.exports = {
 
     //Change province colour
     module.exports.setProvinceColour("political", province_id, [
-      Math.max(usr.colour[0] - 20, 0),
-      Math.max(usr.colour[1] - 20, 0),
-      Math.max(usr.colour[2] - 20, 0)
+      Math.min(usr.colour[1] + 20, 255),
+      Math.min(usr.colour[0] + 20, 255),
+      Math.min(usr.colour[2] + 20, 255)
     ]);
   },
 

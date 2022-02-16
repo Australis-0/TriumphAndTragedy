@@ -1674,9 +1674,9 @@ module.exports = {
               var overlord_obj = main.users[peace_obj.puppet[all_demands[y]].overlord];
 
               new_colour = [
-                Math.max(overlord_obj.colour[0] - 20, 0),
-                Math.max(overlord_obj.colour[1] - 20, 0),
-                Math.max(overlord_obj.colour[2] - 20, 0),
+                Math.min(overlord_obj.colour[0] + 20, 255),
+                Math.min(overlord_obj.colour[1] + 20, 255),
+                Math.min(overlord_obj.colour[2] + 20, 255),
               ];
             }
         }
