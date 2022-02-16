@@ -1340,7 +1340,7 @@ config.technology.military_technology = {
     }
   },
   modern_military_doctrine: {
-    name: "Modern Military Doctrin",
+    name: "Modern Military Doctrine",
     icon: "old_map",
     description: "Modern military doctrine, treating tactics and logistics as a science instead of an art, was borne out of the fire of the Great War, and eventually came to domineer the perspective on modern military thought.",
     prerequisite_techs: ["improved_biplanes", "early_bombers", "trench_warfare"],

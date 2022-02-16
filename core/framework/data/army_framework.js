@@ -668,10 +668,10 @@ module.exports = {
 		var ordinal_string = arg0_string;
 
 		//Declare instance array and reference variables
-		var numbers = ["-", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "I", "V", "X", "L", "C", "D", "M", "i", "v", "x", "l", "c", "d", "m"],
+		var numbers = ["-", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "I", "V", "X", "L", "C", "D", "M", "i", "v", "x", "l", "c", "m"],
 			arabic_numerals = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"],
 			ordinals = ["st", "nd", "rd", "th"],
-			roman_numerals = ["I", "V", "X", "L", "C", "D", "M", "i", "v", "x", "l", "c", "d", "m"],
+			roman_numerals = ["I", "V", "X", "L", "C", "D", "M", "i", "v", "x", "l", "c", "m"],
 			midpoint_signifier = [".", " "];
 		var ordinal_array = [];
 		var global_suffix = "",
