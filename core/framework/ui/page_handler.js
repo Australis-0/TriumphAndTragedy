@@ -11,7 +11,7 @@ module.exports = {
     var usr = main.users[actual_id];
 
     //Make sure user isn't in a visual prompt
-    var in_visual_prompt = main.interfaces[user_id];
+    var in_visual_prompt = interfaces[user_id];
 
     if (in_visual_prompt)
       in_visual_prompt = (in_visual_prompt.type == "visual_prompt");

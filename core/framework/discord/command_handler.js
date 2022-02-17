@@ -17,6 +17,11 @@ module.exports = {
     var game_obj = interfaces[game_id];
     var local_input = input.toLowerCase().replace(/[\[\]]/gm, "");
 
+    //Traditional commands
+    {
+      pageHandler(game_obj.user, local_input);
+    }
+
     //Visual prompt processing
     if (interfaces[game_id].user)
       if (interfaces[interfaces[game_id].user])
@@ -128,23 +133,6 @@ module.exports = {
             log.error(`commandHandler() - visual_prompt ran into an error: ${e}`);
             console.log(e);
           }
-
-    //Traditional commands - Make sure this goes after visual prompt processing!
-    {
-      switch (game_obj.page) {
-        case "inventory":
-          if (local_input == "back") {
-            game_obj.page = "economy";
-            printEconomy(game_obj.user);
-          }
-
-          break;
-        default:
-          pageHandler(game_obj.user, local_input);
-
-          break;
-      }
-    }
   },
 
   splitCommandLine: function (commandLine) {

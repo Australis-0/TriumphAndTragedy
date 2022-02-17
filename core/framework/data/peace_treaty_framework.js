@@ -89,27 +89,33 @@ module.exports = {
 
     //Cycle through all demands; only retake_cores and annexation can actually change the owner currently
     for (var i = 0; i < all_demands.length; i++) {
-      var local_value = peace_obj.peace_demands[all_peace[i]];
+      var local_value = peace_obj.peace_demands[all_demands[i]];
 
       switch (all_demands[i]) {
         case "retake_cores":
-          for (var x = 0; x < war_obj[opposing_side].length; x++) {
+          for (var x = 0; x < local_demands.length; x++) {
             var culture_obj = getCulture(province_obj.culture);
 
-            if (culture_obj.primary_culture.includes(local_value[i]))
-              new_owner = local_value[i];
+            if (war_obj[opposing_side].includes(province_obj.owner))
+              if (culture_obj.primary_culture.includes(local_demands[x]))
+                new_owner = local_value[i];
           }
 
           break;
         case "annexation":
           var local_demands = Object.keys(local_value);
 
+          console.log(local_value);
+          console.log(local_demands);
+
           for (var x = 0; x < local_demands.length; x++) {
-            if (local_value[local_demands[i]].annex_all)
-              if (local_value[local_demands[i]].annex_all.includes(province_obj.owner))
-                new_owner = local_value[local_demands[i]].id;
-            if (local_value[local_demands[i]].provinces.includes(province_obj.id));
-              new_owner = local_value[local_demands[i]].id;
+            console.log(local_value[local_demands[x]]);
+
+            if (local_value[local_demands[x]].annex_all)
+              if (local_value[local_demands[x]].annex_all.includes(province_obj.owner))
+                new_owner = local_value[local_demands[x]].id;
+            if (local_value[local_demands[x]].provinces.includes(province_obj.id));
+              new_owner = local_value[local_demands[x]].id;
           }
       }
     }
@@ -239,15 +245,15 @@ module.exports = {
             var local_user = main.users[local_demands[x]];
             var overlord_id = local_value[local_demands[x]].overlord;
             var overlord_obj = main.users[overlord_id];
-            var vassal_obj = getVassal(local_demands[i]);
+            var vassal_obj = getVassal(local_demands[x]);
 
             //Preexisting vassal handler
             if (vassal_obj) {
               main.users[vassal_obj.overlord].diplomacy.used_diplomatic_slots--;
-              dissolveVassal(local_demands[i]);
+              dissolveVassal(local_demands[x]);
             }
 
-            createVassal(local_demands[i], { target: overlord_id });
+            createVassal(local_demands[x], { target: overlord_id });
             overlord_obj.diplomacy.used_diplomatic_slots++;
           }
 
@@ -331,7 +337,7 @@ module.exports = {
           var local_demands = Object.keys(local_value);
 
           for (var x = 0; x < local_demands.length; x++)
-            peace_string.push(`• The nation of **${main.users[local_demands[i]].name}** will be forced to change their government to ${config.governments[local_value[local_demands[i]].type].name.totoLowerCase()}.`);
+            peace_string.push(`• The nation of **${main.users[local_demands[x]].name}** will be forced to change their government to ${config.governments[local_value[local_demands[x]].type].name.totoLowerCase()}.`);
 
           break;
         case "cut_down_to_size":
