@@ -15,7 +15,7 @@ module.exports = {
 
     //Declare local instance variables
     var game_obj = interfaces[game_id];
-    var local_input = input.toLowerCase();
+    var local_input = input.toLowerCase().replace(/[\[\]]/gm, "");
 
     //Visual prompt processing
     if (interfaces[game_id].user)

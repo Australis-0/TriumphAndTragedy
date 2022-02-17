@@ -64,7 +64,7 @@ module.exports = {
       if (actual_wargoal_array.includes(current_wargoal))
         switch (current_wargoal) {
           case "status_quo":
-            peace_obj.demands.status_quo = true;
+            peace_obj.peace_demands.status_quo = true;
 
             printAlert(game_obj.id, `${config.icons.checkmark} You have successfully demanded that all enemy beligerents should pay **15%** of their cash reserves in reparations to the victor countries at the end of the war.`);
 
@@ -163,11 +163,11 @@ module.exports = {
         if (war_obj[enemy_side].includes(arg[0])) {
           if (arg[0] != owner) {
             //Check to make sure that this country is not already going to be fully annexed by another user
-            if (peace_obj.demands.annexation) {
-              var all_demands = Object.keys(peace_obj.demands.annexation);
+            if (peace_obj.peace_demands.annexation) {
+              var all_demands = Object.keys(peace_obj.peace_demands.annexation);
 
               for (var i = 0; i < all_demands.length; i++) {
-                var local_demand = peace_obj.demands.annexation[all_demands[i]];
+                var local_demand = peace_obj.peace_demands.annexation[all_demands[i]];
 
                 if (local_demand.annex_all)
                   if (local_demand.annex_all.includes(arg[0]))
@@ -177,14 +177,14 @@ module.exports = {
 
             if (!has_error[0]) {
               //Add demand
-              if (peace_obj.demands.annexation)
-                if (peace_obj.demands.annexation[owner])
-                  if (peace_obj.demands.annexation[owner].annex_all)
-                    peace_obj.demands.annexation[owner].annex_all.push(arg[0]);
+              if (peace_obj.peace_demands.annexation)
+                if (peace_obj.peace_demands.annexation[owner])
+                  if (peace_obj.peace_demands.annexation[owner].annex_all)
+                    peace_obj.peace_demands.annexation[owner].annex_all.push(arg[0]);
                   else
-                    peace_obj.demands.annexation[owner].annex_all = [arg[0]];
+                    peace_obj.peace_demands.annexation[owner].annex_all = [arg[0]];
                 else
-                  peace_obj.demands.annexation[owner] = {
+                  peace_obj.peace_demands.annexation[owner] = {
                     id: owner,
                     annex_all: [arg[0]]
                   };
@@ -361,16 +361,16 @@ module.exports = {
         var local_user = main.users[arg[0]];
 
         if (war_obj[enemy_side].includes(arg[0])) {
-          if (peace_obj.demands.cut_down_to_size)
-            if (peace_obj.demands.cut_down_to_size.includes(arg[0]))
+          if (peace_obj.peace_demands.cut_down_to_size)
+            if (peace_obj.peace_demands.cut_down_to_size.includes(arg[0]))
               has_error = [true, `You have already demanded that **${local_user.name}** cut down the size of their armed forces by **90%!** If you wish to remove this wargoal instead, type **[Back]** and then **[Remove Wargoal]**.`];
 
           if (!has_error[0]) {
             //Set demand
-            if (peace_obj.demands.cut_down_to_size)
-              peace_obj.demands.cut_down_to_size.push(arg[0]);
+            if (peace_obj.peace_demands.cut_down_to_size)
+              peace_obj.peace_demands.cut_down_to_size.push(arg[0]);
             else
-              peace_obj.demands.cut_down_to_size = [arg[0]];
+              peace_obj.peace_demands.cut_down_to_size = [arg[0]];
 
             //Print user feedback
             printAlert(game_obj.id, `${config.icons.checkmark} You have successfully demanded that **${local_user.name}** trim down their armed forces by **90%**.`);
@@ -469,11 +469,11 @@ module.exports = {
             same_country.push(all_provinces[i]);
 
           //Check to see whether the province is already included in an existing annexation demand
-          if (peace_obj.demands.annexation) {
-            var all_demands = Object.keys(peace_obj.demands.annexation);
+          if (peace_obj.peace_demands.annexation) {
+            var all_demands = Object.keys(peace_obj.peace_demands.annexation);
 
             for (var x = 0; x < all_demands.length; x++) {
-              var local_demand = peace_obj.demands.annexation[all_demands[x]];
+              var local_demand = peace_obj.peace_demands.annexation[all_demands[x]];
 
               if (local_demand.annex_all)
                 if (local_demand.annex_all.includes(local_province.owner))
@@ -488,16 +488,16 @@ module.exports = {
 
       //If no errors are present, set the object to properly demand all provinces from all_provinces
       if (has_error.length + neutral_provinces.length + nonexistent_provinces.length + same_country.length == 0)
-        if (peace_obj.demands.annexation)
-          if (peace_obj.demands.annexation[owner])
-            peace_obj.demands.provinces = unique(all_provinces);
+        if (peace_obj.peace_demands.annexation)
+          if (peace_obj.peace_demands.annexation[owner])
+            peace_obj.peace_demands.provinces = unique(all_provinces);
           else
-            peace_obj.demands.annexation[owner] = {
+            peace_obj.peace_demands.annexation[owner] = {
               id: owner,
               provinces: unique(all_provinces)
             };
         else
-          peace_obj.demands.annexation = {
+          peace_obj.peace_demands.annexation = {
             [owner]: {
               id: owner,
               provinces: unique(all_provinces)
@@ -582,11 +582,11 @@ module.exports = {
           if (war_obj[enemy_side].includes(arg[0])) {
             if (!government_type.is_anarchy) {
               if (usr.available_governments.includes(raw_government_type)) {
-                if (!peace_obj.demands.install_government)
-                  peace_obj.demands.install_government = {};
+                if (!peace_obj.peace_demands.install_government)
+                  peace_obj.peace_demands.install_government = {};
 
                 //Set new regime change
-                peace_obj.demands.install_government[arg[0]] = {
+                peace_obj.peace_demands.install_government[arg[0]] = {
                   id: arg[0],
                   type: raw_government_type
                 };
@@ -674,8 +674,8 @@ module.exports = {
     //Check if user is already demanding their liberation
     if (vassal_obj) {
       if (war_obj[enemy_side].includes(vassal_obj.overlord)) {
-        if (!peace_obj.demands.liberation) {
-          peace_obj.demands.liberation = true;
+        if (!peace_obj.peace_demands.liberation) {
+          peace_obj.peace_demands.liberation = true;
 
           //Print user feedback
           printAlert(game_obj.id, `${config.icons.checkmark} You have successfully demanded your liberation from your current overlord, **${main.users[vassal_obj.overlord].name}**.`);
@@ -728,7 +728,7 @@ module.exports = {
       ]
     },
     function (arg) {
-      switch (arg[0]) {
+      switch (arg) {
         case "add wargoal":
           //Bring up a dynamic wargoal handler
           module.exports.initialiseAddWargoal(user_id, peace_obj);
@@ -773,14 +773,14 @@ module.exports = {
     var war_obj = main.global.wars[peace_obj.war_id];
 
     //Initialise page menu showing peace treaty effects
-    createPageMenu(game_obj.bottom_embed, {
+    createPageMenu(game_obj.alert_embed, {
       embed_pages: splitEmbed(parsePeaceTreatyString(war_obj, peace_obj), {
         title: `[Back] ¦ Editing Peace Offer For **${war_obj.name}**:`,
         description: [
           `---`,
           "",
-          `**[Add Wargoal]**${(Object.keys(peace_obj.demands).length > 0) ? ` ¦ **[Remove Wargoal]**` : ""} ¦ **[Send Peace Offer]**`
-        ].join("\n"),
+          `**[Add Wargoal]**${(Object.keys(peace_obj.peace_demands).length > 0) ? ` ¦ **[Remove Wargoal]**` : ""} ¦ **[Send Peace Offer]**`
+        ],
         title_pages: true,
         fixed_width: true
       }),
@@ -839,15 +839,15 @@ module.exports = {
             var local_overlord = main.users[arg[1]];
 
             if (war_obj[friendly_side].includes(arg[1])) {
-              if (peace_obj.demands.puppet)
-                peace_obj.demands.puppet = {
+              if (peace_obj.peace_demands.puppet)
+                peace_obj.peace_demands.puppet = {
                   [arg[0]]: {
                     id: arg[0],
                     overlord: arg[1]
                   }
                 };
               else
-                peace_obj.demands.puppet[arg[0]] = {
+                peace_obj.peace_demands.puppet[arg[0]] = {
                   id: arg[0],
                   overlord: arg[1]
                 };
@@ -922,8 +922,8 @@ module.exports = {
       enemy_countries.push(`**${main.users[war_obj[enemy_side][i]].name}**`);
 
     //Add all demanding countries to display
-    if (peace_obj.demands.annexation) {
-      var all_demands = Object.keys(peace_obj.demands.annexation);
+    if (peace_obj.peace_demands.annexation) {
+      var all_demands = Object.keys(peace_obj.peace_demands.annexation);
 
       for (var i = 0; i < all_demands.length; i++)
         has_annexation_demands.push(`**${main.users[all_demands[i]].name}**`);
@@ -1108,11 +1108,11 @@ module.exports = {
     }
 
     //Check to make sure that these demands exist in the first place
-    if (peace_obj.demands.cut_down_to_size) {
+    if (peace_obj.peace_demands.cut_down_to_size) {
       var all_cut_down_to_size_display = [];
 
-      for (var i = 0; i < peace_obj.demands.cut_down_to_size.length; i++)
-        all_cut_down_to_size_display.push(`**${main.users[peace_obj.demands.cut_down_to_size[i]].name}**`);
+      for (var i = 0; i < peace_obj.peace_demands.cut_down_to_size.length; i++)
+        all_cut_down_to_size_display.push(`**${main.users[peace_obj.peace_demands.cut_down_to_size[i]].name}**`);
 
       //Initialise visualPrompt
       visualPrompt(game_obj.id, user_id, {
@@ -1126,15 +1126,15 @@ module.exports = {
         if (main.users[arg[0]]) {
           var local_user = main.users[arg[0]];
 
-          if (peace_obj.demands.cut_down_to_size.includes(arg[0])) {
+          if (peace_obj.peace_demands.cut_down_to_size.includes(arg[0])) {
             //Print user feedback
             printAlert(game_obj.id, `${config.icons.cb} You have successfully dropped the demand for **${local_user.name}** to cut down the size of their armed forces by **90%**.`);
 
             //Change data structure
-            removeElement(peace_obj.demands.cut_down_to_size, arg[0]);
+            removeElement(peace_obj.peace_demands.cut_down_to_size, arg[0]);
 
-            if (peace_obj.demands.cut_down_to_size.length == 0)
-              delete peace_obj.demands.cut_down_to_size;
+            if (peace_obj.peace_demands.cut_down_to_size.length == 0)
+              delete peace_obj.peace_demands.cut_down_to_size;
 
             //Wait one second before sending the user back to the peace treaty viewer
             setTimeout(function(){
@@ -1184,8 +1184,8 @@ module.exports = {
       enemy_side = "attackers";
     }
 
-    if (peace_obj.demands.install_government) {
-      var all_regime_changes = Object.keys(peace_obj.demands.install_government);
+    if (peace_obj.peace_demands.install_government) {
+      var all_regime_changes = Object.keys(peace_obj.peace_demands.install_government);
       var regime_change_display = [];
 
       for (var i = 0; i < all_regime_changes.length; i++)
@@ -1205,15 +1205,15 @@ module.exports = {
           var local_user = main.users[subarg[0]];
 
           if (all_regime_changes.includes(subarg[0])) {
-            var local_demand = peace_obj.demands.install_government[subarg[0]];
+            var local_demand = peace_obj.peace_demands.install_government[subarg[0]];
 
             //Remove regime change, but print user feedback first
             printAlert(game_obj.id, `${config.icons.cb} You have successfully dropped the demand for **${local_user.name}** to change their government type to **${(getGovernment(local_demand.type).name) ? getGovernment(local_demand.type).name : ""}`);
 
             delete local_demand;
 
-            if (Object.keys(peace_obj.demands.install_government).length == 0)
-              delete peace_obj.demands.install_government;
+            if (Object.keys(peace_obj.peace_demands.install_government).length == 0)
+              delete peace_obj.peace_demands.install_government;
 
             setTimeout(function(){
               module.exports.initialisePeaceOfferScreen(user_id, peace_obj);
@@ -1272,8 +1272,8 @@ module.exports = {
       enemy_side = "attackers";
     }
 
-    if (peace_obj.demands.puppet) {
-      var all_puppets = Object.keys(peace_obj.demands.puppet);
+    if (peace_obj.peace_demands.puppet) {
+      var all_puppets = Object.keys(peace_obj.peace_demands.puppet);
       var all_puppet_names = [];
 
       for (var i = 0; i < all_puppets.length; i++)
@@ -1292,8 +1292,8 @@ module.exports = {
         if (main.users[arg[0]]) {
           var local_user = main.users[arg[0]];
 
-          if (peace_obj.demands.puppet[arg[0]]) {
-            var local_demand = peace_obj.demands.puppet[arg[0]];
+          if (peace_obj.peace_demands.puppet[arg[0]]) {
+            var local_demand = peace_obj.peace_demands.puppet[arg[0]];
 
             //Print feedback
             printAlert(game_obj.id, `${config.icons.cb} You have successfully dropped a vassalisation request for **${local_user.name}** to become the puppet of **${main.users[local_demand.overlord].name}**.`);
@@ -1301,8 +1301,8 @@ module.exports = {
             //Delete puppet request
             delete local_demand;
 
-            if (Object.keys(peace_obj.demands.puppet).length == 0)
-              delete peace_obj.demands.puppet;
+            if (Object.keys(peace_obj.peace_demands.puppet).length == 0)
+              delete peace_obj.peace_demands.puppet;
 
             //Go back to the main peace treaty screen
             setTimeout(function(){
@@ -1385,8 +1385,8 @@ module.exports = {
         switch (current_wargoal) {
           //[WIP] - Add wargoal handler so that users can't go around removing empty wargoals
           case "status_quo":
-            if (peace_obj.demands.status_quo) {
-              delete peace_obj.demands.status_quo;
+            if (peace_obj.peace_demands.status_quo) {
+              delete peace_obj.peace_demands.status_quo;
 
               printAlert(game_obj.id, `${config.icons.cb} You have successfully removed your demand for the enemy to pay **15%** in war reparations to cocombatant countries.`);
 
@@ -1407,10 +1407,10 @@ module.exports = {
 
             break;
           case "liberation":
-            if (peace_obj.demands.liberation) {
+            if (peace_obj.peace_demands.liberation) {
               var vassal_obj = getVassal(actual_id);
 
-              delete peace_obj.demands.liberation;
+              delete peace_obj.peace_demands.liberation;
 
               printAlert(game_obj.id, `${config.icons.cb} You are no longer demanding your liberation from your overlord, **${main.users[vassal_obj.overlord].name}**.`);
 
@@ -1478,8 +1478,8 @@ module.exports = {
     }
 
     //Check if the user even has this type of wargoal active
-    if (peace_obj.demands.retake_cores) {
-      var retake_cores = Object.keys(peace_obj.demands.retake_cores);
+    if (peace_obj.peace_demands.retake_cores) {
+      var retake_cores = Object.keys(peace_obj.peace_demands.retake_cores);
       var retake_cores_display = [];
 
       for (var i = 0; i < retake_cores.length; i++)
@@ -1498,15 +1498,15 @@ module.exports = {
         if (main.users[arg[0]]) {
           var local_user = main.users[arg[0]];
 
-          if (peace_obj.demands.retake_cores.includes(arg[0])) {
+          if (peace_obj.peace_demands.retake_cores.includes(arg[0])) {
             //Print user feedback first
             printAlert(game_obj.id, `${config.icons.cb} You have successfully dropped your demand that **${local_user.name}** regain their cores from the enemy.`);
 
             //Change data structure
-            removeElement(peace_obj.demands.retake_cores, arg[0]);
+            removeElement(peace_obj.peace_demands.retake_cores, arg[0]);
 
-            if (Object.keys(peace_obj.demands.retake_cores).length == 0)
-              delete peace_obj.demands.retake_cores;
+            if (Object.keys(peace_obj.peace_demands.retake_cores).length == 0)
+              delete peace_obj.peace_demands.retake_cores;
 
             //Send the user back to the peace negotiation screen
             setTimeout(function(){
@@ -1583,16 +1583,16 @@ module.exports = {
         var local_user = main.users[arg[0]];
 
         //Check if user is already intending on giving cores back to this user
-        if (peace_obj.demands.retake_cores)
-          if (peace_obj.demands.retake_cores.includes(arg[0]))
+        if (peace_obj.peace_demands.retake_cores)
+          if (peace_obj.peace_demands.retake_cores.includes(arg[0]))
             has_error = [true, `You have already demanded that **${local_user.name}** get their cores back from enemy belligerents in this war!`];
 
         if (!has_error[0]) {
           //Add this as a valid demand
-          if (peace_obj.demands.retake_cores)
-            peace_obj.demands.retake_cores.push(arg[0]);
+          if (peace_obj.peace_demands.retake_cores)
+            peace_obj.peace_demands.retake_cores.push(arg[0]);
           else
-            peace_obj.demands.retake_cores = [arg[0]];
+            peace_obj.peace_demands.retake_cores = [arg[0]];
 
           //Print user feedback
           printAlert(game_obj.id, `${config.icons.checkmark} You have successfully added a demand that **${local_user.name}** receive their cores back from any enemy belligerents engaged in this current conflict.`);
@@ -1682,8 +1682,9 @@ module.exports = {
         }
 
         //Check for annexation
-        if (new_owner != local_provinces[x].owner)
-          new_colour = main.users[new_owner].colour;
+        if (new_owner)
+          if (new_owner != local_provinces[x].owner)
+            new_colour = main.users[new_owner].colour;
 
         //Shade in province
         setProvinceColour(map_file, local_provinces[x].id, new_colour);

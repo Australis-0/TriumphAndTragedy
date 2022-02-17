@@ -105,6 +105,18 @@ module.exports = {
     return name_string;
   },
 
+  parseMapmode: function (arg0_map_mode) {
+    //Convert from parameters
+    var map_mode = arg0_map_mode;
+
+    //Check for peace treaties
+    if (map_mode.includes("_peace_treaty"))
+      map_mode = `peace offer`;
+
+    //Return statement
+    return map_mode;
+  },
+
   parseMilliseconds: function (arg0_milliseconds) {
     //Convert from parameters
     var duration = arg0_milliseconds;

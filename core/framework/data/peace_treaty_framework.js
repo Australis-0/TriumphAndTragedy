@@ -70,7 +70,7 @@ module.exports = {
     var peace_obj = arg1_peace_treaty_object;
 
     //Declare local instance variables
-    var all_demands = Object.keys(peace_obj.demands);
+    var all_demands = Object.keys(peace_obj.peace_demands);
     var friendly_side = "";
     var new_owner;
     var opposing_side = "";
@@ -89,7 +89,7 @@ module.exports = {
 
     //Cycle through all demands; only retake_cores and annexation can actually change the owner currently
     for (var i = 0; i < all_demands.length; i++) {
-      var local_value = peace_obj.demands[all_peace[i]];
+      var local_value = peace_obj.peace_demands[all_peace[i]];
 
       switch (all_demands[i]) {
         case "retake_cores":
