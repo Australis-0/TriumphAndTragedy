@@ -21,7 +21,7 @@ module.exports = {
 
       if (!isNaN(parseInt(arg[0])))
         if (usr.alerts[parseInt(arg[0]) - 1])
-          has_alert = [true, i];
+          has_alert = [true, parseInt(arg[0]) - 1];
 
       //Name search
       if (!has_alert[0]) {
@@ -37,7 +37,7 @@ module.exports = {
       }
 
       if (has_alert[0]) {
-        printUserAlert(user_id, usr.alerts[has_alert[1]]);
+        module.exports.printUserAlert(user_id, usr.alerts[has_alert[1]]);
         game_obj.page = `alert_${has_alert[1]}`;
       } else {
         printError(game_obj.id, `The alert you have specified, **${arg[0]}**, is not an alert you currently have to deal with!`);

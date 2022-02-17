@@ -63,7 +63,7 @@ module.exports = {
       ]
     },
     function (arg) {
-      module.exports.relieveUnitsCommand(user_id, arg[1], arg[2], arg[0]);
+      module.exports.relieveUnitsCommand(user_id, arg[2], arg[1], arg[0]);
     },
     function (arg) {
       switch (arg) {

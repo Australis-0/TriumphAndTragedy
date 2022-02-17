@@ -507,13 +507,13 @@ module.exports = {
                   randomElement(province_obj.adjacencies) :
                   province_obj.id;
 
-                var army_size_in_province = getTroopsInProvince(army_obj.province);
+                var army_size_in_province = getTroopsInProvince(defending_army_obj.province);
                 var meets_occupation_requirements = (army_size_in_province >= province_obj.pops.population*0.005);
 
                 if (meets_occupation_requirements)
                   province_obj.controller = actual_id;
 
-                setOccupationColour(actual_id, army_obj.province);
+                setOccupationColour(actual_id, attacking_army_obj.province);
               } else if (battle_type == "sea") {
                 if (defending_army_obj.is_blockading)
                   liftBlockade(actual_id, defending_army_obj.name, true);
