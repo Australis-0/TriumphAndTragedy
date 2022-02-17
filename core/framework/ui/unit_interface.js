@@ -106,11 +106,19 @@ module.exports = {
       var local_unit_category_name = (local_unit_category.name) ? local_unit_category.name : parseString(all_unit_categories[i]);
       var local_unit_category_string = [];
       var local_units = Object.keys(local_unit_category);
+      var unit_category_has_units_available = false;
+
+      //Initialise local tracker variables
+      for (var x = 0; x < local_units.length; x++)
+        if (usr.available_units.includes(local_units[x]))
+          unit_category_has_units_available = true;
 
       //Print unit category header
-      unit_string.push(`${local_unit_category_icon}**${local_unit_category_name}**:`);
-      unit_string.push(config.localisation.divider);
-      unit_string.push("");
+      if (unit_category_has_units_available) {
+        unit_string.push(`${local_unit_category_icon}**${local_unit_category_name}**:`);
+        unit_string.push(config.localisation.divider);
+        unit_string.push("");
+      }
 
       //Iterate over all units in category and push them to the list based on availability
       for (var x = 0; x < local_units.length; x++) {
