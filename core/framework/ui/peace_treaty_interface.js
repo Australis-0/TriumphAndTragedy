@@ -188,6 +188,13 @@ module.exports = {
                     id: owner,
                     annex_all: [arg[0]]
                   };
+              else
+                peace_obj.peace_demands.annexation = {
+                  [owner]: {
+                    id: owner,
+                    annex_all: [arg[0]]
+                  }
+                }
 
               //Print user feedback
               printAlert(game_obj.id, `${config.icons.checkmark} Your peace delegation has successfully motioned for a full annexation of **${local_user.name}** on behalf of **${main.users[owner].name}**.`);
@@ -269,8 +276,14 @@ module.exports = {
 
       //Check to make sure that the annexing country actually exists
       if (main.users[arg[0]]) {
+        var local_user = main.users[arg[0]];
+
         //Check to make sure that they are filing a valid request
         switch (arg[1].trim().toLowerCase()) {
+          case "back":
+            module.exports.modifyPeaceTreaty(user_id, peace_obj, true);
+
+            break;
           case "full annexation":
             //Print user feedback
             printAlert(game_obj.id, `${config.icons.checkmark} You have successfully filed a motion for the full annexation of a belligerent nation to **${local_user.name}**.`);
@@ -306,15 +319,6 @@ module.exports = {
         setTimeout(function(){
           module.exports.initialiseAnnexation(user_id, peace_obj);
         }, 3000);
-      }
-    },
-    function (arg) {
-      switch (arg) {
-        case "back":
-          module.exports.modifyPeaceTreaty(user_id, peace_obj, true);
-          return true;
-
-          break;
       }
     });
   },

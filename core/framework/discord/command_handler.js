@@ -32,7 +32,8 @@ module.exports = {
               is_command = local_prompt.command_function(input.toLowerCase());
 
             //If the phrase typed in is not a valid command, continue on
-            if (!is_command) {
+            if (local_prompt.answers.length != local_prompt.prompts.length)
+              if (!is_command) {
               //Check if prompt has been cancelled
               if (input == "back" && !local_prompt.do_not_cancel) {
                 (current_step > 0) ?
@@ -238,46 +239,52 @@ module.exports = {
           game_obj = interfaces[all_games[i]];
         }
 
-    //Append to interfaces as type visual_prompt
-    interfaces[usr] = {};
-    var visual_prompt = interfaces[usr];
-    visual_prompt.type = "visual_prompt";
-    if (!options.title) visual_prompt = options.title;
-    visual_prompt.message = message_obj;
-    visual_prompt.answers = [];
-    visual_prompt.prompts = options.prompts;
-    visual_prompt.evaluate_function = exec_function;
-    visual_prompt.command_function = cmd_function;
-    visual_prompt.prompt_embed = {};
+    //Set timeout to allow for chaining visual prompts
+    setTimeout(function(){
+      //Append to interfaces as type visual_prompt
+      interfaces[usr] = {};
+      var visual_prompt = interfaces[usr];
+      visual_prompt.type = "visual_prompt";
+      if (!options.title) visual_prompt = options.title;
+      visual_prompt.message = message_obj;
+      visual_prompt.answers = [];
+      visual_prompt.prompts = options.prompts;
+      visual_prompt.evaluate_function = exec_function;
+      visual_prompt.command_function = cmd_function;
+      visual_prompt.prompt_embed = {};
 
-    //Other parameters
-    visual_prompt.colour = options.colour;
-    visual_prompt.description = options.description;
-    visual_prompt.do_not_cancel = options.do_not_cancel;
-    visual_prompt.do_not_display = options.do_not_display;
-    visual_prompt.title = options.title;
-    visual_prompt.show_steps = (options.show_steps == false) ? false : true;
+      //Other parameters
+      visual_prompt.colour = options.colour;
+      visual_prompt.description = options.description;
+      visual_prompt.do_not_cancel = options.do_not_cancel;
+      visual_prompt.do_not_display = options.do_not_display;
+      visual_prompt.title = options.title;
+      visual_prompt.show_steps = (options.show_steps == false) ? false : true;
 
-    //Update visual prompt message
-    if (!options.do_not_display)
-      try {
-        message_obj.edit({
-          embeds: [
-            updateVisualPrompt({
-              title: options.title,
-              answers: [],
-              prompts: options.prompts,
-              satisfies_requirements: [true, ""],
-              show_steps: visual_prompt.show_steps,
+      //Update visual prompt message
+      if (!options.do_not_display)
+        try {
+          message_obj.edit({
+            embeds: [
+              updateVisualPrompt({
+                title: options.title,
+                answers: [],
+                prompts: options.prompts,
+                satisfies_requirements: [true, ""],
+                show_steps: visual_prompt.show_steps,
 
-              colour: options.colour,
-              description: options.description,
-              image: options.image,
+                colour: options.colour,
+                description: options.description,
+                image: options.image,
 
-              do_not_cancel: options.do_not_cancel
-            })
-          ]
-        });
-      } catch {}
+                do_not_cancel: options.do_not_cancel
+              })
+            ]
+          });
+        } catch (e) {
+          log.error(`visualPrompt() ran into error for User ID ${usr}: ${e}.`);
+          console.log(e);
+        }
+    }, 0);
   }
 };

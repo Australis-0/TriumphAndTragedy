@@ -33,6 +33,7 @@ module.exports = {
   },
 
   initialisePrintWar: function (arg0_user) {
+    //Convert from parameters
     var user_id = arg0_user;
 
     //Declare local instance variables
