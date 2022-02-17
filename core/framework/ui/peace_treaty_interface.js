@@ -742,6 +742,7 @@ module.exports = {
           module.exports.initialiseRemoveWargoal(user_id, peace_obj);
 
           break;
+        case "send peace offer":
         case "send peace treaty":
           sendPeaceTreaty(user_id, peace_obj);
 
