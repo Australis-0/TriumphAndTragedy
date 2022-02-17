@@ -1644,7 +1644,7 @@ module.exports = {
     var game_obj = getGameObject(user_id);
     var map_file = `${actual_id}_peace_treaty`;
     var usr = main.users[actual_id];
-    var war_obj = main.gloabl.wars[peace_obj.war_id];
+    var war_obj = main.global.wars[peace_obj.war_id];
 
     //Cache a new SVG
     if (!change_image)
