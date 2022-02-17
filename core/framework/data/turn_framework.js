@@ -182,16 +182,15 @@ module.exports = {
         }
 
         //Set attacker_warscore; defender_warscore
-        local_war.attacker_warscore = (fully_sieged_defenders != local_war.defenders.length) ?
+        local_war.attacker_warscore = Math.min((fully_sieged_defenders != local_war.defenders.length) ?
           0.75*defender_war_exhaustion + (
             0.25*returnSafeNumber(main.users[local_war.defenders_war_leader].modifiers.war_exhaustion, 1)
           ) :
-          1;
-        local_war.defender_warscore = parseFloat((attacker_war_exhaustion/local_war.attackers.length).toFixed(2));
-
-        //Institute warscore caps so they can't exceed 100%
-        local_war.attacker_warscore = Math.min(local_war.attacker_warscore, 1);
-        local_war.defender_warscore = Math.min(local_war.defender_warscore, 1);
+          1
+        , 1);
+        local_war.defender_warscore = Math.min(
+          parseFloat((attacker_war_exhaustion/local_war.attackers.length).toFixed(2)),
+        1);
       }
     }
 
