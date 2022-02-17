@@ -77,7 +77,7 @@ module.exports = {
 
     //Send visual prompt first
     if (all_wars.length > 0) {
-      visualPrompt(game_obj.id, user_id, {
+      visualPrompt(game_obj.alert_embed, user_id, {
         title: `Call In Ally Into War:`,
         prompts: [`Which armed conflict would you like to call an ally into? You are currently involved in the following wars:\n${display_war_list.push("\n- ")}`, "string"]
       },
@@ -92,7 +92,7 @@ module.exports = {
             }
 
           if (alliance_list.length > 0)
-            visualPrompt(game_obj.id, user_id, {
+            visualPrompt(game_obj.alert_embed, user_id, {
               title: `Choose Ally:`,
               prompts: [`Which of the following allies would you like to call into the **${war_obj.name}**?\n${alliance_list.push("\n- ")}`, "mention"]
             },

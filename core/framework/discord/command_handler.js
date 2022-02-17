@@ -197,19 +197,21 @@ module.exports = {
 
     var information_prompt = (!options.do_not_cancel) ? information_prompt_suffix + "To go back, type `back`. To cancel the command entirely, type `cancel`." : "";
 
-    for (var i = 0; i < options.prompts.length; i++) local_fields.push({
-      name: options.prompts[i][0],
-      value: (options.answers[i]) ? `${(!main.users[options.answers[i].toString()]) ? options.answers[i].toString() : main.users[options.answers[i]].name}` : "-"
-    });
+    for (var i = 0; i < options.prompts.length; i++) {
+      local_fields.push(options.prompts[i][0]);
+      local_fields.push(`---`);
+      local_fields.push("");
+      local_fields.push((options.answers[i]) ? `${(!main.users[options.answers[i].toString()]) ? options.answers[i].toString() : main.users[options.answers[i]].name}` : "-");
+      local_fields.push("");
+    }
 
     var visual_prompt_embed = {
       color: embed_colour,
       title: `${embed_title} ${(options.show_steps) ? step_suffix : ""}`,
-      description: `${local_desc} ${show_error} ${information_prompt}`,
+      description: `${local_desc} ${show_error} ${information_prompt}\n\n${local_fields.join("\n")}`,
       image: {
         url: (options.image) ? options.image : "https://cdn.discordapp.com/attachments/722997700391338046/736141424315203634/margin.png",
-      },
-      fields: local_fields
+      }
     };
 
     return visual_prompt_embed;

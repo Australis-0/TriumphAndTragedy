@@ -48,10 +48,10 @@ module.exports = {
     for (var i = 0; i < war_obj.wargoals.length; i++)
       wargoal_array.push(`${(war_obj.wargoals.length - 1 == i) ? "or ": ""}**${(config.localisation[war_obj.wargoals[i]]) ? config.localisation[war_obj.wargoals[i]] : war_obj.wargoals[i]}**`);
     for (var i = 0; i < war_obj.wargoals.length; i++)
-      actual_wargoal_array.push((config.localisation[war_obj.wargoals[i]]) ? config.localisation[war_obj.wargoals[i]] : war_obj.wargoals[i]);
+      actual_wargoal_array.push(((config.localisation[war_obj.wargoals[i]]) ? config.localisation[war_obj.wargoals[i]] : war_obj.wargoals[i]).toLowerCase());
 
     //Initialise visual prompt
-    visualPrompt(game_obj.id, user_id, {
+    visualPrompt(game_obj.alert_embed, user_id, {
       title: `Add Wargoal To Peace Treaty:`,
       prompts: [
         [`Which wargoal would you like to add to this peace treaty?\n\nPlease type either ${wargoal_array.join(", ")}.\n\nTo go back to viewing this peace treaty, type **[Back]**.`, "string"]
@@ -63,7 +63,7 @@ module.exports = {
 
       if (actual_wargoal_array.includes(current_wargoal))
         switch (current_wargoal) {
-          case "status_quo":
+          case "status quo":
             peace_obj.peace_demands.status_quo = true;
 
             printAlert(game_obj.id, `${config.icons.checkmark} You have successfully demanded that all enemy beligerents should pay **15%** of their cash reserves in reparations to the victor countries at the end of the war.`);
@@ -73,7 +73,7 @@ module.exports = {
             }, 1000);
 
             break;
-          case "install_government":
+          case "install government":
             module.exports.initialiseInstallGovernment(user_id, peace_obj);
 
             break;
@@ -146,7 +146,7 @@ module.exports = {
       enemy_countries.push(`**${main.users[war_obj[enemy_side][i]].name}**`);
 
     //Send visual prompt
-    visualPrompt(game_obj.id, user_id, {
+    visualPrompt(game_obj.alert_embed, user_id, {
       title: `Full Annexation Request For **${main.users[owner].name}**:`,
       prompts: [
         [`Which enemy country in this conflict would you like to be fully annexed by **${main.users[owner].name}**?\n${enemy_countries.join("\n- ")}\n\nType **[Back]** to add a different annexation request.`, "mention"]
@@ -256,7 +256,7 @@ module.exports = {
       enemy_countries.push(`**${main.users[war_obj[enemy_side][i]].name}**`);
 
     //Send visual prompt
-    visualPrompt(game_obj.id, user_id, {
+    visualPrompt(game_obj.alert_embed, user_id, {
       title: `Annexation Request:`,
       prompts: [
         [`For which country would you like to motion an annexation request for?\nNote: You can choose any country (even if they are currently at war with you), so long as they are not the same country you are annexing provinces from.\n\nType **[Back]** to add a different wargoal to this peace treaty.`, "mention"],
@@ -347,7 +347,7 @@ module.exports = {
       enemy_countries.push(`**${main.users[war_obj[enemy_side][i]].name}**`);
 
     //Send visual prompt
-    visualPrompt(game_obj.id, user_id, {
+    visualPrompt(game_obj.alert_embed, user_id, {
       title: `Cut Down To Size:`,
       prompts: [
         [`Which of your enemies would you like to cut down to size? Cutting down to size removes up to **90%** of their military from the equation.\n${enemy_countries.join("\n- ")}\n\nType **[Back]** to go back to the previous wargoal menu.`, "mention"]
@@ -437,7 +437,7 @@ module.exports = {
       enemy_countries.push(`**${main.users[war_obj[enemy_side][i]].name}**`);
 
     //Send visualPrompt()
-    visualPrompt(game_obj.id, user_id, {
+    visualPrompt(game_obj.alert_embed, user_id, {
       title: `Demand Provinces:`,
       prompts: [
         [`Which provinces would you like to demand for this nation?\nPlease separate each province with a space like so: '4702 4703 4709'.\n\nType **[Back]** to add a different annexation request instead.`, "string"]
@@ -562,7 +562,7 @@ module.exports = {
       enemy_countries.push(`**${main.users[war_obj[enemy_side][i]].name}**`);
 
     //Send visual prompt
-    visualPrompt(game_obj.id, user_id, {
+    visualPrompt(game_obj.alert_embed, user_id, {
       title: `Install Government:`,
       prompts: [
         [`Whom would you like to force a change of government for? Please mention one of the following belligerent countries:\n${enemy_countries.join("\n- ")}`, "mention"],
@@ -704,7 +704,7 @@ module.exports = {
     }
   },
 
-  initialiseModifyPeaceTreaty: function (arg0_user, arg1_peace_treaty_object, arg2_tooltip) { //[WIP] - Code bulk of function
+  initialiseModifyPeaceTreaty: function (arg0_user, arg1_peace_treaty_object, arg2_tooltip) {
     //Convert from parameters
     var user_id = arg0_user;
     var peace_obj = arg1_peace_treaty_object;
@@ -718,7 +718,7 @@ module.exports = {
     var wargoal_array = [];
 
     //Create invisible visualPrompt()
-    visualPrompt(game_obj.id, user_id, {
+    visualPrompt(game_obj.alert_embed, user_id, {
       title: `Editing Peace Offer for **${war_obj.name}**:`,
       do_not_cancel: true,
       do_not_display: true,
@@ -728,7 +728,7 @@ module.exports = {
       ]
     },
     function (arg) {
-      switch (arg) {
+      switch (arg[0]) {
         case "add wargoal":
           //Bring up a dynamic wargoal handler
           module.exports.initialiseAddWargoal(user_id, peace_obj);
@@ -819,7 +819,7 @@ module.exports = {
       friendly_countries.push(`**${main.users[war_obj[friendly_side][i]].name}**`);
 
     //Send visual prompt
-    visualPrompt(game_obj.id, user_id, {
+    visualPrompt(game_obj.alert_embed, user_id, {
       title: `Puppet A Nation:`,
       prompts: [
         [`Which belligerent nation would you like to assign as a puppet? Please choose one of the following countries:\n${enemy_countries.join("\n- ")}\n\nType **[Back]** to go back to the previous wargoal menu.`, "mention"],
@@ -930,7 +930,7 @@ module.exports = {
     }
 
     //Send visual prompt
-    visualPrompt(game_obj.id, user_id, {
+    visualPrompt(game_obj.alert_embed, user_id, {
       title: `Remove Annexation Demand:`,
       prompts: [
         [`Which of the following nations would you like to revoke an annexation demand for?${has_annexation_demands.join(", ")}.\n\nType **[Back]** to remove a different wargoal.`, "mention"],
@@ -978,7 +978,7 @@ module.exports = {
                   for (var i = 0; i < full_annex_countries.length; i++)
                     full_annex_countries.push(`**${main.users[full_annex_countries[i]].name}**`);
 
-                  visualPrompt(game_obj.id, user_id, {
+                  visualPrompt(game_obj.alert_embed, user_id, {
                     title: `Revoke Full Annexation`,
                     prompts: [
                       [`Whom would you like to spare from full annexation at the hands of **${local_user.name}**? Please choose one of the following countries: ${full_annex_countries.join(", ")}.\n\nType **[Back]** to remove a different type of annexation demand.`, "mention"]
@@ -1115,7 +1115,7 @@ module.exports = {
         all_cut_down_to_size_display.push(`**${main.users[peace_obj.peace_demands.cut_down_to_size[i]].name}**`);
 
       //Initialise visualPrompt
-      visualPrompt(game_obj.id, user_id, {
+      visualPrompt(game_obj.alert_embed, user_id, {
         title: `Remove Cut Down To Size Demand:`,
         prompts: [
           [`Which of these countries would you like to drop a cut down to size wargoal against?${all_cut_down_to_size_display.join(", ")}`, "mention"]
@@ -1191,7 +1191,7 @@ module.exports = {
       for (var i = 0; i < all_regime_changes.length; i++)
         regime_change_display.push(`**${main.users[all_regime_changes[i]].name}**`);
 
-      visualPrompt(game_obj.id, user_id, {
+      visualPrompt(game_obj.alert_embed, user_id, {
         title: `Remove Regime Change:`,
         prompts: [
           `Which of these countries would you like to drop a regime change against? ${regime_change_display.join(", ")}.\n\nType **[Back]** to remove a different peace demand.`, "mention"
@@ -1280,7 +1280,7 @@ module.exports = {
         all_puppet_names.push(`**${main.users[all_puppets[i]].name}**`);
 
       //Send visual prompt
-      visualPrompt(game_obj.id, user_id, {
+      visualPrompt(game_obj.alert_embed, user_id, {
         title: `Remove Puppet Wargoal:`,
         prompts: [
           [`Which of the following countries would you like to free from the grips of a potential puppeting?\n${all_puppet_names.join(", ")}\n\nType **[Back]** to remove a different wargoal.`, "mention"]
@@ -1368,10 +1368,10 @@ module.exports = {
     for (var i = 0; i < war_obj.wargoals.length; i++)
       wargoal_array.push(`${(war_obj.wargoals.length - 1 == i) ? "or ": ""}**${(config.localisation[war_obj.wargoals[i]]) ? config.localisation[war_obj.wargoals[i]] : war_obj.wargoals[i]}**`);
     for (var i = 0; i < war_obj.wargoals.length; i++)
-      actual_wargoal_array.push((config.localisation[war_obj.wargoals[i]]) ? config.localisation[war_obj.wargoals[i]] : war_obj.wargoals[i]);
+      actual_wargoal_array.push(((config.localisation[war_obj.wargoals[i]]) ? config.localisation[war_obj.wargoals[i]] : war_obj.wargoals[i]).toLowerCase());
 
     //Send visual_prompt
-    visualPrompt(game_obj.id, user_id, {
+    visualPrompt(game_obj.alert_embed, user_id, {
       title: `Remove Wargoal From Peace Treaty:`,
       prompts: [
         [`Which type of wargoal would you like to remove from this peace treaty?\n\nPlease type either ${wargoal_array.join(", ")}.\n\nTo go back to viewing this peace treaty, type **[Back]**.`, "string"]
@@ -1486,7 +1486,7 @@ module.exports = {
         retake_cores_display.push(`**${main.users[retake_cores[i]].name}**`);
 
       //Send visual prompt
-      visualPrompt(game_obj.id, user_id, {
+      visualPrompt(game_obj.alert_embed, user_id, {
         title: `Revoke Demand To Retake Cores:`,
         prompts: [
           [`Which of the following countries would you like to no longer regain their cores as a result of this peace treaty?\n${retake_cores_display.join(", ")}\n\nType **[Back]** to remove a different wargoal from the eventual peace offer.`, "mention"]
@@ -1572,7 +1572,7 @@ module.exports = {
       enemy_countries.push(`**${main.users[war_obj[enemy_side][i]].name}**`);
 
     //Send visualPrompt()
-    visualPrompt(game_obj.id, user_id, {
+    visualPrompt(game_obj.alert_embed, user_id, {
       title: `Grant Cores:`,
       mention: [`Whom would you like to grant their cores back to? Please type in the name of a valid nation.\n\nThis country does not have to be a nation associated with this current conflict.`, "mention"]
     },
