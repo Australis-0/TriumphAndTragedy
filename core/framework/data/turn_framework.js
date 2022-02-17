@@ -388,7 +388,7 @@ module.exports = {
         var ai_chance_ranges = [];
 
         //Deduct from duration
-        if (usr.alerts.duration > 0)
+        if (usr.alerts[i].duration > 0)
           usr.alerts[i].duration--;
 
         //Check if alert has timed out
