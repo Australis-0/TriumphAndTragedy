@@ -105,17 +105,14 @@ module.exports = {
         case "annexation":
           var local_demands = Object.keys(local_value);
 
-          console.log(local_value);
-          console.log(local_demands);
-
           for (var x = 0; x < local_demands.length; x++) {
-            console.log(local_value[local_demands[x]]);
 
             if (local_value[local_demands[x]].annex_all)
               if (local_value[local_demands[x]].annex_all.includes(province_obj.owner))
                 new_owner = local_value[local_demands[x]].id;
-            if (local_value[local_demands[x]].provinces.includes(province_obj.id));
-              new_owner = local_value[local_demands[x]].id;
+            if (local_value[local_demands[x]].provinces)
+              if (local_value[local_demands[x]].provinces.includes(province_obj.id));
+                new_owner = local_value[local_demands[x]].id;
           }
       }
     }
