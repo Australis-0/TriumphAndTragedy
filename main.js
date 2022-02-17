@@ -156,8 +156,10 @@ FileManager.import("./game/laws/enact_reform");
 FileManager.import("./game/market/buy");
 FileManager.import("./game/market/sell");
 
+FileManager.import("./game/military/air_raid");
 FileManager.import("./game/military/blockade");
 FileManager.import("./game/military/carpet_siege");
+FileManager.import("./game/military/challenge_blockade");
 FileManager.import("./game/military/convoy_raid");
 FileManager.import("./game/military/create_armies");
 FileManager.import("./game/military/create_army");

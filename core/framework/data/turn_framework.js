@@ -35,6 +35,7 @@ module.exports = {
       //Per turn updates
       if (is_new_turn) {
         //Army cooldowns - KEEP AT TOP!
+        delete local_army.challenged_this_turn;
         delete local_army.taking_attrition;
 
         if (local_army.blockade_recovery_turns) {

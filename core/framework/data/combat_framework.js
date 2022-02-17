@@ -107,355 +107,17 @@ module.exports = {
     return Math.abs(current_roll);
   },
 
-  initialiseBattle: function (arg0_user, arg1_army_name, arg2_user, arg3_army_name) {
-    //Convert from parameters
-    var user_id = arg0_user;
-    var attacking_army_name = arg1_army_name;
-    var ot_user_id = arg2_user;
-    var defending_army_name = arg3_army_name;
-
-    //Declare local instance variables
-    var actual_id = main.global.user_map[user_id];
-    var actual_ot_user_id = main.global.user_map[ot_user_id];
-    var all_wars = Object.keys(main.global.wars);
-    var attacking_army_obj = (typeof attacking_army_name != "object") ?
-      getArmy(actual_id, attacking_army_name.trim()) :
-      attacking_army_name;
-    var defending_army_obj = (typeof defending_army_name != "object") ?
-      getArmy(actual_ot_user_id, defending_army_name.trim()) :
-      defending_army_name;
-    var ot_user = main.users[actual_ot_user_id];
-    var usr = main.users[actual_id];
-
-    //Check for the usual
-    if (usr)
-      if (ot_user)
-        if (attacking_army_obj)
-          if (defending_army_obj) {
-            var battle_type = "";
-            var battle_name = "";
-            var province_obj = main.provinces[attacking_army_obj.province];
-
-            var province_name = (province_obj.name) ? province_obj.name : province_obj.id;
-
-            //Check for battle type
-            if (attacking_army_obj.type == "army" && defending_army_obj.type == "army") {
-              battle_type = "land";
-            } else if (attacking_army_obj.type == "navy" && defending_army_obj.type == "navy") {
-              battle_type = "sea";
-            } else {
-              battle_type = "air";
-            }
-
-            //Get battle name
-            switch (battle_type) {
-              case "land":
-                battle_name = (province_name == province_obj.id) ?
-                  `${(province_obj.battle_ordinal) ? ordinalise(province_obj.battle_ordinal) + " " : ""} Battle of ${randomElement(config.localisation.battle_prefixes)} ${province_obj.id}` :
-                  `${(province_obj.battle_ordinal) ? ordinalise(province_obj.battle_ordinal) + " " : ""} Battle of ${province_name}`;
-
-                province_obj.battle_ordinal = (province_obj.battle_ordinal) ?
-                  province_obj.battle_ordinal + 1 :
-                  2;
-
-                break;
-              case "sea":
-                battle_name = `Battle of ${randomElement(config.localisation.bathymetric_names)}`;
-
-                break;
-              case "air":
-                battle_name = `Battle of ${ot_user.name}`;
-
-                break;
-            }
-
-            //Calculate army stats
-            var attacking_army_stats = calculateArmyStats(actual_id, attacking_army_obj);
-            var attacker_losses = 0;
-            var attacker_stackwiped = false;
-            var attacker_understrength = false;
-            var attacker_units = Object.keys(attacking_army_obj.units);
-            var defending_army_stats = calculateArmyStats(actual_ot_user_id, defending_army_obj);
-            var defender_losses = 0;
-            var defender_stackwiped = false;
-            var defender_understrength = false;
-            var defender_units = Object.keys(defending_army_obj.units);
-
-            var old_attacking_army_obj = JSON.parse(JSON.stringify(attacking_army_obj));
-            var old_defending_army_obj = JSON.parse(JSON.stringify(defending_army_obj));
-
-            //Check for combat_order
-            var combat_order = config.defines.combat.combat_order;
-
-            if (usr.researched_technologies.includes(config.defines.combat.combacombat_order_stalemate_tech))
-              combat_order = ["defence", "attack"];
-
-            if (ot_user.researched_technologies.includes(config.defines.combat.ccombat_order_switch_tech))
-              combat_order = ["attack", "defence"];
-
-            //Check if one side has less than 5% AP or DP of the other side
-            if (battle_type == "land") {
-              if (attacking_army_stats.attack < defending_army_stats.attack*0.05 && attacking_army_obj.defence < defending_army_stats.defence*0.05) {
-                attacker_understrength = true;
-
-                //50% chance of the attacker being stackwiped
-                attacker_stackwiped = (randomNumber(0, 100) <= 50);
-              }
-              if (defending_army_stats.attack < attacking_army_stats.attack*0.05 && defending_army_stats.defence < defending_army_stats.defence*0.05) {
-                defender_stackwiped = true;
-
-                //50% chance of the defender being stackwiped
-                defender_stackwiped = (randomNumber(0, 100) <= 50);
-              }
-            }
-
-            //Begin rolling and subtracting units
-            var attacker_casualties;
-            var attacker_dice_roll = module.exports.calculateRoll(attacking_army_obj);
-            var defender_casualties;
-            var defender_dice_roll = module.exports.calculateRoll(defending_army_obj);
-
-            //Process stackwipes
-            if (attacker_stackwiped)
-              attacker_casualties = module.exports.calculateCasualties(actual_id, attacking_army_obj, defender_dice_roll);
-            if (defender_stackwiped)
-              defender_casualties = module.exports.calculateCasualties(actual_id, defending_army_obj, attacker_dice_roll);
-
-            if (!attacker_stackwiped && !defender_stackwiped)
-              for (var i = 0; i < combat_order.length; i++)
-                if (combat_order[i] == "attack") {
-                  defender_casualties = module.exports.calculateCasualties(actual_ot_user_id, defending_army_obj,
-                      attacker_dice_roll
-                  );
-                } else if (combat_order[i] == "defence") {
-                  attacker_casualties = module.exports.calculateCasualties(actual_id, attacking_army_obj,
-                      defender_dice_roll
-                  );
-                }
-
-            //Check if army must retreat
-            var attacker_retreat = false;
-            var attacker_side = "neutral";
-            var defender_retreat = false;
-            var defender_side = "neutral";
-            var new_attacking_army_stats = calculateArmyStats(actual_id, attacking_army_obj);
-            var new_defending_army_stats = calculateArmyStats(actual_ot_user_id, defending_army_obj);
-
-            if (
-              (
-                (new_defending_army_stats.defence < defending_army_obj.defence*0.5 || new_defending_army_stats.defence == 0) &&
-                defender_casualties > attacker_casualties
-              ) || defender_understrength
-            ) {
-              defender_retreat = true;
-
-              if (battle_type == "land") {
-
-                defending_army_obj.province = (province_obj.adjacencies) ?
-                  randomElement(province_obj.adjacencies) :
-                  province_obj.id;
-
-                var army_size_in_province = getTroopsInProvince(army_obj.province);
-                var meets_occupation_requirements = (army_size_in_province >= province_obj.pops.population*0.005);
-
-                if (meets_occupation_requirements)
-                  province_obj.controller = actual_id;
-
-                setOccupationColour(actual_id, army_obj.province);
-              } else if (battle_type == "sea") {
-                if (defending_army_obj.is_blockading)
-                  liftBlockade(actual_id, defending_army_obj.name, true);
-              }
-            } else if (
-              (
-                (new_attacking_army_stats.defence < attacking_army_stats.defence*0.5 || new_attacking_army_stats.defence == 0) &&
-                attacker_casualties > defender_casualties
-              ) || attacker_understrength
-            ) {
-              attacker_retreat = true;
-
-              if (battle_type == "land")
-                attacking_army_obj.province = (province_obj.adjacencies) ?
-                  randomElement(province_obj.adjacencies) :
-                  province_obj.id;
-            }
-
-            //Add warscore, casualties
-            var attacking_war_exhaustion = returnSafeNumber(Math.round(
-              attacker_casualties/
-                (getTotalActiveDuty(actual_id) + returnSafeNumber(usr.mobilisation.current_manpower_mobilised))
-            ));
-            var defending_war_exhaustion = returnSafeNumber(Math.round(
-              defender_casualties/
-                (getTotalActiveDuty(actual_ot_user_id) + returnSafeNumber(ot_user.mobilisation.current_manpower_mobilised))
-            ));
-
-            attacking_war_exhaustion = Math.min(attacking_war_exhaustion, 0.25);
-            attacking_war_exhaustion = Math.max(attacking_war_exhaustion, 0);
-            defending_war_exhaustion = Math.min(defending_war_exhaustion, 0.25);
-            defending_war_exhaustion = Math.max(defending_war_exhaustion, 0);
-
-            usr.modifiers.war_exhaustion += attacking_war_exhaustion;
-            ot_user.modifiers.war_exhaustion += defending_war_exhaustion;
-
-            for (var i = 0; i < all_wars.length; i++) {
-              var local_war = main.global.wars[all_wars[i]];
-
-              //Reset involvement
-              attacker_side = "neutral";
-              defender_side = "neutral";
-
-              //Check involvement
-              if (local_war.attackers.includes(actual_id))
-                attacker_side = "attacker";
-              if (local_war.defenders.includes(actual_id))
-                attacker_side = "defender";
-
-              if (local_war.attackers.includes(actual_ot_user_id))
-                defender_side = "attacker";
-              if (local_war.defenders.includes(actual_id))
-                defender_side = "defender";
-
-              if (attacker_side != "neutral") {
-                local_war[`${attacker_side}_total_casualties`] += attacker_casualties;
-                local_war[`${defender_side}_total_casualties`] += defender_casualties;
-                local_war[`${actual_id}_casualties`] += attacker_casualties;
-                local_war[`${actual_ot_user_id}_casualties`] += defender_casualties;
-              }
-            }
-
-            //Delete armies if no units are left in them; stackwipe if retreated army is still in the same province
-            if (
-              getArmySize(actual_id, attacking_army_obj) == 0 ||
-              (
-                attacker_retreat && attacking_army_obj.province == defending_army_obj.province
-              ) || attacker_stackwiped
-            )
-              deleteArmy(actual_id, attacking_army_obj.name);
-
-            if (
-              getArmySize(actual_ot_user_id, defending_army_obj) == 0 ||
-              (
-                defender_retreat && defending_army_obj.province == attacking_army_obj.province
-              ) || defender_stackwiped
-            )
-              deleteArmy(actual_ot_user_id, defending_army_obj.name);
-
-            //Declare battle_embed tracker variables
-            var attacker_string = [];
-            var defender_string = [];
-            var result_string = [];
-
-            //Format embed contents - Attacker
-            attacker_string.push(`**${usr.name}** (${attacking_army_obj.name}):`);
-            attacker_string.push("");
-            attacker_string.push(`**Strength:**`);
-            attacker_string.push(`${parseNumber(attacking_army_stats.attack)} Attack ¦ ${parseNumber(attacking_army_stats.defence)} Defence`);
-
-            for (var i = 0; i < attacker_units.length; i++) {
-              var unit_category = getUnitCategoryFromUnit(attacker_units[i]);
-              var unit_obj = getUnit(attacker_units[i]);
-
-              var unit_icon = (unit_obj.icon) ?
-                config.icons[unit_obj.icon] + " " :
-                  (unit_category.icon) ?
-                    config.icons[unit_category.icon] + " " :
-                    "";
-              var unit_name = (unit_obj.name) ? unit_obj.name : attacker_units[i];
-
-              attacker_string.push(`${unit_icon}${parseNumber(returnSafeNumber(attacking_army_obj.units[attacker_units[i]]))} ${unit_name} ${(returnSafeNumber(attacking_army_obj.units[attacker_units[i]]) < old_attacking_army_obj.units[attacker_units[i]]) ? `(-${parseNumber(Math.ceil(old_attacking_army_obj.units[attacker_units[i]] - returnSafeNumber(attacking_army_obj.units[attacker_units[i]])))})` : ""}`);
-            }
-
-            attacker_string.push("");
-            attacker_string.push(`${config.icons.death} Casualties: **${parseNumber(attacker_casualties)}**`);
-
-            //Format embed contents - Defender
-            defender_string.push(`**${ot_user.name}** (${defending_army_obj.name}):`);
-            defender_string.push("");
-            defender_string.push(`**Strength:**`);
-            defender_string.push(`${parseNumber(defending_army_stats.attack)} Attack ¦ ${parseNumber(defending_army_stats.defence)} Defence`);
-
-            for (var i = 0; i < defender_units.length; i++) {
-              var unit_category = getUnitCategoryFromUnit(defender_units[i]);
-              var unit_obj = getUnit(defender_units[i]);
-
-              var unit_icon = (unit_obj.icon) ?
-                config.icons[unit_obj.icon] + " " :
-                  (unit_category.icon) ?
-                    config.icons[unit_category.icon] + " " :
-                    "";
-              var unit_name = (unit_obj.name) ? unit_obj.name : defender_units[i];
-
-              defender_string.push(`${unit_icon}${parseNumber(returnSafeNumber(defending_army_obj.units[defender_units[i]]))} ${unit_name} ${(returnSafeNumber(defending_army_obj.units[defender_units[i]]) < old_defending_army_obj.units[defender_units[i]]) ? `(-${parseNumber(Math.ceil(old_defending_army_obj.units[defender_units[i]] - returnSafeNumber(defending_army_obj.units[defender_units[i]])))})` : ""}`);
-            }
-
-            defender_string.push("");
-            defender_string.push(`${config.icons.death} Casualties: **${parseNumber(defender_casualties)}**`);
-
-            //Format embed contents - Results
-            result_string.push(`**Dice Rolls:** ${usr.name} - ${config.icons.dice} **${parseNumber(attacker_dice_roll)}** ¦ ${ot_user.name} - ${config.icons.dice} **${parseNumber(defender_dice_roll)}**`);
-            result_string.push(`${config.icons.death} Total Casualties: **${parseNumber(attacker_casualties + defender_casualties)}**`);
-
-            if (attacker_stackwiped) {
-              result_string.push(`${config.icons.retreat} Due to being understrength, the attacking side was completely routed from the battlefield and massacred.`);
-              result_string.push(`${config.icons.prestige} **${getPrimaryCultures(actual_ot_user_id, { return_objects: true })[0].adjective} Victory**`);
-            } else if (defender_stackwiped) {
-              result_string.push(`${config.icons.retreat} Due to being understrength, the defending side was completely routed from the battlefield and massacred.`);
-              result_string.push(`${config.icons.prestige} **${getPrimaryCultures(actual_id, { return_objects: true })[0].adjective} Victory**`);
-            } else {
-              if (defender_retreat) {
-                result_string.push(`${config.icons.retreat} Due to heavy losses, the defending side was forced to retreat from the battlefield.`);
-                result_string.push(`${config.icons.prestige} **${getPrimaryCultures(actual_id, { return_objects: true })[0].adjective} Victory**`);
-              } else if (attacker_retreat) {
-                result_string.push(`${config.icons.retreat} Due to heavy losses, the attacking side was forced to retreat from the battlefield.`);
-                result_string.push(`${config.icons.prestige} **${getPrimaryCultures(actual_ot_user_id, { return_objects: true })[0].adjective} Victory**`);
-              } else {
-                result_string.push(`${config.icons.small_arms} Neither side was forced to retreat from the battle, and the fighting rages on!`);
-                result_string.push(`${config.icons.prestige} **Stalemate**`);
-              }
-            }
-
-            result_string.push("");
-            result_string.push(`${config.icons.infamy} The defending side gained **${(defending_war_exhaustion*100).toFixed(2)}** war exhaustion, whilst the attacking side gained **${(attacking_war_exhaustion*100).toFixed(2)}** war exhaustion.`);
-
-            //Format battle_embed
-            var battle_embed = new Discord.MessageEmbed()
-              .setColor(settings.bot_colour)
-              .setTitle(`**${battle_name}:\n${config.localisation.divider}**`)
-              .addFields(
-                {
-                  name: `${config.icons.attacker} __**Attacker:**__\n---\n`,
-                  value: attacker_string.join("\n"),
-                  inline: true
-                },
-                {
-                  name: `${config.icons.defender} __**Defender:**__\n---\n`,
-                  value: defender_string.join("\n"),
-                  inline: true
-                },
-                {
-                  name: `${config.icons.attacker} __**Results:**__\n---\n`,
-                  value: result_string.join("\n")
-                },
-              );
-
-            //Send battle_embed to both users as an embed alert
-            sendEmbedAlert(actual_id, battle_embed, battle_name);
-            sendEmbedAlert(actual_ot_user_id, battle_embed, battle_name);
-          }
-  },
-
   initialiseAirRaid: function (arg0_user, arg1_city_name, arg2_army_name) {
     //Convert from parameters
     var user_id = arg0_user;
-    var city_name = arg1_city_name.trim();
-    var army_name = arg2_army_name.trim();
+    var city_name = arg1_city_name;
+    var army_name = arg2_army_name;
 
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
     var actual_ot_user_id = main.global.user_map[ot_user_id];
-    var army_obj = getArmy(actual_id, army_name);
-    var city_obj = getCity(city_name);
+    var army_obj = (typeof army_name != "object") ? getArmy(actual_id, army_name.trim()) : army_name;
+    var city_obj = (typeof city_name != "object") ? getCity(city_name.trim()) : city_name;
     var usr = main.users[actual_id];
 
     //Check for the usual
@@ -696,6 +358,343 @@ module.exports = {
             }
           }
         }
+  },
+
+  initialiseBattle: function (arg0_user, arg1_army_name, arg2_user, arg3_army_name) {
+    //Convert from parameters
+    var user_id = arg0_user;
+    var attacking_army_name = arg1_army_name;
+    var ot_user_id = arg2_user;
+    var defending_army_name = arg3_army_name;
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var actual_ot_user_id = main.global.user_map[ot_user_id];
+    var all_wars = Object.keys(main.global.wars);
+    var attacking_army_obj = (typeof attacking_army_name != "object") ?
+      getArmy(actual_id, attacking_army_name.trim()) :
+      attacking_army_name;
+    var defending_army_obj = (typeof defending_army_name != "object") ?
+      getArmy(actual_ot_user_id, defending_army_name.trim()) :
+      defending_army_name;
+    var ot_user = main.users[actual_ot_user_id];
+    var usr = main.users[actual_id];
+
+    //Check for the usual
+    if (usr)
+      if (ot_user)
+        if (attacking_army_obj)
+          if (defending_army_obj) {
+            var battle_type = "";
+            var battle_name = "";
+            var province_obj = main.provinces[attacking_army_obj.province];
+
+            var province_name = (province_obj.name) ? province_obj.name : province_obj.id;
+
+            //Check for battle type
+            if (attacking_army_obj.type == "army" && defending_army_obj.type == "army") {
+              battle_type = "land";
+            } else if (attacking_army_obj.type == "navy" && defending_army_obj.type == "navy") {
+              battle_type = "sea";
+            } else {
+              battle_type = "air";
+            }
+
+            //Get battle name
+            switch (battle_type) {
+              case "land":
+                battle_name = (province_name == province_obj.id) ?
+                  `${(province_obj.battle_ordinal) ? ordinalise(province_obj.battle_ordinal) + " " : ""} Battle of ${randomElement(config.localisation.battle_prefixes)} ${province_obj.id}` :
+                  `${(province_obj.battle_ordinal) ? ordinalise(province_obj.battle_ordinal) + " " : ""} Battle of ${province_name}`;
+
+                province_obj.battle_ordinal = (province_obj.battle_ordinal) ?
+                  province_obj.battle_ordinal + 1 :
+                  2;
+
+                break;
+              case "sea":
+                battle_name = `Battle of ${randomElement(config.localisation.bathymetric_names)}`;
+
+                break;
+              case "air":
+                battle_name = `Battle of ${ot_user.name}`;
+
+                break;
+            }
+
+            //Calculate army stats
+            var attacking_army_stats = calculateArmyStats(actual_id, attacking_army_obj);
+            var attacker_losses = 0;
+            var attacker_stackwiped = false;
+            var attacker_understrength = false;
+            var attacker_units = Object.keys(attacking_army_obj.units);
+            var defending_army_stats = calculateArmyStats(actual_ot_user_id, defending_army_obj);
+            var defender_losses = 0;
+            var defender_stackwiped = false;
+            var defender_understrength = false;
+            var defender_units = Object.keys(defending_army_obj.units);
+
+            var old_attacking_army_obj = JSON.parse(JSON.stringify(attacking_army_obj));
+            var old_defending_army_obj = JSON.parse(JSON.stringify(defending_army_obj));
+
+            //Check for combat_order
+            var combat_order = config.defines.combat.combat_order;
+
+            if (usr.researched_technologies.includes(config.defines.combat.combacombat_order_stalemate_tech))
+              combat_order = ["defence", "attack"];
+
+            if (ot_user.researched_technologies.includes(config.defines.combat.ccombat_order_switch_tech))
+              combat_order = ["attack", "defence"];
+
+            //Check if one side has less than 5% AP or DP of the other side
+            if (battle_type == "land") {
+              if (attacking_army_stats.attack < defending_army_stats.attack*0.05 && attacking_army_obj.defence < defending_army_stats.defence*0.05) {
+                attacker_understrength = true;
+
+                //50% chance of the attacker being stackwiped
+                attacker_stackwiped = (randomNumber(0, 100) <= 50);
+              }
+              if (defending_army_stats.attack < attacking_army_stats.attack*0.05 && defending_army_stats.defence < defending_army_stats.defence*0.05) {
+                defender_stackwiped = true;
+
+                //50% chance of the defender being stackwiped
+                defender_stackwiped = (randomNumber(0, 100) <= 50);
+              }
+            }
+
+            //Begin rolling and subtracting units
+            var attacker_casualties;
+            var attacker_dice_roll = module.exports.calculateRoll(attacking_army_obj);
+            var defender_casualties;
+            var defender_dice_roll = module.exports.calculateRoll(defending_army_obj);
+
+            //Process stackwipes
+            if (attacker_stackwiped)
+              attacker_casualties = module.exports.calculateCasualties(actual_id, attacking_army_obj, defender_dice_roll);
+            if (defender_stackwiped)
+              defender_casualties = module.exports.calculateCasualties(actual_id, defending_army_obj, attacker_dice_roll);
+
+            if (!attacker_stackwiped && !defender_stackwiped)
+              for (var i = 0; i < combat_order.length; i++)
+                if (combat_order[i] == "attack") {
+                  defender_casualties = module.exports.calculateCasualties(actual_ot_user_id, defending_army_obj,
+                      attacker_dice_roll
+                  );
+                } else if (combat_order[i] == "defence") {
+                  attacker_casualties = module.exports.calculateCasualties(actual_id, attacking_army_obj,
+                      defender_dice_roll
+                  );
+                }
+
+            //Check if army must retreat
+            var attacker_retreat = false;
+            var attacker_side = "neutral";
+            var defender_retreat = false;
+            var defender_side = "neutral";
+            var new_attacking_army_stats = calculateArmyStats(actual_id, attacking_army_obj);
+            var new_defending_army_stats = calculateArmyStats(actual_ot_user_id, defending_army_obj);
+
+            if (
+              (
+                (new_defending_army_stats.defence < defending_army_obj.defence*0.5 || new_defending_army_stats.defence == 0) &&
+                defender_casualties > attacker_casualties
+              ) || defender_understrength
+            ) {
+              defender_retreat = true;
+
+              if (battle_type == "land") {
+                defending_army_obj.province = (province_obj.adjacencies) ?
+                  randomElement(province_obj.adjacencies) :
+                  province_obj.id;
+
+                var army_size_in_province = getTroopsInProvince(army_obj.province);
+                var meets_occupation_requirements = (army_size_in_province >= province_obj.pops.population*0.005);
+
+                if (meets_occupation_requirements)
+                  province_obj.controller = actual_id;
+
+                setOccupationColour(actual_id, army_obj.province);
+              } else if (battle_type == "sea") {
+                if (defending_army_obj.is_blockading)
+                  liftBlockade(actual_id, defending_army_obj.name, true);
+              }
+            } else if (
+              (
+                (new_attacking_army_stats.defence < attacking_army_stats.defence*0.5 || new_attacking_army_stats.defence == 0) &&
+                attacker_casualties > defender_casualties
+              ) || attacker_understrength
+            ) {
+              attacker_retreat = true;
+
+              if (battle_type == "land")
+                attacking_army_obj.province = (province_obj.adjacencies) ?
+                  randomElement(province_obj.adjacencies) :
+                  province_obj.id;
+            }
+
+            //Add warscore, casualties
+            var attacking_war_exhaustion = returnSafeNumber(Math.round(
+              attacker_casualties/
+                (getTotalActiveDuty(actual_id) + returnSafeNumber(usr.mobilisation.current_manpower_mobilised))
+            ));
+            var defending_war_exhaustion = returnSafeNumber(Math.round(
+              defender_casualties/
+                (getTotalActiveDuty(actual_ot_user_id) + returnSafeNumber(ot_user.mobilisation.current_manpower_mobilised))
+            ));
+
+            attacking_war_exhaustion = Math.min(attacking_war_exhaustion, 0.25);
+            attacking_war_exhaustion = Math.max(attacking_war_exhaustion, 0);
+            defending_war_exhaustion = Math.min(defending_war_exhaustion, 0.25);
+            defending_war_exhaustion = Math.max(defending_war_exhaustion, 0);
+
+            usr.modifiers.war_exhaustion += attacking_war_exhaustion;
+            ot_user.modifiers.war_exhaustion += defending_war_exhaustion;
+
+            for (var i = 0; i < all_wars.length; i++) {
+              var local_war = main.global.wars[all_wars[i]];
+
+              //Reset involvement
+              attacker_side = "neutral";
+              defender_side = "neutral";
+
+              //Check involvement
+              if (local_war.attackers.includes(actual_id))
+                attacker_side = "attacker";
+              if (local_war.defenders.includes(actual_id))
+                attacker_side = "defender";
+
+              if (local_war.attackers.includes(actual_ot_user_id))
+                defender_side = "attacker";
+              if (local_war.defenders.includes(actual_id))
+                defender_side = "defender";
+
+              if (attacker_side != "neutral") {
+                local_war[`${attacker_side}_total_casualties`] += attacker_casualties;
+                local_war[`${defender_side}_total_casualties`] += defender_casualties;
+                local_war[`${actual_id}_casualties`] += attacker_casualties;
+                local_war[`${actual_ot_user_id}_casualties`] += defender_casualties;
+              }
+            }
+
+            //Delete armies if no units are left in them; stackwipe if retreated army is still in the same province
+            if (
+              getArmySize(actual_id, attacking_army_obj) == 0 ||
+              (
+                attacker_retreat && attacking_army_obj.province == defending_army_obj.province
+              ) || attacker_stackwiped
+            )
+              deleteArmy(actual_id, attacking_army_obj.name);
+
+            if (
+              getArmySize(actual_ot_user_id, defending_army_obj) == 0 ||
+              (
+                defender_retreat && defending_army_obj.province == attacking_army_obj.province
+              ) || defender_stackwiped
+            )
+              deleteArmy(actual_ot_user_id, defending_army_obj.name);
+
+            //Declare battle_embed tracker variables
+            var attacker_string = [];
+            var defender_string = [];
+            var result_string = [];
+
+            //Format embed contents - Attacker
+            attacker_string.push(`**${usr.name}** (${attacking_army_obj.name}):`);
+            attacker_string.push("");
+            attacker_string.push(`**Strength:**`);
+            attacker_string.push(`${parseNumber(attacking_army_stats.attack)} Attack ¦ ${parseNumber(attacking_army_stats.defence)} Defence`);
+
+            for (var i = 0; i < attacker_units.length; i++) {
+              var unit_category = getUnitCategoryFromUnit(attacker_units[i]);
+              var unit_obj = getUnit(attacker_units[i]);
+
+              var unit_icon = (unit_obj.icon) ?
+                config.icons[unit_obj.icon] + " " :
+                  (unit_category.icon) ?
+                    config.icons[unit_category.icon] + " " :
+                    "";
+              var unit_name = (unit_obj.name) ? unit_obj.name : attacker_units[i];
+
+              attacker_string.push(`${unit_icon}${parseNumber(returnSafeNumber(attacking_army_obj.units[attacker_units[i]]))} ${unit_name} ${(returnSafeNumber(attacking_army_obj.units[attacker_units[i]]) < old_attacking_army_obj.units[attacker_units[i]]) ? `(-${parseNumber(Math.ceil(old_attacking_army_obj.units[attacker_units[i]] - returnSafeNumber(attacking_army_obj.units[attacker_units[i]])))})` : ""}`);
+            }
+
+            attacker_string.push("");
+            attacker_string.push(`${config.icons.death} Casualties: **${parseNumber(attacker_casualties)}**`);
+
+            //Format embed contents - Defender
+            defender_string.push(`**${ot_user.name}** (${defending_army_obj.name}):`);
+            defender_string.push("");
+            defender_string.push(`**Strength:**`);
+            defender_string.push(`${parseNumber(defending_army_stats.attack)} Attack ¦ ${parseNumber(defending_army_stats.defence)} Defence`);
+
+            for (var i = 0; i < defender_units.length; i++) {
+              var unit_category = getUnitCategoryFromUnit(defender_units[i]);
+              var unit_obj = getUnit(defender_units[i]);
+
+              var unit_icon = (unit_obj.icon) ?
+                config.icons[unit_obj.icon] + " " :
+                  (unit_category.icon) ?
+                    config.icons[unit_category.icon] + " " :
+                    "";
+              var unit_name = (unit_obj.name) ? unit_obj.name : defender_units[i];
+
+              defender_string.push(`${unit_icon}${parseNumber(returnSafeNumber(defending_army_obj.units[defender_units[i]]))} ${unit_name} ${(returnSafeNumber(defending_army_obj.units[defender_units[i]]) < old_defending_army_obj.units[defender_units[i]]) ? `(-${parseNumber(Math.ceil(old_defending_army_obj.units[defender_units[i]] - returnSafeNumber(defending_army_obj.units[defender_units[i]])))})` : ""}`);
+            }
+
+            defender_string.push("");
+            defender_string.push(`${config.icons.death} Casualties: **${parseNumber(defender_casualties)}**`);
+
+            //Format embed contents - Results
+            result_string.push(`**Dice Rolls:** ${usr.name} - ${config.icons.dice} **${parseNumber(attacker_dice_roll)}** ¦ ${ot_user.name} - ${config.icons.dice} **${parseNumber(defender_dice_roll)}**`);
+            result_string.push(`${config.icons.death} Total Casualties: **${parseNumber(attacker_casualties + defender_casualties)}**`);
+
+            if (attacker_stackwiped) {
+              result_string.push(`${config.icons.retreat} Due to being understrength, the attacking side was completely routed from the battlefield and massacred.`);
+              result_string.push(`${config.icons.prestige} **${getPrimaryCultures(actual_ot_user_id, { return_objects: true })[0].adjective} Victory**`);
+            } else if (defender_stackwiped) {
+              result_string.push(`${config.icons.retreat} Due to being understrength, the defending side was completely routed from the battlefield and massacred.`);
+              result_string.push(`${config.icons.prestige} **${getPrimaryCultures(actual_id, { return_objects: true })[0].adjective} Victory**`);
+            } else {
+              if (defender_retreat) {
+                result_string.push(`${config.icons.retreat} Due to heavy losses, the defending side was forced to retreat from the battlefield.`);
+                result_string.push(`${config.icons.prestige} **${getPrimaryCultures(actual_id, { return_objects: true })[0].adjective} Victory**`);
+              } else if (attacker_retreat) {
+                result_string.push(`${config.icons.retreat} Due to heavy losses, the attacking side was forced to retreat from the battlefield.`);
+                result_string.push(`${config.icons.prestige} **${getPrimaryCultures(actual_ot_user_id, { return_objects: true })[0].adjective} Victory**`);
+              } else {
+                result_string.push(`${config.icons.small_arms} Neither side was forced to retreat from the battle, and the fighting rages on!`);
+                result_string.push(`${config.icons.prestige} **Stalemate**`);
+              }
+            }
+
+            result_string.push("");
+            result_string.push(`${config.icons.infamy} The defending side gained **${(defending_war_exhaustion*100).toFixed(2)}** war exhaustion, whilst the attacking side gained **${(attacking_war_exhaustion*100).toFixed(2)}** war exhaustion.`);
+
+            //Format battle_embed
+            var battle_embed = new Discord.MessageEmbed()
+              .setColor(settings.bot_colour)
+              .setTitle(`**${battle_name}:\n${config.localisation.divider}**`)
+              .addFields(
+                {
+                  name: `${config.icons.attacker} __**Attacker:**__\n---\n`,
+                  value: attacker_string.join("\n"),
+                  inline: true
+                },
+                {
+                  name: `${config.icons.defender} __**Defender:**__\n---\n`,
+                  value: defender_string.join("\n"),
+                  inline: true
+                },
+                {
+                  name: `${config.icons.attacker} __**Results:**__\n---\n`,
+                  value: result_string.join("\n")
+                },
+              );
+
+            //Send battle_embed to both users as an embed alert
+            sendEmbedAlert(actual_id, battle_embed, battle_name);
+            sendEmbedAlert(actual_ot_user_id, battle_embed, battle_name);
+          }
   },
 
   initialiseSubmarineRaid: function (arg0_user, arg1_army_name, arg2_user, arg3_mode) {
