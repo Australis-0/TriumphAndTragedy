@@ -820,7 +820,7 @@ module.exports = {
           printCBTooltip(user_id, actual_ot_user_id, input);
         }
 
-        if (game_obj.page.startsWith("view_war_")) { //[WIP] - Add button functionality
+        if (game_obj.page.startsWith("view_war_")) {
           var war_name = game_obj.page.replace("view_war_", "");
           var war_obj = getWar(war_name);
 
@@ -851,7 +851,7 @@ module.exports = {
 
           //[Rename War]
           if (input == "rename_war")
-            initialiseRenameWar(user_id);
+            initialiseRenameWar(user_id, war_name);
 
           //[Send Peace Offer]
           if (input == "send peace offer")

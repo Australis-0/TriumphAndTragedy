@@ -54,6 +54,14 @@ module.exports = {
 
             war_obj.name = parseString(new_war_name);
 
+            //Update war UI
+            if (game_obj.page.includes("view_war_")) {
+              var war_to_view = game_obj.page.replace("view_war_", "");
+
+              printWar(user_id, war_to_view);
+            }
+
+            //Print user feedback
             printAlert(game_obj.id, `You have renamed the **${old_war_name}** to the **${new_war_name}**.`);
           } else {
             printError(game_obj.id, `An ongoing conflict by the name of the **${new_war_name}** already exists!`);
