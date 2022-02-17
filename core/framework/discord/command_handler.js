@@ -276,16 +276,6 @@ module.exports = {
             })
           ]
         });
-      } catch {
-        log.error(`updateVisualPrompt() ran into an error whilst attempting to create a new visual prompt! .. Reinitialising all game embeds to call again!`);
-
-        reinitialiseGameEmbeds();
-
-        setTimeout(function(){
-          var game_obj = getGameObject(usr);
-
-          module.exports.visualPrompt(game_obj.alert_embed, game_obj.user, options, exec_function, cmd_function);
-        }, 3000);
-      }
+      } catch {}
   }
 };

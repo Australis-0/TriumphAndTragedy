@@ -15,11 +15,11 @@ module.exports = {
       ]
     },
     function (arg) {
-      module.exports.renameWar(user_id, war_obj.name, arg[1]);
+      module.exports.renameWar(user_id, war_obj.name, arg[0]);
     });
   },
 
-  renameWar: function (arg0_user, arg1_war_name, arg2_new_war_name) { //[WIP] - Update War UI if user is currently on it
+  renameWar: function (arg0_user, arg1_war_name, arg2_new_war_name) {
     //Convert from parameters
     var user_id = arg0_user;
     var old_war_name = arg1_war_name.trim().toLowerCase();
