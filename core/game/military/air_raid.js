@@ -1,5 +1,5 @@
 module.exports = {
-  airRaid: function (arg0_user, arg1_city_name. arg2_army_name) {
+  airRaid: function (arg0_user, arg1_city_name, arg2_army_name) {
     //Convert from parameters
     var user_id = arg0_user;
     var city_name = arg1_city_name;
