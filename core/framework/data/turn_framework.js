@@ -50,7 +50,7 @@ module.exports = {
         }
 
         //Army attrition
-        if (returnSafeNumber(lookup[province_troop_strengths]) > returnSafeNumber(province_obj.supply_limit)*1000)
+        if (returnSafeNumber(lookup.province_troop_strengths[local_army.province]) > returnSafeNumber(province_obj.supply_limit)*1000)
           if (local_enemies.length > 0)
             if (local_army.type != "navy") {
               var is_capital = false;
@@ -84,7 +84,7 @@ module.exports = {
         //Army movement
         if (local_army.moving_to) {
           var current_element = local_army.moving_to.indexOf(local_army.province);
-          var current_speed = Math.ceil(config.defines.combat.army_speed*usr.modifiers.army_travel_speed);
+          var current_speed = Math.ceil(config.defines.combat.army_speed*local_user.modifiers.army_travel_speed);
 
           for (var x = 0; x < current_speed; x++)
             if (local_army.moving_to[x + current_element]) {
