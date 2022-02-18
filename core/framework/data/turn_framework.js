@@ -396,37 +396,38 @@ module.exports = {
           var alert_buttons = usr.alerts[i].buttons;
 
           //Resolve alert by weighted random if AI chance is a thing
-          if (usr.alerts[i].has_ai_chance) {
-            for (var x = 0; x < alert_buttons.length; x++) {
-              var current_ai_chance =  returnSafeNumber(alert_buttons[x].ai_chance);
+          if (alert_buttons)
+            if (usr.alerts[i].has_ai_chance) {
+              for (var x = 0; x < alert_buttons.length; x++) {
+                var current_ai_chance =  returnSafeNumber(alert_buttons[x].ai_chance);
 
-              ai_chance_ranges.push([ai_chance_sum, ai_chance_sum + current_ai_chance, alert_buttons[x].id]);
-              ai_chance_sum += current_ai_chance;
-            }
-
-            //Roll the dice
-            var dice_roll = randomNumber(0, ai_chance_sum);
-
-            //See where the dice roll landed
-            for (var x = 0; x < ai_chance_ranges.length; x++)
-              if (dice_roll >= ai_chance_ranges[x][0] && dice_roll < ai_chance_ranges[x][1]) {
-                //The dice roll landed here
-                var button_obj = getButton(usr.alerts[i].id, ai_chance_ranges[x][2]);
-
-                //Execute effect
-                if (button_obj.effect)
-                  button_obj.effect(usr.alerts[i].options);
+                ai_chance_ranges.push([ai_chance_sum, ai_chance_sum + current_ai_chance, alert_buttons[x].id]);
+                ai_chance_sum += current_ai_chance;
               }
-          } else {
-            var dice_roll = randomNumber(0, alert_buttons.length);
 
-            //See where the dice roll landed
-            var button_obj = getButton(usr.alerts[i].id, alert_buttons[dice_roll].id);
+              //Roll the dice
+              var dice_roll = randomNumber(0, ai_chance_sum);
 
-            //Execute effect
-            if (button_obj.effect)
-              button_obj.effect(usr.alerts[i].options);
-          }
+              //See where the dice roll landed
+              for (var x = 0; x < ai_chance_ranges.length; x++)
+                if (dice_roll >= ai_chance_ranges[x][0] && dice_roll < ai_chance_ranges[x][1]) {
+                  //The dice roll landed here
+                  var button_obj = getButton(usr.alerts[i].id, ai_chance_ranges[x][2]);
+
+                  //Execute effect
+                  if (button_obj.effect)
+                    button_obj.effect(usr.alerts[i].options);
+                }
+            } else {
+              var dice_roll = randomNumber(0, alert_buttons.length - 1);
+
+              //See where the dice roll landed
+              var button_obj = getButton(usr.alerts[i].id, alert_buttons[dice_roll].id);
+
+              //Execute effect
+              if (button_obj.effect)
+                button_obj.effect(usr.alerts[i].options);
+            }
 
           //Push to removal array
           alerts_to_remove.push(i);

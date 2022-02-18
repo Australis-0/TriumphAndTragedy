@@ -1,5 +1,5 @@
 module.exports = {
-  sendPeaceTreaty: function (arg0_user, arg1_peace_treaty_object) {
+  sendPeaceTreaty: function (arg0_user, arg1_peace_treaty_object) { //[WIP] - Fix unconditional surrender code
     //Convert from parameters
     var user_id = arg0_user;
     var peace_obj = arg1_peace_treaty_object;
@@ -23,7 +23,7 @@ module.exports = {
     }
 
     //Send alert involving peace_obj
-    (war_obj[`${friendly_side.replace("s", "")}_warscore`] == 1) ?
+    if (war_obj[`${friendly_side.replace("s", "")}_warscore`] == 1) {
       sendAlert(war_obj[`${enemy_side}_war_leader`], config.defines.diplomacy.unconditional_peace_alert_id, {
         FROM: actual_id,
         LOCAL: {
@@ -32,7 +32,12 @@ module.exports = {
           peace_treaty_string: parsePeaceTreatyString(war_obj, peace_obj)
         },
         TO: war_obj[`${enemy_side}_war_leader`]
-      }) :
+      });
+
+      //Print user feedback
+      printAlert(game_obj.id, `${config.icons.checkmark} You have successfully sent a peace offer to the enemy war leader, **${main.users[war_obj[`${enemy_side}_war_leader`]].name}**.`);
+    } else {
+      //Send alert to opposing war leader
       sendAlert(war_obj[`${enemy_side}_war_leader`], config.defines.diplomacy.peace_offer_alert_id, {
         FROM: actual_id,
         LOCAL: {
@@ -43,6 +48,12 @@ module.exports = {
         TO: war_obj[`${enemy_side}_war_leader`]
       });
 
-    printAlert(game_obj.id, `${config.icons.checkmark} You have successfully sent a peace offer to the enemy war leader, **${main.users[war_obj[`${enemy_side}_war_leader`]].name}**.`);
+      //Parse peace treaty
+      parsePeaceTreaty(war_obj.name, peace_obj);
+
+      //Print user feedback
+      printAlert(game_obj.id, `${config.icons.checkmark} You have successfully sent a peace offer to the enemy war leader, **${main.users[war_obj[`${enemy_side}_war_leader`]].name}**. They have signed an unconditional surrender, and will be forced to accept its terms.`);
+    }
+
   }
 };

@@ -56,27 +56,34 @@ module.exports = {
 
     var all_buttons = Object.keys(alert_obj);
 
-    //Soft-match first
-    for (var i = 0; i < all_buttons.length; i++)
-      if (all_buttons[i].startsWith("btn_")) {
-        var local_btn = alert_obj[all_buttons[i]];
-        var local_title = (local_btn.title) ? local_btn.title : all_buttons[i];
+    //Key match first
+    if (alert_obj[button_name])
+      //1st Return statement
+      return alert_obj[button_name];
 
-        if (local_title.toLowerCase().indexOf(button_name) != -1)
-          button_found = [true, (!options.return_key) ? local_btn : all_buttons[i]];
-      }
+    if (!button_found[0]) {
+      //Soft-match first
+      for (var i = 0; i < all_buttons.length; i++)
+        if (all_buttons[i].startsWith("btn_")) {
+          var local_btn = alert_obj[all_buttons[i]];
+          var local_title = (local_btn.title) ? local_btn.title : all_buttons[i];
 
-    //Hard-match second
-    for (var i = 0; i < all_buttons.length; i++)
-      if (all_buttons[i].startsWith("btn_")) {
-        var local_btn = alert_obj[all_buttons[i]];
-        var local_title = (local_btn.title) ? local_btn.title : all_buttons[i];
+          if (local_title.toLowerCase().indexOf(button_name) != -1)
+            button_found = [true, (!options.return_key) ? local_btn : all_buttons[i]];
+        }
 
-        if (local_title.toLowerCase() == button_name)
-          button_found = [true, (!options.return_key) ? local_btn : all_buttons[i]];
-      }
+      //Hard-match second
+      for (var i = 0; i < all_buttons.length; i++)
+        if (all_buttons[i].startsWith("btn_")) {
+          var local_btn = alert_obj[all_buttons[i]];
+          var local_title = (local_btn.title) ? local_btn.title : all_buttons[i];
 
-    //Return statement
+          if (local_title.toLowerCase() == button_name)
+            button_found = [true, (!options.return_key) ? local_btn : all_buttons[i]];
+        }
+    }
+
+    //2nd Return statement
     return (button_found[0]) ? button_found[1] : undefined;
   },
 
