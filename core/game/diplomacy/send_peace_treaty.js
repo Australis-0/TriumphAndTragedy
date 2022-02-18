@@ -23,15 +23,25 @@ module.exports = {
     }
 
     //Send alert involving peace_obj
-    sendAlert(war_obj[`${enemy_side}_war_leader`], config.defines.diplomacy.peace_offer_alert_id, {
-      FROM: actual_id,
-      LOCAL: {
-        war_name: war_obj.name,
-        peace_treaty: peace_obj,
-        peace_treaty_string: parsePeaceTreatyString(war_obj, peace_obj)
-      },
-      TO: war_obj[`${enemy_side}_war_leader`]
-    });
+    (war_obj[`${friendly_side.replace("s", "")}_warscore`] == 1) ?
+      sendAlert(war_obj[`${enemy_side}_war_leader`], config.defines.diplomacy.unconditional_peace_alert_id, {
+        FROM: actual_id,
+        LOCAL: {
+          war_name: war_obj.name,
+          peace_treaty: peace_obj,
+          peace_treaty_string: parsePeaceTreatyString(war_obj, peace_obj)
+        },
+        TO: war_obj[`${enemy_side}_war_leader`]
+      }) :
+      sendAlert(war_obj[`${enemy_side}_war_leader`], config.defines.diplomacy.peace_offer_alert_id, {
+        FROM: actual_id,
+        LOCAL: {
+          war_name: war_obj.name,
+          peace_treaty: peace_obj,
+          peace_treaty_string: parsePeaceTreatyString(war_obj, peace_obj)
+        },
+        TO: war_obj[`${enemy_side}_war_leader`]
+      });
 
     printAlert(game_obj.id, `${config.icons.checkmark} You have successfully sent a peace offer to the enemy war leader, **${main.users[war_obj[`${enemy_side}_war_leader`]].name}**.`);
   }
