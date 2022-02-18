@@ -1,5 +1,5 @@
 module.exports = {
-  sendPeaceTreaty: function (arg0_user, arg1_peace_treaty_object) { //[WIP] - Fix unconditional surrender code
+  sendPeaceTreaty: function (arg0_user, arg1_peace_treaty_object) {
     //Convert from parameters
     var user_id = arg0_user;
     var peace_obj = arg1_peace_treaty_object;
