@@ -56,12 +56,12 @@ module.exports = {
             var local_government = config.governments[all_governments[i]];
             var local_government_adjective = (local_government.adjective) ? local_government.adjective : all_governments[i];
             var local_reform_discontent = (reform_obj.political_appeasement) ?
-              (reform_obj.political_appeasement[all_governments[i]]) ?
+              (reform_obj.political_appeasement[`${all_governments[i]}_discontent`]) ?
                 reform_obj.political_appeasement[`${all_governments[i]}_discontent`] :
                 0 :
               0;
             var old_reform_discontent = (current_reform_obj.political_appeasement) ?
-              (current_reform_obj.political_appeasement[all_governments[i]]) ?
+              (current_reform_obj.political_appeasement[`${all_governments[i]}_discontent`]) ?
                 current_reform_obj.political_appeasement[`${all_governments[i]}_discontent`] :
                 0 :
               0;
