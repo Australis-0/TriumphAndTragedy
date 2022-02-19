@@ -12,7 +12,7 @@ module.exports = {
     var raw_reform_name = getReform(reform_name, { return_key: true });
     var reform_obj = getReform(reform_name);
     var usr = main.users[actual_id];
-    
+
     var current_government = config.governments[usr.government];
 
     //Check if government can actually pass a reform or not
@@ -42,8 +42,8 @@ module.exports = {
               //Check if user has the correct index for enacting the reform
               if (
                 (
-                  reform_index == current_reform_index - 1 || //1 reform down
-                  reform_index == current_reform_index + 1 //1 reform up
+                  new_reform_index == current_reform_index - 1 || //1 reform down
+                  new_reform_index == current_reform_index + 1 //1 reform up
                 ) ||
                 options.force_reform
               ) {
@@ -54,20 +54,20 @@ module.exports = {
                 //Random voting by which parties would be in favour of such a bill if user is a democracy
                 var government_obj = config.governments[usr.government];
 
-                if (government_obj.has_elections && !options.force_reform) {
-                  var abstentions = 0;
-                  var ayes = 0;
-                  var nays = 0;
+                var abstentions = 0;
+                var ayes = 0;
+                var nays = 0;
 
-                  //Declare parliament_string
-                  var parliament_string = [];
+                //Declare parliament_string
+                var parliament_string = [];
 
-                  //Format parliament_string
-                  parliament_string.push(`**__${actual_reform_name} Act__**`);
-                  parliament_string.push(config.localiation.divider);
-                  parliament_string.push("");
+                //Format parliament_string
+                parliament_string.push(`**__${actual_reform_name} Act__**`);
+                parliament_string.push(config.localisation.divider);
+                parliament_string.push("");
 
-                  //Start voting process
+                //Start voting process
+                if (government_obj.has_elections) {
                   for (var i = 0; i < all_governments.length; i++) {
                     var local_government = usr.politics[all_governments[i]];
                     var local_government_obj = config.governments[all_governments[i]];
@@ -123,63 +123,64 @@ module.exports = {
 
                   parliament_string.push("");
                   parliament_string.push(`The Ayes to the right, **${parseNumber(ayes)}**, the Noes to the left, **${parseNumber(nays)}**.\n**${parseNumber(abstentions)}** MPs refrained from voting on the issue. Unlock.`);
-
-                  //Check if reform passed
-                  if ((ayes > nays) || options.force_reform) {
-                    parliament_string.push(`${config.icons.checkmark} You have changed your policy on **${reform_category_name}** from **${old_reform_name}** to **${actual_reform_name}**.`);
-                    usr.laws[raw_reform_category_name] = raw_reform_name;
-
-                    //Pass reform block
-                    {
-                      var inverted_old_reform_modifiers = [];
-
-                      //Remove old reform modifiers
-                      if (old_reform_obj.political_appeasement)
-                        for (var i = 0; i < all_governments.length; i++)
-                          try {
-                            var local_government = config.governments[all_governments[i]];
-                            var old_reform_appeasement = old_reform_obj.political_appeasement[`${all_governments[i]}_discontent`];
-
-                            if (old_reform_appeasement)
-                              usr.politics[all_governments[i]].discontent += old_reform_appeasement*-1;
-                          } catch {}
-
-                      //Remove old reform effects
-                      if (old_reform_obj.effects) {
-                        var all_effects = Object.keys(old_reform_obj.effects);
-
-                        for (var i = 0; i < all_effects.length; i++)
-                          try {
-                            inverted_old_reform_modifiers[all_effects[i]] = old_reform_obj.effects[all_effects[i]]*-1;
-                          } catch {}
-                      }
-                      applyModifiers(actual_id, inverted_old_reform_modifiers);
-
-                      //Add new reform modifiers
-                      if (reform_obj.political_appeasement)
-                        for (var i = 0; i < all_governments.length; i++)
-                          try {
-                            var local_government = config.governments[all_governments[i]];
-                            var new_reform_appeasement = new_reform_obj.political_appeasement[`${all_governments[i]}_discontent`];
-
-                            if (new_reform_appeasement)
-                              usr.politics[all_governments[i]].discontent += new_reform_appeasement;
-                          } catch {}
-
-                      //Add new reform effects
-                      if (new_reform_obj.effects)
-                        applyModifiers(actual_id, new_reform_obj.effects);
-                    }
-                  } else {
-                    parliament_string.push(`The reform unfortunately failed to pass Parliament.`);
-                  }
                 }
+
+                //Check if reform passed
+                if ((ayes > nays) || !current_government.has_elections || options.force_reform) {
+                  parliament_string.push(`${config.icons.checkmark} You have changed your policy on **${reform_category_name}** from **${old_reform_name}** to **${actual_reform_name}**.`);
+                  usr.laws[raw_reform_category_name] = raw_reform_name;
+
+                  //Pass reform block
+                  {
+                    var inverted_old_reform_modifiers = [];
+
+                    //Remove old reform modifiers
+                    if (old_reform_obj.political_appeasement)
+                      for (var i = 0; i < all_governments.length; i++)
+                        try {
+                          var local_government = config.governments[all_governments[i]];
+                          var old_reform_appeasement = old_reform_obj.political_appeasement[`${all_governments[i]}_discontent`];
+
+                          if (old_reform_appeasement)
+                            usr.politics[all_governments[i]].discontent += old_reform_appeasement*-1;
+                        } catch {}
+
+                    //Remove old reform effects
+                    if (old_reform_obj.effects) {
+                      var all_effects = Object.keys(old_reform_obj.effects);
+
+                      for (var i = 0; i < all_effects.length; i++)
+                        try {
+                          inverted_old_reform_modifiers[all_effects[i]] = old_reform_obj.effects[all_effects[i]]*-1;
+                        } catch {}
+                    }
+                    applyModifiers(actual_id, inverted_old_reform_modifiers);
+
+                    //Add new reform modifiers
+                    if (reform_obj.political_appeasement)
+                      for (var i = 0; i < all_governments.length; i++)
+                        try {
+                          var local_government = config.governments[all_governments[i]];
+                          var new_reform_appeasement = reform_obj.political_appeasement[`${all_governments[i]}_discontent`];
+
+                          if (new_reform_appeasement)
+                            usr.politics[all_governments[i]].discontent += new_reform_appeasement;
+                        } catch {}
+
+                    //Add new reform effects
+                    if (reform_obj.effects)
+                      applyModifiers(actual_id, reform_obj.effects);
+                  }
+                } else {
+                  parliament_string.push(`The reform unfortunately failed to pass Parliament.`);
+                }
+
+                //Print user feedback
+                printAlert(game_obj.id, parliament_string.join("\n"));
 
                 //Subtract from reform_desire
                 {
-                  usr.modifiers.reform_desire = (usr.modifiers.reform_desire >= 0.5) ?
-                    usr.modifiers.reform_desire - 0.5 :
-                    0;
+                  usr.modifiers.reform_desire = Math.max(usr.modifiers.reform_desire - 0.5, 0);
                 }
 
                 //Update reform UI if user is currently viewing it
