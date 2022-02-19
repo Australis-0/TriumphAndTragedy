@@ -932,7 +932,7 @@ module.exports = {
 
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
-    var raw_unit_name = getUnit(unit_name, { return_key: true });
+    var raw_unit_name = (typeof unit_name != "object") ? getUnit(unit_name, { return_key: true }) : getUnit(unit_name.name, { return_key: true });
     var total_losses = 0;
     var unit_obj = (typeof unit_name != "object") ? getUnit(unit_name.trim().toLowerCase()) : unit_name;
     var usr = main.users[actual_id];

@@ -1520,6 +1520,10 @@ module.exports = {
                 });
               });
 
+            //[(Reform Name)]
+            if (getReform(input))
+              printReform(user_id, input);
+
             break;
           default:
             //Button handler

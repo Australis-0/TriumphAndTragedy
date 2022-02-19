@@ -17,7 +17,7 @@ config.reforms.bureaucracy = {
       stability_modifier: 0.05,
       reform_desire_gain: 0.05,
       tax_efficiency: 0.1,
-      political_capital: 3,
+      political_capital_gain: 3,
       army_upkeep: 0.05,
       building_cost: -0.05,
       training_cost: 0.02,

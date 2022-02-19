@@ -43,6 +43,10 @@ module.exports = {
           if (local_army.blockade_recovery_turns <= 0)
             delete local_army.blockade_recovery_turns;
         }
+        if (local_army.moving_to.length == 0)
+          local_army.stationary_turns++;
+        else
+          local_army.stationary_turns = 0;
         if (local_army.submarine_cooldown) {
           local_army.submarine_cooldown--;
           if (local_army.submarine_cooldown <= 0)

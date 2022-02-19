@@ -19,7 +19,7 @@ module.exports = {
       var raw_reform_category_name = getReformCategoryFromReform(raw_reform_name, { return_key: true });
       var reform_is_unlocked = usr.available_reforms.includes(raw_reform_category_name);
 
-      reform_string.push(`${(reform_obj.icon) ? config.icons[reform_obj.icon] + " " : ""}**${(reform_obj.name) ? reform_obj.name : raw_reform_name}`);
+      reform_string.push(`${(reform_obj.icon) ? config.icons[reform_obj.icon] + " " : ""}**${(reform_obj.name) ? reform_obj.name : raw_reform_name}**`);
 
       if (!reform_is_unlocked)
         reform_string.push(`\nYou have not yet unlocked this reform.`);
