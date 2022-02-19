@@ -137,7 +137,7 @@ config.modifiers = {
     minimum: 0,
     maximum: 1,
 
-    create_modifier_reform_desire: {
+    create_modifier_reform_desire_gain: {
       name: "Reform Desire Gain",
       type: "percentage",
       default_value: 0.02
