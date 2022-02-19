@@ -22,23 +22,12 @@ module.exports = {
       friendly_side = "defenders";
     }
 
+    console.log(war_obj);
+
     //Send alert involving peace_obj
     if (war_obj[`${friendly_side.replace("s", "")}_warscore`] == 1) {
-      sendAlert(war_obj[`${enemy_side}_war_leader`], config.defines.diplomacy.unconditional_peace_alert_id, {
-        FROM: actual_id,
-        LOCAL: {
-          war_name: war_obj.name,
-          peace_treaty: peace_obj,
-          peace_treaty_string: parsePeaceTreatyString(war_obj, peace_obj)
-        },
-        TO: war_obj[`${enemy_side}_war_leader`]
-      });
-
-      //Print user feedback
-      printAlert(game_obj.id, `${config.icons.checkmark} You have successfully sent a peace offer to the enemy war leader, **${main.users[war_obj[`${enemy_side}_war_leader`]].name}**.`);
-    } else {
       //Send alert to opposing war leader
-      sendAlert(war_obj[`${enemy_side}_war_leader`], config.defines.diplomacy.peace_offer_alert_id, {
+      sendAlert(war_obj[`${enemy_side}_war_leader`], config.defines.diplomacy.unconditional_peace_alert_id, {
         FROM: actual_id,
         LOCAL: {
           war_name: war_obj.name,
@@ -53,6 +42,19 @@ module.exports = {
 
       //Print user feedback
       printAlert(game_obj.id, `${config.icons.checkmark} You have successfully sent a peace offer to the enemy war leader, **${main.users[war_obj[`${enemy_side}_war_leader`]].name}**. They have signed an unconditional surrender, and will be forced to accept its terms.`);
+    } else {
+      sendAlert(war_obj[`${enemy_side}_war_leader`], config.defines.diplomacy.peace_offer_alert_id, {
+        FROM: actual_id,
+        LOCAL: {
+          war_name: war_obj.name,
+          peace_treaty: peace_obj,
+          peace_treaty_string: parsePeaceTreatyString(war_obj, peace_obj)
+        },
+        TO: war_obj[`${enemy_side}_war_leader`]
+      });
+
+      //Print user feedback
+      printAlert(game_obj.id, `${config.icons.checkmark} You have successfully sent a peace offer to the enemy war leader, **${main.users[war_obj[`${enemy_side}_war_leader`]].name}**.`);
     }
 
   }

@@ -11,7 +11,7 @@ module.exports = {
     var building_category = getBuildingCategory(raw_building_category, { return_key: true });
     var building_category_obj = getBuildingCategory(building_category);
     var city_obj = getCity(city_name, { users: actual_id });
-    var game_obj = getGame(user_id);
+    var game_obj = getGameObject(user_id);
     var usr = main.users[actual_id];
 
     //Check if city exists in the first place
