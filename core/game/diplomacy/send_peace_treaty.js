@@ -37,11 +37,11 @@ module.exports = {
         TO: war_obj[`${enemy_side}_war_leader`]
       });
 
-      //Parse peace treaty
-      parsePeaceTreaty(war_obj.name, peace_obj);
-
       //Print user feedback
       printAlert(game_obj.id, `${config.icons.checkmark} You have successfully sent a peace offer to the enemy war leader, **${main.users[war_obj[`${enemy_side}_war_leader`]].name}**. They have signed an unconditional surrender, and will be forced to accept its terms.`);
+
+      //Parse peace treaty
+      parsePeaceTreaty(war_obj.name, peace_obj);
     } else {
       sendAlert(war_obj[`${enemy_side}_war_leader`], config.defines.diplomacy.peace_offer_alert_id, {
         FROM: actual_id,

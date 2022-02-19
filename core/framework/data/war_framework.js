@@ -4,6 +4,7 @@ module.exports = {
     var raw_war_name = arg0_war_name.trim().toLowerCase();
 
     //Declare local instance variables
+    var war_id = module.exports.getWar(raw_war_name, { return_key: true });
     var war_obj = module.exports.getWar(raw_war_name);
 
     //Move to war archive
@@ -13,7 +14,7 @@ module.exports = {
 
       main.global.archived_wars[module.exports.generateArchivedWarID()] = JSON.parse(JSON.stringify(war_obj));
 
-      delete war_obj;
+      delete main.global.wars[war_id];
     }
   },
 

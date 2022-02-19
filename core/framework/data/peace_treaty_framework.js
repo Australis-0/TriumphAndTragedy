@@ -133,6 +133,9 @@ module.exports = {
     var opposing_side = "";
     var war_obj = JSON.parse(JSON.stringify(getWar(war_name)));
 
+    //Archive war
+    archiveWar(war_name);
+
     //Fetch friendly side
     if (war_obj.attackers.includes(peace_obj.id)) {
       friendly_side = "attackers";
@@ -143,13 +146,11 @@ module.exports = {
       opposing_side = "attackers";
     }
 
-    //Archive war
+    //Add all participants
     for (var i = 0; i < war_obj.attackers.length; i++)
       all_participants.push(war_obj.attackers[i]);
     for (var i = 0; i < war_obj.defenders.length; i++)
       all_participants.push(war_obj.defenders[i]);
-
-    archiveWar(war_name);
 
     //End war first; lift all occupations
     for (var i = 0; i < all_participants.length; i++) {
