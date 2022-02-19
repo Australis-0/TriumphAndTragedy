@@ -278,7 +278,7 @@ client.on("messageCreate", async (message) => {
     {
       if (equalsIgnoreCase(arg[0], settings.prefix)) {
         if (equalsIgnoreCase(arg[1], "console")) {
-          if (message.member.roles.cache.find(role => ["Senior Developer", "Owner"].includes(role.name))) {
+          if (message.member.roles.cache.find(role => ["549011413843050529", "828725714697846874"].includes(role.id))) {
             var full_code = [];
             for (var i = 2; i < arg.length; i++) full_code.push(arg[i]);
 

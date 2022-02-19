@@ -1,6 +1,6 @@
 global.settings = {
   //General settings
-  bot_token: "Njg4OTYyMTQ1MTU2NTk1NzQz.Xm77_w.U_hKJbmAOqBcLtJkCVAhi_jvmJk",
+  bot_token: "Njg4OTYyMTQ1MTU2NTk1NzQz.Xm77_w.fZCbjvVxRS55EMmO_aIo6HOnnSA",
   prefix: "$",
   no_space: true,
   visual_prompt_delay: 5000, //How many milliseconds should the bot wait before moving onto the next visual prompt?
