@@ -953,16 +953,26 @@ module.exports = {
               printWar(user_id, war_to_view);
               game_obj.page = `view_war_${war_to_view}`;
             } else {
-              var archived_war_report = printWar(user_id, war_to_view, true);
+              var archived_war_report = printWar(user_id, war_to_view, true, true);
 
-              if (archived_war_report)
+              if (archived_war_report) {
+                printWar(user_id, war_to_view, true);
                 game_obj.page = `view_war_archives_${war_to_view}`;
+              }
             }
           }
 
           //[View War]
           if (input == "view war")
             initialisePrintWar(user_id);
+
+          //[(War Name)]
+          var archived_war_report = printWar(user_id, war_to_view, true, true);
+
+          if (archived_war_report) {
+            printWar(user_id, war_to_view, true);
+            game_obj.page = `view_war_archives_${war_to_view}`;
+          }
         }
       }
 

@@ -146,6 +146,9 @@ module.exports = {
       if (local_war.name.trim().toLowerCase() == war_name)
         war_found = [true, (!options.return_key) ? local_war : all_wars[i]];
     }
+
+    //Return statement
+    return (war_found[0]) ? war_found[1] : undefined;
   },
 
   getEnemies: function (arg0_user) {
