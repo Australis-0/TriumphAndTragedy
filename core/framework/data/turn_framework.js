@@ -1098,9 +1098,10 @@ module.exports = {
     {
       //Research processing
       {
+        var emptied_research_slots = 0;
+
         //Only process techs if it is a simulation
         if (!options.is_simulation) {
-          var emptied_research_slots = 0;
           var knowledge_investment = (usr.researching.length != 1) ?
             config.defines.technology.max_knowledge_investment*usr.modifiers.knowledge_investment_limit :
             1;

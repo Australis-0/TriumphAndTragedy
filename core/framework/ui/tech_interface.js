@@ -331,7 +331,7 @@ module.exports = {
     //Declare local tracker variables
     var all_technologies = getAllTechnologies();
     var all_tech_categories = Object.keys(config.technology);
-    var knowledge_gain = getKnowledgeGain(user_id);
+    var knowledge_gain = getKnowledgeGain(actual_id);
     var tech_array_dump = module.exports.printResearchList(actual_id, { return_names: true });
 
     //Declare tech_string

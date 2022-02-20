@@ -973,6 +973,7 @@ config.technology.military_technology = {
     description: "Dirigible balloons are lighter than air aircraft that possess the ability to navigate through the air via engines located onboard. The predecessor to zeppelins, they were some of the first aircraft used for military purposes aside from reconaissance.",
     prerequisite_techs: ["reconaissance_balloons"],
     research_cost: 3000,
+    year: 1900,
     unlocks: {
       unlock_unit: "dirigibles"
     }
@@ -1524,7 +1525,7 @@ config.technology.military_technology = {
     icon: "soldiers",
     description: "The German Freikorps were post-war volunteer troops often comprised of veterans of the Great War that were said to be the result of difficulty to readjust back to normal civilian life, and helped quash the German Revolution and the Spartacist Uprising. They were also known for their role in the Baltic conflicts.",
     prerequisite_techs: ["shock_troops"],
-    research_cost: 650,
+    research_cost: 6500,
     year: 1919,
     unlocks: {
       unlock_unit: "freikorps"
