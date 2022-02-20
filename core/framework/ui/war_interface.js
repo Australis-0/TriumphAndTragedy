@@ -108,7 +108,9 @@ module.exports = {
 
       war_string.push(`Attacker Warscore: **${printPercentage(war_obj.attacker_warscore)}** ¦ Defender Warscore: **${printPercentage(war_obj.defender_warscore)}**`);
       war_string.push("");
-      war_string.push(`**${main.users[war_obj.attackers_war_leader].name}** is the war leader for the attacking faction, whilst **${main.users[war_obj.defenders_war_leader].name}** is the war leader for the defending faction.`);
+      try {
+        war_string.push(`**${main.users[war_obj.attackers_war_leader].name}** is the war leader for the attacking faction, whilst **${main.users[war_obj.defenders_war_leader].name}** is the war leader for the defending faction.`);
+      } catch {}
       war_string.push("");
 
       //Format attacker wargoal string

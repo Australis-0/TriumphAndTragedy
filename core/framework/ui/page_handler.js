@@ -967,10 +967,10 @@ module.exports = {
             initialisePrintWar(user_id);
 
           //[(War Name)]
-          var archived_war_report = printWar(user_id, war_to_view, true, true);
+          var archived_war_report = printWar(user_id, input, true, true);
 
           if (archived_war_report) {
-            printWar(user_id, war_to_view, true);
+            printWar(user_id, input, true);
             game_obj.page = `view_war_archives_${war_to_view}`;
           }
         }
