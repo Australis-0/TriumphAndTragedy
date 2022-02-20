@@ -30,10 +30,6 @@ module.exports = {
         unit_loss_rate = 0.1; //Only 10% of units can be lost if the roll is dodged
 
       //Deal damage
-      attacker_roll -= (!is_reserves) ?
-        defending_army_obj.units[defender_units[i]]*local_defence :
-        defending_army_obj[defender_units[i]]*local_defence;
-
       for (var x = 0; x < local_manpower_costs.length; x++) {
         //Check to see if local_manpower_cost is of a military pop or not
         var local_value = local_unit.manpower_cost[local_manpower_costs[x]]/returnSafeNumber(local_unit.quantity, 1);
@@ -49,11 +45,11 @@ module.exports = {
             attacker_roll >
             defending_army_obj[defender_units[i]]*local_defence
         ) ?
-          Math.abs(Math.ceil(total_casualties*0.5*unit_loss_rate)) :
-          Math.abs(Math.ceil((attacker_roll/local_defence)*unit_loss_rate));
+          Math.ceil(total_casualties*0.5*unit_loss_rate) :
+          Math.ceil((attacker_roll/local_defence)*unit_loss_rate);
 
         //Kill units
-        total_losses += module.exports.killUnitPops(user_id, total_casualties, defender_units[i]);
+        total_losses += module.exports.killUnitPops(user_id, returnSafeNumber(total_casualties), defender_units[i]);
       }
 
       if (!is_reserves)
@@ -67,6 +63,13 @@ module.exports = {
       else
         if (defending_army_obj[defender_units[i]] <= 0)
           delete defending_army_obj[defender_units[i]];
+
+      //Subtract from attacker_roll
+      attacker_roll -= (!is_reserves) ?
+        defending_army_obj.units[defender_units[i]]*local_defence :
+        defending_army_obj[defender_units[i]]*local_defence;
+
+      attacker_roll = Math.max(attacker_roll, 0);
     }
 
     //Return statement
@@ -104,7 +107,7 @@ module.exports = {
     }
 
     //Return statement
-    return Math.abs(current_roll);
+    return current_roll;
   },
 
   initialiseAirRaid: function (arg0_user, arg1_city_name, arg2_army_name) {
