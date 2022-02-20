@@ -1725,7 +1725,7 @@ module.exports = {
             }
 
             //[View Research Queue]
-            if (input == "view research queue") {
+            if (["research queue", "view research queue"].includes(input)) {
               createPageMenu(game_obj.middle_embed, {
                 embed_pages: printResearchQueue(user_id),
                 page: arg[0] - 1,
@@ -1855,7 +1855,7 @@ module.exports = {
               }
 
               //[View Research Queue]
-              if (input == "view research queue") {
+              if (["research queue", "view research queue"].includes(input)) {
                 createPageMenu(game_obj.middle_embed, {
                   embed_pages: printResearchQueue(user_id),
                   page: arg[0] - 1,
