@@ -273,8 +273,8 @@ module.exports = {
     //Initialise research_queue_string
     var research_queue_string = [];
 
-    tech_string.push(`**[Back]**`);
-    tech_string.push("");
+    research_queue_string.push(`**[Back]**`);
+    research_queue_string.push("");
 
     research_queue_string.push(`Your current ${config.icons.building} **Research Queue** allows for the consecutive research of multiple technologies, even whilst asleep. As soon as a technology is researched, any valid technologies in the research queue will take its spot. You must have at least one active research slot for the Research Queue to work, and you may only queue up to **20** technologies.`);
     research_queue_string.push("");
@@ -389,7 +389,7 @@ module.exports = {
 
     //Format research status
     tech_string.push("");
-    tech_string.push(`**[Current Research]**:`);
+    tech_string.push(`**[Current Research]** ¦ **[View Research Queue]**:`);
     tech_string.push(config.localisation.divider);
 
     if (usr.researching.length > 0) {

@@ -1726,7 +1726,11 @@ module.exports = {
 
             //[View Research Queue]
             if (input == "view research queue") {
-              printResearchQueue(user_id);
+              createPageMenu(game_obj.middle_embed, {
+                embed_pages: printResearchQueue(user_id),
+                page: arg[0] - 1,
+                user: game_obj.user
+              });
               game_obj.page = "research_queue";
             }
 
@@ -1752,7 +1756,7 @@ module.exports = {
                   embed_pages: printResearchList(game_obj.user),
                   page: arg[0] - 1,
                   user: game_obj.user
-                })
+                });
               });
 
             //[Research]; [Research (Tech)]
@@ -1848,6 +1852,16 @@ module.exports = {
                 research(user_id, tech_to_research);
               } else if (input == "research") {
                 initialiseResearch(user_id);
+              }
+
+              //[View Research Queue]
+              if (input == "view research queue") {
+                createPageMenu(game_obj.middle_embed, {
+                  embed_pages: printResearchQueue(user_id),
+                  page: arg[0] - 1,
+                  user: game_obj.user
+                });
+                game_obj.page = "research_queue";
               }
             }
 

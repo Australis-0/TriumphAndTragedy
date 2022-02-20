@@ -29,6 +29,15 @@ module.exports = {
           if (!is_in_research) {
             usr.research_queue.push(tech_name);
 
+            //UI updater
+            if (game_obj.page == "research_queue")
+              createPageMenu(game_obj.middle_embed, {
+                embed_pages: printResearchList(actual_id),
+                page: interfaces[game_obj.middle_embed.id].page,
+                user: game_obj.user
+              });
+
+            //Print user feedback
             printAlert(`You have successfully added **${(tech_obj.name) ? tech_obj.name : tech_name}** to your research queue.`);
           } else {
             printError(`You are already researching this item! Therefore, this technology could not be added to your queue.`);
@@ -49,6 +58,7 @@ module.exports = {
     var user_id = arg0_user;
 
     //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
     var game_obj = getGameObject(user_id);
 
     visualPrompt(game_obj.alert_embed, user_id, {
@@ -68,7 +78,10 @@ module.exports = {
 
       switch (input) {
         case "research list":
-          printResearchList(game_obj.user);
+          createPageMenu(game_obj.middle_embed, {
+            embed_pages: printResearchList(actual_id),
+            user: game_obj.user
+          });
           is_command = true;
 
         break;
@@ -126,6 +139,14 @@ module.exports = {
     if (!isNaN(slot_number)) {
       if (usr.research_queue[slot_number]) {
         var local_tech_obj = getTechnology(usr.research_queue[slot_number]);
+
+        //UI updater
+        if (game_obj.page == "research_queue")
+          createPageMenu(game_obj.middle_embed, {
+            embed_pages: printResearchList(actual_id),
+            page: interfaces[game_obj.middle_embed.id].page,
+            user: game_obj.user
+          });
 
         //Print user feedback when slot is removed from research queue
         printAlert(game_obj.id, `You have removed **${(local_tech_obj.name) ? local_tech_obj.name : usr.research_queue[slot_number]}** from your research queue.`);
