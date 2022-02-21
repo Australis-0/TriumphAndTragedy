@@ -103,11 +103,12 @@ module.exports = {
     });
   },
 
-  research: function (arg0_user, arg1_technology_name, arg2_display) {
+  research: function (arg0_user, arg1_technology_name, arg2_display, arg3_force_research) {
     //Convert from parameters
     var user_id = arg0_user;
     var raw_technology_name = arg1_technology_name.toLowerCase();
     var display = arg2_display;
+    var force_research = arg3_force_research;
 
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
@@ -170,9 +171,12 @@ module.exports = {
       if (is_in_queue)
         can_research = false;
 
+      if (force_research)
+        can_research = true;
+
       //Only allow research if research is allowed and can be researched
       if (!is_being_researched) {
-        if (!is_in_queue) {
+        if (!is_in_queue || force_research) {
           if (can_research) {
             //Check if any spare research slots are available
             if (usr.researching.length < usr.modifiers.research_slots) {
