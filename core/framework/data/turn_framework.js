@@ -1157,7 +1157,7 @@ module.exports = {
 
         for (var i = 0; i < emptied_research_slots; i++) {
           //Attempt to research everything in queue
-          var research_status = research(actual_id, usr.research_queue[i], true);
+          var research_status = research(actual_id, usr.research_queue[i], true, true);
 
           //If research command went through, remove it from the queue
           if (research_status)
