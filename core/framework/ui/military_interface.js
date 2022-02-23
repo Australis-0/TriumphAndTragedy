@@ -14,13 +14,13 @@ module.exports = {
     var game_obj = getGameObject(user_id);
     var military_strength = getMilitaryStrength(actual_id);
     var military_string = [];
-    var mobilisation_unit = getUnit(usr.mobilisation.unit_type);
     var occupied_provinces = getProvinces(actual_id, { include_hostile_occupations: true }).length - getProvinces(actual_id).length;
     var reserves_strength = getReserveStrength(actual_id);
     var total_troop_count_status = [];
     var usr = main.users[actual_id];
 
     var all_armies = Object.keys(usr.armies);
+    var mobilisation_unit = getUnit(usr.mobilisation.unit_type);
 
     //Compile army report
     var army_orders = {};
@@ -223,6 +223,8 @@ module.exports = {
     army_management_array.push(`- **[Mass Relieve]** - Relieves units from several armies, putting them back in reserves.`);
     army_management_array.push(`- **[Move Armies]** - Moves several armies to a single province.`);
 
+    mobilisation_array.push(`---`);
+    
     if (usr.modifiers.enable_mobilisation && mobilisation_unit)
       if (!usr.mobilisation.is_mobilised)
         if (main.round_count - returnSafeNumber(usr.mobilisation.last_mobilised) > config.defines.combat.mobilisation_cooldown) {
@@ -280,7 +282,8 @@ module.exports = {
 				{ name: "**Military Organisation Commands:**", value: command_list_array.join("\n") },
 				{ name: "**Global Orders:**", value: global_orders_array.join("\n") },
 				{ name: "**Army Creation:**", value: army_creation_array.join("\n") },
-				{ name: "**Army Management:**", value: army_management_array.join("\n") }
+				{ name: "**Army Management:**", value: army_management_array.join("\n") },
+				{ name: "**Mobilisation:**", value: mobilisation_array.join("\n") }
 			)
       .setImage("https://cdn.discordapp.com/attachments/722997700391338046/736141424315203634/margin.png");
     const embed_military_orders = new Discord.MessageEmbed()
