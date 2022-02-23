@@ -484,10 +484,19 @@ module.exports = {
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
     var actual_ot_user_id = main.global.user_map[ot_user_id];
+    var all_cultures = Object.keys(main.global.cultures);
     var all_mapped_users = Object.keys(main.global.user_map);
 
     //Annex all provinces
-    var all_provinces = module.exports.getProvinces(actual_id, { include_occupations: true });
+    var all_provinces = module.exports.getProvinces(actual_id, { include_occupations: true, include_hostile_occupations: true });
+
+    //Cultural handler
+    for (var i = 0; i < all_cultures.length; i++) {
+      var local_culture = main.global.cultures[all_cultures[i]];
+
+      removeElement(local_culture.primary_culture, actual_id);
+      removeElement(local_culture.accepted_culture, actual_id);
+    }
 
     //Occupation handler
     for (var i = 0; i < all_provinces.length; i++)
