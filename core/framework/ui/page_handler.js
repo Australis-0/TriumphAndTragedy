@@ -1411,6 +1411,16 @@ module.exports = {
           }
         }
 
+        if (game_obj.page == "military") {
+          //[Demobilise]
+          if (input == "demobilise")
+            demobilise(actual_id);
+
+          //[Mobilise]
+          if (input == "mobilise")
+            mobilise(actual_id);
+        }
+
         if (game_obj.page == "unit_list") {
           //Button handler
           //[Back]
@@ -1419,6 +1429,7 @@ module.exports = {
             game_obj.page = "military";
           }
 
+          //[Craft]
           if (input == "craft")
             initialiseCraft(user_id);
 

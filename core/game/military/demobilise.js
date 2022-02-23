@@ -12,7 +12,7 @@ module.exports = {
 
     //Check if user is currently mobilised
     if (usr.mobilised.is_mobilised) {
-      if (usr.enable_mobilisation) {
+      if (usr.modifiers.enable_mobilisation) {
         //Check if user has passed demobilisation cooldown first
         if (main.global.round_count - last_mobilised > config.defines.combat.mobilisation_cooldown) {
           //Begin standing down troops

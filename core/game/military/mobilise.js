@@ -1,5 +1,32 @@
 module.exports = {
-  mobilise: function (arg0_user) { //pWIP] - Apply infamy malus if it turns out that the user mobilising isn't currently being justified on or isn't currently at war; update military UI if mobilised; print to global news reports
+  getMobilisationPops: function (arg0_user) {
+    //Convert from parameters
+    var user_id = arg0_user;
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var all_pops = Object.keys(config.pops);
+    var mobilised_pops = { population: 0 };
+    var usr = main.users[actual_id];
+
+    //Sum up all pops that can be mobilised
+    for (var i = 0; i < all_pops.length; i++) {
+      var local_pop = config.pops[all_pops[i]];
+      var mobilisation_value = Math.ceil(
+        (
+          getTotalPopManpower(actual_id, all_pops[i]) - usr[`used_${all_pops[i]}`]
+        )
+          *config.defines.combat.base_mobilisation_size*usr.modifiers.mobilisation_size
+      );
+
+      mobilised_pops[all_pops[i]] = mobilisation_value;
+      mobilised_pops.population += mobilisation_value;
+    }
+
+    return mobilised_pops;
+  },
+
+  mobilise: function (arg0_user) { //[WIP] - Apply infamy malus if it turns out that the user mobilising isn't currently being justified on or isn't currently at war; update military UI if mobilised; print to global news reports
     //Convert from parameters
     var user_id = arg0_user;
 
@@ -14,27 +41,18 @@ module.exports = {
     //Check if user is already mobilised
     if (!usr.mobilisation.is_mobilised) {
       if (main.global.round_count - last_mobilised > config.defines.combat.mobilisation_cooldown) {
-        if (usr.enable_mobilisation) {
+        if (usr.modifiers.enable_mobilisation) {
           //Sum up all non-military pops as being eligible for mobilisation, add them collectively to a moblisation pops object
           var manpower_mobilised = 0;
           var mobilisation_speed = Math.ceil(
             usr.modifiers.mobilisation_speed*config.defines.combat.base_mobilisation_time
           );
-          var mobilised_pops = {};
-          var unit_obj = getUnit(usr.mobilise_unit);
-          var unit_type = usr.mobilise_unit;
+          var mobilised_pops = module.exports.getMobilisationPops(actual_id);
+          var unit_obj = getUnit(usr.mobilisation.unit_type);
+          var unit_type = usr.mobilisation.unit_type;
 
-          for (var i = 0; i < all_pops.length; i++) {
-            var local_pop = config.pops[all_pops[i]];
-
-            if (!local_pop.specialised_pop && !local_pop.military_pop)
-              mobilised_pops[all_pops[i]] = Math.ceil(
-                (
-                  getTotalPopManpower(actual_id, all_pops[i]) - usr[`used_${all_pops[i]}`]
-                )
-                  *config.defines.combat.base_mobilisation_size*usr.modifiers.mobilisation_size
-              );
-          }
+          //Initialise mobilised_pops and other variables
+          delete mobilised_pops.population;
 
           //Sum them all up
           var all_mobilised_pops = Object.keys(mobilised_pops);
@@ -67,7 +85,7 @@ module.exports = {
           };
 
           //Print out user feedback
-          printAlert(`You have begun to mobilise **${parseNumber(usr.mobilisation.total_manpower_mobilised)}** men as **${(unit_obj.name) ? unit_obj.name : usr.mobilise_unit}**! They will finish mobilising in **${parseNumber(usr.mobilisation.duration)}** ${(usr.mobilisation.duration == 1) ? "turn" : "turns"}.`);
+          printAlert(`You have begun to mobilise **${parseNumber(usr.mobilisation.total_manpower_mobilised)}** men as **${(unit_obj.name) ? unit_obj.name : usr.mobilisation.unit_type}**! They will finish mobilising in **${parseNumber(usr.mobilisation.duration)}** ${(usr.mobilisation.duration == 1) ? "turn" : "turns"}.`);
         } else {
           printError(game_obj.id, `Your people haven't even heard of such a concept yet! Research mobilisation first.`);
         }

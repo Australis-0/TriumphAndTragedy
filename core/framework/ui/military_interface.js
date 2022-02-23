@@ -14,6 +14,7 @@ module.exports = {
     var game_obj = getGameObject(user_id);
     var military_strength = getMilitaryStrength(actual_id);
     var military_string = [];
+    var mobilisation_unit = getUnit(usr.mobilisation.unit_type);
     var occupied_provinces = getProvinces(actual_id, { include_hostile_occupations: true }).length - getProvinces(actual_id).length;
     var reserves_strength = getReserveStrength(actual_id);
     var total_troop_count_status = [];
@@ -201,6 +202,7 @@ module.exports = {
     var army_management_array = [];
     var command_list_array = [];
     var global_orders_array = [];
+    var mobilisation_array = [];
 
     command_list_array.push(`Military organisation commands act as power commands allowing you to quickly manage, equip, and deploy your armies, thereby reducing the need for micromanagement, and giving additional tools to players.`);
     command_list_array.push("");
@@ -220,6 +222,24 @@ module.exports = {
     army_management_array.push(`- **[Mass Deploy]** - For deploying troops to armies en masse.`);
     army_management_array.push(`- **[Mass Relieve]** - Relieves units from several armies, putting them back in reserves.`);
     army_management_array.push(`- **[Move Armies]** - Moves several armies to a single province.`);
+
+    if (usr.modifiers.enable_mobilisation && mobilisation_unit)
+      if (!usr.mobilisation.is_mobilised)
+        if (main.round_count - returnSafeNumber(usr.mobilisation.last_mobilised) > config.defines.combat.mobilisation_cooldown) {
+          var available_manpower = getMobilisationPops(user_id).population;
+
+          (available_manpower > 0) ?
+            mobilisation_array.push(`You can mobilise! Type **[Mobilise]** in order to call upon your people to take up arms.\n**${parseNumber(available_manpower)}** will be placed in your reserves.`) :
+            mobilisation_array.push(`Due to critical manpower shortages on the civilian front, mobilisation isn't available. Try freeing up more workers first!`);
+        } else
+          mobilisation_array.push(`Your people have demobilised too recently to be willing to be called up for war again. Wait for **${parseNumber(config.defines.combat.mobilisation_cooldown - (main.round_count - usr.mobilisation.last_mobilised) + 1)}** more turn(s).`);
+      else
+        if (usr.mobilisation.current_manpower_mobilised < usr.mobilisation.total_manpower_mobilised)
+          mobilisation_array.push(`You are currently mobilising, and your advisors estimate that mobilisation will be complete within **${parseNumber(usr.mobilisation.duration)}** turn(s). So far, **${parseNumber(usr.mobilisation.current_manpower_mobilised)}** men out of **${parseNumber(usr.mobilisation.total_manpower_mobilised)}** available reservists have been mobilised.\n\nYou are currently mobilised. Type **[Demobilise]** in order to lay down your arms.`);
+        else
+          mobilisation_array.push(`You are currently mobilised. Type **[Demobilise]** in order to lay down your arms.`);
+    else
+      mobilisation_array.push(`Military mobilisation is currently locked, as your people haven't heard of the concept yet.`);
 
     //2nd page, print out all army orders; sort by number of active orders
     var all_army_orders = Object.keys(army_orders);

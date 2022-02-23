@@ -234,7 +234,7 @@ module.exports = {
             break;
 
           case "set_mobilisation_unit":
-            usr.modifiers.set_mobilisation_unit = effect_value[0];
+            usr.mobilisation.unit_type = effect_value[0];
 
             break;
 
