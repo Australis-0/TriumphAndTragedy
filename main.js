@@ -347,8 +347,8 @@ setInterval(function(){
 	}
 
   //Combat processing
-  if (turn_time_difference > (settings.turn_timer*1000)/10)
-    nextBattleTick((turn_time_difference > settings.turn_timer*1000));
+  if (battle_difference > (settings.turn_timer*1000)/10)
+    nextBattleTick();
 
   //Date processing
   {
@@ -391,6 +391,7 @@ setInterval(function(){
     writeSave({ file_limit: settings.backup_limit });
 
     //Process nextGlobalTurn() for global processes and calculations
+    nextBattleTick(true);
     nextGlobalTurn();
 
     //Force render maps after turn processing
