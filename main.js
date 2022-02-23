@@ -347,12 +347,8 @@ setInterval(function(){
 	}
 
   //Combat processing
-  if (battle_difference > (settings.turn_timer*1000)/10) {
-    main.global.battle_tick = current_date;
-    main.last_backup = current_date;
-
-    nextBattleTick(battle_difference > (settings.turn_timer*1000));
-  }
+  if (turn_time_difference > (settings.turn_timer*1000)/10)
+    nextBattleTick((turn_time_difference > settings.turn_timer*1000));
 
   //Date processing
   {
