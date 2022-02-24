@@ -68,6 +68,7 @@ module.exports = {
 
     //Print first page
     var alerts_string = [];
+
     alerts_string.push(`**Current Alerts:**`);
     alerts_string.push("");
     alerts_string.push(`**[View Alert]**`);
@@ -116,19 +117,16 @@ module.exports = {
       if (alert_obj.description)
         alert_string.push(alert_obj.description);
 
-        for (var i = 0; i < alert_obj.buttons.length; i++) {
-          alert_string.push("");
-          alert_string.push(`**[${alert_obj.buttons[i].name}]**`);
+      for (var i = 0; i < alert_obj.buttons.length; i++) {
+        alert_string.push("");
+        alert_string.push(`**[${alert_obj.buttons[i].name}]**`);
 
-          if (!alert_obj.buttons[i].hide_description)
-            if (alert_obj.buttons[i].description) {
-              console.log(alert_obj.buttons[i].description);
-
-              (Array.isArray(alert_obj.buttons[i].description)) ?
-                alert_string.push(`\n${parseLocalisation(alert_obj.buttons[i].description.join("\n• "), { scopes: alert_obj.options })}`) :
-                alert_string.push(`\n${parseLocalisation(alert_obj.buttons[i].description, { scopes: alert_obj.options })}`);
-            }
-        }
+        if (!alert_obj.buttons[i].hide_description)
+          if (alert_obj.buttons[i].description)
+            (Array.isArray(alert_obj.buttons[i].description)) ?
+              alert_string.push(`\n${parseLocalisation(alert_obj.buttons[i].description.join("\n• "), { scopes: alert_obj.options })}`) :
+              alert_string.push(`\n${parseLocalisation(alert_obj.buttons[i].description, { scopes: alert_obj.options })}`);
+      }
 
       //Format embed
       alert_embed = new Discord.MessageEmbed()
@@ -141,6 +139,7 @@ module.exports = {
       alert_embed = alert_obj.embed;
     }
 
+    //Push embed to game viewer
     game_obj.main_embed = alert_embed;
     game_obj.main_change = true;
   }

@@ -76,6 +76,7 @@ FileManager.import("./framework/ui/culture_interface");
 FileManager.import("./framework/ui/customisation_interface");
 FileManager.import("./framework/ui/diplomacy_interface");
 FileManager.import("./framework/ui/economy_interface");
+FileManager.import("./framework/ui/events_interface");
 FileManager.import("./framework/ui/games");
 FileManager.import("./framework/ui/global_market_interface");
 FileManager.import("./framework/ui/government_interface");
