@@ -33,6 +33,7 @@ FileManager.import("./framework/data/casus_belli_framework");
 FileManager.import("./framework/data/combat_framework");
 FileManager.import("./framework/data/culture_framework");
 FileManager.import("./framework/data/diplomacy_framework");
+FileManager.import("./framework/data/events_framework");
 FileManager.import("./framework/data/games");
 FileManager.import("./framework/data/global_initialisation");
 FileManager.import("./framework/data/goods_framework");

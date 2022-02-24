@@ -54,24 +54,6 @@ module.exports = {
               randomNumber(local_list[0], local_list[1]);
 
             break;
-          case "set_government":
-            usr.government = randomElement(local_list);
-
-            break;
-          case "set_mobilisation_unit":
-            usr.mobilisation.unit_type = local_value;
-
-            break;
-          case "set_party_popularity":
-            try {
-              var government_types = getList(local_value.type);
-              var government_popularities = getList(local_value.value);
-
-              for (var x = 0; x < government_types.length; x++)
-                usr.politics[government_types[x]].popularity = government_popularities[x];
-            } catch {}
-
-            break;
           case "research_to":
             researchUpTo(user_id, local_value);
 
@@ -89,6 +71,24 @@ module.exports = {
           case "unlock_unit":
             for (var x = 0; x < local_list.length; x++)
               usr.available_units.push(local_list[x]);
+
+            break;
+          case "set_government":
+            usr.government = randomElement(local_list);
+
+            break;
+          case "set_mobilisation_unit":
+            usr.mobilisation.unit_type = local_value;
+
+            break;
+          case "set_party_popularity":
+            try {
+              var government_types = getList(local_value.type);
+              var government_popularities = getList(local_value.value);
+
+              for (var x = 0; x < government_types.length; x++)
+                usr.politics[government_types[x]].popularity = government_popularities[x];
+            } catch {}
 
             break;
         }

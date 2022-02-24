@@ -1155,14 +1155,15 @@ module.exports = {
       {
         var research_queue_removal_array = [];
 
-        for (var i = 0; i < emptied_research_slots; i++) {
-          //Attempt to research everything in queue
-          var research_status = research(actual_id, usr.research_queue[i], true, true);
+        for (var i = 0; i < emptied_research_slots; i++)
+          try {
+            //Attempt to research everything in queue
+            var research_status = research(actual_id, usr.research_queue[i], true, true);
 
-          //If research command went through, remove it from the queue
-          if (research_status)
-            research_queue_removal_array.push(usr.research_queue[i]);
-        }
+            //If research command went through, remove it from the queue
+            if (research_status)
+              research_queue_removal_array.push(usr.research_queue[i]);
+          } catch {}
 
         //Remove all research_queue_removal_array indices from the queue
         for (var i = 0; i < research_queue_removal_array.length; i++)

@@ -94,7 +94,7 @@ module.exports = {
       TO: "actual_id" - The recipient user
     }
   */
-  sendAlert: function (arg0_user, arg1_alert_name, arg2_options) { //[WIP] - Add localisation API later
+  sendAlert: function (arg0_user, arg1_alert_name, arg2_options) {
     //Convert from parameters
     var user_id = arg0_user;
     var alert_name = arg1_alert_name;
@@ -123,7 +123,6 @@ module.exports = {
     for (var i = 0; i < all_subkeys.length; i++)
       if (all_subkeys[i].startsWith("btn_")) {
         var button_obj = alert_obj[all_subkeys[i]];
-
         var button_title = (button_obj.title) ?
           parseLocalisation(button_obj.title, { scopes: options }) :
           all_subkeys[i];
