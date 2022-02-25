@@ -703,6 +703,8 @@ module.exports = {
 
     //Transfer province
     if (province_obj.controller) {
+      var old_owner = JSON.parse(JSON.stringify(user_id));
+
       province_obj.owner = actual_ot_user_id;
       province_obj.controller = actual_ot_user_id;
 
@@ -716,6 +718,10 @@ module.exports = {
       }
 
       //Change other indicators
+      if (province_obj.city_type == "capital")
+        if (province_obj.controller != old_owner)
+          province_obj.city_type = "city";
+
       if (province_obj.type == "urban") {
         usr.city_count++;
         ot_user.city_count--;
