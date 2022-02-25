@@ -342,6 +342,25 @@ module.exports = {
         usr.modifiers.infamy = Math.max(usr.modifiers.infamy, 0);
         usr.modifiers.infamy = Math.min(usr.modifiers.infamy, config.defines.diplomacy.absolute_infamy_limit);
 
+        //Infamy limit
+        usr.modifiers.rgo_throughput += usr.infamy_rgo_throughput;
+        usr.modifiers.production_efficiency += usr.modifiers.production_efficiency;
+
+        if (usr.modifiers.infamy > config.defines.diplomacy.infamy_limit) {
+          usr.infamy_production_efficiency = usr.modifiers.infamy*0.02; //-2% per infamy
+          usr.infamy_rgo_throughput = usr.modifiers.infamy*0.03; //-3% per infamy
+
+          usr.infamy_production_efficiency = Math.max(usr.infamy_production_efficiency, 0);
+          usr.infamy_rgo_throughput = Math.max(usr.infamy_rgo_throughput, 0);
+        } else {
+          usr.infamy_production_efficiency = 0;
+          usr.infamy_rgo_throughput = 0;
+        }
+
+        //Subtract both infamy_production_efficiency and infamy_rgo_throughput from modifiers
+        usr.modifiers.production_efficiency -= returnSafeNumber(usr.infamy_production_efficiency);
+        usr.modifiers.rgo_throughput -= returnSafeNumber(usr.infamy_rgo_throughput);
+
         //War exhaustion
         if (all_enemies.length == 0 && !usr.blockaded.is_blockaded && !usr.mobilisation.is_mobilised)
           usr.modifiers.war_exhaustion -= config.defines.combat.war_exhaustion_tickdown_rate;
