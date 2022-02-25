@@ -63,7 +63,7 @@ module.exports = {
       event_string.push(`**[${event_obj.options[i].name}]**`);
 
       if (!event_obj.options[i].hide_description)
-        if (event_obj.options[i].description)
+        (event_obj.options[i].description) ?
           event_string.push(`\n${parseLocalisation(event_obj.options[i].description.join("\n• "), { scopes: event_obj.options })}`) :
           event_string.push(`\n${parseLocalisation(event_obj.options[i].description, { scopes: event_obj.options })}`);
     }

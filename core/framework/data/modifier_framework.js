@@ -294,7 +294,14 @@ module.exports = {
       } else {
         //Substantiate dummy local_modifier variables if not found
         local_modifier = { name: "" };
-        local_modifier_name = "undefined";
+
+        if (config.governments[all_modifier_keys[i]]) {
+          var local_government = config.governments[all_modifier_keys[i]];
+
+          local_modifier_name = `${local_government.name} Popularity`;
+        } else {
+          local_modifier_name = "undefined";
+        }
       }
 
       switch (local_modifier.type) {

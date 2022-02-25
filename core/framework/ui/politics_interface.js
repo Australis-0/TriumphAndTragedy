@@ -13,7 +13,7 @@ module.exports = {
     var politics_string = [];
     var ruling_government_obj = config.governments[usr.government];
     var simulation = nextTurn(actual_id, { is_simulation: true });
-    var total_reform_desire_gain = 0;
+    var total_reform_desire_gain = usr.modifiers.reform_desire_gain;
 
     //Initialise tracker variables
     for (var i = 0; i < all_governments.length; i++) {

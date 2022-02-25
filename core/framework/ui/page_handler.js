@@ -1053,6 +1053,14 @@ module.exports = {
           }
         }
 
+        if (game_obj.page == "inventory") {
+          //[Back]
+          if (input == "back") {
+            printEconomy(user_id);
+            game_obj.page = "economy";
+          }
+        }
+
         if (game_obj.page == "view_constructions") {
           switch (input) {
             case "back":
