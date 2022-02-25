@@ -39,6 +39,33 @@ module.exports = {
   },
 
   /*
+    getEvents() - Returns an array of keys/objects.
+    options: {
+      return_names: true/false - Whether or not to return the keys of the individual events or not
+    }
+  */
+  getEvents: function (arg0_options) {
+    //Convert from parameters
+    var options = (arg0_options) ? arg0_options : {};
+
+    //Declare local instance variables
+    var all_events = [];
+    var all_event_categories = Object.keys(config.events);
+
+    //Iterate over all categories and events in them
+    for (var i = 0; i < all_event_categories.length; i++) {
+      var local_event_category = config.events[all_event_categories[i]];
+      var local_events = Object.keys(local_event_category);
+
+      for (var x = 0; x < local_events.length; x++)
+        all_events.push((!options.return_names) ? local_event_category[local_events[x]] : local_events[x]);
+    }
+
+    //Return statement
+    return all_events;
+  },
+
+  /*
     getOption() - Returns the option key/object based on the provided name for a specific alert.
     options: {
       return_key: true/false - Whether or not to return a key or object. Defaults to false
@@ -154,7 +181,7 @@ module.exports = {
     usr.events.push({
       id: alert_name,
       name: alert_title,
-      options: options,
+      scopes: options,
 
       has_ai_chance: has_ai_chance,
 

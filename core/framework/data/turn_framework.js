@@ -280,6 +280,7 @@ module.exports = {
     var all_casus_belli = Object.keys(config.casus_belli);
     var all_cities = getCities(actual_id);
     var all_enemies = getEnemies(actual_id);
+    var all_events = lookup.all_events;
     var all_expeditions = Object.keys(usr.expeditions);
     var all_goods = lookup.all_goods_array;
     var all_good_names = lookup.all_good_names;
@@ -675,6 +676,81 @@ module.exports = {
       }
     }
     console.timeEnd(`Diplomacy processing!`);
+
+    console.time(`Events processing!`);
+    //Events processing (Mirror of alerts processing)
+    {
+      var events_to_remove = [];
+
+      //Event triggers
+      for (var i = 0; i < all_events.length; i++)
+        //Check if user meets event requirements
+        if (all_events[i].trigger)
+          if (all_events[i].trigger(usr, all_events[i].scopes))
+            sendEvent(actual_id, lookup.all_event_names[i], {
+              FROM: actual_id,
+              TO: actual_id
+            });
+
+      //Event resolution
+      for (var i = 0; i < usr.events.length; i++) {
+        var ai_chance_sum = 0;
+        var ai_chance_ranges = [];
+
+        //Deduct from duration
+        if (usr.events[i].duration > 0)
+          usr.events[i].duration--;
+
+        //Check if event has timed out
+        if (usr.events[i].duration == 0) {
+          var event_options = usr.events[i].options;
+
+          //Resolve event by weighted random if AI chance is a thing
+          if (event_options)
+            if (usr.events[i].has_ai_chance) {
+              for (var x = 0; x < event_options.length; x++) {
+                var current_ai_chance =  (typeof event_options[x].ai_chance == "function") ?
+                  returnSafeNumber(event_options[x].ai_chance(usr, usr.events[i].scopes)) :
+                  returnSafeNumber(event_options[x].ai_chance);
+
+                ai_chance_ranges.push([ai_chance_sum, ai_chance_sum + current_ai_chance, event_options[x].id]);
+                ai_chance_sum += current_ai_chance;
+              }
+
+              //Roll the dice
+              var dice_roll = randomNumber(0, ai_chance_sum);
+
+              //See where the dice roll landed
+              for (var x = 0; x < ai_chance_ranges.length; x++)
+                if (dice_roll >= ai_chance_ranges[x][0] && dice_roll < ai_chance_ranges[x][1]) {
+                  //The dice roll landed here
+                  var option_obj = getButton(usr.events[i].id, ai_chance_ranges[x][2]);
+
+                  //Execute effect
+                  if (option_obj.effect)
+                    option_obj.effect(usr.events[i].scopes);
+                }
+            } else {
+              var dice_roll = randomNumber(0, event_options.length - 1);
+
+              //See where the dice roll landed
+              var option_obj = getOption(usr.events[i].id, event_options[dice_roll].id);
+
+              //Execute effect
+              if (option_obj.effect)
+                option_obj.effect(usr.events[i].options);
+            }
+
+          //Push to removal array
+          events_to_remove.push(i);
+        }
+      }
+
+      //Remove all events in events_to_remove
+      for (var i = events_to_remove.length - 1; i >= 0; i--)
+        usr.events.splice(events_to_remove[i], 1);
+    }
+    console.timeEnd(`Events processing!`);
 
     console.time(`Goods processing!`);
     //Goods processing
