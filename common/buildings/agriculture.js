@@ -122,7 +122,7 @@ config.buildings.agriculture = {
     manpower_cost: {
       workers: 15000
     },
-    pastures: {
+    produces: {
       meat: 2
     }
   },
