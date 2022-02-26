@@ -40,6 +40,7 @@ FileManager.import("./framework/data/goods_framework");
 FileManager.import("./framework/data/government_framework");
 FileManager.import("./framework/data/laws_framework");
 FileManager.import("./framework/data/localisation_framework");
+FileManager.import("./framework/data/national_modifier_framework");
 FileManager.import("./framework/data/modifier_framework");
 FileManager.import("./framework/data/optimisation_framework");
 FileManager.import("./framework/data/peace_treaty_framework");
