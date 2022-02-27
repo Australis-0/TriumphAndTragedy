@@ -77,7 +77,7 @@ module.exports = {
       image: (options.image) ? options.image : "https://cdn.discordapp.com/attachments/722997700391338046/736141424315203634/margin.png",
       icon: local_icon,
       description: (options.description) ?
-        `${parseLocalisation(options.description, scopes: { FROM: actual_id, LOCAL: (options.local) ? options.local : actual_id, TO: actual_id })}\n\n${parseModifiers(options.modifiers)}` :
+        `${parseLocalisation(options.description, { scopes: { FROM: actual_id, LOCAL: (options.local) ? options.local : actual_id, TO: actual_id }})}\n\n${parseModifiers(options.modifiers)}` :
         "",
 
       modifiers: options.modifiers
