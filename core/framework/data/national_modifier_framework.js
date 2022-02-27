@@ -62,18 +62,22 @@ module.exports = {
     var local_icon = "";
     var usr = main.users[actual_id];
 
+    //Remove any previous modifier occupying the same slot
+    if (usr.national_modifiers[modifier_id])
+      module.exports.removeNationalModifier(actual_id, modifier_id);
+
     //Parse options field
     if (options.icon)
       local_icon = config.icons[local_icon];
     if (options.modifiers)
       applyModifiers(actual_id, options.modifiers);
 
-    usr.national_modifiers[generateNationalModifierID(actual_id)] = {
+    usr.national_modifiers[modifier_id] = {
       name: (options.name) ? options.name : modifier_id,
       image: (options.image) ? options.image : "https://cdn.discordapp.com/attachments/722997700391338046/736141424315203634/margin.png",
       icon: local_icon,
       description: (options.description) ?
-        parseLocalisation(options.description, scopes: { FROM: actual_id, LOCAL: (options.local) ? options.local : actual_id, TO: actual_id }) :
+        `${parseLocalisation(options.description, scopes: { FROM: actual_id, LOCAL: (options.local) ? options.local : actual_id, TO: actual_id })}\n\n${parseModifiers(options.modifiers)}` :
         "",
 
       modifiers: options.modifiers

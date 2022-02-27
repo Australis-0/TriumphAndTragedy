@@ -10,6 +10,7 @@ module.exports = {
   ],
   country_interface: [
     "country_interface",
+    "national_modifiers",
     "view_customisation"
   ],
   diplomacy_pages: [

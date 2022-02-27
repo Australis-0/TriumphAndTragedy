@@ -58,13 +58,13 @@ module.exports = {
     visualPrompt(game_obj.alert_embed, user_id, {
       title: `Deploy Units:`,
       prompts: [
-        [`What is the name of the army you would like to deploy your units in?\n\nType **[Army List]** to view a list of all valid armies.`, "string"],
+        [`How many soldiers would you like to deploy?`, "number", { min: 0 }],
         [`Which type of unit would you like to deploy?\n\nType **[View Reserves]** to view a list of all valid units.`, "string"],
-        [`How many soldiers would you like to deploy?`, "number", { min: 0 }]
+        [`What is the name of the army you would like to deploy your units in?\n\nType **[Army List]** to view a list of all valid armies.`, "string"]
       ]
     },
     function (arg) {
-      module.exports.deployUnitsCommand(user_id, arg[2], arg[1], arg[0]);
+      module.exports.deployUnitsCommand(user_id, arg[0], arg[1], arg[2]);
     },
     function (arg) {
       switch (arg) {

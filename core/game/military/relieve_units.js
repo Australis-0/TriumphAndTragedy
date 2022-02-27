@@ -57,13 +57,13 @@ module.exports = {
     visualPrompt(game_obj.alert_embed, user_id, {
       title: `Relieve Units:`,
       prompts: [
-        [`What is the name of the army you would like to relieve your units from?\n\nType **[Army List]** to view a list of all valid armies.`, "string"],
+        [`How many soldiers would you like to put back in your reserves?`, "number", { min: 0 }],
         [`Which type of unit would you like to relieve?`, "string"],
-        [`How many soldiers would you like to put back in your reserves?`, "number", { min: 0 }]
+        [`What is the name of the army you would like to relieve your units from?\n\nType **[Army List]** to view a list of all valid armies.`, "string"],
       ]
     },
     function (arg) {
-      module.exports.relieveUnitsCommand(user_id, arg[2], arg[1], arg[0]);
+      module.exports.relieveUnitsCommand(user_id, arg[0], arg[1], arg[2]);
     },
     function (arg) {
       switch (arg) {

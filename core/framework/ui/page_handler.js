@@ -471,6 +471,11 @@ module.exports = {
               game_obj.page = "view_customisation";
 
               break;
+            case "view national modifiers":
+              printNationalModifiers(user_id);
+              game_obj.page = "national_modifiers";
+
+              break;
           }
 
           //[Chop (#)]
@@ -493,6 +498,24 @@ module.exports = {
 
             mine(actual_id, amount_to_quarry, "quarry");
           }
+        }
+
+        if (game_obj.page == "national_modifiers") {
+          var all_national_modifiers = Object.keys(usr.national_modifiers);
+
+          //[Back]
+          if (input == "back") {
+            printStats(user_id);
+            game_obj.page = "country_interface";
+          }
+
+          //[(#ID)]
+          if (all_national_modifiers[Math.ceil(parseInt(input)) - 1])
+            printNationalModifiers(user_id, input);
+
+          //[View National Modifier]
+          if (input == "view national modifier")
+            initialisePrintNationalModiifer(user_id);
         }
 
         if (game_obj.page == "view_customisation") {

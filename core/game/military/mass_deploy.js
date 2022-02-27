@@ -10,13 +10,13 @@ module.exports = {
     visualPrompt(game_obj.alert_embed, user_id, {
       title: `Mass Deploy:`,
       prompts: [
-        [`Please type out the names of the armies you'd like to deploy troops to en masse.\nYou may specify armies like so: 'I.-XX. Division', '1st-20th Division', '86th-79th, 92nd, 94th Field Artillery'.\n\nType **[Army List]** to view a list of all valid armies.`, "string"],
         [`How many troops would you like to deploy in each of these armies?\n\nType **[View Reserves]** to see how many troops you can currently deploy.`, "number", { min: 0 }],
-        [`What type of unit do you wish to deploy in these armies?`, "string"]
+        [`What type of unit do you wish to deploy in these armies?`, "string"],
+        [`Please type out the names of the armies you'd like to deploy troops to en masse.\nYou may specify armies like so: 'I.-XX. Division', '1st-20th Division', '86th-79th, 92nd, 94th Field Artillery'.\n\nType **[Army List]** to view a list of all valid armies.`, "string"]
       ]
     },
     function (arg) {
-      module.exports.massDeploy(user_id, arg[0], arg[1], arg[2]);
+      module.exports.massDeploy(user_id, arg[2], arg[0], arg[1]);
     },
     function (arg) {
       switch (arg) {

@@ -86,14 +86,14 @@ module.exports = {
     visualPrompt(game_obj.alert_embed, user_id, {
       title: `Transfer Units Between Armies:`,
       prompts: [
-        [`Which army would you like to transfer units from?\n\nType **[Army List]** to view a list of all valid armies.`, "string"],
-        [`Which type of unit would you like to transfer?`],
         [`How many soldiers would you like to transfer?`, "number", { min: 0 }],
+        [`Which type of unit would you like to transfer?`, "string"],
+        [`Which army would you like to transfer units from?\n\nType **[Army List]** to view a list of all valid armies.`, "string"],
         [`Which army would you like to transfer these soldiers to?\n\nType **[Army List]** to view a list of all valid armies.`, "string"],
       ]
     },
     function (arg) {
-      module.exports.transferUnits(user_id, arg[2], arg[1], arg[0], arg[3]);
+      module.exports.transferUnits(user_id, arg[0], arg[1], arg[2], arg[3]);
     },
     function (arg) {
       switch (arg) {
