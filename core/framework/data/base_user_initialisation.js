@@ -295,6 +295,7 @@ module.exports = {
     //Empty subobjects
     if (!usr.alerts) usr.alerts = [];
     if (!usr.armies) usr.armies = {};
+    if (!usr.army_array) usr.army_array = [];
     if (!usr.auto_trades) usr.auto_trades = {};
     if (!usr.blockaded) usr.blockaded = {};
     if (!usr.events) usr.events = [];

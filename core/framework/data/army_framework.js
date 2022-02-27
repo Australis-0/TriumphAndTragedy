@@ -185,6 +185,7 @@ module.exports = {
 
           //Set new army object in usr.armies
           usr.armies[army_obj.id] = army_obj;
+          usr.army_array.push(army_obj.id);
 
           //Return statement
           return true;
@@ -235,6 +236,7 @@ module.exports = {
 
       //Delete army
       delete usr.armies[army_id];
+      removeElement(usr.army_array, army_id);
     }
   },
 
@@ -411,19 +413,19 @@ module.exports = {
     var army_exists = [false, ""]; //[army_exists, army_obj/key];
     var usr = main.users[actual_id];
 
-    var all_armies = Object.keys(usr.armies);
+    var all_armies = usr.army_array;
 
     //Soft match - Reversed
-    for (var i = all_armies.length - 1; i >= 0; i--) {
-      var local_army = usr.armies[all_armies[i]];
+    for (var i = 0; i < usr.army_array.length; i++) {
+      var local_army = usr.armies[usr.army_array[i]];
 
       if (local_army.name.toLowerCase().indexOf(army_name) != -1)
         army_exists = [true, (!options.return_key) ? local_army : all_armies[i]];
     }
 
     //Hard match - Reversed
-    for (var i = all_armies.length - 1; i >= 0; i--) {
-      var local_army = usr.armies[all_armies[i]];
+    for (var i = 0; i < usr.army_array.length; i++) {
+      var local_army = usr.armies[usr.army_array[i]];
 
       if (local_army.name.toLowerCase() == army_name)
         army_exists = [true, (!options.return_key) ? local_army : all_armies[i]];
