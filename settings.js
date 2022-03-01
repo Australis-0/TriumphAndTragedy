@@ -1,5 +1,6 @@
 global.settings = {
   //General settings
+  administrator_roles: ["549011413843050529", "828725714697846874"], //Role ID's for administrators
   bot_token: "Njg4OTYyMTQ1MTU2NTk1NzQz.Xm77_w.fZCbjvVxRS55EMmO_aIo6HOnnSA",
   prefix: "$",
   no_space: true,
