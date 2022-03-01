@@ -48,42 +48,74 @@ module.exports = {
     }
   },
 
-  initialiseDeployUnits: function (arg0_user) {
+  initialiseDeployUnits: function (arg0_user, arg1_army) {
+    //Convert from parameters
     var user_id = arg0_user;
+    var army_name = arg1_army;
 
     //Declare local instance variables
     var game_obj = getGameObject(user_id);
 
     //Initialise visual prompt
-    visualPrompt(game_obj.alert_embed, user_id, {
-      title: `Deploy Units:`,
-      prompts: [
-        [`How many soldiers would you like to deploy?`, "number", { min: 0 }],
-        [`Which type of unit would you like to deploy?\n\nType **[View Reserves]** to view a list of all valid units.`, "string"],
-        [`What is the name of the army you would like to deploy your units in?\n\nType **[Army List]** to view a list of all valid armies.`, "string"]
-      ]
-    },
-    function (arg) {
-      module.exports.deployUnitsCommand(user_id, arg[0], arg[1], arg[2]);
-    },
-    function (arg) {
-      switch (arg) {
-        case "army list":
-          createPageMenu(game_obj.middle_embed, {
-            embed_pages: printArmyList(user_id),
-            user: game_obj.user
-          });
-          return true;
+    (!army_name) ?
+      visualPrompt(game_obj.alert_embed, user_id, {
+        title: `Deploy Units:`,
+        prompts: [
+          [`How many soldiers would you like to deploy?`, "number", { min: 0 }],
+          [`Which type of unit would you like to deploy?\n\nType **[View Reserves]** to view a list of all valid units.`, "string"],
+          [`What is the name of the army you would like to deploy your units in?\n\nType **[Army List]** to view a list of all valid armies.`, "string"]
+        ]
+      },
+      function (arg) {
+        module.exports.deployUnitsCommand(user_id, arg[0], arg[1], arg[2]);
+      },
+      function (arg) {
+        switch (arg) {
+          case "army list":
+            createPageMenu(game_obj.middle_embed, {
+              embed_pages: printArmyList(user_id),
+              user: game_obj.user
+            });
+            return true;
 
-          break;
-        case "view reserves":
-          createPageMenu(game_obj.middle_embed, {
-            embed_pages: printReserves(game_obj.user),
-            user: game_obj.user
-          });
+            break;
+          case "view reserves":
+            createPageMenu(game_obj.middle_embed, {
+              embed_pages: printReserves(game_obj.user),
+              user: game_obj.user
+            });
 
-          break;
-      }
-    });
+            break;
+        }
+      }) :
+      visualPrompt(game_obj.alert_embed, user_id, {
+        title: `Deploy Units In The ${army_name}:`,
+        prompts: [
+          [`How many soldiers would you like to deploy?`, "number", { min: 0 }],
+          [`Which type of unit would you like to deploy?\n\nType **[View Reserves]** to view a list of all valid units.`, "string"],
+        ]
+      },
+      function (arg) {
+        module.exports.deployUnitsCommand(user_id, arg[0], arg[1], army_name);
+      },
+      function (arg) {
+        switch (arg) {
+          case "army list":
+            createPageMenu(game_obj.middle_embed, {
+              embed_pages: printArmyList(user_id),
+              user: game_obj.user
+            });
+            return true;
+
+            break;
+          case "view reserves":
+            createPageMenu(game_obj.middle_embed, {
+              embed_pages: printReserves(game_obj.user),
+              user: game_obj.user
+            });
+
+            break;
+        }
+      });
   }
 };

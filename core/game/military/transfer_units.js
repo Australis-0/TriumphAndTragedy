@@ -76,36 +76,62 @@ module.exports = {
     }
   },
 
-  initialiseTransferUnits: function (arg0_user) {
+  initialiseTransferUnits: function (arg0_user, arg1_army) {
+    //Convert from parameters
     var user_id = arg0_user;
+    var army_name = arg1_army;
 
     //Declare local instance variables
     var game_obj = getGameObject(user_id);
 
     //Initialise visual prompt
-    visualPrompt(game_obj.alert_embed, user_id, {
-      title: `Transfer Units Between Armies:`,
-      prompts: [
-        [`How many soldiers would you like to transfer?`, "number", { min: 0 }],
-        [`Which type of unit would you like to transfer?`, "string"],
-        [`Which army would you like to transfer units from?\n\nType **[Army List]** to view a list of all valid armies.`, "string"],
-        [`Which army would you like to transfer these soldiers to?\n\nType **[Army List]** to view a list of all valid armies.`, "string"],
-      ]
-    },
-    function (arg) {
-      module.exports.transferUnits(user_id, arg[0], arg[1], arg[2], arg[3]);
-    },
-    function (arg) {
-      switch (arg) {
-        case "army list":
-          createPageMenu(game_obj.middle_embed, {
-            embed_pages: printArmyList(user_id),
-            user: game_obj.user
-          });
-          return true;
+    (!army_name) ?
+      visualPrompt(game_obj.alert_embed, user_id, {
+        title: `Transfer Units Between Armies:`,
+        prompts: [
+          [`How many soldiers would you like to transfer?`, "number", { min: 0 }],
+          [`Which type of unit would you like to transfer?`, "string"],
+          [`Which army would you like to transfer units from?\n\nType **[Army List]** to view a list of all valid armies.`, "string"],
+          [`Which army would you like to transfer these soldiers to?\n\nType **[Army List]** to view a list of all valid armies.`, "string"],
+        ]
+      },
+      function (arg) {
+        module.exports.transferUnits(user_id, arg[0], arg[1], arg[2], arg[3]);
+      },
+      function (arg) {
+        switch (arg) {
+          case "army list":
+            createPageMenu(game_obj.middle_embed, {
+              embed_pages: printArmyList(user_id),
+              user: game_obj.user
+            });
+            return true;
 
-          break;
-      }
+            break;
+        }
+      }) :
+      visualPrompt(game_obj.alert_embed, user_id, {
+        title: `Transfer Units From ${army_name} To Another Army:`,
+        prompts: [
+          [`How many soldiers would you like to transfer?`, "number", { min: 0 }],
+          [`Which type of unit would you like to transfer?`, "string"],
+          [`Which army would you like to transfer these soldiers to?\n\nType **[Army List]** to view a list of all valid armies.`, "string"]
+        ]
+      },
+      function (arg) {
+        module.exports.transferUnits(user_id, arg[0], arg[1], army_name, arg[2]);
+      },
+      function (arg) {
+        switch (arg) {
+          case "army list":
+            createPageMenu(game_obj.middle_embed, {
+              embed_pages: printArmyList(user_id),
+              user: game_obj.user
+            });
+            return true;
+
+            break;
+        }
     });
   }
 };

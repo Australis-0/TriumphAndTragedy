@@ -29,7 +29,9 @@ module.exports = {
       printError(game_obj.id, `The **${army_name}** is not currently a valid army in active service! Check your **[Army List]** for a full list of valid field armies.`);
     }
   },
+
   initialiseDeleteArmy: function (arg0_user) {
+    //Convert from parameters
     var user_id = arg0_user;
 
     //Declare local instance variables

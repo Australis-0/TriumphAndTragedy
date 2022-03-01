@@ -1254,6 +1254,9 @@ module.exports = {
           var viewed_army = game_obj.page.replace("army_viewer_", "");
 
           //[Air Raid]
+          if (input == "air raid")
+            initialiseAirRaidCommand(user_id, viewed_army);
+
           //[Back]
           if (input == "back") {
             createPageMenu(game_obj.middle_embed, {
@@ -1264,11 +1267,29 @@ module.exports = {
           }
 
           //[Blockade]
+          if (input == "blockade")
+            initialiseBlockade(user_id, viewed_army);
+
           //[Challenge Blockade]
+          if (input == "challenge blockade")
+            initialiseChallengeBlockade(user_id, viewed_army);
+
           //[Convoy Raid]
+          if (input == "convoy raid")
+            initialiseConvoyRaid(user_id, viewed_army);
+
           //[Delete Army]
+          if (input == "delete army")
+            deleteArmyCommand(user_id, viewed_army);
+
           //[Deploy Units]
+          if (input == "deploy units")
+            initialiseDeployUnits(user_id, viewed_army);
+
           //[Harbour Raid]
+          if (input == "harbour raid")
+            initialiseHarbourRaid(user_id, viewed_army);
+
           //[Jump To Page]
           if (input == "jump to page")
             visualPrompt(game_obj.alert_embed, user_id, {
@@ -1286,12 +1307,36 @@ module.exports = {
             });
 
           //[Lift Blockade]
+          if (input == "lift blockade")
+            liftBlockade(user_id, viewed_army);
+
           //[Merge Army]
+          if (input == "merge army")
+            initialiseMergeArmy(user_id, viewed_army);
+
           //[Move]
+          if (input == "move")
+            initialiseMoveArmy(user_id, viewed_army);
+
           //[Relieve Units]
+          if (input == "relieve units")
+            initialiseRelieveUnits(user_id, viewed_army);
+
           //[Rename Army]
+          if (input == "rename army")
+            initialiseRenameArmy(user_id, viewed_army);
+
+          //[Split Army]
+          if (input == "split army")
+            initialiseSplitArmy(user_id, viewed_army);
+
           //[Torpedo Fleet]
+          if (input == "torpedo fleet")
+            initialiseTorpedoFleet(user_id, viewed_army);
+
           //[Transfer Units]
+          if (input == "transfer units")
+            initialiseTransferUnits(user_id, viewed_army);
         }
 
         if (military_pages.includes(game_obj.page)) {

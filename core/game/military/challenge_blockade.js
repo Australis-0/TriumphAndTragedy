@@ -53,40 +53,60 @@ module.exports = {
     }
   },
 
-  initialiseChallengeBlockade: function (arg0_user) {
+  initialiseChallengeBlockade: function (arg0_user, arg1_army) {
     //Convert from parameters
     var user_id = arg0_user;
+    var army_name = arg1_army;
 
     //Declare local instance variables
     var game_obj = getGameObject(user_id);
 
     //Initialise visual prompt
-    visualPrompt(game_obj.alert_embed, user_id, {
-      title: `Challenge Blockade:`,
-      prompts: [
-        [`Which country would you like to challenge the blockade on?\n\nType **[View Ledger]** to view a ledger of all valid nations.`, "mention"],
-        [`What is the name of the fleet you would like to send to relieve the blockade on this country?\n\nType **[Army List]** to view a list of all valid armies.`, "string"]
-      ]
-    },
-    function (arg) {
-      module.exports.challengeBlockade(user_id, arg[0], arg[1]);
-    },
-    function (arg) {
-      switch (arg) {
-        case "army list":
-          createPageMenu(game_obj.middle_embed, {
-            embed_pages: printArmyList(user_id),
-            user: game_obj.user
-          });
-          return true;
+    (!army_name) ?
+      visualPrompt(game_obj.alert_embed, user_id, {
+        title: `Challenge Blockade:`,
+        prompts: [
+          [`Which country would you like to challenge the blockade on?\n\nType **[View Ledger]** to view a ledger of all valid nations.`, "mention"],
+          [`What is the name of the fleet you would like to send to relieve the blockade on this country?\n\nType **[Army List]** to view a list of all valid armies.`, "string"]
+        ]
+      },
+      function (arg) {
+        module.exports.challengeBlockade(user_id, arg[0], arg[1]);
+      },
+      function (arg) {
+        switch (arg) {
+          case "army list":
+            createPageMenu(game_obj.middle_embed, {
+              embed_pages: printArmyList(user_id),
+              user: game_obj.user
+            });
+            return true;
 
-          break;
-        case "view ledger":
-          printLedger(user_id);
-          return true;
+            break;
+          case "view ledger":
+            printLedger(user_id);
+            return true;
 
-          break;
-      }
-    });
+            break;
+        }
+      }) :
+      visualPrompt(game_obj.alert_embed, user_id, {
+        title: `Challenge A Blockade w/ the ${army_name}:`,
+        prompts: [
+          [`Which country would you like to challenge the blockade on?\n\nType **[View Ledger]** to view a ledger of all valid nations.`, "mention"]
+        ]
+      },
+      function (arg) {
+        module.exports.challengeBlockade(user_id, arg[0], army_name);
+      },
+      function (arg) {
+        switch (arg) {
+          case "view ledger":
+            printLedger(user_id);
+            return true;
+
+            break;
+        }
+      });
   }
 };

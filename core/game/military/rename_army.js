@@ -28,34 +28,45 @@ module.exports = {
     }
   },
 
-  initialiseRenameArmy: function (arg0_user) {
+  initialiseRenameArmy: function (arg0_user, arg1_army) {
     var user_id = arg0_user;
+    var army_name = arg1_army;
 
     //Declare local instance variables
     var game_obj = getGameObject(user_id);
 
     //Initialise visual prompt
-    visualPrompt(game_obj.alert_embed, user_id, {
-      title: `Rename Army:`,
-      prompts: [
-        [`What is the current name of the army you would like to rename?\n\nType **[Army List]** for a valid list of all armies.`, "string"],
-        [`What should be the new name of this army?`, "string"]
-      ]
-    },
-    function (arg) {
-      module.exports.renameArmy(user_id, arg[0], arg[1]);
-    },
-    function (arg) {
-      switch (arg) {
-        case "army list":
-          createPageMenu(game_obj.middle_embed, {
-            embed_pages: printArmyList(user_id),
-            user: game_obj.user
-          });
-          return true;
+    (!army_name) ?
+      visualPrompt(game_obj.alert_embed, user_id, {
+        title: `Rename Army:`,
+        prompts: [
+          [`What is the current name of the army you would like to rename?\n\nType **[Army List]** for a valid list of all armies.`, "string"],
+          [`What should be the new name of this army?`, "string"]
+        ]
+      },
+      function (arg) {
+        module.exports.renameArmy(user_id, arg[0], arg[1]);
+      },
+      function (arg) {
+        switch (arg) {
+          case "army list":
+            createPageMenu(game_obj.middle_embed, {
+              embed_pages: printArmyList(user_id),
+              user: game_obj.user
+            });
+            return true;
 
-          break;
-      }
-    });
+            break;
+        }
+      }) :
+      visualPrompt(game_obj.alert_embed, user_id, {
+        title: `Rename Army:`,
+        prompts: [
+          [`What should be the new name of this army?`, "string"]
+        ]
+      },
+      function (arg) {
+        module.exports.renameArmy(user_id, army_name, arg[0]);
+      });
   }
 };
