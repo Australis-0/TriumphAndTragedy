@@ -224,17 +224,18 @@ module.exports = {
     army_management_array.push(`- **[Move Armies]** - Moves several armies to a single province.`);
 
     mobilisation_array.push(`---`);
-    
+
     if (usr.modifiers.enable_mobilisation && mobilisation_unit)
       if (!usr.mobilisation.is_mobilised)
         if (main.round_count - returnSafeNumber(usr.mobilisation.last_mobilised) > config.defines.combat.mobilisation_cooldown) {
           var available_manpower = getMobilisationPops(user_id).population;
+          var unit_obj = getUnit(usr.mobilisation.unit_type);
 
           (available_manpower > 0) ?
-            mobilisation_array.push(`You can mobilise! Type **[Mobilise]** in order to call upon your people to take up arms.\n**${parseNumber(available_manpower)}** will be placed in your reserves.`) :
+            mobilisation_array.push(`You can mobilise! Type **[Mobilise]** in order to call upon your people to take up arms.\n**${parseNumber(available_manpower)}** ${(unit_obj.name) ? unit_obj.name : usr.mobilisation.unit_name} will be placed in your reserves.`) :
             mobilisation_array.push(`Due to critical manpower shortages on the civilian front, mobilisation isn't available. Try freeing up more workers first!`);
         } else
-          mobilisation_array.push(`Your people have demobilised too recently to be willing to be called up for war again. Wait for **${parseNumber(config.defines.combat.mobilisation_cooldown - (main.round_count - usr.mobilisation.last_mobilised) + 1)}** more turn(s).`);
+          mobilisation_array.push(`Your people have demobilised too recently to be willing to be called up for war again. Wait for **${parseNumber(config.defines.combat.mobilisation_cooldown - (main.round_count - returnSafeNumber(usr.mobilisation.last_mobilised)) + 1)}** more turn(s).`);
       else
         if (usr.mobilisation.current_manpower_mobilised < usr.mobilisation.total_manpower_mobilised)
           mobilisation_array.push(`You are currently mobilising, and your advisors estimate that mobilisation will be complete within **${parseNumber(usr.mobilisation.duration)}** turn(s). So far, **${parseNumber(usr.mobilisation.current_manpower_mobilised)}** men out of **${parseNumber(usr.mobilisation.total_manpower_mobilised)}** available reservists have been mobilised.\n\nYou are currently mobilised. Type **[Demobilise]** in order to lay down your arms.`);

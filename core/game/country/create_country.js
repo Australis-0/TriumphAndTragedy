@@ -1,5 +1,5 @@
 module.exports = {
-  foundCountry: function (arg0_user, arg1_name) { //[WIP]
+  foundCountry: function (arg0_user, arg1_name) {
     //Convert from parameters
     var user_id = arg0_user;
     var country_name = arg1_name;
@@ -51,6 +51,20 @@ module.exports = {
 
     //Initialise user data
     if (!country_name_taken) {
+      if (main.users[user_id])
+        while (true) {
+          var local_id_suffix = generateRandomID();
+
+          var full_id = `${user_id}-${local_id_suffix}`;
+
+          //Return and break once a true ID is found
+          if (!main.users[user_id]) {
+            user_id = full_id;
+            break;
+          }
+        }
+
+
       initUser(user_id);
       var usr = main.users[user_id];
 

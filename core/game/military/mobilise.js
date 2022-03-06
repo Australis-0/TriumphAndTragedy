@@ -14,13 +14,13 @@ module.exports = {
       var local_pop = config.pops[all_pops[i]];
       var mobilisation_value = Math.ceil(
         (
-          getTotalPopManpower(actual_id, all_pops[i]) - usr[`used_${all_pops[i]}`]
+          getTotalPopManpower(actual_id, all_pops[i]) - usr.pops[`used_${all_pops[i]}`]
         )
           *config.defines.combat.base_mobilisation_size*usr.modifiers.mobilisation_size
       );
 
-      mobilised_pops[all_pops[i]] = mobilisation_value;
-      mobilised_pops.population += mobilisation_value;
+      mobilised_pops[all_pops[i]] = returnSafeNumber(mobilisation_value);
+      mobilised_pops.population += returnSafeNumber(mobilisation_value);
     }
 
     return mobilised_pops;

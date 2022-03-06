@@ -55,6 +55,54 @@ module.exports = {
     return local_graph;
   },
 
+  deleteCountry: function (arg0_user) {
+    //Convert from parameters
+    var user_id = arg0_user; //User to be deleted
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var all_cultures = Object.keys(main.global.cultures);
+    var all_mapped_users = Object.keys(main.global.user_map);
+    var all_provinces = module.exports.getProvinces(actual_id, { include_occupations: true, include_hostile_occupations: true });
+
+    //Remove all occupations
+    for (var i = 0; i < all_provinces.length; i++)
+      if (all_provinces[i].controller != all_provinces[i].owner)
+        all_provinces[i].controller = all_provinces[i].owner;
+
+    //Cultural handler
+    for (var i = 0; i < all_cultures.length; i++) {
+      var local_culture = main.global.cultures[all_cultures[i]];
+
+      removeElement(local_culture.primary_culture, actual_id);
+      removeElement(local_culture.accepted_culture, actual_id);
+    }
+
+    //Occupation handler
+    for (var i = 0; i < all_provinces.length; i++)
+      if (all_provinces[i].controller != all_provinces[i].owner)
+        all_provinces[i].controller = all_provinces[i].owner;
+
+    for (var i = 0; i < all_provinces.length; i++)
+      if (all_provinces[i].controller == actual_id) {
+        var all_subkeys = Object.keys(all_provinces[i]);
+
+        for (var x = 0; x < all_subkeys.length; x++)
+          if (!config.defines.common.default_keys.includes(all_subkeys[x]))
+            delete all_provinces[i][all_subkeys[x]];
+      }
+
+    //Remove all diplomatic relations and delete user object
+    destroyAllDiplomaticRelations(actual_id);
+
+    //Remove all connections in user map
+    for (var i = 0; i < all_mapped_users.length; i++)
+      if (main.global.user_map[all_mapped_users[i]] == actual_id)
+        delete main.global.user_map[all_mapped_users[i]];
+
+    delete main.users[actual_id];
+  },
+
   //getAverageTechCount() - Fetches average tech count from all users
   getAverageTechCount: function () {
     //Declare local instance variables
@@ -504,7 +552,8 @@ module.exports = {
         all_provinces[i].controller = all_provinces[i].owner;
 
     for (var i = 0; i < all_provinces.length; i++)
-      transferProvince(actual_id, { target: actual_ot_user_id, province_id: all_provinces[i].id });
+      if (all_provinces[i].controller == actual_id)
+        transferProvince(actual_id, { target: actual_ot_user_id, province_id: all_provinces[i].id });
 
     //Remove all diplomatic relations and delete user object
     destroyAllDiplomaticRelations(actual_id);

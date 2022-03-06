@@ -1,5 +1,6 @@
 config.defines.common = {
   alert_timeout: 5, //How many turns should alerts last before they timeout?
+  default_keys: ["adjacencies", "id"], //List of default province keys
   event_timeout: 5, //How many turns should events last before they timeout?
 
   starting_provinces: 1,
