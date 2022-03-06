@@ -14,22 +14,22 @@ module.exports = {
     var vassal_customisation_array = [];
 
     customisation_array.push(`${config.icons.old_map} Rename Your Nation: **[Rename Country]**`);
-    customisation_array.push(`Messed up? Change your country's name.`);
+    customisation_array.push(`_Messed up? Change your country's name._`);
     customisation_array.push("");
     customisation_array.push(`${config.icons.old_scroll} Change Your Motto: **[Set Motto]**`);
-    customisation_array.push(`A new slogan to inspire the masses.`);
+    customisation_array.push(`_A new slogan to inspire the masses._`);
     customisation_array.push("");
     customisation_array.push(`${config.icons.infamy} Import A New Flag: **[Set Flag]**`);
-    customisation_array.push(`For that flag I die!`);
+    customisation_array.push(`_For that flag I die!_`);
     customisation_array.push("");
     customisation_array.push(`${config.icons.government} Set Your Nation's Colour: **[Set Colour]**`);
     customisation_array.push(`Change your nation's colour to something else using RGB colour codes.`);
     customisation_array.push("");
     customisation_array.push(`${config.icons.culture} Customise Your Culture: **[Rename Culture]**`);
-    customisation_array.push(`A truly fascinating name for ethnographers.`);
+    customisation_array.push(`_A truly fascinating name for ethnographers._`);
     customisation_array.push("");
     customisation_array.push(`${config.icons.culture} Set Your Culture's Adjetive: **[Rename Culture Adjective]**`);
-    customisation_array.push(`A new label by which to identify your people.`);
+    customisation_array.push(`_A new label by which to identify your people._`);
 
     if (usr.options.vassal_customisation_locked && Object.keys(usr.diplomacy.vassals).length > 0)
       (usr.options.vassal_customisation_locked) ?
@@ -38,21 +38,21 @@ module.exports = {
 
     //Format vassal_customisation_array
     vassal_customisation_array.push(`${config.icons.globe} Rename Vassal: **[Rename Vassal]**`);
-    vassal_customisation_array.push(`Force 'em to change their name, free of charge!'`);
+    vassal_customisation_array.push(`_Force 'em to change their name, free of charge!_`);
     vassal_customisation_array.push("");
     vassal_customisation_array.push(`${config.icons.old_map} Rename Vassal City: **[Rename Vassal City]**`);
-    vassal_customisation_array.push(`Don't like the name of one of their cities? Change it, and assert your dominance.`);
+    vassal_customisation_array.push(`_Don't like the name of one of their cities? Change it, and assert your dominance._`);
     vassal_customisation_array.push("");
     vassal_customisation_array.push(`${config.icons.culture} Rename Vassal Culture: **[Rename Vassal Culture]**`);
-    vassal_customisation_array.push(`Not a fan of their culture? Invent some new word for it.`);
+    vassal_customisation_array.push(`_Not a fan of their culture? Invent some new word for it._`);
     vassal_customisation_array.push(`${config.icons.government} Change Vassal Colour: **[Set Vassal Colour]**`);
-    vassal_customisation_array.push(`Now they'll be shown on the map in a glorious shade of .. uh, something.`);
+    vassal_customisation_array.push(`_Now they'll be shown on the map in a glorious shade of .. uh, something._`);
     vassal_customisation_array.push("");
     vassal_customisation_array.push(`${config.icons.infamy} Change Vassal Flag: **[Set Vassal Flag]**`);
-    vassal_customisation_array.push(`Nothing quite says you own them as much as slapping your flag on top of theirs.`);
+    vassal_customisation_array.push(`_Nothing quite says you own them as much as slapping your flag on top of theirs._`);
     vassal_customisation_array.push("");
     vassal_customisation_array.push(`${config.icons.paper} Change Vassal Motto: **[Set Vassal Motto]**`);
-    vassal_customisation_array.push(`Decree that they use your motto!`);
+    vassal_customisation_array.push(`_Decree that they use your motto!_`);
 
     const embed_customisation = new Discord.MessageEmbed()
   		.setColor(settings.bot_colour)
