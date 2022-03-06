@@ -28,7 +28,7 @@ module.exports = {
     customisation_array.push(`${config.icons.culture} Customise Your Culture: **[Rename Culture]**`);
     customisation_array.push(`_A truly fascinating name for ethnographers._`);
     customisation_array.push("");
-    customisation_array.push(`${config.icons.culture} Set Your Culture's Adjetive: **[Rename Culture Adjective]**`);
+    customisation_array.push(`${config.icons.culture} Set Your Culture's Adjective: **[Rename Culture Adjective]**`);
     customisation_array.push(`_A new label by which to identify your people._`);
 
     if (usr.options.vassal_customisation_locked && Object.keys(usr.diplomacy.vassals).length > 0)
