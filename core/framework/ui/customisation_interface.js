@@ -26,6 +26,9 @@ module.exports = {
     customisation_array.push(`Change your nation's colour to something else using RGB colour codes.`);
     customisation_array.push("");
     customisation_array.push(`${config.icons.culture} Customise Your Culture: **[Rename Culture]**`);
+    customisation_array.push(`A truly fascinating name for ethnographers.`);
+    customisation_array.push("");
+    customisation_array.push(`${config.icons.culture} Set Your Culture's Adjetive: **[Rename Culture Adjective]**`);
     customisation_array.push(`A new label by which to identify your people.`);
 
     if (usr.options.vassal_customisation_locked && Object.keys(usr.diplomacy.vassals).length > 0)

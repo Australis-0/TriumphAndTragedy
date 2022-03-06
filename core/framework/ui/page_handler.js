@@ -538,6 +538,10 @@ module.exports = {
           if (input == "rename culture")
             initialiseRenamePrimaryCulture(user_id);
 
+          //[Rename Culture Adjective]
+          if (input == "rename culture adjective")
+            initialiseRenameCultureAdjective(user_id);
+
           //[Set Colour]
           if (input == "set colour")
             initialiseSetColour(user_id);
