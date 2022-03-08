@@ -95,7 +95,7 @@ module.exports = {
 
         interfaces[game_id].channel = channel.id;
         interfaces[game_id].map = {};
-        interfaces[game_id].page = (main.users[user_id]) ? "country_interface" : "founding_map";
+        interfaces[game_id].page = (main.global.user_map[user_id]) ? "country_interface" : "founding_map";
 
         //Send confirmation message and initialise main menu embeds
         sendPlainEmbed(msg, `<@${user_id}> - Click <#${channel.id}> to begin playing.`);
@@ -228,6 +228,7 @@ module.exports = {
         //Begin processing page
         if (!["country_interface", "map", "founding_map"].includes(game_obj.page))
           game_obj.page = (main.global.user_map[game_obj.user]) ? "country_interface" : "founding_map";
+
         if (main.global.user_map[game_obj.user])
           if (main.users[main.global.user_map[game_obj.user]])
             game_obj.page = "country_interface";

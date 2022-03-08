@@ -103,7 +103,7 @@ module.exports = {
       var local_province = getProvince(province_id);
 
       //Check if province is valid, province has to be owned
-      if (local_province.owner == user_id && local_province.controller == user_id) {
+      if (local_province.owner == actual_id && local_province.controller == actual_id) {
         if (local_province.type == "rural") {
           if (!city_name.toLowerCase().startsWith("province")) {
             //Initialise city object, determine capital status first
@@ -174,7 +174,7 @@ module.exports = {
 
         //Print actual province controller/occupation status
         (local_province.owner) ?
-          printError(game_obj.id, `You don't own Province **${province_id}**!\n\nProvince **${province_id}** is a${(is_occupied) ? "n occupied" : ""} province of the ${main.users[local_province.controller].name} of ${local_province.culture} culture${(is_occupied) ? " that rightfully belongs to " + main.users[local_province.owner].name : ""}.`) :
+          printError(game_obj.id, `You don't own Province **${province_id}**!\n\nProvince **${province_id}** is a${(is_occupied) ? "n occupied" : ""} province of the ${main.users[local_province.controller].name} of ${main.global.cultures[local_province.culture].adjective} culture${(is_occupied) ? " that rightfully belongs to " + main.users[local_province.owner].name : ""}.`) :
           printError(game_obj.id, `You don't own Province **${province_id}**!\n\Province **${province_id}** is currently uncolonised.`);
       }
     } else {

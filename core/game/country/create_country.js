@@ -5,12 +5,28 @@ module.exports = {
     var country_name = arg1_name;
 
     //Declare local instance variables
+    var actual_id = JSON.parse(JSON.stringify(user_id));
     var game_obj = getGameObject(user_id);
-    var just_registered = (!main.users[user_id]);
+
+    if (main.users[user_id])
+      while (true) {
+        var local_id_suffix = generateRandomID();
+
+        var full_id = `${user_id}-${local_id_suffix}`;
+
+        //Return and break once a true ID is found
+        if (!main.users[full_id]) {
+          actual_id = full_id;
+          break;
+        }
+      }
+
+    //Delayed registration
+    var just_registered = (!main.users[actual_id]);
 
     if (just_registered) {
       //Initialise user data
-      var usr = initCountry(user_id, country_name);
+      var usr = module.exports.initCountry(actual_id, country_name);
 
       //Send message affirming successful registration if in game
       if (usr && game_obj) {
@@ -31,7 +47,7 @@ module.exports = {
       }
 
       //Set valid user map (this can be used later on for co-op and AI tags):
-      main.global.user_map[user_id] = user_id;
+      main.global.user_map[user_id] = actual_id;
     }
   },
 
@@ -51,20 +67,6 @@ module.exports = {
 
     //Initialise user data
     if (!country_name_taken) {
-      if (main.users[user_id])
-        while (true) {
-          var local_id_suffix = generateRandomID();
-
-          var full_id = `${user_id}-${local_id_suffix}`;
-
-          //Return and break once a true ID is found
-          if (!main.users[user_id]) {
-            user_id = full_id;
-            break;
-          }
-        }
-
-
       initUser(user_id);
       var usr = main.users[user_id];
 

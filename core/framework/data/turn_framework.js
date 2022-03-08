@@ -218,7 +218,11 @@ module.exports = {
 
     //Iterate over all users and process their turns
     for (var i = 0; i < all_users.length; i++)
-      nextTurn(all_users[i]);
+      try {
+        nextTurn(all_users[i]);
+      } catch (e) {
+        console.log(e);
+      }
 
     //World Market Down-Logic
     {
@@ -344,7 +348,7 @@ module.exports = {
 
         //Infamy limit
         usr.modifiers.rgo_throughput += usr.infamy_rgo_throughput;
-        usr.modifiers.production_efficiency += usr.modifiers.production_efficiency;
+        usr.modifiers.production_efficiency += usr.infamy_production_efficiency;
 
         if (usr.modifiers.infamy > config.defines.diplomacy.infamy_limit) {
           usr.infamy_production_efficiency = usr.modifiers.infamy*0.02; //-2% per infamy

@@ -18,6 +18,18 @@ module.exports = {
         if (amount > 0) {
           if (usr.reserves[raw_unit_name] >= amount) {
             disbandUnits(actual_id, amount, raw_unit_name);
+
+            //Update military; reserves UI if user is currently on it
+            if (game_obj.page == "military")
+              printMilitary(user_id);
+            if (game_obj.page == "reserves")
+              createPageMenu(game_obj.middle_embed, {
+                embed_pages: printReserves(user_id),
+                page: interfaces[game_obj.middle_embed.id].page,
+                user: game_obj.user
+              });
+
+            printAlert(game_obj.id, `You have disbanded **${parseNumber(amount)}** ${(unit_obj.name) ? unit_obj.name : raw_unit_name}.`);
           } else {
             printError(game_obj.id, `You don't have that many **${(unit_obj.name) ? unit_obj.name : raw_unit_name}** in your reserves! You may only disband up to **${parseNumber(usr.reserves[raw_unit_name])}** ${(unit_obj.name) ? unit_obj.name : raw_unit_name}.`)
           }
