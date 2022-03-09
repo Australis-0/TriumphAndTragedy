@@ -272,14 +272,7 @@ module.exports = {
             var local_messages = returnChannel(local_ui.channel).messages.fetch({ limit: 10 }).then((messages) => {
               messages.forEach(msg => msg.delete());
             });
-            var reinitialisation_check = setInterval(function(interface_id){
-              var message_count = returnChannel(local_ui.channel).messages.cache.size;
-
-              if (message_count == 0) {
-                initialiseGameEmbeds(interface_id);
-                clearInterval(reinitialisation_check);
-              }
-            }, 100, all_interfaces[i]);
+            initialiseGameEmbeds(all_interfaces[i]);
           } catch (e) {
             if (returnChannel(local_ui.channel)) {
               log.error(`Could not delete messages and reinitialise game embeds: ${e}.`);

@@ -39,7 +39,7 @@ module.exports = {
               }
 
               //Print user feedback
-              printAlert(game_obj.id, `${config.icons.checkmark} You have begun to improve your relations with **${ot_user.name}** to **${Math.max(current_relations[0] + 50, -100)}** for ${config.icons.political_capital} **${parseNumber(config.defines.diplomacy.improve_relations_cost)}** Political Capital.`);
+              printAlert(game_obj.id, `${config.icons.checkmark} You have begun to improve your relations with **${ot_user.name}** to **${Math.min(current_relations[0] + 50, -100)}** for ${config.icons.political_capital} **${parseNumber(config.defines.diplomacy.improve_relations_cost)}** Political Capital.`);
             } else {
               printError(game_obj.id, `You are already currently improving your relations with **${ot_user.name}**! They will finish improving to **${parseNumber(current_relations.improving_to, { display_prefix: true })}** in **${parseNumber(current_relations.duration)}** turn(s).`);
             }

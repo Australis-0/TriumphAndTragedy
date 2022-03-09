@@ -302,7 +302,8 @@ module.exports = {
       //User variables
       for (var i = 0; i < all_user_keys.length; i++)
         if (main.global.user_map[all_user_keys[i]] == actual_ot_user_id)
-          user_keys.push(`<@${all_user_keys[i]}>`);
+          if (!all_user_keys[i].includes("-"))
+            user_keys.push(`<@${all_user_keys[i]}>`);
 
       //Wargoal justifications
       for (var i = 0; i < usr.diplomacy.justifications.length; i++) {
@@ -311,7 +312,7 @@ module.exports = {
         if (local_justification.target == ot_user_id) {
           var cb_obj = getCB(local_justification.type);
 
-          justifying_wargoals.push(`**${(cb_obj.name) ? cb_obj.name.toLowerCase() : local_justification.ttype}**`);
+          justifying_wargoals.push(`**${(cb_obj.name) ? cb_obj.name.toLowerCase() : local_justification.type}**`);
         }
       }
 
