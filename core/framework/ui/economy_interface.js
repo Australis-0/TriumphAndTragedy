@@ -70,7 +70,7 @@ module.exports = {
 
       if (local_resource_modifiers[all_good_names[i]].count != 0) {
         economy_string.push(`${processed_good_icon}Base **${printPercentage(usr.modifiers.rgo_throughput, { display_prefix: true })}** ${processed_good_name} Gain in **${local_resource_modifiers[all_good_names[i]].count}** citie(s):`);
-        economy_string.push(`- ${local_resource_modifiers[all_good_names[i]].cities.join(", ")}.`);
+        economy_string.push(`- ${local_resource_modifiers[all_good_names[i]].cities.join(", ")}`);
       }
     }
 

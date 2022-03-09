@@ -75,7 +75,7 @@ module.exports = {
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
     var all_building_categories = Object.keys(config.buildings);
-    var all_provinces = getProvinces(user_id);
+    var all_provinces = getProvinces(actual_id);
     var game_obj = getGameObject(user_id);
     var usr = main.users[actual_id];
 
@@ -109,8 +109,8 @@ module.exports = {
             //Initialise city object, determine capital status first
             //If user has no other cities, set it to their capital
 
-            local_province.city_type = (getCities(user_id).length == 0) ? "capital" : "city";
-            local_province.culture = getPrimaryCultures(user_id)[0];
+            local_province.city_type = (getCities(actual_id).length == 0) ? "capital" : "city";
+            local_province.culture = getPrimaryCultures(actual_id)[0];
             local_province.name = city_name;
             local_province.type = "urban";
 

@@ -119,7 +119,7 @@ module.exports = {
               if (map_obj.objects.length > 3) map_obj.objects.splice(0, 1);
 
               //Controls
-              if (map_obj.zoom_in) map_obj.zoom++;
+              if (map_obj.zoom_in) map_obj.zoom = (map_obj.zoom < 11) ? map_obj.zoom + 1 : 11;
               if (map_obj.zoom_out) map_obj.zoom = (map_obj.zoom > 1) ? map_obj.zoom - 1 : 1;
 
               if (map_obj.decrease_pan_speed) map_obj.speed = map_obj.speed*0.9;

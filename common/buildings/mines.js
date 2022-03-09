@@ -111,7 +111,7 @@ config.buildings.mines = {
   silver_mines: {
     name: "Silver Mines",
     singular: "Silver Mine",
-    icon: "silver_mines:772296533302968331>",
+    icon: "silver_mines",
 
     construction_turns: 4,
     cost: {

@@ -25,7 +25,7 @@ module.exports = {
     //Visual prompt processing
     if (interfaces[game_id].user)
       if (interfaces[interfaces[game_id].user])
-        if (interfaces[interfaces[game_id].user].type == "visual_prompt")
+        if (interfaces[interfaces[game_id].user].answers)
           try {
             //Declare local instance variables
             var is_command = false;
