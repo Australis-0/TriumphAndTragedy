@@ -130,131 +130,129 @@ module.exports = {
 
     //Send out the embeds!
     try {
-      if (!game_obj.alert_embed) {
-        //Initialise message objects
-        returnChannel(game_obj.channel).send(config.localisation.blank).then((message) => {
-          game_obj.header = message;
+      //Initialise message objects
+      returnChannel(game_obj.channel).send(config.localisation.blank).then((message) => {
+        game_obj.header = message;
 
-          setInterval(function(){
-            if (game_obj.header_change) {
-              message.edit({ embeds: [game_obj.new_header] });
-              delete game_obj.header_change;
-            }
-          }, 100);
-        });
-
-        //Main embed displaying stats screen
-        returnChannel(game_obj.channel).send({ embeds: [middle_embed] }).then((message) => {
-          game_obj.collectors.push(message.id);
-          game_obj.middle_embed = message;
-
-          setInterval(function(){
-            if (game_obj.main_change) {
-              message.edit({ embeds: [game_obj.main_embed] });
-              message.reactions.removeAll().catch(error => log.error(`Failed to clear reactions: ${error}.`));
-              game_obj.main_change = false;
-            }
-          }, 100);
-        });
-        //Extra control panel elements
-        returnChannel(game_obj.channel).send("https://cdn.discordapp.com/attachments/722997700391338046/736141424315203634/margin.png").then((message) => {
-          game_obj.collectors.push(message.id);
-          game_obj.middle_control_panel = message;
-        });
-        returnChannel(game_obj.channel).send("https://cdn.discordapp.com/attachments/722997700391338046/736141424315203634/margin.png").then((message) => {
-          game_obj.collectors.push(message.id);
-          game_obj.bottom_control_panel = message;
-        });
-
-        //Bottom embed displaying alerts
-        returnChannel(game_obj.channel).send({ embeds: [bottom_embed] }).then((message) => {
-          game_obj.alert_embed = message;
-
-          setInterval(function(){
-            var message_is_prompt = false;
-            var all_visual_prompts = Object.keys(interfaces);
-
-            //Check if message is subject to a current command prompt
-            for (var i = 0; i < all_visual_prompts.length; i++) {
-              var local_prompt = interfaces[all_visual_prompts[i]];
-              if (local_prompt.type == "visual_prompt")
-                if (local_prompt.message.id == message.id)
-                  message_is_prompt = true;
-            }
-
-            //Only edit the message if the message is not a prompt.
-            if (!message_is_prompt) {
-              if (game_obj.alert_change) {
-                if (game_obj.alert_array.length == 0) {
-                  const new_alert_embed = new Discord.MessageEmbed()
-                    .setColor(settings.bot_colour)
-                    .setDescription("No new alerts.")
-                    .setImage("https://cdn.discordapp.com/attachments/722997700391338046/736141424315203634/margin.png");
-
-                  message.edit({ embeds: [new_alert_embed] });
-                } else {
-                  const new_alert_embed = new Discord.MessageEmbed()
-                    .setColor(settings.bot_colour)
-                    .setDescription(game_obj.alert_array.join("\n"))
-                    .setImage("https://cdn.discordapp.com/attachments/722997700391338046/736141424315203634/margin.png");
-
-                  message.edit({ embeds: [new_alert_embed] });
-                }
-                game_obj.alert_change = false;
-              }
-            }
-          }, 100);
-
-          //Date processing
-          setInterval(function(){
-            var current_date = new Date().getTime();
-            var time_remaining = settings.turn_timer*1000 - (current_date - main.last_turn);
-
-            const topbar_embed = new Discord.MessageEmbed()
-              .setColor(settings.bot_colour)
-              .setTitle(`${config.icons.time} **${getDate(main.date)}** - Round ${parseNumber(main.round_count)}`)
-              .setDescription(`- Each round is approximately ${parseMilliseconds(settings.turn_timer*1000)}. ${parseMilliseconds(time_remaining)} remaining until the next turn.`)
-              .setImage("https://cdn.discordapp.com/attachments/722997700391338046/736141424315203634/margin.png");
-
-            try {
-              game_obj.header.edit({ embeds: [topbar_embed] });
-
-              if (game_obj.page == "founding_map")
-                (!main.global.user_map[game_obj.user]) ?
-                  initialiseFoundCountry(game_obj.user) :
-                  initialiseSettleStartingProvinces(game_obj.user);
-            } catch {}
-          }, 10000);
-
-          //Begin processing page
-          if (!["country_interface", "map", "founding_map"].includes(game_obj.page))
-            game_obj.page = (main.global.user_map[game_obj.user]) ? "country_interface" : "founding_map";
-
-          if (main.global.user_map[game_obj.user])
-            if (main.users[main.global.user_map[game_obj.user]])
-              game_obj.page = "country_interface";
-
-          //Load up either the starting map viewer or country interface depending on the starting page
-          switch (game_obj.page) {
-            case "country_interface":
-              initialiseTopbar(game_obj.user);
-              printStats(game_obj.user);
-
-              break;
-            case "map":
-            case "founding_map":
-              //Initialise map viewer and found country dialogue prompt
-              initialiseMapViewer(game_id);
-              if (game_obj.page == "founding_map")
-                (!main.global.user_map[game_obj.user]) ?
-                  initialiseFoundCountry(game_obj.user) :
-                  initialiseSettleStartingProvinces(game_obj.user);
-              if (["map"].includes(game_obj.page)) initialiseTopbar(game_obj.user);
-
-              break;
+        setInterval(function(){
+          if (game_obj.header_change) {
+            message.edit({ embeds: [game_obj.new_header] });
+            delete game_obj.header_change;
           }
-        });
-      }
+        }, 100);
+      });
+
+      //Main embed displaying stats screen
+      returnChannel(game_obj.channel).send({ embeds: [middle_embed] }).then((message) => {
+        game_obj.collectors.push(message.id);
+        game_obj.middle_embed = message;
+
+        setInterval(function(){
+          if (game_obj.main_change) {
+            message.edit({ embeds: [game_obj.main_embed] });
+            message.reactions.removeAll().catch(error => log.error(`Failed to clear reactions: ${error}.`));
+            game_obj.main_change = false;
+          }
+        }, 100);
+      });
+      //Extra control panel elements
+      returnChannel(game_obj.channel).send("https://cdn.discordapp.com/attachments/722997700391338046/736141424315203634/margin.png").then((message) => {
+        game_obj.collectors.push(message.id);
+        game_obj.middle_control_panel = message;
+      });
+      returnChannel(game_obj.channel).send("https://cdn.discordapp.com/attachments/722997700391338046/736141424315203634/margin.png").then((message) => {
+        game_obj.collectors.push(message.id);
+        game_obj.bottom_control_panel = message;
+      });
+
+      //Bottom embed displaying alerts
+      returnChannel(game_obj.channel).send({ embeds: [bottom_embed] }).then((message) => {
+        game_obj.alert_embed = message;
+
+        setInterval(function(){
+          var message_is_prompt = false;
+          var all_visual_prompts = Object.keys(interfaces);
+
+          //Check if message is subject to a current command prompt
+          for (var i = 0; i < all_visual_prompts.length; i++) {
+            var local_prompt = interfaces[all_visual_prompts[i]];
+            if (local_prompt.type == "visual_prompt")
+              if (local_prompt.message.id == message.id)
+                message_is_prompt = true;
+          }
+
+          //Only edit the message if the message is not a prompt.
+          if (!message_is_prompt) {
+            if (game_obj.alert_change) {
+              if (game_obj.alert_array.length == 0) {
+                const new_alert_embed = new Discord.MessageEmbed()
+                  .setColor(settings.bot_colour)
+                  .setDescription("No new alerts.")
+                  .setImage("https://cdn.discordapp.com/attachments/722997700391338046/736141424315203634/margin.png");
+
+                message.edit({ embeds: [new_alert_embed] });
+              } else {
+                const new_alert_embed = new Discord.MessageEmbed()
+                  .setColor(settings.bot_colour)
+                  .setDescription(game_obj.alert_array.join("\n"))
+                  .setImage("https://cdn.discordapp.com/attachments/722997700391338046/736141424315203634/margin.png");
+
+                message.edit({ embeds: [new_alert_embed] });
+              }
+              game_obj.alert_change = false;
+            }
+          }
+        }, 100);
+
+        //Date processing
+        setInterval(function(){
+          var current_date = new Date().getTime();
+          var time_remaining = settings.turn_timer*1000 - (current_date - main.last_turn);
+
+          const topbar_embed = new Discord.MessageEmbed()
+            .setColor(settings.bot_colour)
+            .setTitle(`${config.icons.time} **${getDate(main.date)}** - Round ${parseNumber(main.round_count)}`)
+            .setDescription(`- Each round is approximately ${parseMilliseconds(settings.turn_timer*1000)}. ${parseMilliseconds(time_remaining)} remaining until the next turn.`)
+            .setImage("https://cdn.discordapp.com/attachments/722997700391338046/736141424315203634/margin.png");
+
+          try {
+            game_obj.header.edit({ embeds: [topbar_embed] });
+
+            if (game_obj.page == "founding_map")
+              (!main.global.user_map[game_obj.user]) ?
+                initialiseFoundCountry(game_obj.user) :
+                initialiseSettleStartingProvinces(game_obj.user);
+          } catch {}
+        }, 10000);
+
+        //Begin processing page
+        if (!["country_interface", "map", "founding_map"].includes(game_obj.page))
+          game_obj.page = (main.global.user_map[game_obj.user]) ? "country_interface" : "founding_map";
+
+        if (main.global.user_map[game_obj.user])
+          if (main.users[main.global.user_map[game_obj.user]])
+            game_obj.page = "country_interface";
+
+        //Load up either the starting map viewer or country interface depending on the starting page
+        switch (game_obj.page) {
+          case "country_interface":
+            initialiseTopbar(game_obj.user);
+            printStats(game_obj.user);
+
+            break;
+          case "map":
+          case "founding_map":
+            //Initialise map viewer and found country dialogue prompt
+            initialiseMapViewer(game_id);
+            if (game_obj.page == "founding_map")
+              (!main.global.user_map[game_obj.user]) ?
+                initialiseFoundCountry(game_obj.user) :
+                initialiseSettleStartingProvinces(game_obj.user);
+            if (["map"].includes(game_obj.page)) initialiseTopbar(game_obj.user);
+
+            break;
+        }
+      });
     } catch {}
   },
 
@@ -274,7 +272,14 @@ module.exports = {
             var local_messages = returnChannel(local_ui.channel).messages.fetch({ limit: 10 }).then((messages) => {
               messages.forEach(msg => msg.delete());
             });
-            initialiseGameEmbeds(all_interfaces[i]);
+            var reinitialisation_check = setInterval(function(interface_id){
+              var message_count = returnChannel(local_ui.channel).messages.cache.size;
+
+              if (message_count == 0) {
+                initialiseGameEmbeds(interface_id);
+                clearInterval(reinitialisation_check);
+              }
+            }, 100, all_interfaces[i]);
           } catch (e) {
             if (returnChannel(local_ui.channel)) {
               log.error(`Could not delete messages and reinitialise game embeds: ${e}.`);
