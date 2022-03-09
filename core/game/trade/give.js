@@ -22,6 +22,9 @@ module.exports = {
     var ot_user = main.users[ot_actual_id];
     var usr = main.users[actual_id];
 
+    if (raw_good_name == "money")
+      good_obj = {};
+
     //Check to make sure that user isn't giving goods to themselves
     if (ot_user) {
       if (actual_id != ot_actual_id) {
@@ -68,14 +71,16 @@ module.exports = {
                               duration: amount_of_turns
                             };
 
-                            var local_good_icon = (getGood(good_name).icon) ?
-                              getGood(good_name).icon + " " :
-                              (raw_good_name == "money") ?
-                                config.icons.money + " " :
+                            var local_good_icon = (good_name == "money") ?
+                              config.icons.money + " " :
+                              (getGood(good_name)) ?
+                                config.icons[getGood(good_name).icon] + " " :
                                 "";
-                            var local_good_name = (getGood(good_name).name) ?
-                              getGood(good_name).name :
-                              all_imports[i].good_type;
+                            var local_good_name = (getGood(good_name)) ?
+                              (getGood(good_name)) ?
+                                getGood(good_name).name :
+                                good_name :
+                              good_name;
 
                             if (!options.hide_display)
                               printAlert(game_obj.id, `Your transports have begun to ship ${parseNumber(raw_amount)} ${local_good_icon}${local_good_name} to **${ot_user.name}**. They will arrive in **${parseNumber(amount_of_turns)}** turn(s).`);

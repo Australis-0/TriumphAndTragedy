@@ -26,13 +26,15 @@ module.exports = {
     if (all_auto_trades.length > 0) {
       for (var i = 0; i < all_auto_trades.length; i++) {
         var local_auto_trade = usr.auto_trades[all_auto_trades[i]];
-        var local_good_icon = (getGood(local_auto_trade.good_type).icon) ?
-          getGood(local_auto_trade.good_type).icon + " " :
-          (local_auto_trade.good_type == "money") ?
-            config.icons.money + " " :
+        var local_good_icon = (local_auto_trade.good_type == "money") ?
+          config.icons.money + " " :
+          (getGood(local_auto_trade.good_type)) ?
+            config.icons[getGood(local_auto_trade.good_type).icon] + " " :
             "";
-        var local_good_name = (getGood(local_auto_trade.good_type).name) ?
-          getGood(local_auto_trade.good_type).name :
+        var local_good_name = (getGood(local_auto_trade.good_type)) ?
+          (getGood(local_auto_trade.good_type)) ?
+            getGood(local_auto_trade.good_type).name :
+            local_auto_trade.good_type :
           local_auto_trade.good_type;
 
         //Format string
@@ -66,14 +68,16 @@ module.exports = {
 
     for (var i = 0; i < all_exports.length; i++) {
       var local_export = usr.trades[all_exports[i]];
-      var local_good_icon = (getGood(local_export.good_type).icon) ?
-        config.icons[getGood(local_export.good_type).icon] + " " :
-        (local_export.good_type == "money") ?
-          config.icons.money + " " :
+      var local_good_icon = (local_export == "money") ?
+        config.icons.money + " " :
+        (getGood(local_export)) ?
+          config.icons[getGood(local_export).icon] + " " :
           "";
-      var local_good_name = (getGood(local_export.good_type).name) ?
-        getGood(local_export.good_type).name :
-        local_export.good_type;
+      var local_good_name = (getGood(local_export)) ?
+        (getGood(local_export)) ?
+          getGood(local_export).name :
+          local_export :
+        local_export;
 
       export_string.push(`Exporting ${local_good_icon}${parseNumber(local_export.amount)} ${local_good_name} to **${main.users[local_export.target].name}**.\nThe shipment will arrive in **${parseNumber(local_export.duration)}** turn(s).`);
     }
@@ -105,14 +109,16 @@ module.exports = {
     var all_imports = getImports(actual_id);
 
     for (var i = 0; i < all_imports.length; i++) {
-      var local_good_icon = (getGood(all_imports[i].good_type).icon) ?
-        config.icons[getGood(all_imports[i].good_type).icon] + " " :
-        (all_imports[i].good_type == "money") ?
-          config.icons.money + " " :
+      var local_good_icon = (all_imports[i] == "money") ?
+        config.icons.money + " " :
+        (getGood(all_imports[i])) ?
+          config.icons[getGood(all_imports[i]).icon] + " " :
           "";
-      var local_good_name = (getGood(all_imports[i].good_type).name) ?
-        getGood(all_imports[i].good_type).name :
-        all_imports[i].good_type;
+      var local_good_name = (getGood(all_imports[i])) ?
+        (getGood(all_imports[i])) ?
+          getGood(all_imports[i]).name :
+          all_imports[i] :
+        all_imports[i];
 
       import_string.push(`Importing ${local_good_icon}${parseNumber(all_imports[i].amount)} ${local_good_name} from **${main.users[all_imports[i].exporter].name}**.\nThe shipment will arrive in **${parseNumber(all_imports[i].duration)}** turn(s).`);
     }
@@ -182,13 +188,15 @@ module.exports = {
     //Print imports; may only print up to 10 imports
     for (var i = 0; i < local_imports.length; i++)
       if (i <= 10) {
-        var local_good_icon = (getGood(local_imports[i].good_type).icon) ?
-          config.icons[getGood(local_imports[i].good_type).icon] + " " :
-          (local_imports[i].good_type == "money") ?
-            config.icons.money + " " :
+        var local_good_icon = (local_imports[i].good_type == "money") ?
+          config.icons.money + " " :
+          (getGood(local_imports[i].good_type)) ?
+            config.icons[getGood(local_imports[i].good_type).icon] + " " :
             "";
-        var local_good_name = (getGood(local_imports[i].good_type).name) ?
-          getGood(local_imports[i].good_type).name :
+        var local_good_name = (getGood(local_imports[i].good_type)) ?
+          (getGood(local_imports[i].good_type)) ?
+            getGood(local_imports[i].good_type).name :
+            local_imports[i].good_type :
           local_imports[i].good_type;
 
         import_string.push(`Importing ${local_good_icon}${parseNumber(local_imports[i].amount)} ${local_good_name} from **${main.users[local_imports[i].exporter].name}**.\nThe shipment will arrive in **${parseNumber(local_imports[i].duration)}** turn(s).`);
@@ -206,13 +214,15 @@ module.exports = {
     for (var i = 0; i < all_exports.length; i++)
       if (i <= 10) {
         var local_export = usr.trades[all_exports[i]];
-        var local_good_icon = (getGood(local_export.good_type).icon) ?
-          config.icons[getGood(local_export.good_type).icon] + " " :
-          (local_export.good_type == "money") ?
-            config.icons.money + " " :
+        var local_good_icon = (local_export.good_type == "money") ?
+          config.icons.money + " " :
+          (getGood(local_export.good_type)) ?
+            config.icons[getGood(local_export.good_type).icon] + " " :
             "";
-        var local_good_name = (getGood(local_export.good_type).name) ?
-          getGood(local_export.good_type).name :
+        var local_good_name = (getGood(local_export.good_type)) ?
+          (getGood(local_export.good_type)) ?
+            getGood(local_export.good_type).name :
+            local_export.good_type :
           local_export.good_type;
 
         export_string.push(`Exporting ${local_good_icon}${parseNumber(local_export.amount)} ${local_good_name} to **${main.users[local_export.target].name}**.\nThe shipment will arrive in **${parseNumber(local_export.duration)}** turn(s).`);
@@ -222,7 +232,6 @@ module.exports = {
       export_string.push(`+${parseNumber(all_exports.length-10)} more ...`);
 
     //World Market
-
     market_string.push(config.localisation.divider);
     market_string.push("");
 

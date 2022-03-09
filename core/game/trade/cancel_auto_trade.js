@@ -15,14 +15,16 @@ module.exports = {
       if (selected_auto_trade) {
         //Formatting variables
         var good_name = getGood(selected_auto_trade.good_type, { return_key: true });
-        var local_good_icon = (getGood(good_name).icon) ?
-          getGood(good_name).icon + " " :
-          (raw_good_name == "money") ?
-            config.icons.money + " " :
+        var local_good_icon = (raw_good_name == "money") ?
+          config.icons.money + " " :
+          (getGood(good_name)) ?
+            config.icons[getGood(good_name).icon] + " " :
             "";
-        var local_good_name = (getGood(good_name).name) ?
-          getGood(good_name).name :
-          all_imports[i].good_type;
+        var local_good_name = (getGood(good_name)) ?
+          (getGood(good_name)) ?
+            getGood(good_name).name :
+            selected_auto_trade.good_type :
+          selected_auto_trade.good_type;
 
         //Print out alert first
         printAlert(game_obj.id, `You have cancelled the automatic shipment of ${local_good_icon}**${parseNumber(selected_auto_trade.amount)}** ${local_good_name} to **${main.users[selected_auto_trade.target].name}**.`);
