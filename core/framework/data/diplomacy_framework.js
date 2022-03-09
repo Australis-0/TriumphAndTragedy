@@ -613,10 +613,10 @@ module.exports = {
         var relations_obj = usr.diplomacy.relations[actual_ot_user_id];
 
         //If relations are of default type, delete
-        if (relations_obj.status == "stagnant" && relations_value == 0)
+        if (relations_obj.status == "stagnant" && relations_obj.value + relations_value == 0)
           delete usr.diplomacy.relations[actual_ot_user_id];
         else
-          relations_obj.value = relations_value;
+          relations_obj.value += relations_value;
       }
     } else {
       //Improve/decrease gradually over time if not instant
@@ -645,7 +645,7 @@ module.exports = {
         } else {
           var relations_obj = usr.diplomacy.relations[actual_ot_user_id];
 
-          relations_obj.improving_to = relations_value;
+          relations_obj.improving_to = relations_obj.improving_to + relations_value;
           relations_obj.status = improving_type;
           relations_obj.duration = duration;
         }
