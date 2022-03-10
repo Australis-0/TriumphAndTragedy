@@ -803,14 +803,14 @@ module.exports = {
           var new_manpower_mobilised = 0;
 
           //Mobilise more people if current_manpower_mobilised is not the same as total_manpower_mobilised
-          if (current_manpower_mobilised < total_manpower_mobilised)
+          if (usr.mobilisation.current_manpower_mobilised < usr.mobilisation.total_manpower_mobilised)
             new_manpower_mobilised += Math.ceil(
-              (total_manpower_mobilised - current_manpower_mobilised)/
+              (usr.mobilisation.total_manpower_mobilised - usr.mobilisation.current_manpower_mobilised)/
                 usr.mobilisation.original_duration
             );
 
           //How to deal with rounding?
-          new_manpower_mobilised = Math.min(new_manpower_mobilised, total_manpower_mobilised - current_manpower_mobilised);
+          new_manpower_mobilised = Math.min(new_manpower_mobilised, usr.mobilisation.total_manpower_mobilised - usr.mobilisation.current_manpower_mobilised);
 
           usr.mobilisation.total_manpower_mobilised += new_manpower_mobilised;
           usr.reserves[usr.mobilisation.unit_type] += new_manpower_mobilised;

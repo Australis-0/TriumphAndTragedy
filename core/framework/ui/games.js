@@ -269,16 +269,16 @@ module.exports = {
           var local_ui = interfaces[all_interfaces[i]];
 
           try {
-            var local_messages = returnChannel(local_ui.channel).messages.fetch({ limit: 10 }).then((messages) => {
-              messages.forEach(msg => msg.delete());
-            });
+            try {
+              var local_messages = returnChannel(local_ui.channel).messages.fetch({ limit: 10 }).then((messages) => {
+                messages.forEach(msg => msg.delete());
+              });
+            } catch (e) {
+              log.error(`Could not initialise game embeds: ${e}.`);
+            }
             initialiseGameEmbeds(all_interfaces[i]);
           } catch (e) {
-            if (!returnChannel(local_ui.channel))
-              clearGame(all_interfaces[i]);
-            if (returnChannel(local_ui.channel))
-              setTimeout(module.exports.reinitialiseGameEmbeds, 3000);
-
+            setTimeout(module.exports.reinitialiseGameEmbeds, 3000);
             log.error(`Could not delete messages and reinitialise game embeds: ${e}.`);
           }
         }

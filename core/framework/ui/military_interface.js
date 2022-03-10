@@ -85,7 +85,7 @@ module.exports = {
     var war_exhaustion_rate = config.defines.combat.war_exhaustion_tickdown_rate;
     if (!at_war && !isBlockaded(actual_id))
       if (usr.mobilisation.is_mobilised)
-        war_exhaustion_tickdown_rate -= config.defines.combat.war_exhaustion_mobilisation_rate;
+        war_exhaustion_rate -= config.defines.combat.war_exhaustion_mobilisation_rate;
 
     (usr.modifiers.war_exhaustion == 100 && at_war) ?
       military_hq_description.push(`${config.icons.retreat} We have hit **100%** War Exhaustion, and our enemies may now force us to come to an unconditional surrender!`) :
