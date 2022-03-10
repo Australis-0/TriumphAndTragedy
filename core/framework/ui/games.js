@@ -274,10 +274,12 @@ module.exports = {
             });
             initialiseGameEmbeds(all_interfaces[i]);
           } catch (e) {
-            if (returnChannel(local_ui.channel)) {
-              log.error(`Could not delete messages and reinitialise game embeds: ${e}.`);
+            if (!returnChannel(local_ui.channel))
+              clearGame(all_interfaces[i]);
+            if (returnChannel(local_ui.channel))
               setTimeout(module.exports.reinitialiseGameEmbeds, 3000);
-            }
+
+            log.error(`Could not delete messages and reinitialise game embeds: ${e}.`);
           }
         }
 

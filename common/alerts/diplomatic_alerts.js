@@ -147,7 +147,7 @@ config.alerts.diplomacy = {
           FROM: options.TO
         });
         createAlliance(options.FROM, options.TO);
-        options.TO_USER.diplomacy.used_diplomatic_slots++;
+        TO_USER.diplomacy.used_diplomatic_slots++;
       }
     },
     btn_decline_alliance: {
