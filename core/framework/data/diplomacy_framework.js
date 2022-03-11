@@ -645,7 +645,7 @@ module.exports = {
         } else {
           var relations_obj = usr.diplomacy.relations[actual_ot_user_id];
 
-          relations_obj.improving_to = relations_obj.improving_to + relations_value;
+          relations_obj.improving_to += relations_value;
           relations_obj.status = improving_type;
           relations_obj.duration = duration;
         }

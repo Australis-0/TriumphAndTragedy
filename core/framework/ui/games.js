@@ -274,6 +274,9 @@ module.exports = {
                 messages.forEach(msg => msg.delete());
               });
             } catch (e) {
+              setTimeout(function(){
+                clearGame(all_interfaces[i]);
+              }, 1);
               log.error(`Could not initialise game embeds: ${e}.`);
             }
             initialiseGameEmbeds(all_interfaces[i]);
