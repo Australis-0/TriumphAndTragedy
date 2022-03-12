@@ -29,9 +29,7 @@ module.exports = {
             if (construction_index) {
               var local_user = main.users[province_obj.owner];
 
-              console.log(local_user.under_construction.length);
               local_user.under_construction.splice(construction_index, 1);
-              console.log(local_user.under_construction.length);
             }
 
             //Modifier handler
@@ -49,10 +47,10 @@ module.exports = {
               var supplied_provinces = getProvincesInRange(province_id, config.defines.combat.infrastructure_range);
 
               for (var i = 0; i < supplied_provinces.length; i++) {
-                var province_obj = main.provinces[supplied_provinces[i]];
+                var local_province = main.provinces[supplied_provinces[i]];
 
-                province_obj.supply_limit = (province_obj.supply_limit) ?
-                  province_obj.supply_limit + building_obj.supply_limit*amount :
+                local_province.supply_limit = (local_province.supply_limit) ?
+                  local_province.supply_limit + building_obj.supply_limit*amount :
                   building_obj.supply_limit*amount;
               }
             }
@@ -65,6 +63,8 @@ module.exports = {
               province_obj.buildings.push({
                 building_type: raw_building_name
               });
+
+            console.log(province_obj);
           }
   },
 

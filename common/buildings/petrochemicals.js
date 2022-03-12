@@ -24,7 +24,7 @@ config.buildings.petrochemicals = {
   refineries: {
     name: "Refineries",
     singular: "Refinery",
-    icon: "refinery",
+    icon: "refineries",
     category: "petrochemicals",
 
     construction_turns: 4,

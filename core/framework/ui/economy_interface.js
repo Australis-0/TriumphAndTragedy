@@ -84,7 +84,7 @@ module.exports = {
 
     //Dynamically push resource production to economy_string
     var all_production = getProduction(actual_id);
-    var all_produced_goods = Object.keys(all_production);
+    var all_produced_goods = Object.keys(all_production).sort();
 
     for (var i = 0; i < all_produced_goods.length; i++) {
       var local_good = getGood(all_produced_goods[i]);

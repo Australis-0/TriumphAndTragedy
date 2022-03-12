@@ -590,27 +590,29 @@ module.exports = {
             for (var x = 0; x < all_users.length; x++)
               if (all_users[x] != actual_id)
                 //Make sure user can't have the same CB twice
-                if (local_cb.limit(usr, main.users[all_users[x]])) {
-                  var already_has_this_cb = false;
+                try {
+                  if (local_cb.limit(usr, main.users[all_users[x]])) {
+                    var already_has_this_cb = false;
 
-                  for (var y = 0; y < usr.diplomacy.casus_belli.length; y++) {
-                    var local_casus_belli = usr.diplomacy.casus_belli[y];
+                    for (var y = 0; y < usr.diplomacy.casus_belli.length; y++) {
+                      var local_casus_belli = usr.diplomacy.casus_belli[y];
 
-                    if (
-                      local_casus_belli.type == all_casus_belli[i] &&
-                      local_casus_belli.target == all_users[x]
-                    )
-                      already_has_this_cb = true;
+                      if (
+                        local_casus_belli.type == all_casus_belli[i] &&
+                        local_casus_belli.target == all_users[x]
+                      )
+                        already_has_this_cb = true;
+                    }
+
+                    if (!already_has_this_cb)
+                      usr.diplomacy.casus_belli.push({
+                        type: all_casus_belli[i],
+                        target: all_users[x],
+
+                        duration: 1
+                      });
                   }
-
-                  if (!already_has_this_cb)
-                    usr.diplomacy.casus_belli.push({
-                      type: all_casus_belli[i],
-                      target: all_users[x],
-
-                      duration: 1
-                    });
-                }
+                } catch {}
         }
 
         //Improve/decrease relations
