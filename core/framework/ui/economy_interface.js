@@ -6,6 +6,7 @@ module.exports = {
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
     var all_good_names = getGoods({ return_names: true });
+    var all_goods = lookup.all_goods;
     var all_pops = Object.keys(config.pops);
     var game_obj = getGameObject(user_id);
     var usr = main.users[actual_id];
@@ -84,10 +85,26 @@ module.exports = {
 
     //Dynamically push resource production to economy_string
     var all_production = getProduction(actual_id);
-    var all_produced_goods = Object.keys(all_production).sort();
+    var all_unprocessed_goods = Object.keys(all_production);
+    var sorted_goods_cache = [];
+
+    var all_produced_goods = [];
+
+    for (var i = 0; i < all_unprocessed_goods.length; i++) {
+      var local_good = lookup.all_goods[all_unprocessed_goods[i]];
+
+      (local_good) ?
+        sorted_goods_cache.push([(local_good.name) ? local_good.name : all_unprocessed_goods[i], all_unprocessed_goods[i]]) :
+        sorted_goods_cache.push([all_unprocessed_goods[i], all_unprocessed_goods[i]]);
+    }
+
+    sorted_goods_cache.sort(); //Only the first element in a nested array is sorted
+
+    for (var i = 0; i < sorted_goods_cache.length; i++)
+      all_produced_goods.push(sorted_goods_cache[i][1]);
 
     for (var i = 0; i < all_produced_goods.length; i++) {
-      var local_good = getGood(all_produced_goods[i]);
+      var local_good = lookup.all_goods[all_produced_goods[i]];
       var local_value = all_production[all_produced_goods[i]];
 
       if (local_good) {
