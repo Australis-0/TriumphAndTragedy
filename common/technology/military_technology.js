@@ -914,7 +914,6 @@ config.technology.military_technology = {
     year: 1840,
     unlocks: {
       unlock_unit: "riflemen",
-      obsolete_unit: "riflemen",
       army_upkeep: 0.05
     }
   },

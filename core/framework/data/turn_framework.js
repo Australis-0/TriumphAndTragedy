@@ -280,7 +280,7 @@ module.exports = {
     var usr = main.users[actual_id];
 
     //Declare local tracker variables
-    var all_armies = Object.keys(usr.armies);
+    var all_armies = (usr.armies) ? Object.keys(usr.armies) : [];
     var all_casus_belli = Object.keys(config.casus_belli);
     var all_cities = getCities(actual_id);
     var all_enemies = getEnemies(actual_id);
