@@ -272,10 +272,11 @@ module.exports = {
   },
 
   //Parses modifiers to a string
-  parseModifiers: function (arg0_modifier_obj, arg1_exclude_bullets) {
+  parseModifiers: function (arg0_modifier_obj, arg1_exclude_bullets, arg2_base_zero) {
     //Convert from parameters
     var modifier_obj = arg0_modifier_obj;
     var exclude_bullets = arg1_exclude_bullets;
+    var base_zero = arg2_base_zero;
 
     //Declare local instance variables
     var all_modifier_keys = Object.keys(modifier_obj);
@@ -299,8 +300,12 @@ module.exports = {
           var local_government = config.governments[all_modifier_keys[i]];
 
           local_modifier_name = `${local_government.name} Popularity`;
+        } else if (all_modifier_keys[i].includes("_ap")) {
+          local_modifier_name = parseString(all_modifier_keys[i].replace("_ap", " Attack"));
+        } else if (all_modifier_keys[i].includes("_dp")) {
+          local_modifier_name = parseString(all_modifier_keys[i].replace("_dp", " Defence"));
         } else {
-          local_modifier_name = "undefined";
+          local_modifier_name = parseString(all_modifier_keys[i]);
         }
       }
 
@@ -317,11 +322,11 @@ module.exports = {
             //Effect blocks
             case "obsolete_building":
               var building_names = [];
-              for (var i = 0; i < local_value.length; i++)
+              for (var x = 0; x < local_value.length; x++)
                 building_names.push(
-                  (getBuilding(local_value[i]).name) ?
-                    getBuilding(local_value[i]).name :
-                    local_value[i]
+                  (getBuilding(local_value[x]).name) ?
+                    getBuilding(local_value[x]).name :
+                    local_value[x]
                 )
 
               modifier_string.push(`${prefix}Obsoletes **${building_names.join(", ")}**`);
@@ -329,11 +334,11 @@ module.exports = {
               break;
             case "obsolete_government":
               var government_names = [];
-              for (var i = 0; i < local_value.length; i++)
+              for (var x = 0; x < local_value.length; x++)
                 government_names.push(
-                  (config.governments[local_value[i]].name) ?
-                    config.governments[local_value[i]].name :
-                    local_value[i]
+                  (config.governments[local_value[x]].name) ?
+                    config.governments[local_value[x]].name :
+                    local_value[x]
                 )
 
               modifier_string.push(`${prefix}Obsoletes **${government_names.join(", ")}**`);
@@ -341,11 +346,11 @@ module.exports = {
               break;
             case "obsolete_reform":
               var reform_names = [];
-              for (var i = 0; i < local_value.length; i++)
+              for (var x = 0; x < local_value.length; x++)
                 government_names.push(
-                  (getReform(local_value[i]).name) ?
-                    getReform(local_value[i]).name :
-                    local_value[i]
+                  (config.reforms[local_value[x]]) ?
+                    config.reforms[local_value[x]].name :
+                    local_value[x]
                 );
 
               modifier_string.push(`${prefix}Obsoletes **${reform_names.join(", ")}**`);
@@ -353,11 +358,11 @@ module.exports = {
               break;
             case "obsolete_unit":
               var unit_names = [];
-              for (var i = 0; i < local_value.length; i++)
+              for (var x = 0; x < local_value.length; x++)
                 unit_names.push(
-                  (getUnit(local_value[i]).name) ?
-                    getUnit(local_value[i]).name :
-                    local_value[i]
+                  (getUnit(local_value[x]).name) ?
+                    getUnit(local_value[x]).name :
+                    local_value[x]
                 );
 
               modifier_string.push(`${prefix}Obsoletes **${unit_names.join(", ")}**`);
@@ -366,11 +371,11 @@ module.exports = {
 
             case "unlock_building":
               var building_names = [];
-              for (var i = 0; i < local_value.length; i++)
+              for (var x = 0; x < local_value.length; x++)
                 building_names.push(
-                  (getBuilding(local_value[i]).name) ?
-                    getBuilding(local_value[i]).name :
-                    local_value[i]
+                  (getBuilding(local_value[x]).name) ?
+                    getBuilding(local_value[x]).name :
+                    local_value[x]
                 );
 
               modifier_string.push(`${prefix}Enables **${building_names.join(", ")}**`);
@@ -378,11 +383,11 @@ module.exports = {
               break;
             case "unlock_government":
               var government_names = [];
-              for (var i = 0; i < local_value.length; i++)
+              for (var x = 0; x < local_value.length; x++)
                 government_names.push(
-                  (getGovernment(local_value[i]).name) ?
-                    getGovernment(local_value[i]).name :
-                    local_value[i]
+                  (getGovernment(local_value[x]).name) ?
+                    getGovernment(local_value[x]).name :
+                    local_value[x]
                 );
 
               modifier_string.push(`${prefix}Unlocks **${government_names.join(", ")}**`);
@@ -390,11 +395,11 @@ module.exports = {
               break;
             case "unlock_reform":
               var reform_names = [];
-              for (var i = 0; i < local_value.length; i++)
+              for (var x = 0; x < local_value.length; x++)
                 reform_names.push(
-                  (getReform(local_value[i]).name) ?
-                    getReform(local_value[i]).name :
-                    local_value[i]
+                  (config.reforms[local_value[x]]) ?
+                    config.reforms[local_value[x]].name :
+                    local_value[x]
                 );
 
               modifier_string.push(`${prefix}Unlocks **${reform_names.join(", ")}**`);
@@ -402,11 +407,11 @@ module.exports = {
               break;
             case "unlock_unit":
               var unit_names = [];
-              for (var i = 0; i < local_value.length; i++)
+              for (var x = 0; x < local_value.length; x++)
                 unit_names.push(
-                  (getUnit(local_value[i]).name) ?
-                    getUnit(local_value[i]).name :
-                    local_value[i]
+                  (getUnit(local_value[x]).name) ?
+                    getUnit(local_value[x]).name :
+                    local_value[x]
                 );
 
               modifier_string.push(`${prefix}Enables **${unit_names.join(", ")}**`);
@@ -415,7 +420,9 @@ module.exports = {
 
             //Default parser
             default:
-              modifier_string.push(`${prefix}**${printPercentage(local_value[0], { display_prefix: true })}** ${local_modifier_name}`);
+              (local_modifier.type == "percentage" || (local_value[0] > -1 && local_value[0] < 1)) ?
+                modifier_string.push(`${prefix}**${printPercentage(local_value[0], { display_prefix: true, base_zero: base_zero })}** ${local_modifier_name}`) :
+                modifier_string.push(`${prefix}**${parseNumber(local_value[0], { display_prefix: true, base_zero: base_zero })}** ${local_modifier_name}`);
 
               break;
           }
