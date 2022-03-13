@@ -319,6 +319,12 @@ module.exports = {
         default:
           //By default a modifier is parsed as percentage, but only if it is not an effect
           switch (all_modifier_keys[i]) {
+            case "set_mobilisation_unit":
+              var unit_obj = getUnit(local_value[0]);
+              modifier_string.push(`${prefix}Sets Mobilisation Unit to **${(unit_obj.name) ? unit_obj.name : local_value[0]}**`);
+
+              break;
+
             //Effect blocks
             case "obsolete_building":
               var building_names = [];
@@ -409,8 +415,10 @@ module.exports = {
               var unit_names = [];
               for (var x = 0; x < local_value.length; x++)
                 unit_names.push(
-                  (getUnit(local_value[x]).name) ?
-                    getUnit(local_value[x]).name :
+                  (getUnit(local_value[x])) ?
+                    (getUnit(local_value[x]).name) ?
+                      getUnit(local_value[x]).name :
+                      local_value[x] :
                     local_value[x]
                 );
 

@@ -211,6 +211,31 @@ config.units.naval = {
     },
     quantity: 5
   },
+  ironclads: {
+    name: "Ironclads",
+    singular: "Ironclad",
+
+    attack: 1200,
+    defence: 1800,
+    manoeuvre: 3,
+    initative: 1,
+
+    cost: {
+      iron: 10,
+      artillery: 3,
+      uniforms: 5,
+      ammunition: 5,
+      coal: 3,
+      food: 5,
+      money: 5000,
+
+      naval_units_cp: 20
+    },
+    manpower_cost: {
+      soldiers: 800
+    },
+    quantity: 1
+  },
   breastwork_monitors: {
     name: "Breastwork Monitors",
     singular: "Breastwork Monitor",
