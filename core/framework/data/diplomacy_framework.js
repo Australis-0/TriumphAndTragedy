@@ -354,7 +354,7 @@ module.exports = {
 
     //Iterate over all users and push all military access objects to array
     for (var i = 0; i < all_users.length; i++)
-      if (hasMilitaryAccess(all_users[i], actual_id))
+      if (module.exports.hasMilitaryAccess(all_users[i], actual_id))
         all_military_accesses.push(all_users[i]);
 
     //Return statement
@@ -531,13 +531,15 @@ module.exports = {
     var usr = main.users[actual_id];
 
     //Check if user_id has military_access on ot_user_id
-    if (usr.diplomacy.military_access[actual_ot_user_id]) {
-      var local_military_access = usr.diplomacy.military_access[actual_ot_user_id];
+    try {
+      if (usr.diplomacy.military_access[actual_ot_user_id]) {
+        var local_military_access = usr.diplomacy.military_access[actual_ot_user_id];
 
-      //Return statement if an access agreement is currently active
-      if (local_military_access.status == "active")
-        return true;
-    }
+        //Return statement if an access agreement is currently active
+        if (local_military_access.status == "active")
+          return true;
+      }
+    } catch {}
   },
 
   hasNonAggressionPact: function (arg0_user, arg1_user) {

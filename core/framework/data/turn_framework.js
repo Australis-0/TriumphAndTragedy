@@ -1222,7 +1222,7 @@ module.exports = {
 
             //Check if tech has finished researching
             if (usr.researching[i].total_research_cost <= usr.researching[i].current_investment + max_knowledge_investment) {
-              var local_tech_obj = usr.researching[i].technology;
+              var local_tech_obj = getTechnology(usr.researching[i].technology);
 
               //Make sure that tech is not already researched
               if (!usr.researched_technologies.includes(usr.researching[i].technology)) {
@@ -1245,10 +1245,6 @@ module.exports = {
               usr.researching[i].current_investment += Math.round(max_knowledge_investment);
             }
           }
-
-          //Actually remove techs that have finished researching
-          for (var i = 0; i < research_removal_array.length; i++)
-            removeElement(usr.researching, research_removal_array[i]);
         }
       }
 
@@ -1256,19 +1252,21 @@ module.exports = {
       {
         var research_queue_removal_array = [];
 
-        for (var i = 0; i < emptied_research_slots; i++)
-          try {
-            //Attempt to research everything in queue
-            var research_status = research(actual_id, usr.research_queue[i], true, true);
+        for (var i = emptied_research_slots; i >= 0; i--)
+          if (!usr.researched_technologies.includes(usr.research_queue[i])) {
+            try {
+              //Attempt to research everything in queue
+              var research_status = research(user_id, usr.research_queue[i], true, true);
 
-            //If research command went through, remove it from the queue
-            if (research_status)
-              research_queue_removal_array.push(usr.research_queue[i]);
-          } catch {}
-
-        //Remove all research_queue_removal_array indices from the queue
-        for (var i = 0; i < research_queue_removal_array.length; i++)
-          removeElement(usr.research_queue, research_queue_removal_array[i]);
+              //If research command went through, remove it from the queue
+              if (research_status)
+                usr.research_queue.splice(i, 1);
+            } catch (e) {
+              console.log(e);
+            }
+          } else {
+            usr.research_queue.splice(i, 1);
+          }
       }
     }
     console.timeEnd(`Tech processing!`);

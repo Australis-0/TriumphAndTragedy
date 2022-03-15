@@ -38,7 +38,7 @@ module.exports = {
 
         if (usr.total_ceded_this_turn < config.defines.diplomacy.cede_province_limit) {
           if (usr.total_cities_ceded_this_turn < config.defines.diplomacy.cede_city_limit) {
-            if (!is_being_justified_on) {
+            if (!is_being_justified_on[0]) {
               if (!at_war) {
                 if (ot_user.options.allow_ceding.includes(actual_id)) {
                   //Update tracker variables

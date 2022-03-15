@@ -330,7 +330,7 @@ module.exports = {
               var building_names = [];
               for (var x = 0; x < local_value.length; x++)
                 building_names.push(
-                  (getBuilding(local_value[x]).name) ?
+                  (getBuilding(local_value[x])) ?
                     getBuilding(local_value[x]).name :
                     local_value[x]
                 )
@@ -342,8 +342,10 @@ module.exports = {
               var government_names = [];
               for (var x = 0; x < local_value.length; x++)
                 government_names.push(
-                  (config.governments[local_value[x]].name) ?
-                    config.governments[local_value[x]].name :
+                  (config.governments[local_value[x]]) ?
+                    (config.governments[local_value[x]].name) ?
+                      config.governments[local_value[x]].name :
+                      local_value[x] :
                     local_value[x]
                 )
 
@@ -355,7 +357,9 @@ module.exports = {
               for (var x = 0; x < local_value.length; x++)
                 government_names.push(
                   (config.reforms[local_value[x]]) ?
-                    config.reforms[local_value[x]].name :
+                      (config.reforms[local_value[x]].name) :
+                        config.reforms[local_value[x]].name :
+                        local_value[x]
                     local_value[x]
                 );
 
@@ -366,8 +370,10 @@ module.exports = {
               var unit_names = [];
               for (var x = 0; x < local_value.length; x++)
                 unit_names.push(
-                  (getUnit(local_value[x]).name) ?
-                    getUnit(local_value[x]).name :
+                  (getUnit(local_value[x])) ?
+                      (getUnit(local_value[x]).name) :
+                        getUnit(local_value[x]).name :
+                        local_value[x] :
                     local_value[x]
                 );
 
@@ -379,8 +385,10 @@ module.exports = {
               var building_names = [];
               for (var x = 0; x < local_value.length; x++)
                 building_names.push(
-                  (getBuilding(local_value[x]).name) ?
-                    getBuilding(local_value[x]).name :
+                  (getBuilding(local_value[x])) ?
+                      (getBuilding(local_value[x]).name) ?
+                        getBuilding(local_value[x]).name :
+                        local_value[x] :
                     local_value[x]
                 );
 
@@ -391,8 +399,10 @@ module.exports = {
               var government_names = [];
               for (var x = 0; x < local_value.length; x++)
                 government_names.push(
-                  (getGovernment(local_value[x]).name) ?
-                    getGovernment(local_value[x]).name :
+                  (getGovernment(local_value[x])) ?
+                      (getGovernment(local_value[x]).name) ?
+                        getGovernment(local_value[x]).name :
+                        local_value[x]:
                     local_value[x]
                 );
 
@@ -404,7 +414,9 @@ module.exports = {
               for (var x = 0; x < local_value.length; x++)
                 reform_names.push(
                   (config.reforms[local_value[x]]) ?
-                    config.reforms[local_value[x]].name :
+                      (config.reforms[local_value[x]].name) ?
+                        config.reforms[local_value[x]].name :
+                        local_value[x] :
                     local_value[x]
                 );
 
@@ -416,7 +428,7 @@ module.exports = {
               for (var x = 0; x < local_value.length; x++)
                 unit_names.push(
                   (getUnit(local_value[x])) ?
-                    (getUnit(local_value[x]).name) ?
+                    (getUnit(local_value[x])) ?
                       getUnit(local_value[x]).name :
                       local_value[x] :
                     local_value[x]
