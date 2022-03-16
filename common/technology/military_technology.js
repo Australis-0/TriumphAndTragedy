@@ -1377,7 +1377,7 @@ config.technology.military_technology = {
     year: 1915,
     unlocks: {
       unlock_unit: "great_war_infantry",
-      obsolete_units: ["riflemen", "breechloaded_infantry"]
+      obsolete_unit: ["riflemen", "breechloaded_infantry"]
     }
   },
   mobile_field_hospitals: {

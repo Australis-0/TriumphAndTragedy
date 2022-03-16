@@ -357,9 +357,9 @@ module.exports = {
               for (var x = 0; x < local_value.length; x++)
                 government_names.push(
                   (config.reforms[local_value[x]]) ?
-                      (config.reforms[local_value[x]].name) :
+                      (config.reforms[local_value[x]].name) ?
                         config.reforms[local_value[x]].name :
-                        local_value[x]
+                        local_value[x] :
                     local_value[x]
                 );
 
@@ -371,7 +371,7 @@ module.exports = {
               for (var x = 0; x < local_value.length; x++)
                 unit_names.push(
                   (getUnit(local_value[x])) ?
-                      (getUnit(local_value[x]).name) :
+                      (getUnit(local_value[x]).name) ?
                         getUnit(local_value[x]).name :
                         local_value[x] :
                     local_value[x]

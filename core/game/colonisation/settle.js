@@ -80,16 +80,6 @@ module.exports = {
 
       //Check if unit_type even exists
       if (usr.reserves[unit_type] > 0) {
-        //Get unit_costs so that we can subtract the needed manpower from the used pile
-        var unit_costs = getUnitCost(actual_id, unit_type);
-
-        var all_unit_costs = Object.keys(unit_costs);
-
-        //Deduct from used pops
-        for (var i = 0; i < all_unit_costs.length; i++)
-          if (all_pops.includes(all_unit_costs[i]))
-            usr.pops[`used_${all_unit_costs[i]}`] = Math.max(usr.pops[`used_${all_unit_costs[i]}`] - unit_costs[all_unit_costs[i]], 0);
-
         //Check for errors
         var local_checks = 0;
         for (var i = 0; i < provinces.length; i++)
@@ -121,6 +111,16 @@ module.exports = {
 
           printError(game_obj.id, error_msg.join("\n"));
         } else {
+          //Get unit_costs so that we can subtract the needed manpower from the used pile
+          var unit_costs = getUnitCost(actual_id, unit_type);
+
+          var all_unit_costs = Object.keys(unit_costs);
+
+          //Deduct from used pops
+          for (var i = 0; i < all_unit_costs.length; i++)
+            if (all_pops.includes(all_unit_costs[i]))
+              usr.pops[`used_${all_unit_costs[i]}`] = Math.max(usr.pops[`used_${all_unit_costs[i]}`] - unit_costs[all_unit_costs[i]], 0);
+
           //The $settle command went through, create a new colonial charter, update Colonisation UI if currently active, and send user feedback
           usr.reserves[unit_type]--;
 
@@ -187,6 +187,7 @@ module.exports = {
     //Error tracker variables
     var colonised_provinces = [];
     var error_msg = [];
+    var foreign_countries = [];
     var has_duplicates = false;
     var missing_provinces = [];
 
@@ -198,8 +199,10 @@ module.exports = {
           if (findDuplicates(provinces).length == 0) //Check for any duplicates
             if (!main.provinces[provinces[i]].owner) //Check to make sure province is not settled
               local_checks++;
-            else
+            else {
               colonised_provinces.push(`**${provinces[i]}**`);
+              foreign_countries.push(`**${main.users[main.provinces[provinces[i]].owner].name}**`);
+            }
           else
             has_duplicates = true;
         else
@@ -209,7 +212,7 @@ module.exports = {
       if (local_checks < provinces.length) {
         error_msg.push(`**Your colonists are baffled at your command!** The following errors were jotted down:`);
         if (colonised_provinces.length > 0)
-          error_msg.push(`- The province(s) of ${colonised_provinces.join(", ")} were already owned by other nations.`);
+          error_msg.push(`- The province(s) of ${colonised_provinces.join(", ")} were already owned by the nations of ${parseList(foreign_countries.join(", "))}.`);
         if (has_duplicates)
           error_msg.push(`- The specified province(s) of ${findDuplicates(provinces).join(", ")} were duplicates of one another.`);
         if (missing_provinces.length > 0)

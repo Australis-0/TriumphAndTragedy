@@ -274,12 +274,10 @@ module.exports = {
                 messages.forEach(msg => msg.delete());
               });
             } catch (e) {
-              setTimeout(function(){
-                clearGame(all_interfaces[i]);
-              }, 1);
+              clearGame(all_interfaces[i]);
               log.error(`Could not initialise game embeds: ${e}.`);
             }
-            initialiseGameEmbeds(all_interfaces[i]);
+            module.exports.initialiseGameEmbeds(all_interfaces[i]);
           } catch (e) {
             setTimeout(module.exports.reinitialiseGameEmbeds, 3000);
             log.error(`Could not delete messages and reinitialise game embeds: ${e}.`);
