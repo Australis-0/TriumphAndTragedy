@@ -3,7 +3,7 @@ module.exports = {
   clearGame: function (arg0_game_id) {
     //Convert from parameters
     var game_id = arg0_game_id;
-    var game_obj = interfaces[arg0_game_id];
+    var game_obj = main.interfaces[arg0_game_id];
 
     //Delete game channel first
     try {
@@ -260,13 +260,13 @@ module.exports = {
     //Regular error trapping
     try {
        //Declare local instance variables
-       var all_interfaces = Object.keys(interfaces);
+       var all_interfaces = Object.keys(main.interfaces);
        var open_channels = [];
 
        //Reinitialise all game embeds
        for (var i = 0; i < all_interfaces.length; i++)
-        if (interfaces[all_interfaces[i]].type == "game") {
-          var local_ui = interfaces[all_interfaces[i]];
+        if (main.interfaces[all_interfaces[i]].type == "game") {
+          var local_ui = main.interfaces[all_interfaces[i]];
 
           try {
             try {

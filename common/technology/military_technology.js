@@ -637,7 +637,7 @@ config.technology.military_technology = {
     research_cost: 1000,
     year: 1753,
     unlocks: {
-      unlock_building: ["aeroports", "air_bases"]
+      unlock_building: ["air_bases"]
     }
   },
   light_infantry: {
