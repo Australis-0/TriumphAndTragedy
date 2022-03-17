@@ -265,7 +265,7 @@ module.exports = {
 
        //Reinitialise all game embeds
        for (var i = 0; i < all_interfaces.length; i++)
-        if (main.interfaces[all_interfaces[i]].type == "game") {
+        if (main.interfaces[all_interfaces[i]].channel) {
           var local_ui = main.interfaces[all_interfaces[i]];
 
           try {

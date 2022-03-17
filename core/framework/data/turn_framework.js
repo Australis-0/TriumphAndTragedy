@@ -1252,7 +1252,7 @@ module.exports = {
       {
         var research_queue_removal_array = [];
 
-        for (var i = emptied_research_slots; i >= 0; i--)
+        for (var i = 0; i < emptied_research_slots; i++)
           if (!usr.researched_technologies.includes(usr.research_queue[i])) {
             try {
               //Attempt to research everything in queue
@@ -1260,13 +1260,17 @@ module.exports = {
 
               //If research command went through, remove it from the queue
               if (research_status)
-                usr.research_queue.splice(i, 1);
+                research_queue_removal_array.push(usr.research_queue[i]);
             } catch (e) {
               console.log(e);
             }
           } else {
-            usr.research_queue.splice(i, 1);
+            research_queue_removal_array.push(usr.research_queue[i]);
           }
+
+        //Remove research_queue_removal_array from research_queue
+        for (var i = 0; i < research_queue_removal_array.length; i++)
+          removeElement(usr.research_queue, research_queue_removal_array[i]);
       }
     }
     console.timeEnd(`Tech processing!`);
