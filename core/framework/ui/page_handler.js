@@ -1854,7 +1854,7 @@ module.exports = {
             if (input.startsWith("research ")) {
               var tech_to_research = input.replace("research ", "");
 
-              research(actual_id, tech_to_research);
+              research(user_id, tech_to_research);
             } else if (input == "research") {
               initialiseResearch(user_id);
             }
