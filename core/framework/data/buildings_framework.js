@@ -63,8 +63,6 @@ module.exports = {
               province_obj.buildings.push({
                 building_type: raw_building_name
               });
-
-            console.log(province_obj);
           }
   },
 
