@@ -17,6 +17,21 @@ module.exports = {
       in_visual_prompt = (in_visual_prompt.type == "visual_prompt");
 
     if (!in_visual_prompt) {
+      //Global commands [WIP] - Add convenience for city viewing, province viewing, list viewing, and army viewing; build, craft, settle, and tax commands
+      {
+        if (input == "inventory") {
+          game_obj.page = "inventory";
+          printInventory(user_id);
+        }
+        if (input == "view cities") {
+          game_obj.page = "cities_list";
+          createPageMenu(game_obj.middle_embed, {
+            embed_pages: printCities(game_obj.user),
+            user: game_obj.user
+          });
+        }
+      }
+
       //Alerts page handler
       {
         if (game_obj.page == "alerts") {
@@ -1062,19 +1077,6 @@ module.exports = {
               (usr.city_cap-usr.city_count > 0) ?
                 initialiseFoundCity(user_id) :
                 printError(game_obj.id, `You don't have enough city slots remaining to found a new city!`);
-
-              break;
-            case "inventory":
-              game_obj.page = "inventory";
-              printInventory(user_id);
-
-              break;
-            case "view cities":
-              game_obj.page = "cities_list";
-              createPageMenu(game_obj.middle_embed, {
-                embed_pages: printCities(game_obj.user),
-                user: game_obj.user
-              });
 
               break;
           }

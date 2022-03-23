@@ -626,9 +626,9 @@ module.exports = {
       var current_relations = module.exports.getRelations(actual_id, actual_ot_user_id)[0];
       var improving_type = "stagnant";
 
-      if (relations_value < current_relations) {
+      if (relations_value < 0) {
         improving_type = "decreasing";
-      } else if (relations_value == current_relations) {
+      } else if (relations_value == 0) {
         improving_type = "stagnant";
       } else {
         improving_type = "increasing";
