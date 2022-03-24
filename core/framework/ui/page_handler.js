@@ -17,12 +17,68 @@ module.exports = {
       in_visual_prompt = (in_visual_prompt.type == "visual_prompt");
 
     if (!in_visual_prompt) {
-      //Global commands [WIP] - Add convenience for city viewing, province viewing, list viewing, and army viewing; build, craft, settle, and tax commands
+      //Global commands
       {
+        //[Build]
+        if (!game_obj.page.startsWith("view_city")) {
+          if (input == "build")
+            visualPrompt(game_obj.alert_embed, user_id, {
+              title: `Construct Buildings:`,
+              prompts: [
+                [`Which city would you like to build in?\n\nType **[View Cities]** for a complete list of your cities.`, "string"],
+                [`How many buildings of this type would you like to begin building?`, "number", { min: 1 }],
+                [`What would you like to build in your city?\n\nType **[Build List]** for a list of valid buildings.\nType **[Inventory]** to view your inventory.`, "string"]
+              ]
+            },
+            function (arg) {
+              build(user_id, arg[0], arg[1], arg[2]);
+            },
+            function (arg) {
+              switch (arg) {
+                case "build list":
+                  createPageMenu(game_obj.middle_embed, {
+                    embed_pages: printBuildList(actual_id),
+                    user: game_obj.user
+                  });
+                  return true;
+
+                  break;
+                case "cities list":
+                  createPageMenu(game_obj.middle_embed, {
+                    embed_pages: printCities(game_obj.user),
+                    user: game_obj.user
+                  });
+                  return true;
+
+                  break;
+                case "inventory":
+                  printInventory(user_id);
+                  return true;
+
+                  break;
+              }
+            });
+        }
+
+        //[Craft]
+        if (["craft", "train units"].includes(input))
+          initialiseCraft(user_id);
+
+        //[Inventory]
         if (input == "inventory") {
           game_obj.page = "inventory";
           printInventory(user_id);
         }
+
+        //[Settle]
+        if (input == "settle")
+          initialiseSettle(user_id);
+
+        //[Set Tax]
+        if (input == "set tax")
+          initialiseSetTax(user_id);
+
+        //[View (Name)]
         if (input.startsWith("view ")) {
           var view_obj = input.replace("view ", "").trim();
 
@@ -35,6 +91,18 @@ module.exports = {
               game_obj.page = "army_list";
 
               break;
+            case "casus belli":
+            case "cb list":
+              //[View CB List]
+              if (input == "view cb list") {
+                createPageMenu(game_obj.middle_embed, {
+                  embed_pages: printCBs(user_id),
+                  user: game_obj.user
+                });
+                game_obj.page = "cb_list";
+              }
+
+              break;
             case "cities":
               createPageMenu(game_obj.middle_embed, {
                 embed_pages: printCities(game_obj.user),
@@ -43,12 +111,43 @@ module.exports = {
               game_obj.page = "cities_list";
 
               break;
+            case "culture":
+              createPageMenu(game_obj.middle_embed, {
+                embed_pages: printCultures(user_id),
+                user: game_obj.user
+              });
+              game_obj.page = "culture";
+
+              break;
+            case "government":
+            case "governments":
+              createPageMenu(game_obj.middle_embed, {
+                embed_pages: printGovernmentList(actual_id),
+                user: game_obj.user
+              });
+              game_obj.page = "view_governments";
+
+              break;
+            case "ledger":
+              printLedger(user_id);
+              game_obj.page = "ledger";
+
+              break;
             case "provinces":
               createPageMenu(game_obj.middle_embed, {
                 embed_pages: printProvinces(user_id),
                 user: game_obj.user
               });
               game_obj.page = "provinces_list";
+
+              break;
+            case "unit list":
+            case "units":
+              createPageMenu(game_obj.middle_embed, {
+                embed_pages: printUnitList(game_obj.user),
+                user: game_obj.user
+              });
+              game_obj.page = "unit_list";
 
               break;
             default:
@@ -213,26 +312,6 @@ module.exports = {
         }
       }
 
-      //Budget page handler
-      {
-        if (budget_pages.includes(game_obj.page)) {
-          switch (input) {
-            case "set tax":
-              visualPrompt(game_obj.alert_embed, user_id, {
-                title: `Set Tax:`,
-                prompts: [
-                  [`What is the percentage of tax you would like to set for your citizenry?`, "number", { min: 0, max: Math.ceil(usr.modifiers.max_tax*100) }]
-                ]
-              },
-              function (arg) {
-                setTax(user_id, arg[0]);
-              });
-
-              break;
-          }
-        }
-      }
-
       //Cities page handler
       {
         if (game_obj.page == "cities_list") {
@@ -297,12 +376,12 @@ module.exports = {
               visualPrompt(game_obj.alert_embed, user_id, {
                 title: `Constructing Building(s) in ${city_obj.name}:`,
                 prompts: [
-                  [`What would you like to build in your city?\n\nType **[Build List]** for a list of valid buildings.\nType **[Inventory]** to view your inventory.`, "string"],
-                  [`How many buildings of this type would you like to begin building?`, "number", { min: 1 }]
+                  [`How many buildings of this type would you like to begin building?`, "number", { min: 1 }],
+                  [`What would you like to build in your city?\n\nType **[Build List]** for a list of valid buildings.\nType **[Inventory]** to view your inventory.`, "string"]
                 ]
               },
               function (arg) {
-                build(user_id, city_obj.name, arg[1], arg[0]);
+                build(user_id, city_obj.name, arg[0], arg[1]);
               },
               function (arg) {
                 switch (arg) {
@@ -423,10 +502,6 @@ module.exports = {
               game_obj.page = "reserves";
             }
 
-            //[Settle]
-            if (input == "settle")
-              initialiseSettle(user_id);
-
             //[Settle Starting Provinces]
             if (["settle starting province", "settle starting provinces"].includes(input)) {
               var has_no_provinces = (getProvinces(actual_id, { include_hostile_occupations: true, include_occupations: true }).length == 0);
@@ -467,10 +542,6 @@ module.exports = {
                   user: game_obj.user
                 });
               });
-
-            //[Train Units]
-            if (["craft", "train units"].includes(input))
-              initialiseCraft(user_id);
 
             //[Unit List]
             if (["craft list", "unit list"].includes(input)) {
@@ -548,10 +619,6 @@ module.exports = {
               break;
             case "set government":
               initialiseSetGovernmentCommand(user_id);
-
-              break;
-            case "set tax":
-              initialiseSetTax(user_id);
 
               break;
             case "settle starting province":
@@ -734,21 +801,6 @@ module.exports = {
               game_obj.page = "view_customisation";
             }
 
-          //[View CB List]
-          if (input == "view cb list") {
-            createPageMenu(game_obj.middle_embed, {
-              embed_pages: printCBs(user_id),
-              user: game_obj.user
-            });
-            game_obj.page = "cb_list";
-          }
-
-          //[View Ledger]
-          if (input == "view ledger") {
-            printLedger(user_id);
-            game_obj.page = "ledger";
-          }
-
           //[View Relations]
           if (input == "view relations") {
             initialiseViewDiplomacy(user_id);
@@ -897,16 +949,6 @@ module.exports = {
                 user: game_obj.user
               });
             });
-
-          //[View Relations]
-          if (input == "view relations") {
-            initialiseViewDiplomacy(user_id);
-          } else if (input.startsWith("view relations ")) {
-            var ot_user_id = returnMention(game_obj.page.replace("view relations ", ""));
-
-            viewDiplomacy(user_id, ot_user_id);
-            game_obj.page = `diplomacy_view_${main.global.user_map[ot_user_id]}`;
-          }
         }
 
         if (game_obj.page.startsWith("view_cb_")) {
@@ -1525,10 +1567,6 @@ module.exports = {
           if (input == "territorial violation")
             initialiseAvoidTerritorialViolation(user_id);
 
-          //[Train Units]
-          if (["train units", "craft"].includes(input))
-            initialiseCraft(user_id);
-
           //[Transfer Units]
           if (input == "transfer units")
             initialiseTransferUnits(user_id);
@@ -1591,10 +1629,6 @@ module.exports = {
             printMilitary(user_id);
             game_obj.page = "military";
           }
-
-          //[Craft]
-          if (input == "craft")
-            initialiseCraft(user_id);
 
           //[Jump To Page]
           if (input == "jump to page")
@@ -1718,10 +1752,6 @@ module.exports = {
             //[Set Government]
             if (input == "set government")
               initialiseSetGovernmentCommand(user_id);
-
-            //[Set Tax]
-            if (input == "set tax")
-              initialiseSetTax(user_id);
 
             //[Support Party]
             if (input == "support party")
