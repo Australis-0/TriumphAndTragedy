@@ -23,12 +23,93 @@ module.exports = {
           game_obj.page = "inventory";
           printInventory(user_id);
         }
-        if (input == "view cities") {
-          game_obj.page = "cities_list";
-          createPageMenu(game_obj.middle_embed, {
-            embed_pages: printCities(game_obj.user),
-            user: game_obj.user
-          });
+        if (input.startsWith("view ")) {
+          var view_obj = input.replace("view ", "").trim();
+
+          switch (view_obj) {
+            case "armies":
+              createPageMenu(game_obj.middle_embed, {
+                embed_pages: printArmyList(user_id),
+                user: game_obj.user
+              });
+              game_obj.page = "army_list";
+
+              break;
+            case "cities":
+              createPageMenu(game_obj.middle_embed, {
+                embed_pages: printCities(game_obj.user),
+                user: game_obj.user
+              });
+              game_obj.page = "cities_list";
+
+              break;
+            case "provinces":
+              createPageMenu(game_obj.middle_embed, {
+                embed_pages: printProvinces(user_id),
+                user: game_obj.user
+              });
+              game_obj.page = "provinces_list";
+
+              break;
+            default:
+              var army_obj = getArmy(actual_id, view_obj);
+              var city_obj = getCity(view_obj, { users: actual_id });
+
+              if (main.provinces[view_obj]) {
+                printProvince(game_obj.user, view_obj);
+              } else {
+                var army_name_exact_match = false;
+                var city_name_exact_match = false;
+
+                if (army_obj)
+                  if (army_obj.name.trim().toLowerCase() == view_obj)
+                    army_name_exact_match = true;
+                if (city_obj)
+                  if (city_obj.name.trim().toLowerCase() == view_obj)
+                    city_name_exact_match = true;
+
+                //Army smart display
+                if (army_obj) {
+                  if (city_name_exact_match && !army_name_exact_match) {
+                    createPageMenu(game_obj.middle_embed, {
+                      embed_pages: printCity(game_obj.user, city_obj.name),
+                      user: game_obj.user
+                    });
+
+                    game_obj.page = `view_city_${city_obj.name}`;
+                  } else {
+                    var viewed_army = printArmy(user_id, army_obj.name);
+
+                    createPageMenu(game_obj.middle_embed, {
+                      embed_pages: viewed_army,
+                      user: game_obj.user
+                    });
+                    game_obj.page = `army_viewer_${army_obj.name}`;
+                  }
+                }
+
+                //City smart display
+                if (city_obj)
+                  if (army_name_exact_match && !city_name_exact_match) {
+                    var viewed_army = printArmy(user_id, army_obj.name);
+
+                    createPageMenu(game_obj.middle_embed, {
+                      embed_pages: viewed_army,
+                      user: game_obj.user
+                    });
+                    game_obj.page = `army_viewer_${army_obj.name}`;
+                  } else {
+                    createPageMenu(game_obj.middle_embed, {
+                      embed_pages: printCity(game_obj.user, city_obj.name),
+                      user: game_obj.user
+                    });
+
+                    game_obj.page = `view_city_${city_obj.name}`;
+                  }
+              }
+
+              break;
+          }
         }
       }
 
@@ -1682,14 +1763,6 @@ module.exports = {
                 user: game_obj.user
               });
               game_obj.page = "culture";
-
-              break;
-            case "view provinces":
-              game_obj.page = "provinces_list";
-              createPageMenu(game_obj.middle_embed, {
-                embed_pages: printProvinces(user_id),
-                user: game_obj.user
-              });
 
               break;
           }
