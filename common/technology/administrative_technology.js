@@ -801,7 +801,7 @@ config.technology.administrative_technology = {
     research_cost: 5000,
     year: 1929,
     unlocks: {
-      infamy_loss: 0.02
+      infamy_loss: -0.02
     }
   },
   colonial_management: {
@@ -916,7 +916,7 @@ config.technology.administrative_technology = {
     research_cost: 6500,
     year: 1945,
     unlocks: {
-      infamy_loss: 0.01
+      infamy_loss: -0.01
     }
   },
 
