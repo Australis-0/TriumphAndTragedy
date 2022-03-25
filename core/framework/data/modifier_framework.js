@@ -43,23 +43,81 @@ module.exports = {
       var usr = main.users[user_id];
 
       //Begin parsing
-      for (var i = 0; i < all_modifiers.length; i++)
-        //Check if the modifier in question actually exists before incrementing
-        if (usr.modifiers[all_modifiers[i]]) {
-          usr.modifiers[all_modifiers[i]] += modifiers[all_modifiers[i]];
-        } else if (usr[all_modifiers[i]]) {
-          var is_government = Object.keys(config.governments).includes(all_modifiers[i]);
-          var modifier_value = modifiers[all_modifiers[i]];
+      for (var i = 0; i < all_modifiers.length; i++) {
+        var effect_value = getList(modifiers[all_modifiers[i]]);
 
-          if (is_government) {
-            usr.politics[all_modifiers[i]].drift += modifier_value;
-          } else {
-            if (usr.inventory[all_modifiers[i]] != undefined)
-              usr.inventory[all_modifiers[i]] += modifier_value;
-            else
-              usr[all_modifiers[i]] += modifier_value;
-          }
+        switch (all_modifiers[i]) {
+          //Obsoletion
+          case "obsolete_building":
+            for (var x = 0; x < effect_value.length; x++)
+              removeElement(usr.available_buildings, effect_value[x]);
+
+            break;
+          case "obsolete_government":
+            for (var x = 0; x < effect_value.length; x++)
+              removeElement(usr.available_governments, effect_value[x]);
+
+            break;
+          case "obsolete_reform":
+            for (var x = 0; x < effect_value.length; x++)
+              removeElement(usr.available_reforms, effect_value[x]);
+
+            break;
+          case "obsolete_unit":
+            for (var x = 0; x < effect_value.length; x++)
+              removeElement(usr.available_units, effect_value[x]);
+
+            break;
+
+          case "set_mobilisation_unit":
+            usr.mobilisation.unit_type = effect_value[0];
+
+            break;
+
+          //Unlocking
+          case "unlock_building":
+            for (var x = 0; x < effect_value.length; x++)
+              usr.available_buildings.push(effect_value[x]);
+
+            break;
+          case "unlock_government":
+            for (var x = 0; x < effect_value.length; x++)
+              usr.available_governments.push(effect_value[x]);
+
+            break;
+          case "unlock_reform":
+            for (var x = 0; x < effect_value.length; x++)
+              unlockReform(user_id, effect_value[x]);
+
+            break;
+          case "unlock_unit":
+            for (var x = 0; x < effect_value.length; x++)
+              usr.available_units.push(effect_value[x]);
+
+            break;
+
+          //Default case handling
+          default:
+            //Check if the modifier in question actually exists before incrementing
+            if (usr.modifiers[all_modifiers[i]]) {
+              usr.modifiers[all_modifiers[i]] += modifiers[all_modifiers[i]];
+            } else if (usr[all_modifiers[i]]) {
+              var is_government = Object.keys(config.governments).includes(all_modifiers[i]);
+              var modifier_value = modifiers[all_modifiers[i]];
+
+              if (is_government) {
+                usr.politics[all_modifiers[i]].drift += modifier_value;
+              } else {
+                if (usr.inventory[all_modifiers[i]] != undefined)
+                  usr.inventory[all_modifiers[i]] += modifier_value;
+                else
+                  usr[all_modifiers[i]] += modifier_value;
+              }
+            }
+
+            break;
         }
+      }
     } catch (e) {
       log.error(`applyModifiers() ran into an error:`);
       console.log(e);
