@@ -1586,7 +1586,7 @@ module.exports = {
             initialisePrintArmy(user_id);
 
           //[View (Army Name)]
-          if (input.startsWith("view ") && !["view army", "view reserves"].includes(input)) {
+          if (input.startsWith("view ") && !["view armies", "view army", "view reserves"].includes(input)) {
             var army_obj = getArmy(user_id, arg[0]);
             var army_to_view = input.replace("view army ", "");
             var army_report = printArmy(user_id, arg[0]);
