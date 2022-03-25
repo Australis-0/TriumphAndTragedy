@@ -676,7 +676,7 @@ module.exports = {
 
           //Fetch total available slots in city for building_category
           available_building_slots[1].total_slots =
-            city_obj[`${raw_building_category_name}_building_slots`] +
+            city_obj[`${raw_building_category_name}_building_slots`] + returnSafeNumber(usr.modifiers[raw_building_name]) +
             usr.modifiers.extra_building_slots;
 
           //Set .available_slots
@@ -691,6 +691,7 @@ module.exports = {
         //Declare local instance variables
         var all_building_categories = Object.keys(config.buildings);
         var actual_building_category;
+        var total_building_type = 0;
 
         for (var i = 0; i < all_building_categories.length; i++)
           if (Object.keys(config.buildings[all_building_categories[i]]).includes(building_category_name))
@@ -700,13 +701,18 @@ module.exports = {
 
         //Fetch total_buildings
         for (var i = 0; i < city_obj.buildings.length; i++)
-          if (Object.keys(local_building_category).includes(city_obj.buildings[i].building_type))
+          if (Object.keys(local_building_category).includes(city_obj.buildings[i].building_type)) {
             available_building_slots[1].total_buildings++;
+
+            //Incrmenet for total_building_type
+            if (city_obj.buildings[i].building_type == raw_building_name)
+              total_building_type++;
+          }
 
         //Fetch total available slots in city for that building type
         if (building_obj.separate_building_slots) {
-          available_building_slots[1].total_slots = (usr.modifiers[building_category_name]) ?
-            usr.modifiers[building_category_name] :
+          available_building_slots[1].total_slots = (usr.modifiers[raw_building_name]) ?
+            usr.modifiers[raw_building_name] :
             0;
 
           //Set total number of available_slots
@@ -716,6 +722,16 @@ module.exports = {
         } else if (building_obj.unlimited_slots) {
           available_building_slots[1].available_slots = -1;
           available_building_slots[1].total_slots = -1;
+        } else {
+          var actual_raw_building_category_name = module.exports.getBuildingCategory(actual_building_category, { return_key: true });
+
+          available_building_slots[1].total_slots =
+            returnSafeNumber(usr.modifiers[raw_building_name]) + usr.modifiers.extra_building_slots;
+            
+            available_building_slots[1].total_slots = Math.min(city_obj[`${actual_raw_building_category_name}_building_slots`] - available_building_slots[1].total_buildings, available_building_slots[1].total_slots);
+          available_building_slots[1].available_slots =
+            available_building_slots[1].total_slots -
+            available_building_slots[1].total_buildings;
         }
 
         available_building_slots[0] = true;
