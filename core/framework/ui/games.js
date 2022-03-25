@@ -7,7 +7,13 @@ module.exports = {
 
     //Delete game channel first
     try {
-      returnChannel(game_obj.channel).delete();
+      var delete_loop = setInterval(function(channel_id) {
+        try {
+          returnChannel(channel_id).delete();
+        } catch {
+          clearInterval(delete_loop);
+        }
+      }, 1000, JSON.parse(JSON.stringify(game_obj.channel)));
     } catch (e) {
       log.warn(`clearGame() - Game channel for Game ID ${game_id} could not be found: ${e}`);
     }

@@ -201,87 +201,8 @@ module.exports = {
     var tech_obj = module.exports.getTechnology(raw_technology_name);
 
     //Parse technology for user!
-    if (tech_obj.unlocks) {
-      var all_effects = Object.keys(tech_obj.unlocks);
-
-      for (var i = 0; i < all_effects.length; i++) {
-        //Declare local tracker variables
-        var effect_name = all_effects[i];
-        var effect_value = getList(tech_obj.unlocks[effect_name]);
-
-        //Parse effect_names
-        switch (effect_name) {
-          //Obsoletion
-          case "obsolete_building":
-            for (var x = 0; x < effect_value.length; x++)
-              removeElement(usr.available_buildings, effect_value[x]);
-
-            break;
-          case "obsolete_government":
-            for (var x = 0; x < effect_value.length; x++)
-              removeElement(usr.available_governments, effect_value[x]);
-
-            break;
-          case "obsolete_reform":
-            for (var x = 0; x < effect_value.length; x++)
-              removeElement(usr.available_reforms, effect_value[x]);
-
-            break;
-          case "obsolete_unit":
-            for (var x = 0; x < effect_value.length; x++)
-              removeElement(usr.available_units, effect_value[x]);
-
-            break;
-
-          case "set_mobilisation_unit":
-            usr.mobilisation.unit_type = effect_value[0];
-
-            break;
-
-          //Unlocking
-          case "unlock_building":
-            for (var x = 0; x < effect_value.length; x++)
-              usr.available_buildings.push(effect_value[x]);
-
-            break;
-          case "unlock_government":
-            for (var x = 0; x < effect_value.length; x++)
-              usr.available_governments.push(effect_value[x]);
-
-            break;
-          case "unlock_reform":
-            for (var x = 0; x < effect_value.length; x++)
-              unlockReform(user_id, effect_value[x]);
-
-            break;
-          case "unlock_unit":
-            for (var x = 0; x < effect_value.length; x++)
-              usr.available_units.push(effect_value[x]);
-
-            break;
-
-          //Default case handling
-          default:
-            //Check if effect_name is a building category or not
-            var is_building_category = Object.keys(config.buildings).includes(effect_name);
-            var is_government = Object.keys(config.governments).includes(effect_name);
-
-            if (is_building_category) {
-              usr.modifiers[`${effect_name}_building_slots`] += effect_value[0];
-            } else if (is_government) {
-              if (usr.politics[effect_name])
-                usr.politics[effect_name].drift += effect_value[0];
-            } else {
-              //Process all other effects here
-              usr.modifiers[effect_name] = (usr.modifiers[effect_name]) ?
-                usr.modifiers[effect_name] + effect_value[0] :
-                effect_value[0];
-            }
-
-            break;
-        }
-      }
-    }
+    if (tech_obj.unlocks)
+      applyModifiers(user_id, tech_obj.unlocks);
   },
 
   researchUpTo: function (arg0_user, arg1_technology_cost) {

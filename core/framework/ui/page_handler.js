@@ -1295,7 +1295,7 @@ module.exports = {
             });
 
           //[View (Army Name)]
-          if (input.startsWith("view ") && !["view army", "view reserves"].includes(input)) {
+          if (input.startsWith("view ") && !["view armies", "view army", "view reserves"].includes(input)) {
             var army_to_view = input.replace("view ", "");
             var viewed_army = printArmy(user_id, army_to_view);
 
