@@ -118,7 +118,7 @@ config.units.colonists = {
     cost: {
       wood: 30,
       lead: 50,
-      good: 20,
+      gold: 20,
       steel: 30,
       iron: 5,
       petroil: 15,

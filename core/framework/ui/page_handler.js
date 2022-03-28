@@ -11,12 +11,13 @@ module.exports = {
     var usr = main.users[actual_id];
 
     //Make sure user isn't in a visual prompt
+    var in_founding_map = (game_obj.page == "founding_map");
     var in_visual_prompt = interfaces[user_id];
 
     if (in_visual_prompt)
       in_visual_prompt = (in_visual_prompt.type == "visual_prompt");
 
-    if (!in_visual_prompt) {
+    if (!in_founding_map && !in_visual_prompt) {
       //Global commands
       {
         //[Build]
@@ -65,7 +66,7 @@ module.exports = {
           initialiseCraft(user_id);
 
         //[Inventory]
-        if (input == "inventory") {
+        if (["inv", "inventory"].includes(input)) {
           game_obj.page = "inventory";
           printInventory(user_id);
         }
@@ -77,6 +78,111 @@ module.exports = {
         //[Set Tax]
         if (input == "set tax")
           initialiseSetTax(user_id);
+
+        //Topbar commands
+        {
+          if (["exit", "quit", "quit game"].includes(input)) {
+            //Create a confirmation dialogue for quitting the game
+            returnChannel(game_obj.channel).send("Loading ..").then((msg) => {
+              confirmDialogue(msg, {
+                text: "**Save and Exit Game**\n\nAre you sure you want to quit the game and return to the main menu?",
+                user: game_obj.user,
+                delete_after: true
+              }, function () {
+                clearGame(game_obj.id);
+              })
+            });
+          }
+
+          //[Budget]
+          if (input == "budget")
+            if (game_obj.page != "budget") {
+              game_obj.page = "budget";
+              printBudget(user_id);
+              initialiseTopbar(user_id);
+            }
+
+          //[Colonisation]
+          if (["colonisation", "colonization"].includes(input))
+            if (game_obj.page != "colonisation") {
+              game_obj.page = "colonisation";
+              printColonisation(user_id);
+              initialiseTopbar(user_id);
+            }
+
+          //[Country/Stats/Statistics]
+          if (["country", "country interface", "country statistics", "stats", "statistics"].includes(input))
+            if (game_obj.page != "country_interface") {
+              game_obj.page = "country_interface";
+              printStats(user_id);
+              initialiseTopbar(user_id);
+            }
+
+          //[Diplomacy]
+          if (input == "diplomacy")
+            if (game_obj.page != "diplomacy") {
+              game_obj.page = "diplomacy";
+              printDiplomacy(user_id);
+              initialiseTopbar(user_id);
+            }
+
+          //[Econ/Economy]
+          if (["econ", "economic statistics", "economy"].includes(input))
+            if (game_obj.page != "economy") {
+              game_obj.page = "budget";
+              printEconomy(user_id);
+              initialiseTopbar(user_id);
+            }
+
+          //[Map]
+          if (input == "map")
+            if (game_obj.page != "map") {
+              game_obj.page = "map";
+              initialiseMapViewer(getGame(user_id));
+              initialiseTopbar(user_id);
+            }
+
+          //[Military]
+          if (input == "military")
+            if (game_obj.page != "military") {
+              game_obj.page = "military";
+              printMilitary(user_id);
+              initialiseTopbar(user_id);
+            }
+
+          //[Politics]
+          if (input == "politics")
+            if (game_obj.page != "politics") {
+              game_obj.page = "budget";
+              printPolitics(user_id);
+              initialiseTopbar(user_id);
+            }
+
+          //[Population]
+          if (input == "population")
+            if (game_obj.page != "population") {
+              game_obj.page = "population";
+              printPops(user_id);
+              initialiseTopbar(user_id);
+            }
+
+          //[Technology]
+          if (input == "technology")
+            if (game_obj.page != "technology") {
+              game_obj.page = "technology";
+              printTechnology(user_id);
+              initialiseTopbar(user_id);
+            }
+
+          //[Trade]
+          if (input == "trade")
+            if (game_obj.page != "trade") {
+              game_obj.page = "trade";
+              printTrade(user_id);
+              initialiseTopbar(user_id);
+            }
+
+        }
 
         //[View (Name)]
         if (input.startsWith("view ")) {
