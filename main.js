@@ -15,8 +15,10 @@ global.voice = require("@discordjs/voice");
 const FileManager = require("./core/file_manager");
 
 //Import Core Functions
+//Automated Backup and Restoration System (ABRS)
 FileManager.import("./ABRS");
 
+//Base JS QOL functions
 FileManager.import("./framework/arrays");
 FileManager.import("./framework/colours");
 FileManager.import("./framework/log");
@@ -24,6 +26,7 @@ FileManager.import("./framework/numbers");
 FileManager.import("./framework/strings");
 FileManager.import("./framework/users");
 
+//Framework files - these contain all the main game functions, and parsers for common/
 FileManager.import("./framework/data/alert_framework");
 FileManager.import("./framework/data/army_framework");
 FileManager.import("./framework/data/base_user_initialisation");
@@ -53,6 +56,7 @@ FileManager.import("./framework/data/unit_framework");
 FileManager.import("./framework/data/user_framework");
 FileManager.import("./framework/data/war_framework");
 
+//Discord.js QOL functions
 FileManager.import("./framework/discord/channels");
 FileManager.import("./framework/discord/button_handler");
 FileManager.import("./framework/discord/command_handler");
@@ -62,9 +66,11 @@ FileManager.import("./framework/discord/reaction_framework");
 FileManager.import("./framework/discord/select_handler");
 FileManager.import("./framework/discord/users");
 
+//Map viewer and renderer files
 FileManager.import("./framework/map/map_renderer");
 FileManager.import("./framework/map/province_renderer");
 
+//UI files
 FileManager.import("./framework/ui/alert_interface");
 FileManager.import("./framework/ui/army_interface");
 FileManager.import("./framework/ui/buildings_interface");
@@ -97,7 +103,7 @@ FileManager.import("./framework/ui/ui_framework");
 FileManager.import("./framework/ui/unit_interface");
 FileManager.import("./framework/ui/war_interface");
 
-//Game command files
+//Game command files, broken up by ./game/(mechanic)/(command)
 FileManager.import("./game/actions/chop");
 FileManager.import("./game/actions/mine");
 FileManager.import("./game/actions/quarry");
