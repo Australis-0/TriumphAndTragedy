@@ -1,4 +1,62 @@
 # Triumph & Tragedy
 
-![enter image description here](https://media.discordapp.net/attachments/829862963485474827/936005762600296458/civilization_mobile_banner_2.png)
-[![Join our community!](https://img.shields.io/discord/548994743925997570?label=Discord&style=for-the-badge)](https://discord.gg/89kQY2KFQz)
+![](https://media.discordapp.net/attachments/829862963485474827/936005762600296458/civilization_mobile_banner_2.png)
+![](https://media.discordapp.net/attachments/829862963485474827/962095713225957407/unknown.png)
+
+[![Join our community!](https://img.shields.io/discord/548994743925997570?label=Discord&style=for-the-badge)](https://discord.gg/89kQY2KFQz) ![](https://img.shields.io/github/downloads/Australis-0/TriumphAndTragedy/total?style=for-the-badge) ![](https://img.shields.io/github/v/release/Australis-0/TriumphAndTragedy?style=for-the-badge) ![We're looking for programmers! If you know JS/JSON, please get in touch!](https://img.shields.io/github/labels/Australis-0/TriumphAndTragedy/help-wanted?style=for-the-badge)
+
+## About
+
+**Triumph & Tragedy** is a turn-based grand-strategy Discord bot game featuring fully automated economic, diplomatic, combat, and political mechanics. It comes with a variety of frameworks as well as a revolutionary new UI system that utilises private channels for a more seamless in-game experience.
+
+* Brutally simple and readable
+* Easy to setup
+* Modding framework
+* Performant
+
+## Contributing
+
+Anyone is welcome to contribute to Triumph & Tragedy! Although we have a variety of [official updates](https://docs.google.com/document/d/1BKCJqh4oHbGyzd0z3Zv7wa1ZYlJANipJ--YZat7OS98/edit?usp=sharing) in the works,  your feedback on these is more than welcome.
+
+If you'd like to create a mod for Triumph & Tragedy, simply fork this repo and start editing!
+
+If you wish to help with official updates, get in touch with `@Australis#6709` or `@Vis#5102` over Discord for information on how to become an official contributor, or simply create a new pull request.
+
+## Data Structure
+
+The data structure of Triumph & Tragedy is brutally simple, and separated into the following categories:
+
+#### Main Folders:
+
+- `common/` - All config and modding files are contained here, and formatted in JSON.
+- `core/framework/data` - These contain the core game functions and parsers from common.
+- `core/framework/ui` - All UI elements are put here.
+- `core/game` - Contains all the command files for the game.
+
+#### Special Files:
+
+- `core/framework/data/turn_framework.js` is used for all turn processing.
+
+- `core/framework/discord/command_handler.js` provides our visual prompt system, an alternative to Discord's base slash commands.
+
+- `core/framework/ui/page_handler.js` handles all buttons and commands.
+- `core/framework/ui/topbar_handler.js` handles all topbar buttons (e.g. Country/Economy, etc).
+- `core/framework/ui/ui_framework.js` contains the base framework for most UI elements.
+
+- `main.js` contains an overview and directory of all files used in the bot.
+
+## Documentation
+
+Documentation is available for modders! [Click here](https://docs.google.com/document/d/14cIguINtzcLS0-rSkRPAV5VJOIcJPIA1pZzO2k5jEYQ/edit?usp=sharing) to start reading.
+
+The game's code is structured in a reasonable and simple way! Filenames tell you what mechanic and category they sit in, and all functions inside are automatically made global for convenience, and sorted alphabetically. The code inside tries to be as simple and readable as possible.
+
+Feel free to dig right in!
+
+## Help
+
+If you have any additional questions, [Join our Discord](https://discord.gg/89kQY2KFQz)! We're more than happy to help. This bot is a major undertaking, and as such we ourselves need all the help we can get!
+
+Happy modding and coding,
+
+-Australis & Vis
