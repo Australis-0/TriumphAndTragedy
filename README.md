@@ -57,6 +57,15 @@ Feel free to dig right in!
 
 ## Help
 
+#### Dependencies:
+
+- **Cairo Graphics**
+- **Node.js** 16.9.0+
+
+Make sure to set up a bot client under Discord Developer Portal and edit `settings.js` if you want the bot to run properly! You can then launch the bot at anytime by running `autorun.bat`.
+
+---
+
 If you have any additional questions, [Join our Discord](https://discord.gg/89kQY2KFQz)! We're more than happy to help. This bot is a major undertaking, and as such we ourselves need all the help we can get!
 
 Happy modding and coding,
