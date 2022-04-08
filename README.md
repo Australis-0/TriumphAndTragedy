@@ -5,7 +5,9 @@
 ![](https://media.discordapp.net/attachments/829862963485474827/962095713225957407/unknown.png)
 
 
-[![Join our community!](https://img.shields.io/discord/548994743925997570?label=Discord&style=for-the-badge)](https://discord.gg/89kQY2KFQz) ![](https://img.shields.io/github/downloads/Australis-0/TriumphAndTragedy/total?style=for-the-badge) ![](https://img.shields.io/github/languages/code-size/Australis-0/TriumphAndTragedy?style=for-the-badge) ![We're looking for programmers! If you know JS/JSON, please get in touch!](https://img.shields.io/github/labels/Australis-0/TriumphAndTragedy/help-wanted?style=for-the-badge)
+[![Join our community!](https://img.shields.io/discord/548994743925997570?label=Discord&style=for-the-badge)](https://discord.gg/89kQY2KFQz) ![](https://img.shields.io/github/downloads/Australis-0/TriumphAndTragedy/total?style=for-the-badge) ![](https://img.shields.io/github/languages/code-size/Australis-0/TriumphAndTragedy?style=for-the-badge)
+
+We're looking for programmers! If you know JS/JSON, please get in touch!
 
 ## About
 
