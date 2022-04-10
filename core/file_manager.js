@@ -5,14 +5,19 @@ module.exports = {
 
     //Declare local instance variables
     var file_array = [];
-    var files = fs.readdirSync(folder);
 
-    for (var i = 0; i < files.length; i++) {
-      //Self-reference to fetch files in sub-directories
-      local_dir_array = (fs.statSync(folder + "/" + files[i]).isDirectory()) ? module.exports.getAllFiles(folder + "/" + files[i]) : file_array.push(path.join(folder, "/", files[i]));
+    try {
+      var files = fs.readdirSync(folder);
 
-      //Add files from local_dir_array to file_array
-      for (var x = 0; x < local_dir_array.length; x++) file_array.push(local_dir_array[x]);
+      for (var i = 0; i < files.length; i++) {
+        //Self-reference to fetch files in sub-directories
+        local_dir_array = (fs.statSync(folder + "/" + files[i]).isDirectory()) ? module.exports.getAllFiles(folder + "/" + files[i]) : file_array.push(path.join(folder, "/", files[i]));
+
+        //Add files from local_dir_array to file_array
+        for (var x = 0; x < local_dir_array.length; x++) file_array.push(local_dir_array[x]);
+      }
+    } catch (e) {
+      console.log(e);
     }
 
     //Return statement

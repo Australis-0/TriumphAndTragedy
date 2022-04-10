@@ -128,7 +128,7 @@ module.exports = {
     return `${d.getDate()}.${d.getMonth()+1}.${d.getFullYear()} ${hour_prefix}${d.getHours()}.${minute_prefix}${d.getMinutes()}.${second_prefix}${d.getSeconds()}`;
   },
 
-  writeSave: function (arg0_options) { //WIP
+  writeSave: function (arg0_options) {
     //Convert from parameters
     var options = arg0_options;
     var file_limit = (options.file_limit) ? options.file_limit : 0;
@@ -158,9 +158,9 @@ module.exports = {
         log.info(`Deleted ${total_backups[total_backups.length-1]} as it exceeded the set limit of ${file_limit} simultaneous backups.`);
         fs.unlinkSync(`./backups/${total_backups[total_backups.length-1]}`);
       } catch {}
-
-      //Reload backup array
-      loadBackupArray();
     }
+
+    //Reload backup array
+    loadBackupArray();
 	}
 };
