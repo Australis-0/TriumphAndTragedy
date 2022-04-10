@@ -160,8 +160,8 @@ module.exports = {
               });
 
             printAlert(game_obj.id, (local_province.city_type == "capital") ?
-              `Capital city founded as **${city_name}** in Province **${province_id}**! Over **${parseNumber(local_province.pops.population)}** are now legally residents of the capital city of **${usr.name}**!` :
-              `A new city was founded as **${city_name}** in Province **${province_id}**! Over **${parseNumber(local_province.pops.population)}** are now legally residents of the city of **${city_name}** in Province **${province_id}**.`
+              `Capital city founded as **${city_name}** in Province **${province_id}**! Over **${parseNumber(local_province.pops.population)}** inhabitants are now legally residents of the capital city of **${usr.name}**!` :
+              `A new city was founded as **${city_name}** in Province **${province_id}**! Over **${parseNumber(local_province.pops.population)}** inhabitants are now legally residents of the city of **${city_name}** in Province **${province_id}**.`
             );
           } else {
             printError(game_obj.id, `You cannot have a city name that overlaps with the name of an existing province!`);
