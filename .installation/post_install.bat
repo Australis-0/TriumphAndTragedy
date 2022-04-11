@@ -85,7 +85,16 @@ if errorlevel 2 GOTO open_settings
 if errorlevel 1 GOTO run_bot
 
 :run_bot
+xcopy /y %CD%\.installation\database.js %CD%
+xcopy /y %CD%\.installation\provinces.js %CD%\map\
+xcopy /y %CD%\.installation\provinces.svg %CD%\map\
 xcopy /y %CD%\.installation\settings.js %CD%
+
+cd map
+del /f colonial_map.svg
+del /f political_map.svg
+del /f supply_limit_map.svg
+cd ..
 
 echo %info% %logo% has finished installing. The bot will now start.
 autorun.bat
