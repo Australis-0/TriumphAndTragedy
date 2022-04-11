@@ -1,4 +1,5 @@
-node_modules/
 backups/
+.installation/PATH
+node_modules/
 database.js
 settings.js

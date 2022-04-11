@@ -80,7 +80,7 @@ echo %info% %logo% This bot needs you to look over its settings before it can co
 echo.
 
 :open_settings
-start "" /wait notepad.exe %CD%\.installation\settings.js
+start "" /wait notepad.exe %CD%\.installation\install_settings.js
 echo Are you sure these settings are accurate^? (Y/N)
 choice /N /M "Enter input:"
 
@@ -90,10 +90,10 @@ if errorlevel 1 GOTO run_bot
 
 :run_bot
 echo %CD%\.installation\database.js
-copy /b/v/y %CD%\.installation\database.js %CD%
-copy /b/v/y %CD%\.installation\provinces.js %CD%\map\
-copy /b/v/y %CD%\.installation\provinces.svg %CD%\map\
-copy /b/v/y %CD%\.installation\settings.js %CD%
+copy /b/v/y %CD%\.installation\install_database.js %CD%\database.js
+copy /b/v/y %CD%\.installation\install_provinces.js %CD%\map\provinces.js
+copy /b/v/y %CD%\.installation\install_provinces.svg %CD%\map\provinces.svg
+copy /b/v/y %CD%\.installation\install_settings.js %CD%\settings.js
 
 cd map
 del /f colonial_map.svg 2>NUL
