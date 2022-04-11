@@ -67,6 +67,7 @@ Feel free to dig right in!
 Make sure to set up a bot client under Discord Developer Portal if you want the bot to run properly!
 
 This bot now comes with an installation script! Simply run `install.bat` to begin the installation process and follow each prompt thoroughly.
+
 You can then launch the bot at anytime by running `autorun.bat`.
 
 ---
