@@ -39,7 +39,7 @@ call npm audit fix
 
 echo %info% %logo% Installing Cairo Graphics ..
 echo %warn% %logo% This will modify your System's PATH variable. 
-echo A backup will automatically be saved in path.txt just in case. Are you sure you wish to continue^? (Y/N)
+echo A backup will automatically be saved in path.txt just in case. Are you sure you wish to modify your system's PATH variable using this installer^? (Y/N)
 
 :: Confirmation prompt for Cairo Graphics install
 choice /N /M "Enter input:"
@@ -56,7 +56,7 @@ setx path "%PATH%;%CD%\.installation\cairo\bin"
 echo %info% %logo% Cairo Graphics successfully installed.
 
 :step_four
-
+echo.
 echo %info% %logo% requires that you have already have an existing bot token to insert when prompted. If you don't have a bot token, please follow the instructions below:
 echo.
 echo 1. Go to Discord Developer Portal ([36m[4mhttps://discord.com/developers/applications[0m) and make sure you are logged in with your Discord account.
@@ -65,8 +65,29 @@ echo 3. Click on 'Bot' on the leftmost side of the screen.
 echo 4. Click on 'Add Bot', and confirm (Click on 'Yes, do it!')
 echo 5. Click on 'Reset Token'.
 echo 6. Click on 'Copy'.
-echo You should now have a freshly minted bot token. Please insert it below:
+echo.
+echo You should now have a freshly minted bot token. Make sure to keep it in your clipboard!
+pause
 
 :: WIP - Copy and modify ./installation/settings.js
+
+:step_five
+echo.
+echo %info% %logo% This bot needs you to look over its settings before it can complete its installation.
+echo.
+
+:open_settings
+start "" /wait notepad.exe %CD%\.installation\settings.js
+echo Are you sure these settings are accurate^? (Y/N)
+
+:: Confirmation prompt for settings
+if errorlevel 2 GOTO open_settings
+if errorlevel 1 GOTO run_bot
+
+:run_bot
+xcopy /y %CD%\.installation\settings.js %CD%
+
+echo %info% %logo% has finished installing. The bot will now start.
+autorun.bat
 
 pause
