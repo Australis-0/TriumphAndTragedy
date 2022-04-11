@@ -90,16 +90,18 @@ if errorlevel 1 GOTO run_bot
 
 :run_bot
 echo %CD%\.installation\database.js
-copy /b/v/y %CD%\.installation\install_database.js %CD%\database.js
-copy /b/v/y %CD%\.installation\install_provinces.js %CD%\map\provinces.js
-copy /b/v/y %CD%\.installation\install_provinces.svg %CD%\map\provinces.svg
-copy /b/v/y %CD%\.installation\install_settings.js %CD%\settings.js
+copy /b/v/y "%CD%\.installation\install_database.js" database.js
+copy /b/v/y "%CD%\.installation\install_provinces.js" "%CD%\map\provinces.js"
+copy /b/v/y "%CD%\.installation\install_provinces.svg" "%CD%\map\provinces.svg"
+copy /b/v/y "%CD%\.installation\install_settings.js" settings.js
 
 cd map
 del /f colonial_map.svg 2>NUL
 del /f political_map.svg 2>NUL
 del /f supply_limit_map.svg 2>NUL
 cd ..
+
+if not exist "%CD%\backups\" mkdir backups
 
 echo %info% %logo% has finished installing. The bot will now start.
 autorun.bat
