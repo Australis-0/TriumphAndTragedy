@@ -82,21 +82,23 @@ echo.
 :open_settings
 start "" /wait notepad.exe %CD%\.installation\settings.js
 echo Are you sure these settings are accurate^? (Y/N)
+choice /N /M "Enter input:"
 
 :: Confirmation prompt for settings
 if errorlevel 2 GOTO open_settings
 if errorlevel 1 GOTO run_bot
 
 :run_bot
-xcopy /y %CD%\.installation\database.js %CD%
-xcopy /y %CD%\.installation\provinces.js %CD%\map\
-xcopy /y %CD%\.installation\provinces.svg %CD%\map\
-xcopy /y %CD%\.installation\settings.js %CD%
+echo %CD%\.installation\database.js
+copy /b/v/y %CD%\.installation\database.js %CD%
+copy /b/v/y %CD%\.installation\provinces.js %CD%\map\
+copy /b/v/y %CD%\.installation\provinces.svg %CD%\map\
+copy /b/v/y %CD%\.installation\settings.js %CD%
 
 cd map
-del /f colonial_map.svg
-del /f political_map.svg
-del /f supply_limit_map.svg
+del /f colonial_map.svg 2>NUL
+del /f political_map.svg 2>NUL
+del /f supply_limit_map.svg 2>NUL
 cd ..
 
 echo %info% %logo% has finished installing. The bot will now start.

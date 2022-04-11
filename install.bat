@@ -59,7 +59,7 @@ goto step_two
 ::Node.js dependency installation - move to ./installation/post_install.bat
 :step_two
 cd .installation
-post_install.bat
+start post_install.bat
 
 :exit
 exit
