@@ -8,12 +8,19 @@ echo Check our [36m[4mInstallation Guide[0m (https://github.com/Australis-0/T
 echo.
 
 :: Initialise global variables
+set drive_path=%~d0
+set file_path=%~dp0
+
 set "error=[31m[ERROR][0m"
 set "logo=[36m[Triumph ^& Tragedy][0m"
 set "info=[36m[INFO][0m"
 set "warn=[33m[WARN][0m"
 
 pause
+
+:: Correct directory
+%drive_path%
+cd %file_path%
 
 :: Check if Node.js is already installed
 :step_one
@@ -51,8 +58,7 @@ goto step_two
 :node_install
 echo.
 echo Opening Node.js installer ..
-cd .installation
-node-v16.14.2-x64.msi
+.installation\node-v16.14.2-x64.msi
 cd ..
 goto step_two
 
