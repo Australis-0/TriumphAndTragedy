@@ -239,6 +239,7 @@ FileManager.loadFile("settings.js");
 //Initialise Discord.js client and related instance variables
 global.client = new Discord.Client({ intents: [1, 4, 8, 16, 32, 64, 128, 512, 1024, 2048, 4096, 8192, 16384] });
 global.backup_loaded = false;
+global.ignore_channels = (settings.ignore_channels) ? settings.ignore_channels : [];
 global.interfaces = {};
 global.visual_prompts = {};
 
@@ -283,7 +284,7 @@ client.on("messageCreate", async (message) => {
     Original Content: ${input}
   `);
 
-  if (!message.author.bot) {
+  if (!message.author.bot && !ignore_channels.includes(message.channel.id)) {
     //Debug commands (these ones have a prefix)
     {
       if (equalsIgnoreCase(arg[0], settings.prefix)) {

@@ -32,6 +32,7 @@
     "canvas": "^2.9.1",
     "diacriticless": "^1.0.1",
     "discord.js": "^13.6.0",
+    "form-data": "^4.0.0",
     "fs": "^0.0.1-security",
     "ngraph.graph": "^19.1.0",
     "ngraph.path": "^1.4.0",

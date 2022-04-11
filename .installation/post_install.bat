@@ -10,28 +10,31 @@ set "warn=[33m[WARN][0m"
 :: Begin installing npm dependencies
 cd ..
 
-echo %info% %logo% Installing dependencies (1/11) 'underscore' ..
+echo %info% %logo% Installing dependencies (1/12) 'underscore' ..
 call npm install underscore
-echo %info% %logo% Installing dependencies (2/11) 'ngraph.graph' ..
+echo %info% %logo% Installing dependencies (2/12) 'ngraph.graph' ..
 call npm install ngraph.graph
-echo %info% %logo% Installing dependencies (3/11) 'ngraph.path' ..
+echo %info% %logo% Installing dependencies (3/12) 'ngraph.path' ..
 call npm install ngraph.path
-echo %info% %logo% Installing dependencies (4/11) 'canvas' ..
+echo %info% %logo% Installing dependencies (4/12) 'canvas' ..
 call npm install canvas
-echo %info% %logo% Installing dependencies (5/11) 'diacriticless' ..
+echo %info% %logo% Installing dependencies (5/12) 'diacriticless' ..
 call npm install diacriticless
-echo %info% %logo% Installing dependencies (6/11) 'discord.js' ..
+echo %info% %logo% Installing dependencies (6/12) 'discord.js' ..
+call npm uninstall discord.js
 call npm install discord.js
-echo %info% %logo% Installing dependencies (7/11) 'fs' ..
+echo %info% %logo% Installing dependencies (7/12) 'fs' ..
 call npm install fs
-echo %info% %logo% Installing dependencies (8/11) 'node-html-parser' ..
+echo %info% %logo% Installing dependencies (8/12) 'node-html-parser' ..
 call npm install node-html-parser
-echo %info% %logo% Installing dependencies (9/11) 'opusscript' ..
+echo %info% %logo% Installing dependencies (9/12) 'opusscript' ..
 call npm install opusscript
-echo %info% %logo% Installing dependencies (10/11) 'path' ..
+echo %info% %logo% Installing dependencies (10/12) 'path' ..
 call npm install path
-echo %info% %logo% Installing dependencies (11/11) '@discordjs/voice' ..
+echo %info% %logo% Installing dependencies (11/12) '@discordjs/voice' ..
 call npm install @discordjs/voice
+echo %info% %logo% Installing dependencies (12/12) 'form-data' ..
+call npm install --save form-data
 
 echo %info% %logo% All dependencies successfully installed, patching issues ..
 call npm install
