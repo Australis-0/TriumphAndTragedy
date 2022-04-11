@@ -8,11 +8,15 @@ echo Check our [36m[4mInstallation Guide[0m (https://github.com/Australis-0/T
 echo.
 
 :: Initialise global variables
-set "error=[31m[0m"
+set "error=[31m[ERROR][0m"
 set "logo=[36m[Triumph ^& Tragedy][0m"
+set "info=[36m[INFO][0m"
 set "warn=[33m[WARN][0m"
 
+pause
+
 :: Check if Node.js is already installed
+:step_one
 set "node_warning=%warn% Node is not installed on your device. Would you like to install it? (Y/N)"
 set "node_install=false"
 for /f "delims=" %%i in ('node -v 2^>nul') do (
@@ -30,7 +34,18 @@ if errorlevel 2 GOTO node_no_install
 if errorlevel 1 GOTO node_install
 
 :node_no_install
-echo You have decided not to install Node.js.
+if %node_install%==true (
+	echo.
+	echo You have decided not to install Node.js.
+	goto step_two
+) else (
+	echo.
+	echo %error% Triumph ^& Tragedy cannot be installed without Node.js. Would you like to exit^? (Y/N)
+	choice /N /M "Enter input:"
+	
+	if errorlevel 2 GOTO step_one
+	if errorlevel 1 GOTO exit
+)
 goto step_two
 
 :node_install
@@ -41,6 +56,10 @@ node-v16.14.2-x64.msi
 cd ..
 goto step_two
 
+::Node.js dependency installation - move to ./installation/post_install.bat
 :step_two
+cd .installation
+post_install.bat
 
-pause
+:exit
+exit
