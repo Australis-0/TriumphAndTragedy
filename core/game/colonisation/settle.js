@@ -238,8 +238,17 @@ module.exports = {
         //Reload all maps, initialise user topbar
         reloadAllMaps("political");
         game_obj.page = "country_interface";
-        initialiseTopbar(user_id);
-        printStats(user_id);
+
+        if (main.season_started) {
+          initialiseTopbar(user_id);
+          printStats(user_id);
+        } else {
+          createPageMenu(game_obj.middle_embed, {
+            embed_pages: printQueue(user_id),
+            user: user_id
+          });
+        }
+
       }
     } else {
       printError(game_obj.id, `You may only settle up to **${parseNumber(config.defines.common.starting_provinces)}** province(s) at once!`);
