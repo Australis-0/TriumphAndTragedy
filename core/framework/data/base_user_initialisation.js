@@ -375,6 +375,11 @@ module.exports = {
       if (!usr.under_construction) usr.under_construction = [];
       if (!usr.vassal_years) usr.vassal_years = 0;
 
+      //Queue
+      if (!main.season_started)
+        if (!usr.last_queue_check)
+          usr.last_queue_check = new Date().getTime();
+
     //Apply starting kit if not registered
     if (!already_registered) module.exports.initStartingKit(user_id);
   }

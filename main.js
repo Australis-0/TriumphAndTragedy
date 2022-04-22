@@ -49,6 +49,7 @@ FileManager.import("./framework/data/optimisation_framework");
 FileManager.import("./framework/data/peace_treaty_framework");
 FileManager.import("./framework/data/politics_framework");
 FileManager.import("./framework/data/pop_framework");
+FileManager.import("./framework/data/queue_framework");
 FileManager.import("./framework/data/tech_framework");
 FileManager.import("./framework/data/trade_framework");
 FileManager.import("./framework/data/turn_framework");
@@ -96,6 +97,7 @@ FileManager.import("./framework/ui/peace_treaty_interface");
 FileManager.import("./framework/ui/politics_interface");
 FileManager.import("./framework/ui/pops_interface");
 FileManager.import("./framework/ui/provinces_interface");
+FileManager.import("./framework/ui/queue_interface");
 FileManager.import("./framework/ui/tech_interface");
 FileManager.import("./framework/ui/topbar_interface");
 FileManager.import("./framework/ui/trade_interface");
@@ -348,6 +350,7 @@ setInterval(function(){
 	var current_date = new Date().getTime();
   var current_turn_time = 0;
   var battle_difference = current_date - returnSafeNumber(main.global.battle_tick);
+  var queue_time_difference = current_date - main.last_queue_check;
 	var time_difference = current_date - main.last_backup;
   var turn_time_difference = current_date - main.last_turn;
 
@@ -362,7 +365,7 @@ setInterval(function(){
     nextBattleTick();
 
   //Date processing
-  {
+  if (main.season_started) {
     if (main.date.year < 1750)
       current_turn_time = 2;
     else
@@ -395,6 +398,39 @@ setInterval(function(){
     }
   }
 
+  //Queue processing
+  if (!main.season_started) {
+    //Check if enough players have joined for the season to start
+    if (Object.keys(main.users).length >= config.defines.common.starting_players) {
+      main.season_started = true;
+      reinitialiseGameEmbeds();
+    }
+
+    //Otherwise, go on with the activity checks ..
+    if (queue_time_difference > returnSafeNumber(config.defines.common.activity_check)*1000*60*60*24) {
+      main.last_queue_check = current_date;
+
+      //Clear inactive users
+      var all_current_users = Object.keys(main.users);
+      for (var i = 0; i < all_current_users.length; i++) {
+        var local_user = main.users[all_current_users[i]];
+
+        if (current_date - local_user.last_queue_check >= returnSafeNumber(config.defines.common.activity_check)*1000*60*60*24) {
+          try {
+            returnChannel(settings.alert_channel).send(`<@${main.global.user_map[all_current_users[i]]}> was dropped from the queue due to inactivity.`);
+            deleteCountry(all_current_users[i]);
+            reinitialiseGameEmbeds();
+          } catch {}
+        }
+      }
+
+      //Send check to all remaining users
+      var all_users = Object.keys(main.users);
+      for (var i = 0; i < all_users.length; i++)
+        checkActivityInQueue(all_users[i]);
+    }
+  }
+
   //Turn processing for all users
   if (turn_time_difference > settings.turn_timer*1000) {
     main.last_backup = current_date;
@@ -402,12 +438,14 @@ setInterval(function(){
     writeSave({ file_limit: settings.backup_limit });
 
     //Process nextGlobalTurn() for global processes and calculations
-    nextBattleTick(true);
-    nextGlobalTurn();
+    if (main.season_started) {
+      nextBattleTick(true);
+      nextGlobalTurn();
 
-    //Force render maps after turn processing
-    forceRender("political");
-    main.round_count++;
+      //Force render maps after turn processing
+      forceRender("political");
+      main.round_count++;
+    }
   }
 
   //Write to database.js

@@ -1,5 +1,5 @@
 module.exports = {
-  printStats: function (arg0_user) { //WIP
+  printStats: function (arg0_user) {
     //Convert from parameters
     var user_id = arg0_user;
 

@@ -56,6 +56,26 @@ module.exports = {
           //Resolve button interaction successfully
           await interaction.update({ components: (clear_components) ? [] : interaction.message.components });
         }
+      } else {
+        //Update usr.last_queue_check
+        if (!main.season_started)
+          if (interaction.customId == "stay_in_queue") {
+            var usr = main.users[main.global.user_map[user.id]];
+
+            usr.last_queue_check = new Date.getTime();
+
+            try {
+              user.send(`You have successfully confirmed your activity. Next check is in **${parseNumber(config.defines.common.activity_check)}** day(s).`);
+            } catch {}
+          } else if (interaction.customId == "leave_the_queue") {
+            try {
+              user.send(`You have left this queue.`);
+
+              returnChannel(settings.alert_channel).send(`<@${user.id}> was dropped from the queue per request!`);
+              deleteCountry(user.id);
+              reinitialiseGameEmbeds();
+            } catch {}
+          }
       }
     }
   }

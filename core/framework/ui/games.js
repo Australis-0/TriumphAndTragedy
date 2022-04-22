@@ -218,7 +218,11 @@ module.exports = {
           const topbar_embed = new Discord.MessageEmbed()
             .setColor(settings.bot_colour)
             .setTitle(`${config.icons.time} **${getDate(main.date)}** - Round ${parseNumber(main.round_count)}`)
-            .setDescription(`- Each round is approximately ${parseMilliseconds(settings.turn_timer*1000)}. ${parseMilliseconds(time_remaining)} remaining until the next turn.`)
+            .setDescription(
+              (main.season_started) ?
+                `- Each round is approximately ${parseMilliseconds(settings.turn_timer*1000)}. ${parseMilliseconds(time_remaining)} remaining until the next turn.` :
+                `This season has not yet started. Waiting on **${parseNumber(config.defines.common.starting_players - Object.keys(main.users).length)}** more player(s) for the game to start ..`
+            )
             .setImage("https://cdn.discordapp.com/attachments/722997700391338046/736141424315203634/margin.png");
 
           try {
@@ -242,8 +246,15 @@ module.exports = {
         //Load up either the starting map viewer or country interface depending on the starting page
         switch (game_obj.page) {
           case "country_interface":
-            initialiseTopbar(game_obj.user);
-            printStats(game_obj.user);
+            if (main.season_started) {
+              initialiseTopbar(game_obj.user);
+              printStats(game_obj.user);
+            } else {
+              createPageMenu(game_obj.middle_embed, {
+                embed_pages: printQueue(game_obj.user),
+                user: game_obj.user
+              });
+            }
 
             break;
           case "map":

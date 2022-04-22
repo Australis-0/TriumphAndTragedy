@@ -45,8 +45,13 @@ module.exports = {
             };
           }
 
+    //Queue trackers
+    if (main.season_started == undefined) main.season_started =
+      (returnSafeNumber(config.defines.common.starting_players) == 0);
+
     //Declare tracker variables
     if (!main.last_backup) main.last_backup = new Date().getTime();
+    if (!main.last_queue_check) main.last_queue_check = new Date().getTime();
     if (!main.last_turn) main.last_turn = new Date().getTime();
 
     //Fix province ID's

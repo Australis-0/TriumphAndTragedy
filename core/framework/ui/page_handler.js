@@ -17,7 +17,7 @@ module.exports = {
     if (in_visual_prompt)
       in_visual_prompt = (in_visual_prompt.type == "visual_prompt");
 
-    if (!in_founding_map && !in_visual_prompt) {
+    if (!in_founding_map && !in_visual_prompt && main.season_started) {
       //Global commands
       {
         //[Build]

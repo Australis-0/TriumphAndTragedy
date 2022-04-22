@@ -91,6 +91,13 @@ module.exports = {
       usr.pops.accepted_cultures.push(culture_id);
       usr.pops.primary_culture = culture_id;
 
+      //Check if enough players are there to start the game
+      if (Object.keys(main.users).length >= config.defines.common.starting_players) {
+        //Start the game
+        main.season_started = true;
+        reinitialiseGameEmbeds();
+      }
+
       return usr;
     }
   },
