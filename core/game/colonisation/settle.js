@@ -248,7 +248,6 @@ module.exports = {
             user: user_id
           });
         }
-
       }
     } else {
       printError(game_obj.id, `You may only settle up to **${parseNumber(config.defines.common.starting_provinces)}** province(s) at once!`);
