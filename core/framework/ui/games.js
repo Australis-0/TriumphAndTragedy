@@ -175,7 +175,7 @@ module.exports = {
       returnChannel(game_obj.channel).send({ embeds: [bottom_embed] }).then((message) => {
         game_obj.alert_embed = message;
 
-        setInterval(function(){
+        var alert_loop = setInterval(function(){
           var message_is_prompt = false;
           var all_visual_prompts = Object.keys(interfaces);
 
@@ -211,7 +211,7 @@ module.exports = {
         }, 100);
 
         //Date processing
-        setInterval(function(){
+        var date_loop = setInterval(function(){
           var current_date = new Date().getTime();
           var time_remaining = settings.turn_timer*1000 - (current_date - main.last_turn);
 
@@ -226,7 +226,12 @@ module.exports = {
             .setImage("https://cdn.discordapp.com/attachments/722997700391338046/736141424315203634/margin.png");
 
           try {
-            game_obj.header.edit({ embeds: [topbar_embed] });
+            try {
+              game_obj.header.edit({ embeds: [topbar_embed] });
+            } catch {
+              clearInterval(alert_loop);
+              clearInterval(date_loop);
+            }
 
             if (game_obj.page == "founding_map")
               (!main.global.user_map[game_obj.user]) ?
