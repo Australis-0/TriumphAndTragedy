@@ -28,6 +28,9 @@ module.exports = {
     queue_string.push("");
     queue_string.push(`_Encourage more players to join if you want this season to start sooner!_`);
 
+    //Remove control panel if one exists
+    removeControlPanel(game_obj.id);
+
     return splitEmbed(queue_string, {
       title: "Current Queue:",
       title_pages: true,

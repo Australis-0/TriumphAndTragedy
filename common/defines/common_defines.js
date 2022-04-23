@@ -6,7 +6,7 @@ config.defines.common = {
   activity_check: 3, //How often should the bot checkup on players in the season queue to make sure they're still active? (in days)
   starting_players: 10, //How many players should the game require before it can start? Set to 0 to disable starting queue
   starting_provinces: 1,
-  starting_year: 1861,
+  starting_year: 1500,
 
   starting_kit: {
     set_government: "anarchy",
@@ -19,9 +19,8 @@ config.defines.common = {
     money: 50000,
     wood: 10,
     stone: 15,
-    machine_parts: 50,
     food: 50,
-    research_to: 1800,
+    research_to: 0,
 
     magnates: [3, 15],
     unlock_building: [
