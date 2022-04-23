@@ -226,13 +226,19 @@ module.exports = {
             .setImage("https://cdn.discordapp.com/attachments/722997700391338046/736141424315203634/margin.png");
 
           try {
-            game_obj.header.edit({ embeds: [topbar_embed] });
+            game_obj.header.edit({ embeds: [topbar_embed] }).catch((error) => {
+              clearGame(game_id);
+              clearInterval(alert_loop);
+              clearInterval(date_loop);
+            });
 
             if (game_obj.page == "founding_map")
               (!main.global.user_map[game_obj.user]) ?
                 initialiseFoundCountry(game_obj.user) :
                 initialiseSettleStartingProvinces(game_obj.user);
-          } catch {}
+          } catch (e) {
+            console.log(e);
+          }
         }, 10000);
 
         //Begin processing page
