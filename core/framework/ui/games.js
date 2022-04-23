@@ -226,12 +226,7 @@ module.exports = {
             .setImage("https://cdn.discordapp.com/attachments/722997700391338046/736141424315203634/margin.png");
 
           try {
-            try {
-              game_obj.header.edit({ embeds: [topbar_embed] });
-            } catch {
-              clearInterval(alert_loop);
-              clearInterval(date_loop);
-            }
+            game_obj.header.edit({ embeds: [topbar_embed] });
 
             if (game_obj.page == "founding_map")
               (!main.global.user_map[game_obj.user]) ?
