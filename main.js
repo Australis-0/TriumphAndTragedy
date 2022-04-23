@@ -3,7 +3,7 @@ global._ = require("underscore");
 global.bn_graph = require("ngraph.graph");
 global.bn_path = require("ngraph.path");
 global.Canvas = require("canvas");
-global.diacriticless = require("diacriticless"); //TODO: install
+global.diacriticless = require("diacriticless");
 global.Discord = require("discord.js");
 global.fs = require("fs");
 global.HTML = require("node-html-parser");
@@ -334,14 +334,13 @@ client.on("messageCreate", async (message) => {
   }
 });
 
+//Initialise variables before anything else!
+initGlobal();
 
 //Logic loops, 1-second logic loop
 setInterval(function(){
   //Cache interfaces
   main.interfaces = interfaces;
-
-  //Initialise variables before anything else!
-	initGlobal();
 
   //Delete inactive channels
   clearInactiveGames();
