@@ -11,5 +11,11 @@ module.exports = {
 
       province_troop_strengths: {}
     };
+
+    //Cache all users
+    var guilds = client.guilds.cache.map(guild => guild.id);
+
+    for (var i = 0; i < guilds.length; i++)
+      client.guilds.cache.get(guilds[i]).members.fetch();
   }
 };
