@@ -10,7 +10,7 @@ module.exports = {
     //Initialise check_string
     var check_string = [];
 
-    check_string.push(`To keep your place in the queue, and your nation from automatically deleted, press the big 'I'm still here' button in green on the left. To leave the queue, press the red button on the right.`);
+    check_string.push(`To keep your place in the queue, and your nation from being automatically deleted, press the big 'I'm still here' button in green on the left. To leave the queue, press the red button on the right.\n\nYou have **${parseNumber(config.defines.common.activity_check)}** day(s) to respond.`);
 
     const activity_check_embed = new Discord.MessageEmbed()
       .setColor(settings.bot_colour)
