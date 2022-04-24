@@ -301,8 +301,12 @@ module.exports = {
                 module.exports.initialiseGameEmbeds(local_interface);
                 clearInterval(reinitialisation_loop);
               } catch (e) {
-                log.error(`Could not initialise game embeds: ${e}.`);
-                console.log(e);
+                if (returnChannel(local_ui.channel)) {
+                  log.error(`Could not initialise game embeds: ${e}.`);
+                  console.log(e);
+                } else {
+                  clearInterval(reinitialisation_loop);
+                }
               }
             }, 1000, local_ui, all_interfaces[i]);
           } catch (e) {

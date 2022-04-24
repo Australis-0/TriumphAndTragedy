@@ -15,7 +15,6 @@ module.exports = {
     const activity_check_embed = new Discord.MessageEmbed()
       .setColor(settings.bot_colour)
       .setTitle(`**Keep Your Place In The Queue!**`)
-      .setThumbnail(usr.flag)
       .setImage("https://cdn.discordapp.com/attachments/722997700391338046/736141424315203634/margin.png")
       .setDescription(check_string.join("\n"));
     const confirmation_row = new Discord.MessageActionRow()
@@ -41,6 +40,7 @@ module.exports = {
       else
         drop_from_queue = true;
     } catch (e) {
+      console.log(e);
       drop_from_queue = true;
     }
 
