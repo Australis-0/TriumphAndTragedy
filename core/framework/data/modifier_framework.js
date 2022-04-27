@@ -111,7 +111,10 @@ module.exports = {
                 if (usr.inventory[all_modifiers[i]] != undefined)
                   usr.inventory[all_modifiers[i]] += modifier_value;
                 else
-                  usr[all_modifiers[i]] += modifier_value;
+                  if (Object.keys(config.buildings).includes(all_modifiers[i]))
+                    usr.modifiers[`${all_modifiers[i]}_building_slots`] += modifier_value;
+                  else
+                    usr[all_modifiers[i]] += modifier_value;
               }
             }
 

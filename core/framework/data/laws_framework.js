@@ -283,7 +283,5 @@ module.exports = {
       log.info(`Chosen Reform dump:`);
       console.log(chosen_reform);
     }
-
-
   }
 };
