@@ -676,7 +676,8 @@ module.exports = {
 
           //Fetch total available slots in city for building_category
           available_building_slots[1].total_slots =
-            Math.max(city_obj[`${raw_building_category_name}_building_slots`] - usr.modifiers[`${raw_building_category_name}_building_slots`], 0) +
+            Math.min(usr.modifiers[`${raw_building_category_name}_building_slots`], 1) +
+              Math.max(city_obj[`${raw_building_category_name}_building_slots`] - usr.modifiers[`${raw_building_category_name}_building_slots`], 0) +
               returnSafeNumber(usr.modifiers[raw_building_name]) +
               returnSafeNumber(usr.modifiers[`${raw_building_category_name}_building_slots`]) + usr.modifiers.extra_building_slots;
 
