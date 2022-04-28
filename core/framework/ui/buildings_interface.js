@@ -229,10 +229,12 @@ module.exports = {
         //Only display city if constructions are currently ongoing there
         if (local_constructions.length > 0) {
           construction_string.push(`**${main.provinces[all_cities[i]].name}**:`);
+          construction_string.push("");
+          
           for (var x = 0; x < local_constructions.length; x++) {
             var local_building_obj = getBuilding(local_constructions[x].building_type);
 
-            construction_string.push(`Currently constructing ${parseNumber(local_constructions[x].building_amount)} ${(local_building_obj.name) ? local_building_obj.name : local_constructions[x].building_type} in this city. They will finish in **${local_constructions[x].construction_turns}** turn(s).`);
+            construction_string.push(`Currently constructing **${parseNumber(local_constructions[x].building_amount)}** ${(local_building_obj.name) ? local_building_obj.name : local_constructions[x].building_type} in this city. They will finish in **${local_constructions[x].construction_turns}** turn(s).`);
           }
         }
       }
