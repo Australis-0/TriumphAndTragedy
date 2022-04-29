@@ -114,7 +114,7 @@ module.exports = {
                   usr[all_modifiers[i]] += modifier_value;
               }
             } else {
-              if (usr.modifiers[`${all_modiifers[i]}_building_slots`])
+              if (usr.modifiers[`${all_modifiers[i]}_building_slots`])
                 usr.modifiers[`${all_modifiers[i]}_building_slots`] += modifier_value;
             }
 
