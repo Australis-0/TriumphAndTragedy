@@ -85,7 +85,7 @@ config.technology.naval_technology = {
     }
   },
   circumnavigation: {
-    name: "circumnavigation",
+    name: "Circumnavigation",
     icon: "globe",
     description: "Circumnavigating the globe will not only help boost our national prestige, but will enable us to conduct studies of far-away lands and bring back exotic flora and fauna for research.",
     prerequisite_techs: ["the_galleon"],
