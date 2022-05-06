@@ -2184,11 +2184,11 @@ module.exports = {
 
             //[Cancel Auto Trade]
             if (input == "cancel auto trade")
-              initialiseCancelAutoTrade();
+              initialiseCancelAutoTrade(user_id);
 
             //[Create Auto Trade]
             if (input == "create auto trade")
-              initialiseCreateAutoTrade();
+              initialiseCreateAutoTrade(user_id);
 
             break;
           case "exports":

@@ -47,7 +47,7 @@ module.exports = {
     //Return statement
     return splitEmbed(auto_trade_string, {
       title: "[Back] ¦ Auto-Trades:",
-      description: auto_trade_prefix_string.join("\n"),
+      description: auto_trade_prefix_string,
       title_pages: true,
       fixed_width: true
     });
