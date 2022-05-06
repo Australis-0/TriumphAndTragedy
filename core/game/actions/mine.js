@@ -16,7 +16,7 @@ module.exports = {
       ]
     },
     function (arg) {
-      module.exports.mine(actual_id, arg[0], "mine");
+      module.exports.mine(user_id, arg[0], "mine");
     });
   },
 

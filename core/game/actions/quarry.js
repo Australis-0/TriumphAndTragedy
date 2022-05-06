@@ -16,7 +16,7 @@ module.exports = {
       ]
     },
     function (arg) {
-      mine(actual_id, arg[0], "quarry");
+      mine(user_id, arg[0], "quarry");
     });
   }
 };
