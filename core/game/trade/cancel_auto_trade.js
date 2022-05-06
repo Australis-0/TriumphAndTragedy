@@ -34,7 +34,10 @@ module.exports = {
 
         //Update auto trade UI if game_obj.page is still on auto_trades
         if (game_obj.page == "auto_trades")
-          printAutoTrades(game_obj.user);
+          createPageMenu(game_obj.middle_embed, {
+            embed_pages: printAutoTrades(game_obj.user),
+            user: game_obj.user
+          });
       } else {
         printError(game_obj.id, `The auto-trade you have selected turned out to be nonexistent! Try selected a valid autotrade ID to cancel instead.`)
       }

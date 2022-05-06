@@ -1,5 +1,5 @@
 module.exports = {
-  createAutoTrade: function (arg0_user, arg1_receiving_user, arg2_amount, arg3_good_type) { //[WIP] - Remember to update auto-trade UI when being focused on by user
+  createAutoTrade: function (arg0_user, arg1_receiving_user, arg2_amount, arg3_good_type) {
     //Convert from parameters
     var user_id = arg0_user;
     var other_user = arg1_receiving_user;
@@ -26,7 +26,7 @@ module.exports = {
                   if (!isBlockaded(actual_id)) {
                     if (!isBlockaded(ot_actual_id)) {
                       //This is referred to twice to make sure we can get the name of the key later on
-                      var auto_trade_id = generateAutoTradeID();
+                      var auto_trade_id = generateAutoTradeID(user_id);
 
                       usr.auto_trades[auto_trade_id] = {
                         id: auto_trade_id,
@@ -42,7 +42,10 @@ module.exports = {
 
                       //Update auto trade UI if game_obj.page is still on auto_trades
                       if (game_obj.page == "auto_trades")
-                        printAutoTrades(game_obj.user);
+                        createPageMenu(game_obj.middle_embed, {
+                          embed_pages: printAutoTrades(game_obj.user),
+                          user: game_obj.user
+                        });
 
                       //Print alert
                       printAlert(game_obj.id, `You have begun shipping out **${parseNumber(raw_amount)}** ${(good_obj.name) ? good_obj.name : "money"} per turn to the country of **${ot_user.name}**.`);
