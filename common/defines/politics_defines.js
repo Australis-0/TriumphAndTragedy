@@ -9,6 +9,7 @@ config.defines.politics = {
 
   //General Political Defines
   coup_cost: 150, //PC cost for couping
+  coup_popularity_threshold: 0.10, //How much popularity does an ideology need to be a viable contender for a coup?
   max_stab_boost: 0.50, //How much should be the maximum someone can boost their stability by?
   move_capital_cost: 100, //PC cost for moving capital cities
   political_capital_gain: 10, //All costs not labelled in this category are in political capital

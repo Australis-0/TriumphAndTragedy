@@ -1012,8 +1012,9 @@ module.exports = {
           var dice_roll = randomNumber(0, 100)/100;
 
           for (var i = 0; i < all_governments.length; i++)
-            if (usr.politics[all_governments[i]].popularity >= 0.30)
-              low_party_popularity = true;
+            if (usr.politics[all_governments[i]].popularity >= config.defines.politics.coup_popularity_threshold)
+              if (all_governments[i] != usr.government)
+                low_party_popularity = true;
 
           if (dice_roll > usr.modifiers.stability + config.defines.politics.revolt_threshold) {
             //Fetch list of valid governments to coup to
