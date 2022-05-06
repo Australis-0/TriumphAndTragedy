@@ -2290,7 +2290,7 @@ module.exports = {
                 }
 
                 //[Manage Auto-Trades]
-                if (["auto-trades", "autotrades", "manage auto-trades", "manage autotrades"].includes(game_obj.page)) {
+                if (["auto-trades", "autotrades", "manage auto-trades", "manage autotrades"].includes(input)) {
                   createPageMenu(game_obj.middle_embed, {
                     embed_pages: printAutoTrades(game_obj.user),
                     user: game_obj.user
