@@ -41,7 +41,7 @@ module.exports = {
 
         switch (all_effects[x]) {
           case "can_justify_wars":
-            government_string.push(`- Capability to declare wars: ${parseBoolean(local_value)}`);
+            government_string.push(`- Capability to justify aggressive non-colonial wars: ${parseBoolean(local_value)}`);
 
             break;
           case "has_elections":
