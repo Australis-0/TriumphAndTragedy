@@ -157,7 +157,7 @@ module.exports = {
               printColonisation(user_id);
 
             //Print user alert feedback
-            printAlert(game_obj.id, `Settlers from **${usr.name}** have set out to colonise the province(s) of ${provinces.join(", ")}. They will arrive in **${parseNumber(prov_colonisation_turns)}**. They will then take an additional **${parseNumber(config.defines.colonisation.base_colonisation_turns)}** turn(s) to colonise.`);
+            printAlert(game_obj.id, `Settlers from **${usr.name}** have set out to colonise the province(s) of ${provinces.join(", ")}. They will arrive in **${parseNumber(prov_colonisation_turns)}** turn(s). They will then take an additional **${parseNumber(config.defines.colonisation.base_colonisation_turns)}** turn(s) to colonise.`);
           } catch (e) {
             if (!capital_obj)
               printError(game_obj.id, `You need to have a set capital city in order to start colonising provinces!`);
