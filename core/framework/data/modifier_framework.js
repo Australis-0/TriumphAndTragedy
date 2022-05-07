@@ -100,7 +100,7 @@ module.exports = {
           default:
             //Check if the modifier in question actually exists before incrementing
             var modifier_value = modifiers[all_modifiers[i]];
-            
+
             if (usr.modifiers[all_modifiers[i]]) {
               usr.modifiers[all_modifiers[i]] += modifiers[all_modifiers[i]];
             } else if (usr[all_modifiers[i]]) {
@@ -381,13 +381,11 @@ module.exports = {
         default:
           //By default a modifier is parsed as percentage, but only if it is not an effect
           switch (all_modifier_keys[i]) {
-            case "set_mobilisation_unit":
-              var unit_obj = getUnit(local_value[0]);
-              modifier_string.push(`${prefix}Sets Mobilisation Unit to **${(unit_obj.name) ? unit_obj.name : local_value[0]}**`);
+            //Effect blocks
+            case "enable_centralisation":
+              modifier_string.push((local_value[0]) ? `Enables Centralisation` : `Disables Centralisation`);
 
               break;
-
-            //Effect blocks
             case "obsolete_building":
               var building_names = [];
               for (var x = 0; x < local_value.length; x++)
@@ -442,7 +440,11 @@ module.exports = {
               modifier_string.push(`${prefix}Obsoletes **${unit_names.join(", ")}**`);
 
               break;
+            case "set_mobilisation_unit":
+              var unit_obj = getUnit(local_value[0]);
+              modifier_string.push(`${prefix}Sets Mobilisation Unit to **${(unit_obj.name) ? unit_obj.name : local_value[0]}**`);
 
+              break;
             case "unlock_building":
               var building_names = [];
               for (var x = 0; x < local_value.length; x++)

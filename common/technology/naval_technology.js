@@ -152,7 +152,7 @@ config.technology.naval_technology = {
   mercantile_fleet: {
     name: "Mercantile Fleet",
     icon: "taxes",
-    description: "Men-of-war, outfitted with square rigging and three decks of cannons have increasingly become the premier ships in naval warfare, capable of projecting power across the world. Although expensive, they wield a significant advantage in battle ...",
+    description: "The formation of a centralised mercantile fleet can help boost trade incomes and offer protection from privateers and other pirates, ensuring a relatively sounder investment for the risky prospect that is navigation on the high seas.",
     prerequisite_techs: ["fleet_in_being"],
     research_cost: 250,
     year: 1600,
