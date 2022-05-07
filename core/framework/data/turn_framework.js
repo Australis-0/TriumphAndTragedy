@@ -1290,7 +1290,7 @@ module.exports = {
           local_auto_trade.exporter,
           local_auto_trade.target,
 
-          local_auto.amount,
+          local_auto_trade.amount,
           local_auto_trade.good_type,
           { hide_display: true }
         );

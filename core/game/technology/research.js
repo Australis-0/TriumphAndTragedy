@@ -106,7 +106,7 @@ module.exports = {
   research: function (arg0_user, arg1_technology_name, arg2_display, arg3_force_research) {
     //Convert from parameters
     var user_id = arg0_user;
-    var raw_technology_name = arg1_technology_name.toLowerCase();
+    var raw_technology_name = arg1_technology_name.toString().toLowerCase();
     var display = arg2_display;
     var force_research = arg3_force_research;
 
