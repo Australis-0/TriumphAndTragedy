@@ -76,7 +76,7 @@ module.exports = {
     var usr = main.users[actual_id];
 
     //Declare local tracker variables
-    var city_obj = getCity(city_name);
+    var city_obj = main.provinces[getCity(city_name).id];
 
     if (city_obj) {
       var rgo_name = (getGood(city_obj.resource).name) ? getGood(city_obj.resource).name : city_obj.resource;
@@ -95,7 +95,7 @@ module.exports = {
       city_string.push("");
       city_string.push(`City Options: ${(city_obj.city_type != "capital") ? "**[Move Capital]** ¦ " : ""}**[Rename City]**`);
       city_string.push(`Manage Buildings: **[Build]** ¦ **[Demolish]**`);
-      city_string.push(`Promote Urbanisation: **[Develop]** - Gain an extra building slot in this city for **${parseNumber(getDevelopmentCost(actual_id, city_name))}** ${config.icons.political_capital} Political Capital.`);
+      city_string.push(`Promote Urbanisation: **[Develop]** - Gain an extra building slot in this city for **${parseNumber(getDevelopmentCost(actual_id, city_obj.id))}** ${config.icons.political_capital} Political Capital.`);
       city_string.push(config.localisation.divider);
 
       //Print city information
@@ -129,7 +129,7 @@ module.exports = {
 
       for (var i = 0; i < all_building_categories.length; i++) {
         var local_building_category = getBuildingCategory(all_building_categories[i]);
-        var local_building_slots = getBuildingSlots(actual_id, city_name, all_building_categories[i]);
+        var local_building_slots = getBuildingSlots(actual_id, city_obj.id, all_building_categories[i]);
         var special_string = (local_building_category.is_housing || local_building_category.description) ?
           (local_building_category.is_housing) ?
             `\n • **Current Limit:** ${parseNumber(people_housed)}. Cities cannot grow once they surpass their housing limit. Build more **housing** to increase this limit.` :
@@ -152,7 +152,7 @@ module.exports = {
                 var all_buildings = 0;
                 var local_building = getBuilding(all_buildings_in_category[x]);
                 var local_building_name = (local_building.name) ? local_building.name : all_buildings_in_category[x];
-                var local_slots = getBuildingSlots(actual_id, city_name, all_buildings_in_category[x]);
+                var local_slots = getBuildingSlots(actual_id, city_obj.id, all_buildings_in_category[x]);
 
                 for (var y = 0; y < city_obj.buildings.length; y++)
                   if (city_obj.buildings[y].building_type == all_buildings_in_category[x])
