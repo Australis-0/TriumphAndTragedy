@@ -25,6 +25,7 @@ config.defines.combat = {
   max_army_limit: 1000, //What is the maximum amount of armies that a user should be allowed to have? Set to 0 to disable
   mobilisation_cooldown: 3, //Amount of turns before a person can mobilise/demobilise again
   mobilise_unit: "none", //Default unit for mobilisation
+	occupation_requirement: 0.005, //What is the percentage of the population a hostile army needs for occupation?
   peacetime_mobilisation_penalty: 0.5, //What should the penalty for peacetime mobilisation be (in infamy)?
 	seaplane_bonus: 0.5, //What should the bonus combat modifier whilst at sea be?
 	submarine_cooldown: 1, //How many turns should it take for submarines to cooldown from their previous operation? Set to 0 to disable

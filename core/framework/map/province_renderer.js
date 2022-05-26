@@ -4,20 +4,41 @@ module.exports = {
     return "stroke:#000000;stroke-width:0.26458332px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;opacity:1";
   },
 
+  setAllProvinceColours: function (arg0_user, arg1_province_id, arg2_occupied) {
+    //Convert from parameters
+    var user_id = arg0_user;
+    var province_id = arg1_province_id;
+    var occupied = arg2_occupied;
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var usr = main.users[actual_id];
+
+    var new_colour = usr.colour;
+
+    //Check if occupied or not
+    if (occupied)
+      new_colour = [
+        Math.min(usr.colour[1] + 20, 255),
+        Math.min(usr.colour[0] + 20, 255),
+        Math.min(usr.colour[2] + 20, 255)
+      ];
+
+    //Set province colours
+    module.exports.setProvinceColour("colonisation", province_id, new_colour);
+    module.exports.setProvinceColour("political", province_id, new_colour);
+  },
+
   setOccupationColour: function (arg0_user, arg1_province_id) {
     //Convert from parameters
     var user_id = arg0_user;
     var province_id = arg1_province_id;
 
     //Declare local instance variables
-    var usr = main.users[user_id];
+    var actual_id = main.global.user_map[user_id];
 
     //Change province colour
-    module.exports.setProvinceColour("political", province_id, [
-      Math.min(usr.colour[1] + 20, 255),
-      Math.min(usr.colour[0] + 20, 255),
-      Math.min(usr.colour[2] + 20, 255)
-    ]);
+    module.exports.setAllProvinceColours(actual_id, province_id, true);
   },
 
   setProvinceColour: function (arg0_file, arg1_province_id, arg2_colour) {
@@ -30,6 +51,7 @@ module.exports = {
       local_map.querySelector(`#${province_id}`).setAttribute("style", `fill:${RGBToHex(colour[0], colour[1], colour[2])};${getDefaultProvinceStyling()}`);
     } catch (e) {
       console.log(e);
+      log.warn(`Attempted Province ID: #${province_id}`);
     }
   }
 };

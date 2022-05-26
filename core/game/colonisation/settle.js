@@ -147,10 +147,16 @@ module.exports = {
             //Push to expeditions
             usr.expeditions[local_colonisation_id] = {
               id: local_colonisation_id,
+              colour: generateColonisationColour(actual_id),
+
               provinces: provinces,
               duration: prov_colonisation_turns + config.defines.colonisation.base_colonisation_turns,
               unit_type: unit_type
             };
+
+            //Update colonisation mapmode
+            for (var i = 0; i < provinces.length; i++)
+              setProvinceColour("colonisation", provinces[i], usr.expeditions[local_colonisation_id].colour);
 
             //Update colonisation/reserves UI if user is currently on it
             if (game_obj.page == "colonisation")
@@ -226,7 +232,7 @@ module.exports = {
         //No errors were ran into, begin instantly settling provinces
         for (var i = 0; i < provinces.length; i++) {
           settleProvince(provinces[i], actual_id);
-          setProvinceColour("political", provinces[i], usr.colour);
+          setAllProvinceColours(actual_id, provinces[i]);
           display_provinces.push(`**${provinces[i]}**`);
         }
 

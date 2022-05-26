@@ -121,7 +121,12 @@ module.exports = {
         down_arrow: (reaction.emoji.name == "⬇️"),
         left_arrow: (reaction.emoji.name == "⬅️"),
         right_arrow: (reaction.emoji.name == "➡️"),
-        interact_button: (reaction.emoji.name == "🔘")
+        interact_button: (reaction.emoji.name == "🔘"),
+
+        //Mapmodes
+        political: (reaction.emoji.name == "globe"),
+        colonisation: (reaction.emoji.name == "colonisation"),
+        supply: (reaction.emoji.name == "railways")
       };
 
       if (is_collector[0]) {

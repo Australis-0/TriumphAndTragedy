@@ -130,6 +130,11 @@ module.exports = {
               if (map_obj.up_arrow) map_obj.y += (map_obj.speed/map_obj.zoom);
               if (map_obj.down_arrow) map_obj.y -= (map_obj.speed/map_obj.zoom);
 
+              //Mapmode controls
+              if (map_obj.political) module.exports.changeImage(game_id, "political");
+              if (map_obj.colonisation) module.exports.changeImage(game_id, "colonisation");
+              if (map_obj.supply) module.exports.changeImage(game_id, "supply");
+
               //Reset map data states
               reloadMap(game_id);
               reloadMapInterface(map_interface_embed, game_id);
@@ -144,6 +149,11 @@ module.exports = {
               map_obj.right_arrow = false;
               map_obj.up_arrow = false;
               map_obj.down_arrow = false;
+
+              //Mapmode buttons
+              map_obj.political = false;
+              map_obj.colonisation = false;
+              map_obj.supply = false;
             } catch (e) {
               log.warn(`logic_loop under initialiseMapViewer() was unable to proceed! ${e}.`);
               clearInterval(logic_loop);

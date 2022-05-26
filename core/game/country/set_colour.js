@@ -50,6 +50,7 @@ module.exports = {
                 colour_taken = [true, main.users[all_users[i]].name];
 
               if (!colour_taken[0]) {
+                var all_expeditions = Object.keys(usr.expeditions);
                 var all_provinces = getProvinces(actual_id, { include_occupations: true });
 
                 //Set colour
@@ -60,11 +61,23 @@ module.exports = {
                 if (is_vassal)
                   return [true, `You have set ${(is_vassal) ? `vassal's` : `your`} RGB colour to **${usr.colour.join(", ")}**.`];
 
+                //Change colonisation colours
+                for (var i = 0; i < all_expeditions.length; i++)
+                  usr.expeditions[all_expeditions[i]].colour = generateColonisationColour(actual_id);
+                for (var i = 0; i < all_expeditions.length; i++) {
+                  var local_expedition = usr.expeditions[all_expeditions[i]];
+
+                  for (var x = 0; x < local_expedition.provinces.length; x++)
+                    setProvinceColour("colonisation", local_expedition.provinces[x], local_expedition.colour);
+                }
+
+                //Change political colours
                 for (var i = 0; i < all_provinces.length; i++)
-                  if (all_provinces[i].owner == all_provinces[i].controller)
-                    setProvinceColour("political", all_provinces[i].id, usr.colour);
-                  else
-                    setProvinceColour("political", all_provinces[i].id, [Math.min(usr.colour[0] + 20, 255), Math.min(usr.colour[1] + 20, 255), Math.min(usr.colour[2] + 20, 255)]);
+                  if (all_provinces[i].owner == all_provinces[i].controller) {
+                    setAllProvinceColours(actual_id, all_provinces[i].id);
+                  } else {
+                    setAllProvinceColours(all_provinces[i].controller, all_provinces[i].id, true);
+                  }
               } else {
                 if (!do_not_display)
                   printError(game_obj.id, `The colour you have specified, **${r}**, **${g}**, **${b}**, has already been taken by **${colour_taken[1]}**! Please pick a different colour.`);

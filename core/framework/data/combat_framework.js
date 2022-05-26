@@ -371,8 +371,8 @@ module.exports = {
     var defending_army_name = arg3_army_name;
 
     //Declare local instance variables
-    var actual_id = main.global.user_map[user_id];
-    var actual_ot_user_id = main.global.user_map[ot_user_id];
+    var actual_id = main.global.user_map[user_id]; //Attacker
+    var actual_ot_user_id = main.global.user_map[ot_user_id]; //Defender
     var all_wars = Object.keys(main.global.wars);
     var attacking_army_obj = (typeof attacking_army_name != "object") ?
       getArmy(actual_id, attacking_army_name.trim()) :
@@ -511,12 +511,12 @@ module.exports = {
                   province_obj.id;
 
                 var army_size_in_province = getTroopsInProvince(defending_army_obj.province);
-                var meets_occupation_requirements = (army_size_in_province >= province_obj.pops.population*0.005);
+                var meets_occupation_requirements = (army_size_in_province >= province_obj.pops.population*config.defines.combat.occupation_requirement);
 
                 if (meets_occupation_requirements)
                   province_obj.controller = actual_id;
 
-                setOccupationColour(actual_id, attacking_army_obj.province);
+                setAllProvinceColours(actual_id, attacking_army_obj.province, true);
               } else if (battle_type == "sea") {
                 if (defending_army_obj.is_blockading)
                   liftBlockade(actual_id, defending_army_obj.name, true);

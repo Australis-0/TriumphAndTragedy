@@ -103,6 +103,40 @@ module.exports = {
     delete main.users[actual_id];
   },
 
+  generateColonisationColour: function (arg0_user) {
+    //Convert from parameters
+    var user_id = arg0_user;
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var new_colour;
+    var usr = main.users[actual_id];
+
+    var all_expeditions = Object.keys(usr.expeditions);
+
+    //Generate random colour
+    while (true) {
+      new_colour = [
+        usr.colour[0] + randomNumber(5, 20),
+        usr.colour[1] + randomNumber(5, 20),
+        usr.colour[2] + randomNumber(5, 20)
+      ];
+
+      for (var i = 0; i < all_expeditions.length; i++) {
+        var local_expedition = usr.expeditions[all_expeditions[i]];
+
+        if (
+          local_expedition.colour[0] != new_colour[0] ||
+          local_expedition.colour[1] != new_colour[1] ||
+          local_expedition.colour[2] != new_colour[2]
+        )
+          break;
+      }
+    }
+
+    return new_colour;
+  },
+
   //getAverageTechCount() - Fetches average tech count from all users
   getAverageTechCount: function () {
     //Declare local instance variables
@@ -780,7 +814,7 @@ module.exports = {
       ot_user.provinces++;
 
       //Change province colour
-      setProvinceColour("political", options.province_id, ot_user.colour);
+      setAllProvinceColours(actual_ot_user_id, options.province_id);
     }
   }
 };

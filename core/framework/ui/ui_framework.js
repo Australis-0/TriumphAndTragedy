@@ -177,13 +177,16 @@ module.exports = {
         case "map":
           game_obj.middle_embed.react("⏫")
             .then(() => { game_obj.middle_embed.react("⬆️"); })
-            .then(() => { game_obj.middle_embed.react("785931430215155754"); });
+            .then(() => { game_obj.middle_embed.react("785931430215155754"); })
+            .then(() => { game_obj.middle_embed.react("716811246556545035"); }); //Political
           game_obj.middle_control_panel.react("⬅️")
             .then(() => { game_obj.middle_control_panel.react("🔘"); } )
-            .then(() => { game_obj.middle_control_panel.react("➡️"); } );
+            .then(() => { game_obj.middle_control_panel.react("➡️"); } )
+            .then(() => { game_obj.middle_control_panel.react("716821194891853826"); } ); //Colonisation
           game_obj.bottom_control_panel.react("⏬")
             .then(() => { game_obj.bottom_control_panel.react("⬇️"); } )
-            .then(() => { game_obj.bottom_control_panel.react("785931430407700482"); } );
+            .then(() => { game_obj.bottom_control_panel.react("785931430407700482"); } )
+            .then(() => { game_obj.bottom_control_panel.react("773451853534986241"); }); //Supply
 
           break;
         default:

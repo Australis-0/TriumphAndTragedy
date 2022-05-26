@@ -123,8 +123,10 @@ module.exports = {
 
       //If army is in a hostile province with an army that has more than 0,5% of the local population, and is not in combat, occupy it
       if (!local_army.in_combat && local_enemies.includes(province_obj.controller))
-        if (getArmySize(local_army.owner, local_army) > province_obj.pops.population*0.005)
+        if (getArmySize(local_army.owner, local_army) > province_obj.pops.population*config.defines.combat.occupation_requirement) {
           province_obj.controller = local_army.owner;
+          setAllProvinceColours(province_obj.controller, province_obj.id, true)
+        }
     }
   },
 
@@ -135,6 +137,11 @@ module.exports = {
     var all_provinces = Object.keys(main.provinces);
     var all_users = Object.keys(main.users);
     var all_wars = Object.keys(main.global.wars);
+
+    //Map processing
+    {
+      forceRender("supply");
+    }
 
     //Optimisation processing
     {
@@ -156,8 +163,12 @@ module.exports = {
             var revolt_risk = Math.min(1 - (amount_of_troops/(local_province.pops.population/100)), 0.5);
             var revolt_roll = Math.random();
 
-            if (revolt_roll < revolt_risk)
+            if (revolt_roll < revolt_risk) {
               local_province.controller = local_province.owner;
+
+              //Render mapmodes for province
+              setAllProvinceColours(local_province.owner, all_provinces[i]);
+            }
           }
       }
 
