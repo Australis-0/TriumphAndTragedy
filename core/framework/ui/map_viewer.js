@@ -23,7 +23,7 @@ module.exports = {
           map_obj.original_img = attachment[1].url;
 
           //Reload map
-          reloadMap(game_id, true);
+          reloadMap(game_id);
         });
       })
     }
@@ -64,6 +64,10 @@ module.exports = {
 
     map_obj.increase_pan_speed = false;
     map_obj.decrease_pan_speed = false;
+
+    map_obj.political = false;
+    map_obj.colonisation = false;
+    map_obj.supply = false;
 
     //Initialise tracker variables
     map_obj.mapmode = map;
@@ -131,9 +135,18 @@ module.exports = {
               if (map_obj.down_arrow) map_obj.y -= (map_obj.speed/map_obj.zoom);
 
               //Mapmode controls
-              if (map_obj.political) module.exports.changeImage(game_id, "political");
-              if (map_obj.colonisation) module.exports.changeImage(game_id, "colonisation");
-              if (map_obj.supply) module.exports.changeImage(game_id, "supply");
+              if (map_obj.political) {
+                map_obj.mapmode = "political";
+                module.exports.changeImage(game_id, "political");
+              }
+              if (map_obj.colonisation) {
+                map_obj.mapmode = "colonisation";
+                module.exports.changeImage(game_id, "colonisation");
+              }
+              if (map_obj.supply) {
+                map_obj.mapmode = "supply";
+                module.exports.changeImage(game_id, "supply");
+              }
 
               //Reset map data states
               reloadMap(game_id);
@@ -150,7 +163,7 @@ module.exports = {
               map_obj.up_arrow = false;
               map_obj.down_arrow = false;
 
-              //Mapmode buttons
+              //Mapmodes
               map_obj.political = false;
               map_obj.colonisation = false;
               map_obj.supply = false;
@@ -175,6 +188,11 @@ module.exports = {
             if (actions.down_arrow) map_obj.down_arrow = true;
             if (actions.left_arrow) map_obj.left_arrow = true;
             if (actions.right_arrow) map_obj.right_arrow = true;
+
+            //Mapmodes
+            if (actions.political) map_obj.political = true;
+            if (actions.colonisation) map_obj.colonisation = true;
+            if (actions.supply) map_obj.supply = true;
           };
         });
       });
