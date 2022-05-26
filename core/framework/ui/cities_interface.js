@@ -77,6 +77,7 @@ module.exports = {
 
     //Declare local tracker variables
     var city_obj = main.provinces[getCity(city_name).id];
+    var culture_obj = main.global.cultures[city_obj.culture];
 
     if (city_obj) {
       var rgo_name = (getGood(city_obj.resource).name) ? getGood(city_obj.resource).name : city_obj.resource;
@@ -103,9 +104,12 @@ module.exports = {
       city_string.push("");
       city_string.push(`**Province:** ${config.icons.provinces} ${city_obj.id}`);
       city_string.push(`**Population:** ${config.icons.population} ${parseNumber(city_obj.pops.population)}`);
+      city_string.push(`**Development:** ${config.icons.development} ${parseNumber(city_obj.development)}`);
       city_string.push(`**RGO:** ${rgo_icon}${rgo_name}`);
       city_string.push(`- **${(usr.modifiers.rgo_throughput-1 >= 0) ? "+" : ""}${printPercentage(usr.modifiers.rgo_throughput)}** modifier to ${rgo_icon}${rgo_name} production in this province.`);
-      city_string.push(`**Development:** ${config.icons.development} ${parseNumber(city_obj.development)}`);
+      city_string.push("");
+      city_string.push(`**Culture:** ${config.icons.culture} ${culture_obj.name}`)
+      city_string.push(`**Supply Limit:** ${config.icons.railways} ${parseNumber((city_obj.supply_limit) ? city_obj.supply_limit : config.defines.combat.base_supply_limit)}`);
 
       city_string.push("");
       city_string.push(`**Buildings:**`);

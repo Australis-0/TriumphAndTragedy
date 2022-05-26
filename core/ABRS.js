@@ -106,9 +106,9 @@ module.exports = {
   	}
 
     //Load maps
-  	loadMap("colonial_map.svg", "colonial");
+  	loadMap("colonisation_map.svg", "colonisation");
     loadMap("political_map.svg", "political");
-    loadMap("supply_limit_map.svg", "supply");
+    loadMap("supply_map.svg", "supply");
 
     //Load province adjacencies
     if (!main.provinces)

@@ -41,7 +41,7 @@ call npm install
 call npm audit fix
 
 echo %info% %logo% Installing Cairo Graphics ..
-echo %warn% %logo% This will modify your System's PATH variable. 
+echo %warn% %logo% This will modify your System's PATH variable.
 echo A backup will automatically be saved in path.txt just in case. Are you sure you wish to modify your system's PATH variable using this installer^? (Y/N)
 
 :: Confirmation prompt for Cairo Graphics install
@@ -96,9 +96,9 @@ copy /b/v/y "%CD%\.installation\install_provinces.svg" "%CD%\map\provinces.svg"
 copy /b/v/y "%CD%\.installation\install_settings.js" settings.js
 
 cd map
-del /f colonial_map.svg 2>NUL
+del /f colonisation_map.svg 2>NUL
 del /f political_map.svg 2>NUL
-del /f supply_limit_map.svg 2>NUL
+del /f supply.svg 2>NUL
 cd ..
 
 if not exist "%CD%\backups\" mkdir backups

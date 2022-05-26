@@ -259,6 +259,8 @@ module.exports = {
             default:
               var army_obj = getArmy(actual_id, view_obj);
               var city_obj = getCity(view_obj, { users: actual_id });
+              var province_name = input.replace("view", "").trim()
+                .replace("province", "").trim();
 
               if (main.provinces[view_obj]) {
                 printProvince(game_obj.user, view_obj);
@@ -311,6 +313,15 @@ module.exports = {
 
                     game_obj.page = `view_city_${city_obj.name}`;
                   }
+
+                //Province smart display
+                if (!city_obj)
+                  if (main.provinces[province_name])
+                    if (main.provinces[province_name].owner == actual_id)
+                    createPageMenu(game_obj.middle_embed, {
+                      embed_pages: printProvince(game_obj.user, province_name),
+                      user: game_obj.user
+                    });
               }
 
               break;
