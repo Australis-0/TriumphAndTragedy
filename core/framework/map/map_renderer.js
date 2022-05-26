@@ -75,13 +75,13 @@ module.exports = {
                 ctx.fillStyle = RGBToHex(
                   config.defines.map.scalar_gradient[local_index][0], config.defines.map.scalar_gradient[local_index][1], config.defines.map.scalar_gradient[local_index][2]
                 );
-                ctx.fillRect(config.defines.map.map_label_coords[0] + i*320, config.defines.map.map_label_coords[1] + 15, 36, 36);
+                ctx.fillRect(config.defines.map.map_label_coords[0] + 320, config.defines.map.map_label_coords[1] + 15 + (i/10)*40, 36, 36);
                 ctx.beginPath();
-                ctx.rect(config.defines.map.map_label_coords[0] + i*320, config.defines.map.map_label_coords[1] + 15, 36, 36);
+                ctx.rect(config.defines.map.map_label_coords[0] + 320, config.defines.map.map_label_coords[1] + 15 + (i/10)*40, 36, 36);
                 ctx.stroke();
 
                 ctx.fillStyle = "#ffffff";
-                ctx.fillText(truncateString(`${Math.round(Math.max(maximum_supply_limit*(local_index/100), config.defines.combat.base_supply_limit))}`, 15), config.defines.map.map_label_coords[0] + 50 + i*320, config.defines.map.map_label_coords[1] + 47);
+                ctx.fillText(truncateString(`${Math.round(Math.max(maximum_supply_limit*(local_index/100), config.defines.combat.base_supply_limit))}`, 15), config.defines.map.map_label_coords[0] + 50 + 320, config.defines.map.map_label_coords[1] + 47 + (i/10)*40);
               }
 
               //JPEG compression
