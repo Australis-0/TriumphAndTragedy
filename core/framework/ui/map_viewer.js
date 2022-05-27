@@ -23,7 +23,7 @@ module.exports = {
           map_obj.original_img = attachment[1].url;
 
           //Reload map
-          reloadMap(game_id);
+          reloadMap(game_id, false, true);
         });
       })
     }
@@ -113,6 +113,8 @@ module.exports = {
                   url: map_obj.image_url
                 }
               };
+
+              map_obj.current_embed = map_interface_embed;
 
               //Keep track of embed_history (interface string), and objects (map image)
               map_obj.embed_history.push(map_obj.interface_string.join("\n"));
@@ -270,6 +272,9 @@ module.exports = {
 
             Attachment.forEach(function(attachment) {
               map_obj.image_url = attachment[1].url.toString();
+
+              if (force_reload)
+                module.exports.reloadMapInterface(map_obj.current_embed, game_id);
             });
           });
         }
