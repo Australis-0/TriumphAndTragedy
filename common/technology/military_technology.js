@@ -681,7 +681,7 @@ config.technology.military_technology = {
   carronade: {
     name: "Carronade",
     icon: "artillery_piece",
-    description: "Beginning in the late 18th century, carronades were light cannons that helped protect trade shipments, and could also double as highly mobile artipllery on conventional battlefields.",
+    description: "Beginning in the late 18th century, carronades were light cannons that helped protect trade shipments, and could also double as highly mobile artillery on conventional battlefields.",
     prerequisite_techs: ["mysorean_rocket"],
     research_cost: 1200,
     year: 1770,
