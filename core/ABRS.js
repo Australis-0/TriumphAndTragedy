@@ -105,14 +105,16 @@ module.exports = {
   		}
   	}
 
+    //Load province adjacencies
+    setTimeout(function(){
+      if (!main.provinces)
+        initGlobal();
+    }, 1100);
+
     //Load maps
   	loadMap("colonisation_map.svg", "colonisation");
     loadMap("political_map.svg", "political");
     loadMap("supply_map.svg", "supply");
-
-    //Load province adjacencies
-    if (!main.provinces)
-      initGlobal();
 
     setTimeout(module.exports.initialiseGraph, 500);
   },
