@@ -109,13 +109,14 @@ module.exports = {
 
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
+    var iterations = 0;
     var new_colour;
     var usr = main.users[actual_id];
 
     var all_expeditions = Object.keys(usr.expeditions);
 
     //Generate random colour
-    while (true) {
+    while (iterations < 15) {
       new_colour = [
         usr.colour[0] + randomNumber(5, 20),
         usr.colour[1] + randomNumber(5, 20),
@@ -132,6 +133,9 @@ module.exports = {
         )
           break;
       }
+
+      //Break after 15 iterations
+      iterations++;
     }
 
     return new_colour;
