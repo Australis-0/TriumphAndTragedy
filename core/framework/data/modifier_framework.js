@@ -75,6 +75,10 @@ module.exports = {
             break;
 
           //Unlocking
+          case "enable_mobilisation":
+            usr.modifiers.enable_mobilisation = effect_value[0];
+
+            break;
           case "unlock_building":
             for (var x = 0; x < effect_value.length; x++)
               usr.available_buildings.push(effect_value[x]);
