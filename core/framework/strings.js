@@ -18,6 +18,35 @@ module.exports = {
     return separate_words.join(" ");
   },
 
+  cleanStringify: function (arg0_object) {
+    //Convert from parameters
+    var object = arg0_object;
+
+    if (object && typeof object === 'object') {
+      object = copyWithoutCircularReferences([object], object);
+    }
+    return JSON.stringify(object);
+
+    function copyWithoutCircularReferences(references, object) {
+      var cleanObject = {};
+      Object.keys(object).forEach(function(key) {
+        var value = object[key];
+        if (value && typeof value === 'object') {
+          if (references.indexOf(value) < 0) {
+            references.push(value);
+            leanObject[key] = copyWithoutCircularReferences(references, value);
+            references.pop();
+          } else {
+            cleanObject[key] = '###_Circular_###';
+          }
+        } else if (typeof value !== 'function') {
+          cleanObject[key] = value;
+        }
+      });
+      return cleanObject;
+    }
+  },
+
   equalsIgnoreCase: function (arg0, arg1) {
     return (arg0.toLowerCase() == arg1.toLowerCase());
   },
@@ -182,6 +211,14 @@ module.exports = {
 		//Return statement
 		return current_string;
 	},
+
+  stripNonNumerics: function (arg0_string) {
+    //Convert from parameters
+    var processed_string = arg0_string.toString().trim();
+
+    //Return statement
+    return processed_string.replace(/\D/g, "");
+  },
 
   truncateString: function (arg0_string, arg1_number, arg2_do_not_show_dots) {
     //Convert from parameters

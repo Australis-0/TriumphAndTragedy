@@ -1399,7 +1399,9 @@ config.technology.military_technology = {
     prerequisite_techs: ["armoured_cars"],
     research_cost: 5500,
     year: 1918,
-    army_travel_speed: 0.50
+    unlocks: {
+      army_travel_speed: 0.50
+    }
   },
   light_tank: {
     name: "Light Tank",
