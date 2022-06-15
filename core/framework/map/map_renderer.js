@@ -72,16 +72,18 @@ module.exports = {
                 var local_index = i;
                 if (local_index == 100) local_index--; //Render 99
 
-                ctx.fillStyle = RGBToHex(
-                  config.defines.map.scalar_gradient[local_index][0], config.defines.map.scalar_gradient[local_index][1], config.defines.map.scalar_gradient[local_index][2]
-                );
-                ctx.fillRect(config.defines.map.map_label_coords[0], config.defines.map.map_label_coords[1] + 15 + (i/10)*40, 36, 36);
-                ctx.beginPath();
-                ctx.rect(config.defines.map.map_label_coords[0], config.defines.map.map_label_coords[1] + 15 + (i/10)*40, 36, 36);
-                ctx.stroke();
+                if (i == 0 || maximum_supply_limit > config.defines.combat.base_supply_limit) {
+                  ctx.fillStyle = RGBToHex(
+                    config.defines.map.scalar_gradient[local_index][0], config.defines.map.scalar_gradient[local_index][1], config.defines.map.scalar_gradient[local_index][2]
+                  );
+                  ctx.fillRect(config.defines.map.map_label_coords[0], config.defines.map.map_label_coords[1] + 15 + (i/10)*40, 36, 36);
+                  ctx.beginPath();
+                  ctx.rect(config.defines.map.map_label_coords[0], config.defines.map.map_label_coords[1] + 15 + (i/10)*40, 36, 36);
+                  ctx.stroke();
 
-                ctx.fillStyle = "#ffffff";
-                ctx.fillText(truncateString(`${Math.round(Math.max(maximum_supply_limit*(local_index/100), config.defines.combat.base_supply_limit))}`, 15), config.defines.map.map_label_coords[0] + 50, config.defines.map.map_label_coords[1] + 47 + (i/10)*40);
+                  ctx.fillStyle = "#ffffff";
+                  ctx.fillText(truncateString(`${Math.round(Math.max(maximum_supply_limit*(local_index/100), config.defines.combat.base_supply_limit))}`, 15), config.defines.map.map_label_coords[0] + 50, config.defines.map.map_label_coords[1] + 47 + (i/10)*40);
+                }
               }
 
               //JPEG compression
@@ -283,11 +285,13 @@ module.exports = {
           var local_province = main.provinces[all_provinces[i]];
           var local_supply = Math.max(returnSafeNumber(local_province.supply_limit), config.defines.combat.base_supply_limit);
 
-          var local_colour = config.defines.map.scalar_gradient[
-            Math.max(
-              Math.round((local_supply/maximum_supply_limit)*100) - 1,
-            0)
-          ];
+          var local_colour = (local_supply > config.defines.combat.base_supply_limit) ?
+            config.defines.map.scalar_gradient[
+              Math.max(
+                Math.round((local_supply/maximum_supply_limit)*100) - 1,
+              0)
+            ] :
+            config.defines.map.scalar_gradient[0];
 
           try {
             setProvinceColour(map_name, all_provinces[i], local_colour);
