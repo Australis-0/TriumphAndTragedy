@@ -722,7 +722,7 @@ module.exports = {
       for (var i = 0; i < all_events.length; i++)
         //Check if user meets event requirements
         if (all_events[i].trigger)
-          if (all_events[i].trigger(usr, all_events[i].scopes))
+          if (all_events[i].trigger(usr))
             sendEvent(actual_id, lookup.all_event_names[i], {
               FROM: actual_id,
               TO: actual_id
