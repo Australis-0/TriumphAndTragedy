@@ -12,6 +12,7 @@ global.settings = {
   cache_channels: [
     "INSERT_CACHE_CHANNEL"
   ], //What are the ID's of all the cache channels to which the bot may randomly upload? (This helps increase 'bandwidth' and reduces rate limiting)
+  citizen_role: "INSERT_CITIZEN_ROLE", //Which role should be allowed access to private channels?
   ignore_channels: [
 	  "INSERT_IGNORE_CHANNEL"
   ], //What are the ID's of all the channels the bot should ignore? (Not respond to commands in)
