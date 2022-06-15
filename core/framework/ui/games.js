@@ -94,6 +94,10 @@ module.exports = {
         //Make channel private so that only the user who requested the channel can access it
         channel.permissionOverwrites.set([
           {
+            id: user_id,
+            allow: ["VIEW_CHANNEL", "READ_MESSAGE_HISTORY"]
+          },
+          {
             id: settings.citizen_role,
             allow: ["VIEW_CHANNEL", "SEND_MESSAGES", "READ_MESSAGE_HISTORY"]
           }
