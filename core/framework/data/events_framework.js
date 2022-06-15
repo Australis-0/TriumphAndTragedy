@@ -129,8 +129,8 @@ module.exports = {
 
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
-    var event_name = module.exports.getEvent(alert_name, { return_key: true });
-    var event_obj = module.exports.getEvent(alert_name);
+    var event_name = module.exports.getEvent(event_name, { return_key: true });
+    var event_obj = module.exports.getEvent(event_name);
     var game_obj = getGameObject(user_id);
     var usr = main.users[actual_id];
 
@@ -179,8 +179,8 @@ module.exports = {
 
     //Push event_obj to usr.events
     usr.events.push({
-      id: alert_name,
-      name: alert_title,
+      id: event_name,
+      name: event_title,
       scopes: options,
 
       has_ai_chance: has_ai_chance,

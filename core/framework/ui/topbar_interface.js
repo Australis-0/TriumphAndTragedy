@@ -282,6 +282,17 @@ module.exports = {
         });
 
         break;
+      case "events_btn":
+        if (!alert_pages.includes(game_obj.page)) {
+          game_obj.page = "events";
+          module.exports.initialiseTopbar(user_id);
+        }
+        createPageMenu(game_obj.middle_embed, {
+          embed_pages: printEvents(user_id),
+          user: game_obj.user
+        });
+
+        break;
       case "budget_btn":
         //Print out budget menu
         if (game_obj.page != "budget") {

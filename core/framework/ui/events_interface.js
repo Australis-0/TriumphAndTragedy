@@ -1,4 +1,62 @@
 module.exports = {
+  initialisePrintEvent: function (arg0_user) {
+    //Convert from parameters
+    var user_id = arg0_user;
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var game_obj = getGameObject(user_id);
+    var usr = main.users[actual_id];
+
+    //Declare visual prompt
+    visualPrompt(game_obj.alert_embed, user_id, {
+      title: `View Event:`,
+      prompts: [
+        [`What is the ID/name of the event you would like to view?\n\nType **[View Events]** to view a full list of your events.`, "string"]
+      ]
+    },
+    function (arg) {
+      var has_event = [false, ""]; //[has_event, event_index];
+      var requested_event = arg[0].trim().toLowerCase();
+
+      if (!isNaN(parseInt(arg[0])))
+        if (usr.events[parseInt(arg[0]) - 1])
+          has_event = [true, parseInt(arg[0]) - 1];
+
+      //Name search
+      if (!has_event[0]) {
+        //Soft match
+        for (var i = 0; i < usr.events.length; i++)
+          if (usr.events[i].name.toLowerCase().indexOf(requested_event) != -1)
+            has_event = [true, i];
+
+        //Hard match
+        for (var i = 0; i < usr.events.length; i++)
+          if (usr.events[i].name.toLowerCase() == requested_event)
+            has_event = [true, i];
+      }
+
+      if (has_event[0]) {
+        module.exports.printEvent(user_id, usr.events[has_event[1]]);
+        game_obj.page = `event_${has_event[1]}`;
+      } else {
+        printError(game_obj.id, `The event you have specified, **${arg[0]}**, is not an event you currently have to deal with!`);
+      }
+    },
+    function (arg) {
+      switch (arg) {
+        case "view events":
+          createPageMenu(game_obj.middle_embed, {
+            embed_pages: module.exports.printEvents(game_obj.user),
+            user: game_obj.user
+          });
+          return true;
+
+          break;
+      }
+    });
+  },
+
   printEvents: function (arg0_user) {
     //Convert from parameters
     var user_id = arg0_user;
@@ -63,8 +121,6 @@ module.exports = {
       event_string.push(`**[${event_obj.options[i].name}]**`);
 
       if (!event_obj.options[i].hide_description)
-        (event_obj.options[i].description) ?
-          event_string.push(`\n${parseLocalisation(event_obj.options[i].description.join("\n• "), { scopes: event_obj.options })}`) :
           event_string.push(`\n${parseLocalisation(event_obj.options[i].description, { scopes: event_obj.options })}`);
     }
 
