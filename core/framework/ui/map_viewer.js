@@ -23,7 +23,11 @@ module.exports = {
           map_obj.original_img = attachment[1].url;
 
           //Reload map
-          reloadMap(game_id, false, true);
+          reloadMap(game_id, false, true,
+            (map_obj.x == 0 && map_obj.y == 0 && map_obj.zoom == 1) ?
+              attachment[1].url :
+              undefined
+          );
         });
       })
     }
@@ -216,12 +220,13 @@ module.exports = {
     }
   },
 
-  reloadMap: async function (arg0_game_id, arg1_do_not_reload_image, arg2_force_reload) {
+  reloadMap: async function (arg0_game_id, arg1_do_not_reload_image, arg2_force_reload, arg3_image_url) {
     //Convert from parameters
     var game_id = arg0_game_id;
     var game_obj = interfaces[game_id];
     var do_not_reload_image = arg1_do_not_reload_image;
     var force_reload = arg2_force_reload;
+    var image_url = arg3_image_url;
 
     //Declare local instance variables
     try {
@@ -241,43 +246,48 @@ module.exports = {
           "Use the arrow keys and magnifying icons at the bottom to navigate around the map."
         ];
 
-        if (!do_not_reload_image) {
-          var local_canvas = Canvas.createCanvas(Math.ceil(config.defines.map.map_resolution[0]/4), Math.ceil(config.defines.map.map_resolution[1]/4));
-          var ctx = local_canvas.getContext("2d");
-          var img = await Canvas.loadImage(map_obj.original_img);
+        if (!do_not_reload_image)
+          if (!image_url) {
+            var local_canvas = Canvas.createCanvas(Math.ceil(config.defines.map.map_resolution[0]/4), Math.ceil(config.defines.map.map_resolution[1]/4));
+            var ctx = local_canvas.getContext("2d");
+            var img = await Canvas.loadImage(map_obj.original_img);
 
-          //Centre alignment first
-          var offset_x = 0;
-          var offset_y = 0;
-          if (map_obj.zoom > 1) {
-            offset_x = -(Math.ceil(config.defines.map.map_resolution[0]/8)*(map_obj.zoom-1));
-            offset_y = -(Math.ceil(config.defines.map.map_resolution[1]/8)*(map_obj.zoom-1));
-          }
+            //Centre alignment first
+            var offset_x = 0;
+            var offset_y = 0;
+            if (map_obj.zoom > 1) {
+              offset_x = -(Math.ceil(config.defines.map.map_resolution[0]/8)*(map_obj.zoom-1));
+              offset_y = -(Math.ceil(config.defines.map.map_resolution[1]/8)*(map_obj.zoom-1));
+            }
 
-          //Draw image on ctx
-          ctx.drawImage(img,
-            offset_x + (map_obj.x*map_obj.zoom),
-            offset_y + (map_obj.y*map_obj.zoom),
+            //Draw image on ctx
+            ctx.drawImage(img,
+              offset_x + (map_obj.x*map_obj.zoom),
+              offset_y + (map_obj.y*map_obj.zoom),
 
-            Math.ceil(config.defines.map.map_resolution[0]/4)*map_obj.zoom, Math.ceil(config.defines.map.map_resolution[1]/4)*map_obj.zoom
-          );
+              Math.ceil(config.defines.map.map_resolution[0]/4)*map_obj.zoom, Math.ceil(config.defines.map.map_resolution[1]/4)*map_obj.zoom
+            );
 
-          var attachment = new Discord.MessageAttachment(local_canvas.toBuffer(), "map_viewer.jpg");
+            var attachment = new Discord.MessageAttachment(local_canvas.toBuffer(), "map_viewer.jpg");
 
-          returnCacheChannel().send({
-            content: `${generateRandomID()}_${game_id}`,
-            files: [attachment]
-          }).then((message) => {
-            var Attachment = Array.from(message.attachments);
+            returnCacheChannel().send({
+              content: `${generateRandomID()}_${game_id}`,
+              files: [attachment]
+            }).then((message) => {
+              var Attachment = Array.from(message.attachments);
 
-            Attachment.forEach(function(attachment) {
-              map_obj.image_url = attachment[1].url.toString();
+              Attachment.forEach(function(attachment) {
+                map_obj.image_url = attachment[1].url.toString();
 
-              if (force_reload)
-                module.exports.reloadMapInterface(map_obj.current_embed, game_id);
+                if (force_reload)
+                  module.exports.reloadMapInterface(map_obj.current_embed, game_id);
+              });
             });
-          });
-        }
+          } else {
+            map_obj.image_url = image_url;
+            if (force_reload)
+              module.exports.reloadMapInterface(map_obj.current_embed, game_id);
+          }
       }
     } catch {}
   }
