@@ -1,10 +1,9 @@
-//Colors framework
+//Colours framework
 module.exports = {
   componentToHex: function (c) {
     var hex = c.toString(16);
 
     //Return statement
-
     return hex.length == 1 ? "0" + hex : hex;
   },
 

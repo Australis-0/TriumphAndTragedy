@@ -95,11 +95,11 @@ module.exports = {
         channel.permissionOverwrites.set([
           {
             id: user_id,
-            allow: ["VIEW_CHANNEL", "READ_MESSAGE_HISTORY"]
+            allow: ["VIEW_CHANNEL", "SEND_MESSAGES", "READ_MESSAGE_HISTORY"]
           },
           {
             id: settings.citizen_role,
-            allow: ["VIEW_CHANNEL", "SEND_MESSAGES", "READ_MESSAGE_HISTORY"]
+            allow: ["VIEW_CHANNEL", "READ_MESSAGE_HISTORY"]
           }
         ]);
 
