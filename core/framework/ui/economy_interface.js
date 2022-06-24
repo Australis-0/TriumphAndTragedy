@@ -38,7 +38,7 @@ module.exports = {
     economy_string.push(`- ${config.icons.population} Population Growth Rate: **${printPercentage(usr.modifiers.pop_growth_modifier-1)}**`);
     economy_string.push(`You have **${parseNumber(getCities(actual_id, { include_hostile_occupations: true, include_occupations: true }).length)}** cities in total throughout your country.`);
     economy_string.push("");
-    economy_string.push(`- **[View Cities]**${(usr.city_cap-usr.city_count > 0) ? " ¦ **[Found City]** (" + parseNumber(usr.city_cap-usr.city_count) + ")" : ""}`);
+    economy_string.push(`- **[View Cities]**${(usr.city_cap-usr.city_count > 0) ? " | **[Found City]** (" + parseNumber(usr.city_cap-usr.city_count) + ")" : ""}`);
     economy_string.push("");
     economy_string.push(config.localisation.divider);
     economy_string.push("");
@@ -82,7 +82,7 @@ module.exports = {
 
     //Resource production
     resource_production_string.push("");
-    resource_production_string.push(`- **[Building List]** ¦ **[Build]**`);
+    resource_production_string.push(`- **[Building List]** | **[Build]**`);
 
     //Dynamically push resource production to resource_production_string
     var all_production = getProduction(actual_id);

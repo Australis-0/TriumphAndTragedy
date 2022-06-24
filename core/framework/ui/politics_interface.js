@@ -28,14 +28,15 @@ module.exports = {
     total_reform_desire_gain = Math.min(total_reform_desire_gain, 0.15);
 
     //Format politics_string
-    politics_string.push(`**Ruling Government:**`);
+    politics_string.push(`__**Ruling Government:**__`);
     politics_string.push(`**-**`);
     politics_string.push("");
     politics_string.push(`${config.icons.government} Government Type: **${ruling_government_obj.name}**`);
     politics_string.push(`${config.icons.political_capital} Political Capital: **${parseNumber(usr.modifiers.political_capital)}** (${parseNumber(usr.modifiers.political_capital_gain, { display_prefix: true })} per turn)`);
     politics_string.push("");
     politics_string.push(`- **[Coup ${config.icons.political_capital} ${parseNumber(config.defines.politics.coup_cost)}]** ¦ **[Support Party ${config.icons.political_capital} ${parseNumber(config.defines.politics.support_cost)}]**`);
-    politics_string.push(`- **[View Cultures]**${(usr.available_reforms.length > 0) ? ` ¦ **[View Reforms]**` : ""}`)
+    politics_string.push(`- **[View Cultures]**${(usr.available_reforms.length > 0) ? ` ¦ **[View Reforms]**` : ""}`);
+    politics_string.push("");
 
     if (usr.available_reforms.length > 0) {
       reforms_string.push("");
@@ -60,12 +61,12 @@ module.exports = {
         if (local_party.discontent < 0 && !discontented_string)
           discontented_string = "ready to revolt";
 
-        reforms_string.push(`${printPercentage(local_party.popularity)} of your pop. are ${local_government.adjective.toLowerCase()}. They are **${discontented_string}** (${parseNumber(Math.floor(local_party.discontent))}) with the state of our nation.`);
+        reforms_string.push(`**${printPercentage(local_party.popularity)}** of your pop. are ${local_government.adjective.toLowerCase()}.\n- They are **${discontented_string}** (${parseNumber(Math.floor(local_party.discontent))}) with the state of our nation.`);
       }
 
     //Print stability
-    stability_string.push(`**[Raise Stability]** by **${printPercentage(config.defines.politics.stability_boost)}** for **${parseNumber(config.defines.politics.stability_cost)}** ${config.icons.political_capital} Political Capital.`);
-    stability_string.push(`**[Set Tax]**`);
+    stability_string.push(`- **[Raise Stability]** by **${printPercentage(config.defines.politics.stability_boost)}** for **${parseNumber(config.defines.politics.stability_cost)}** ${config.icons.political_capital} Political Capital.`);
+    stability_string.push(`- **[Set Tax]**`);
     stability_string.push("");
 
     stability_string.push(parseStabilityModifier(actual_id));

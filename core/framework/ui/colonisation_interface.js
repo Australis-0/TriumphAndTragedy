@@ -28,7 +28,8 @@ module.exports = {
       colonisation_string.push(`\n- Your country doesn't have any provinces currently! Consider typing **[Settle Starting Provinces]** to settle down your peoples.`);
 
     colonisation_string.push(config.localisation.divider);
-    colonisation_string.push(`**Available Colonial Units:**`);
+    colonisation_string.push("");
+    colonisation_string.push(`__**Available Colonial Units:**__`);
     colonisation_string.push("");
 
     //Calculate colonist unit tracker statistics
@@ -47,12 +48,15 @@ module.exports = {
     } else {
       colonisation_string.push(`You have **${parseNumber(total_colonial_units)}** total units capable of colonising **${parseNumber(provinces_can_colonise)}** province(s).`);
       colonisation_string.push("");
-      colonisation_string.push(`**[Reserves]** ¦ **[Settle]** ¦ **[Train Units]**`);
+      colonisation_string.push(`**[Reserves]** | **[Settle]** | **[Train Units]**`);
     }
+
+    colonisation_string.push("");
 
     //Print out ongoing expeditions tab
     colonisation_string.push(config.localisation.divider);
-    colonisation_string.push(`**Expeditions:**`);
+    colonisation_string.push("");
+    colonisation_string.push(`__**Expeditions:**__`);
     colonisation_string.push("");
 
     if (all_expeditions.length == 0) {
@@ -79,7 +83,7 @@ module.exports = {
     //Edit main embed display
     createPageMenu(game_obj.middle_embed, {
       embed_pages: splitEmbed(colonisation_string, {
-        title: "[Back] ¦ [Jump To Page] ¦ Colonisation:",
+        title: `[Jump To Page] | Colonisation:`,
         title_pages: true,
         fixed_width: true
       }),

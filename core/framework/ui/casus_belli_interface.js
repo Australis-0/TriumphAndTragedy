@@ -212,7 +212,7 @@ module.exports = {
 
     //Check for all valid wargoals the target user has
     if (has_wargoal_on_target) {
-      wargoal_string.push(`**[Cancel Wargoal]** ¦ **[Declare War]**`);
+      wargoal_string.push(`**[Cancel Wargoal]** | **[Declare War]**`);
       wargoal_string.push("");
       wargoal_string.push(config.localisation.divider);
       wargoal_string.push("");

@@ -241,7 +241,7 @@ module.exports = {
         map_obj.title = `Map of the World, ${getDate(main.date)}`;
         map_obj.interface_string = [
           `You are now viewing the **${parseMapmode(map_obj.mapmode)}** mapmode.`,
-          `Zoom: ${map_obj.zoom} ¦ Speed: ${map_obj.speed} ¦ X: ${Math.round(map_obj.x)} ¦ Y: ${Math.round(map_obj.y)}`,
+          `Zoom: ${map_obj.zoom} | Speed: ${map_obj.speed} | X: ${Math.round(map_obj.x)} | Y: ${Math.round(map_obj.y)}`,
           "",
           "Use the arrow keys and magnifying icons at the bottom to navigate around the map."
         ];

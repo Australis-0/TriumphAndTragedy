@@ -157,7 +157,7 @@ module.exports = {
       //Format embed
       var embed_reform_page = new Discord.MessageEmbed()
         .setColor(settings.bot_colour)
-        .setTitle(`[Back] ¦ [Jump To Page] ¦ Political Reforms: (Page 1 of 1)\n${config.localisation.divider}`)
+        .setTitle(`[Back] | [Jump To Page] | Political Reforms: (Page 1 of 1)\n${config.localisation.divider}`)
         .setDescription(local_reform_string.join("\n"));
 
       //Push formatted embed to reform_embeds

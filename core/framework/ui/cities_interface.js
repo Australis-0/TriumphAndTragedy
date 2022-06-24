@@ -18,7 +18,7 @@ module.exports = {
     var city_string = [];
 
     //Format string
-    city_string.push(`**[Back]** ¦ **[Jump To Page]**`);
+    city_string.push(`**[Back]** | **[Jump To Page]**`);
     city_string.push("");
     city_string.push(`${config.icons.globe} Country: **${usr.name}**`);
     city_string.push("");
@@ -87,15 +87,15 @@ module.exports = {
       var city_string = [];
 
       //Format string
-      city_string.push(`**[Back]** ¦ **[Jump To Page]**`);
+      city_string.push(`**[Back]** | **[Jump To Page]**`);
       city_string.push("");
       city_string.push(`${config.icons.globe} Country: **${usr.name}**`);
       city_string.push(`Type **[Cities]** to view a full list of all your cities.`);
       city_string.push("");
       city_string.push(config.localisation.divider);
       city_string.push("");
-      city_string.push(`City Options: ${(city_obj.city_type != "capital") ? "**[Move Capital]** ¦ " : ""}**[Rename City]**`);
-      city_string.push(`Manage Buildings: **[Build]** ¦ **[Demolish]**`);
+      city_string.push(`City Options: ${(city_obj.city_type != "capital") ? "**[Move Capital]** | " : ""}**[Rename City]**`);
+      city_string.push(`Manage Buildings: **[Build]** | **[Demolish]**`);
       city_string.push(`Promote Urbanisation: **[Develop]** - Gain an extra building slot in this city for **${parseNumber(getDevelopmentCost(actual_id, city_obj.id))}** ${config.icons.political_capital} Political Capital.`);
       city_string.push(config.localisation.divider);
 

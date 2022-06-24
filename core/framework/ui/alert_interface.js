@@ -84,7 +84,7 @@ module.exports = {
 
     //Split embed and push to alert_embeds
     return splitEmbed(alerts_string, {
-      title: "[Back] ¦ [Jump To Page] ¦ Alert List:",
+      title: "[Back] | [Jump To Page] | Alert List:",
       title_pages: true,
       fixed_width: true
     });
@@ -131,7 +131,7 @@ module.exports = {
       //Format embed
       alert_embed = new Discord.MessageEmbed()
         .setColor(settings.bot_colour)
-        .setTitle(`[Back] ¦ ${alert_obj.name}:`)
+        .setTitle(`[Back] | ${alert_obj.name}:`)
         .setThumbnail(alert_obj.thumbnail ? alert_obj.thumbnail : usr.flag)
         .setImage(alert_obj.image ? alert_obj.image : "https://cdn.discordapp.com/attachments/722997700391338046/736141424315203634/margin.png")
         .setDescription(alert_string.join("\n"));

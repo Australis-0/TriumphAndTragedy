@@ -130,19 +130,19 @@ module.exports = {
         army_string.push(`${config.icons.aeroplanes} **Aeroplanes** receive a **${printPercentage(config.defines.combat.seaplane_bonus, { base_zero: true, display_prefix: true })}** attack bonus whilst at sea.`);
 
       //Push buttons
-      army_string.push(`**[Rename Army]** ¦ **[Deploy Units]** ¦ ${(all_units.length > 0) ? "**[Relieve Units]** ¦ **[Transfer Units]** ¦" : ""} **[Delete Army]**`);
+      army_string.push(`**[Rename Army]** | **[Deploy Units]** | ${(all_units.length > 0) ? "**[Relieve Units]** | **[Transfer Units]** |" : ""} **[Delete Army]**`);
 
       if (army_obj.type == "army") {
-        army_string.push(`**[Merge Army]** ¦ **[Move]**`);
+        army_string.push(`**[Merge Army]** | **[Move]**`);
       } else if (army_obj.type == "navy") { //[WIP] - Work on blockades first, then come back later
         var submarine_string = (army_power.pure_submarines) ?
-          ` ¦ **[Convoy Raid]** ¦ **[Harbour Raid]** ¦ **[Torpedo Fleet]**` :
+          ` | **[Convoy Raid]** | **[Harbour Raid]** | **[Torpedo Fleet]**` :
           "";
         (army_obj.is_blockading) ?
-          army_string.push(`**[Blockade]** ¦ **[Challenge Blockade]** ${submarine_string}`) :
-          army_string.push(`**[Challenge Blockade]** ¦ **[Lift Blockade]** ${submarine_string}`)
+          army_string.push(`**[Blockade]** | **[Challenge Blockade]** ${submarine_string}`) :
+          army_string.push(`**[Challenge Blockade]** | **[Lift Blockade]** ${submarine_string}`)
       } else if (army_obj.type == "air") {
-        army_string.push(`**[Merge Army]** ¦ **[Move]** ¦ **[Air Raid]**`);
+        army_string.push(`**[Merge Army]** | **[Move]** | **[Air Raid]**`);
       }
 
       //Display additional statistics
@@ -181,7 +181,7 @@ module.exports = {
 
       //Return statement
       return splitEmbed(army_string, {
-        title: `[Back] ¦ [Jump To Page] ¦ ${army_icon} ${army_obj.name}, ${usr.name}:`,
+        title: `[Back] | [Jump To Page] | ${army_icon} ${army_obj.name}, ${usr.name}:`,
         title_pages: true,
         fixed_width: true
       });
@@ -245,13 +245,13 @@ module.exports = {
 
     //Return statement
     return splitEmbed(armies_string, {
-      title: "[Back] ¦ [Jump To Page] ¦ Army List:",
+      title: "[Back] | [Jump To Page] | Army List:",
       title_pages: true,
       fixed_width: true,
 
       description: [
-        `**[Create Army]** ¦ **[Delete Army]** ¦ **[Merge Army]** ¦ **[Rename Army]** ¦ **[View Army]**`,
-        `**[Deploy Units]** ¦ **[Transfer Units]** ¦ **[Relieve Units]**`,
+        `**[Create Army]** | **[Delete Army]** | **[Merge Army]** | **[Rename Army]** | **[View Army]**`,
+        `**[Deploy Units]** | **[Transfer Units]** | **[Relieve Units]**`,
         ``,
         ``,
       ]

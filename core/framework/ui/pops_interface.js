@@ -44,49 +44,45 @@ module.exports = {
     for (var i = 0; i < all_pops.length; i++)
       urban_pops.population += returnSafeNumber(urban_pops[all_pops[i]]);
 
-    //Initialise pops_string
+    //Initialise pops_string and other formatting variables
     var pops_string = [];
+    var rural_pops_string = [];
+    var total_pops_string = [];
+    var urban_pops_string = [];
 
     //Format embed
-    pops_string.push(`**[Back]**`);
-    pops_string.push("");
-    pops_string.push(`${config.icons.culture} **[Culture]** ¦ ${config.icons.population} **[View Provinces]**`);
-    pops_string.push("");
-    pops_string.push("**Urban Population:**");
+    pops_string.push(`- ${config.icons.culture} **[Culture]** ¦ ${config.icons.population} **[View Provinces]**`);
     pops_string.push("");
 
-    pops_string.push(`${config.icons.development} Urban Population: **${printPercentage(urban_pops.population/getPopulation(actual_id))}**`);
+    urban_pops_string.push("");
 
     //Print dynamic urban pops
     for (var i = 0; i < all_pops.length; i++) {
       var local_pop = config.pops[all_pops[i]];
 
-      pops_string.push(`- ${(local_pop.icon) ? local_pop.icon + " " : ""}${(local_pop.name) ? local_pop.name : all_pops[i]}: **${parseNumber(returnSafeNumber(urban_pops[all_pops[i]]))}**`);
+      urban_pops_string.push(`${(local_pop.icon) ? local_pop.icon + " " : ""}${(local_pop.name) ? local_pop.name : all_pops[i]}: \n- **${parseNumber(returnSafeNumber(urban_pops[all_pops[i]]))}**`);
     }
 
-    pops_string.push("");
-    pops_string.push(config.localisation.divider);
-    pops_string.push(`**Rural Population:**`);
-    pops_string.push("");
-    pops_string.push(`${config.icons.provinces} Rural Population: **${printPercentage(rural_pops.population/getPopulation(actual_id))}**`);
-    pops_string.push("");
+    urban_pops_string.push("");
+
+    //Rural pops
+    rural_pops_string.push("");
 
     //Print dynamic rural pops
     for (var i = 0; i < all_pops.length; i++) {
       var local_pop = config.pops[all_pops[i]];
 
-      pops_string.push(`- ${(local_pop.icon) ? local_pop.icon + " " : ""}${(local_pop.name) ? local_pop.name : all_pops[i]}: **${parseNumber(returnSafeNumber(rural_pops[all_pops[i]]))}**`);
+      rural_pops_string.push(`${(local_pop.icon) ? local_pop.icon + " " : ""}${(local_pop.name) ? local_pop.name : all_pops[i]}: \n- **${parseNumber(returnSafeNumber(rural_pops[all_pops[i]]))}**`);
     }
 
-    pops_string.push("");
-    pops_string.push(config.localisation.divider);
-    pops_string.push(`**Total Population:**`);
+    rural_pops_string.push("");
 
+    //Total pops
     //Print dynamic total pops - Total
     for (var i = 0; i < all_pops.length; i++) {
       var local_pop = config.pops[all_pops[i]];
 
-      pops_string.push(`- ${(local_pop.icon) ? local_pop.icon + " " : ""}Total ${(local_pop.name) ? local_pop.name : all_pops[i]}: **${parseNumber(usr.pops[all_pops[i]])}**`);
+      total_pops_string.push(`- ${(local_pop.icon) ? local_pop.icon + " " : ""}Total ${(local_pop.name) ? local_pop.name : all_pops[i]}: **${parseNumber(usr.pops[all_pops[i]])}**`);
     }
 
     //Print dynamic total pops - Availability
@@ -95,16 +91,16 @@ module.exports = {
 
       //Print linebreak if at least one pop's availability is shown in the UI
       if (local_pop && i == 0)
-        pops_string.push("");
+        total_pops_string.push("");
 
       if (local_pop.stats_display)
-        pops_string.push(`- ${(local_pop.icon) ? local_pop.icon + " " : ""}Available ${(local_pop.name) ? local_pop.name : all_pops[i]}: **${parseNumber(returnSafeNumber(usr.pops[all_pops[i]] - usr.pops["used_" + all_pops[i]]))}**`);
+        total_pops_string.push(`- ${(local_pop.icon) ? local_pop.icon + " " : ""}Available ${(local_pop.name) ? local_pop.name : all_pops[i]}: **${parseNumber(returnSafeNumber(usr.pops[all_pops[i]] - usr.pops["used_" + all_pops[i]]))}**`);
     }
 
-    pops_string.push("");
-    pops_string.push(`**Population Modifiers:**`);
-    pops_string.push(config.localisation.divider);
-    pops_string.push("");
+    total_pops_string.push("");
+    total_pops_string.push(`__**Population Modifiers:**__`);
+    total_pops_string.push(`**-**`);
+    total_pops_string.push("");
 
     //Print dynamic population modifiers
     var dynamic_modifiers = {};
@@ -131,22 +127,22 @@ module.exports = {
         if (getModifier(all_current_pop_modifiers[i])) { //Is of type modifier
           var local_modifier = getModifier(all_current_pop_modifiers[i]);
 
-          pops_string.push(`${(local_modifier.icon) ? config.icons[local_modifier.icon] + " " : ""}${(local_modifier.name) ? local_modifier.name : all_current_pop_modifiers[i]}: **${printPercentage(usr.modifiers[all_current_pop_modifiers[i]], { display_prefix: true })}**`);
+          total_pops_string.push(`${(local_modifier.icon) ? config.icons[local_modifier.icon] + " " : ""}${(local_modifier.name) ? local_modifier.name : all_current_pop_modifiers[i]}: **${printPercentage(usr.modifiers[all_current_pop_modifiers[i]], { display_prefix: true })}**`);
         } else if (getGood(all_current_pop_modifiers[i])) { //Is of type good
           var local_good = getGood(all_current_pop_modifiers[i]);
 
-          pops_string.push(`${(local_good.icon) ? config.icons[local_good.icon] + " " : ""}${(local_good.name) ? local_good.name : all_current_pop_modifiers[i]}: **${parseNumber(usr.inventory[all_current_pop_modifiers[i]], { display_prefix: true })}**`);
+          total_pops_string.push(`${(local_good.icon) ? config.icons[local_good.icon] + " " : ""}${(local_good.name) ? local_good.name : all_current_pop_modifiers[i]}: **${parseNumber(usr.inventory[all_current_pop_modifiers[i]], { display_prefix: true })}**`);
         } else { //Default catch handler
-          pops_string.push(`${all_current_pop_modifiers[i]}: **${parseNumber(usr[all_current_pop_modifiers[i]], { display_prefix: true })}**`);
+          total_pops_string.push(`${all_current_pop_modifiers[i]}: **${parseNumber(usr[all_current_pop_modifiers[i]], { display_prefix: true })}**`);
         }
       }
 
       //Push end-space formatting
-      pops_string.push("");
+      total_pops_string.push("");
     }
 
     //Print static population modifiers
-    pops_string.push(`${config.icons.development} Population Growth Modifier: **${printPercentage(usr.modifiers.pop_growth_modifier-1)}**`);
+    total_pops_string.push(`${config.icons.development} Population Growth Modifier: **${printPercentage(usr.modifiers.pop_growth_modifier-1)}**`);
 
     //Remove control panel if one exists
     removeControlPanel(game_obj.id);
@@ -157,7 +153,12 @@ module.exports = {
       .setTitle(`**Population:**`)
       .setThumbnail(usr.flag)
       .setImage("https://cdn.discordapp.com/attachments/722997700391338046/736141424315203634/margin.png")
-      .setDescription(pops_string.join("\n"));
+      .setDescription(pops_string.join("\n"))
+      .addFields(
+        { name: `${config.icons.development} __Urban Population:__ **${printPercentage(urban_pops.population/getPopulation(actual_id))}**\n-`, value: urban_pops_string.join("\n"), inline: true },
+        { name: `${config.icons.provinces} __Rural Population:__ **${printPercentage(rural_pops.population/getPopulation(actual_id))}**\n-`, value: rural_pops_string.join("\n"), inline: true },
+        { name: "__Total Population:__\n-", value: total_pops_string.join("\n") }
+      );
 
     game_obj.main_embed = population_embed;
     game_obj.main_change = true;

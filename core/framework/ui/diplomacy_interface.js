@@ -89,17 +89,17 @@ module.exports = {
     diplomacy_string.push(`${config.icons.infamy} Infamy: **${parseNumber(usr.modifiers.infamy)}** (${parseNumber(usr.modifiers.infamy_loss, { display_prefix: true })} per turn)`);
 
     diplomacy_string.push("");
-    diplomacy_string.push(`**[View CB List]** ¦ **[War List]**`);
+    diplomacy_string.push(`- **[View CB List]** | **[War List]**`);
     diplomacy_string.push("");
     diplomacy_string.push(config.localisation.divider);
     diplomacy_string.push("");
-    diplomacy_string.push(`**[View Ledger]** ¦ **[View Relations]**`);
-    diplomacy_string.push(`**[Cede Province]** ¦ **[Allow Ceding]** ¦ **[Deny Ceding]**`);
+    diplomacy_string.push(`- **[View Ledger]** | **[View Relations]**`);
+    diplomacy_string.push(`- **[Cede Province]** | **[Allow Ceding]** | **[Deny Ceding]**`);
     if (Object.keys(usr.diplomacy.vassals).length > 0) {
       diplomacy_string.push("");
       (!usr.options.vassal_customisation_locked) ?
-        diplomacy_string.push(`**[Lock Vassal Customisation]** ¦ **[Vassal Customisation]**`) :
-        diplomacy_string.push(`**[Unlock Vassal Customisation]** ¦ **[Vassal Customisation]**`);
+        diplomacy_string.push(`- **[Lock Vassal Customisation]** | **[Vassal Customisation]**`) :
+        diplomacy_string.push(`- **[Unlock Vassal Customisation]** | **[Vassal Customisation]**`);
     }
     diplomacy_string.push("");
 
@@ -115,7 +115,7 @@ module.exports = {
 
     //Add sorted ledger of top 10 countries by score
     diplomacy_string.push("");
-    diplomacy_string.push("`Name ¦ Score ¦ Army Size ¦ Provinces ¦ Population ¦ Technology`");
+    diplomacy_string.push("`Name | Score | Army Size | Provinces | Population | Technology`");
     diplomacy_string.push("");
 
     var sorted_users = getSortedUsers();
@@ -124,7 +124,7 @@ module.exports = {
       var local_user = main.users[sorted_users[i]];
 
       if (i < 10)
-        diplomacy_string.push(`**${local_user.name}** ¦ ${parseNumber(getScore(sorted_users[i]))} ¦ ${parseNumber(getTotalActiveDuty(sorted_users[i]))} ¦ ${parseNumber(local_user.provinces)} ¦ ${parseNumber(local_user.population)} ¦ ${parseNumber(local_user.researched_technologies.length)}`)
+        diplomacy_string.push(`**${local_user.name}** | ${parseNumber(getScore(sorted_users[i]))} | ${parseNumber(getTotalActiveDuty(sorted_users[i]))} | ${parseNumber(local_user.provinces)} | ${parseNumber(local_user.population)} | ${parseNumber(local_user.researched_technologies.length)}`)
     }
 
     if (sorted_users.length > 10)
@@ -183,7 +183,7 @@ module.exports = {
     removeControlPanel(game_obj.id);
 
     var split_ledger = splitEmbed(ledger_string, {
-      title: "[Back] ¦ [Jump To Page] ¦ Diplomatic Ledger:",
+      title: "[Back] | [Jump To Page] | Diplomatic Ledger:",
       description: [
         `**[View Relations]**`,
         config.localisation.divider,
@@ -317,7 +317,7 @@ module.exports = {
       }
 
       //Push main statistics
-      diplomacy_view_string.push(`**${ot_user.name}** ¦ ${parseList(user_keys)}`);
+      diplomacy_view_string.push(`**${ot_user.name}** | ${parseList(user_keys)}`);
       diplomacy_view_string.push(`${config.icons.political_capital} Government: **${(government_obj.name) ? government_obj.name : ot_user.government}**`);
       diplomacy_view_string.push(`${config.icons.provinces} Provinces: ${parseNumber(user_provinces.length)} (${(capital_obj) ? (capital_obj.id) ? `Capital ID: Province ${capital_obj.id}` : `No set capital` : `No set capital`})`);
       diplomacy_view_string.push(`${config.icons.population} Population: **${parseNumber(ot_user.population)}**`);
@@ -493,7 +493,7 @@ module.exports = {
         ending_string = `, (+${cities.length-name_array.length} more)`;
 
       //Begin formatting stats_string
-      stats_string.push(`**${ot_user.name}** ¦ ${parseList(user_keys)}`);
+      stats_string.push(`**${ot_user.name}** | ${parseList(user_keys)}`);
       stats_string.push(`${config.icons.political_capital} Government: **${(government_obj.name) ? government_obj.name : ot_user.government}**`);
       stats_string.push(`${config.icons.provinces} Provinces: ${parseNumber(user_provinces.length)} (${(capital_obj) ? (capital_obj.id) ? `Capital ID: Province ${capital_obj.id}` : `No set capital` : `No set capital`})`);
       stats_string.push(`${config.icons.population} Population: **${parseNumber(ot_user.population)}**`);
@@ -533,7 +533,7 @@ module.exports = {
         var local_pop = config.pops[all_pops[i]];
 
         if (local_pop.stats_display && local_pop.military_pop)
-          stats_string.push(`${(local_pop.icon) ? local_pop.icon + " " : ""}${(local_pop.name) ? local_pop.name : all_pops[i]}: (**${parseNumber(ot_user.pops["used_" + all_pops[i]])}**/**${parseNumber(getTotalPopManpower(actual_ot_user_id, all_pops[i]))}) ¦ (**${printPercentage(getTotalPopManpower(actual_ot_user_id, all_pops[i], true))}** Recruitable Population)`);
+          stats_string.push(`${(local_pop.icon) ? local_pop.icon + " " : ""}${(local_pop.name) ? local_pop.name : all_pops[i]}: (**${parseNumber(ot_user.pops["used_" + all_pops[i]])}**/**${parseNumber(getTotalPopManpower(actual_ot_user_id, all_pops[i]))}) | (**${printPercentage(getTotalPopManpower(actual_ot_user_id, all_pops[i], true))}** Recruitable Population)`);
       }
     }
 
@@ -543,14 +543,14 @@ module.exports = {
     //Format both diplomatic actions and statistics page to embeds
     const diplomacy_embed = new Discord.MessageEmbed()
       .setColor(settings.bot_colour)
-      .setTitle(`[Back] ¦ **Diplomatic Overview:**`)
+      .setTitle(`[Back] | **Diplomatic Overview:**`)
       .setThumbnail(ot_user.flag)
       .setImage("https://cdn.discordapp.com/attachments/722997700391338046/736141424315203634/margin.png")
       .setDescription(diplomacy_view_string.join("\n"));
 
     const stats_embed = new Discord.MessageEmbed()
       .setColor(settings.bot_colour)
-      .setTitle(`[Back] ¦ **Diplomatic Overview:**`)
+      .setTitle(`[Back] | **Diplomatic Overview:**`)
       .setThumbnail(ot_user.flag)
       .setImage("https://cdn.discordapp.com/attachments/722997700391338046/736141424315203634/margin.png")
       .setDescription(stats_string.join("\n"));

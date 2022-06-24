@@ -78,7 +78,7 @@ module.exports = {
 
             //Set manpower_string
             if (manpower_array.length > 0)
-              manpower_string = ` ¦ ${manpower_array.join(", ")}`;
+              manpower_string = ` | ${manpower_array.join(", ")}`;
           }
 
           //Get production_string
@@ -132,32 +132,32 @@ module.exports = {
           //Get construction_string
           if (building_obj.construction_turns) {
             construction_string = (building_obj.construction_turns > 0) ?
-              ` ¦ Takes ${parseNumber(Math.ceil(building_obj.construction_turns))} Turn(s) to construct` :
-              ` ¦ Constructed instantly`;
+              ` | Takes ${parseNumber(Math.ceil(building_obj.construction_turns))} Turn(s) to construct` :
+              ` | Constructed instantly`;
           } else {
-            construction_string = ` ¦ Takes ${parseNumber(Math.ceil(config.defines.economy.construction_turns*usr.modifiers.construction_time))} Turn(s) to construct`;
+            construction_string = ` | Takes ${parseNumber(Math.ceil(config.defines.economy.construction_turns*usr.modifiers.construction_time))} Turn(s) to construct`;
           }
 
           //Entry logic
           if (production_array.length > 0 && maintenance_array.length > 0) {
-            production_string = ` ¦ Produces ${production_array.join(", ")} from ${maintenance_array.join(", ")}`;
+            production_string = ` | Produces ${production_array.join(", ")} from ${maintenance_array.join(", ")}`;
           } else if (production_array.length > 0) {
-            production_string = ` ¦ Produces ${production_array.join(", ")} per turn`;
+            production_string = ` | Produces ${production_array.join(", ")} per turn`;
           } else if (maintenance_array.length > 0) {
-            production_string = ` ¦ Consumes ${maintenance_array.join(", ")} per turn`;
+            production_string = ` | Consumes ${maintenance_array.join(", ")} per turn`;
           }
 
           //Custom localisation
           if (building_obj.description)
-            production_string += ` ¦ ${building_obj.description}`;
+            production_string += ` | ${building_obj.description}`;
           if (building_obj.houses)
-            production_string += ` ¦ Houses ${parseNumber(building_obj.houses)}`;
+            production_string += ` | Houses ${parseNumber(building_obj.houses)}`;
           if (building_obj.modifiers)
-            production_string += ` ¦ ${parseModifiers(building_obj.modifiers, true)}`;
+            production_string += ` | ${parseModifiers(building_obj.modifiers, true)}`;
 
           //Manpower string
           if (manpower_array.length > 0)
-            manpower_string = ` ¦ ${manpower_array.join(", ")}`;
+            manpower_string = ` | ${manpower_array.join(", ")}`;
 
           //Push building to local_building_category_string
           local_building_category_string.push(`${building_icon}**${building_name}** - ${costs_array.join(", ")}${manpower_string}${production_string}${construction_string}`);
@@ -200,7 +200,7 @@ module.exports = {
     var construction_string = [];
 
     if (usr) {
-      construction_string.push(`**[Back]** ¦ **[Jump To Page]**`);
+      construction_string.push(`**[Back]** | **[Jump To Page]**`);
       construction_string.push("");
 
       //Push all constructions to construction_string as a formatted array, initialise all construction_obj fields first

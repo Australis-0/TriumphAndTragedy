@@ -57,7 +57,7 @@ module.exports = {
 
     const national_modifiers_embed = new Discord.MessageEmbed()
       .setColor(settings.bot_colour)
-      .setTitle(`[Back] ¦ [View National Modifier] ¦ National Modifiers - Table of Contents:`)
+      .setTitle(`[Back] | [View National Modifier] | National Modifiers - Table of Contents:`)
       .setDescription(national_modifiers_string.join("\n"));
 
     //Create page menu for user

@@ -110,8 +110,8 @@ module.exports = {
         local_embed.setThumbnail(options.thumbnail);
     if (options.title)
       (Array.isArray(options.title)) ?
-        local_embed.setTitle(`**${options.title[all_embeds.length]} ${page_ending}**\n ${config.localisation.divider}`) :
-        local_embed.setTitle(`**${options.title} ${page_ending}**\n ${config.localisation.divider}`);
+        local_embed.setTitle(`**${options.title[all_embeds.length]} ${page_ending}**\n${config.localisation.divider}`) :
+        local_embed.setTitle(`**${options.title} ${page_ending}**\n${config.localisation.divider}`);
 
     if (options.fixed_width) local_embed.setImage("https://cdn.discordapp.com/attachments/722997700391338046/736141424315203634/margin.png");
 

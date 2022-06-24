@@ -84,7 +84,7 @@ module.exports = {
 
     //Split embed and push to event_embeds
     return splitEmbed(events_string, {
-      title: "[Back] ¦ [Jump To Page] ¦ Event List:",
+      title: "[Back] | [Jump To Page] | Event List:",
       title_pages: true,
       fixed_width: true
     });
@@ -127,7 +127,7 @@ module.exports = {
     //Format embed
     event_embed = new Discord.MessageEmbed()
       .setColor(settings.bot_colour)
-      .setTitle(`[Back] ¦ ${event_obj.name}:`)
+      .setTitle(`[Back] | ${event_obj.name}:`)
       .setThumbnail(event_obj.thumbnail ? event_obj.thumbnail : usr.flag)
       .setImage(event_obj.image ? event_obj.image: "https://cdn.discordapp.com/attachments/722997700391338046/736141424315203634/margin.png")
       .setDescription(event_string.join("\n"));

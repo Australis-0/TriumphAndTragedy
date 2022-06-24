@@ -51,7 +51,7 @@ module.exports = {
           if (i % 13 == 0 || i == market_fields.length - 1) {
             var market_embed = new Discord.MessageEmbed()
               .setColor(settings.bot_colour)
-              .setTitle(`[Back] ¦ [Jump To Page] ¦ **World Market:**`)
+              .setTitle(`[Back] | [Jump To Page] | **World Market:**`)
               .setDescription(market_string.join("\n"))
               .setImage("https://cdn.discordapp.com/attachments/722997700391338046/736141424315203634/margin.png")
               .setFooter(market_ending_string.join("\n"));

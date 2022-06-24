@@ -41,11 +41,11 @@ module.exports = {
       var is_primary_culture = all_primary_cultures.includes(sorted_culture_array[i].id);
 
       if (is_primary_culture)
-        culture_description = `our primary culture. ¦ **[Rename Culture]** ¦ **[Rename Culture Adjective]**`;
+        culture_description = `our primary culture. | **[Rename Culture]** | **[Rename Culture Adjective]**`;
 
       if (!is_primary_culture)
         culture_description = (is_accepted_culture) ?
-          `an accepted culture. ¦ **[Remove Accepted Culture]**` :
+          `an accepted culture. | **[Remove Accepted Culture]**` :
           `an unaccepted culture. Either assimilate their provinces in **[View Population]**, or add them as an accepted culture for **${parseNumber(config.defines.politics.accepted_culture_cost)}** ${config.icons.political_capital} Political Capital.`;
 
       culture_string.push(`**${printPercentage(calculateCulturalPercentage(actual_id, sorted_culture_array[i].id))}** of our population, or **${parseNumber(getCultureProvinces(actual_id, sorted_culture_array[i].id).length)}** of our provinces identify as **${getCulture(sorted_culture_array[i].id).name}**/**${getCulture(sorted_culture_array[i].id).adjective}**, ${culture_description}`);
@@ -63,12 +63,12 @@ module.exports = {
       culture_string.push("");
       culture_string.push(`**[Add Accepted Culture]** for ${config.icons.political_capital} **${parseNumber(config.defines.politics.accepted_culture_cost)}** Political Capital.`);
       culture_string.push("");
-      culture_string.push(`**[Assimilate All]** ¦ **[View Population]**`);
+      culture_string.push(`**[Assimilate All]** | **[View Population]**`);
     }
 
     //Return statement
     return splitEmbed(culture_string, {
-      title: "[Back] ¦ [Jump To Page] ¦ Culture:",
+      title: "[Back] | [Jump To Page] | Culture:",
       title_pages: true,
       fixed_width: true
     });

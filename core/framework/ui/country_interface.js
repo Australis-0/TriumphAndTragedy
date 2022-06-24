@@ -79,7 +79,7 @@ module.exports = {
 
     //Format embed
     stats_string.push(`${config.icons.globe} Country: **${usr.name}**`);
-    stats_string.push(`<@${user_id}> ¦ _${(usr.motto) ? usr.motto : "No motto set."}_`);
+    stats_string.push(`<@${user_id}> | _${(usr.motto) ? usr.motto : "No motto set."}_`);
 
     if (has_no_provinces && !atWar(actual_id))
       stats_string.push(`\n- Your country doesn't have any provinces currently! Consider typing **[Settle Starting Provinces]** to settle down your peoples.`);
@@ -108,7 +108,7 @@ module.exports = {
       var local_pop = config.pops[all_pops[i]];
 
       if (local_pop.stats_display)
-        stats_string.push(`${(local_pop.icon) ? local_pop.icon + " " : ""} ${(local_pop.name) ? local_pop.name : all_pops[i]}: (**${parseNumber(usr.pops["used_" + all_pops[i]])}**/**${parseNumber(getTotalPopManpower(actual_id, all_pops[i]))}**)${(local_pop.military_pop) ? " ¦ (**" + printPercentage(getTotalPopManpower(actual_id, all_pops[i], true)) + "** Recruitable Population)" : ""}`);
+        stats_string.push(`${(local_pop.icon) ? local_pop.icon + " " : ""} ${(local_pop.name) ? local_pop.name : all_pops[i]}: (**${parseNumber(usr.pops["used_" + all_pops[i]])}**/**${parseNumber(getTotalPopManpower(actual_id, all_pops[i]))}**)${(local_pop.military_pop) ? " | (**" + printPercentage(getTotalPopManpower(actual_id, all_pops[i], true)) + "** Recruitable Population)" : ""}`);
     }
 
     stats_string.push("");

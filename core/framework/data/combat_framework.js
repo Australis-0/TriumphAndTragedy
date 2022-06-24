@@ -605,7 +605,7 @@ module.exports = {
             attacker_string.push(`**${usr.name}** (${attacking_army_obj.name}):`);
             attacker_string.push("");
             attacker_string.push(`**Strength:**`);
-            attacker_string.push(`${parseNumber(attacking_army_stats.attack)} Attack ¦ ${parseNumber(attacking_army_stats.defence)} Defence`);
+            attacker_string.push(`${parseNumber(attacking_army_stats.attack)} Attack | ${parseNumber(attacking_army_stats.defence)} Defence`);
 
             for (var i = 0; i < attacker_units.length; i++) {
               var unit_category = getUnitCategoryFromUnit(attacker_units[i]);
@@ -628,7 +628,7 @@ module.exports = {
             defender_string.push(`**${ot_user.name}** (${defending_army_obj.name}):`);
             defender_string.push("");
             defender_string.push(`**Strength:**`);
-            defender_string.push(`${parseNumber(defending_army_stats.attack)} Attack ¦ ${parseNumber(defending_army_stats.defence)} Defence`);
+            defender_string.push(`${parseNumber(defending_army_stats.attack)} Attack | ${parseNumber(defending_army_stats.defence)} Defence`);
 
             for (var i = 0; i < defender_units.length; i++) {
               var unit_category = getUnitCategoryFromUnit(defender_units[i]);
@@ -648,7 +648,7 @@ module.exports = {
             defender_string.push(`${config.icons.death} Casualties: **${parseNumber(defender_casualties)}**`);
 
             //Format embed contents - Results
-            result_string.push(`**Dice Rolls:** ${usr.name} - ${config.icons.dice} **${parseNumber(attacker_dice_roll)}** ¦ ${ot_user.name} - ${config.icons.dice} **${parseNumber(defender_dice_roll)}**`);
+            result_string.push(`**Dice Rolls:** ${usr.name} - ${config.icons.dice} **${parseNumber(attacker_dice_roll)}** | ${ot_user.name} - ${config.icons.dice} **${parseNumber(defender_dice_roll)}**`);
             result_string.push(`${config.icons.death} Total Casualties: **${parseNumber(attacker_casualties + defender_casualties)}**`);
 
             if (attacker_stackwiped) {
