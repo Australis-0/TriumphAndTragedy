@@ -98,7 +98,7 @@ module.exports = {
     stats_string.push(config.localisation.divider);
     stats_string.push("");
     stats_string.push(`__**Population:**__`);
-    stats_string.push(`**-**`);
+    stats_string.push(config.localisation.divider);
     stats_string.push("");
     stats_string.push(`${config.icons.development} Cities: (**${parseInt(cities.length)}**/**${parseInt(usr.city_cap)}**): ${name_string}${ending_string}`);
     stats_string.push(`${config.icons.population} Population: **${parseNumber(getPopulation(usr.id))}** (Requires ${config.icons.food} **${Math.ceil((usr.population/1000000)*config.defines.economy.food_required_per_million)}** food per turn)`);
@@ -159,9 +159,9 @@ module.exports = {
       .setImage("https://cdn.discordapp.com/attachments/722997700391338046/736141424315203634/margin.png")
       .setDescription(stats_string.join("\n"))
       .addFields(
-        { name: "__Economy:__\n-", value: economy_string.join("\n") },
-        { name: "__Internal Politics:__\n-", value: politics_string.join("\n") },
-        { name: "__Actions:__\n-", value: actions_string.join("\n") },
+        { name: "__Economy:__\n━━", value: economy_string.join("\n") },
+        { name: "__Internal Politics:__\n━━", value: politics_string.join("\n") },
+        { name: "__Actions:__\n━━", value: actions_string.join("\n") },
       );
 
     game_obj.main_embed = stats_embed;

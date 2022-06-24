@@ -13,7 +13,7 @@ module.exports = {
 
     //Format reserves_string
     reserves_string.push(`${config.icons.globe} Country: **${usr.name}**`);
-    reserves_string.push(`**[Create Army]** ¦ **[Disband Units]** ¦ **[Train Units]** ¦ **[Unit List]**`);
+    reserves_string.push(`**[Create Army]** | **[Disband Units]** | **[Train Units]** | **[Unit List]**`);
     reserves_string.push("");
     reserves_string.push(config.localisation.divider);
     reserves_string.push(`${config.icons.manpower} **Reserves:**`);
@@ -75,11 +75,11 @@ module.exports = {
       army_display_stats.push(`Total ${parseString(local_combat_modifier)}: ` + "`" + `${parseNumber(army_stats[local_combat_modifier])}` + "`");
     }
 
-    reserves_string.push(`${army_display_stats.join(" ¦ ")}.`);
+    reserves_string.push(`${army_display_stats.join(" | ")}.`);
 
     //Return embed as splitEmbed
     return splitEmbed(reserves_string, {
-      title: "[Back] ¦ [Jump To Page] ¦ Reserves:",
+      title: "[Back] | [Jump To Page] | Reserves:",
       title_pages: true,
       fixed_width: true
     });
@@ -178,17 +178,17 @@ module.exports = {
 
             //Set manpower_string
             if (manpower_array.length > 0)
-              manpower_string = ` ¦ ${manpower_array.join(", ")}`;
+              manpower_string = ` | ${manpower_array.join(", ")}`;
           }
 
           //Get colonisation_string
           if (local_unit.colonise_provinces)
             colonisation_string = (local_unit.colonise_provinces <= 1) ?
-              ` ¦ Settles ${parseNumber(local_unit.colonise_provinces)} Province` :
-              ` ¦ Settles ${parseNumber(local_unit.colonise_provinces)} Provinces`;
+              ` | Settles ${parseNumber(local_unit.colonise_provinces)} Province` :
+              ` | Settles ${parseNumber(local_unit.colonise_provinces)} Provinces`;
 
           //Get quantity_string
-          quantity_string = ` ¦ x${parseNumber(unit_quantity)} Quantity`;
+          quantity_string = ` | x${parseNumber(unit_quantity)} Quantity`;
 
           //Push item to array, followed by unit_stats
           unit_string.push(`${unit_icon}**${unit_name}** - ${costs_string} ${manpower_string}`);
@@ -228,7 +228,7 @@ module.exports = {
 
     //Return statement
     return splitEmbed(unit_string, {
-      title: "[Back] ¦ [Jump To Page] Unit List",
+      title: "[Back] | [Jump To Page] Unit List",
       title_pages: true,
       description: [
         "",

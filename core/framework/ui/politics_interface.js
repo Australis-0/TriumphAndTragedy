@@ -29,13 +29,13 @@ module.exports = {
 
     //Format politics_string
     politics_string.push(`__**Ruling Government:**__`);
-    politics_string.push(`**-**`);
+    politics_string.push(config.localisation.divider);
     politics_string.push("");
     politics_string.push(`${config.icons.government} Government Type: **${ruling_government_obj.name}**`);
     politics_string.push(`${config.icons.political_capital} Political Capital: **${parseNumber(usr.modifiers.political_capital)}** (${parseNumber(usr.modifiers.political_capital_gain, { display_prefix: true })} per turn)`);
     politics_string.push("");
-    politics_string.push(`- **[Coup ${config.icons.political_capital} ${parseNumber(config.defines.politics.coup_cost)}]** ¦ **[Support Party ${config.icons.political_capital} ${parseNumber(config.defines.politics.support_cost)}]**`);
-    politics_string.push(`- **[View Cultures]**${(usr.available_reforms.length > 0) ? ` ¦ **[View Reforms]**` : ""}`);
+    politics_string.push(`- **[Coup ${config.icons.political_capital} ${parseNumber(config.defines.politics.coup_cost)}]** | **[Support Party ${config.icons.political_capital} ${parseNumber(config.defines.politics.support_cost)}]**`);
+    politics_string.push(`- **[View Cultures]**${(usr.available_reforms.length > 0) ? ` | **[View Reforms]**` : ""}`);
     politics_string.push("");
 
     if (usr.available_reforms.length > 0) {
@@ -73,7 +73,7 @@ module.exports = {
 
     //Print calculated stability
     stability_string.push("");
-    stability_string.push(`**-**`);
+    stability_string.push(config.localisation.divider);
     stability_string.push("");
     stability_string.push(`__**Calculated Stability:**__`);
     stability_string.push("");
@@ -88,7 +88,7 @@ module.exports = {
           low_party_popularity = true;
 
       if (low_party_popularity) {
-        stability_string.push(`**-**`);
+        stability_string.push(config.localisation.divider);
         stability_string.push(`You have a ${config.icons.revolt} **revolt risk** of **${printPercentage(config.defines.politics.revolt_threshold - simulation.modifiers.stability)}**!`);
       }
     }
@@ -104,8 +104,8 @@ module.exports = {
       .setImage("https://cdn.discordapp.com/attachments/722997700391338046/736141424315203634/margin.png")
       .setDescription(politics_string.join("\n"))
       .addFields(
-        { name: `__Reforms:__\n-`, value: reforms_string.join("\n"), inline: true },
-        { name: `__Stability:__\n-`, value: stability_string.join("\n"), inline: true }
+        { name: `__Reforms:__\n━━`, value: reforms_string.join("\n"), inline: true },
+        { name: `__Stability:__\n━━`, value: stability_string.join("\n"), inline: true }
       );
 
     game_obj.main_embed = politics_embed;

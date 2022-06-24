@@ -17,7 +17,7 @@ module.exports = {
     auto_trade_prefix_string.push("");
     auto_trade_prefix_string.push(`${config.icons.taxes} **Auto-Trades** are shipments of goods that occur automatically from your nation to another country. These goods are shipped out once per turn.`);
     auto_trade_prefix_string.push("");
-    auto_trade_prefix_string.push(` **[Cancel Auto Trade]** ¦ **[Create Auto Trade]**`);
+    auto_trade_prefix_string.push(` **[Cancel Auto Trade]** | **[Create Auto Trade]**`);
     auto_trade_prefix_string.push("");
     auto_trade_prefix_string.push(config.localisation.divider);
     auto_trade_prefix_string.push("");
@@ -46,7 +46,7 @@ module.exports = {
 
     //Return statement
     return splitEmbed(auto_trade_string, {
-      title: "[Back] ¦ Auto-Trades:",
+      title: "[Back] | Auto-Trades:",
       description: auto_trade_prefix_string,
       title_pages: true,
       fixed_width: true
@@ -87,7 +87,7 @@ module.exports = {
 
     //Return statement
     return splitEmbed(export_string, {
-      title: "[Back] ¦ Exports:",
+      title: "[Back] | Exports:",
       title_pages: true,
       fixed_width: true
     });
@@ -128,7 +128,7 @@ module.exports = {
 
     //Return statement
     return splitEmbed(import_string, {
-      title: "[Back] ¦ Imports:",
+      title: "[Back] | Imports:",
       title_pages: true,
       fixed_width: true
     });
@@ -172,7 +172,7 @@ module.exports = {
 
     //Import/Export list
     trade_string.push(config.localisation.divider);
-    trade_string.push(`**Imports/Exports:** ¦ **[Transfer Goods]**`);
+    trade_string.push(`**Imports/Exports:** | **[Transfer Goods]**`);
     trade_string.push("");
 
     (number_of_autotrades > 0) ?
@@ -248,8 +248,8 @@ module.exports = {
           local_good.name :
           all_market_goods[i];
 
-        market_string.push(`${local_good_icon} - ${local_good_name} (**${parseNumber(local_market_good.stock)}** in stock): Buy Price: £${parseNumber(local_market_good.buy_price)} ¦ Sell Price: £${parseNumber(local_market_good.sell_price)}`);
-        market_string.push(`- **[Buy ${local_good_name}]** ¦ **[Sell ${local_good_name}]**`);
+        market_string.push(`${local_good_icon} - ${local_good_name} (**${parseNumber(local_market_good.stock)}** in stock): Buy Price: £${parseNumber(local_market_good.buy_price)} | Sell Price: £${parseNumber(local_market_good.sell_price)}`);
+        market_string.push(`- **[Buy ${local_good_name}]** | **[Sell ${local_good_name}]**`);
       }
 
     if (all_market_goods.length > 10)

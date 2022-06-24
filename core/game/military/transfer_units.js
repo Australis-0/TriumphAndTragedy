@@ -69,7 +69,7 @@ module.exports = {
           printError(game_obj.id, `**${unit_name}** is not a valid type of unit that you can transfer! Make sure to **[View ${army_obj.name}]** for a full list of valid units available for transfer.`);
         }
       } else {
-        printError(game_obj.id, `You can't transfer units to a nonexistent army! Check your **[Army List]** for a full view of all armies under your control, or consider creating a new army. ¦ **[Create Army]**`);
+        printError(game_obj.id, `You can't transfer units to a nonexistent army! Check your **[Army List]** for a full view of all armies under your control, or consider creating a new army. | **[Create Army]**`);
       }
     } else {
       printError(game_obj.id, `You can't transfer units from a nonexistent army! Check your **[Army List]** for a full view of all armies under your control.`);

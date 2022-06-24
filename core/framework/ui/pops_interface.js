@@ -51,7 +51,7 @@ module.exports = {
     var urban_pops_string = [];
 
     //Format embed
-    pops_string.push(`- ${config.icons.culture} **[Culture]** ¦ ${config.icons.population} **[View Provinces]**`);
+    pops_string.push(`- ${config.icons.culture} **[Culture]** | ${config.icons.population} **[View Provinces]**`);
     pops_string.push("");
 
     urban_pops_string.push("");
@@ -99,7 +99,7 @@ module.exports = {
 
     total_pops_string.push("");
     total_pops_string.push(`__**Population Modifiers:**__`);
-    total_pops_string.push(`**-**`);
+    total_pops_string.push(config.localisation.divider);
     total_pops_string.push("");
 
     //Print dynamic population modifiers
@@ -157,7 +157,7 @@ module.exports = {
       .addFields(
         { name: `${config.icons.development} __Urban Population:__ **${printPercentage(urban_pops.population/getPopulation(actual_id))}**\n-`, value: urban_pops_string.join("\n"), inline: true },
         { name: `${config.icons.provinces} __Rural Population:__ **${printPercentage(rural_pops.population/getPopulation(actual_id))}**\n-`, value: rural_pops_string.join("\n"), inline: true },
-        { name: "__Total Population:__\n-", value: total_pops_string.join("\n") }
+        { name: "__Total Population:__\n━━", value: total_pops_string.join("\n") }
       );
 
     game_obj.main_embed = population_embed;

@@ -340,17 +340,17 @@ module.exports = {
                 .setTitle(`**Raid over ${city_obj.name}:**\n${config.localisation.divider}`)
                 .addFields(
                   {
-                    name: `${config.icons.bombing_attacker} __**Attacker:**__\n---\n`,
+                    name: `${config.icons.bombing_attacker} __**Attacker:**__\n━━--\n`,
                     value: attacker_string.join("\n"),
                     inline: true
                   },
                   {
-                    name: `${config.icons.bombing_defender} __**Defender:**__\n---\n`,
+                    name: `${config.icons.bombing_defender} __**Defender:**__\n━━--\n`,
                     value: defender_string.join("\n"),
                     inline: true
                   },
                   {
-                    name: `${config.icons.results} __**Results:**__\n---\n`,
+                    name: `${config.icons.results} __**Results:**__\n━━--\n`,
                     value: result_string.join("\n"),
                   }
                 );
@@ -679,17 +679,17 @@ module.exports = {
               .setTitle(`**${battle_name}:\n${config.localisation.divider}**`)
               .addFields(
                 {
-                  name: `${config.icons.attacker} __**Attacker:**__\n---\n`,
+                  name: `${config.icons.attacker} __**Attacker:**__\n━━--\n`,
                   value: attacker_string.join("\n"),
                   inline: true
                 },
                 {
-                  name: `${config.icons.defender} __**Defender:**__\n---\n`,
+                  name: `${config.icons.defender} __**Defender:**__\n━━--\n`,
                   value: defender_string.join("\n"),
                   inline: true
                 },
                 {
-                  name: `${config.icons.attacker} __**Results:**__\n---\n`,
+                  name: `${config.icons.attacker} __**Results:**__\n━━--\n`,
                   value: result_string.join("\n")
                 },
               );

@@ -23,7 +23,7 @@ module.exports = {
 
     //Format embed
     economy_string.push(`__**Population:**__`);
-    economy_string.push(`**-**`);
+    economy_string.push(config.localisation.divider);
     economy_string.push("");
 
     //Push the availability of dynamically displayed non-military pops to screen
@@ -150,7 +150,7 @@ module.exports = {
         .setImage("https://cdn.discordapp.com/attachments/722997700391338046/736141424315203634/margin.png")
         .setDescription(economy_string.join("\n"))
         .addFields(
-          { name: "__Production Modifiers:__\n-", value: modifiers_string.join("\n"), inline: true },
+          { name: "__Production Modifiers:__\n━━", value: modifiers_string.join("\n"), inline: true },
           { name: "__Resource Production:__ (per turn)\n-", value: resource_production_string.join("\n"), inline: true },
           { name: config.localisation.blank, value: footer_string.join("\n") }
         );

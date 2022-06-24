@@ -60,7 +60,7 @@ module.exports = {
         }
 
         //Push tech summary to string
-        research_string.push(`#**${i + 1}**. ${local_tech_icon} **${local_tech_name}** ¦ **[Cancel Research]**`)
+        research_string.push(`#**${i + 1}**. ${local_tech_icon} **${local_tech_name}** | **[Cancel Research]**`)
 
         //Push research progress to string
         research_string.push(`---`);
@@ -153,7 +153,7 @@ module.exports = {
     }
 
     //Format string
-    tech_string.push(`**[Back]** ¦ **[Jump To Page]**`);
+    tech_string.push(`**[Back]** | **[Jump To Page]**`);
     tech_string.push("");
 
     //Begin assembling the tech array by getting all valid tech categories
@@ -180,7 +180,7 @@ module.exports = {
             researching_status = `__Queued (#${usr.research_queue.indexOf(local_tech_category[x])+1})__`;
 
           if (researching_status == "")
-            researching_status = `¦ **[Research ${(local_tech.name) ? local_tech.name : local_tech_category[x]}]**`;
+            researching_status = `| **[Research ${(local_tech.name) ? local_tech.name : local_tech_category[x]}]**`;
 
           //Push to tech_string
           tech_string.push(`${gfx_icon}**${(local_tech.name) ? local_tech.name : local_tech_category[x]}**: ${researching_status}`);
@@ -253,7 +253,7 @@ module.exports = {
     research_queue_string.push("---");
     research_queue_string.push("");
     (usr.research_queue.length < 20) ?
-      research_queue_string.push(`**[Add Technology]** ¦ **[Remove Technology]**`) :
+      research_queue_string.push(`**[Add Technology]** | **[Remove Technology]**`) :
       research_queue_string.push(`**[Remove Technology]**`);
     if (usr.research_queue.length >= 20)
       research_queue_string.push(`\nYour **Research Queue** is currently full up! Considering removing a technology from your research queue if you wish to queue up something else.`);
@@ -360,7 +360,7 @@ module.exports = {
 
     //Format research status
     tech_string.push("");
-    tech_string.push(`- **[Current Research]** ¦ **[View Research Queue]**:`);
+    tech_string.push(`- **[Current Research]** | **[View Research Queue]**:`);
     tech_string.push(config.localisation.divider);
 
     if (usr.researching.length > 0) {

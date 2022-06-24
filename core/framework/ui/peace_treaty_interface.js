@@ -780,11 +780,11 @@ module.exports = {
     //Initialise page menu showing peace treaty effects
     createPageMenu(game_obj.alert_embed, {
       embed_pages: splitEmbed(parsePeaceTreatyString(war_obj, peace_obj), {
-        title: `[Back] ¦ Editing Peace Offer For **${war_obj.name}**:`,
+        title: `[Back] | Editing Peace Offer For **${war_obj.name}**:`,
         description: [
           `---`,
           "",
-          `**[Add Wargoal]**${(Object.keys(peace_obj.peace_demands).length > 0) ? ` ¦ **[Remove Wargoal]**` : ""} ¦ **[Send Peace Offer]**`
+          `**[Add Wargoal]**${(Object.keys(peace_obj.peace_demands).length > 0) ? ` | **[Remove Wargoal]**` : ""} | **[Send Peace Offer]**`
         ],
         title_pages: true,
         fixed_width: true

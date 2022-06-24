@@ -41,7 +41,7 @@ module.exports = {
       var culture_obj = main.global.cultures[province_obj.culture];
 
       //Format embed
-      province_string.push(`**[Back]** ¦ **[Jump To Page]**`);
+      province_string.push(`**[Back]** | **[Jump To Page]**`);
       province_string.push("");
       province_string.push(`**Ownership:**`);
       province_string.push("");
@@ -117,7 +117,7 @@ module.exports = {
     var province_string = [];
 
     //Format province_string
-    province_string.push(`**[Back]** ¦ **[Jump To Page]**`);
+    province_string.push(`**[Back]** | **[Jump To Page]**`);
     province_string.push("");
     province_string.push(`${config.icons.globe} Country: **${usr.name}**`);
     province_string.push("");
