@@ -15,11 +15,15 @@ module.exports = {
     var all_cities = getCities(actual_id);
     var local_resource_modifiers = {};
 
-    //Initialise economy_string
+    //Initialise economy_string and other formatting variables
     var economy_string = [];
+    var footer_string = [];
+    var modifiers_string = [];
+    var resource_production_string = [];
 
     //Format embed
-    economy_string.push(`**Population:**`);
+    economy_string.push(`__**Population:**__`);
+    economy_string.push(`**-**`);
     economy_string.push("");
 
     //Push the availability of dynamically displayed non-military pops to screen
@@ -34,16 +38,17 @@ module.exports = {
     economy_string.push(`- ${config.icons.population} Population Growth Rate: **${printPercentage(usr.modifiers.pop_growth_modifier-1)}**`);
     economy_string.push(`You have **${parseNumber(getCities(actual_id, { include_hostile_occupations: true, include_occupations: true }).length)}** cities in total throughout your country.`);
     economy_string.push("");
-    economy_string.push(`**[View Cities]**${(usr.city_cap-usr.city_count > 0) ? " ¦ **[Found City]** (" + parseNumber(usr.city_cap-usr.city_count) + ")" : ""}`);
+    economy_string.push(`- **[View Cities]**${(usr.city_cap-usr.city_count > 0) ? " ¦ **[Found City]** (" + parseNumber(usr.city_cap-usr.city_count) + ")" : ""}`);
     economy_string.push("");
     economy_string.push(config.localisation.divider);
     economy_string.push("");
-    economy_string.push(`**Production Modifiers:**`);
-    economy_string.push("");
+
+    //Modifiers
+    modifiers_string.push("");
 
     ((usr.modifiers.building_cost - 1)*100 != 0) ?
-      economy_string.push(`${config.icons.construction_time} Building Cost Modifier: **${printPercentage(usr.modifiers.building_cost - 1)}**`) :
-      economy_string.push(`${config.icons.construction_time} No building cost modifiers active.`);
+      modifiers_string.push(`${config.icons.construction_time} Building Cost Modifier: **${printPercentage(usr.modifiers.building_cost - 1)}**`) :
+      modifiers_string.push(`${config.icons.construction_time} No building cost modifiers active.`);
 
     //Production modifiers (RGO)
     for (var i = 0; i < all_good_names.length; i++)
@@ -58,9 +63,9 @@ module.exports = {
       var local_throughput = getCityRGOThroughput(city_obj.name) - (usr.modifiers.rgo_throughput - 1);
 
       local_element.count++;
-      local_element.cities.push(`${city_obj.name} ` + (
+      local_element.cities.push(`${city_obj.name}` + (
         (!isNaN(city_obj.supply_limit)) ?
-          `**${printPercentage(Math.ceil(local_throughput), { display_prefix: true })}**` : ``
+          ` **${printPercentage(Math.ceil(local_throughput), { display_prefix: true })}**` : ``
       ));
     }
 
@@ -70,20 +75,16 @@ module.exports = {
       var processed_good_icon = (local_good.icon) ? config.icons[local_good.icon] + " " : "";
 
       if (local_resource_modifiers[all_good_names[i]].count != 0) {
-        economy_string.push(`${processed_good_icon}Base **${printPercentage(usr.modifiers.rgo_throughput, { display_prefix: true })}** ${processed_good_name} Gain in **${local_resource_modifiers[all_good_names[i]].count}** citie(s):`);
-        economy_string.push(`- ${local_resource_modifiers[all_good_names[i]].cities.join(", ")}`);
+        modifiers_string.push(`${processed_good_icon}Base **${printPercentage(usr.modifiers.rgo_throughput, { display_prefix: true })}** ${processed_good_name} Gain in **${local_resource_modifiers[all_good_names[i]].count}** citie(s):`);
+        modifiers_string.push(`- ${local_resource_modifiers[all_good_names[i]].cities.join(", ")}`);
       }
     }
 
-    economy_string.push("");
-    economy_string.push(config.localisation.divider);
-
     //Resource production
-    economy_string.push(`**Resource Production (per turn):**`);
-    economy_string.push(`**[Building List]** ¦ **[Build]**`);
-    economy_string.push("");
+    resource_production_string.push("");
+    resource_production_string.push(`- **[Building List]** ¦ **[Build]**`);
 
-    //Dynamically push resource production to economy_string
+    //Dynamically push resource production to resource_production_string
     var all_production = getProduction(actual_id);
     var all_unprocessed_goods = Object.keys(all_production);
     var sorted_goods_cache = [];
@@ -123,21 +124,19 @@ module.exports = {
         }
 
         //Push to string
-        economy_string.push(`- **${(local_value[0] == local_value[1]) ? parseNumber(local_value[0]) : parseNumber(local_value[0]) + " - " + parseNumber(local_value[1])}** ${(local_good.name) ? local_good.name : all_produced_goods[i]}.`);
+        resource_production_string.push(`- **${(local_value[0] == local_value[1]) ? parseNumber(local_value[0]) : parseNumber(local_value[0]) + " - " + parseNumber(local_value[1])}** ${(local_good.name) ? local_good.name : all_produced_goods[i]}.`);
       }
     }
 
     if (Object.keys(all_production).length == 0)
-      economy_string.push(`- _Our economy is not currently producing any goods! Consider constructing some new buildings in order to jumpstart our economy._`);
+      footer_string.push(`- _Our economy is not currently producing any goods! Consider constructing some new buildings in order to jumpstart our economy._`);
     else {
-      economy_string.push("");
-      economy_string.push(`Note: Buildings that lack requisite goods or maintenance will not produce anything.`);
-      economy_string.push("");
+      footer_string.push(`Note: Buildings that lack requisite goods or maintenance will not produce anything.`);
+      footer_string.push("");
     }
 
-    economy_string.push("");
-    economy_string.push(`- **[Constructions]** View a complete list of current constructions.`);
-    economy_string.push(`- **[Inventory]** View your **current resources**.`);
+    footer_string.push(`- **[Constructions]** View a complete list of current constructions.`);
+    footer_string.push(`- **[Inventory]** View your **current resources**.`);
 
     //Remove control panel if one exists
     if (game_obj) {
@@ -149,7 +148,12 @@ module.exports = {
         .setTitle(`**Economy:**`)
         .setThumbnail(usr.flag)
         .setImage("https://cdn.discordapp.com/attachments/722997700391338046/736141424315203634/margin.png")
-        .setDescription(economy_string.join("\n"));
+        .setDescription(economy_string.join("\n"))
+        .addFields(
+          { name: "__Production Modifiers:__\n-", value: modifiers_string.join("\n"), inline: true },
+          { name: "__Resource Production:__ (per turn)\n-", value: resource_production_string.join("\n"), inline: true },
+          { name: config.localisation.blank, value: footer_string.join("\n") }
+        );
 
       game_obj.main_embed = economy_embed;
       game_obj.main_change = true;

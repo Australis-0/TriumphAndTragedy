@@ -58,7 +58,7 @@ module.exports = {
     budget_string.push(`Note: Buildings that lack requisite goods or maintenance will not produce anything.`);
     budget_string.push("");
 
-    var money_string = (user_income[0] == user_income[1]) ?
+    var money_string = (user_income[0] != user_income[1]) ?
       `${parseNumber(user_income[0])} - ${parseNumber(user_income[1])}` :
       parseNumber(user_income[0]);
 
@@ -70,7 +70,7 @@ module.exports = {
     budget_string.push("");
     budget_string.push(`Current tax: (**${printPercentage(usr.tax_rate)}**/**${printPercentage(usr.modifiers.max_tax)}**) ${(getIncome(actual_id)[0] < 0) ? "- Consider adjusting your tax rate to gain additional income." : ""}`);
     budget_string.push("");
-    budget_string.push(`**[Set Tax]**`);
+    budget_string.push(`- **[Set Tax]**`);
     budget_string.push("");
     budget_string.push(`${config.icons.blockade} Blockade status: ${(isBlockaded(actual_id)) ? "you are currently blockaded!" : "you are currently not blockaded."}`);
 

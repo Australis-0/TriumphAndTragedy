@@ -92,7 +92,7 @@ module.exports = {
       return_names: true/false - Whether or not to return the keys of the tech instead of a displayable embed.
     }
   */
-  printResearchList: function (arg0_user, arg1_options) { //[WIP] - Needs additional frameworks before effects parser is able to progress
+  printResearchList: function (arg0_user, arg1_options) {
     //Convert from parameters
     var user_id = arg0_user;
     var options = (arg1_options) ? arg1_options : {};
@@ -311,9 +311,6 @@ module.exports = {
     tech_string.push("");
     tech_string.push(`${config.icons.government} Current Tech Count: (**${parseNumber(usr.researched_technologies.length)}**/${parseNumber(all_technologies.length)})`);
     tech_string.push("");
-    tech_string.push(`**[Research Possibilities]**:`);
-    tech_string.push(config.localisation.divider);
-    tech_string.push("");
 
     //Iterate over all categories and print how many techs in each have been researched
     for (var i = 0; i < all_tech_categories.length; i++) {
@@ -339,6 +336,11 @@ module.exports = {
 
     tech_string.push("");
     tech_string.push(`${config.icons.technology} Knowledge Gain Per Turn: ${(Math.min(knowledge_gain[0], knowledge_gain[1]) > 0) ? "+" : ""}**${printRange(knowledge_gain)}**`);
+    tech_string.push("");
+
+    tech_string.push(`**[Research Possibilities]**:`);
+    tech_string.push(config.localisation.divider);
+    tech_string.push("");
 
     //Print tech research options
     for (var i = 0; i < tech_array_dump.length; i++)
@@ -358,7 +360,7 @@ module.exports = {
 
     //Format research status
     tech_string.push("");
-    tech_string.push(`**[Current Research]** ¦ **[View Research Queue]**:`);
+    tech_string.push(`- **[Current Research]** ¦ **[View Research Queue]**:`);
     tech_string.push(config.localisation.divider);
 
     if (usr.researching.length > 0) {

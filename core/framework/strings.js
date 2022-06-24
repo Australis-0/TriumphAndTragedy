@@ -179,7 +179,7 @@ module.exports = {
       (typeof number == "number") ?
           (options.display_float) ?
             parseInt(number*100)/100 :
-            number :
+            parseInt(number) :
         parseInt(number)
     );
   },

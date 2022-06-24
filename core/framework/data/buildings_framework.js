@@ -557,14 +557,14 @@ module.exports = {
             if (production_list.length >= 2) {
               if (!actual_resource) {
                 changeProductionValue(all_produced_goods[i], "minimum", production_list[0]*actual_production_efficiency);
-                changeProductionValue(all_produced_goods[i], "maximum", production_list[0]*actual_production_efficiency);
+                changeProductionValue(all_produced_goods[i], "maximum", production_list[1]*actual_production_efficiency);
               } else {
                 if (!is_knowledge) {
                   changeProductionValue(all_produced_goods[i], "minimum", production_list[0]*usr.modifiers[`${all_produced_goods[i]}_gain`]*actual_production_efficiency);
-                  changeProductionValue(all_produced_goods[i], "maximum", production_list[0]*usr.modifiers[`${all_produced_goods[i]}_gain`]*actual_production_efficiency);
+                  changeProductionValue(all_produced_goods[i], "maximum", production_list[1]*usr.modifiers[`${all_produced_goods[i]}_gain`]*actual_production_efficiency);
                 } else {
                   changeProductionValue(all_produced_goods[i], "minimum", production_list[0]*actual_production_efficiency*usr.modifiers[`${all_produced_goods[i]}_gain`]);
-                  changeProductionValue(all_produced_goods[i], "maximum", production_list[0]*actual_production_efficiency*usr.modifiers[`${all_produced_goods[i]}_gain`]);
+                  changeProductionValue(all_produced_goods[i], "maximum", production_list[1]*actual_production_efficiency*usr.modifiers[`${all_produced_goods[i]}_gain`]);
                 }
               }
             } else {

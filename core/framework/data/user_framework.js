@@ -304,7 +304,7 @@ module.exports = {
     return returnSafeNumber(
       (1 + usr.modifiers.rgo_throughput) +
         (
-          returnSafeNumber(city_obj.supply_limit, config.defines.combat.base_supply_limit)/
+          returnSafeNumber(city_obj.supply_limit, 0)/
           config.defines.economy.supply_limit_rgo_modifier
         )*0.01
     , 1);
