@@ -162,6 +162,7 @@ module.exports = {
   /*
     parseNumber() - Formats a number to a string whilst displaying decimal separators (e.g. 1.567,23 instead of 1567.23).
     options: {
+      display_float: true/false, - Whether or not to display a number to the hundreths place
       display_prefix: true/false - Whether or not to display a starting prefix
     }
   */
@@ -174,7 +175,13 @@ module.exports = {
       (options.display_prefix) ?
         (number > 0) ? "+" : ""
       : ""
-    ) + Intl.NumberFormat('de').format(parseInt(number));
+    ) + Intl.NumberFormat('de').format(
+      (typeof number == "number") ?
+          (options.display_float) ?
+            parseInt(number*100)/100 :
+            number :
+        parseInt(number)
+    );
   },
 
   parseString: function (arg0_string) {

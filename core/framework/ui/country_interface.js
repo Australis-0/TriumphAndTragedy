@@ -112,11 +112,12 @@ module.exports = {
       parseNumber(user_income[0]);
 
     stats_string.push(`${config.icons.money} Money: **${parseNumber(usr.money)}** (${config.icons.money} **${money_string}** per turn).`);
-    stats_string.push(`- **[Inventory]** ¦ **[Build]** ¦ **[Craft]**`);
+    stats_string.push("");
+    stats_string.push(`**[Inventory]** ¦ **[Build]** ¦ **[Craft]**`);
     stats_string.push("");
     stats_string.push(config.localisation.divider);
-    stats_string.push("");
     stats_string.push(`**Internal Politics:**`);
+    stats_string.push("");
     try {
       stats_string.push(`${config.icons.government} Government Type: **${(config.governments[usr.government].name) ? config.governments[usr.government].name.toLowerCase() : usr.government}**`);
 
@@ -128,14 +129,16 @@ module.exports = {
     stats_string.push(`${config.icons.political_capital} Political Capital: **${parseNumber(usr.modifiers.political_capital)}** (${(usr.modifiers.political_capital_gain >= 0) ? "+" : ""}${parseNumber(usr.modifiers.political_capital_gain)} per turn)`);
 
     //Add infamy section later
-    stats_string.push(`${config.icons.infamy} Infamy: **${parseNumber(usr.modifiers.infamy)}** (${parseNumber(usr.modifiers.infamy_loss, { display_prefix: true })} per turn)`);
+    stats_string.push(`${config.icons.infamy} Infamy: **${parseNumber(usr.modifiers.infamy)}** (${parseNumber(usr.modifiers.infamy_loss, { display_float: true, display_prefix: true })} per turn)`);
     if (usr.modifiers.infamy > config.defines.infamy_limit)
       stats_string.push(`- Our current level of infamy is costing us **${printPercentage(usr.infamy_rgo_throughput)}** RGO Throughput and **${printPercentage(usr.infamy_production_efficiency)}** Production Eff.`);
 
     stats_string.push(config.localisation.divider);
     stats_string.push(`**Actions:**`);
-    stats_string.push(`Your actions may be used up to give you raw resources, or kept for taxable income. Each action is worth ${config.icons.money} **${parseNumber(config.defines.economy.money_per_action)}** at **100%** tax.`);
+    stats_string.push("");
+    stats_string.push(`Your Actions may be used up to give you raw resources, or kept for taxable income. Each action is worth ${config.icons.money} **${parseNumber(config.defines.economy.money_per_action)}** at **100%** tax.`);
     stats_string.push(`- **${Math.ceil(usr.modifiers.civilian_actions*100)}%** of your actions will be used up by civilians next turn.`);
+    stats_string.push("");
     stats_string.push(`**[Mine]** ¦ **[Quarry]** ¦ **[Chop]**`);
     stats_string.push("");
     stats_string.push(`${config.icons.actions} Actions: **${parseNumber(usr.actions)}**`);

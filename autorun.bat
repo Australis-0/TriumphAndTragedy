@@ -1,5 +1,5 @@
 @echo off
-title Triumph and Tragedy I
+title Triumph and Tragedy I - Pearl and Trident
 echo [Triumph and Tragedy] Auto-run is starting ..
 :main
 node --max-old-space-size=12192 main.js
