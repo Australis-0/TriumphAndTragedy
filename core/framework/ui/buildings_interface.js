@@ -6,10 +6,12 @@ module.exports = {
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
     var game_obj = getGameObject(user_id);
+    var total_page_count = 0;
     var usr = main.users[actual_id];
 
-    //Initialise building_string
-    var building_string = [];
+    //Initialise all_embeds as embed list
+    var all_embeds = [];
+    var category_map = [];
 
     //Iterate over all valid buildings
     var all_building_categories = getBuildingCategories();
@@ -19,6 +21,7 @@ module.exports = {
       var local_building_category_name = (local_building_category.name) ? local_building_category.name : parseString(all_building_categories[i]);
       var local_building_category_string = [];
       var local_buildings = Object.keys(local_building_category);
+      var local_fields = [];
 
       //Iterate over all buildings in category and push them to the list based on availability
       for (var x = 0; x < local_buildings.length; x++) {
@@ -74,11 +77,11 @@ module.exports = {
 
             //Set costs_string
             if (costs_array.length > 0)
-              costs_string = `Costs ${costs_array.join(", ")}`;
+              costs_string = `Costs:\n- ${costs_array.join("\n- ")}`;
 
             //Set manpower_string
             if (manpower_array.length > 0)
-              manpower_string = ` | ${manpower_array.join(", ")}`;
+              manpower_string = `- ${manpower_array.join("\n- ")}`;
           }
 
           //Get production_string
@@ -96,8 +99,8 @@ module.exports = {
             //Parse debug name; two-fold array with random minimum to maximum production, one-fold array with the same production value all the time
             if (local_building_production[0] != local_building_production[1]) {
               (all_produced_goods[y] != "money") ?
-                production_array.push(`${parseNumber(Math.ceil(local_building_production[0]))} - ${parseNumber(Math.ceil(local_building_production[1]))} ${resource_name}`) :
-                production_array.push(`£${parseNumber(Math.ceil(local_building_production[0]))} - £${parseNumber(Math.ceil(local_building_production[1]))}`);
+                production_array.push(`${parseNumber(Math.ceil(local_building_production[0]))} to ${parseNumber(Math.ceil(local_building_production[1]))} ${resource_name}`) :
+                production_array.push(`£${parseNumber(Math.ceil(local_building_production[0]))} to £${parseNumber(Math.ceil(local_building_production[1]))}`);
             } else {
               (all_produced_goods[y] != "money") ?
                 production_array.push(`${parseNumber(Math.ceil(local_building_production[0]))} ${resource_name}`) :
@@ -120,8 +123,8 @@ module.exports = {
             //Parse debug name; two-fold array with random minimum to maximum production, one-fold array with the same production value all the time
             if (local_building_consumption.length > 1) {
               (all_maintenance_costs[y] != "money") ?
-                maintenance_array.push(`${parseNumber(Math.ceil(local_building_consumption[0]))} - ${parseNumber(Math.ceil(local_building_consumption[1]))} ${resource_name}`) :
-                maintenance_array.push(`£${parseNumber(Math.ceil(local_building_consumption[0]))} - £${parseNumber(Math.ceil(local_building_consumption[1]))}`);
+                maintenance_array.push(`${parseNumber(Math.ceil(local_building_consumption[0]))} to ${parseNumber(Math.ceil(local_building_consumption[1]))} ${resource_name}`) :
+                maintenance_array.push(`£${parseNumber(Math.ceil(local_building_consumption[0]))} to £${parseNumber(Math.ceil(local_building_consumption[1]))}`);
             } else {
               (all_maintenance_costs[y] != "money") ?
                 maintenance_array.push(`${parseNumber(Math.ceil(local_building_consumption[0]))} ${resource_name}`) :
@@ -132,58 +135,89 @@ module.exports = {
           //Get construction_string
           if (building_obj.construction_turns) {
             construction_string = (building_obj.construction_turns > 0) ?
-              ` | Takes ${parseNumber(Math.ceil(building_obj.construction_turns))} Turn(s) to construct` :
-              ` | Constructed instantly`;
+              `\nConstruction Time: ${parseNumber(Math.ceil(building_obj.construction_turns))} Turn(s)` :
+              `\nConstruction Time: Instant`;
           } else {
-            construction_string = ` | Takes ${parseNumber(Math.ceil(config.defines.economy.construction_turns*usr.modifiers.construction_time))} Turn(s) to construct`;
+            construction_string = `\nConstruction Time: ${parseNumber(Math.ceil(config.defines.economy.construction_turns*usr.modifiers.construction_time))} Turn(s)`;
           }
 
           //Entry logic
-          if (production_array.length > 0 && maintenance_array.length > 0) {
-            production_string = ` | Produces ${production_array.join(", ")} from ${maintenance_array.join(", ")}`;
-          } else if (production_array.length > 0) {
-            production_string = ` | Produces ${production_array.join(", ")} per turn`;
-          } else if (maintenance_array.length > 0) {
-            production_string = ` | Consumes ${maintenance_array.join(", ")} per turn`;
+          if (production_array.length > 0) {
+            production_string = `\nProduces:\n- ${production_array.join("\n- ")}`;
+          }
+          if (maintenance_array.length > 0) {
+            production_string += `\nMaintenance:\n- ${maintenance_array.join("\n- ")}`;
           }
 
           //Custom localisation
           if (building_obj.description)
-            production_string += ` | ${building_obj.description}`;
+            production_string += `\n- ${building_obj.description}`;
           if (building_obj.houses)
-            production_string += ` | Houses ${parseNumber(building_obj.houses)}`;
+            production_string += `\n- Houses ${parseNumber(building_obj.houses)}`;
           if (building_obj.modifiers)
-            production_string += ` | ${parseModifiers(building_obj.modifiers, true)}`;
+            production_string += `\n- ${stripMarkdown(parseModifiers(building_obj.modifiers, true))}`;
 
           //Manpower string
           if (manpower_array.length > 0)
-            manpower_string = ` | ${manpower_array.join(", ")}`;
+            manpower_string = `${(costs_array.length > 0) ? "\n" : ""}- ${manpower_array.join("\n- ")}`;
 
-          //Push building to local_building_category_string
-          local_building_category_string.push(`${building_icon}**${building_name}** - ${costs_array.join(", ")}${manpower_string}${production_string}${construction_string}`);
+          //Push to local fields
+          local_fields.push({
+            name: `${building_icon} __**${building_name}**:__`,
+            value: `\`\`\`yaml\n${costs_string}${manpower_string}${production_string}\n${construction_string}\`\`\``,
+            inline: true
+          });
         }
       }
 
       //Push building category strings to global array only if building entries exist in the first place
-      if (local_building_category_string.length > 0) {
-        building_string.push(`**${local_building_category_name}:**`);
-        building_string.push(config.localisation.divider);
-        building_string.push("");
+      if (local_fields.length > 0) {
+        local_building_category_string.push(config.localisation.divider);
+        local_building_category_string.push("");
 
-        for (var x = 0; x < local_building_category_string.length; x++)
-          building_string.push(local_building_category_string[x]);
+        //Begin formatting embeds
+        var local_embed_fields = [];
 
-        //Insert margin
-        building_string.push("");
+        for (var x = 0; x < local_fields.length; x++) {
+          local_embed_fields.push(local_fields[x]);
+
+          if (x != 0 || local_fields.length == 1)
+            if (x % 12 == 0 || x == local_fields.length - 1) {
+              var building_category_embed = new Discord.MessageEmbed()
+                .setColor(settings.bot_colour)
+                .setDescription(local_building_category_string.join("\n"));
+              var total_current_fields = 0;
+
+              for (var y = 0; y < local_embed_fields.length; y++) {
+                building_category_embed.addFields(local_embed_fields[y]);
+                total_current_fields++;
+              }
+
+              //Regularise columns
+              var extra_columns = (total_current_fields == 4) ? 2 :
+                Math.round(
+                  (total_current_fields/3 - Math.floor(total_current_fields/3)
+                )*3) - 1;
+
+              if (total_current_fields % 3 != 0)
+                for (var y = 0; y < extra_columns; y++)
+                    building_category_embed.addFields({ name: "-", value: config.localisation.break, inline: true });
+
+              //Clear local_embed_fields, then push embed
+              local_embed_fields = [];
+              all_embeds.push(building_category_embed);
+              category_map.push(local_building_category_name);
+            }
+        }
       }
     }
 
+    //Modify page counters
+    for (var i = 0; i < all_embeds.length; i++)
+      all_embeds[i].setTitle(`${category_map[i]} (Page ${i + 1} of ${all_embeds.length}):`);
+
     //Return statement
-    return splitEmbed(building_string, {
-      title: "Build List:",
-      title_pages: true,
-      fixed_width: true
-    });
+    return all_embeds;
   },
 
   printConstructions: function (arg0_user) {
@@ -230,7 +264,7 @@ module.exports = {
         if (local_constructions.length > 0) {
           construction_string.push(`**${main.provinces[all_cities[i]].name}**:`);
           construction_string.push("");
-          
+
           for (var x = 0; x < local_constructions.length; x++) {
             var local_building_obj = getBuilding(local_constructions[x].building_type);
 

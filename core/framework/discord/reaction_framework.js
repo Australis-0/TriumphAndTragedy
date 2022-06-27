@@ -64,15 +64,15 @@ module.exports = {
                   //If its at the beginning, we need both emojis now
                   if (ui_obj.embed_array.length > 2) {
                     if (current_page != ui_obj.embed_array.length-1 && current_page == 1) {
-                      removeAllReactions();
+                      removeAllReactions(msg_obj);
                       msg_obj.react("⬅️").then(() => msg_obj.react("➡️"));
                     } else if (current_page == ui_obj.embed_array.length-1) {
-                      removeAllReactions();
+                      removeAllReactions(msg_obj);
                       msg_obj.react("⬅️");
                     }
                   } else {
                     if (current_page == 1) {
-                      removeAllReactions();
+                      removeAllReactions(msg_obj);
                       msg_obj.react("⬅️");
                     }
                   }

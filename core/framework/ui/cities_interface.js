@@ -14,8 +14,9 @@ module.exports = {
       include_occupations: true
     });
 
-    //Initialise city_string
+    //Initialise city_string, fields_list
     var city_string = [];
+    var fields_list = [];
 
     //Format string
     city_string.push(`**[Back]** | **[Jump To Page]**`);
@@ -33,21 +34,24 @@ module.exports = {
 
     city_string.push(config.localisation.divider);
     city_string.push("");
-    city_string.push(`**Cities:**`);
+    city_string.push(`__**Cities:**__`);
 
     if (cities.length != 0) {
       for (var i = 0; i < cities.length; i++) {
-        city_string.push(`[View **${cities[i].name}**] ${(cities[i].city_type == "capital") ? " - Capital City" : ""}`);
+        var local_field = [];
 
         //Display occupation status
         if (cities[i].owner != cities[i].controller)
           (cities[i].controller != actual_id) ?
-            city_string.push(`- Currently occupied by **${main.users[cities[i].controller].name}**.`) :
-            city_string.push(`- This city is currently occupied by us in a war! We won't be able to gain resources from it until it is legally annexed by us.`);
+            local_field.push(`- Currently occupied by **${main.users[cities[i].controller].name}**.`) :
+            local_field.push(`- This city is currently occupied by us in a war! We won't be able to gain resources from it until it is legally annexed by us.`);
 
-        city_string.push(`- ${config.icons.provinces} Province: ${cities[i].id}`);
-        city_string.push(`- ${config.icons.population} Population: ${parseNumber(cities[i].pops.population)}/${parseNumber(cities[i].housing)}`);
-        city_string.push(`- RGO: ${(getGood(cities[i].resource).icon) ? config.icons[getGood(cities[i].resource).icon] + " " : ""} ${(getGood(cities[i].resource).name) ? getGood(cities[i].resource).name : cities[i].resource}`);
+        local_field.push(`- ${config.icons.provinces} Province: ${cities[i].id}`);
+        local_field.push(`- ${config.icons.population} Population: ${parseNumber(cities[i].pops.population)}/${parseNumber(cities[i].housing)}`);
+        local_field.push(`- RGO: ${(getGood(cities[i].resource).icon) ? config.icons[getGood(cities[i].resource).icon] + " " : ""} ${(getGood(cities[i].resource).name) ? getGood(cities[i].resource).name : cities[i].resource}`);
+
+        //Print culture
+        fields_list.push({ name: `[View **${cities[i].name}**] ${(cities[i].city_type == "capital") ? " - Capital City" : ""}`, value: local_field.join("\n"), inline: true });
       }
     } else {
       city_string.push("");
@@ -59,9 +63,12 @@ module.exports = {
 
     //Return statement
     return splitEmbed(city_string, {
+      fields: fields_list,
+      fixed_width: true,
+      maximum_fields: 12,
+      table_width: 2,
       title: "City List:",
-      title_pages: true,
-      fixed_width: true
+      title_pages: true
     });
   },
 

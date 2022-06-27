@@ -131,7 +131,7 @@ module.exports = {
     if (Object.keys(all_production).length == 0)
       footer_string.push(`- _Our economy is not currently producing any goods! Consider constructing some new buildings in order to jumpstart our economy._`);
     else {
-      footer_string.push(`Note: Buildings that lack requisite goods or maintenance will not produce anything.`);
+      footer_string.push(`Note: Buildings that lack requisite goods or maintenance will not produce anything. Infrastructure can improve your RGO Throughput.`);
       footer_string.push("");
     }
 

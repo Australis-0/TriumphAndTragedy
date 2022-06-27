@@ -219,6 +219,14 @@ module.exports = {
 		return current_string;
 	},
 
+  stripMarkdown: function (arg0_string) {
+    //Convert from parameters
+    var processed_string = arg0_string.toString();
+
+    //Return statement
+    return processed_string.replace(/(__)|(\*\*)/gm, "");
+  },
+
   stripNonNumerics: function (arg0_string) {
     //Convert from parameters
     var processed_string = arg0_string.toString().trim();

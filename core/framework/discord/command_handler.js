@@ -116,20 +116,22 @@ module.exports = {
             if (local_prompt)
               if (!local_prompt.do_not_display)
                 if (local_prompt.message)
-                  local_prompt.message.edit({
-                    embeds: [
-                      updateVisualPrompt({
-                        title: local_prompt.title,
-                        show_steps: local_prompt.show_steps,
-                        answers: local_prompt.answers,
-                        prompts: local_prompt.prompts,
-                        satisfies_requirements: satisfies_requirements,
+                  try {
+                    local_prompt.message.edit({
+                      embeds: [
+                        updateVisualPrompt({
+                          title: local_prompt.title,
+                          show_steps: local_prompt.show_steps,
+                          answers: local_prompt.answers,
+                          prompts: local_prompt.prompts,
+                          satisfies_requirements: satisfies_requirements,
 
-                        colour: local_prompt.colour,
-                        description: local_prompt.description
-                      })
-                    ]
-                  });
+                          colour: local_prompt.colour,
+                          description: local_prompt.description
+                        })
+                      ]
+                    });
+                  } catch {}
           } catch (e) {
             log.error(`commandHandler() - visual_prompt ran into an error: ${e}`);
             console.log(e);

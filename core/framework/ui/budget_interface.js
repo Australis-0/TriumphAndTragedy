@@ -25,7 +25,7 @@ module.exports = {
     var unit_upkeep = getUnitUpkeep(actual_id);
 
     //Push to budget_string
-    budget_string.push(`**Economic Statistics:**`);
+    budget_string.push(`__**Economic Statistics:**__`);
     budget_string.push("");
 
     budget_string.push(`${config.icons.government} Tax Efficiency: **${printPercentage(usr.modifiers.tax_efficiency)}**`);
@@ -46,6 +46,12 @@ module.exports = {
       budget_string.push(`${config.icons.actions} Actions (**${parseNumber(total_actions_gained_per_turn[0], { display_prefix: true })}**-**${parseNumber(total_actions_gained_per_turn[1])}** per turn)`);
     budget_string.push(`- **${printPercentage(usr.modifiers.civilian_actions)}** of your actions will be used up as ${config.icons.trade} **Civilian Goods** next turn.`);
 
+    budget_string.push("");
+    budget_string.push(`Note: Buildings that lack requisite goods or maintenance will not produce anything.`);
+    budget_string.push("");
+
+    budget_string.push("");
+    budget_string.push(`__**Expenditures:**__`);
     if (unit_upkeep > 0)
       budget_string.push(`- ${(unit_upkeep > 0) ? "-" : "+"}**£${parseNumber(unit_upkeep)}** from unit maintenance.`);
     if (total_maintenance[0] + total_maintenance[1] > 0)
@@ -53,10 +59,6 @@ module.exports = {
         budget_string.push(`- ${(total_maintenance[0] > 0) ? "-" : "+"}**£${parseNumber(total_maintenance[0])}** from building maintenance.`);
       else
         budget_string.push(`- ${(total_maintenance[0] > 0) ? "-" : "+"}**£${parseNumber(total_maintenance[0])}** - ${(total_maintenance[1] < 0) ? "-" : "+"}**£${parseNumber(total_maintenance[1])}** from building maintenance.`);
-
-    budget_string.push("");
-    budget_string.push(`Note: Buildings that lack requisite goods or maintenance will not produce anything.`);
-    budget_string.push("");
 
     var money_string = (user_income[0] != user_income[1]) ?
       `${parseNumber(user_income[0])} - ${parseNumber(user_income[1])}` :
@@ -66,7 +68,7 @@ module.exports = {
     budget_string.push("");
     budget_string.push(config.localisation.divider);
     budget_string.push("");
-    budget_string.push(`**Economic Policy:**`);
+    budget_string.push(`__**Economic Policy:**__`);
     budget_string.push("");
     budget_string.push(`Current tax: (**${printPercentage(usr.tax_rate)}**/**${printPercentage(usr.modifiers.max_tax)}**) ${(getIncome(actual_id)[0] < 0) ? "- Consider adjusting your tax rate to gain additional income." : ""}`);
     budget_string.push("");

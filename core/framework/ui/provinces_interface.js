@@ -19,7 +19,7 @@ module.exports = {
     });
   },
 
-  printProvince: function (arg0_user, arg1_province) { //[WIP] - Work on supply limit calculation during diplomacy update
+  printProvince: function (arg0_user, arg1_province) {
     //Convert from parameters
     var user_id = arg0_user;
     var province_id = arg1_province;
@@ -87,10 +87,7 @@ module.exports = {
     }
   },
 
-  printProvinces: function (arg0_user) { //[WIP]
-    //TODO: Print cities first before rural provinces
-    //TODO: Print provinces
-    //TODO: Implement UI in pops tab
+  printProvinces: function (arg0_user) {
 
     //Convert from parameters
     var user_id = arg0_user;
@@ -113,7 +110,8 @@ module.exports = {
       include_occupations: true
     });
 
-    //Initialise province_string
+    //Initialise province_string, fields_list
+    var fields_list = [];
     var province_string = [];
 
     //Format province_string
@@ -128,26 +126,30 @@ module.exports = {
     if (cities.length != 0 || provinces.length != 0) {
       //Print cities first
       province_string.push("");
-      province_string.push(`**Cities:**`);
+      province_string.push(`__**Cities:**__`);
       province_string.push("");
+
       if (cities.length != 0) {
         for (var i = 0; i < cities.length; i++) {
           var culture_obj = getCulture(cities[i].culture);
+          var local_field = [];
 
-          province_string.push(`**${cities[i].name}**:`);
-          province_string.push(`**[View ${cities[i].name}]**`);
-          province_string.push("");
-          province_string.push(`- ${config.icons.population} Population: **${parseNumber(cities[i].pops.population)}**`);
+          local_field.push(`**[View ${cities[i].name}]**`);
+          local_field.push("");
+          local_field.push(`- ${config.icons.population} Population: **${parseNumber(cities[i].pops.population)}**`);
 
           //Print individual pop statistics
           for (var x = 0; x < all_pops.length; x++)
-            province_string.push(`- ${(config.pops[all_pops[x]].icon) ? config.pops[all_pops[x]].icon : ""} ${(config.pops[all_pops[x]].name) ? config.pops[all_pops[x]].name : all_pops[x]}: ${parseNumber(cities[i].pops[all_pops[x]])}`);
+            local_field.push(`- ${(config.pops[all_pops[x]].icon) ? config.pops[all_pops[x]].icon : ""} ${(config.pops[all_pops[x]].name) ? config.pops[all_pops[x]].name : all_pops[x]}: ${parseNumber(cities[i].pops[all_pops[x]])}`);
 
           //Print culture
-          province_string.push(`- ${config.icons.culture} Culture: ${culture_obj.name}`);
+          local_field.push(`- ${config.icons.culture} Culture: ${culture_obj.name}`);
 
           if (!accepted_cultures.includes(cities[i].culture))
-            province_string.push(`- **[Assimilate]**`);
+            local_field.push(`- **[Assimilate]**`);
+
+          //Push field to list
+          fields_list.push({ name: `__**${cities[i].name}**:__`, value: local_field.join("\n"), inline: true });
         }
       } else {
         (provinces.length > 0) ?
@@ -164,21 +166,24 @@ module.exports = {
         for (var i = 0; i < provinces.length; i++) {
           try {
             var culture_obj = getCulture(provinces[i].culture);
+            var local_field = [];
 
-            province_string.push(`**Province ${provinces[i].id}**:`);
-            province_string.push(`**[View Province ${provinces[i].id}]**`);
-            province_string.push("");
-            province_string.push(`- ${config.icons.population} Population: **${parseNumber(provinces[i].pops.population)}**`);
+            local_field.push(`**[View Province ${provinces[i].id}]**`);
+            local_field.push("");
+            local_field.push(`- ${config.icons.population} Population: **${parseNumber(provinces[i].pops.population)}**`);
 
             //Print individual pop statistics again
             for (var x = 0; x < all_pops.length; x++)
-              province_string.push(`- ${(config.pops[all_pops[x]].icon) ? config.pops[all_pops[x]].icon : ""} ${(config.pops[all_pops[x]].name) ? config.pops[all_pops[x]].name : all_pops[x]}: ${parseNumber(provinces[i].pops[all_pops[x]])}`);
+              local_field.push(`- ${(config.pops[all_pops[x]].icon) ? config.pops[all_pops[x]].icon : ""} ${(config.pops[all_pops[x]].name) ? config.pops[all_pops[x]].name : all_pops[x]}: ${parseNumber(provinces[i].pops[all_pops[x]])}`);
 
             //Print culture
-            province_string.push(`- ${config.icons.culture} Culture: ${culture_obj.name}`);
+            local_field.push(`- ${config.icons.culture} Culture: ${culture_obj.name}`);
 
             if (!accepted_cultures.includes(provinces[i].culture))
-              province_string.push(`- **[Assimilate]**`);
+              local_field.push(`- **[Assimilate]**`);
+
+            //Push field to list
+            fields_list.push({ name: `__**Province ${provinces[i].id}**:__`, value: local_field.join("\n"), inline: true });
           } catch {}
         }
       } else {
@@ -192,9 +197,12 @@ module.exports = {
 
     //Return statement
     return splitEmbed(province_string, {
+      fields: fields_list,
+      fixed_width: true,
+      maximum_fields: 12,
+      table_width: 2,
       title: "Province List:",
-      title_pages: true,
-      fixed_width: true
+      title_pages: true
     });
   }
 };

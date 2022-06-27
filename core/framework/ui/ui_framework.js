@@ -265,7 +265,7 @@ module.exports = {
     } catch {}
   },
 
-  selectMenu: function (arg0_message_obj, arg1_options) { //WIP
+  selectMenu: function (arg0_message_obj, arg1_options) { //[WIP]
     //Convert from parameters
     var msg = arg0_message_obj;
     var options = arg1_options;
@@ -318,83 +318,121 @@ module.exports = {
     var maximum_characters_per_embed = (options.maximum_characters) ? options.maximum_characters : 3500;
     var total_page_count = 0;
 
+    //Maximum fields reduction
+    if (options.maximum_fields && options.table_width != 2)
+      options.maximum_fields--;
+
     //Error trapping
     try {
-      //Split by lines if maximum_lines argument is specified, but split by characters otherwise
-      if (!options.maximum_lines) {
-        var current_character_count = 0;
+      //Split by fields if requested
+      if (options.maximum_fields) {
+        //Split embeds based on fields
+        if (options.fields)
+          for (var i = 0; i < options.fields.length; i++) {
+            if (options.table_width == 2)
+              if ((i + 1) % 2 == 0)
+                local_array_string.push({ name: '\u200b', value: '\u200b', inline: true });
 
-        //Fetch total page count
-        for (var i = 0; i < array_string.length; i++) {
-          local_array_string.push(array_string[i]);
-          current_character_count += array_string[i].length;
+            local_array_string.push(options.fields[i]);
 
-          if (i != 0 || array_string.length == 1)
-            if (
-              current_character_count >= maximum_characters_per_embed || i == array_string.length-1 &&
+            if (i != 0 || options.fields.length == 1)
+              if (i % (options.maximum_fields + 1) == 0 || i == options.fields.length-1) {
+                total_page_count++;
 
-              //Check to see that string is not empty
-              local_array_string.join("\n").length > 0
-            ) {
-              total_page_count++;
-              current_character_count = 0;
-              local_array_string = [];
-            }
-        }
+                //Initialise page embed
+                var local_embed = new Discord.MessageEmbed()
+                  .setColor(settings.bot_colour)
+                  .setDescription(array_string.join("\n"));
 
-        //Reset variables
-        current_character_count = 0;
-        local_array_string = [];
+                //Declare local options variables
+                var page_ending = (options.title && options.title_pages) ? `(Page ${all_embeds.length+1} of ${total_page_count}):` : "";
 
-        //Split embeds based on characters
-        for (var i = 0; i < array_string.length; i++) {
-          local_array_string.push(array_string[i]);
-          current_character_count += array_string[i].length;
+                formatEmbed(local_embed, all_embeds, page_ending, options);
 
-          if (i != 0 || array_string.length == 1)
-            if (
-              //Check if page requirements are met
-              current_character_count >= maximum_characters_per_embed || i == array_string.length-1 &&
+                //Add fields
+                for (var x = 0; x < local_array_string.length; x++)
+                  local_embed.addFields(local_array_string[x]);
 
-              //Check to see that string is not empty
-              local_array_string.join("\n").length > 0
-            ) {
-              //Initialise page embed
-              var local_embed = new Discord.MessageEmbed()
-                .setColor("#a98ac7")
-                .setDescription(
-                  ((options.description) ?
-                    "\n" + options.description.join("\n") :
-                    "") +
-                  local_array_string.join("\n")
-                );
-
-              //Declare local options variables
-              var page_ending = (options.title && options.title_pages) ? `(Page ${all_embeds.length+1} of ${total_page_count}):` : "";
-
-              formatEmbed(local_embed, all_embeds, page_ending, options);
-              current_character_count = 0;
-              local_array_string = [];
-            }
-        }
+                local_array_string = [];
+              }
+          }
       } else {
-        //Split embeds based on lines
-        for (var i = 0; i < array_string.length; i++) {
-          local_array_string.push(array_string[i]);
+        //Split by lines if maximum_lines argument is specified, but split by characters otherwise
+        if (!options.maximum_lines) {
+          var current_character_count = 0;
 
-          if (i != 0 || array_string.length == 1)
-            if (i % options.maximum_lines == 0 || i == array_string.length-1) {
-              //Initialise page embed
-              var local_embed = new Discord.MessageEmbed()
-                .setColor("#a98ac7")
-                .setDescription(local_array_string.join("\n"));
+          //Fetch total page count
+          for (var i = 0; i < array_string.length; i++) {
+            local_array_string.push(array_string[i]);
+            current_character_count += array_string[i].length;
 
-              //Declare local options variables
-              var page_ending = (options.title && options.title_pages) ? `(Page ${all_embeds.length+1} of ${total_page_count}):` : "";
+            if (i != 0 || array_string.length == 1)
+              if (
+                current_character_count >= maximum_characters_per_embed || i == array_string.length-1 &&
 
-              formatEmbed(local_embed, all_embeds, page_ending, options);
-              local_array_string = [];
-            }
+                //Check to see that string is not empty
+                local_array_string.join("\n").length > 0
+              ) {
+                total_page_count++;
+                current_character_count = 0;
+                local_array_string = [];
+              }
+          }
+
+          //Reset variables
+          current_character_count = 0;
+          local_array_string = [];
+
+          //Split embeds based on characters
+          for (var i = 0; i < array_string.length; i++) {
+            local_array_string.push(array_string[i]);
+            current_character_count += array_string[i].length;
+
+            if (i != 0 || array_string.length == 1)
+              if (
+                //Check if page requirements are met
+                current_character_count >= maximum_characters_per_embed || i == array_string.length-1 &&
+
+                //Check to see that string is not empty
+                local_array_string.join("\n").length > 0
+              ) {
+                //Initialise page embed
+                var local_embed = new Discord.MessageEmbed()
+                  .setColor("#a98ac7")
+                  .setDescription(
+                    ((options.description) ?
+                      "\n" + options.description.join("\n") :
+                      "") +
+                    local_array_string.join("\n")
+                  );
+
+                //Declare local options variables
+                var page_ending = (options.title && options.title_pages) ? `(Page ${all_embeds.length+1} of ${total_page_count}):` : "";
+
+                formatEmbed(local_embed, all_embeds, page_ending, options);
+                current_character_count = 0;
+                local_array_string = [];
+              }
+          }
+        } else {
+          //Split embeds based on lines
+          for (var i = 0; i < array_string.length; i++) {
+            local_array_string.push(array_string[i]);
+
+            if (i != 0 || array_string.length == 1)
+              if (i % options.maximum_lines == 0 || i == array_string.length-1) {
+                //Initialise page embed
+                var local_embed = new Discord.MessageEmbed()
+                  .setColor("#a98ac7")
+                  .setDescription(local_array_string.join("\n"));
+
+                //Declare local options variables
+                var page_ending = (options.title && options.title_pages) ? `(Page ${all_embeds.length+1} of ${total_page_count}):` : "";
+
+                formatEmbed(local_embed, all_embeds, page_ending, options);
+                local_array_string = [];
+              }
+          }
         }
       }
 
