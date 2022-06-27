@@ -1,4 +1,52 @@
 module.exports = {
+  addSelectMenu: function (arg0_message_obj, arg1_options) {
+    //Convert from parameters
+    var msg = arg0_message_obj;
+    var options = arg1_options;
+
+    /*
+      Options field:
+      {
+        actual_key: menu_obj.era,
+        display_key: menu_obj.display_era,
+        id: "era_select_menu",
+        options: [
+          {
+            label: "Renaissance",
+            emoji: config.icons.renaissance,
+            description: "1500-1618",
+            value: "renaissance",
+
+            effect: setEra("renaissance")
+          }
+        ],
+        placeholder: "No starting era selected"
+      }
+    */
+
+    //Declare local instance variables
+    var select_menu = new Discord.MessageSelectMenu()
+      .setCustomId(options.id)
+      .setPlaceholder((!options.placeholder) ? `Select an option ..` : options.placeholder);
+
+    //Add options
+    for (var i = 0; i < options.options.length; i++) {
+      select_menu.addOptions(options.options[i]);
+
+      //Add effect
+      selection_effect_map[`${msg.id}-${options.id}-${options.options[i].value}`] = options.options[i].effect;
+    }
+
+    //Add select menu to message
+    var new_select_row = new Discord.MessageActionRow()
+      .addComponents(select_menu);
+    var new_component_array = msg.components;
+      new_component_array.push(new_select_row);
+
+    //Edit message
+    msg.edit({ components: new_component_array })
+  },
+  
   confirmDialogue: function (arg0_message_obj, arg1_contents, arg2_function) {
     //Convert from parameters
     var message_id = arg0_message_obj;
@@ -263,32 +311,6 @@ module.exports = {
     try {
       game_obj.bottom_control_panel.reactions.removeAll();
     } catch {}
-  },
-
-  selectMenu: function (arg0_message_obj, arg1_options) { //[WIP]
-    //Convert from parameters
-    var msg = arg0_message_obj;
-    var options = arg1_options;
-
-    /*
-      Options field:
-      {
-        actual_key: menu_obj.era,
-        display_key: menu_obj.display_era,
-        id: "era_select_menu",
-        options: [
-          {
-            label: "Renaissance",
-            emoji: config.icons.renaissance,
-            description: "1500-1618",
-            value: "renaissance"
-          }
-        ],
-        placeholder: "No starting era selected"
-      }
-    */
-
-    //Declare local instance variables
   },
 
   sendPlainEmbed: function (arg0_message_obj, arg1_contents) {

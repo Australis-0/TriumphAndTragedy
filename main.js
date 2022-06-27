@@ -247,6 +247,7 @@ global.client = new Discord.Client({ intents: [
 global.backup_loaded = false;
 global.ignore_channels = (settings.ignore_channels) ? settings.ignore_channels : [];
 global.interfaces = {};
+global.selection_effect_map = {};
 global.visual_prompts = {};
 
 client.login(settings.bot_token);

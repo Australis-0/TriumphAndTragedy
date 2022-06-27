@@ -219,11 +219,9 @@ module.exports = {
     //Edit message to include new top row buttons
     try {
       game_obj.header.edit({
-        content: config.localisation.blank,
         components: []
       }).then(() => {
         game_obj.header.edit({
-          content: config.localisation.blank,
           components: [
             main_menu_row,
             country_row_1,
