@@ -112,6 +112,7 @@ module.exports = {
     }, 1100);
 
     //Load maps
+    loadMap("atlas_map.svg", "atlas");
   	loadMap("colonisation_map.svg", "colonisation");
     loadMap("political_map.svg", "political");
     loadMap("supply_map.svg", "supply");

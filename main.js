@@ -9,6 +9,7 @@ global.fs = require("fs");
 global.HTML = require("node-html-parser");
 global.opus = require("opusscript");
 global.path = require("path");
+global.SVG = require("convert-svg-to-png");
 global.voice = require("@discordjs/voice");
 
 //Import Core Framework
@@ -68,6 +69,7 @@ FileManager.import("./framework/discord/select_handler");
 FileManager.import("./framework/discord/users");
 
 //Map viewer and renderer files
+FileManager.import("./framework/map/atlas_renderer");
 FileManager.import("./framework/map/map_renderer");
 FileManager.import("./framework/map/province_renderer");
 

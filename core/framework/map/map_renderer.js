@@ -25,6 +25,77 @@ module.exports = {
         //Regular error trapping just in case
         try {
           switch (map_name) {
+            case "atlas":
+              //Political map rendering
+              var current_element = 0;
+              var counter = 0;
+
+              //Separate labels into columns
+              for (var i = 0; i < all_users.length; i++) {
+                var local_user = main.users[all_users[i]];
+
+                //Only display label if user is not eliminated and has more than zero provinces
+                if (!local_user.eliminated && local_user.provinces > 0)
+                  if (label_placement[current_element]) {
+                    if (counter == label_placement[current_element]) {
+                      counter = 0;
+                      current_element++;
+                    }
+
+                    counter++;
+                    if (labels[current_element])
+                      labels[current_element].push(all_users[i]);
+                    else
+                      labels[current_element] = [all_users[i]];
+                  }
+              }
+
+              //Initialise canvas and draw key for atlas map
+              {
+                var canvas = Canvas.createCanvas(config.defines.map.map_resolution[0], config.defines.map.map_resolution[1]);
+                var ctx = canvas.getContext("2d");
+
+                //Load map
+                var background_layer = new Canvas.Image();
+                var atlas_svg_layer = new Canvas.Image();
+
+                background_layer.onload = () => ctx.drawImage(background_layer, 0, 0, config.defines.map.map_resolution[0], config.defines.map.map_resolution[1]);
+                background_layer.onerror = err => { throw err; }
+
+                background_layer.src = `./map/${config.defines.map.map_terrain}`;
+
+                atlas_svg_layer.onload = () => ctx.drawImage(atlas_svg_layer, 0, 0, config.defines.map.map_resolution[0], config.defines.map.map_resolution[1]);
+                atlas_svg_layer.onerror = err => { throw err; }
+                atlas_svg_layer.src = `./map/atlas_map.png`;
+
+                //Generate key
+                ctx.font = "36px Oswald";
+                ctx.fillStyle = "#ffffff";
+                ctx.fillText("Nations of the World:", config.defines.map.map_label_coords[0], config.defines.map.map_label_coords[1]);
+
+                //Generate colour key and accompanying labels
+                ctx.strokeStyle = "#ffffff";
+
+                for (var i = 0; i < labels.length; i++)
+                  for (var x = 0; x < labels[i].length; x++) {
+                    var local_user = main.users[labels[i][x]];
+
+                    ctx.fillStyle = RGBToHex(parseInt(local_user.colour[0]), parseInt(local_user.colour[1]), parseInt(local_user.colour[2]));
+                    ctx.fillRect(config.defines.map.map_label_coords[0] + i*320, config.defines.map.map_label_coords[1] + 15 + x*40, 36, 36);
+                    ctx.beginPath();
+                    ctx.rect(config.defines.map.map_label_coords[0] + i*320, config.defines.map.map_label_coords[1] + 15 + x*40, 36, 36);
+                    ctx.stroke();
+
+                    ctx.fillStyle = "#ffffff";
+                    ctx.fillText(truncateString(local_user.name, 15), config.defines.map.map_label_coords[0] + 50 + i*320, config.defines.map.map_label_coords[1] + 47 + x*40);
+                  }
+
+                //JPEG compression
+                var main_cache = canvas.toBuffer("image/jpeg");
+                fs.writeFileSync(`./map/cache/${map_name}.jpg`, main_cache);
+              }
+
+              break;
             case "supply":
               var all_provinces = Object.keys(main.provinces);
               var maximum_supply_limit = 0;
@@ -127,6 +198,7 @@ module.exports = {
 
                 background_layer.onload = () => ctx.drawImage(background_layer, 0, 0, config.defines.map.map_resolution[0], config.defines.map.map_resolution[1]);
                 background_layer.onerror = err => { throw err; }
+
                 background_layer.src = `./map/${config.defines.map.map_background}`;
 
                 political_svg_layer.onload = () => ctx.drawImage(political_svg_layer, 0, 0, config.defines.map.map_resolution[0], config.defines.map.map_resolution[1]);
@@ -179,6 +251,23 @@ module.exports = {
     });
   },
 
+  convertSVG: async function (arg0_map_name) {
+    //Convert from parameters
+    var map_name = arg0_map_name;
+
+    //Declare local instance variables
+    var file_path = "./map/" + global[`${map_name}_file`];
+
+    //Convert file
+    var output_file_path = await SVG.convertFile(file_path);
+
+    try {
+      cacheSVG(map_name);
+    } catch {
+      cacheSVG(map_name); //Very creative fix, I know
+    }
+  },
+
   forceRender: function (arg0_map_name) {
     //Convert from parameters
     var map_name = arg0_map_name;
@@ -199,6 +288,10 @@ module.exports = {
 
     //Map case handler
     switch (map_name) {
+      case "atlas":
+        renderAtlas();
+
+        break;
       case "colonisation":
         //Loop over all provinces and shade them in normally!
         for (var i = 0; i < all_provinces.length; i++) {

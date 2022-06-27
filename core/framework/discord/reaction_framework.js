@@ -124,8 +124,9 @@ module.exports = {
         interact_button: (reaction.emoji.name == "🔘"),
 
         //Mapmodes
-        political: (reaction.emoji.name == "globe"),
+        atlas: (reaction.emoji.name == "globe"),
         colonisation: (reaction.emoji.name == "colonisation"),
+        political: (reaction.emoji.name == "political_capital"),
         supply: (reaction.emoji.name == "railways")
       };
 

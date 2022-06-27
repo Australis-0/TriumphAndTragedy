@@ -6,6 +6,7 @@ config.defines.map = {
   map_resolution: [11232, 4320],
   map_label_coords: [20, 710],
 	map_label_placement: [27, 27, 27, 27, 27, 27, 10000],
+  map_terrain: "colourmap.jpg", //Terrain colourmap for atlas mapmode
   map_type: "earth",
 
   default_province_colour: [179, 179, 179],

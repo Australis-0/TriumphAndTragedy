@@ -178,7 +178,8 @@ module.exports = {
           game_obj.middle_embed.react("⏫")
             .then(() => { game_obj.middle_embed.react("⬆️"); })
             .then(() => { game_obj.middle_embed.react("785931430215155754"); })
-            .then(() => { game_obj.middle_embed.react("716811246556545035"); }); //Political
+            .then(() => { game_obj.middle_embed.react("716811246556545035"); }) //Political
+            .then(() => { game_obj.middle_embed.react("716817688525275257"); }); //Atlas
           game_obj.middle_control_panel.react("⬅️")
             .then(() => { game_obj.middle_control_panel.react("🔘"); } )
             .then(() => { game_obj.middle_control_panel.react("➡️"); } )

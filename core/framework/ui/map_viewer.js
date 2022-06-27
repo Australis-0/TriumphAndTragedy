@@ -73,6 +73,8 @@ module.exports = {
     map_obj.colonisation = false;
     map_obj.supply = false;
 
+    map_obj.atlas = false;
+
     //Initialise tracker variables
     map_obj.mapmode = map;
     map_obj.original_img = "";
@@ -153,6 +155,10 @@ module.exports = {
                 map_obj.mapmode = "supply";
                 module.exports.changeImage(game_id, "supply");
               }
+              if (map_obj.atlas) {
+                map_obj.mapmode = "atlas";
+                module.exports.changeImage(game_id, "atlas");
+              }
 
               //Reset map data states
               reloadMap(game_id);
@@ -173,6 +179,8 @@ module.exports = {
               map_obj.political = false;
               map_obj.colonisation = false;
               map_obj.supply = false;
+
+              map_obj.atlas = false;
             } catch (e) {
               log.warn(`logic_loop under initialiseMapViewer() was unable to proceed! ${e}.`);
               clearInterval(logic_loop);
@@ -199,6 +207,8 @@ module.exports = {
             if (actions.political) map_obj.political = true;
             if (actions.colonisation) map_obj.colonisation = true;
             if (actions.supply) map_obj.supply = true;
+
+            if (actions.atlas) map_obj.atlas = true;
           };
         });
       });
