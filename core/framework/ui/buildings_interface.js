@@ -1,7 +1,8 @@
 module.exports = {
-  printBuildList: function (arg0_user) {
+  printBuildList: function (arg0_user, arg1_hide_select_menu) {
     //Convert from parameters
     var user_id = arg0_user;
+    var hide_select_menu = arg1_hide_select_menu;
 
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
@@ -12,12 +13,15 @@ module.exports = {
     //Initialise all_embeds as embed list
     var all_embeds = [];
     var category_map = [];
+    var icon_map = [];
+    var select_menu_options = [];
 
     //Iterate over all valid buildings
     var all_building_categories = getBuildingCategories();
 
     for (var i = 0; i < all_building_categories.length; i++) {
       var local_building_category = getBuildingCategory(all_building_categories[i]);
+      var local_building_category_icon = (local_building_category.icon) ? config.icons[local_building_category.icon] + " " : "";
       var local_building_category_name = (local_building_category.name) ? local_building_category.name : parseString(all_building_categories[i]);
       var local_building_category_string = [];
       var local_buildings = Object.keys(local_building_category);
@@ -207,6 +211,7 @@ module.exports = {
               local_embed_fields = [];
               all_embeds.push(building_category_embed);
               category_map.push(local_building_category_name);
+              icon_map.push(local_building_category_icon);
             }
         }
       }
@@ -214,7 +219,37 @@ module.exports = {
 
     //Modify page counters
     for (var i = 0; i < all_embeds.length; i++)
-      all_embeds[i].setTitle(`${category_map[i]} (Page ${i + 1} of ${all_embeds.length}):`);
+      all_embeds[i].setTitle(`${icon_map[i]}${category_map[i]} (Page ${i + 1} of ${all_embeds.length}):`);
+
+    //Add select menu
+    if (!hide_select_menu) {
+      var select_menu = unique(category_map);
+
+      for (var i = 0; i < select_menu.length; i++)
+        select_menu_options.push({
+          label: select_menu[i],
+          value: getBuildingCategory(select_menu[i], { return_key: true }),
+
+          options: {
+            name: select_menu[i]
+          },
+
+          effect: function (value, options) {
+            createPageMenu(game_obj.middle_embed, {
+              embed_pages: printBuildList(game_obj.user, true),
+              starting_page: category_map.indexOf(options.name),
+              user: game_obj.user
+            });
+          }
+        });
+
+      //Implement select menu
+      addSelectMenu(game_obj.header, {
+        id: `select_building_category`,
+        options: select_menu_options,
+        placeholder: `⭭ Select a Building Category ..`,
+      });
+    }
 
     //Return statement
     return all_embeds;

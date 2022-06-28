@@ -7,8 +7,6 @@ module.exports = {
     /*
       Options field:
       {
-        actual_key: menu_obj.era,
-        display_key: menu_obj.display_era,
         id: "era_select_menu",
         options: [
           {
@@ -35,6 +33,9 @@ module.exports = {
 
       //Add effect
       selection_effect_map[`${msg.id}-${options.id}-${options.options[i].value}`] = options.options[i].effect;
+
+      if (options.options[i].options)
+        selection_effect_map[`${msg.id}-${options.id}-${options.options[i].value}-options`] = options.options[i].options;
     }
 
     //Add select menu to message
@@ -46,7 +47,7 @@ module.exports = {
     //Edit message
     msg.edit({ components: new_component_array })
   },
-  
+
   confirmDialogue: function (arg0_message_obj, arg1_contents, arg2_function) {
     //Convert from parameters
     var message_id = arg0_message_obj;
@@ -117,16 +118,19 @@ module.exports = {
         if (starting_page == 0) {
           ui_obj.current_emoji_type = "first_page";
           msg.edit({ embeds: [options.embed_pages[starting_page]] }).then((message) => {
+            removeAllReactions(msg);
             if (options.embed_pages.length > 1) message.react("➡️");
           });
         } else if (starting_page == options.embed_pages[options.embed_pages.length-1]) {
           ui_obj.current_emoji_type = "in_between";
           msg.edit({ embeds: [options.embed_pages[starting_page]] }).then((message) => {
+            removeAllReactions(msg);
             if (options.embed_pages.length > 1) message.react("⬅️");
           });
         } else {
           ui_obj.current_emoji_type = "last_page";
           msg.edit({ embeds: [options.embed_pages[starting_page]] }).then((message) => {
+            removeAllReactions(msg);
             if (options.embed_pages.length > 1) message.react("⬅️")
               .then(() => message.react("➡️"));
           });

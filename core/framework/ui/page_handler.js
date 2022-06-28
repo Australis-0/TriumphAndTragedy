@@ -38,7 +38,7 @@ module.exports = {
               switch (arg) {
                 case "build list":
                   createPageMenu(game_obj.middle_embed, {
-                    embed_pages: printBuildList(actual_id),
+                    embed_pages: printBuildList(user_id),
                     user: game_obj.user
                   });
                   return true;
@@ -504,7 +504,7 @@ module.exports = {
                 switch (arg) {
                   case "build list":
                     createPageMenu(game_obj.middle_embed, {
-                      embed_pages: printBuildList(actual_id),
+                      embed_pages: printBuildList(user_id),
                       user: game_obj.user
                     });
                     return true;
@@ -1278,7 +1278,7 @@ module.exports = {
                 switch (arg) {
                   case "build list":
                     createPageMenu(game_obj.middle_embed, {
-                      embed_pages: printBuildList(actual_id),
+                      embed_pages: printBuildList(user_id),
                       user: game_obj.user
                     });
                     return true;
@@ -1299,7 +1299,7 @@ module.exports = {
             case "building list":
             case "build list":
               createPageMenu(game_obj.middle_embed, {
-                embed_pages: printBuildList(actual_id),
+                embed_pages: printBuildList(user_id),
                 user: game_obj.user
               });
 

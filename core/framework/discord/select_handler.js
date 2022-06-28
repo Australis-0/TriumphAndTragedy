@@ -43,63 +43,23 @@ module.exports = {
 
     //Make sure only actual selections are getting processed
     if (interaction.isSelectMenu()) {
-      var menu_id = getHub(interaction.user.id);
+      var game_obj = getGameObject(interaction.user.id);
 
-      if (menu_id) {
+      if (game_obj) {
         //Declare local instance variables
-        var menu_obj = interfaces[menu_id];
-        var guild_id = getChannelGuild(menu_obj.channel);
-        var guild_obj = main.guilds[guild_id];
+        var guild_id = getChannelGuild(game_obj.channel);
+        var value = interaction.values[0];
 
-        //Settings Page
-        {
-          switch (interaction.customId) {
-            case "toggle_game_creator_roles":
-              //Create role selection handler
-              createRoleHandler({
-                guild_obj: guild_obj,
-                interaction: interaction,
-                menu_obj: menu_obj,
-                display_key: "game_creator_roles"
-              });
+        var local_key = `${interaction.message.id}-${interaction.customId}-${value}`;
+        
+        //addSelectMenu() functionality
+        if (selection_effect_map[`${local_key}`])
+          selection_effect_map[`${local_key}`](
+            value,
+            selection_effect_map[`${local_key}-options`]
+          );
 
-              //Update select menu
-              settingsInput(menu_id, "game creator roles");
-              break;
-            case "toggle_game_master_roles":
-              //Create role selection handler
-              createRoleHandler({
-                guild_obj: guild_obj,
-                interaction: interaction,
-                menu_obj: menu_obj,
-                display_key: "game_master_roles"
-              });
-
-              //Update select menu
-              settingsInput(menu_id, "game master roles");
-              break;
-            case "toggle_singleplayer_game_creator_roles":
-              //Create role selection handler
-              createRoleHandler({
-                guild_obj: guild_obj,
-                interaction: interaction,
-                menu_obj: menu_obj,
-                display_key: "singleplayer_game_creator_roles"
-              });
-
-              //Update select menu
-              settingsInput(menu_id, "singleplayer game creator roles");
-              break;
-          }
-
-          //Update settings menu
-          setTimeout(function(){
-            menu_obj.main_embed = printSettingsEmbed(menu_id);
-            menu_obj.main_change = true;
-          }, 500);
-        }
-
-        //Keep at bottom so that buttons never fail
+        //Keep at bottom so interactions never fail
         await interaction.update({});
       }
     }

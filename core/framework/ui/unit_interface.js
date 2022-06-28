@@ -1,5 +1,5 @@
 module.exports = {
-  printReserves: function (arg0_user) { //[WIP] - Finish interface print-out
+  printReserves: function (arg0_user) {
     //Convert from parameters
     var user_id = arg0_user;
 
@@ -85,22 +85,27 @@ module.exports = {
     });
   },
 
-  printUnitList: function (arg0_user) {
+  printUnitList: function (arg0_user, arg1_hide_select_menu) {
     //Convert from parameters
     var user_id = arg0_user;
+    var hide_select_menu = arg1_hide_select_menu;
 
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
     var game_obj = getGameObject(user_id);
     var usr = main.users[actual_id];
 
-    //Initialise unit_string
+    //Initialise embed list as all_embeds, unit_string
+    var all_embeds = [];
+    var category_map = [];
+    var icon_map = [];
     var unit_string = [];
 
     //Iterate over all valid units
     var all_unit_categories = getUnitCategories();
 
     for (var i = 0; i < all_unit_categories.length; i++) {
+      var local_fields = [];
       var local_unit_category = getUnitCategory(all_unit_categories[i]);
       var local_unit_category_icon = (local_unit_category.icon) ? config.icons[local_unit_category.icon] + " " : "";
       var local_unit_category_name = (local_unit_category.name) ? local_unit_category.name : parseString(all_unit_categories[i]);
@@ -112,13 +117,6 @@ module.exports = {
       for (var x = 0; x < local_units.length; x++)
         if (usr.available_units.includes(local_units[x]))
           unit_category_has_units_available = true;
-
-      //Print unit category header
-      if (unit_category_has_units_available) {
-        unit_string.push(`${local_unit_category_icon}**${local_unit_category_name}**:`);
-        unit_string.push(config.localisation.divider);
-        unit_string.push("");
-      }
 
       //Iterate over all units in category and push them to the list based on availability
       for (var x = 0; x < local_units.length; x++) {
@@ -165,33 +163,31 @@ module.exports = {
               parseString(all_unit_costs[y]);
 
             //Parse debug name
-            (all_unit_costs[y] != "money") ?
-              costs_array.push(`${parseNumber(Math.ceil(local_unit_cost))} ${resource_name}`) :
-              costs_array.push(`£${parseNumber(Math.ceil(local_unit_cost))}`);
-
             if (Object.keys(config.pops).includes(all_unit_costs[y]))
               manpower_array.push(`${parseNumber(Math.ceil(local_unit_cost))} ${pop_name}`);
+            else
+              (all_unit_costs[y] != "money") ?
+                costs_array.push(`${parseNumber(Math.ceil(local_unit_cost))} ${resource_name}`) :
+                costs_array.push(`£${parseNumber(Math.ceil(local_unit_cost))}`);
+
 
             //Set costs_string
             if (costs_array.length > 0)
-              costs_string = costs_array.join(", ");
+              costs_string = `Costs:\n- ${costs_array.join("\n- ")}`;
 
             //Set manpower_string
             if (manpower_array.length > 0)
-              manpower_string = ` | ${manpower_array.join(", ")}`;
+              manpower_string = `\n\nManpower Cost:\n- ${manpower_array.join("\n- ")}`;
           }
 
           //Get colonisation_string
           if (local_unit.colonise_provinces)
             colonisation_string = (local_unit.colonise_provinces <= 1) ?
-              ` | Settles ${parseNumber(local_unit.colonise_provinces)} Province` :
-              ` | Settles ${parseNumber(local_unit.colonise_provinces)} Provinces`;
+              `Settles ${parseNumber(local_unit.colonise_provinces)} Province` :
+              `Settles ${parseNumber(local_unit.colonise_provinces)} Provinces`;
 
           //Get quantity_string
-          quantity_string = ` | x${parseNumber(unit_quantity)} Quantity`;
-
-          //Push item to array, followed by unit_stats
-          unit_string.push(`${unit_icon}**${unit_name}** - ${costs_string} ${manpower_string}`);
+          quantity_string = `x${parseNumber(unit_quantity)}`;
 
           var has_combat_modifiers = false;
 
@@ -201,43 +197,102 @@ module.exports = {
 
           if (has_combat_modifiers)
             for (var y = 0; y < config.defines.combat.combat_modifiers.length; y++)
-              unit_stats_array.push(`${returnSafeNumber(local_unit[config.defines.combat.combat_modifiers[y]])} ${parseString(config.defines.combat.combat_modifiers[y])}`);
+              unit_stats_array.push(`${parseNumber(returnSafeNumber(local_unit[config.defines.combat.combat_modifiers[y]]))} ${parseString(config.defines.combat.combat_modifiers[y])}`);
+
+          if (colonisation_string.length > 0)
+            unit_stats_array.push(colonisation_string);
 
           //Format unit_stats_string
-          if (unit_stats_array.length > 0) {
-            unit_stats_string += "`";
+          if (unit_stats_array.length > 0)
+            unit_stats_string = `\n\nUnit Stats:\n- ${unit_stats_array.join("\n- ")}`;
 
-            for (var y = 0; y < unit_stats_array.length; y++)
-              unit_stats_string += unit_stats_array[y] + (
-                //Add dash only if y is not equal to unit_stats_array.length-1
-                (y < unit_stats_array.length-1) ?
-                  " - " :
-                  ""
-              );
-
-            unit_stats_string += "`";
-
-            unit_string.push(unit_stats_string);
-          }
+          //Push item to array, followed by unit_stats
+          local_fields.push({
+            name: `${unit_icon}__**${unit_name}** (${quantity_string}):__`,
+            value: `\`\`\`yaml\n${costs_string} ${manpower_string} ${unit_stats_string}\`\`\``,
+            inline: true
+          });
         }
       }
 
-      //Insert margin break between categories
-      unit_string.push("");
+      //Convert fields to embeds
+      if (local_fields.length > 0) {
+        local_unit_category_string.push(config.localisation.divider);
+        local_unit_category_string.push("");
+
+        //Begin formatting embeds
+        var local_embed_fields = [];
+
+        for (var x = 0; x < local_fields.length; x++) {
+          local_embed_fields.push(local_fields[x]);
+
+          if (x != 0 || local_fields.length == 1)
+            if (x % 12 == 0 || x == local_fields.length - 1) {
+              var unit_category_embed = new Discord.MessageEmbed()
+                .setColor(settings.bot_colour)
+                .setDescription(local_unit_category_string.join("\n"));
+              var total_current_fields = 0;
+
+              for (var y = 0; y < local_embed_fields.length; y++) {
+                unit_category_embed.addFields(local_embed_fields[y]);
+                total_current_fields++;
+              }
+
+              //Regularise columns
+              var extra_columns = (total_current_fields == 4) ? 2 :
+                Math.round(
+                  (total_current_fields/3 - Math.floor(total_current_fields/3)
+                )*3) - 1;
+
+              if (total_current_fields % 3 != 0)
+                for (var y = 0; y < extra_columns; y++)
+                  unit_category_embed.addFields({ name: "-", value: config.localisation.break, inline: true });
+
+              //Clear local_embed_fields, then push embed
+              local_embed_fields = [];
+              all_embeds.push(unit_category_embed);
+              category_map.push(local_unit_category_name);
+              icon_map.push(local_unit_category_icon);
+            }
+        }
+      }
+    }
+
+    //Modify page counters
+    for (var i = 0; i < all_embeds.length; i++)
+      all_embeds[i].setTitle(`${icon_map[i]}${category_map[i]} (Page ${i + 1} of ${all_embeds.length}):`);
+
+    //Add select menu
+    if (!hide_select_menu) {
+      var select_menu = unique(category_map);
+
+      for (var i = 0; i < select_menu.length; i++)
+        select_menu_options.push({
+          label: select_menu[i],
+          value: getUnitCategory(select_menu[i], { return_key: true }),
+
+          options: {
+            name: select_menu[i]
+          },
+
+          effect: function (value, options) {
+            createPageMenu(game_obj.middle_embed, {
+              embed_pages: printUnitList(game_obj.user, true),
+              starting_page: category_map.indexOf(options.name),
+              user: game_obj.user
+            });
+          }
+        });
+
+      //Implement select menu
+      addSelectMenu(game_obj.header, {
+        id: `select_unit_category`,
+        options: select_menu_options,
+        placeholder: `⭭ Select a Unit Category ..`
+      });
     }
 
     //Return statement
-    return splitEmbed(unit_string, {
-      title: "[Back] | [Jump To Page] Unit List",
-      title_pages: true,
-      description: [
-        "",
-        `**[Craft]**`,
-        "",
-        config.localisation.divider,
-        ""
-      ],
-      fixed_width: true
-    });
+    return all_embeds;
   }
 }
