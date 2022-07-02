@@ -2131,7 +2131,7 @@ module.exports = {
             //[Research List]
             if (input == "research list") {
               createPageMenu(game_obj.middle_embed, {
-                embed_pages: printResearchList(actual_id),
+                embed_pages: printResearchList(user_id),
                 user: game_obj.user
               });
               game_obj.page = "research_list";
@@ -2221,7 +2221,7 @@ module.exports = {
             //[Research List]; [Research (Tech)]
             if (input == "research list") {
               createPageMenu(game_obj.middle_embed, {
-                embed_pages: printResearchList(actual_id),
+                embed_pages: printResearchList(user_id),
                 user: game_obj.user
               });
               game_obj.page = "research_list";
@@ -2255,7 +2255,7 @@ module.exports = {
               //[Research Possibilities]; [Research (Tech)]
               if (input == "research possibilities" || input == "research list") {
                 createPageMenu(game_obj.middle_embed, {
-                  embed_pages: printResearchList(actual_id),
+                  embed_pages: printResearchList(user_id),
                   user: game_obj.user
                 });
                 game_obj.page = "research_list";

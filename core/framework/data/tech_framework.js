@@ -139,6 +139,58 @@ module.exports = {
     return (technology_exists[0]) ? technology_exists[1] : undefined;
   },
 
+  /*
+    Fetches the object/key of a tech category based on name provided.
+    options: {
+      return_key: true/false - Defaults to false. Whether or not to return a key instead of the main object
+    }
+  */
+  getTechnologyCategory: function (arg0_name, arg1_options) {
+    //Convert from parameters
+    var category_name = arg0_name.toLowerCase().trim().split(" ").join("_");
+    var options = (arg1_options) ? arg1_options : {};
+
+    //Declare local instance variables
+    var all_tech_categories = Object.keys(config.technology);
+    var category_exists = [false, ""]; //[category_exists, category_name/object];
+
+    //Iterate over all categories and their respective keys
+    {
+      //Key name, soft match
+      for (var i = 0; i < all_tech_categories.length; i++)
+        if (all_tech_categories[i].indexOf(category_name) != -1)
+          category_exists = [true, (!options.return_key) ? config.technology[all_tech_categories[i]] : all_tech_categories[i]];
+
+      //Key name, hard match
+      for (var i = 0; i < all_tech_categories.length; i++)
+        if (all_tech_categories[i] == category_name)
+          category_exists = [true, (!options.return_key) ? config.technology[all_tech_categories[i]] : all_tech_categories[i]];
+
+      if (!category_exists[0]) {
+        //Category name, soft match
+        for (var i = 0; i < all_tech_categories.length; i++) {
+          var local_category = config.technology[all_tech_categories[i]];
+
+          if (local_category.name)
+            if (local_category.name.toLowerCase().trim().indexOf(category_name) != -1)
+              category_exists = [true, (!options.return_key) ? config.technology[all_tech_categories[i]] : all_tech_categories[i]];
+        }
+
+        //Category name, hard match
+        for (var i = 0; i < all_tech_categories.length; i++) {
+          var local_category = config.technology[all_tech_categories[i]];
+
+          if (local_category.name)
+            if (local_category.name.toLowerCase().trim() == category_name)
+              category_exists = [true, (!options.return_key) ? config.technology[all_tech_categories[i]] : all_tech_categories[i]];
+        }
+      }
+    }
+
+    //Return statement
+    return (category_exists[0]) ? category_exists[1] : undefined;
+  },
+
   getTechnologyCost: function (arg0_name) {
     //Convert from parameters
     var tech_obj = module.exports.getTechnology(arg0_name);

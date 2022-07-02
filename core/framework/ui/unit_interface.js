@@ -99,6 +99,7 @@ module.exports = {
     var all_embeds = [];
     var category_map = [];
     var icon_map = [];
+    var select_menu_options = [];
     var unit_string = [];
 
     //Iterate over all valid units
@@ -239,10 +240,7 @@ module.exports = {
               }
 
               //Regularise columns
-              var extra_columns = (total_current_fields == 4) ? 2 :
-                Math.round(
-                  (total_current_fields/3 - Math.floor(total_current_fields/3)
-                )*3) - 1;
+              var extra_columns = Math.ceil(total_current_fields/3)*3 - total_current_fields;
 
               if (total_current_fields % 3 != 0)
                 for (var y = 0; y < extra_columns; y++)
@@ -288,7 +286,7 @@ module.exports = {
       addSelectMenu(game_obj.header, {
         id: `select_unit_category`,
         options: select_menu_options,
-        placeholder: `⭭ Select a Unit Category ..`
+        placeholder: `⭭ Select Unit Category ..`
       });
     }
 

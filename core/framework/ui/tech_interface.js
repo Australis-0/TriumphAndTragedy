@@ -89,6 +89,7 @@ module.exports = {
   /*
     printResearchList() - Prints out a research list for a given user based on available techs.
     options: {
+      hide_select_menu: true/false, - Whether or not to hide the select menu
       return_names: true/false - Whether or not to return the keys of the tech instead of a displayable embed.
     }
   */
@@ -108,7 +109,10 @@ module.exports = {
     var tech_array_dump = [];
     var processed_tech_categories = {};
 
-    //Initialise tech_string
+    //Initialise tech_string and embeds list as all_embeds
+    var all_embeds = [];
+    var category_map = [];
+    var select_menu_options = [];
     var tech_string = [];
 
     //Initialise processed_tech_categories
@@ -156,15 +160,15 @@ module.exports = {
     tech_string.push(`**[Back]** | **[Jump To Page]**`);
     tech_string.push("");
 
+    //Format header
+    tech_string.push(config.localisation.divider);
+    tech_string.push("");
+
     //Begin assembling the tech array by getting all valid tech categories
     for (var i = 0; i < all_tech_categories.length; i++)
       if (processed_tech_categories[all_tech_categories[i]].length > 0) {
         var local_tech_category = processed_tech_categories[all_tech_categories[i]];
-
-        //Format header
-        tech_string.push(`${config.icons.technology} **${parseString(all_tech_categories[i])}:**`);
-        tech_string.push(config.localisation.divider);
-        tech_string.push("");
+        var local_tech_category_string = [];
 
         for (var x = 0; x < local_tech_category.length; x++) {
           var local_tech = getTechnology(local_tech_category[x]);
@@ -182,23 +186,23 @@ module.exports = {
           if (researching_status == "")
             researching_status = `| **[Research ${(local_tech.name) ? local_tech.name : local_tech_category[x]}]**`;
 
-          //Push to tech_string
-          tech_string.push(`${gfx_icon}**${(local_tech.name) ? local_tech.name : local_tech_category[x]}**: ${researching_status}`);
+          //Push to local_tech_category_string
+          local_tech_category_string.push(`${gfx_icon}**${(local_tech.name) ? local_tech.name : local_tech_category[x]}**: ${researching_status}`);
 
           if (local_tech.description)
-            tech_string.push(`\n_${local_tech.description}_\n`);
+            local_tech_category_string.push(`\n_${local_tech.description}_\n`);
 
-          tech_string.push(`- **Cost:** ${config.icons.knowledge} ${parseNumber(getTechnologyCost(local_tech_category[x]))}`);
-          tech_string.push(`- **Effects:**`);
+          local_tech_category_string.push(`- **Cost:** ${config.icons.knowledge} ${parseNumber(getTechnologyCost(local_tech_category[x]))}`);
+          local_tech_category_string.push(`- **Effects:**`);
 
           //Push modifiers, but only if the tech unlocks something first
           if (local_tech.unlocks) {
             var all_modifiers = Object.keys(local_tech.unlocks);
 
-            tech_string.push(parseModifiers(local_tech.unlocks, false, true));
+            local_tech_category_string.push(parseModifiers(local_tech.unlocks, false, true));
           } else {
             if (local_tech.custom_effect_description)
-              tech_string.push(`_${local_tech.custom_effect_description}_`);
+              local_tech_category_string.push(`_${local_tech.custom_effect_description}_`);
           }
 
           //Print what other technologies the current tech leads to
@@ -213,21 +217,59 @@ module.exports = {
           }
 
           if (leads_to_array.length > 0)
-            tech_string.push(`- **Leads to:** ${leads_to_array.join(", ")}`);
-
-          //Insert newline as margin so that all the techs aren't bunched up next to each other
-          tech_string.push("");
+            local_tech_category_string.push(`- **Leads to:** ${leads_to_array.join(", ")}`);
         }
+
+        var local_embeds = splitEmbed(local_tech_category_string, {
+          description: tech_string,
+          fixed_width: true
+        });
+
+        //Modify category_map
+        for (var x = 0; x < local_embeds.length; x++)
+          category_map.push(`${parseString(all_tech_categories[i])}`);
+
+        //Push to all_embeds
+        for (var x = 0; x < local_embeds.length; x++)
+          all_embeds.push(local_embeds[x]);
       }
 
+    //Modify titles for all_embeds
+    for (var i = 0; i < all_embeds.length; i++)
+      all_embeds[i].setTitle(`${category_map[i]} (Page ${i + 1} of ${all_embeds.length}):`);
+
+    //Add select menu
+    if (!options.return_names && !options.hide_select_menu) {
+      var select_menu = unique(category_map);
+
+      for (var i = 0; i < select_menu.length; i++)
+        select_menu_options.push({
+          label: select_menu[i],
+          value: getTechnologyCategory(select_menu[i], { return_key: true }),
+
+          options: {
+            name: select_menu[i]
+          },
+
+          effect: function (value, options) {
+            createPageMenu(game_obj.middle_embed, {
+              embed_pages: printResearchList(game_obj.user),
+              starting_page: category_map.indexOf(options.name),
+              user: game_obj.user
+            });
+          }
+        });
+
+      //Implement select menu
+      addSelectMenu(game_obj.header, {
+        id: `select_research_category`,
+        options: select_menu_options,
+        placeholder: `⭭ Select Research Category ..`
+      });
+    }
+
     //Return statement
-    return (!options.return_names) ?
-      splitEmbed(tech_string, {
-        title: "Available Technologies:",
-        title_pages: true,
-        fixed_width: true
-      }) :
-      tech_array_dump;
+    return (!options.return_names) ? all_embeds : tech_array_dump;
   },
 
   printResearchQueue: function (arg0_user) {
