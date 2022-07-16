@@ -122,7 +122,7 @@ module.exports = {
 
     economy_string.push(`${config.icons.money} Money: **${parseNumber(usr.money)}** (${config.icons.money} **${money_string}** per turn).`);
     economy_string.push("");
-    economy_string.push(`- **[Build]** | **[Craft]** | **[Inventory]**`);
+    economy_string.push(`- **[Build]** | **[Inventory]** | **[Train Units]** `);
     economy_string.push("");
 
     politics_string.push("");
