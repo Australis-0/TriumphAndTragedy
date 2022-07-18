@@ -165,6 +165,9 @@ module.exports = {
     var number = arg0_number;
     var options = (arg1_options) ? arg1_options : {};
 
+    if (options.base_one)
+      number--;
+
     //Return statement
     return `${(options.display_prefix) ? (
       (number > 1 && !options.base_zero) ||

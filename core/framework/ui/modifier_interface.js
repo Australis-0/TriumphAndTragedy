@@ -6,21 +6,27 @@ module.exports = {
 
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
-    var all_national_modifiers = Object.keys(usr.national_modifiers);
-    var all_modifiers = Object.keys(usr.modifiers);
-    var all_temporary_modifiers = Object.keys(usr.temporary_modifiers);
     var game_obj = getGameObject(user_id);
     var sorted_matrix = [];
     var usr = main.users[actual_id];
 
+    var all_national_modifiers = Object.keys(usr.national_modifiers);
+    var all_modifiers = Object.keys(usr.modifiers);
+    var all_temporary_modifiers = Object.keys(usr.temporary_modifiers);
+
     //Sort sorted_matrix
     for (var i = 0; i < all_modifiers.length; i++) {
+      var local_impact;
       var local_modifier = getModifier(all_modifiers[i]);
       var local_value = usr.modifiers[all_modifiers[i]];
 
-      var local_impact = local_value - returnSafeNumber(local_modifier.default_value);
+      local_impact = (local_modifier) ?
+         local_value - returnSafeNumber(local_modifier.default_value) :
+         local_value - 1;
 
-      sorted_matrix.push([(local_modifier.name) ? local_modifier.name : all_modifiers[i], all_modifiers[i], local_impact]);
+      (local_modifier) ?
+        sorted_matrix.push([(local_modifier.name) ? local_modifier.name : all_modifiers[i], all_modifiers[i], local_impact]) :
+        sorted_matrix.push([parseString(all_modifiers[i]), all_modifiers[i], local_impact]);
     }
 
     //Sort by alphabetical or by impact
@@ -71,9 +77,21 @@ module.exports = {
       var local_modifier = getModifier(all_modifiers[i]);
       var local_value = usr.modifiers[all_modifiers[i]];
 
-      if (returnSafeNumber(local_modifier.default_value) != local_value)
-        modifier_string.push(`${(local_modifier.icon) ? config.icons[local_modifier.icon] + " " : ""}${(local_modifier.name) ? local_modifier.name : all_modifiers[i]}: **${parseModifiers(local_value, true)}**`);
+      if (local_modifier)
+        if (returnSafeNumber(local_modifier.default_value) != local_value)
+          modifier_string.push(`${(local_modifier.icon) ? config.icons[local_modifier.icon] + " " : ""} ${parseModifiers({ [all_modifiers[i]]: local_value }, true, false, (local_value != 0))}`);
+        else
+          modifier_string.push(`${parseModifiers({ [all_modifiers[i]]: local_value }, true, false, (local_value != 0))}`);
     }
+
+    //Remove all rows with either **0** or **0%**
+    var remove_elements = [];
+
+    for (var i = 0; i < modifier_string.length; i++)
+      if (modifier_string[i].includes("**0**") || modifier_string[i].includes("**0%**"))
+        remove_elements.push(modifier_string[i]);
+    for (var i = 0; i < remove_elements.length; i++)
+      removeElement(modifier_string, remove_elements[i]);
 
     //Remove control panel if one exists
     removeControlPanel(game_obj.id);
@@ -93,9 +111,11 @@ module.exports = {
 
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
-    var all_temporary_modifiers = Object.keys(usr.temporary_modifiers);
     var game_obj = getGameObject(user_id);
     var sorted_matrix = [];
+    var usr = main.users[actual_id];
+
+    var all_temporary_modifiers = Object.keys(usr.temporary_modifiers);
 
     //Sort sorted_matrix
     for (var i = 0; i < all_temporary_modifiers.length; i++) {
@@ -105,7 +125,9 @@ module.exports = {
       var local_modifier = getModifier(local_object.type);
       var local_value = local_object.value;
 
-      sorted_matrix.push([(local_modifier.name) ? local_modifier.name : local_object.type, all_temporary_modifiers[i], local_duration, local_value]);
+      (local_modifier) ?
+        sorted_matrix.push([(local_modifier.name) ? local_modifier.name : local_object.type, all_temporary_modifiers[i], local_duration, local_value]) :
+        sorted_matrix.push([local_object.type, all_temporary_modifiers[i], local_duration, local_value]);
     }
 
     //Sort by alphabetical, chronological (none), duration, or impact

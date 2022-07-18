@@ -338,11 +338,12 @@ module.exports = {
   },
 
   //Parses modifiers to a string
-  parseModifiers: function (arg0_modifier_obj, arg1_exclude_bullets, arg2_base_zero) {
+  parseModifiers: function (arg0_modifier_obj, arg1_exclude_bullets, arg2_base_zero, arg3_base_one) {
     //Convert from parameters
     var modifier_obj = arg0_modifier_obj;
     var exclude_bullets = arg1_exclude_bullets;
     var base_zero = arg2_base_zero;
+    var base_one = arg3_base_one;
 
     //Declare local instance variables
     var all_modifier_keys = Object.keys(modifier_obj);
@@ -377,8 +378,13 @@ module.exports = {
 
       switch (local_modifier.type) {
         case "integer":
+          var prefix_displayed = true;
+
+          if (["political_capital"].includes(local_modifier.type))
+            prefix_displayed = false;
+
           //Parse modifier as integer
-          modifier_string.push(`${prefix}**${parseNumber(local_value[0], { display_prefix: true })}** ${local_modifier_name}`);
+          modifier_string.push(`${prefix}**${parseNumber(local_value[0], { display_prefix: prefix_displayed })}** ${local_modifier_name}`);
 
           break;
         case "percentage":
@@ -388,6 +394,10 @@ module.exports = {
             //Effect blocks
             case "enable_centralisation":
               modifier_string.push((local_value[0]) ? `Enables Centralisation` : `Disables Centralisation`);
+
+              break;
+            case "infamy_loss":
+              modifier_string.push(`${prefix}**${printPercentage(local_value[0], { display_prefix: true, base_zero: true })}** ${local_modifier_name}`);
 
               break;
             case "obsolete_building":
@@ -509,8 +519,8 @@ module.exports = {
             //Default parser
             default:
               (local_modifier.type == "percentage" || (local_value[0] > -1 && local_value[0] < 1)) ?
-                modifier_string.push(`${prefix}**${printPercentage(local_value[0], { display_prefix: true, base_zero: base_zero })}** ${local_modifier_name}`) :
-                modifier_string.push(`${prefix}**${parseNumber(local_value[0], { display_prefix: true, base_zero: base_zero })}** ${local_modifier_name}`);
+                modifier_string.push(`${prefix}**${printPercentage(local_value[0], { display_prefix: true, base_zero: base_zero, base_one: base_one })}** ${local_modifier_name}`) :
+                modifier_string.push(`${prefix}**${parseNumber(local_value[0], { display_prefix: true, base_zero: base_zero, base_one: base_one })}** ${local_modifier_name}`);
 
               break;
           }

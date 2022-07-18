@@ -1917,14 +1917,14 @@ module.exports = {
           //[Sort by Impact]
           if (["impact", "sort by impact"].includes(input))
             createPageMenu(game_obj.middle_embed, {
-              embed_pages: printModifiers(game_obj.user, "alphabetical"),
+              embed_pages: printModifiers(game_obj.user, "impact"),
               user: game_obj.user
             });
 
           //[Sort by Key]
           if (["key", "sort by key"].includes(input))
             createPageMenu(game_obj.middle_embed, {
-              embed_pages: printModifiers(game_obj.user, "alphabetical"),
+              embed_pages: printModifiers(game_obj.user, "key"),
               user: game_obj.user
             });
         }

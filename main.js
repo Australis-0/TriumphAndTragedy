@@ -93,6 +93,7 @@ FileManager.import("./framework/ui/government_interface");
 FileManager.import("./framework/ui/laws_interface");
 FileManager.import("./framework/ui/map_viewer");
 FileManager.import("./framework/ui/military_interface");
+FileManager.import("./framework/ui/modifier_interface");
 FileManager.import("./framework/ui/national_modifier_interface");
 FileManager.import("./framework/ui/page_handler");
 FileManager.import("./framework/ui/peace_treaty_interface");

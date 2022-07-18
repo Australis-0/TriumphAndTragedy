@@ -95,7 +95,8 @@ module.exports = {
       stats_string.push(`You currently have **${parseNumber(all_national_modifiers.length)}** National Modifier(s) active.`);
       stats_string.push(`- **[View National Modifiers]**`);
     }
-    stats_string.push(`- **[View Temporary Modifiers]**`);
+    if (Object.keys(usr.temporary_modifiers).length > 0)
+      stats_string.push(`- **[View Temporary Modifiers]**`);
     stats_string.push("");
     stats_string.push(config.localisation.divider);
     stats_string.push("");

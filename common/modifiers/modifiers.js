@@ -39,13 +39,18 @@ config.modifiers = {
     type: "percentage",
     default_value: 1
   },
+  colonial_power_cap: {
+    name: "Colonial Power Capacity",
+    type: "integer",
+    default_value: 50
+  },
   colonial_power_gain: {
     name: "Colonial Power Gain",
     type: "percentage",
     default_value: 1
   },
   colonist_travel_speed: {
-    name: "Colonist Travel Time",
+    name: "Colonist Travel Speed",
     type: "percentage",
     default_value: 1
   },
@@ -112,6 +117,11 @@ config.modifiers = {
     default_value: 1,
 
     minimum: 0.05
+  },
+  political_capital: {
+    name: "Political Capital",
+    type: "integer",
+    default_value: 0
   },
   political_capital_gain: {
     name: "Political Capital Gain",
@@ -192,6 +202,11 @@ config.modifiers = {
 
     minimum: 0
   },
+  civilian_actions: {
+    name: "Civilian Actions",
+    type: "percentage",
+    default_value: 0
+  },
   construction_speed: {
     name: "Construction Speed",
     type: "percentage",
@@ -219,7 +234,7 @@ config.modifiers = {
     minimum: 0,
     maximum: 1
   },
-  maximum_tax_rate: {
+  max_tax: {
     name: "Maximum Tax Rate",
     type: "percentage",
     default_value: 0,
@@ -303,7 +318,7 @@ config.modifiers = {
     default_value: 1
   },
   army_travel_speed: {
-    name: "Army Travel Time",
+    name: "Army Travel Speed",
     type: "percentage",
     default_value: 1
   },
