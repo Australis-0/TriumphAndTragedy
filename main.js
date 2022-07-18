@@ -245,6 +245,7 @@ global.client = new Discord.Client({ intents: [
   1, 4, 8, 16, 32, 64, 128, 512, 1024, 2048, 4096, 8192, 16384, 32767
 ] });
 global.backup_loaded = false;
+global.cache = {};
 global.ignore_channels = (settings.ignore_channels) ? settings.ignore_channels : [];
 global.interfaces = {};
 global.selection_effect_map = {};

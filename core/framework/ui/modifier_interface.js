@@ -2,7 +2,7 @@ module.exports = {
   printModifiers: function (arg0_user, arg1_sort_type) {
     //Convert from parameters
     var user_id = arg0_user;
-    var sort_type = arg1_sort_type;
+    var sort_type = (arg1_sort_type) ? arg1_sort_type : "key";
 
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
@@ -34,6 +34,9 @@ module.exports = {
 
     for (var i = 0; i < sorted_matrix.length; i++)
       all_modifiers.push(sorted_matrix[i][1]);
+
+    //Cache sort type
+    cache[game_obj.middle_embed.id] = sort_type
 
     //Format modifier_string
     var modifier_string = [];
@@ -89,7 +92,7 @@ module.exports = {
   printTemporaryModifiers: function (arg0_user, arg1_sort_type) {
     //Convert from parameters
     var user_id = arg0_user;
-    var sort_type = arg1_sort_type;
+    var sort_type = (arg1_sort_type) ? arg1_sort_type : "chronological";
 
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
@@ -109,6 +112,56 @@ module.exports = {
     }
 
     //Sort by alphabetical, chronological (none), duration, or impact
-    
+    if (sort_type == "alphabetical")
+      sorted_matrix.sort((a, b) => a[0].toUpperCase().localeCompare(b[0].toUpperCase()));
+    if (sort_type == "duration")
+      sorted_matrix.sort((a, b) => b[2] - a[2]);
+    if (sort_type == "impact")
+      sorted_matrix.sort((a, b) => b[3] - a[3]);
+
+    //Reorganise sorted_matrix
+    all_temporary_modifiers = [];
+
+    for (var i = 0; i < sorted_matrix.length; i++)
+      all_temporary_modifiers.push(sorted_matrix[i][1]);
+
+    //Cache sort type
+    cache[game_obj.middle_embed.id] = sort_type
+
+    //Format temporary_modifier_string
+    var temporary_modifier_string = [];
+
+    if (all_temporary_modifiers.length == 0) {
+      temporary_modifier_string.push(`_No temporary modifiers are currently active._`);
+      temporary_modifier_string.push("");
+      temporary_modifier_string.push(`Temporary Modifiers can be gained through **Alerts**, **Events**, and other game mechanics.`);
+    } else {
+      temporary_modifier_string.push(`Temporary Modifiers are flags that only affect a single modifier which expire after a set amount of turns.`);
+      temporary_modifier_string.push("");
+      temporary_modifier_string.push(`- **[Sort by Alphabetical]** | **[Sort by Chronological]** | **[Sort by Duration]** | **[Sort by Impact]**`);
+      temporary_modifier_string.push("");
+      temporary_modifier_string.push(config.localisation.divider);
+      temporary_modifier_string.push("");
+
+      //Iterate over all_temporary_modifiers and fetch proper names, parse localisation by base_zero
+      for (var i = 0; i < all_temporary_modifiers.length; i++) {
+        var local_object = usr.temporary_modifiers[all_temporary_modifiers[i]];
+
+        temporary_modifier_string.push(`${parseModifiers({ [local_object.type]: local_object.value }, false, true)} for **${parseNumber(local_object.duration)}** turn(s).`);
+      }
+    }
+
+    //Remove control panel if one exists
+    removeControlPanel(game_obj.id);
+
+    //Return embed
+    createPageMenu(game_obj.middle_embed, {
+      embed_pages: splitEmbed(temporary_modifier_string, {
+        title: `[Jump To Page] | Temporary Modifiers:`,
+        title_pages: true,
+        fixed_width: true
+      }),
+      user: game_obj.user
+    });
   }
 };
