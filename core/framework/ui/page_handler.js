@@ -239,12 +239,33 @@ module.exports = {
               game_obj.page = "ledger";
 
               break;
+            case "modifiers":
+              createPageMenu(game_obj.middle_embed, {
+                embed_pages: printModifiers(user_id),
+                user: game_obj.user
+              });
+              game_obj.page = "modifiers_list";
+
+              break;
+            case "national modifiers":
+              printNationalModifiers(user_id);
+              game_obj.page = "national_modifiers";
+
+              break;
             case "provinces":
               createPageMenu(game_obj.middle_embed, {
                 embed_pages: printProvinces(user_id),
                 user: game_obj.user
               });
               game_obj.page = "provinces_list";
+
+              break;
+            case "temporary modifiers":
+              createPageMenu(game_obj.middle_embed, {
+                embed_pages: printTemporaryModifiers(user_id),
+                user: game_obj.user
+              });
+              game_obj.page = "temporary_modifiers_list";
 
               break;
             case "unit list":
@@ -749,11 +770,6 @@ module.exports = {
             case "view customisation":
               printCustomisation(user_id);
               game_obj.page = "view_customisation";
-
-              break;
-            case "view national modifiers":
-              printNationalModifiers(user_id);
-              game_obj.page = "national_modifiers";
 
               break;
           }
@@ -1861,6 +1877,108 @@ module.exports = {
                 page: arg[0] - 1,
                 user: game_obj.user
               });
+            });
+        }
+      }
+
+      //Modifiers page handler
+      {
+        if (game_obj.page == "modifiers_list") {
+          //[Back]
+          if (input == "back") {
+            game_obj.page = "country_interface";
+            initialiseTopbar(user_id);
+            printStats(user_id);
+          }
+
+          //[Jump to Page]
+          if (input == "jump to page")
+            visualPrompt(game_obj.alert_embed, user_id, {
+              title: `Jump To Page:`,
+              prompts: [
+                [`Which page would you like to jump to?`, "number", { min: 1, max: printModifiers(game_obj.user).length }]
+              ]
+            },
+            function (arg) {
+              createPageMenu(game_obj.middle_embed, {
+                embed_pages: printModifiers(game_obj.user, cache[game_obj.middle_embed.id]),
+                page: arg[0] - 1,
+                user: game_obj.user
+              });
+            });
+
+          //[Sort by Alphabetical]
+          if (["alphabetical", "sort by alphabetical"].includes(input))
+            createPageMenu(game_obj.middle_embed, {
+              embed_pages: printModifiers(game_obj.user, "alphabetical"),
+              user: game_obj.user
+            });
+
+          //[Sort by Impact]
+          if (["impact", "sort by impact"].includes(input))
+            createPageMenu(game_obj.middle_embed, {
+              embed_pages: printModifiers(game_obj.user, "alphabetical"),
+              user: game_obj.user
+            });
+
+          //[Sort by Key]
+          if (["key", "sort by key"].includes(input))
+            createPageMenu(game_obj.middle_embed, {
+              embed_pages: printModifiers(game_obj.user, "alphabetical"),
+              user: game_obj.user
+            });
+        }
+
+        if (game_obj.page == "temporary_modifiers_list") {
+          //[Back]
+          if (input == "back") {
+            game_obj.page = "country_interface";
+            initialiseTopbar(user_id);
+            printStats(user_id);
+          }
+
+          //[Jump to Page]
+          if (input == "jump to page")
+            visualPrompt(game_obj.alert_embed, user_id, {
+              title: `Jump To Page:`,
+              prompts: [
+                [`Which page would you like to jump to?`, "number", { min: 1, max: printTemporaryModifiers(game_obj.user).length }]
+              ]
+            },
+            function (arg) {
+              createPageMenu(game_obj.middle_embed, {
+                embed_pages: printTemporaryModifiers(game_obj.user, cache[game_obj.middle_embed.id]),
+                page: arg[0] - 1,
+                user: game_obj.user
+              });
+            });
+
+          //[Sort by Alphabetical]
+          if (["alphabetical", "sort by alphabetical"].includes(input))
+            createPageMenu(game_obj.middle_embed, {
+              embed_pages: printTemporaryModifiers(game_obj.user, "alphabetical"),
+              user: game_obj.user
+            });
+
+          //[Sort by Chronological]
+          if (["chronological", "sort by chronological"].includes(input))
+            createPageMenu(game_obj.middle_embed, {
+              embed_pages: printTemporaryModifiers(game_obj.user, "chronological"),
+              user: game_obj.user
+            });
+
+          //[Sort by Duration]
+          if (["duration", "sort by duration"].includes(input))
+            createPageMenu(game_obj.middle_embed, {
+              embed_pages: printTemporaryModifiers(game_obj.user, "duration"),
+              user: game_obj.user
+            });
+
+          //[Sort by Impact]
+          if (["impact", "sort by impact"].includes(input))
+            createPageMenu(game_obj.middle_embed, {
+              embed_pages: printTemporaryModifiers(game_obj.user, "impact"),
+              user: game_obj.user
             });
         }
       }

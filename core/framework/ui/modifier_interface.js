@@ -36,7 +36,7 @@ module.exports = {
       all_modifiers.push(sorted_matrix[i][1]);
 
     //Cache sort type
-    cache[game_obj.middle_embed.id] = sort_type
+    cache[game_obj.middle_embed.id] = sort_type;
 
     //Format modifier_string
     var modifier_string = [];
@@ -78,14 +78,11 @@ module.exports = {
     //Remove control panel if one exists
     removeControlPanel(game_obj.id);
 
-    //Return embed
-    createPageMenu(game_obj.middle_embed, {
-      embed_pages: splitEmbed(modifier_string, {
-        title: `[Jump To Page] | Modifiers:`,
-        title_pages: true,
-        fixed_width: true
-      }),
-      user: game_obj.user
+    //Return statement
+    return splitEmbed(modifier_string, {
+      title: `[Back] | [Jump To Page] | Modifiers:`,
+      title_pages: true,
+      fixed_width: true
     });
   },
 
@@ -154,14 +151,11 @@ module.exports = {
     //Remove control panel if one exists
     removeControlPanel(game_obj.id);
 
-    //Return embed
-    createPageMenu(game_obj.middle_embed, {
-      embed_pages: splitEmbed(temporary_modifier_string, {
-        title: `[Jump To Page] | Temporary Modifiers:`,
-        title_pages: true,
-        fixed_width: true
-      }),
-      user: game_obj.user
+    //Return statement
+    return splitEmbed(temporary_modifier_string, {
+      title: `[Back] | [Jump To Page] | Temporary Modifiers:`,
+      title_pages: true,
+      fixed_width: true
     });
   }
 };
