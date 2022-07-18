@@ -13,7 +13,7 @@ module.exports = {
     var cb_list_string = [];
 
     //Format cb_list_string
-    cb_list_string.push(`Notice: 'Status Quo' includes war reparations.`);
+    cb_list_string.push(`**Notice:** 'Status Quo' includes war reparations.`);
     cb_list_string.push("");
 
     //Iterate over all CB's and print them out
@@ -41,6 +41,9 @@ module.exports = {
       cb_list_string.push(`- ${config.icons.infamy} Infamy: ${parseNumber(local_cb_infamy)}`);
       cb_list_string.push("");
     }
+
+    //Remove control panel
+    removeControlPanel(game_obj.id);
 
     //Return embed
     return splitEmbed(cb_list_string, {

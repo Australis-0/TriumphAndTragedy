@@ -1,4 +1,58 @@
 module.exports = {
+  printGlobalCommands: function (arg0_user) {
+    //Convert from parameters
+    var user_id = arg0_user;
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var game_obj = getGameObject(user_id);
+    var usr = main.users[actual_id];
+
+    //Format global_commands_string
+    var global_commands_string = [];
+
+    global_commands_string.push(`Global commands can help you get around faster! These commands apply on all pages and can be used by simply typing the corresponding command in Discord's message box.`);
+    global_commands_string.push("");
+    global_commands_string.push(`Here's a quick glossary:`)
+    global_commands_string.push("");
+    global_commands_string.push(config.localisation.divider);
+    global_commands_string.push("");
+    global_commands_string.push(`- **[Map/Country/Budget/Economy/Technology ..]** - Switch between tabs.`);
+    global_commands_string.push("");
+    global_commands_string.push(`- **[Build]** - Opens the build menu.`);
+    global_commands_string.push(`- **[Inventory]** - Opens your national stockpile.`);
+    global_commands_string.push(`- **[Recruit]** - Recruits units. Can also be accessed through **[Train Units]**.`);
+    global_commands_string.push(`- **[Set Tax]** - Adjusts your tax rate.`);
+    global_commands_string.push(`- **[Settle]** - Settles a set of provinces with your colonists.`);
+    global_commands_string.push("");
+    global_commands_string.push(`- **[View Armies]** - Shows a list of all your armies.`);
+    global_commands_string.push(`- **[View CB List]** - Opens a list of all potential CB's.`);
+    global_commands_string.push(`- **[View Cities]** - Shows a list of all cities under your control.`);
+    global_commands_string.push(`- **[View Cultures]** - Shows a list of all cultures in your nation.`);
+    global_commands_string.push(`- **[View Governments]** - Opens a list of all available governments.`)
+    global_commands_string.push(`- **[View Ledger]** - Opens a scoreboard of all nations on the map.`);
+    global_commands_string.push(`- **[View National Modifiers]** - View all your current **National Modifiers**.`);
+    global_commands_string.push(`- **[View Modifiers]** - View all your modifiers on the national level.`);
+    global_commands_string.push(`- **[View Provinces]** - Shows a list of all provinces under your control.`);
+    global_commands_string.push(`- **[View Temporary Modifiers]** - View all your active **Temporary Modifiers**.`);
+    global_commands_string.push(`- **[View Units]** - Opens a list of all units you can recruit.`);
+    global_commands_string.push("");
+    global_commands_string.push(`- **[View (Army/City/Province)]** - Quick jump to viewing an army/city/province under your control.`);
+
+    //Remove control panel if one exists
+    removeControlPanel(game_obj.id);
+
+    //Create embed and edit to message
+    const global_commands_embed = new Discord.MessageEmbed()
+      .setColor(settings.bot_colour)
+      .setTitle(`[Back] | **Global Commands:**`)
+      .setImage("https://cdn.discordapp.com/attachments/722997700391338046/736141424315203634/margin.png")
+      .setDescription(global_commands_string.join("\n"));
+
+    game_obj.main_embed = global_commands_embed;
+    game_obj.main_change = true;
+  },
+
   printStats: function (arg0_user) {
     //Convert from parameters
     var user_id = arg0_user;
@@ -87,6 +141,8 @@ module.exports = {
     stats_string.push("");
     stats_string.push(`${config.icons.prestige} Prestige: **${parseNumber(usr.prestige)}** (${(usr.modifiers.prestige_gain > 0) ? "+" : ""}${usr.modifiers.prestige_gain} per turn)`);
     stats_string.push(`${config.icons.provinces} Provinces: **${parseNumber(usr.provinces)}**`);
+    stats_string.push("");
+    stats_string.push(`- **[Global Commands]**`);
     stats_string.push("");
     stats_string.push(`- **[View Customisation]**`);
     stats_string.push(`- **[View Modifiers]**`);

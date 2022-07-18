@@ -62,7 +62,7 @@ module.exports = {
         }
 
         //[Craft]
-        if (["craft", "train units"].includes(input))
+        if (["craft", "recruit", "train", "train units"].includes(input))
           initialiseCraft(user_id);
 
         //[Inventory]
@@ -218,6 +218,7 @@ module.exports = {
 
               break;
             case "culture":
+            case "cultures":
               createPageMenu(game_obj.middle_embed, {
                 embed_pages: printCultures(user_id),
                 user: game_obj.user
@@ -239,17 +240,17 @@ module.exports = {
               game_obj.page = "ledger";
 
               break;
+            case "national modifiers":
+              printNationalModifiers(user_id);
+              game_obj.page = "national_modifiers";
+
+              break;
             case "modifiers":
               createPageMenu(game_obj.middle_embed, {
                 embed_pages: printModifiers(user_id),
                 user: game_obj.user
               });
               game_obj.page = "modifiers_list";
-
-              break;
-            case "national modifiers":
-              printNationalModifiers(user_id);
-              game_obj.page = "national_modifiers";
 
               break;
             case "provinces":
@@ -739,6 +740,11 @@ module.exports = {
               game_obj.page = "view_customisation";
 
               break;
+            case "global commands":
+              printGlobalCommands(user_id);
+              game_obj.page = "global_commands";
+
+              break;
             case "government list":
               createPageMenu(game_obj.middle_embed, {
                 embed_pages: printGovernmentList(actual_id),
@@ -793,6 +799,14 @@ module.exports = {
             var amount_to_quarry = parseInt(input.replace("quarry ", "").trim());
 
             mine(actual_id, amount_to_quarry, "quarry");
+          }
+        }
+
+        if (game_obj.page == "global_commands") {
+          //[Back]
+          if (input == "back") {
+            printStats(user_id);
+            game_obj.page = "country_interface";
           }
         }
 
