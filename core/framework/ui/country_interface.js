@@ -89,7 +89,7 @@ module.exports = {
     stats_string.push(`${config.icons.provinces} Provinces: **${parseNumber(usr.provinces)}**`);
     stats_string.push("");
     stats_string.push(`- **[View Customisation]**`);
-    if (all_national_modifiers > 0) {
+    if (all_national_modifiers.length > 0) {
       stats_string.push("");
       stats_string.push(`You currently have **${parseNumber(all_national_modifiers.length)}** National Modifier(s) active.`);
       stats_string.push(`**[View National Modifiers]**`);
