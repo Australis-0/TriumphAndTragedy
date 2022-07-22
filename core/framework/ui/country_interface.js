@@ -28,6 +28,7 @@ module.exports = {
     global_commands_string.push(`- **[View Armies]** - Shows a list of all your armies.`);
     global_commands_string.push(`- **[View CB List]** - Opens a list of all potential CB's.`);
     global_commands_string.push(`- **[View Cities]** - Shows a list of all cities under your control.`);
+    global_commands_string.push(`- **[View Constructions]** - Shows a list of all ongoing construction in your country.`);
     global_commands_string.push(`- **[View Cultures]** - Shows a list of all cultures in your nation.`);
     global_commands_string.push(`- **[View Governments]** - Opens a list of all available governments.`)
     global_commands_string.push(`- **[View Ledger]** - Opens a scoreboard of all nations on the map.`);

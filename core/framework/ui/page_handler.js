@@ -218,6 +218,14 @@ module.exports = {
               game_obj.page = "cities_list";
 
               break;
+            case "constructions":
+              createPageMenu(game_obj.middle_embed, {
+                embed_pages: printConstructions(actual_id),
+                user: game_obj.user
+              });
+              game_obj.page = "view_constructions";
+
+              break;
             case "culture":
             case "cultures":
               createPageMenu(game_obj.middle_embed, {

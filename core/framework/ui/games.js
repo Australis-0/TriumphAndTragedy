@@ -319,11 +319,18 @@ module.exports = {
           }
         }
 
-       //Clear all menus of type page_menu, visual_prompt
+       //Clear all menus of type page_menu, visual_prompt, dead games
        for (var i = 0; i < all_interfaces.length; i++)
          if (["page_menu", "visual_prompt"].includes(interfaces[all_interfaces[i]].type)) {
            delete interfaces[all_interfaces[i]];
            delete main.interfaces[all_interfaces[i]];
+         } else if (interfaces[all_interfaces[i]].type == "game") {
+           var local_ui = interfaces[all_interfaces[i]];
+
+           if (!local_ui.channel) {
+             delete interfaces[all_interfaces[i]];
+             delete main.interfaces[all_interfaces[i]];
+           }
          }
     } catch (e) {
       log.error(`reinitialiseGameEmbeds() ran into an error: ${e}.`);
