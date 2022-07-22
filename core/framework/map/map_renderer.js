@@ -427,7 +427,7 @@ module.exports = {
           //Iterate through all interfaces, checking for open maps and reloading their respective maps
           for (var i = 0; i < all_interfaces.length; i++) try {
             if (interfaces[all_interfaces[i]].type == "game")
-              if (["founding_map"].includes(interfaces[all_interfaces[i]].page)) {
+              if (["founding_map", "map"].includes(interfaces[all_interfaces[i]].page)) {
                 var map_obj = interfaces[all_interfaces[i]].map;
 
                 //Check to make sure mapmode is indeed compatible

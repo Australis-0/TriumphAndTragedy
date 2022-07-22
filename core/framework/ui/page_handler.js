@@ -44,6 +44,7 @@ module.exports = {
                   return true;
 
                   break;
+                case "view cities":
                 case "cities list":
                   createPageMenu(game_obj.middle_embed, {
                     embed_pages: printCities(game_obj.user),
