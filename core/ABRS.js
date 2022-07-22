@@ -46,6 +46,7 @@ module.exports = {
       try {
         global[`${map_name}_file`] = map_file;
         global[`${map_name}_parsed`] = HTML.parse(global[map_name].toString());
+        mapmodes.push(map_name);
       } catch (e) {
         log.error(`Could not parse map file ${map_file}: ${e}.`);
       }

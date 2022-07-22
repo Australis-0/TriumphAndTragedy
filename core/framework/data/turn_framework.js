@@ -140,6 +140,9 @@ module.exports = {
 
     //Map processing
     {
+      if (main.round_count == 1)
+        for (var i = 0; i < mapmodes.length; i++)
+          forceRender(mapmodes[i]);
       forceRender("supply");
     }
 

@@ -18,24 +18,25 @@ module.exports = {
       var local_province = main.provinces[all_provinces[i]];
 
       //Surround in try/catch in case element is nonexistent
-      try {
-        if (local_province.owner != local_province.controller) {
-          var local_key = `${local_province.owner}--${local_province.controller}`;
+      if (local_province.owner)
+        try {
+          if (local_province.owner != local_province.controller) {
+            var local_key = `${local_province.owner}--${local_province.controller}`;
 
-          if (!union_data[local_key])
-            union_data[local_key] = "";
+            if (!union_data[local_key])
+              union_data[local_key] = "";
 
-          //Push d in path
-          union_data[local_key] += ` ${atlas_parsed.querySelector("#" + all_provinces[i]).getAttribute("d")}`;
-          union_data[local_province.owner] += ` ${atlas_parsed.querySelector("#" + all_provinces[i]).getAttribute("d")}`;
-        } else if (local_province.owner == local_province.controller) {
-          //Push d in path
-          union_data[local_province.owner] += ` ${atlas_parsed.querySelector("#" + all_provinces[i]).getAttribute("d")}`;
+            //Push d in path
+            union_data[local_key] += ` ${atlas_parsed.querySelector("#" + all_provinces[i]).getAttribute("d")}`;
+            union_data[local_province.owner] += ` ${atlas_parsed.querySelector("#" + all_provinces[i]).getAttribute("d")}`;
+          } else if (local_province.owner == local_province.controller) {
+            //Push d in path
+            union_data[local_province.owner] += ` ${atlas_parsed.querySelector("#" + all_provinces[i]).getAttribute("d")}`;
+          }
+        } catch (e) {
+          console.log(e);
+          log.warn(`Attempted Province ID: #${all_provinces[i]}`);
         }
-      } catch (e) {
-        console.log(e);
-        log.warn(`Attempted Province ID: #${all_provinces[i]}`);
-      }
     }
 
     //Set styling to invisible

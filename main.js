@@ -250,6 +250,7 @@ global.backup_loaded = false;
 global.cache = {};
 global.ignore_channels = (settings.ignore_channels) ? settings.ignore_channels : [];
 global.interfaces = {};
+global.mapmodes = [];
 global.selection_effect_map = {};
 global.visual_prompts = {};
 
