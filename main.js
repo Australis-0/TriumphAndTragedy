@@ -9,6 +9,7 @@ global.fs = require("fs");
 global.HTML = require("node-html-parser");
 global.opus = require("opusscript");
 global.path = require("path");
+global.sharp = require("sharp");
 global.SVG = require("convert-svg-to-png");
 global.voice = require("@discordjs/voice");
 
@@ -331,7 +332,7 @@ client.on("messageCreate", async (message) => {
         if (game_obj.channel == message.channel.id) {
           setTimeout(function(){
             message.delete();
-          }, 500);
+          }, 1000);
           commandHandler(getGame(user_id), arg.join(" "));
 
           //Check if game is still active

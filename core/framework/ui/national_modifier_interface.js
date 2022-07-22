@@ -20,7 +20,7 @@ module.exports = {
   printNationalModifiers: function (arg0_user, arg1_page) {
     //Convert from parameters
     var user_id = arg0_user;
-    var page = (arg1_page) ? Math.ceil(parseInt(arg1_page)) - 1 : arg1_page;
+    var page = (arg1_page) ? Math.ceil(parseInt(arg1_page)) - 1 : 0;
 
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
@@ -52,6 +52,9 @@ module.exports = {
         all_embeds.push(spirit_embed);
       }
     } else {
+      national_modifiers_string.push("");
+      national_modifiers_string.push(config.localisation.divider);
+      national_modifiers_string.push("");
       national_modifiers_string.push(`You currently have no active **National Modifiers**! National Modifiers can affect other modifiers in your country until said modifiers are removed, and can be caused by events and player actions.`);
     }
 
@@ -60,9 +63,11 @@ module.exports = {
       .setTitle(`[Back] | [View National Modifier] | National Modifiers - Table of Contents:`)
       .setDescription(national_modifiers_string.join("\n"));
 
+    all_embeds.unshift(national_modifiers_embed);
+
     //Create page menu for user
     createPageMenu(game_obj.middle_embed, {
-      embed_pages: all_embeds.unshift(national_modifiers_embed),
+      embed_pages: all_embeds,
       page: page,
       user: user_id
     });

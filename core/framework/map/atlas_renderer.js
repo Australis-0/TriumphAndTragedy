@@ -133,8 +133,5 @@ module.exports = {
           atlas_parsed.querySelector("svg g").insertAdjacentHTML("beforeend", local_element_stroke);
         }
       } catch {}
-
-    //Cache SVG
-    convertSVG("atlas");
   }
 };

@@ -41,6 +41,7 @@
     "node-html-parser": "^5.3.3",
     "opusscript": "^0.0.8",
     "path": "^0.12.7",
+    "sharp": "^0.30.7",
     "underscore": "^1.13.2"
   }
 }
