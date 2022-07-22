@@ -9,7 +9,6 @@ global.fs = require("fs");
 global.HTML = require("node-html-parser");
 global.opus = require("opusscript");
 global.path = require("path");
-global.sharp = require("sharp");
 global.SVG = require("convert-svg-to-png");
 global.voice = require("@discordjs/voice");
 
