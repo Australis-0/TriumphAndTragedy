@@ -25,8 +25,8 @@ module.exports = {
           }
       }
 
-      if (highest_cost > 0)
-        researchUpTo(user_id, local_value);
+      if (highest_cost > returnSafeNumber(config.defines.common.research_to))
+        researchUpTo(user_id, highest_cost);
     }
 
     //Loop over all keys in starting kit and parse them
