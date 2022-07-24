@@ -250,6 +250,7 @@ config.units.infantry = {
   },
   matchlock_infantry: {
     name: "Matchlock Infantry",
+    singular: "Matchlock Infantryman",
 
     attack: 6,
     defence: 2,
@@ -272,6 +273,7 @@ config.units.infantry = {
   },
   wheellock_infantry: {
     name: "Wheellock Infantry",
+    name: "Wheellock Infantryman",
 
     attack: 6,
     defence: 3,
@@ -294,6 +296,7 @@ config.units.infantry = {
   },
   flintlock_infantry: {
     name: "Flintlock Infantry",
+    singular: "Flintlock Infantryman",
 
     attack: 10,
     defence: 2,
@@ -339,6 +342,7 @@ config.units.infantry = {
   },
   line_infantry: {
     name: "Line Infantry",
+    singular: "Line Infantryman",
 
     attack: 15,
     defence: 4,
@@ -386,6 +390,7 @@ config.units.infantry = {
   },
   napoleonic_infantry: {
     name: "Napoleonic Infantry",
+    singular: "Napoleonic Infantryman",
 
     attack: 10,
     defence: 3,
@@ -398,6 +403,30 @@ config.units.infantry = {
       iron: 1,
       ammunition: 5,
       food: 2,
+      money: 1000,
+
+      ground_units_cp: 5
+    },
+    manpower_cost: {
+      soldiers: 10000
+    },
+    quantity: 10000
+  },
+  light_infantry: {
+    name: "Light Infantry",
+    singular: "Light Infantryman",
+
+    attack: 5,
+    defence: 1,
+    manoeuvre: 5,
+    initiative: 6,
+
+    cost: {
+      lumber: 3,
+      uniforms: 5,
+      iron: 1,
+      ammunition: 3,
+      food: 1,
       money: 1000,
 
       ground_units_cp: 5

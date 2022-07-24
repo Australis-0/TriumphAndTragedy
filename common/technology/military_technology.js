@@ -652,7 +652,7 @@ config.technology.military_technology = {
     }
   },
   colonial_garrisons: {
-    name: "Colonial garrisons",
+    name: "Colonial Garrisons",
     icon: "old_map",
     description: "By relying on colonial and indigenous manpower to defend our outposts, we can lessen the burden and army upkeep of ourselves, and save our manpower for our own purposes.",
     prerequisite_techs: ["indigenous_troops"],

@@ -187,6 +187,7 @@ module.exports = {
             researching_status = `| **[Research ${(local_tech.name) ? local_tech.name : local_tech_category[x]}]**`;
 
           //Push to local_tech_category_string
+          local_tech_category_string.push("");
           local_tech_category_string.push(`${gfx_icon}**${(local_tech.name) ? local_tech.name : local_tech_category[x]}**: ${researching_status}`);
 
           if (local_tech.description)
