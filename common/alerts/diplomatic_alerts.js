@@ -32,8 +32,6 @@ config.alerts.diplomacy = {
         "**+25** Relations with **{FROM.name}**."
       ],
       effect: function (options) {
-        console.log(options);
-
         addTemporaryModifier(options.TO, {
           type: "stability_modifier",
           value: 0.10,
@@ -69,10 +67,9 @@ config.alerts.diplomacy = {
           target: options.FROM,
           value: 20
         });
-        createNonAggressionPact({
-          target: options.FROM,
+        createNonAggressionPact(options.TO, options.FROM, {
           duration: 10
-        })
+        });
       }
     },
     btn_decline_non_aggression: {

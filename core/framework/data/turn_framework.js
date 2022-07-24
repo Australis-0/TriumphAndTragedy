@@ -379,6 +379,9 @@ module.exports = {
         usr.modifiers.production_efficiency -= returnSafeNumber(usr.infamy_production_efficiency);
         usr.modifiers.rgo_throughput -= returnSafeNumber(usr.infamy_rgo_throughput);
 
+        //Used diplomatic slots
+        usr.diplomacy.used_diplomatic_slots = getUsedDiplomaticSlots(actual_id);
+
         //War exhaustion
         if (all_enemies.length == 0 && !usr.blockaded.is_blockaded && !usr.mobilisation.is_mobilised)
           usr.modifiers.war_exhaustion -= config.defines.combat.war_exhaustion_tickdown_rate;
@@ -646,34 +649,35 @@ module.exports = {
           var local_relation = usr.diplomacy.relations[all_relations[i]];
 
           //Check if improving_to value exists
-          if (local_relation.improving_to) {
-            var relation_change = (local_relation.improving_to - local_relation.value)/local_relation.duration;
+          if (local_relation.improving_to)
+            if (local_relation.improving_to < local_relation.value) {
+              var relation_change = (local_relation.improving_to - local_relation.value)/local_relation.duration;
 
-            //Set new relation value
-            local_relation.value += relation_change;
+              //Set new relation value
+              local_relation.value += relation_change;
 
-            //Cap off at whatever relation_change was, negative/positive
-            //Negative handler
-            if (
-              (relation_change < 0 && local_relation.value < local_relation.improving_to) ||
-              (relation_change > 0 && local_relation.value > local_relation.improving_to)
-            )
-              local_relation.value = local_relation.improving_to;
+              //Cap off at whatever relation_change was, negative/positive
+              //Negative handler
+              if (
+                (relation_change < 0 && local_relation.value < local_relation.improving_to) ||
+                (relation_change > 0 && local_relation.value > local_relation.improving_to)
+              )
+                local_relation.value = local_relation.improving_to;
 
-            //Check if the current value is equal to the improved relation
-            if (local_relation.value == local_relation.improving_to) {
-              //Set status to stagnant
-              local_relation.status = "stagnant";
+              //Check if the current value is equal to the improved relation
+              if (local_relation.value >= local_relation.improving_to) {
+                //Set status to stagnant
+                local_relation.status = "stagnant";
 
-              //If so, delete the keys
-              delete local_relation.improving_to;
-              delete local_relation.duration;
+                //If so, delete the keys
+                delete local_relation.improving_to;
+                delete local_relation.duration;
+              }
+
+              //Cap it out at -100 and +100
+              local_relation.value = Math.max(local_relation.value, -100);
+              local_relation.value = Math.min(local_relation.value, 100);
             }
-
-            //Cap it out at -100 and +100
-            local_relation.value = Math.max(local_relation.value, -100);
-            local_relation.value = Math.min(local_relation.value, 100);
-          }
         }
 
         //Non-aggression pacts

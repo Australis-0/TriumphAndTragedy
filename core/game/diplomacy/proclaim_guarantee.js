@@ -53,7 +53,7 @@ module.exports = {
                   printError(game_obj.id, `You can't guarantee the independence of other nations as a vassal yourself!`);
                 }
               } else {
-                printError(game_obj.id, `You are already using your current maximum amount of diplomatic slots! (${config.icons.bureaucrats} **${parseNumber(usr.diplomacy.used_diplomatic_slots)}**/${parseNumber(usr.modifiers.diplomatic_slots)})!\n\nTry cancelling some sort of diplomatic relation first to gain back your slots.`);
+                printError(game_obj.id, `You are already using your current maximum amount of diplomatic slots! (${config.icons.faculty} **${parseNumber(usr.diplomacy.used_diplomatic_slots)}**/${parseNumber(usr.modifiers.diplomatic_slots)})!\n\nTry cancelling some sort of diplomatic relations first to gain back your slots.`);
               }
             } else {
               printError(game_obj.id, `You can't guarantee the independence of a rival country! Unrival them first.`);

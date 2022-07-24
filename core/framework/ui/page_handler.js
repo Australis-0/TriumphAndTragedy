@@ -270,6 +270,10 @@ module.exports = {
               game_obj.page = "provinces_list";
 
               break;
+            case "relations":
+              initialiseViewDiplomacy(user_id);
+
+              break;
             case "temporary modifiers":
               createPageMenu(game_obj.middle_embed, {
                 embed_pages: printTemporaryModifiers(user_id),
@@ -958,9 +962,7 @@ module.exports = {
             }
 
           //[View Relations]
-          if (input == "view relations") {
-            initialiseViewDiplomacy(user_id);
-          } else if (input.startsWith("view relations ")) {
+          if (input.startsWith("view relations ")) {
             var ot_user_id = returnMention(game_obj.page.replace("view relations ", ""));
 
             viewDiplomacy(user_id, ot_user_id);

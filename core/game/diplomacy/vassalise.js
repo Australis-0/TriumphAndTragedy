@@ -32,7 +32,7 @@ module.exports = {
               //Print user feedback
               printAlert(game_obj.id, `${config.icons.checkmark} We have sent **${ot_user.name}** a request for them to become our vassal.`);
             } else {
-              printError(game_obj.id, `You are already using your current maximum amount of diplomatic slots! (${config.icons.bureaucrats} **${parseNumber(usr.diplomacy.used_diplomatic_slots)}**/${parseNumber(usr.modifiers.diplomatic_slots)})!\n\nTry cancelling some sort of diplomatic relation first to gain back your slots.`);
+              printError(game_obj.id, `You are already using your current maximum amount of diplomatic slots! (${config.icons.faculty} **${parseNumber(usr.diplomacy.used_diplomatic_slots)}**/${parseNumber(usr.modifiers.diplomatic_slots)})!\n\nTry cancelling some sort of diplomatic relations first to gain back your slots.`);
             }
           } else {
             printError(game_obj.id, `You don't have enough Political Capital to request the vassalisation of another country! You need ${config.icons.political_capital} **${parseNumber(config.defines.diplomacy.vassalise_cost - usr.modifiers.political_capital)}** more Political Capital in order to send this request to **${ot_user.name}**.`);

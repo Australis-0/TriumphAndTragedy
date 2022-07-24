@@ -88,10 +88,7 @@ module.exports = {
         id: actual_ot_user_id,
         duration: duration
       };
-    }
-
-    //Extend non-aggression pact if it does unless it is already infinite
-    if (usr.diplomacy.non_aggression_pacts[actual_ot_user_id]) {
+    } else { //Extend non-aggression pact if it does unless it is already infinite
       var non_aggression_pact = usr.diplomacy.non_aggression_pacts[actual_ot_user_id];
 
       if (non_aggression_pact.duration != -1) {
@@ -476,6 +473,42 @@ module.exports = {
 
     //Return statement
     return final_sorted_user_array;
+  },
+
+  getUsedDiplomaticSlots: function (arg0_user) {
+    //Convert from parameters
+    var user_id = arg0_user;
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var used_diplomatic_slots = 0;
+    var usr = main.users[actual_id];
+
+    var all_allies = Object.keys(usr.diplomacy.allies);
+    var all_guarantees = Object.keys(usr.diplomacy.guarantees);
+    var all_military_accesses = Object.keys(usr.diplomacy.military_access);
+    var all_non_aggression_pacts = Object.keys(usr.diplomacy.non_aggression_pacts);
+    var all_vassals = Object.keys(usr.diplomacy.vassals);
+
+    //Check all diplomatic relations
+    for (var i = 0; i < all_allies.length; i++)
+      if (hasAlliance(actual_id, all_allies[i]))
+        used_diplomatic_slots++;
+    for (var i = 0; i < all_guarantees.length; i++)
+      if (hasGuarantee(actual_id, all_guarantees[i]))
+        used_diplomatic_slots++;
+    for (var i = 0; i < all_military_accesses.length; i++)
+      if (hasMilitaryAccess(actual_id, all_military_accesses[i]))
+        used_diplomatic_slots++;
+    for (var i = 0; i < all_non_aggression_pacts.length; i++)
+      if (hasNonAggressionPact(actual_id, all_non_aggression_pacts[i]))
+        used_diplomatic_slots++;
+    for (var i = 0; i < all_vassals.length; i++)
+      if (usr.diplomacy.vassals[all_vassals[i]].overlord == actual_id)
+        used_diplomatic_slots++;
+
+    //Return statement
+    return used_diplomatic_slots;
   },
 
   hasAlliance: function (arg0_user, arg1_user) {

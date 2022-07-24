@@ -337,20 +337,20 @@ module.exports = {
 
       //Set current status string for both current_relations_string and ot_user_relations_string
       if (current_user_relations[1].status == "increasing") {
-        current_relations_string = `(Improving to ${parseNumber(current_user_relations[1].improving_to, { display_prefix: true })} in ${parseNumber(current_user_relations[1].duration)} turn(s)).`;
+        current_relations_string = `(Improving to **${parseNumber(current_user_relations[1].improving_to, { display_prefix: true })}** in **${parseNumber(current_user_relations[1].duration)}** turn(s)).`;
       } else if (current_user_relations[1].status == "decreasing") {
-        current_relations_string = `(Decreasing to ${parseNumber(current_user_relations[1].improving_to, { display_prefix: true })} in ${parseNumber(current_user_relations[1].duration)} turn(s)).`;
+        current_relations_string = `(Decreasing to **${parseNumber(current_user_relations[1].improving_to, { display_prefix: true })}** in **${parseNumber(current_user_relations[1].duration)}** turn(s)).`;
       }
 
       if (current_ot_user_relations[1].status == "increasing") {
-        ot_user_relations_string = `(Improving to ${parseNumber(current_ot_user_relations[1].improving_to, { display_prefix: true })} in ${parseNumber(current_ot_user_relations[1].duration)} turn(s)).`;
+        ot_user_relations_string = `(Improving to **${parseNumber(current_ot_user_relations[1].improving_to, { display_prefix: true })}** in **${parseNumber(current_ot_user_relations[1].duration)}** turn(s)).`;
       } else if (current_ot_user_relations[1].status == "decreasing") {
-        ot_user_relations_string = `(Decreasing to ${parseNumber(current_ot_user_relations[1].improving_to, { display_prefix: true })} in ${parseNumber(current_ot_user_relations[1].duration)} turn(s)).`;
+        ot_user_relations_string = `(Decreasing to **${parseNumber(current_ot_user_relations[1].improving_to, { display_prefix: true })}** in **${parseNumber(current_ot_user_relations[1].duration)}** turn(s)).`;
       }
 
       //Push relational status to diplomacy_view_string
       diplomacy_view_string.push(`Our relations with them: **${parseNumber(current_user_relations[0], { display_prefix: true })}** ${current_relations_string}`);
-      diplomacy_view_string.push(`Their relations with us: **${parseNumber(current_ot_user_relations[0], { display_prefix: true })}** ${current_relations_string}`);
+      diplomacy_view_string.push(`Their relations with us: **${parseNumber(current_ot_user_relations[0], { display_prefix: true })}** ${ot_user_relations_string}`);
 
       //Other info
       diplomacy_view_string.push("");
