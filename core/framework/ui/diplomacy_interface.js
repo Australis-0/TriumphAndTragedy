@@ -336,13 +336,13 @@ module.exports = {
       var ot_user_relations_string = "";
 
       //Set current status string for both current_relations_string and ot_user_relations_string
-      if (current_user_relations[1].status == "improving") {
+      if (current_user_relations[1].status == "increasing") {
         current_relations_string = `(Improving to ${parseNumber(current_user_relations[1].improving_to, { display_prefix: true })} in ${parseNumber(current_user_relations[1].duration)} turn(s)).`;
       } else if (current_user_relations[1].status == "decreasing") {
         current_relations_string = `(Decreasing to ${parseNumber(current_user_relations[1].improving_to, { display_prefix: true })} in ${parseNumber(current_user_relations[1].duration)} turn(s)).`;
       }
 
-      if (current_ot_user_relations[1].status == "improving") {
+      if (current_ot_user_relations[1].status == "increasing") {
         ot_user_relations_string = `(Improving to ${parseNumber(current_ot_user_relations[1].improving_to, { display_prefix: true })} in ${parseNumber(current_ot_user_relations[1].duration)} turn(s)).`;
       } else if (current_ot_user_relations[1].status == "decreasing") {
         ot_user_relations_string = `(Decreasing to ${parseNumber(current_ot_user_relations[1].improving_to, { display_prefix: true })} in ${parseNumber(current_ot_user_relations[1].duration)} turn(s)).`;

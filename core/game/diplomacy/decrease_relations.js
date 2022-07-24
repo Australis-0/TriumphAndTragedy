@@ -25,8 +25,8 @@ module.exports = {
               //Begin decreasing relations
               usr.modifiers.political_capital -= config.defines.diplomacy.decrease_relations_cost;
 
-              modifyRelations(actual_ot_user_id, {
-                target: actual_id,
+              modifyRelations(actual_id, {
+                target: actual_ot_user_id,
                 value: -50,
                 duration: 5
               });

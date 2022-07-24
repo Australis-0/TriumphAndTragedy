@@ -1060,7 +1060,7 @@ module.exports = {
             revokeMilitaryAccess(user_id, actual_ot_user_id);
 
           //[Sign Non-Aggression Pact]
-          if (input == "sign non aggression pact")
+          if (["sign non-aggression pact", "sign non aggression pact", "non-aggression pact", "non aggression pact"].includes(input))
             nonAggressionPact(user_id, actual_ot_user_id);
 
           //[View CBs]
