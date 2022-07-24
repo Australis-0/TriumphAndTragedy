@@ -644,6 +644,9 @@ module.exports = {
           value: relations_value,
           status: "stagnant"
         };
+
+        relations_obj.value = Math.min(100, relatins_obj.value);
+        relations_obj.value = Math.max(-100, relations_obj.value);
       } else {
         var relations_obj = usr.diplomacy.relations[actual_ot_user_id];
 
@@ -652,6 +655,9 @@ module.exports = {
           delete usr.diplomacy.relations[actual_ot_user_id];
         else
           relations_obj.value += relations_value;
+
+        relations_obj.value = Math.min(100, relatins_obj.value);
+        relations_obj.value = Math.max(-100, relations_obj.value);
       }
     } else {
       //Improve/decrease gradually over time if not instant
@@ -677,12 +683,18 @@ module.exports = {
             status: improving_type,
             duration: duration
           };
+
+          relations_obj.improving_to = Math.min(100, relatins_obj.improving_to);
+          relations_obj.improving_to = Math.max(-100, relations_obj.improving_to);
         } else {
           var relations_obj = usr.diplomacy.relations[actual_ot_user_id];
 
           relations_obj.improving_to += relations_value;
           relations_obj.status = improving_type;
           relations_obj.duration = duration;
+
+          relations_obj.improving_to = Math.min(100, relatins_obj.improving_to);
+          relations_obj.improving_to = Math.max(-100, relations_obj.improving_to);
         }
     }
   }
