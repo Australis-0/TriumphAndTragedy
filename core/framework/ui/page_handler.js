@@ -428,23 +428,24 @@ module.exports = {
             var button_obj = getButton(alert_obj.id, input);
 
             //Execute if button is found
-            if (button_obj)
+            if (button_obj) {
               if (button_obj.effect) {
                 button_obj.effect(alert_obj.options);
 
                 //Send user feedback
                 printAlert(game_obj.id, `${config.icons.checkmark} You have successfully resolved **${alert_obj.name}** by choosing **${button_obj.title}**.`);
-
-                //Delete alert key
-                usr.alerts.splice(local_alert_id, 1);
-
-                //Go back to the main alert screen after resolving
-                game_obj.page = "alerts";
-                createPageMenu(game_obj.middle_embed, {
-                  embed_pages: printAlerts(game_obj.user),
-                  user: game_obj.user
-                });
               }
+
+              //Delete alert key
+              usr.alerts.splice(local_alert_id, 1);
+
+              //Go back to the main alert screen after resolving
+              game_obj.page = "alerts";
+              createPageMenu(game_obj.middle_embed, {
+                embed_pages: printAlerts(game_obj.user),
+                user: game_obj.user
+              });
+            }
           } else {
             if (input == "OK") {
               //Send user feedback
@@ -1462,23 +1463,24 @@ module.exports = {
             var option_obj = getOption(event_obj.id, input);
 
             //Execute if option is found
-            if (option_obj)
+            if (option_obj) {
               if (option_obj.effect) {
                 option_obj.effect(event_obj.scopes);
 
                 //Send user feedback
                 printAlert(game_obj.id, `${config.icons.checkmark} You have successfully resolved **${event_obj.name}** by choosing **${option_obj.title}**.`);
-
-                //Delete event key
-                usr.events.splice(local_event_id, 1);
-
-                //Go back to the main event screen after resolving
-                game_obj.page = "events";
-                createPageMenu(game_obj.middle_embed, {
-                  embed_pages: printEvents(game_obj.user),
-                  user: game_obj.user
-                });
               }
+
+              //Delete event key
+              usr.events.splice(local_event_id, 1);
+
+              //Go back to the main event screen after resolving
+              game_obj.page = "events";
+              createPageMenu(game_obj.middle_embed, {
+                embed_pages: printEvents(game_obj.user),
+                user: game_obj.user
+              });
+            }
           } else {
             if (input == "OK") {
               //Send user feedback
