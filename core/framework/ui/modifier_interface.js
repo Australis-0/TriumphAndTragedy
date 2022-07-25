@@ -55,9 +55,9 @@ module.exports = {
 
     if (all_national_modifiers.length > 0 || all_temporary_modifiers.length > 0) {
       if (all_national_modifiers.length > 0)
-        modifier_string.push(`- **[View National Modifiers]`);
+        modifier_string.push(`- **[View National Modifiers]**`);
       if (all_temporary_modifiers.length > 0)
-        modifier_string.push(`- **[View Temporary Modifiers]`);
+        modifier_string.push(`- **[View Temporary Modifiers]**`);
 
       modifier_string.push("");
       modifier_string.push(config.localisation.divider);

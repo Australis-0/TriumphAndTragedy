@@ -161,7 +161,7 @@ module.exports = {
     stats_string.push(`__**Population:**__`);
     stats_string.push(config.localisation.divider);
     stats_string.push("");
-    stats_string.push(`${config.icons.development} Cities: (**${parseInt(cities.length)}**/**${parseInt(usr.city_cap)}**): ${name_string}${ending_string}`);
+    stats_string.push(`${config.icons.development} Cities: (**${parseInt(cities.length)}**/**${parseInt(getCitiesCap(actual_id))}**): ${name_string}${ending_string}`);
     stats_string.push(`${config.icons.population} Population: **${parseNumber(getPopulation(usr.id))}** (Requires ${config.icons.food} **${Math.ceil((usr.population/1000000)*config.defines.economy.food_required_per_million)}** food per turn)`);
 
     //Push all pops to stats menu if set to visible
