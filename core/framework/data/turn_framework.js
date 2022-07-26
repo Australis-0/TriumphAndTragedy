@@ -677,6 +677,8 @@ module.exports = {
               //Cap it out at -100 and +100
               local_relation.value = Math.max(local_relation.value, -100);
               local_relation.value = Math.min(local_relation.value, 100);
+              local_relation.improving_to = Math.max(local_relation.improving_to, -100);
+              local_relation.improving_to = Math.max(local_relation.improving_to, 100);
             }
         }
 
