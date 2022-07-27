@@ -139,149 +139,148 @@ module.exports = {
       .setImage("https://cdn.discordapp.com/attachments/722997700391338046/736141424315203634/margin.png");
 
     //Send out the embeds!
-    if (returnChannel(game_obj.channel).messages.cache.size == 0)
-      try {
-        //Initialise message objects
-        returnChannel(game_obj.channel).send(config.localisation.blank).then((message) => {
-          game_obj.header = message;
+    try {
+      //Initialise message objects
+      returnChannel(game_obj.channel).send(config.localisation.blank).then((message) => {
+        game_obj.header = message;
 
-          setInterval(function(){
-            if (game_obj.header_change) {
-              message.edit({ embeds: [game_obj.new_header] });
-              delete game_obj.header_change;
-            }
-          }, 100);
-        });
-
-        //Main embed displaying stats screen
-        returnChannel(game_obj.channel).send({ embeds: [middle_embed] }).then((message) => {
-          game_obj.collectors.push(message.id);
-          game_obj.middle_embed = message;
-
-          setInterval(function(){
-            if (game_obj.main_change) {
-              message.edit({ embeds: [game_obj.main_embed] });
-              message.reactions.removeAll().catch(error => log.error(`Failed to clear reactions: ${error}.`));
-              game_obj.main_change = false;
-            }
-          }, 100);
-        });
-        //Extra control panel elements
-        returnChannel(game_obj.channel).send("https://cdn.discordapp.com/attachments/722997700391338046/736141424315203634/margin.png").then((message) => {
-          game_obj.collectors.push(message.id);
-          game_obj.middle_control_panel = message;
-        });
-        returnChannel(game_obj.channel).send("https://cdn.discordapp.com/attachments/722997700391338046/736141424315203634/margin.png").then((message) => {
-          game_obj.collectors.push(message.id);
-          game_obj.bottom_control_panel = message;
-        });
-
-        //Bottom embed displaying alerts
-        returnChannel(game_obj.channel).send({ embeds: [bottom_embed] }).then((message) => {
-          game_obj.alert_embed = message;
-
-          var alert_loop = setInterval(function(){
-            var message_is_prompt = false;
-            var all_visual_prompts = Object.keys(interfaces);
-
-            //Check if message is subject to a current command prompt
-            for (var i = 0; i < all_visual_prompts.length; i++) {
-              var local_prompt = interfaces[all_visual_prompts[i]];
-              if (local_prompt.type == "visual_prompt")
-                if (local_prompt.message.id == message.id)
-                  message_is_prompt = true;
-            }
-
-            //Only edit the message if the message is not a prompt.
-            if (!message_is_prompt) {
-              if (game_obj.alert_change) {
-                if (game_obj.alert_array.length == 0) {
-                  const new_alert_embed = new Discord.MessageEmbed()
-                    .setColor(settings.bot_colour)
-                    .setDescription("No new alerts.")
-                    .setImage("https://cdn.discordapp.com/attachments/722997700391338046/736141424315203634/margin.png");
-
-                  message.edit({ embeds: [new_alert_embed] });
-                } else {
-                  const new_alert_embed = new Discord.MessageEmbed()
-                    .setColor(settings.bot_colour)
-                    .setDescription(game_obj.alert_array.join("\n"))
-                    .setImage("https://cdn.discordapp.com/attachments/722997700391338046/736141424315203634/margin.png");
-
-                  message.edit({ embeds: [new_alert_embed] });
-                }
-                game_obj.alert_change = false;
-              }
-            }
-          }, 100);
-
-          //Date processing
-          var date_loop = setInterval(function(){
-            var current_date = new Date().getTime();
-            var time_remaining = settings.turn_timer*1000 - (current_date - main.last_turn);
-
-            const topbar_embed = new Discord.MessageEmbed()
-              .setColor(settings.bot_colour)
-              .setTitle(`${config.icons.time} **${getDate(main.date)}** - Round ${parseNumber(main.round_count)}`)
-              .setDescription(
-                (main.season_started) ?
-                  `- Each round is approximately ${parseMilliseconds(settings.turn_timer*1000)}. ${parseMilliseconds(time_remaining)} remaining until the next turn.` :
-                  `This season has not yet started. Waiting on **${parseNumber(config.defines.common.starting_players - Object.keys(main.users).length)}** more player(s) for the game to start ..`
-              )
-              .setImage("https://cdn.discordapp.com/attachments/722997700391338046/736141424315203634/margin.png");
-
-            try {
-              game_obj.header.edit({ embeds: [topbar_embed] }).catch((error) => {
-                clearGame(game_id);
-                clearInterval(alert_loop);
-                clearInterval(date_loop);
-              });
-
-              if (game_obj.page == "founding_map")
-                (!main.global.user_map[game_obj.user]) ?
-                  initialiseFoundCountry(game_obj.user) :
-                  initialiseSettleStartingProvinces(game_obj.user);
-            } catch (e) {
-              console.log(e);
-            }
-          }, 10000);
-
-          //Begin processing page
-          if (!["country_interface", "map", "founding_map"].includes(game_obj.page))
-            game_obj.page = (main.global.user_map[game_obj.user]) ? "country_interface" : "founding_map";
-
-          if (main.global.user_map[game_obj.user])
-            if (main.users[main.global.user_map[game_obj.user]])
-              game_obj.page = "country_interface";
-
-          //Load up either the starting map viewer or country interface depending on the starting page
-          switch (game_obj.page) {
-            case "country_interface":
-              if (main.season_started) {
-                initialiseTopbar(game_obj.user);
-                printStats(game_obj.user);
-              } else {
-                createPageMenu(game_obj.middle_embed, {
-                  embed_pages: printQueue(game_obj.user),
-                  user: game_obj.user
-                });
-              }
-
-              break;
-            case "map":
-            case "founding_map":
-              //Initialise map viewer and found country dialogue prompt
-              initialiseMapViewer(game_id);
-              if (game_obj.page == "founding_map")
-                (!main.global.user_map[game_obj.user]) ?
-                  initialiseFoundCountry(game_obj.user) :
-                  initialiseSettleStartingProvinces(game_obj.user);
-              if (["map"].includes(game_obj.page)) initialiseTopbar(game_obj.user);
-
-              break;
+        setInterval(function(){
+          if (game_obj.header_change) {
+            message.edit({ embeds: [game_obj.new_header] });
+            delete game_obj.header_change;
           }
-        });
-      } catch {}
+        }, 100);
+      });
+
+      //Main embed displaying stats screen
+      returnChannel(game_obj.channel).send({ embeds: [middle_embed] }).then((message) => {
+        game_obj.collectors.push(message.id);
+        game_obj.middle_embed = message;
+
+        setInterval(function(){
+          if (game_obj.main_change) {
+            message.edit({ embeds: [game_obj.main_embed] });
+            message.reactions.removeAll().catch(error => log.error(`Failed to clear reactions: ${error}.`));
+            game_obj.main_change = false;
+          }
+        }, 100);
+      });
+      //Extra control panel elements
+      returnChannel(game_obj.channel).send("https://cdn.discordapp.com/attachments/722997700391338046/736141424315203634/margin.png").then((message) => {
+        game_obj.collectors.push(message.id);
+        game_obj.middle_control_panel = message;
+      });
+      returnChannel(game_obj.channel).send("https://cdn.discordapp.com/attachments/722997700391338046/736141424315203634/margin.png").then((message) => {
+        game_obj.collectors.push(message.id);
+        game_obj.bottom_control_panel = message;
+      });
+
+      //Bottom embed displaying alerts
+      returnChannel(game_obj.channel).send({ embeds: [bottom_embed] }).then((message) => {
+        game_obj.alert_embed = message;
+
+        var alert_loop = setInterval(function(){
+          var message_is_prompt = false;
+          var all_visual_prompts = Object.keys(interfaces);
+
+          //Check if message is subject to a current command prompt
+          for (var i = 0; i < all_visual_prompts.length; i++) {
+            var local_prompt = interfaces[all_visual_prompts[i]];
+            if (local_prompt.type == "visual_prompt")
+              if (local_prompt.message.id == message.id)
+                message_is_prompt = true;
+          }
+
+          //Only edit the message if the message is not a prompt.
+          if (!message_is_prompt) {
+            if (game_obj.alert_change) {
+              if (game_obj.alert_array.length == 0) {
+                const new_alert_embed = new Discord.MessageEmbed()
+                  .setColor(settings.bot_colour)
+                  .setDescription("No new alerts.")
+                  .setImage("https://cdn.discordapp.com/attachments/722997700391338046/736141424315203634/margin.png");
+
+                message.edit({ embeds: [new_alert_embed] });
+              } else {
+                const new_alert_embed = new Discord.MessageEmbed()
+                  .setColor(settings.bot_colour)
+                  .setDescription(game_obj.alert_array.join("\n"))
+                  .setImage("https://cdn.discordapp.com/attachments/722997700391338046/736141424315203634/margin.png");
+
+                message.edit({ embeds: [new_alert_embed] });
+              }
+              game_obj.alert_change = false;
+            }
+          }
+        }, 100);
+
+        //Date processing
+        var date_loop = setInterval(function(){
+          var current_date = new Date().getTime();
+          var time_remaining = settings.turn_timer*1000 - (current_date - main.last_turn);
+
+          const topbar_embed = new Discord.MessageEmbed()
+            .setColor(settings.bot_colour)
+            .setTitle(`${config.icons.time} **${getDate(main.date)}** - Round ${parseNumber(main.round_count)}`)
+            .setDescription(
+              (main.season_started) ?
+                `- Each round is approximately ${parseMilliseconds(settings.turn_timer*1000)}. ${parseMilliseconds(time_remaining)} remaining until the next turn.` :
+                `This season has not yet started. Waiting on **${parseNumber(config.defines.common.starting_players - Object.keys(main.users).length)}** more player(s) for the game to start ..`
+            )
+            .setImage("https://cdn.discordapp.com/attachments/722997700391338046/736141424315203634/margin.png");
+
+          try {
+            game_obj.header.edit({ embeds: [topbar_embed] }).catch((error) => {
+              clearGame(game_id);
+              clearInterval(alert_loop);
+              clearInterval(date_loop);
+            });
+
+            if (game_obj.page == "founding_map")
+              (!main.global.user_map[game_obj.user]) ?
+                initialiseFoundCountry(game_obj.user) :
+                initialiseSettleStartingProvinces(game_obj.user);
+          } catch (e) {
+            console.log(e);
+          }
+        }, 10000);
+
+        //Begin processing page
+        if (!["country_interface", "map", "founding_map"].includes(game_obj.page))
+          game_obj.page = (main.global.user_map[game_obj.user]) ? "country_interface" : "founding_map";
+
+        if (main.global.user_map[game_obj.user])
+          if (main.users[main.global.user_map[game_obj.user]])
+            game_obj.page = "country_interface";
+
+        //Load up either the starting map viewer or country interface depending on the starting page
+        switch (game_obj.page) {
+          case "country_interface":
+            if (main.season_started) {
+              initialiseTopbar(game_obj.user);
+              printStats(game_obj.user);
+            } else {
+              createPageMenu(game_obj.middle_embed, {
+                embed_pages: printQueue(game_obj.user),
+                user: game_obj.user
+              });
+            }
+
+            break;
+          case "map":
+          case "founding_map":
+            //Initialise map viewer and found country dialogue prompt
+            initialiseMapViewer(game_id);
+            if (game_obj.page == "founding_map")
+              (!main.global.user_map[game_obj.user]) ?
+                initialiseFoundCountry(game_obj.user) :
+                initialiseSettleStartingProvinces(game_obj.user);
+            if (["map"].includes(game_obj.page)) initialiseTopbar(game_obj.user);
+
+            break;
+        }
+      });
+    } catch {}
   },
 
   reinitialiseGameEmbeds: function () {
@@ -298,12 +297,20 @@ module.exports = {
 
           try {
             var reinitialisation_loop = setInterval(function(local_ui, local_interface){
+              //Set cache
+              cache[local_ui.channel] = local_interface;
+
               try {
-                var local_messages = returnChannel(local_ui.channel).messages.fetch({ limit: 10 }).then((messages) => {
-                  messages.forEach(msg => msg.delete());
+                var local_messages = returnChannel(local_ui.channel).messages.fetch({ limit: 100 }).then((messages) => {
+                  var all_messages = [...messages];
+                  var local_channel = JSON.parse(JSON.stringify(all_messages[0][1].channel.id));
+
+                  for (var x = 0; x < all_messages.length; x++)
+                    all_messages[x][1].delete(all_messages[x]);
+
+                  module.exports.initialiseGameEmbeds(cache[local_channel]);
                 });
 
-                module.exports.initialiseGameEmbeds(local_interface);
                 clearInterval(reinitialisation_loop);
               } catch (e) {
                 if (returnChannel(local_ui.channel)) {

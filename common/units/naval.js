@@ -62,7 +62,7 @@ config.units.naval = {
       iron: 3,
       lead: 3,
       food: 7,
-      food: 1500,
+      food: 15,
       money: 1500,
 
       naval_units_cp: 15
