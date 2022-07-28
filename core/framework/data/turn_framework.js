@@ -684,7 +684,7 @@ module.exports = {
 
         //Non-aggression pacts
         for (var i = 0; i < all_non_aggression_pacts.length; i++) {
-          var local_non_aggression_pact = usr.diplomacy.non_aggression_pacts[i];
+          var local_non_aggression_pact = usr.diplomacy.non_aggression_pacts[all_non_aggression_pacts[i]];
 
           //Decrement duration if greater than zero
           if (local_non_aggression_pact.duration > 0)
