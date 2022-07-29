@@ -2439,11 +2439,11 @@ module.exports = {
             }
 
             //[Cancel Auto Trade]
-            if (input == "cancel auto trade")
+            if (["cancel auto trade", "cancel auto-trade"].includes(input))
               initialiseCancelAutoTrade(user_id);
 
             //[Create Auto Trade]
-            if (input == "create auto trade")
+            if (["create auto trade", "create auto-trade"].includes(input))
               initialiseCreateAutoTrade(user_id);
 
             break;
@@ -2546,7 +2546,7 @@ module.exports = {
                 }
 
                 //[Manage Auto-Trades]
-                if (["auto-trades", "autotrades", "manage auto-trades", "manage autotrades"].includes(input)) {
+                if (["auto-trades", "autotrades", "manage auto-trades", "manage autotrades", "manage auto trades"].includes(input)) {
                   createPageMenu(game_obj.middle_embed, {
                     embed_pages: printAutoTrades(game_obj.user),
                     user: game_obj.user

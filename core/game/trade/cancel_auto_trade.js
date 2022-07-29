@@ -16,7 +16,7 @@ module.exports = {
       if (selected_auto_trade) {
         //Formatting variables
         var good_name = getGood(selected_auto_trade.good_type, { return_key: true });
-        var local_good_icon = (raw_good_name == "money") ?
+        var local_good_icon = (good_name == "money") ?
           config.icons.money + " " :
           (getGood(good_name)) ?
             config.icons[getGood(good_name).icon] + " " :
@@ -31,7 +31,7 @@ module.exports = {
         printAlert(game_obj.id, `You have cancelled the automatic shipment of ${local_good_icon}**${parseNumber(selected_auto_trade.amount)}** ${local_good_name} to **${main.users[selected_auto_trade.target].name}**.`);
 
         //Remove selected auto trade
-        delete selected_auto_trade;
+        delete usr.auto_trades[auto_trade_key];
 
         //Update auto trade UI if game_obj.page is still on auto_trades
         if (game_obj.page == "auto_trades")

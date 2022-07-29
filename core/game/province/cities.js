@@ -99,105 +99,110 @@ module.exports = {
     }
 
     var all_resource_shortages = Object.keys(resource_shortages);
-    if (all_resource_shortages.length == 0) {
-      var local_province = getProvince(province_id);
+    if (getCitiesCap(actual_id) - getCities(actual_id).length > 0) {
 
-      //Check if province is valid, province has to be owned
-      if (local_province.owner == actual_id && local_province.controller == actual_id) {
-        if (local_province.type == "rural") {
-          if (!city_name.toLowerCase().startsWith("province")) {
-            //Initialise city object, determine capital status first
-            //If user has no other cities, set it to their capital
+      if (all_resource_shortages.length == 0) {
+        var local_province = getProvince(province_id);
 
-            local_province.city_type = (getCities(actual_id).length == 0) ? "capital" : "city";
-            local_province.culture = getPrimaryCultures(actual_id)[0];
-            local_province.name = city_name;
-            local_province.type = "urban";
+        //Check if province is valid, province has to be owned
+        if (local_province.owner == actual_id && local_province.controller == actual_id) {
+          if (local_province.type == "rural") {
+            if (!city_name.toLowerCase().startsWith("province")) {
+              //Initialise city object, determine capital status first
+              //If user has no other cities, set it to their capital
 
-            var population_amount = (local_province.city_type == "capital") ?
-              randomNumber(250000, 1000000) :
-              randomNumber(250000, 800000);
+              local_province.city_type = (getCities(actual_id).length == 0) ? "capital" : "city";
+              local_province.culture = getPrimaryCultures(actual_id)[0];
+              local_province.name = city_name;
+              local_province.type = "urban";
 
-            //Generate city pop object
-            generatePops(province_id, {
-              type: "all",
-              amount: population_amount
-            });
+              var population_amount = (local_province.city_type == "capital") ?
+                randomNumber(250000, 1000000) :
+                randomNumber(250000, 800000);
 
-            //Set city RGO
-            local_province.resource = randomElement(getRawGoods({ return_names: true }));
-
-            //Set building objects
-            local_province.buildings = [];
-            local_province.development = 0;
-            local_province.housing = 0;
-
-            //Set building slot capacity per category
-            for (var i = 0; i < all_building_categories.length; i++)
-              local_province[`${all_building_categories[i]}_building_slots`] = usr.modifiers[`${all_building_categories[i]}_building_slots`];
-            //Increase city_count tracker variable
-            usr.city_count++;
-
-            //Update UIs
-            if (game_obj.page == "country_interface")
-              printStats(game_obj.user);
-
-            if (game_obj.page == "economy")
-              printEconomy(game_obj.user);
-
-            if (game_obj.page == "provinces_list")
-              createPageMenu(game_obj.middle_embed, {
-                embed_pages: printProvinces(game_obj.user),
-                page: interfaces[game_obj.middle_embed.id].page,
-                user: game_obj.user
+              //Generate city pop object
+              generatePops(province_id, {
+                type: "all",
+                amount: population_amount
               });
 
-            if (game_obj.page == "cities_list")
-              createPageMenu(game_obj.middle_embed, {
-                embed_pages: printCities(game_obj.user),
-                page: interfaces[game_obj.middle_embed.id].page,
-                user: game_obj.user
-              });
+              //Set city RGO
+              local_province.resource = randomElement(getRawGoods({ return_names: true }));
 
-            printAlert(game_obj.id, (local_province.city_type == "capital") ?
-              `Capital city founded as **${city_name}** in Province **${province_id}**! Over **${parseNumber(local_province.pops.population)}** inhabitants are now legally residents of the capital city of **${usr.name}**!` :
-              `A new city was founded as **${city_name}** in Province **${province_id}**! Over **${parseNumber(local_province.pops.population)}** inhabitants are now legally residents of the city of **${city_name}** in Province **${province_id}**.`
-            );
+              //Set building objects
+              local_province.buildings = [];
+              local_province.development = 0;
+              local_province.housing = 0;
+
+              //Set building slot capacity per category
+              for (var i = 0; i < all_building_categories.length; i++)
+                local_province[`${all_building_categories[i]}_building_slots`] = usr.modifiers[`${all_building_categories[i]}_building_slots`];
+              //Increase city_count tracker variable
+              usr.city_count++;
+
+              //Update UIs
+              if (game_obj.page == "country_interface")
+                printStats(game_obj.user);
+
+              if (game_obj.page == "economy")
+                printEconomy(game_obj.user);
+
+              if (game_obj.page == "provinces_list")
+                createPageMenu(game_obj.middle_embed, {
+                  embed_pages: printProvinces(game_obj.user),
+                  page: interfaces[game_obj.middle_embed.id].page,
+                  user: game_obj.user
+                });
+
+              if (game_obj.page == "cities_list")
+                createPageMenu(game_obj.middle_embed, {
+                  embed_pages: printCities(game_obj.user),
+                  page: interfaces[game_obj.middle_embed.id].page,
+                  user: game_obj.user
+                });
+
+              printAlert(game_obj.id, (local_province.city_type == "capital") ?
+                `Capital city founded as **${city_name}** in Province **${province_id}**! Over **${parseNumber(local_province.pops.population)}** inhabitants are now legally residents of the capital city of **${usr.name}**!` :
+                `A new city was founded as **${city_name}** in Province **${province_id}**! Over **${parseNumber(local_province.pops.population)}** inhabitants are now legally residents of the city of **${city_name}** in Province **${province_id}**.`
+              );
+            } else {
+              printError(game_obj.id, `You cannot have a city name that overlaps with the name of an existing province!`);
+            }
           } else {
-            printError(game_obj.id, `You cannot have a city name that overlaps with the name of an existing province!`);
+            printError(game_obj.id, `Province **${province_id}** is already an urban province belonging to **${local_province.name}**!`);
           }
         } else {
-          printError(game_obj.id, `Province **${province_id}** is already an urban province belonging to **${local_province.name}**!`);
+          var is_occupied = (local_province.owner != local_province.controller);
+
+          //Print actual province controller/occupation status
+          (local_province.owner) ?
+            printError(game_obj.id, `You don't own Province **${province_id}**!\n\nProvince **${province_id}** is a${(is_occupied) ? "n occupied" : ""} province of the ${main.users[local_province.controller].name} of ${main.global.cultures[local_province.culture].adjective} culture${(is_occupied) ? " that rightfully belongs to " + main.users[local_province.owner].name : ""}.`) :
+            printError(game_obj.id, `You don't own Province **${province_id}**!\n\Province **${province_id}** is currently uncolonised.`);
         }
       } else {
-        var is_occupied = (local_province.owner != local_province.controller);
+        //Resource shortages encountered, print them out
+        var shortage_array = [];
 
-        //Print actual province controller/occupation status
-        (local_province.owner) ?
-          printError(game_obj.id, `You don't own Province **${province_id}**!\n\nProvince **${province_id}** is a${(is_occupied) ? "n occupied" : ""} province of the ${main.users[local_province.controller].name} of ${main.global.cultures[local_province.culture].adjective} culture${(is_occupied) ? " that rightfully belongs to " + main.users[local_province.owner].name : ""}.`) :
-          printError(game_obj.id, `You don't own Province **${province_id}**!\n\Province **${province_id}** is currently uncolonised.`);
-      }
-    } else {
-      //Resource shortages encountered, print them out
-      var shortage_array = [];
+        for (var i = 0; i < all_resource_shortages.length; i++) {
+          var local_good = getGood(all_resource_shortages[i]);
+          var local_icon = "";
+          var local_shortage = resource_shortages[all_resource_shortages[i]];
 
-      for (var i = 0; i < all_resource_shortages.length; i++) {
-        var local_good = getGood(all_resource_shortages[i]);
-        var local_icon = "";
-        var local_shortage = resource_shortages[all_resource_shortages[i]];
+          //Determine icon
+          if (!usr.inventory[all_resource_shortages[i]]) {
+            if (all_resource_shortages[i] == "money")
+              local_icon = config.icons.money;
+          } else {
+            local_icon = (local_good.icon) ? config.icons[local_good.icon] : "";
+          }
 
-        //Determine icon
-        if (!usr.inventory[all_resource_shortages[i]]) {
-          if (all_resource_shortages[i] == "money")
-            local_icon = config.icons.money;
-        } else {
-          local_icon = (local_good.icon) ? config.icons[local_good.icon] : "";
+          shortage_array.push(`- ${local_icon} ${parseNumber(local_shortage)} ${(local_good) ? (local_good.name) ? local_good.name : all_resource_shortages[i] : ""}`);
         }
 
-        shortage_array.push(`- ${local_icon} ${parseNumber(local_shortage)} ${(local_good) ? (local_good.name) ? local_good.name : all_resource_shortages[i] : ""}`);
+        printError(getGame(user_id), `You don't have resources to found a city! Gather the following resources first:\n\n${shortage_array.join("\n")}`);
       }
-
-      printError(getGame(user_id), `You don't have resources to found a city! Gather the following resources first:\n\n${shortage_array.join("\n")}`);
+    } else {
+      printError(getGame(user_id), `You don't have enough provinces to found a new city yet!`);
     }
   },
 

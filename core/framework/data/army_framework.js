@@ -249,7 +249,7 @@ module.exports = {
   deployUnits: function (arg0_user, arg1_amount, arg2_unit_name, arg3_army_name, arg4_options) {
     //Convert from parameters
     var user_id = arg0_user;
-    var amount = parseInt(arg1_amount);
+    var amount = returnSafeNumber(parseInt(arg1_amount));
     var unit_name = arg2_unit_name.trim().toLowerCase();
     var army_name = arg3_army_name;
     var options = (arg4_options) ? arg4_options : {};
@@ -315,10 +315,10 @@ module.exports = {
             if (usr.reserves[raw_unit_name] == 0)
               delete usr.reserves[raw_unit_name];
 
-            return [true, `**${parseNumber(amount)}** ${(unit_obj.name) ? unit_obj.name : raw_unit_name} were ${(!options.spawn_units) ? "transferred to" : "deployed in"} the **${army_obj.name}**.`];
-
             //Recalculate army type
             module.exports.calculateArmyType(actual_id, army_obj);
+
+            return [true, `**${parseNumber(amount)}** ${(unit_obj.name) ? unit_obj.name : raw_unit_name} were ${(!options.spawn_units) ? "transferred to" : "deployed in"} the **${army_obj.name}**.`];
           }
   },
 

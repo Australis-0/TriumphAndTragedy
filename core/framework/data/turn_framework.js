@@ -1299,8 +1299,14 @@ module.exports = {
       {
         var research_queue_removal_array = [];
 
-        for (var i = 0; i < emptied_research_slots; i++)
-          if (!usr.researched_technologies.includes(usr.research_queue[i])) {
+        for (var i = 0; i < usr.research_queue.length; i++) {
+          var is_being_researched = false;
+
+          for (var x = 0; x < usr.researching.length; x++)
+            if (usr.researching[x].technology == usr.research_queue[i])
+              is_being_researched = true;
+
+          if (!usr.researched_technologies.includes(usr.research_queue[i]) || is_being_researched) {
             try {
               //Attempt to research everything in queue
               var research_status = research(user_id, usr.research_queue[i], true, true);
@@ -1314,6 +1320,7 @@ module.exports = {
           } else {
             research_queue_removal_array.push(usr.research_queue[i]);
           }
+        }
 
         //Remove research_queue_removal_array from research_queue
         for (var i = 0; i < research_queue_removal_array.length; i++)

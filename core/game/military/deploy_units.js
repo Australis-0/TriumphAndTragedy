@@ -29,6 +29,11 @@ module.exports = {
               page: interfaces[game_obj.middle_embed.id].page,
               user: game_obj.user
             });
+          } else if (game_obj.page == "reserves") {
+            createPageMenu(game_obj.middle_embed, {
+              embed_pages: printReserves(user_id),
+              user: game_obj.user
+            });
           }
 
           //Print out error message if one exists
