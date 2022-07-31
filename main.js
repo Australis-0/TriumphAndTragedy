@@ -452,8 +452,8 @@ setInterval(function(){
       nextGlobalTurn();
 
       //Force render maps after turn processing
-      forceRender("political");
-      main.round_count++;
+      for (var i = 0; i < mapmodes.length; i++)
+        forceRender(mapmodes[i]);
     }
   }
 

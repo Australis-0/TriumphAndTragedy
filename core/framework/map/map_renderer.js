@@ -291,6 +291,9 @@ module.exports = {
     //Map case handler
     switch (map_name) {
       case "atlas":
+        var provinces_file = fs.readFileSync("./map/provinces.svg");
+        atlas_parsed = HTML.parse(provinces_file.toString());
+        
         renderAtlas();
 
         break;

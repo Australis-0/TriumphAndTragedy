@@ -138,14 +138,6 @@ module.exports = {
     var all_users = Object.keys(main.users);
     var all_wars = Object.keys(main.global.wars);
 
-    //Map processing
-    {
-      if (main.round_count == 1)
-        for (var i = 0; i < mapmodes.length; i++)
-          forceRender(mapmodes[i]);
-      forceRender("supply");
-    }
-
     //Optimisation processing
     {
       lookup.province_troop_strengths = {};
