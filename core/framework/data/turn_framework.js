@@ -1300,13 +1300,17 @@ module.exports = {
         var research_queue_removal_array = [];
 
         for (var i = 0; i < usr.research_queue.length; i++) {
+          //Remove any techs that are being researched from the queue
           var is_being_researched = false;
 
           for (var x = 0; x < usr.researching.length; x++)
             if (usr.researching[x].technology == usr.research_queue[i])
               is_being_researched = true;
 
-          if (!usr.researched_technologies.includes(usr.research_queue[i]) || is_being_researched) {
+          if (is_being_researched)
+            research_queue_removal_array.push(usr.research_queue[i]);
+
+          if (!usr.researched_technologies.includes(usr.research_queue[i])) {
             try {
               //Attempt to research everything in queue
               var research_status = research(user_id, usr.research_queue[i], true, true);
