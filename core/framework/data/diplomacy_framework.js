@@ -440,10 +440,10 @@ module.exports = {
     //Return statement
     return (
       (usr.population/100000) + //Population
-      ( //Technology
+      Math.abs( //Technology
         (usr.researched_technologies.length - getAverageTechCount())*5
       ) +
-      getTotalActiveDuty(actual_id)/50000, //Military
+      getTotalActiveDuty(actual_id)/50000 + //Military
       usr.provinces //Provinces
     );
   },
