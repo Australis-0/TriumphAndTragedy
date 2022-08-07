@@ -56,7 +56,8 @@ config.buildings.infrastructure = {
       steel: 10,
       lumber: 10,
       stone: 5,
-      machine_parts: 5
+      machine_parts: 5,
+      money: 8000
     },
     maximum: 10,
     manpower_cost: {

@@ -151,8 +151,8 @@ module.exports = {
         .setImage("https://cdn.discordapp.com/attachments/722997700391338046/736141424315203634/margin.png")
         .setDescription(economy_string.join("\n"))
         .addFields(
-          { name: "__Production Modifiers:__\n━━", value: modifiers_string.join("\n"), inline: true },
-          { name: "__Resource Production:__ (per turn)\n-", value: resource_production_string.join("\n"), inline: true },
+          { name: "__Production Modifiers:__\n━━", value: truncateString(modifiers_string.join("\n"), 1000), inline: true },
+          { name: "__Resource Production:__ (per turn)\n-", value: truncateString(resource_production_string.join("\n"), 1000), inline: true },
           { name: config.localisation.blank, value: footer_string.join("\n") }
         );
 
