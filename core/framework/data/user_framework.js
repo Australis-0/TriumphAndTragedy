@@ -290,7 +290,7 @@ module.exports = {
     }
 
     //Return statement if city is found
-    return (city_exists[0]) ? city_exists[1] : undefined;
+    return (city_exists[0]) ? city_exists[1] : main.provinces[city_name];
   },
 
   getCityRGOThroughput: function (arg0_name) {

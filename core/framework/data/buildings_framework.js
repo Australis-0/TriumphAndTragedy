@@ -653,7 +653,7 @@ module.exports = {
     }]; //[encountered_error, { available_slots: 0, total_buildings: 0, total_buildings_under_construction: 0, total_slots: 0}]
     var building_category = module.exports.getBuildingCategory(building_category_name);
     var building_obj = module.exports.getBuilding(building_category_name);
-    var city_obj = (!main.provinces[city_name]) ? getCity(city_name, { users: user_id }) : main.provinces[city_name];
+    var city_obj = getCity(city_name, { users: user_id });
     var raw_building_category_name = module.exports.getBuildingCategory(building_category_name, { return_key: true });
     var raw_building_name = module.exports.getBuilding(building_category_name, { return_key: true });
     var usr = main.users[user_id];
