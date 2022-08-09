@@ -55,9 +55,13 @@ config.buildings.agriculture = {
     manpower_cost: {
       workers: 25000
     },
-    produces: {
+    maintenance: {
       fertiliser: 2,
       refined_petroil: 1
+    },
+    produces: {
+      wheat: 5,
+      meat: 3
     }
   },
   industrial_farms: {
