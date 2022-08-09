@@ -52,12 +52,12 @@ config.buildings.agriculture = {
       stone: 5,
       money: 10000
     },
-    manpower_cost: {
-      workers: 25000
-    },
     maintenance: {
       fertiliser: 2,
       refined_petroil: 1
+    },
+    manpower_cost: {
+      workers: 25000
     },
     produces: {
       wheat: 5,

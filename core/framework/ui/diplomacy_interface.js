@@ -477,9 +477,10 @@ module.exports = {
         if (i < 15) {
           if (cities[i].type == "capital") {
             capital_included = true;
-            name_array.push(`**${local_city.name}**`);
+            name_array.push(`**${cities[i].name}**`);
+          } else {
+            name_array.push(cities[i].name);
           }
-          name_array.push(local_city.name);
         }
 
       if (name_array.length >= 2) {
@@ -513,18 +514,18 @@ module.exports = {
         var local_pop = config.pops[all_pops[i]];
 
         if (local_pop.stats_display && !local_pop.military_pop)
-          stats_string.push(`${(local_pop.icon) ? local_pop.icon + " " : ""}${(local_pop.name) ? local_pop.name : all_pops[i]}: (**${parseNumber(ot_user.pops["used_" + all_pops[i]])}**/**${parseNumber(getTotalPopManpower(actual_ot_user_id, all_pops[i]))})`);
+          stats_string.push(`${(local_pop.icon) ? local_pop.icon + " " : ""}${(local_pop.name) ? local_pop.name : all_pops[i]}: (**${parseNumber(ot_user.pops["used_" + all_pops[i]])}**/**${parseNumber(getTotalPopManpower(actual_ot_user_id, all_pops[i]))})**`);
       }
 
       stats_string.push("");
       stats_string.push(`${config.icons.money} Money: **${parseNumber(ot_user.money)}**`);
-      stats_string.push(`${config.icons.political_capital} Political Capital: **${parseNumber(ot_user.political_capital)}**`);
+      stats_string.push(`${config.icons.political_capital} Political Capital: **${parseNumber(ot_user.modifiers.political_capital)}**`);
 
       stats_string.push("");
       stats_string.push(`**Military Statistics:**`);
       stats_string.push("");
 
-      stats_string.push(`${config.icons.infamy} Infamy: **${parseNumber(ot_user.modifiers.infamy)}** (${parseNumber(ot_user.modifiers.infamy_loss, { display_prefix: true })} per turn)`);
+      stats_string.push(`${config.icons.infamy} Infamy: **${parseNumber(ot_user.modifiers.infamy)}** (${parseNumber(ot_user.modifiers.infamy_loss, { display_float: true, display_prefix: true })} per turn)`);
       stats_string.push(`${config.icons.infamy} War Exhaustion: **${printPercentage(ot_user.modifiers.war_exhaustion)}**`);
       stats_string.push("");
 
