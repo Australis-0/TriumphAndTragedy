@@ -454,9 +454,17 @@ module.exports = {
               modifier_string.push(`${prefix}Obsoletes **${unit_names.join(", ")}**`);
 
               break;
+            case "reform_desire_gain":
+              modifier_string.push(`${prefix}Reform Desire Gain: **${printPercentage(usr.modifiers.reform_desire_gain, { base_zero: true })}**`);
+
+              break;
             case "set_mobilisation_unit":
               var unit_obj = getUnit(local_value[0]);
               modifier_string.push(`${prefix}Sets Mobilisation Unit to **${(unit_obj.name) ? unit_obj.name : local_value[0]}**`);
+
+              break;
+            case "stability_modifier":
+              modifier_string.push(`${prefix}Stability Modifier: **${printPercentage(usr.modifiers.stability_modifier, { base_zero: true })}**`);
 
               break;
             case "unlock_building":

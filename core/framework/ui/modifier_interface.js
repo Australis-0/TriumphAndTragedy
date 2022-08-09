@@ -81,7 +81,7 @@ module.exports = {
         if (returnSafeNumber(local_modifier.default_value) != local_value)
           modifier_string.push(`${(local_modifier.icon) ? config.icons[local_modifier.icon] + " " : ""} ${parseModifiers({ [all_modifiers[i]]: local_value }, true, false, (local_value != 0))}`);
         else
-          modifier_string.push(`${parseModifiers({ [all_modifiers[i]]: local_value }, true, false, (local_value != 0 && local_value >= -1))}`);
+          modifier_string.push(`${parseModifiers({ [all_modifiers[i]]: local_value }, true, false, (local_value != 0))}`);
     }
 
     //Remove all rows with either **0** or **0%**
