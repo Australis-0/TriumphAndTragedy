@@ -455,7 +455,7 @@ module.exports = {
 
               break;
             case "reform_desire_gain":
-              modifier_string.push(`${prefix}Reform Desire Gain: **${printPercentage(usr.modifiers.reform_desire_gain, { base_zero: true })}**`);
+              modifier_string.push(`${prefix}Reform Desire Gain: **${printPercentage(local_value[0], { base_zero: true })}**`);
 
               break;
             case "set_mobilisation_unit":
@@ -464,7 +464,7 @@ module.exports = {
 
               break;
             case "stability_modifier":
-              modifier_string.push(`${prefix}Stability Modifier: **${printPercentage(usr.modifiers.stability_modifier, { base_zero: true })}**`);
+              modifier_string.push(`${prefix}Stability Modifier: **${printPercentage(local_value[0], { base_zero: true })}**`);
 
               break;
             case "unlock_building":
