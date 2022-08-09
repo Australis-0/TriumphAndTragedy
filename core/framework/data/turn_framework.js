@@ -838,7 +838,7 @@ module.exports = {
 
           //Mobilise more people if current_manpower_mobilised is not the same as total_manpower_mobilised
           if (usr.mobilisation.current_manpower_mobilised < usr.mobilisation.total_manpower_mobilised)
-            new_manpower_mobilised += Math.ceil(usr.mobilisation.current_manpower_mobilised/usr.mobilisation.original_duration);
+            new_manpower_mobilised += Math.ceil(usr.mobilisation.total_manpower_mobilised/usr.mobilisation.original_duration);
 
           //How to deal with rounding?
           new_manpower_mobilised = Math.min(new_manpower_mobilised, usr.mobilisation.total_manpower_mobilised - usr.mobilisation.current_manpower_mobilised);
