@@ -12,12 +12,12 @@ module.exports = {
     //Sum up all pops that can be mobilised
     for (var i = 0; i < all_pops.length; i++) {
       var local_pop = config.pops[all_pops[i]];
-      var mobilisation_value = Math.ceil(
+      var mobilisation_value = Math.min(Math.ceil(
         (
           getTotalPopManpower(actual_id, all_pops[i]) - usr.pops[`used_${all_pops[i]}`]
         )
           *config.defines.combat.base_mobilisation_size*usr.modifiers.mobilisation_size
-      );
+      ), 0);
 
       mobilised_pops[all_pops[i]] = returnSafeNumber(mobilisation_value);
       mobilised_pops.population += returnSafeNumber(mobilisation_value);

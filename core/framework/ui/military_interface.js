@@ -66,7 +66,7 @@ module.exports = {
         var local_value = usr.mobilisation.mobilised_pops[all_mobilised_pops[i]];
 
         if (local_value > 0)
-          mobilised_string.push(`${(local_pop.icon) ? config.icons[local_pop.icon] + " " : ""}**${parseNumber(local_value)}** mobilised ${((local_pop.name) ? local_pop.name : all_mobilised_pops[i]).toLowerCase()}`);
+          mobilised_string.push(`${(local_pop.icon) ? local_pop.icon + " " : ""}**${parseNumber(local_value)}** mobilised ${((local_pop.name) ? local_pop.name : all_mobilised_pops[i]).toLowerCase()}`);
       }
     }
 

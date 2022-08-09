@@ -838,10 +838,7 @@ module.exports = {
 
           //Mobilise more people if current_manpower_mobilised is not the same as total_manpower_mobilised
           if (usr.mobilisation.current_manpower_mobilised < usr.mobilisation.total_manpower_mobilised)
-            new_manpower_mobilised += Math.ceil(
-              (usr.mobilisation.total_manpower_mobilised - usr.mobilisation.current_manpower_mobilised)/
-                usr.mobilisation.original_duration
-            );
+            new_manpower_mobilised += Math.ceil(usr.mobilisation.current_manpower_mobilised/usr.mobilisation.original_duration);
 
           //How to deal with rounding?
           new_manpower_mobilised = Math.min(new_manpower_mobilised, usr.mobilisation.total_manpower_mobilised - usr.mobilisation.current_manpower_mobilised);
@@ -1393,7 +1390,7 @@ module.exports = {
         usr.modifiers.war_exhaustion += config.defines.combat.war_exhaustion_mobilisation_rate;
 
         if (!is_being_justified_on && all_enemies.length == 0)
-          usr.modifiers.infamy += config.defines.peacetime_mobilisation_penalty;
+          usr.modifiers.infamy += config.defines.combat.peacetime_mobilisation_penalty;
       }
 
       //Occupation
