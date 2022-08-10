@@ -1639,7 +1639,7 @@ module.exports = {
             initialiseTransferUnits(user_id);
         }
 
-        if (game_obj.page.startsWith("army_viewer_", "")) { //[WIP] - Add auto-complete in the future; remember to remove previous order handlers from the top if you do!
+        if (game_obj.page.startsWith("army_viewer_", "")) {
           var viewed_army = game_obj.page.replace("army_viewer_", "");
 
           //[Air Raid]
@@ -1831,6 +1831,16 @@ module.exports = {
           if (input == "transfer units")
             initialiseTransferUnits(user_id);
 
+          //[Unit Ledger]
+          if (input == "unit ledger") {
+            createPageMenu(game_obj.middle_embed, {
+              embed_pages: printUnitLedger(user_id),
+              user: game_obj.user
+            });
+
+            game_obj.page = "unit_ledger";
+          }
+
           //[Unit List]
           if (["craft list", "unit list"].includes(input)) {
             createPageMenu(game_obj.middle_embed, {
@@ -1880,6 +1890,31 @@ module.exports = {
           //[Mobilise]
           if (input == "mobilise")
             mobilise(user_id);
+        }
+
+        if (game_obj.page == "unit_ledger") {
+          //Button handler
+          //[Back]
+          if (input == "back") {
+            printMilitary(user_id);
+            game_obj.page = "military";
+          }
+
+          //[Jump To Page]
+          if (input == "jump to page")
+            visualPrompt(game_obj.alert_embed, user_id, {
+              title: `Jump To Page:`,
+              prompts: [
+                [`Which page would you like to jump to?`, "number", { min: 1, max: printUnitLedger(game_obj.user).length }]
+              ]
+            },
+            function (arg) {
+              createPageMenu(game_obj.middle_embed, {
+                embed_pages: printUnitLedger(game_obj.user),
+                page: arg[0] - 1,
+                user: game_obj.user
+              });
+            });
         }
 
         if (game_obj.page == "unit_list") {

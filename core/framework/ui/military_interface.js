@@ -122,10 +122,6 @@ module.exports = {
     }
 
     military_status_array.push("");
-    military_status_array.push(`- Type **[Army List]** to view a complete list of all your armies.`);
-    military_status_array.push(`- Type **[Train Units]** to recruit more units into your army.`);
-    military_status_array.push(`- Type **[Unit List]** to view a full list of units available for recruitment.`);
-    military_status_array.push(`- Type **[View Reserves]** to view what units you have in your reserves.`);
 
     //2nd Field - Casualties counter
     var military_civilian_casualties = [],
@@ -163,7 +159,16 @@ module.exports = {
       military_civilian_casualties.push(`_We have incurred no civilian casualties as of late._`);
     }
 
-    //3rd Field - List of options
+    //3rd Field - Overview commands
+    var military_overview_commands = [];
+
+    military_overview_commands.push(`- Type **[Army List]** to view a complete list of all your armies.`);
+    military_overview_commands.push(`- Type **[Train Units]** to recruit more units into your army.`);
+    military_overview_commands.push(`- Type **[Unit Ledger]** to view an overview of a ledger of all units.`);
+    military_overview_commands.push(`- Type **[Unit List]** to view a full list of units available for recruitment.`);
+    military_overview_commands.push(`- Type **[View Reserves]** to view what units you have in your reserves.`);
+
+    //4th Field - List of options
     var options_array = [];
     var reference_string = {
       "always": "Always",
@@ -281,6 +286,7 @@ module.exports = {
 			.addFields(
 				{ name: "**Military Statistics:**", value: military_status_array.join("\n"), inline: true },
 				{ name: "**Recent Casualties:**", value: military_civilian_casualties.join("\n"), inline: true },
+        { name: `**Military Overview:**`, value: military_overview_commands.join("\n") },
 				{ name: "**Military Options:**", value: options_array.join("\n") },
 				{ name: "**Military Organisation Commands:**", value: command_list_array.join("\n") },
 				{ name: "**Global Orders:**", value: global_orders_array.join("\n") },

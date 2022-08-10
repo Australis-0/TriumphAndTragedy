@@ -258,7 +258,7 @@ module.exports = {
     });
   },
 
-  printUnitOverview: function (arg0_user) { //[WIP]
+  printUnitLedger: function (arg0_user) { //[WIP] - Add more detailed breakdown by deployed/reserves, total manpower in unit type in future
     //Convert from parameters
     var user_id = arg0_user;
 
@@ -296,5 +296,36 @@ module.exports = {
     }
 
     //Combine into units_string
+    units_string.push(`**Air Units:**`);
+    units_string.push("");
+    units_string.push(config.localisation.divider);
+    units_string.push("");
+    (air_string.length > 0) ?
+      units_string.push(air_string.join("\n")) :
+      units_string.push(`_No units of this type could be found._`);
+
+    units_string.push(`**Army Units:**`);
+    units_string.push("");
+    units_string.push(config.localisation.divider);
+    units_string.push("");
+    (army_string.length > 0) ?
+      units_string.push(army_string.join("\n")) :
+      units_string.push(`_No units of this type could be found._`);
+
+
+    units_string.push(`**Naval Units:**`);
+    units_string.push("");
+    units_string.push(config.localisation.divider);
+    units_string.push("");
+    (naval_string.length > 0) ?
+      units_string.push(naval_string.join("\n")) :
+      units_string.push(`_No units of this type could be found._`);
+
+    //Return embed as splitEmbed
+    return splitEmbed(units_string, {
+      title: "[Back] | [Jump To Page] | Unit Overview:",
+      title_pages: true,
+      fixed_width: true
+    });
   }
 };
