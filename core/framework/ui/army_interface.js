@@ -291,7 +291,7 @@ module.exports = {
       var local_type = "waste_string";
 
       try {
-        strings[`${strings[local_category.type]}_string`].push(`${(local_unit.icon) ? config.icons[local_unit.icon] + " " : ""}**${(local_unit.name) ? local_unit.name : all_units[i]}** - ${parseNumber(local_value)}`);
+        strings[`${strings[local_category.type]}_string`].push(`• ${(local_unit.icon) ? config.icons[local_unit.icon] + " " : ""}**${(local_unit.name) ? local_unit.name : all_units[i]}** - ${parseNumber(local_value)}`);
       } catch {}
     }
 
@@ -300,25 +300,27 @@ module.exports = {
     units_string.push("");
     units_string.push(config.localisation.divider);
     units_string.push("");
-    (air_string.length > 0) ?
-      units_string.push(air_string.join("\n")) :
+    (strings.air_string.length > 0) ?
+      units_string.push(strings.air_string.join("\n")) :
       units_string.push(`_No units of this type could be found._`);
+    units_string.push("");
 
     units_string.push(`**Army Units:**`);
     units_string.push("");
     units_string.push(config.localisation.divider);
     units_string.push("");
-    (army_string.length > 0) ?
-      units_string.push(army_string.join("\n")) :
+    (strings.army_string.length > 0) ?
+      units_string.push(strings.army_string.join("\n")) :
       units_string.push(`_No units of this type could be found._`);
+    units_string.push("");
 
 
     units_string.push(`**Naval Units:**`);
     units_string.push("");
     units_string.push(config.localisation.divider);
     units_string.push("");
-    (naval_string.length > 0) ?
-      units_string.push(naval_string.join("\n")) :
+    (strings.naval_string.length > 0) ?
+      units_string.push(strings.naval_string.join("\n")) :
       units_string.push(`_No units of this type could be found._`);
 
     //Return embed as splitEmbed
