@@ -40,7 +40,7 @@ module.exports = {
     try {
       var actual_id = main.global.user_map[user_id];
       var all_modifiers = Object.keys(modifiers);
-      var usr = main.users[user_id];
+      var usr = main.users[actual_id];
 
       //Begin parsing
       for (var i = 0; i < all_modifiers.length; i++) {

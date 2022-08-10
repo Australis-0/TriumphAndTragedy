@@ -1875,11 +1875,11 @@ module.exports = {
         if (game_obj.page == "military") {
           //[Demobilise]
           if (input == "demobilise")
-            demobilise(actual_id);
+            demobilise(user_id);
 
           //[Mobilise]
           if (input == "mobilise")
-            mobilise(actual_id);
+            mobilise(user_id);
         }
 
         if (game_obj.page == "unit_list") {

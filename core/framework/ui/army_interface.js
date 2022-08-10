@@ -256,5 +256,45 @@ module.exports = {
         ``,
       ]
     });
+  },
+
+  printUnitOverview: function (arg0_user) { //[WIP]
+    //Convert from parameters
+    var user_id = arg0_user;
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var game_obj = getGameObject(user_id);
+    var player_units = getUnits(actual_id);
+    var usr = main.users[actual_id];
+
+    var all_units = Object.keys(player_units);
+
+    //Format air_string, army_string, naval_string
+    var strings = {
+      air: "air",
+      land: "army",
+      naval: "naval",
+
+      air_string: [],
+      army_string: [],
+      naval_string: [],
+      waste_string: []
+    };
+    var units_string = [];
+
+    //Iterate over all units and push according to type
+    for (var i = 0; i < all_units.length; i++) {
+      var local_category = getUnitCategoryFromUnit(all_units[i]);
+      var local_unit = getUnit(all_units[i]);
+      var local_value = player_units[all_units[i]];
+      var local_type = "waste_string";
+
+      try {
+        strings[`${strings[local_category.type]}_string`].push(`${(local_unit.icon) ? config.icons[local_unit.icon] + " " : ""}**${(local_unit.name) ? local_unit.name : all_units[i]}** - ${parseNumber(local_value)}`);
+      } catch {}
+    }
+
+    //Combine into units_string
   }
 };

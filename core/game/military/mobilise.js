@@ -49,7 +49,7 @@ module.exports = {
           );
           var mobilised_pops = module.exports.getMobilisationPops(actual_id);
           var unit_obj = getUnit(usr.mobilisation.unit_type);
-          var unit_type = usr.mobilisation.unit_type;
+          var unit_type = JSON.parse(JSON.stringify(usr.mobilisation.unit_type)); //Deep copied in-case unit changes with new tech research
 
           //Initialise mobilised_pops and other variables
           delete mobilised_pops.population;
@@ -81,11 +81,16 @@ module.exports = {
 
             original_duration: mobilisation_speed,
             duration: mobilisation_speed,
+            mobilised_type: unit_type,
             unit_type: unit_type
           };
 
           //Print out user feedback
-          printAlert(`You have begun to mobilise **${parseNumber(usr.mobilisation.total_manpower_mobilised)}** men as **${(unit_obj.name) ? unit_obj.name : usr.mobilisation.unit_type}**! They will finish mobilising in **${parseNumber(usr.mobilisation.duration)}** ${(usr.mobilisation.duration == 1) ? "turn" : "turns"}.`);
+          printAlert(game_obj.id, `You have begun to mobilise **${parseNumber(usr.mobilisation.total_manpower_mobilised)}** men as **${(unit_obj.name) ? unit_obj.name : usr.mobilisation.unit_type}**! They will finish mobilising in **${parseNumber(usr.mobilisation.duration)}** ${(usr.mobilisation.duration == 1) ? "turn" : "turns"}.`);
+
+          //Update military UI
+          if (game_obj.page == "military")
+            printMilitary(user_id);
         } else {
           printError(game_obj.id, `Your people haven't even heard of such a concept yet! Research mobilisation first.`);
         }

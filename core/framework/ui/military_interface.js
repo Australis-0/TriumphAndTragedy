@@ -20,7 +20,9 @@ module.exports = {
     var usr = main.users[actual_id];
 
     var all_armies = Object.keys(usr.armies);
-    var mobilisation_unit = getUnit(usr.mobilisation.unit_type);
+    var mobilisation_unit = (usr.mobilisation.mobilised_type) ?
+      getUnit(usr.mobilisation.mobilised_type) :
+      getUnit(usr.mobilisation.unit_type);
 
     //Compile army report
     var army_orders = {};

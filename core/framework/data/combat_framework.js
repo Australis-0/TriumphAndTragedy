@@ -961,7 +961,7 @@ module.exports = {
               var local_percentage = local_amount/usr.mobilisation.currrent_manpower_mobilised;
 
               //Begin removing pops based on local percentage
-              if (raw_unit_name != usr.mobilisation.unit_type) {
+              if (raw_unit_name != usr.mobilisation.mobilised_type) {
                 var amount_killed = Math.ceil(local_value/all_mobilised_pops.length)*amount;
 
                 killPops(actual_id, {

@@ -843,8 +843,8 @@ module.exports = {
           //How to deal with rounding?
           new_manpower_mobilised = Math.min(new_manpower_mobilised, usr.mobilisation.total_manpower_mobilised - usr.mobilisation.current_manpower_mobilised);
 
-          usr.mobilisation.total_manpower_mobilised += new_manpower_mobilised;
-          usr.reserves[usr.mobilisation.unit_type] += new_manpower_mobilised;
+          usr.mobilisation.current_manpower_mobilised += new_manpower_mobilised;
+          usr.reserves[usr.mobilisation.mobilised_type] += new_manpower_mobilised;
 
           //Decrement duration
           if (usr.mobilisation.duration > 0)
