@@ -296,7 +296,7 @@ module.exports = {
     }
 
     //Combine into units_string
-    units_string.push(`**Air Units:**`);
+    units_string.push(`__**Air Units:**__`);
     units_string.push("");
     units_string.push(config.localisation.divider);
     units_string.push("");
@@ -305,7 +305,7 @@ module.exports = {
       units_string.push(`_No units of this type could be found._`);
     units_string.push("");
 
-    units_string.push(`**Army Units:**`);
+    units_string.push(`__**Army Units:**__`);
     units_string.push("");
     units_string.push(config.localisation.divider);
     units_string.push("");
@@ -315,7 +315,7 @@ module.exports = {
     units_string.push("");
 
 
-    units_string.push(`**Naval Units:**`);
+    units_string.push(`__**Naval Units:**__`);
     units_string.push("");
     units_string.push(config.localisation.divider);
     units_string.push("");
