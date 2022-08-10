@@ -67,7 +67,7 @@ module.exports = {
         var local_expedition_unit = getUnit(local_expedition.unit_type);
         var local_expedition_unit_name = (local_expedition_unit.name) ? local_expedition_unit.name.toLowerCase() : local_expedition.unit_type;
 
-        colonisation_string.push(`${config.icons.old_map} Charter #${local_expedition.id} - **${local_expedition.provinces}**:`);
+        colonisation_string.push(`${config.icons.old_map} Charter #${local_expedition.id}:`);
         (local_expedition.duration > config.defines.colonisation.base_colonisation_turns) ?
           colonisation_string.push(` - The **${local_expedition_unit_name}** will arrive in **${parseNumber(local_expedition.duration - config.defines.colonisation.base_colonisation_turns)}** turn(s). **[Cancel Charter #${local_expedition.id}]**`) :
           colonisation_string.push(` - The **${local_expedition_unit_name}** have arrived! They have begun settling and your advisor estimates that it will take them **${parseNumber(local_expedition.duration)}** more turn(s).`);
