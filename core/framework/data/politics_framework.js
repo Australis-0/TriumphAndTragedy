@@ -151,5 +151,28 @@ module.exports = {
 
     //Return statement
     return (government_exists[0]) ? government_exists[1] : undefined;
+  },
+
+  getStability: function (arg0_user) {
+    //Convert from parameters
+    var user_id = arg0_user;
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var usr = main.users[actual_id];
+
+    //Declare local instance variables
+    var government_stability_modifier = getGovernmentStabilityModifier(actual_id);
+    var popularity_stability_modifier = usr.politics[usr.government].popularity*0.75;
+
+    //Calculate stability
+    return (
+      popularity_stability_modifier +
+      government_stability_modifier -
+      usr.tax_rate -
+      usr.modifiers.overextension +
+      returnSafeNumber(usr.boosted_stability) +
+      usr.modifiers.stability_modifier
+    )
   }
 };

@@ -1025,14 +1025,7 @@ module.exports = {
         var popularity_stability_modifier = usr.politics[usr.government].popularity*0.75;
 
         //Calculate stability
-        usr.modifiers.stability = Math.ceil(
-          popularity_stability_modifier +
-          government_stability_modifier -
-          usr.tax_rate -
-          usr.modifiers.overextension +
-          returnSafeNumber(usr.boosted_stability) +
-          usr.modifiers.stability_modifier
-        );
+        usr.modifiers.stability = getStability(actual_id);
 
         //Cap off stability
         usr.modifiers.stability = Math.min(usr.modifiers.stability, 1);
