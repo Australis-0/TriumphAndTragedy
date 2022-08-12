@@ -164,7 +164,7 @@ module.exports = {
 
     military_overview_commands.push(`- Type **[Army List]** to view a complete list of all your armies.`);
     military_overview_commands.push(`- Type **[Train Units]** to recruit more units into your army.`);
-    military_overview_commands.push(`- Type **[Unit Ledger]** to view an overview of a ledger of all units.`);
+    military_overview_commands.push(`- Type **[Unit Ledger]** to view a ledger of all your units, active or reserved.`);
     military_overview_commands.push(`- Type **[Unit List]** to view a full list of units available for recruitment.`);
     military_overview_commands.push(`- Type **[View Reserves]** to view what units you have in your reserves.`);
 

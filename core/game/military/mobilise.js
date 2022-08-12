@@ -12,7 +12,7 @@ module.exports = {
     //Sum up all pops that can be mobilised
     for (var i = 0; i < all_pops.length; i++) {
       var local_pop = config.pops[all_pops[i]];
-      var mobilisation_value = Math.min(Math.ceil(
+      var mobilisation_value = Math.max(Math.ceil(
         (
           getTotalPopManpower(actual_id, all_pops[i]) - usr.pops[`used_${all_pops[i]}`]
         )

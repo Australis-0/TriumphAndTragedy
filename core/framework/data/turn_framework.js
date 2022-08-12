@@ -381,6 +381,7 @@ module.exports = {
 
       //Economic modifiers
       {
+        usr.modifiers.shipment_time = Math.max(usr.modifiers.shipment_time, 0.01); //This is the cap for shipment time
         usr.transactions_this_turn = 0;
       }
 

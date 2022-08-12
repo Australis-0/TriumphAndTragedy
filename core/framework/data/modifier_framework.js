@@ -105,9 +105,9 @@ module.exports = {
             //Check if the modifier in question actually exists before incrementing
             var modifier_value = modifiers[all_modifiers[i]];
 
-            if (usr.modifiers[all_modifiers[i]]) {
-              usr.modifiers[all_modifiers[i]] += modifiers[all_modifiers[i]];
-            } else if (usr[all_modifiers[i]]) {
+            if (usr.modifiers[all_modifiers[i]] != undefined) {
+              usr.modifiers[all_modifiers[i]] += modifier_value;
+            } else if (usr[all_modifiers[i]] != undefined) {
               var is_government = Object.keys(config.governments).includes(all_modifiers[i]);
 
               if (is_government) {
@@ -119,13 +119,16 @@ module.exports = {
                   usr[all_modifiers[i]] += modifier_value;
               }
             } else {
-              if (usr.modifiers[`${all_modifiers[i]}_building_slots`])
+              if (usr.modifiers[`${all_modifiers[i]}_building_slots`] != undefined)
                 usr.modifiers[`${all_modifiers[i]}_building_slots`] += modifier_value;
             }
 
             break;
         }
       }
+
+      //Return statement
+      return usr.modifiers;
     } catch (e) {
       log.error(`applyModifiers() ran into an error:`);
       console.log(e);
