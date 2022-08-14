@@ -693,7 +693,7 @@ config.technology.naval_technology = {
     name: "Torpedo Guidance Systems",
     icon: "government",
     description: "Through improving the reliability of torpedoes and allowing an independent guidance system, we can ensure that they will remain steady on course to the target once launched from a submarine, before detonating beneath the ship.",
-    prerequisite_techs: ["torpedo_bombers"],
+    prerequisite_techs: ["torpedo_boats"],
     research_cost: 5500,
     year: 1915,
     custom_effect_description: "This will lead to further advancements regarding submarine warfare ..."
@@ -839,7 +839,7 @@ config.technology.naval_technology = {
     name: "Cavity Magnetron Radar",
     icon: "government",
     description: "The Cavity Magnetron RADAR was a highly capable British radar that was produced in extremely compact sizes during the Second World War. They were put on board ships and aeroplanes, and helped detect incoming enemy aircraft earlier.",
-    prerequisite_techs: ["modern_arresting_gear", "battleship"],
+    prerequisite_techs: ["naval_catapults", "battlecruisers"],
     research_cost: 7500,
     year: 1940,
     unlocks: {

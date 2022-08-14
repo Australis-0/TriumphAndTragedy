@@ -126,13 +126,14 @@ module.exports = {
 
       //Check for prerequisite_techs. If no prerequisite_techs are available, the tech is automatically available unless the user has already researched it
       if (local_tech.prerequisite_techs) {
+        var prerequisite_techs = getList(local_tech.prerequisite_techs);
         var prerequisite_checks = 0;
 
-        for (var x = 0; x < local_tech.prerequisite_techs.length; x++)
-          if (usr.researched_technologies.includes(local_tech.prerequisite_techs[x]))
+        for (var x = 0; x < prerequisite_techs.length; x++)
+          if (usr.researched_technologies.includes(prerequisite_techs[x]))
             prerequisite_checks++;
 
-        if (prerequisite_checks == local_tech.prerequisite_techs.length)
+        if (prerequisite_checks == prerequisite_techs.length)
           tech_available = true;
       } else {
         //No prerequisite_techs were found, so it must be a starting tech

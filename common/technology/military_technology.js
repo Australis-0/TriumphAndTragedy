@@ -1227,7 +1227,7 @@ config.technology.military_technology = {
     name: "Flamethrower Units",
     icon: "cb",
     description: "Flamethrower units, often used for clearing out enemy trenches and occassional partisans were an effective way to intimidate enemies, despite the danger posed by using one.",
-    prerequisite_techs: ["franc_tireurs`", "logistics_companies"],
+    prerequisite_techs: ["franc_tireurs", "logistics_companies"],
     research_cost: 4500,
     year: 1901,
     unlocks: {
@@ -1309,7 +1309,7 @@ config.technology.military_technology = {
     name: "Landship",
     icon: "land_vehicles",
     description: "The landship was the name given to early tanks whose job was to roll over enemy trenches and smash holes in the lines for advancing infantry. They were often slow and cumbersome, and prone to malfunction.",
-    prerequisite_techs: ["flamethrower_units"],
+    prerequisite_techs: ["armoured_cars"],
     research_cost: 5000,
     year: 1916,
     unlocks: {
@@ -1548,7 +1548,7 @@ config.technology.military_technology = {
     name: "Fighters",
     icon: "aeroplanes",
     description: "At the outbreak of the Second World War, increasingly effective ways to intercept enemy bombers were developed, and the concept of bomber escorts were first suggested, leading to a competition between interception and escort range. The golden age of dogfighting begins ...",
-    prerequisite_techs: ["improved_tank_reliability"],
+    prerequisite_techs: ["propeller_fighters"],
     research_cost: 7000,
     year: 1939,
     unlocks: {
@@ -1800,7 +1800,7 @@ config.technology.military_technology = {
     name: "Strategic Bombers",
     icon: "aeroplanes",
     description: "Strategic bombers are aircraft capable of carrying massive payloads over long distances, typically to drop on civilian targets, but also on military.",
-    prerequisite_techs: ["extended_air_range"],
+    prerequisite_techs: ["bombers", "extended_air_range"],
     research_cost: 8500,
     year: 1943,
     unlocks: {
@@ -2064,7 +2064,7 @@ config.technology.military_technology = {
     name: "Chobham Armour",
     icon: "steel",
     description: "Chobham Armour is a type of composite armour originating in the U.K. that took advantage of the sheer hardness of ceramics to shatter enemy projectiles upon impact. The exact nature of this armour remains classified.",
-    prerequisite_techs: ["modern-apc"],
+    prerequisite_techs: ["modern_apc"],
     research_cost: 10000,
     year: 1961,
     unlocks: {
