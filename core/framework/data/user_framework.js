@@ -467,18 +467,21 @@ module.exports = {
     var distance = parseInt(arg1_distance);
 
     //Declare local instance variables
+    var new_province_cache = [];
     var province_cache = [province_id];
 
-    if (main.provinces[province_id])
-      for (var i = 0; i < distance; i++)
-        for (var x = 0; x < province_cache.length; x++) {
-          var local_province = main.provinces[province_cache[x]];
+    for (var i = 0; i < distance; i++) {
+      for (var x = 0; x < province_cache.length; x++) {
+        var local_province = main.provinces[province_cache[x]];
 
-          if (local_province.adjacencies)
-            for (var y = 0; y < local_province.adjacencies.length; y++)
-              if (!province_cache.includes(local_province.adjacencies[y]))
-                province_cache.push(local_province.adjacencies[y]);
-        }
+        if (local_province.adjacencies)
+          for (var y = 0; y < local_province.adjacencies.length; y++)
+            if (!province_cache.includes(local_province.adjacencies[y]))
+              new_province_cache.push(local_province.adjacencies[y]);
+      }
+      for (var x = 0; x < new_province_cache.length; x++)
+        province_cache.push(new_province_cache[x]);
+    }
 
     //Return statement
     return province_cache;

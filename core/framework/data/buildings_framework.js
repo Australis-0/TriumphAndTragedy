@@ -18,6 +18,7 @@ module.exports = {
 
     //Declare local instance variables
     var building_obj = module.exports.getBuilding(building_name);
+    var new_modifiers = {};
     var province_obj = main.provinces[province_id];
     var raw_building_name = module.exports.getBuilding(building_name, { return_key: true });
 
@@ -33,8 +34,20 @@ module.exports = {
             }
 
             //Modifier handler
-            if (building_obj.modifiers)
-              applyModifiers(province_obj.owner, building_obj.modifiers);
+            if (building_obj.modifiers) {
+              var all_modifiers = Object.keys(building_obj.modifiers);
+
+              for (var i = 0; i < all_modifiers.length; i++) {
+                var local_value = building_obj.modifiers[all_modifiers[i]];
+
+                new_modifiers[all_modifiers[i]] = (isNaN(local_value)) ?
+                  local_value :
+                  local_value*amount;
+              }
+
+              //Apply new_modifiers
+              applyModifiers(province_obj.owner, new_modifiers);
+            }
 
             //Housing modifier
             if (building_obj.houses)
