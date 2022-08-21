@@ -43,15 +43,25 @@ module.exports = {
 
   setProvinceColour: function (arg0_file, arg1_province_id, arg2_colour) {
     //Convert from parameters
-    var local_map = global[`${arg0_file}_parsed`];
+    var file = arg0_file;
+    var local_map = global[`${file}_parsed`];
     var province_id = arg1_province_id;
     var colour = arg2_colour; //Provided as [r, g, b] array
 
-    try {
-      local_map.querySelector(`#${province_id}`).setAttribute("style", `fill:${RGBToHex(colour[0], colour[1], colour[2])};${getDefaultProvinceStyling()}`);
-    } catch (e) {
-      console.log(e);
-      log.warn(`Attempted Province ID: #${province_id}`);
-    }
+    //Declare local instance variables
+    var has_colour = false;
+    var new_colour = RGBToHex(colour[0], colour[1], colour[2]);
+
+    if (main.provinces[province_id])
+      if (main.provinces[province_id][`${file}_colour`] == new_colour)
+        has_colour = true;
+
+    if (!has_colour)
+      try {
+        local_map.querySelector(`#${province_id}`).setAttribute("style", `fill:${new_colour};${getDefaultProvinceStyling()}`);
+
+        if (main.provinces[province_id])
+          main.provinces[province_id][`${file}_colour`] = new_colour;
+      } catch {}
   }
 };
