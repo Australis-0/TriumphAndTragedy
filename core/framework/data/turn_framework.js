@@ -376,7 +376,7 @@ module.exports = {
 
         //War exhaustion
         if (all_enemies.length == 0 && !usr.blockaded.is_blockaded && !usr.mobilisation.is_mobilised)
-          usr.modifiers.war_exhaustion -= config.defines.combat.war_exhaustion_tickdown_rate;
+          usr.modifiers.war_exhaustion -= returnSafeNumber(config.defines.combat.war_exhaustion_tickdown_rate);
       }
 
       //Economic modifiers
@@ -1381,7 +1381,7 @@ module.exports = {
 
       //Mobilisation
       if (usr.mobilisation.is_mobilised) {
-        usr.modifiers.war_exhaustion += config.defines.combat.war_exhaustion_mobilisation_rate;
+        usr.modifiers.war_exhaustion += returnSafeNumber(config.defines.combat.war_exhaustion_mobilisation_rate);
 
         if (!is_being_justified_on && all_enemies.length == 0)
           usr.modifiers.infamy += config.defines.combat.peacetime_mobilisation_penalty;
@@ -1391,7 +1391,7 @@ module.exports = {
       var occupied_provinces = owned_provinces.length - controlled_provinces.length;
 
       //A full siege of the target user ticks up warscore by 10% per turn
-      usr.modifiers.war_exhaustion += parseFloat(((occupied_provinces/owned_provinces.length)*0.1).toFixed(2));
+      usr.modifiers.war_exhaustion += returnSafeNumber(parseFloat(((occupied_provinces/owned_provinces.length)*0.1).toFixed(2)));
     } catch (e) {
       console.log(e);
     }
