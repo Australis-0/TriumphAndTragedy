@@ -1257,7 +1257,7 @@ config.technology.economic_technology = {
     icon: "food",
     description: "The systematic optimisation of agriculture, with the usage of pesticides and herbicides in an attempt to maximise crop yield, is referred to as intensive agriculture, and is the main supplier of modern supermarkets and food supply chains.",
     year: 1960,
-    prerequisite_techs: ["industrial_farms"],
+    prerequisite_techs: ["industrial_farming"],
     research_cost: 7500,
     unlocks: {
       agriculture: 2
@@ -1443,6 +1443,17 @@ config.technology.economic_technology = {
       tax_efficiency: 0.05
     }
   },
+  emerging_economic_theory: {
+    name: "Emerging Economic Theory",
+    icon: "technology",
+    description: "New modes of economic thinking are beginning to challenge the economic establishment, leading to new policy intiatives and greater flexibility in deciding political directives.",
+    prerequisite_techs: ["globalisation"],
+    research_cost: 9000,
+    year: 2006,
+    unlocks: {
+      production_efficiency: 0.02
+    }
+  },
 
   gmo_crops: {
     name: "GMO Crops",
@@ -1455,8 +1466,8 @@ config.technology.economic_technology = {
       pop_growth_modifier: 0.01
     }
   },
-  production_efficiency: {
-    name: "Production Efficiency",
+  production_facilities: {
+    name: "Production Facilities",
     icon: "factory",
     description: "Production facilities are typically used to refer to consumer goods factories that produce and distribute market goods of a civilian nature.",
     prerequisite_techs: ["modern_urban_transport"],

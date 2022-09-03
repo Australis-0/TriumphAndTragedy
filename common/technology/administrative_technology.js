@@ -965,7 +965,7 @@ config.technology.administrative_technology = {
     name: "Modern Political Theory",
     icon: "political_capital",
     description: "Political science has started to become a more developed field, and the studying of citizen behaviour will allow us to predict future political movements and problems with greater certainty than before.",
-    prerequisite_techs: ["decolonisation"],
+    prerequisite_techs: ["economic_based_ideologies", "political_responsibility"],
     research_cost: 7500,
     year: 1971,
     unlocks: {
@@ -982,7 +982,7 @@ config.technology.administrative_technology = {
     custom_effect_description: "This technology currently has no effect. This may change in future versions."
   },
 
-  modern_political_theory: {
+  modern_political_competency: {
     name: "Modern Political Theory",
     icon: "knowledge",
     description: "The idea of competency in politics is beginning to hold greater sway over our administration as citizens increasingly come to expect more from their government. Needless to say, they will only be satisfied through provision.",
@@ -1019,7 +1019,7 @@ config.technology.administrative_technology = {
     name: "LGBTQIA Rights",
     icon: "government",
     description: "As attitudes in other countries regarding people with different sexual orientations start to shift, it might be time for us to consider our own take on the issue.",
-    prerequisite_techs: ["modern_political_competency"],
+    prerequisite_techs: ["political_responsibility"],
     research_cost: 8500,
     year: 1969,
     unlocks: {
