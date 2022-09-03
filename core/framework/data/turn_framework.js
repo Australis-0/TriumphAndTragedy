@@ -383,6 +383,10 @@ module.exports = {
       {
         usr.modifiers.shipment_time = Math.max(usr.modifiers.shipment_time, 0.01); //This is the cap for shipment time
         usr.transactions_this_turn = 0;
+
+        //Make sure good amount can't go lower than 0
+        for (var i = 0; i < lookup.all_good_names.length; i++)
+          usr.inventory[lookup.all_good_names[i]] = Math.max(usr.inventory[lookup.all_good_names[i]], 0);
       }
 
       //Population modifiers/trackers

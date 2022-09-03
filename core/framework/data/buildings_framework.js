@@ -934,6 +934,27 @@ module.exports = {
             }
           }
 
+        //Check for special_effect
+        if (good_type == "all")
+          for (var i = 0; i < all_goods.length; i++) {
+            var local_good = lookup.all_goods[all_goods[i]];
+
+            if (local_good.special_effect) {
+              local_good.special_effect(virtual_usr);
+
+              changeProductionValue(all_goods[i], "minimum", virtual_inventory[all_goods[i]] - usr.inventory[all_goods[i]]);
+              changeProductionValue(all_goods[i], "maximum", virtual_inventory[all_goods[i]] - usr.inventory[all_goods[i]]);
+            }
+          }
+        else
+          if (lookup.all_goods[good_type])
+            if (lookup.all_goods[good_type].special_effect) {
+              local_good.special_effect(virtual_usr);
+
+              changeProductionValue(good_type, "minimum", virtual_inventory[good_type] - usr.inventory[good_type]);
+              changeProductionValue(good_type, "maximum", virtual_inventory[good_type] - usr.inventory[good_type]);
+            }
+
         //Sort goods_production so that each key is actually [min, max]
         var all_good_keys = Object.keys(goods_production);
         for (var i = 0; i < all_good_keys.length; i++)

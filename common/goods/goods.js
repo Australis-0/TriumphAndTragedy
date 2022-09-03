@@ -196,16 +196,15 @@ config.goods = {
 
       special_effect: function (usr) {
         //At least 1 food per million is required by the population
+        usr.inventory.food -= Math.ceil(usr.population/1000000);
+
         if (usr.inventory.food < Math.ceil(usr.population/1000000)) {
-          usr.inventory.food = 0;
           usr.has_famine = true;
 
           killPops(usr.id, {
             type: "all",
             amount: getFaminePenalty(usr.id)
           });
-        } else {
-          usr.inventory.food -= Math.ceil(usr.population/1000000);
         }
       }
     },
