@@ -97,7 +97,7 @@ module.exports = {
       military_hq_description.push(`- ${printPercentage(usr.blockaded.blockaded_war_exhaustion, { display_prefix: true })} War Exhaustion from the ongoing blockade.`);
 
     //Print infamy
-    military_hq_description.push(`${config.icons.infamy} Infamy: **${parseFloat(usr.modifiers.infamy)}** (${parseFloat(usr.modifiers.infamy_loss, { display_prefix: true })} per turn)`);
+    military_hq_description.push(`${config.icons.infamy} Infamy: **${parseNumber(usr.modifiers.infamy, { display_float: true })}** (${parseNumber(usr.modifiers.infamy_loss, { display_float: true, display_prefix: true })} per turn)`);
 
     //3 inline fields; total number of armies/navies/air wings and AP/DP - military and civilian casualties over the last 10 turns - list of options
 		//1st Field - Total number of Armies/Navies/Air Wings, as well as AP/DP
