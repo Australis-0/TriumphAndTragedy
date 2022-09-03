@@ -411,21 +411,21 @@ module.exports = {
     var armies_in_province = [];
 
     //Iterate over all users and their armies
-    for (var i = 0; i < all_users.length; i++) {
-      var local_user = main.users[all_users[i]];
-      var local_user_armies = Object.keys(local_user.armies);
+      for (var i = 0; i < all_users.length; i++) {
+        var local_user = main.users[all_users[i]];
+        var local_user_armies = Object.keys(local_user.armies);
 
-      for (var x = 0; x < local_user_armies.length; x++) {
-        var local_army = local_user.armies[local_user_armies[x]];
+        for (var x = 0; x < local_user_armies.length; x++) {
+          var local_army = local_user.armies[local_user_armies[x]];
 
-        //Append owner for identification
-        local_army.owner = all_users[i];
+          //Append owner for identification
+          local_army.owner = all_users[i];
 
-        if (local_army.province == province_id)
-          if (local_army.type != "navy")
-            armies_in_province.push(local_army);
+          if (local_army.province == province_id)
+            if (local_army.type != "navy")
+              armies_in_province.push(local_army);
+        }
       }
-    }
 
     //Return statement
     return armies_in_province;

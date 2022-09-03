@@ -20,6 +20,7 @@ module.exports = {
     "war_list"
   ],
   economy_pages: [
+    "building_list",
     "economy",
     "inventory"
   ],
@@ -30,7 +31,8 @@ module.exports = {
   military_pages: [
     "army_list",
     "military",
-    "reserves"
+    "reserves",
+    "unit_list"
   ],
   politics_pages: [
     "cultures",

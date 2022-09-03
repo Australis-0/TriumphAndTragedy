@@ -198,6 +198,15 @@ module.exports = {
               game_obj.page = "army_list";
 
               break;
+            case "building list":
+            case "buildings":
+              createPageMenu(game_obj.middle_embed, {
+                embed_pages: printBuildList(user_id),
+                user: game_obj.user
+              });
+              game_obj.page = "building_list";
+
+              break;
             case "casus belli":
             case "cb list":
               //[View CB List]

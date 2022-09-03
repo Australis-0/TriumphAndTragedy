@@ -198,7 +198,7 @@ module.exports = {
     politics_string.push(`${config.icons.political_capital} Political Capital: **${parseNumber(usr.modifiers.political_capital)}** (${(usr.modifiers.political_capital_gain >= 0) ? "+" : ""}${parseNumber(usr.modifiers.political_capital_gain)} per turn)`);
 
     //Add infamy section later
-    politics_string.push(`${config.icons.infamy} Infamy: **${parseNumber(usr.modifiers.infamy)}** (${parseNumber(usr.modifiers.infamy_loss, { display_float: true, display_prefix: true })} per turn)`);
+    politics_string.push(`${config.icons.infamy} Infamy: **${parseFloat(usr.modifiers.infamy)}** (${parseNumber(usr.modifiers.infamy_loss, { display_float: true, display_prefix: true })} per turn)`);
     if (usr.modifiers.infamy > config.defines.infamy_limit)
       politics_string.push(`- Our current level of infamy is costing us **${printPercentage(usr.infamy_rgo_throughput)}** RGO Throughput and **${printPercentage(usr.infamy_production_efficiency)}** Production Eff.`);
 
