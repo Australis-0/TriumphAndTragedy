@@ -293,7 +293,7 @@ module.exports = {
       case "atlas":
         var provinces_file = fs.readFileSync("./map/provinces.svg");
         atlas_parsed = HTML.parse(provinces_file.toString());
-        
+
         renderAtlas();
 
         break;
@@ -315,7 +315,11 @@ module.exports = {
                   Math.min(local_user.colour[2] + 20, 255)
                 ]);
             }
-          } catch {}
+          } catch (e) {
+            log.error(`Could not parse colonisation users!`);
+            console.log(e);
+            console.log(`Province ID: ${all_provinces[i]}`)
+          }
         }
 
         //Loop over all users and determine where they're colonising

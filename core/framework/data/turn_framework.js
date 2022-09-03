@@ -264,6 +264,10 @@ module.exports = {
       }
     }
 
+    //Force render maps after turn processing
+    for (var i = 0; i < mapmodes.length; i++)
+      forceRender(mapmodes[i]);
+
     //Increment global round-count
     main.global.round_count++;
   },

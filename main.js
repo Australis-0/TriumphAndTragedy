@@ -450,10 +450,6 @@ setInterval(function(){
     if (main.season_started) {
       nextBattleTick(true);
       nextGlobalTurn();
-
-      //Force render maps after turn processing
-      for (var i = 0; i < mapmodes.length; i++)
-        forceRender(mapmodes[i]);
     }
   }
 
