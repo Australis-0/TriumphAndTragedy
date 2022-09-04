@@ -188,6 +188,7 @@ module.exports = {
     //Print imports; may only print up to 10 imports
     for (var i = 0; i < local_imports.length; i++)
       if (i <= 10) {
+        var actual_exporter_id = main.global.user_map[local_imports[i].exporter];
         var local_good_icon = (local_imports[i].good_type == "money") ?
           config.icons.money + " " :
           (getGood(local_imports[i].good_type)) ?
@@ -199,7 +200,7 @@ module.exports = {
             local_imports[i].good_type :
           local_imports[i].good_type;
 
-        import_string.push(`Importing ${local_good_icon}${parseNumber(local_imports[i].amount)} ${local_good_name} from **${main.users[local_imports[i].exporter].name}**.\nThe shipment will arrive in **${parseNumber(local_imports[i].duration)}** turn(s).`);
+        import_string.push(`Importing ${local_good_icon}${parseNumber(local_imports[i].amount)} ${local_good_name} from **${main.users[actual_exporter_id].name}**.\nThe shipment will arrive in **${parseNumber(local_imports[i].duration)}** turn(s).`);
       }
 
     if (local_imports.length > 10)
@@ -213,6 +214,7 @@ module.exports = {
 
     for (var i = 0; i < all_exports.length; i++)
       if (i <= 10) {
+        var actual_target_id = main.global.user_map[local_export.target];
         var local_export = usr.trades[all_exports[i]];
         var local_good_icon = (local_export.good_type == "money") ?
           config.icons.money + " " :
@@ -225,7 +227,7 @@ module.exports = {
             local_export.good_type :
           local_export.good_type;
 
-        export_string.push(`Exporting ${local_good_icon}${parseNumber(local_export.amount)} ${local_good_name} to **${main.users[local_export.target].name}**.\nThe shipment will arrive in **${parseNumber(local_export.duration)}** turn(s).`);
+        export_string.push(`Exporting ${local_good_icon}${parseNumber(local_export.amount)} ${local_good_name} to **${main.users[actual_target_id].name}**.\nThe shipment will arrive in **${parseNumber(local_export.duration)}** turn(s).`);
       }
 
     if (all_exports.length > 10)

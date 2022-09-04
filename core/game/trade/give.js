@@ -36,7 +36,7 @@ module.exports = {
                   if (!isBlockaded(actual_id)) {
                     if (!isBlockaded(ot_actual_id)) {
                       //Check if user has enough shipment capacity
-                      if (getShipmentCapacity(actual_id) >= raw_amount) {
+                      if (getShipmentCapacity(actual_id) >= raw_amount || raw_good_name == "money") {
                         //Check if user has enough items to actually carry this out
                         if (
                           (raw_good_name == "money" && usr.money >= raw_amount) ||
@@ -61,7 +61,7 @@ module.exports = {
                             //Append to trade object
                             usr.trades[trade_id] = {
                               target: other_user,
-                              exporter: user_id,
+                              exporter: actual_id,
 
                               amount: raw_amount,
                               good_type: (raw_good_name == "money") ?
@@ -71,16 +71,19 @@ module.exports = {
                               duration: amount_of_turns
                             };
 
-                            var local_good_icon = (good_name == "money") ?
+                            var local_good_icon = (raw_good_name == "money") ?
                               config.icons.money + " " :
                               (getGood(good_name)) ?
                                 config.icons[getGood(good_name).icon] + " " :
                                 "";
-                            var local_good_name = (getGood(good_name)) ?
-                              (getGood(good_name)) ?
+                            var local_good_name;
+                            try {
+                              local_good_name = (getGood(good_name)) ?
                                 getGood(good_name).name :
-                                good_name :
-                              good_name;
+                                good_name;
+                            } catch {
+                              local_good_name = "Money";
+                            }
 
                             if (!options.hide_display)
                               printAlert(game_obj.id, `Your transports have begun to ship ${parseNumber(raw_amount)} ${local_good_icon}${local_good_name} to **${ot_user.name}**. They will arrive in **${parseNumber(amount_of_turns)}** turn(s).`);
