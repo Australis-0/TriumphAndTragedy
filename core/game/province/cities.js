@@ -63,7 +63,7 @@ module.exports = {
           printError(game_obj.id, `You must wait until next turn for your new government to start issuing edicts!`);
         }
       } else {
-        printError(game_obj.id, `The city you have specified, **${truncateString(city_name, )}**, could not be found anywhere inside of your controlled territories!`);
+        printError(game_obj.id, `The city you have specified, **${truncateString(city_name)}**, could not be found anywhere inside of your controlled territories!`);
       }
     } else {
       printError(game_obj.id, `The building category you have specified, **${raw_building_category}**, doesn't exist!`);
