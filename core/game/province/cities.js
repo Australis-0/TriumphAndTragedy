@@ -9,60 +9,64 @@ module.exports = {
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
     var building_category = getBuildingCategory(raw_building_category, { return_key: true });
-    var building_category_obj = getBuildingCategory(building_category);
+    var building_category_obj = getBuildingCategory((building_category) ? building_category : raw_building_name);
     var city_obj = getCity(city_name, { users: actual_id });
     var game_obj = getGameObject(user_id);
     var usr = main.users[actual_id];
 
     //Check if city exists in the first place
-    if (city_obj) {
-      //Calculate development_cost
-      var development_cost = getDevelopmentCost(actual_id, city_name, amount);
+    if (building_category_obj) {
+      if (city_obj) {
+        //Calculate development_cost
+        var development_cost = getDevelopmentCost(actual_id, city_name, amount);
 
-      if (usr.country_age != 0) {
-        if (usr.modifiers.political_capital >= development_cost) {
-          if (amount > 0) {
-            if (building_category_obj) {
-              if (!building_category_obj.disable_slots) {
-                //Effect changes to political_capital and building category development
-                usr.modifiers.political_capital -= development_cost;
-                city_obj.development += amount;
-                city_obj[`${building_category}_building_slots`] += amount;
+        if (usr.country_age != 0) {
+          if (usr.modifiers.political_capital >= development_cost) {
+            if (amount > 0) {
+              if (building_category_obj) {
+                if (!building_category_obj.disable_slots) {
+                  //Effect changes to political_capital and building category development
+                  usr.modifiers.political_capital -= development_cost;
+                  city_obj.development += amount;
+                  city_obj[`${building_category}_building_slots`] += amount;
 
-                city_obj[`${building_category}_development`] = (city_obj[`${building_category}_development`]) ?
-                  city_obj[`${building_category}_development`] + amount :
-                  amount;
+                  city_obj[`${building_category}_development`] = (city_obj[`${building_category}_development`]) ?
+                    city_obj[`${building_category}_development`] + amount :
+                    amount;
 
-                printAlert(game_obj.id, `You have issued **${parseNumber(amount)}** urbanisation edicts for the **${parseNumber(development_cost)}** Political Capital! People have begun flocking to **${city_obj.name}** to start working and constructing new buildings, thereby expanding the overall building cap in the city for **${parseString(building_category).toLowerCase()}**.`);
+                  printAlert(game_obj.id, `You have issued **${parseNumber(amount)}** urbanisation edicts for the **${parseNumber(development_cost)}** Political Capital! People have begun flocking to **${city_obj.name}** to start working and constructing new buildings, thereby expanding the overall building cap in the city for **${parseString(building_category).toLowerCase()}**.`);
 
-                //Update UI
-                if (game_obj.page == `view_city_${city_obj.name}`)
-                  createPageMenu(game_obj.middle_embed, {
-                    embed_pages: printCity(game_obj.user, city_obj.name),
-                    page: interfaces[game_obj.middle_embed.id].page,
-                    user: game_obj.user
-                  });
+                  //Update UI
+                  if (game_obj.page == `view_city_${city_obj.name}`)
+                    createPageMenu(game_obj.middle_embed, {
+                      embed_pages: printCity(game_obj.user, city_obj.name),
+                      page: interfaces[game_obj.middle_embed.id].page,
+                      user: game_obj.user
+                    });
+                } else {
+                  printError(game_obj.id, `**${parseString(building_category)}** doesn't have any slots to develop!`);
+                }
               } else {
-                printError(game_obj.id, `**${parseString(building_category)}** doesn't have any slots to develop!`);
+                printError(game_obj.id, `You can't issue urbanisation edicts targeting a nonexistent building category!`);
               }
             } else {
-              printError(game_obj.id, `You can't issue urbanisation edicts targeting a nonexistent building category!`);
+              (amount == 0) ?
+                printError(game_obj.id, `You can't issue zero urbanisation edicts!`) :
+                printError(game_obj.id, `You can't issue negative urbanisation edicts! Who are you anyway, Pol Pot?`);
             }
           } else {
-            (amount == 0) ?
-              printError(game_obj.id, `You can't issue zero urbanisation edicts!`) :
-              printError(game_obj.id, `You can't issue negative urbanisation edicts! Who are you anyway, Pol Pot?`);
+            (total_pc_price.toString().indexOf("e") != -1) ?
+              printError(game_obj.id, `You do not currently have enough Political Capital to issue this many urbanisation edicts! You need **infinite** ${config.icons.political_capital} Political Capital before being able to develop your city further to the extent that you have requested.`) :
+              printError(game_obj.id, `You don't have enough Political Capital to issue this many urbanisation edicts! You need another **${parseNumber(development_cost)}** ${config.icons.political_capital} Political Capital before being able to develop your city further to the extent that you have requested.`);
           }
         } else {
-          (total_pc_price.toString().indexOf("e") != -1) ?
-            printError(game_obj.id, `You do not currently have enough Political Capital to issue this many urbanisation edicts! You need **infinite** ${config.icons.political_capital} Political Capital before being able to develop your city further to the extent that you have requested.`) :
-            printError(game_obj.id, `You don't have enough Political Capital to issue this many urbanisation edicts! You need another **${parseNumber(development_cost)}** ${config.icons.political_capital} Political Capital before being able to develop your city further to the extent that you have requested.`);
+          printError(game_obj.id, `You must wait until next turn for your new government to start issuing edicts!`);
         }
       } else {
-        printError(game_obj.id, `You must wait until next turn for your new government to start issuing edicts!`);
+        printError(game_obj.id, `The city you have specified, **${truncateString(city_name, )}**, could not be found anywhere inside of your controlled territories!`);
       }
     } else {
-      printError(game_obj.id, `The city you have specified, **${truncateString(city_name, )}**, could not be found anywhere inside of your controlled territories!`);
+      printError(game_obj.id, `The building category you have specified, **${raw_building_category}**, doesn't exist!`);
     }
   },
 
