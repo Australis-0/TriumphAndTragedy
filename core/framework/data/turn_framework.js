@@ -1394,8 +1394,12 @@ module.exports = {
       //Occupation
       var occupied_provinces = owned_provinces.length - controlled_provinces.length;
 
-      //A full siege of the target user ticks up warscore by 10% per turn
-      usr.modifiers.war_exhaustion += returnSafeNumber(parseFloat(((occupied_provinces/owned_provinces.length)*0.1).toFixed(2)));
+      //A full siege of the target user ticks up warscore by 10% per turn unless fully sieged down
+      if (occupied_provinces >= owned_provinces.length) {
+        usr.modifiers.war_exhaustion = 1;
+      } else {
+        usr.modifiers.war_exhaustion += returnSafeNumber(parseFloat(((occupied_provinces/owned_provinces.length)*0.1).toFixed(2)));
+      }
     } catch (e) {
       console.log(e);
     }
