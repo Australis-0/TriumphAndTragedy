@@ -243,7 +243,7 @@ module.exports = {
     for (var i = 0; i < all_wars.length; i++) {
       var local_war = main.global.wars[all_wars[i]];
 
-      if (local_war.attackers.includes(actual_id) || local_war.defenders.includes(actual_ot_user_id))
+      if (local_war.attackers.includes(actual_id) || local_war.defenders.includes(actual_id))
         war_array.push((!options.return_key) ? local_war : all_wars[i]);
     }
 

@@ -88,7 +88,6 @@ module.exports = {
   },
 
   printProvinces: function (arg0_user) {
-
     //Convert from parameters
     var user_id = arg0_user;
 
@@ -196,13 +195,18 @@ module.exports = {
     }
 
     //Return statement
-    return splitEmbed(province_string, {
-      fields: fields_list,
-      fixed_width: true,
-      maximum_fields: 12,
-      table_width: 2,
-      title: "Province List:",
-      title_pages: true
-    });
+    return (fields_list.length > 0) ?
+      splitEmbed(province_string, {
+        fields: fields_list,
+        fixed_width: true,
+        maximum_fields: 12,
+        table_width: 2,
+        title: "Province List:",
+        title_pages: true
+      }) :
+      splitEmbed(province_string, {
+        title: "Province List:",
+        title_pages: true
+      });
   }
 };

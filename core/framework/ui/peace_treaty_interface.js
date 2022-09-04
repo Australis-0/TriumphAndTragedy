@@ -220,7 +220,7 @@ module.exports = {
 
         //Wait 3 seconds before reinitialising prompt
         setTimeout(function(){
-          module.exports.initialiseAnnexAll(user_id, peace_obj);
+          module.exports.initialiseAnnexAll(user_id, peace_obj, owner);
         }, 3000);
       }
     },

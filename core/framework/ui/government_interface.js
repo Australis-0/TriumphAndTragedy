@@ -16,7 +16,9 @@ module.exports = {
     government_string.push(`**[Back]** | **[Jump To Page]**`);
     government_string.push("");
     government_string.push("Note: Only governments currently available to you are being shown.");
-    government_string.push(`${(usr.government == anarchy_name) ? "**[Set Government]**" : "**[Coup]**"}`);
+    try {
+      government_string.push(`${(usr.government == anarchy_name) ? "**[Set Government]**" : "**[Coup]**"}`);
+    } catch {}
     government_string.push("");
     government_string.push(config.localisation.divider);
     government_string.push("");
