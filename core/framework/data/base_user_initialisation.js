@@ -110,9 +110,13 @@ module.exports = {
 
         if (local_user.country_age >= 20)
           for (var x = 0; x < local_user.researched_technologies.length; x++) {
-            var technology_cost = returnSafeNumber(getTechnology(local_user.researched_technologies[x]).research_cost);
+            try {
+              var technology_cost = returnSafeNumber(getTechnology(local_user.researched_technologies[x]).research_cost);
 
-            highest_cost = Math.max(highest_cost, technology_cost);
+              highest_cost = Math.max(highest_cost, technology_cost);
+            } catch (e) {
+              log.error(`${all_users[i]} has an invalid tech when running through ${local_user.researched_technologies[x]}!`);
+            }
           }
       }
 
