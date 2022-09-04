@@ -128,6 +128,10 @@ module.exports = {
           setAllProvinceColours(province_obj.controller, province_obj.id, true)
         }
     }
+    
+    //Force render maps after turn processing
+    for (var i = 0; i < mapmodes.length; i++)
+      forceRender(mapmodes[i]);
   },
 
   nextGlobalTurn: function () {
@@ -242,7 +246,7 @@ module.exports = {
           //There can't be a shortage of the existing good
           local_market_good.stock >= Math.ceil(
             config.defines.economy.resource_base_stock*0.1
-          )
+          );
         ) {
           if (local_market_good.buy_price > 100 && local_market_good.sell_price > 100) {
             local_market_good.buy_price = Math.ceil(local_market_good.buy_price*0.95);
@@ -263,10 +267,6 @@ module.exports = {
         local_market_good.amount_sold = Math.ceil(local_market_good.amount_sold*0.5);
       }
     }
-
-    //Force render maps after turn processing
-    for (var i = 0; i < mapmodes.length; i++)
-      forceRender(mapmodes[i]);
 
     //Increment global round-count
     main.global.round_count++;
