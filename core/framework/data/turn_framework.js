@@ -128,7 +128,7 @@ module.exports = {
           setAllProvinceColours(province_obj.controller, province_obj.id, true)
         }
     }
-    
+
     //Force render maps after turn processing
     for (var i = 0; i < mapmodes.length; i++)
       forceRender(mapmodes[i]);
@@ -246,7 +246,7 @@ module.exports = {
           //There can't be a shortage of the existing good
           local_market_good.stock >= Math.ceil(
             config.defines.economy.resource_base_stock*0.1
-          );
+          )
         ) {
           if (local_market_good.buy_price > 100 && local_market_good.sell_price > 100) {
             local_market_good.buy_price = Math.ceil(local_market_good.buy_price*0.95);
