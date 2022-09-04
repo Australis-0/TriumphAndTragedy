@@ -34,9 +34,9 @@ module.exports = {
                 //Check if province is already being assimilated
                 var is_being_assimilated = [false, ""]; //[is_being_assimilated, assimilation_obj];
 
-                for (var i = 0; i < usr.assimilations.length; i++)
-                  if (usr.assimilations[i].province_id == province_id)
-                    is_being_assimilated = [true, usr.assimilations[i]];
+                for (var i = 0; i < usr.pops.assimilations.length; i++)
+                  if (usr.pops.assimilations[i].province_id == province_id)
+                    is_being_assimilated = [true, usr.pops.assimilations[i]];
 
                 if (!is_being_assimilated[0]) {
                   //Declare sub-local instance variables
@@ -45,8 +45,8 @@ module.exports = {
                   //Subtract from usr.modifiers.political_capital
                   usr.modifiers.political_capital -= config.defines.politics.assimilate_cost;
 
-                  //Push to usr.assimilations
-                  usr.assimilations.push({
+                  //Push to usr.pops.assimilations
+                  usr.pops.assimilations.push({
                     culture_id: raw_culture_name,
                     province_id: province_id,
 

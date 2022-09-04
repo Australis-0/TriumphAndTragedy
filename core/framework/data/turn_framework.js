@@ -150,6 +150,32 @@ module.exports = {
         lookup.province_troop_strengths[all_provinces[i]] = getTroopsInProvince(all_provinces[i]);
     }
 
+    //World Market Up-Logic
+    {
+      for (var i = 0; i < all_market_goods.length; i++) {
+        var local_market_good = main.market[all_market_goods[i]];
+
+        //Increase buy_price each turn
+        if (local_market_good.buy_price < local_market_good.sell_price*1.2)
+          local_market_good.buy_price = Math.ceil(local_market_good.buy_price*1.2);
+
+        //Institute minimum good price caps
+        local_market_good.buy_price =
+          Math.max(local_market_good.buy_price, config.defines.economy.resource_min_buy_price);
+
+        local_market_good.sell_price =
+          Math.max(local_market_good.sell_price, config.defines.economy.resource_min_sell_price);
+      }
+    }
+
+    //Iterate over all users and process their turns
+    for (var i = 0; i < all_users.length; i++)
+      try {
+        nextTurn(all_users[i]);
+      } catch (e) {
+        console.log(e);
+      }
+
     //War processing
     {
       //Iterate over all provinces to check occupation risk
@@ -196,43 +222,18 @@ module.exports = {
         }
 
         //Set attacker_warscore; defender_warscore
-        local_war.attacker_warscore = Math.min((fully_sieged_defenders != local_war.defenders.length) ?
-          0.75*defender_war_exhaustion + (
-            0.25*returnSafeNumber(main.users[local_war.defenders_war_leader].modifiers.war_exhaustion, 1)
-          ) :
-          1
+        local_war.attacker_warscore = Math.min(
+          (fully_sieged_defenders != local_war.defenders.length) ?
+            0.75*defender_war_exhaustion + (
+              0.25*returnSafeNumber(main.users[local_war.defenders_war_leader].modifiers.war_exhaustion, 1)
+            ) :
+            1
         , 1);
         local_war.defender_warscore = Math.min(
           parseFloat((attacker_war_exhaustion/local_war.attackers.length).toFixed(2)),
         1);
       }
     }
-
-    //World Market Up-Logic
-    {
-      for (var i = 0; i < all_market_goods.length; i++) {
-        var local_market_good = main.market[all_market_goods[i]];
-
-        //Increase buy_price each turn
-        if (local_market_good.buy_price < local_market_good.sell_price*1.2)
-          local_market_good.buy_price = Math.ceil(local_market_good.buy_price*1.2);
-
-        //Institute minimum good price caps
-        local_market_good.buy_price =
-          Math.max(local_market_good.buy_price, config.defines.economy.resource_min_buy_price);
-
-        local_market_good.sell_price =
-          Math.max(local_market_good.sell_price, config.defines.economy.resource_min_sell_price);
-      }
-    }
-
-    //Iterate over all users and process their turns
-    for (var i = 0; i < all_users.length; i++)
-      try {
-        nextTurn(all_users[i]);
-      } catch (e) {
-        console.log(e);
-      }
 
     //World Market Down-Logic
     {
