@@ -50,22 +50,22 @@ module.exports = {
           //Obsoletion
           case "obsolete_building":
             for (var x = 0; x < effect_value.length; x++)
-              removeElement(usr.available_buildings, effect_value[x]);
+              usr.available_buildings = removeElement(usr.available_buildings, effect_value[x]);
 
             break;
           case "obsolete_government":
             for (var x = 0; x < effect_value.length; x++)
-              removeElement(usr.available_governments, effect_value[x]);
+              usr.available_governments = removeElement(usr.available_governments, effect_value[x]);
 
             break;
           case "obsolete_reform":
             for (var x = 0; x < effect_value.length; x++)
-              removeElement(usr.available_reforms, effect_value[x]);
+              usr.available_reforms = removeElement(usr.available_reforms, effect_value[x]);
 
             break;
           case "obsolete_unit":
             for (var x = 0; x < effect_value.length; x++)
-              removeElement(usr.available_units, effect_value[x]);
+              usr.available_units = removeElement(usr.available_units, effect_value[x]);
 
             break;
 
