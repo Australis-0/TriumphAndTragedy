@@ -214,7 +214,6 @@ module.exports = {
 
     for (var i = 0; i < all_exports.length; i++)
       if (i <= 10) {
-        var actual_target_id = main.global.user_map[local_export.target];
         var local_export = usr.trades[all_exports[i]];
         var local_good_icon = (local_export.good_type == "money") ?
           config.icons.money + " " :
@@ -226,6 +225,8 @@ module.exports = {
             getGood(local_export.good_type).name :
             local_export.good_type :
           local_export.good_type;
+          
+        var actual_target_id = main.global.user_map[local_export.target];
 
         export_string.push(`Exporting ${local_good_icon}${parseNumber(local_export.amount)} ${local_good_name} to **${main.users[actual_target_id].name}**.\nThe shipment will arrive in **${parseNumber(local_export.duration)}** turn(s).`);
       }
