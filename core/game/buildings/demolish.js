@@ -18,47 +18,52 @@ module.exports = {
       if (!atWar(actual_id)) {
         if (building_obj) {
           if (city_obj) {
-            //Check if the city even has that many buildings of that type to demolish in the first place
-            var raw_building_name = getBuilding(building_name, { return_key: true });
-            var total_buildings = 0;
+            if (city_obj.controller == actual_id) {
 
-            for (var i = 0; i < city_obj.buildings.length; i++)
-              if (city_obj.buildings[i].building_type == raw_building_name)
-                total_buildings++;
+              //Check if the city even has that many buildings of that type to demolish in the first place
+              var raw_building_name = getBuilding(building_name, { return_key: true });
+              var total_buildings = 0;
 
-            if (total_buildings >= amount) {
-              if (amount > 0) {
-                var demolished_buildings = destroyBuilding(amount, raw_building_name, city_obj.id);
+              for (var i = 0; i < city_obj.buildings.length; i++)
+                if (city_obj.buildings[i].building_type == raw_building_name)
+                  total_buildings++;
 
-                //Convert to array
-                var all_freed_pops = Object.keys(demolished_buildings);
-                var freed_pops = [];
+              if (total_buildings >= amount) {
+                if (amount > 0) {
+                  var demolished_buildings = destroyBuilding(amount, raw_building_name, city_obj.id);
 
-                for (var i = 0; i < all_freed_pops.length; i++) {
-                  var local_pop = config.pops[all_freed_pops[i]];
+                  //Convert to array
+                  var all_freed_pops = Object.keys(demolished_buildings);
+                  var freed_pops = [];
 
-                  freed_pops.push(`${(local_pop.icon) ? local_pop.icon + " " : ""}**${parseNumber(demolished_buildings[all_freed_pops[i]])}** ${(local_pop.name) ? local_pop.name : all_freed_pops[i]}`);
+                  for (var i = 0; i < all_freed_pops.length; i++) {
+                    var local_pop = config.pops[all_freed_pops[i]];
+
+                    freed_pops.push(`${(local_pop.icon) ? local_pop.icon + " " : ""}**${parseNumber(demolished_buildings[all_freed_pops[i]])}** ${(local_pop.name) ? local_pop.name : all_freed_pops[i]}`);
+                  }
+
+                  //Update UI
+                  if (game_obj.page == `view_city_${city_obj.name}`)
+                    createPageMenu(game_obj.middle_embed, {
+                      embed_pages: printCity(game_obj.user, city_obj.name),
+                      page: interfaces[game_obj.middle_embed.id].page,
+                      user: game_obj.user
+                    });
+
+                  //Print user feedback
+                  (all_freed_pops.length > 0) ?
+                    printAlert(game_obj.id, `${(building_obj.icon) ? config.icons[building_obj.icon] + " " : ""}**${parseNumber(amount)}** ${(building_obj.name) ? building_obj.name : raw_building_name} were demolished. You were refunded ${parseList(freed_pops)}, and **${parseNumber(amount)}** building slots were freed up.`) :
+                    printAlert(game_obj.id, `${(building_obj.icon) ? config.icons[building_obj.icon] + " " : ""}**${parseNumber(amount)}** ${(building_obj.name) ? building_obj.name : raw_building_name} were demolished.`);
+                } else if (amount == 0) {
+                  printError(game_obj.id, `You can't demolish zero **${(building_obj.name) ? building_obj.name : raw_building_name}! How does that make any sense?`);
+                } else {
+                  printError(game_obj.id, `How do you propose demolishing negative **${(building_obj.name) ? building_obj.name : raw_building_name}, genius?`);
                 }
-
-                //Update UI
-                if (game_obj.page == `view_city_${city_obj.name}`)
-                  createPageMenu(game_obj.middle_embed, {
-                    embed_pages: printCity(game_obj.user, city_obj.name),
-                    page: interfaces[game_obj.middle_embed.id].page,
-                    user: game_obj.user
-                  });
-
-                //Print user feedback
-                (all_freed_pops.length > 0) ?
-                  printAlert(game_obj.id, `${(building_obj.icon) ? config.icons[building_obj.icon] + " " : ""}**${parseNumber(amount)}** ${(building_obj.name) ? building_obj.name : raw_building_name} were demolished. You were refunded ${parseList(freed_pops)}, and **${parseNumber(amount)}** building slots were freed up.`) :
-                  printAlert(game_obj.id, `${(building_obj.icon) ? config.icons[building_obj.icon] + " " : ""}**${parseNumber(amount)}** ${(building_obj.name) ? building_obj.name : raw_building_name} were demolished.`);
-              } else if (amount == 0) {
-                printError(game_obj.id, `You can't demolish zero **${(building_obj.name) ? building_obj.name : raw_building_name}! How does that make any sense?`);
               } else {
-                printError(game_obj.id, `How do you propose demolishing negative **${(building_obj.name) ? building_obj.name : raw_building_name}, genius?`);
+                printError(game_obj.id, `You don't have that many **${(building_obj.name) ? building_obj.name : raw_building_name}**! You can only demolish up to **${parseNumber(total_buildings)}** ${(building_obj.name) ? building_obj.name : raw_building_name} in this city.`);
               }
             } else {
-              printError(game_obj.id, `You don't have that many **${(building_obj.name) ? building_obj.name : raw_building_name}**! You can only demolish up to **${parseNumber(total_buildings)}** ${(building_obj.name) ? building_obj.name : raw_building_name} in this city.`);
+              printAlert(game_obj.id, `You can't demolish buildings in a city you don't control!`);
             }
           } else {
             printError(game_obj.id, `The city you have specified proved as elusive as El Dorado!`);
