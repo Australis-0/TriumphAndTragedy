@@ -67,7 +67,7 @@ config.technology.military_technology = {
     year: 1302,
     unlocks: {
       unlock_unit: "pike_and_square",
-      obsolete_unit: "spearmen"
+      obsolete_unit: ["spearmen", "skirmishers"]
     }
   },
   heavy_cavalry: {
@@ -1492,6 +1492,7 @@ config.technology.military_technology = {
     research_cost: 6500,
     year: 1932,
     unlocks: {
+      obsolete_unit: ["dirigibles", "zeppelins"],
       unlock_unit: "propeller_fighters"
     }
   },
