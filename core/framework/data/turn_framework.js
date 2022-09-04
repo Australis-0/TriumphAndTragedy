@@ -387,10 +387,6 @@ module.exports = {
       {
         usr.modifiers.shipment_time = Math.max(usr.modifiers.shipment_time, 0.01); //This is the cap for shipment time
         usr.transactions_this_turn = 0;
-
-        //Make sure good amount can't go lower than 0
-        for (var i = 0; i < lookup.all_good_names.length; i++)
-          usr.inventory[lookup.all_good_names[i]] = Math.max(usr.inventory[lookup.all_good_names[i]], 0);
       }
 
       //Population modifiers/trackers
@@ -1408,9 +1404,16 @@ module.exports = {
     console.time(`Modifier cap processing!`);
     //Modifier cap handlers - KEEP AT BOTTOM!
     {
+      //Diplomatic modifiers
       usr.modifiers.infamy = Math.min(Math.max(usr.modifiers.infamy, 0), 1);
       usr.modifiers.war_exhaustion = Math.min(Math.max(usr.modifiers.war_exhaustion, 0), 1);
 
+      //Economic modifiers
+      //Make sure good amount can't go lower than 0
+      for (var i = 0; i < lookup.all_good_names.length; i++)
+        usr.inventory[lookup.all_good_names[i]] = Math.max(usr.inventory[lookup.all_good_names[i]], 0);
+
+      //Political modifiers
       balanceParties(actual_id);
     }
     console.timeEnd(`Modifier cap processing!`);
