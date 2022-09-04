@@ -176,7 +176,7 @@ module.exports = {
         console.log(e);
       }
 
-    //War processing
+    //War processing - This must happen after users process their turns
     {
       //Iterate over all provinces to check occupation risk
       for (var i = 0; i < all_provinces.length; i++) {
@@ -235,7 +235,7 @@ module.exports = {
       }
     }
 
-    //World Market Down-Logic
+    //World Market Down-Logic - This must happen after users process their turns
     {
       for (var i = 0; i < all_market_goods.length; i++) {
         var local_market_good = main.market[all_market_goods[i]];
