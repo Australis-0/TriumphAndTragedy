@@ -245,8 +245,8 @@ module.exports = {
   //parseTechnology() - Parses the technological effects of a given tech for a given user. (Used primarily after the research of a tech has been finished)
   parseTechnology: function (arg0_user, arg1_technology_name) {
     //Convert from parameters
-    var user_id = arg0_user;
-    var usr = main.users[arg0_user];
+    var actual_id = main.global.user_map[arg0_user];
+    var usr = main.users[actual_id];
     var raw_technology_name = arg1_technology_name.toLowerCase();
 
     //Declare local instance variables
@@ -254,7 +254,7 @@ module.exports = {
 
     //Parse technology for user!
     if (tech_obj.unlocks)
-      applyModifiers(user_id, tech_obj.unlocks);
+      applyModifiers(actual_id, tech_obj.unlocks);
   },
 
   researchUpTo: function (arg0_user, arg1_technology_cost) {

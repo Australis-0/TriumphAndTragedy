@@ -10,25 +10,6 @@ module.exports = {
     var all_users = Object.keys(main.users);
     var starting_kit = config.defines.common.starting_kit;
 
-    //Auto-catchup
-    {
-      var highest_cost = 0;
-
-      for (var i = 0; i < all_users.length; i++) {
-        var local_user = main.users[all_users[i]];
-
-        if (local_user.country_age >= 20)
-          for (var x = 0; x < local_user.researched_technologies.length; x++) {
-            var technology_cost = returnSafeNumber(getTechnology(local_user.researched_technologies[x]).research_cost);
-
-            highest_cost = Math.max(highest_cost, technology_cost);
-          }
-      }
-
-      if (highest_cost > returnSafeNumber(config.defines.common.research_to))
-        researchUpTo(user_id, highest_cost);
-    }
-
     //Loop over all keys in starting kit and parse them
     for (var i = 0; i < all_starting_keys.length; i++) {
       var local_name = all_starting_keys[i];
@@ -118,6 +99,25 @@ module.exports = {
               randomNumber(local_list[0], local_list[1]) :
               local_list[0];
       }
+    }
+
+    //Auto-catchup
+    {
+      var highest_cost = 0;
+
+      for (var i = 0; i < all_users.length; i++) {
+        var local_user = main.users[all_users[i]];
+
+        if (local_user.country_age >= 20)
+          for (var x = 0; x < local_user.researched_technologies.length; x++) {
+            var technology_cost = returnSafeNumber(getTechnology(local_user.researched_technologies[x]).research_cost);
+
+            highest_cost = Math.max(highest_cost, technology_cost);
+          }
+      }
+
+      if (highest_cost > returnSafeNumber(config.defines.common.research_to))
+        researchUpTo(user_id, highest_cost);
     }
   },
 
@@ -302,7 +302,9 @@ module.exports = {
     if (!usr.expeditions) usr.expeditions = {};
     if (!usr.inventory) usr.inventory = {};
     if (!usr.laws) usr.laws = {};
-    if (!usr.mobilisation) usr.mobilisation = {};
+    if (!usr.mobilisation) usr.mobilisation = {
+      unit_type: "none"
+    };
     if (!usr.national_modifiers) usr.national_modifiers = {};
     if (!usr.researching) usr.researching = [];
     if (!usr.reserves) usr.reserves = {};

@@ -68,7 +68,7 @@ module.exports = {
                 var local_units = Object.keys(local_army.units);
 
                 for (var x = 0; x < local_units.length; x++) {
-                  var lost_units = local_army.units[local_units[x]] - Math.ceil(
+                  var lost_units =  Math.ceil(
                     local_army.units[local_units[x]]*config.defines.combat.base_attrition_rate*local_user.modifiers.attrition_rate
                   );
 

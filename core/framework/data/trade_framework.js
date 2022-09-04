@@ -111,7 +111,8 @@ module.exports = {
     for (var i = 0; i < all_exports.length; i++) {
       var local_trade = usr.trades[all_exports[i]];
 
-      total_used_capacity += local_trade.amount;
+      if (local_trade.good_type != "money")
+        total_used_capacity += local_trade.amount;
     }
 
     //Return statement
