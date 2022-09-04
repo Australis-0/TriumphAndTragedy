@@ -5,7 +5,7 @@ config.governments = {
     singular: "Anarchist",
     icon: "black_circle",
     is_anarchy: true,
-    description: "Anarchists believe in a stateless world ... which is bad news for you, since you're roleplaying a state. Go on, do `$government <name>`!",
+    description: "Anarchists believe in a stateless world ... which is bad news for you, since you're roleplaying a state. Go on, pick a government!",
 
     effect: {
       can_justify_wars: false,
