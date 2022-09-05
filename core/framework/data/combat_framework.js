@@ -118,7 +118,6 @@ module.exports = {
 
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
-    var actual_ot_user_id = main.global.user_map[ot_user_id];
     var army_obj = (typeof army_name != "object") ? getArmy(actual_id, army_name.trim()) : army_name;
     var city_obj = (typeof city_name != "object") ? getCity(city_name.trim()) : city_name;
     var usr = main.users[actual_id];

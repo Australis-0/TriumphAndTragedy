@@ -222,7 +222,7 @@ module.exports = {
       for (var i = 0; i < all_visual_prompts.length; i++) {
         var local_prompt = interfaces[all_visual_prompts[i]];
         if (local_prompt.type == "visual_prompt")
-          if (local_prompt.message.id == message.id)
+          if (local_prompt.message.id == game_obj.alert_embed.id)
             message_is_prompt = true;
       }
 
