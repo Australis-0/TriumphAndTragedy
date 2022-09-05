@@ -99,6 +99,8 @@ module.exports = {
               } else {
                 log.error(`local_prompt.evaluate_function() turned out to be nonexistent! See below for a full log of the local_prompt object:`);
                 console.log(local_prompt);
+
+                printAlert(game_id, `The bot got restarted! This usually indicates some form of developer action. Try inputting the command again.`);
               }
 
               //Print final text or reset alert array to what it was before
