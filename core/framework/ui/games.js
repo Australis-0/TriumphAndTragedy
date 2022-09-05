@@ -273,6 +273,8 @@ module.exports = {
             initialiseSettleStartingProvinces(game_obj.user);
       } catch (e) {
         console.log(e);
+        if (bot_clock > 30)
+          clearGame(game_id);
       }
     }, 10000);
 

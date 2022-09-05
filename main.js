@@ -246,6 +246,7 @@ global.client = new Discord.Client({ intents: [
   1, 4, 8, 16, 32, 64, 128, 512, 1024, 2048, 4096, 8192, 16384, 32767
 ] });
 global.backup_loaded = false;
+global.bot_clock = 0;
 global.cache = {};
 global.ignore_channels = (settings.ignore_channels) ? settings.ignore_channels : [];
 global.interfaces = {};
@@ -349,6 +350,9 @@ initGlobal();
 
 //Logic loops, 1-second logic loop
 setInterval(function(){
+  //Bot clock
+  bot_clock++;
+
   //Cache interfaces
   main.interfaces = interfaces;
 
