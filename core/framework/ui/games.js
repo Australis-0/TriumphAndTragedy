@@ -353,15 +353,14 @@ module.exports = {
         }
 
       //Clear all menus of type page_menu, visual_prompt, dead games
-      for (var i = 0; i < all_interfaces.length; i++)
-        if (interfaces[all_interfaces[i]].type == "game") {
-          var local_ui = interfaces[all_interfaces[i]];
+      for (var i = 0; i < all_interfaces.length; i++) {
+        var local_ui = interfaces[all_interfaces[i]];
 
-          if (!local_ui.channel) {
-            delete interfaces[all_interfaces[i]];
-            delete main.interfaces[all_interfaces[i]];
-          }
+        if (!local_ui.channel) {
+          delete interfaces[all_interfaces[i]];
+          delete main.interfaces[all_interfaces[i]];
         }
+      }
     } catch (e) {
       log.error(`reinitialiseGameEmbeds() ran into an error: ${e}.`);
       console.log(e);
