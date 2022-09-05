@@ -1,5 +1,7 @@
 //Games framework functions
 module.exports = {
+  game_embeds: ["header", "middle_embed", "middle_control_panel", "bottom_control_panel", "alert_embed"],
+
   clearInterfaces: function () {
     //Declare local instance variables
     var all_interfaces = Object.keys(interfaces);
