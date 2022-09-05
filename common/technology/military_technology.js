@@ -1492,7 +1492,7 @@ config.technology.military_technology = {
     research_cost: 6500,
     year: 1932,
     unlocks: {
-      obsolete_unit: ["dirigibles", "zeppelins"],
+      obsolete_unit: ["dirigibles", "reconaissance_balloons", "zeppelins"],
       unlock_unit: "propeller_fighters"
     }
   },
