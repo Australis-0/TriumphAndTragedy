@@ -124,7 +124,7 @@ module.exports = {
       for (var i = 0; i < war_obj.attackers.length; i++) {
         var local_attacker = main.users[war_obj.attackers[i]];
 
-        attackers_string.push(`**${local_attacker.name}** | **${parseNumber(war_obj[war_obj.attackers[i] + "_casualties"])}**`);
+        attackers_string.push(`**${(local_attacker) ? local_attacker.name : war_obj.attackers[i]}** | **${parseNumber(war_obj[war_obj.attackers[i] + "_casualties"])}**`);
       }
 
       //Format defender wargoal string; this is put here for future flexibility
@@ -138,7 +138,7 @@ module.exports = {
       for (var i = 0; i < war_obj.defenders.length; i++) {
         var local_defender = main.users[war_obj.defenders[i]];
 
-        defenders_string.push(`**${local_defender.name}** | **${parseNumber(war_obj[war_obj.defenders[i] + "_casualties"])}**`);
+        defenders_string.push(`**${(local_defender) ? local_defender.name : war_obj.defenders[i]}** | **${parseNumber(war_obj[war_obj.defenders[i] + "_casualties"])}**`);
       }
 
       //Bottom war string (Total Casualties)
@@ -238,7 +238,7 @@ module.exports = {
         var local_war = main.global.archived_wars[all_archived_wars[i]];
         var total_casualties = local_war.attacker_total_casualties + local_war.defender_total_casualties;
 
-        wars_string.push(`[${local_war.name}] | **${parseNumber(total_casualties)}** | `);
+        wars_string.push(`**[${local_war.name}]** | **${parseNumber(total_casualties)}**`);
       }
     }
 

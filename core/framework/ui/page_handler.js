@@ -1153,69 +1153,6 @@ module.exports = {
           printCBTooltip(user_id, actual_ot_user_id, input);
         }
 
-        if (game_obj.page.startsWith("view_war_")) {
-          var war_name = game_obj.page.replace("view_war_", "");
-          var war_obj = getWar(war_name);
-
-          //[Back]
-          if (input == "back") {
-            createPageMenu(game_obj.middle_embed, {
-              embed_pages: printWars(game_obj.user),
-              user: game_obj.user
-            });
-            game_obj.page = "war_list";
-          }
-
-          //[Add Wargoal]
-          if (input == "add wargoal")
-            (war_obj.peace_treaties[actual_id]) ?
-              initialiseAddWargoal(user_id, war_obj.peace_treaties[actual_id]) :
-              printError(game_obj.id, `You don't currently have a peace treaty active for this conflict! Type **[Sign Peace Treaty]** first to create a new peace treaty.`);
-
-          //[Call Ally]
-          if (input == "call ally")
-            initialiseCallAlly(user_id);
-
-          //[Remove Wargoal]
-          if (input == "remove wargoal")
-            (war_obj.peace_treaties[actual_id]) ?
-              initialiseRemoveWargoal(user_id, war_obj.peace_treaties[actual_id]) :
-              printError(game_obj.id, `You don't currently have a peace treaty active for this conflict! Type **[Sign Peace Treaty]** first to create a new peace treaty.`);
-
-          //[Rename War]
-          if (input == "rename war")
-            initialiseRenameWar(user_id, war_name);
-
-          //[Send Peace Offer]
-          if (input == "send peace offer")
-            (war_obj.peace_treaties[actual_id]) ?
-              sendPeaceTreaty(user_id, war_obj.peace_treaties[actual_id]) :
-              printError(game_obj.id, `You don't currently have a peace treaty active for this conflict! Type **[Sign Peace Treaty]** first to create a new peace treaty.`);
-
-          //[Sign Peace Treaty]
-          if (input == "sign peace treaty")
-            signPeaceTreaty(user_id, war_obj.name);
-
-          //[View Peace Offer]
-          if (["view peace offer", "view peace treaty"].includes(input))
-            (war_obj.peace_treaties[actual_id]) ?
-              modifyPeaceTreaty(user_id, war_obj.peace_treaties[actual_id]) :
-              printError(game_obj.id, `You don't currently have a peace treaty active for this conflict! Type **[Sign Peace Treaty]** first to create a new peace treaty.`);
-        }
-
-        if (game_obj.page.startsWith("view_war_archives_", "")) {
-          var archived_war = game_obj.page.replace("view_war_archives", "");
-
-          //[Back]
-          if (input == "back") {
-            createPageMenu(game_obj.middle_embed, {
-              embed_pages: printWars(game_obj.user),
-              user: game_obj.user
-            });
-            game_obj.page = "war_list";
-          }
-        }
-
         if (game_obj.page.startsWith("view_wargoal_")) {
           var actual_ot_user_id = game_obj.page.replace("view_cb_", "");
 
@@ -1305,6 +1242,70 @@ module.exports = {
           if (archived_war_report) {
             printWar(user_id, input, true);
             game_obj.page = `view_war_archives_${war_to_view}`;
+          }
+        }
+
+        //These go after war list
+        if (game_obj.page.startsWith("view_war_")) {
+          var war_name = game_obj.page.replace("view_war_", "");
+          var war_obj = getWar(war_name);
+
+          //[Back]
+          if (input == "back") {
+            createPageMenu(game_obj.middle_embed, {
+              embed_pages: printWars(game_obj.user),
+              user: game_obj.user
+            });
+            game_obj.page = "war_list";
+          }
+
+          //[Add Wargoal]
+          if (input == "add wargoal")
+            (war_obj.peace_treaties[actual_id]) ?
+              initialiseAddWargoal(user_id, war_obj.peace_treaties[actual_id]) :
+              printError(game_obj.id, `You don't currently have a peace treaty active for this conflict! Type **[Sign Peace Treaty]** first to create a new peace treaty.`);
+
+          //[Call Ally]
+          if (input == "call ally")
+            initialiseCallAlly(user_id);
+
+          //[Remove Wargoal]
+          if (input == "remove wargoal")
+            (war_obj.peace_treaties[actual_id]) ?
+              initialiseRemoveWargoal(user_id, war_obj.peace_treaties[actual_id]) :
+              printError(game_obj.id, `You don't currently have a peace treaty active for this conflict! Type **[Sign Peace Treaty]** first to create a new peace treaty.`);
+
+          //[Rename War]
+          if (input == "rename war")
+            initialiseRenameWar(user_id, war_name);
+
+          //[Send Peace Offer]
+          if (input == "send peace offer")
+            (war_obj.peace_treaties[actual_id]) ?
+              sendPeaceTreaty(user_id, war_obj.peace_treaties[actual_id]) :
+              printError(game_obj.id, `You don't currently have a peace treaty active for this conflict! Type **[Sign Peace Treaty]** first to create a new peace treaty.`);
+
+          //[Sign Peace Treaty]
+          if (input == "sign peace treaty")
+            signPeaceTreaty(user_id, war_obj.name);
+
+          //[View Peace Offer]
+          if (["view peace offer", "view peace treaty"].includes(input))
+            (war_obj.peace_treaties[actual_id]) ?
+              modifyPeaceTreaty(user_id, war_obj.peace_treaties[actual_id]) :
+              printError(game_obj.id, `You don't currently have a peace treaty active for this conflict! Type **[Sign Peace Treaty]** first to create a new peace treaty.`);
+        }
+
+        if (game_obj.page.startsWith("view_war_archives_", "")) {
+          var archived_war = game_obj.page.replace("view_war_archives", "");
+
+          //[Back]
+          if (input == "back") {
+            createPageMenu(game_obj.middle_embed, {
+              embed_pages: printWars(game_obj.user),
+              user: game_obj.user
+            });
+            game_obj.page = "war_list";
           }
         }
       }
