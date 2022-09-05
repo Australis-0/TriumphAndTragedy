@@ -132,7 +132,7 @@ module.exports = {
     }
 
     //Force render maps after turn processing
-    for (var i = tick_count % 10; i < mapmodes.length; i += 10)
+    for (var i = main.tick_count % 10; i < mapmodes.length; i += 10)
       if (mapmodes[i])
         forceRender(mapmodes[i]);
   },
