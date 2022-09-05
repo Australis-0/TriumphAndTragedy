@@ -395,8 +395,8 @@ module.exports = {
       delete usr.has_famine;
 
       //Stability modifiers/trackers
-      if (returnSafeNumber(usr.stability_boost) > 0)
-        usr.stability_boost -= 0.01;
+      if (returnSafeNumber(usr.boosted_stability) > 0)
+        usr.boosted_stability -= 0.01;
 
       //Temporary modifier handling
       {
