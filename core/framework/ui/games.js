@@ -265,11 +265,7 @@ module.exports = {
         .setImage("https://cdn.discordapp.com/attachments/722997700391338046/736141424315203634/margin.png");
 
       try {
-        game_obj.header.edit({ embeds: [topbar_embed] }).catch((error) => {
-          clearGame(game_id);
-          clearInterval(alert_loop);
-          clearInterval(date_loop);
-        });
+        game_obj.header.edit({ embeds: [topbar_embed] });
 
         if (game_obj.page == "founding_map")
           (!main.global.user_map[game_obj.user]) ?
@@ -308,60 +304,52 @@ module.exports = {
        //Reinitialise all game embeds
        for (var i = 0; i < all_interfaces.length; i++)
         if (main.interfaces[all_interfaces[i]].channel) {
+          var local_interface = all_interfaces[i];
           var local_ui = main.interfaces[all_interfaces[i]];
 
-          try {
-            var reinitialisation_loop = setInterval(function(local_ui, local_interface){
-              //Set cache
-              cache[local_ui.channel] = local_interface;
+          //Set cache
+          cache[local_ui.channel] = all_interfaces[i];
 
-              try {
-                //Try to fetch existing messages first
-                var local_messages = returnChannel(local_ui.channel).messages.fetch({ limit: 100 }).then((messages) => {
-                  var all_messages = [...messages];
-                  var fetched_game_embeds = 0;
+          //Try to fetch existing messages first
+          var reinitialisation_loop = setInterval(function(local_ui, local_interface){
+            if (returnChannel(local_ui.channel))
+              var local_messages = returnChannel(local_ui.channel).messages.fetch({ limit: 100 }).then((messages) => {
+                var all_messages = [...messages];
+                var fetched_game_embeds = [];
 
-                  for (var x = 0; x < all_messages.length; x++) {
-                    var is_game_embed = [false, ""];
+                for (var x = 0; x < all_messages.length; x++) {
+                  var is_game_embed = [false, ""];
 
-                    for (var y = 0; y < game_embeds.length; y++)
-                      if (local_ui[game_embeds[y]].id == all_messages[x][0])
-                        is_game_embed = [true, game_embeds[y]];
-                      else
-                        all_messages[x][1].delete();
+                  for (var y = 0; y < game_embeds.length; y++)
+                    if (local_ui[game_embeds[y]].id == all_messages[x][0])
+                      is_game_embed = [true, game_embeds[y]];
 
-                    if (is_game_embed[0]) {
-                      local_ui[is_game_embed[1]] = all_messages[x][1];
-                      fetched_game_embeds++;
-                    }
+                  if (is_game_embed[0]) {
+                    local_ui[is_game_embed[1]] = all_messages[x][1];
+                    fetched_game_embeds.push(all_messages[x][0]);
                   }
+                }
 
-                  //Reinitialise game embeds only if original embeds could not be fetched
-                  if (fetched_game_embeds >= game_embeds.length) {
-                    module.exports.initialiseGameLoop(local_interface);
-                  } else {
-                    for (var x = 0; x < all_messages.length; x++)
+                //Reinitialise game embeds only if original embeds could not be fetched
+                if (fetched_game_embeds.length >= game_embeds.length) {
+                  module.exports.initialiseGameLoop(local_interface);
+                  clearInterval(reinitialisation_loop);
+
+                  for (var x = 0; x < all_messages.length; x++)
+                    if (!fetched_game_embeds.includes(all_messages[x][0]))
                       try {
                         all_messages[x][1].delete();
                       } catch {}
-                    initialiseGameEmbeds(local_interface);
-                  }
-                });
-
-                clearInterval(reinitialisation_loop);
-              } catch (e) {
-                if (returnChannel(local_ui.channel)) {
-                  log.error(`Could not initialise game embeds: ${e}.`);
-                  console.log(e);
                 } else {
+                  for (var x = 0; x < all_messages.length; x++)
+                    try {
+                      all_messages[x][1].delete();
+                    } catch {}
+                  initialiseGameEmbeds(local_interface);
                   clearInterval(reinitialisation_loop);
                 }
-              }
-            }, 1000, local_ui, all_interfaces[i]);
-          } catch (e) {
-            setTimeout(module.exports.reinitialiseGameEmbeds, 3000);
-            log.error(`Could not delete messages and reinitialise game embeds: ${e}.`);
-          }
+              });
+          }, 3000, local_ui, local_interface);
         }
 
       //Clear all menus of type page_menu, visual_prompt, dead games
@@ -379,6 +367,7 @@ module.exports = {
         }
     } catch (e) {
       log.error(`reinitialiseGameEmbeds() ran into an error: ${e}.`);
+      console.log(e);
     }
   }
 };
