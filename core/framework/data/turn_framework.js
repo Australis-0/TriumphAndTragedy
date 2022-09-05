@@ -10,8 +10,10 @@ module.exports = {
     var all_enemies = {};
   	var current_date = new Date().getTime();
 
+    //Date processing for battle tick
     main.global.battle_tick = current_date;
     main.last_backup = current_date;
+    main.tick_count++;
 		writeSave({ file_limit: settings.backup_limit });
 
     //Clear all combat flags
@@ -130,8 +132,9 @@ module.exports = {
     }
 
     //Force render maps after turn processing
-    for (var i = 0; i < mapmodes.length; i++)
-      forceRender(mapmodes[i]);
+    for (var i = tick_count % 10; i < mapmodes.length; i += 10)
+      if (mapmodes[i])
+        forceRender(mapmodes[i]);
   },
 
   nextGlobalTurn: function () {
