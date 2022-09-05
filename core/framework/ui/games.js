@@ -327,6 +327,8 @@ module.exports = {
                     for (var y = 0; y < game_embeds.length; y++)
                       if (local_ui[game_embeds[y]].id == all_messages[x][0])
                         is_game_embed = [true, game_embeds[y]];
+                      else
+                        all_messages[x][1].delete();
 
                     if (is_game_embed[0]) {
                       local_ui[is_game_embed[1]] = all_messages[x][1];
