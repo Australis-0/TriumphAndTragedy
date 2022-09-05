@@ -534,7 +534,7 @@ module.exports = {
         var local_pop = config.pops[all_pops[i]];
 
         if (local_pop.stats_display && local_pop.military_pop)
-          stats_string.push(`${(local_pop.icon) ? local_pop.icon + " " : ""}${(local_pop.name) ? local_pop.name : all_pops[i]}: (**${parseNumber(ot_user.pops["used_" + all_pops[i]])}**/**${parseNumber(getTotalPopManpower(actual_ot_user_id, all_pops[i]))}) | (**${printPercentage(getTotalPopManpower(actual_ot_user_id, all_pops[i], true))}** Recruitable Population)`);
+          stats_string.push(`${(local_pop.icon) ? local_pop.icon + " " : ""}${(local_pop.name) ? local_pop.name : all_pops[i]}: (**${parseNumber(ot_user.pops["used_" + all_pops[i]])}**/**${parseNumber(getTotalPopManpower(actual_ot_user_id, all_pops[i]))}**) | (**${printPercentage(getTotalPopManpower(actual_ot_user_id, all_pops[i], true))}** Recruitable Population)`);
       }
     }
 
