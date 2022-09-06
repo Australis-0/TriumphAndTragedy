@@ -7,20 +7,27 @@ module.exports = {
 
     //Delete game channel first
     try {
+      if (!game_obj) {
+        delete interfaces[game_id];
+        delete main.interfaces[game_id];
+      }
+
       clearInterval(cache[`${game_id}_alert_loop`]);
       clearInterval(cache[`${game_id}_date_loop`]);
       clearInterval(cache[`${game_id}_header_loop`]);
       clearInterval(cache[`${game_id}_main_loop`]);
 
-      var delete_loop = setInterval(function(channel_id) {
-        try {
-          returnChannel(channel_id).delete();
-        } catch {
-          clearInterval(delete_loop);
-        }
-      }, 1000, JSON.parse(JSON.stringify(game_obj.channel)));
+      if (game_obj)
+        var delete_loop = setInterval(function(channel_id) {
+          try {
+            returnChannel(channel_id).delete();
+          } catch {
+            clearInterval(delete_loop);
+          }
+        }, 1000, JSON.parse(JSON.stringify(game_obj.channel)));
     } catch (e) {
       log.warn(`clearGame() - Game channel for Game ID ${game_id} could not be found: ${e}`);
+      console.log(e);
     }
 
     //Declare local instance variables
@@ -33,6 +40,7 @@ module.exports = {
 
     //Delete game object
     delete interfaces[game_id];
+    delete main.interfaces[game_id];
   },
 
   clearGames: function () {
@@ -269,17 +277,16 @@ module.exports = {
         )
         .setImage("https://cdn.discordapp.com/attachments/722997700391338046/736141424315203634/margin.png");
 
-      try {
+      if (returnChannel(game_obj.channel)) {
         game_obj.header.edit({ embeds: [topbar_embed] });
 
         if (game_obj.page == "founding_map")
           (!main.global.user_map[game_obj.user]) ?
             initialiseFoundCountry(game_obj.user) :
             initialiseSettleStartingProvinces(game_obj.user);
-      } catch (e) {
-        if (bot_clock > 30) {
+      } else {
+        if (game_obj)
           clearGame(game_id);
-        }
       }
     }, 10000);
 
