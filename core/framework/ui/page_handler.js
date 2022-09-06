@@ -1584,7 +1584,7 @@ module.exports = {
         if (game_obj.page == "army_list" || game_obj.page.startsWith("army_viewer_")) {
           //[Air Raid]
           if (input == "air raid")
-            initialiseAirRaid(user_id);
+            initialiseAirRaidCommand(user_id);
 
           //[Back]
           if (game_obj.page == "army_list" && input == "back") {

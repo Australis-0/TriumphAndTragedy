@@ -7,6 +7,11 @@ module.exports = {
 
     //Delete game channel first
     try {
+      clearInterval(game_obj.alert_loop);
+      clearInterval(game_obj.date_loop);
+      clearInterval(game_obj.header_loop);
+      clearInterval(game_obj.main_loop);
+
       var delete_loop = setInterval(function(channel_id) {
         try {
           returnChannel(channel_id).delete();
@@ -214,7 +219,7 @@ module.exports = {
     var usr = main.users[game_obj.user];
 
     //Alert loop
-    var alert_loop = setInterval(function(){
+    game_obj.alert_loop = setInterval(function(){
       var message_is_prompt = false;
       var all_visual_prompts = Object.keys(interfaces);
 
@@ -250,7 +255,7 @@ module.exports = {
     }, 100);
 
     //Date loop
-    var date_loop = setInterval(function(){
+    game_obj.date_loop = setInterval(function(){
       var current_date = new Date().getTime();
       var time_remaining = settings.turn_timer*1000 - (current_date - main.last_turn);
 
@@ -272,14 +277,14 @@ module.exports = {
             initialiseFoundCountry(game_obj.user) :
             initialiseSettleStartingProvinces(game_obj.user);
       } catch (e) {
-        console.log(e);
-        if (bot_clock > 30)
+        if (bot_clock > 30) {
           clearGame(game_id);
+        }
       }
     }, 10000);
 
     //Header loop
-    setInterval(function(){
+    game_obj.header_loop = setInterval(function(){
       if (game_obj.header_change) {
         game_obj.header.edit({ embeds: [game_obj.new_header] });
         delete game_obj.header_change;
@@ -287,7 +292,7 @@ module.exports = {
     }, 100);
 
     //Main embed/panel loop
-    setInterval(function(){
+    game_obj.main_loop = setInterval(function(){
       if (game_obj.main_change) {
         game_obj.middle_embed.edit({ embeds: [game_obj.main_embed] });
         game_obj.middle_embed.reactions.removeAll().catch(error => log.error(`Failed to clear reactions: ${error}.`));
