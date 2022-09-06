@@ -983,7 +983,7 @@ config.technology.administrative_technology = {
   },
 
   modern_political_competency: {
-    name: "Modern Political Theory",
+    name: "Modern Political Competency",
     icon: "knowledge",
     description: "The idea of competency in politics is beginning to hold greater sway over our administration as citizens increasingly come to expect more from their government. Needless to say, they will only be satisfied through provision.",
     prerequisite_techs: ["modern_political_theory"],
