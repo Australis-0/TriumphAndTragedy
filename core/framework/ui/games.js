@@ -290,28 +290,40 @@ module.exports = {
     cache[`${game_id}_date_loop`] = setInterval(function(){
       var current_date = new Date().getTime();
       var time_remaining = settings.turn_timer*1000 - (current_date - main.last_turn);
+      var update_allowed = false;
 
-      const topbar_embed = new Discord.MessageEmbed()
-        .setColor(settings.bot_colour)
-        .setTitle(`${config.icons.time} **${getDate(main.date)}** - Round ${parseNumber(main.round_count)}`)
-        .setDescription(
-          (main.season_started) ?
-            `- Each round is approximately ${parseMilliseconds(settings.turn_timer*1000)}. ${parseMilliseconds(time_remaining)} remaining until the next turn.` :
-            `This season has not yet started. Waiting on **${parseNumber(config.defines.common.starting_players - Object.keys(main.users).length)}** more player(s) for the game to start ..`
-        )
-        .setImage("https://cdn.discordapp.com/attachments/722997700391338046/736141424315203634/margin.png");
+      if (!game_obj.last_updated_date) {
+        update_allowed = true;
+      } else if ((current_date - game_obj.last_updated_date) > 5000)
+        update_allowed = true;
 
-      if (returnChannel(game_obj.channel)) {
-        game_obj.header.edit({ embeds: [topbar_embed] });
+      //Rate-limit editing to once every 5 seconds
+      if (update_allowed) {
+        const topbar_embed = new Discord.MessageEmbed()
+          .setColor(settings.bot_colour)
+          .setTitle(`${config.icons.time} **${getDate(main.date)}** - Round ${parseNumber(main.round_count)}`)
+          .setDescription(
+            (main.season_started) ?
+              `- Each round is approximately ${parseMilliseconds(settings.turn_timer*1000)}. ${parseMilliseconds(time_remaining)} remaining until the next turn.` :
+              `This season has not yet started. Waiting on **${parseNumber(config.defines.common.starting_players - Object.keys(main.users).length)}** more player(s) for the game to start ..`
+          )
+          .setImage("https://cdn.discordapp.com/attachments/722997700391338046/736141424315203634/margin.png");
 
-        if (game_obj.page == "founding_map")
-          (!main.global.user_map[game_obj.user]) ?
-            initialiseFoundCountry(game_obj.user) :
-            initialiseSettleStartingProvinces(game_obj.user);
-      } else {
-        if (game_obj)
-          clearGame(game_id);
+        if (returnChannel(game_obj.channel)) {
+          game_obj.header.edit({ embeds: [topbar_embed] });
+
+          if (game_obj.page == "founding_map")
+            (!main.global.user_map[game_obj.user]) ?
+              initialiseFoundCountry(game_obj.user) :
+              initialiseSettleStartingProvinces(game_obj.user);
+        } else {
+          if (game_obj)
+            clearGame(game_id);
+        }
       }
+
+      //Refresh last updated date
+      game_obj.last_updated_date = current_date;
     }, 10000);
 
     //Header loop
