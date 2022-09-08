@@ -7,10 +7,11 @@ module.exports = {
     var msg_obj = arg0_msg_obj;
 
     //Delete message if found to have a delete after argument
-    if (ui_obj.delete_after) {
-      var delete_after_delay = (ui_obj.delete_after_delay) ? ui_obj.delete_after_delay : 0;
-      setTimeout(function(){ msg_obj.delete(); }, delete_after_delay);
-    }
+    if (ui_obj)
+      if (ui_obj.delete_after) {
+        var delete_after_delay = (ui_obj.delete_after_delay) ? ui_obj.delete_after_delay : 0;
+        setTimeout(function(){ msg_obj.delete(); }, delete_after_delay);
+      }
 
     //Clear up interface cache
     delete interfaces[msg_obj.id];

@@ -357,7 +357,6 @@ setInterval(function(){
   main.interfaces = interfaces;
 
   //Delete inactive channels
-  clearBadGames();
   clearInactiveGames();
 
   //ABRS - Save backups!

@@ -18,11 +18,11 @@ module.exports = {
 
       if (bad_ui) {
         //Bad UI, clear game
-        if (local_ui.type == "game")
-          module.exports.clearGame(all_interfaces[i])
-        else {
-          main.interfaces[local_ui.id] = {};
-          interfaces[local_ui.id] = {};
+        if (local_ui.type != "game") {
+          delete main.interfaces[local_ui.id];
+          delete interfaces[local_ui.id];
+        } else {
+          module.exports.clearGame(local_ui.id);
         }
       }
     }
@@ -44,6 +44,9 @@ module.exports = {
       clearInterval(cache[`${game_id}_date_loop`]);
       clearInterval(cache[`${game_id}_header_loop`]);
       clearInterval(cache[`${game_id}_main_loop`]);
+
+      //Clear other bad games
+      clearBadGames();
 
       if (game_obj)
         var delete_loop = setInterval(function(channel_id) {
