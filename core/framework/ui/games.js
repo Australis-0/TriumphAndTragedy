@@ -294,10 +294,10 @@ module.exports = {
 
       if (!game_obj.last_updated_date) {
         update_allowed = true;
-      } else if ((current_date - game_obj.last_updated_date) > 5000)
+      } else if ((current_date - game_obj.last_updated_date) > 9500)
         update_allowed = true;
 
-      //Rate-limit editing to once every 5 seconds
+      //Rate-limit editing to once every 9,5 seconds
       if (update_allowed) {
         const topbar_embed = new Discord.MessageEmbed()
           .setColor(settings.bot_colour)
@@ -320,7 +320,7 @@ module.exports = {
           if (game_obj)
             clearGame(game_id);
         }
-        
+
         //Refresh last updated date
         game_obj.last_updated_date = current_date;
       }
