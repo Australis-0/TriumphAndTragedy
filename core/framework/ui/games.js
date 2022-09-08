@@ -1,5 +1,33 @@
 //Initialise Games/Lobbies UI
 module.exports = {
+  clearBadGames: function () {
+    //Declare local instance variables
+    var all_interfaces = Object.keys(main.interfaces);
+
+    //Loop through all of them and clear the bad ones
+    for (var i = 0; i < all_interfaces.length; i++) {
+      var bad_ui = false;
+      var local_ui = main.interfaces[all_interfaces[i]];
+
+      if (!local_ui.channel) {
+        bad_ui = true;
+      } else {
+        if (!returnChannel(local_ui.channel))
+          bad_ui = true;
+      }
+
+      if (bad_ui) {
+        //Bad UI, clear game
+        if (local_ui.type == "game")
+          module.exports.clearGame(all_interfaces[i])
+        else {
+          main.interfaces[local_ui.id] = {};
+          interfaces[local_ui.id] = {};
+        }
+      }
+    }
+  },
+
   clearGame: function (arg0_game_id) {
     //Convert from parameters
     var game_id = arg0_game_id;

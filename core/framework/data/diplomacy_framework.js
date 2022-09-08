@@ -425,7 +425,7 @@ module.exports = {
     //Return statement
     return (
       usr.modifiers.political_capital_gain*
-        ((Object.keys(usr.vassals).length)*config.defines.diplomacy.vassal_maintenance_cost)
+        ((Object.keys(usr.diplomacy.vassals).length)*config.defines.diplomacy.vassal_maintenance_cost)
     );
   },
 
