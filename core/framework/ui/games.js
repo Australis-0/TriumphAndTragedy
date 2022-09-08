@@ -1,6 +1,6 @@
 //Initialise Games/Lobbies UI
 module.exports = {
-  clearBadGames: function () {
+  clearBadGames: function () { //[WIP]
     //Declare local instance variables
     var all_interfaces = Object.keys(main.interfaces);
 
@@ -18,12 +18,8 @@ module.exports = {
 
       if (bad_ui) {
         //Bad UI, clear game
-        if (local_ui.type != "game") {
-          delete main.interfaces[local_ui.id];
-          delete interfaces[local_ui.id];
-        } else {
+        if (local_ui.type == "game")
           module.exports.clearGame(local_ui.id);
-        }
       }
     }
   },
