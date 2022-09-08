@@ -61,6 +61,7 @@ module.exports = {
 
     //Add to interface
     interfaces[message_id.id] = {};
+    interfaces[message_id.id].channel = message_id.channel.id;
     interfaces[message_id.id].id = message_id.id;
     interfaces[message_id.id].type = "confirm_dialogue";
     interfaces[message_id.id].user = (contents.user) ? contents.user : undefined;
@@ -109,6 +110,7 @@ module.exports = {
         interfaces[msg.id] = {};
         var ui_obj = interfaces[msg.id];
 
+        ui_obj.channel = msg.channel.id;
         ui_obj.type = "page_menu";
         ui_obj.embed_array = options.embed_pages;
         ui_obj.page = starting_page;
