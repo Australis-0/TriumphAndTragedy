@@ -45,9 +45,6 @@ module.exports = {
       clearInterval(cache[`${game_id}_header_loop`]);
       clearInterval(cache[`${game_id}_main_loop`]);
 
-      //Clear other bad games
-      clearBadGames();
-
       if (game_obj)
         var delete_loop = setInterval(function(channel_id) {
           try {
