@@ -651,8 +651,9 @@ module.exports = {
 
           //Check if improving_to value exists
           if (local_relation.improving_to)
-            if (local_relation.improving_to < local_relation.value) {
+            if (local_relation.improving_to != local_relation.value) {
               var relation_change = (local_relation.improving_to - local_relation.value)/local_relation.duration;
+              console.log(`Relation change: ${local_relation.improving_to}`)
 
               //Set new relation value
               local_relation.value += relation_change;
