@@ -40,7 +40,7 @@ module.exports = {
             if (local_mobilised_pop < 0)
               local_mobilised_pop = 0;
 
-            usr[`used_${all_mobilised_pops[i]}`] -= local_mobilised_pop;
+            usr.pops[`used_${all_mobilised_pops[i]}`] -= local_mobilised_pop;
           }
 
           var unit_obj = getUnit(usr.mobilisation.mobilised_type);

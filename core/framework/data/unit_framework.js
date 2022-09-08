@@ -22,10 +22,10 @@ module.exports = {
           var all_manpower_costs = Object.keys(unit_obj.manpower_cost);
 
           for (var i = 0; i < all_manpower_costs.length; i++) {
-            usr[`used_${all_manpower_costs[i]}`] -= (unit_obj.manpower_cost[all_manpower_costs[i]]/returnSafeNumber(unit_obj.quantity, 1))*amount;
+            usr.pops[`used_${all_manpower_costs[i]}`] -= (unit_obj.manpower_cost[all_manpower_costs[i]]/returnSafeNumber(unit_obj.quantity, 1))*amount;
 
-            if (usr[`used_${all_manpower_costs[i]}`] < 0)
-              usr[`used_${all_manpower_costs[i]}`] = 0;
+            if (usr.pops[`used_${all_manpower_costs[i]}`] < 0)
+              usr.pops[`used_${all_manpower_costs[i]}`] = 0;
           }
         }
 

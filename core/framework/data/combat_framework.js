@@ -996,7 +996,7 @@ module.exports = {
             });
 
             usr.pops[`used_${local_manpower_costs[i]}`] = returnSafeNumber(Math.max(
-              usr.pops[`used_${local_manpower_costs[x]}`] - amount_killed,
+              usr.pops[`used_${local_manpower_costs[i]}`] - amount_killed,
               0
             ));
 

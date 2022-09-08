@@ -61,7 +61,7 @@ module.exports = {
             var local_mobilised_pop = mobilised_pops[all_mobilised_pops[i]];
 
             //Add to used_(pop type)
-            usr[`used_${all_mobilised_pops[i]}`] += local_mobilised_pop;
+            usr.pops[`used_${all_mobilised_pops[i]}`] += local_mobilised_pop;
 
             //Add to tracker sum
             manpower_mobilised += local_mobilised_pop;
