@@ -75,6 +75,10 @@ module.exports = {
             break;
 
           //Unlocking
+          case "enable_blockades":
+            usr.modifiers.enable_blockades = true;
+
+            break;
           case "enable_mobilisation":
             usr.modifiers.enable_mobilisation = effect_value[0];
 
