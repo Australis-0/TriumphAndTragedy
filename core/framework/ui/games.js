@@ -320,10 +320,10 @@ module.exports = {
           if (game_obj)
             clearGame(game_id);
         }
+        
+        //Refresh last updated date
+        game_obj.last_updated_date = current_date;
       }
-
-      //Refresh last updated date
-      game_obj.last_updated_date = current_date;
     }, 10000);
 
     //Header loop
