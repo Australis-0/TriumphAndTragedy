@@ -315,7 +315,7 @@ module.exports = {
     }, 10000);
 
     //Header loop
-    cache[`${game_id}_date_loop`] = setInterval(function(){
+    cache[`${game_id}_header_loop`] = setInterval(function(){
       if (game_obj.header_change) {
         game_obj.header.edit({ embeds: [game_obj.new_header] });
         delete game_obj.header_change;
@@ -323,7 +323,7 @@ module.exports = {
     }, 100);
 
     //Main embed/panel loop
-    cache[`${game_id}_header_loop`] = setInterval(function(){
+    cache[`${game_id}_main_loop`] = setInterval(function(){
       if (game_obj.main_change) {
         game_obj.middle_embed.edit({ embeds: [game_obj.main_embed] });
         game_obj.middle_embed.reactions.removeAll().catch(error => log.error(`Failed to clear reactions: ${error}.`));
