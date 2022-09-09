@@ -187,7 +187,7 @@ module.exports = {
 
     //Print imports; may only print up to 10 imports
     for (var i = 0; i < local_imports.length; i++)
-      if (i <= 10) {
+      if (i <= 5) {
         var actual_exporter_id = main.global.user_map[local_imports[i].exporter];
         var local_good_icon = (local_imports[i].good_type == "money") ?
           config.icons.money + " " :
@@ -203,7 +203,7 @@ module.exports = {
         import_string.push(`Importing ${local_good_icon}${parseNumber(local_imports[i].amount)} ${local_good_name} from **${main.users[actual_exporter_id].name}**.\nThe shipment will arrive in **${parseNumber(local_imports[i].duration)}** turn(s).`);
       }
 
-    if (local_imports.length > 10)
+    if (local_imports.length > 5)
       import_string.push(`+${parseNumber(local_imports.length-10)} more ...`);
 
     //Print exports; may only print up to 10 exports
@@ -213,7 +213,7 @@ module.exports = {
       export_string.push(`_You have no outgoing exports._`);
 
     for (var i = 0; i < all_exports.length; i++)
-      if (i <= 10) {
+      if (i <= 5) {
         var local_export = usr.trades[all_exports[i]];
         var local_good_icon = (local_export.good_type == "money") ?
           config.icons.money + " " :
@@ -225,13 +225,13 @@ module.exports = {
             getGood(local_export.good_type).name :
             local_export.good_type :
           local_export.good_type;
-          
+
         var actual_target_id = main.global.user_map[local_export.target];
 
         export_string.push(`Exporting ${local_good_icon}${parseNumber(local_export.amount)} ${local_good_name} to **${main.users[actual_target_id].name}**.\nThe shipment will arrive in **${parseNumber(local_export.duration)}** turn(s).`);
       }
 
-    if (all_exports.length > 10)
+    if (all_exports.length > 5)
       export_string.push(`+${parseNumber(all_exports.length-10)} more ...`);
 
     //World Market
@@ -271,12 +271,12 @@ module.exports = {
       .addFields(
         {
           name: `${config.icons.taxes} **[Import List]**:`,
-          value: import_string.join("\n"),
+          value: truncateString(import_string.join("\n"), 900),
           inline: true
         },
         {
           name: `${config.icons.trade} **[Export List]**:`,
-          value: export_string.join("\n"),
+          value: truncateString(export_string.join("\n"), 900),
           inline: true
         },
         {
