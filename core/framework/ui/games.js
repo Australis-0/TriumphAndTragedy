@@ -389,7 +389,8 @@ module.exports = {
                 for (var x = 0; x < all_messages.length; x++)
                   if (!fetched_game_embeds.includes(all_messages[x][0]))
                     try {
-                      all_messages[x][1].delete();
+                      if (!all_messages[x][1].author.bot)
+                        all_messages[x][1].delete();
                     } catch {}
               });
           }, 3000, local_ui, local_interface);

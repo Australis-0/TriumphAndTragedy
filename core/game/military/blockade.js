@@ -14,7 +14,7 @@ module.exports = {
     var usr = main.users[actual_id];
 
     //Check to see if user is already blockaded
-    if (usr.enable_blockades) {
+    if (usr.modifiers.enable_blockades) {
       if (ot_user) {
         if (army_obj) {
           if (!army_obj.is_blockading) {
