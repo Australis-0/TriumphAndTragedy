@@ -382,24 +382,15 @@ module.exports = {
                   } catch {}
                 }
 
-                //Reinitialise game embeds only if original embeds could not be fetched
-                if (fetched_game_embeds.length >= game_embeds.length) {
-                  module.exports.initialiseGameLoop(local_interface);
-                  clearInterval(reinitialisation_loop);
+                //Initialise game loop
+                module.exports.initialiseGameLoop(local_interface);
+                clearInterval(reinitialisation_loop);
 
-                  for (var x = 0; x < all_messages.length; x++)
-                    if (!fetched_game_embeds.includes(all_messages[x][0]))
-                      try {
-                        all_messages[x][1].delete();
-                      } catch {}
-                } else {
-                  for (var x = 0; x < all_messages.length; x++)
+                for (var x = 0; x < all_messages.length; x++)
+                  if (!fetched_game_embeds.includes(all_messages[x][0]))
                     try {
                       all_messages[x][1].delete();
                     } catch {}
-                  initialiseGameEmbeds(local_interface);
-                  clearInterval(reinitialisation_loop);
-                }
               });
           }, 3000, local_ui, local_interface);
         }
