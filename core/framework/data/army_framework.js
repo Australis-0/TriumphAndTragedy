@@ -121,13 +121,14 @@ module.exports = {
 
         for (var i = 0; i < all_units.length; i++)
           if (army_obj.units[all_units[i]] > 0) {
+            var amount = army_obj.units[all_units[i]];
             var unit_obj = getUnit(all_units[i]);
 
             //Check for unit type
             unit_types[`has_${getUnitCategoryFromUnit(all_units[i]).type}_unit`] = true;
 
             //Check for carrier capacity
-            unit_types.carrier_capacity += returnSafeNumber(unit_obj.carrier_capacity);
+            unit_types.carrier_capacity += returnSafeNumber(unit_obj.carrier_capacity*amount);
           }
 
         //Army type parsing

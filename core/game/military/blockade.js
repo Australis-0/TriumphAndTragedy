@@ -37,7 +37,7 @@ module.exports = {
                 printError(game_obj.id, `The **${army_obj.name}** is still in recovery from a previous blockade! Wait **${parseNumber(army_obj.blockade_recovery_turns)}** more turn(s) before trying to implement a blockade with this army.`)
               }
             } else {
-              var blockade_creation = createBlockade(actual_id, actual_ot_user_id, army_obj.name);
+              var blockade_creation = createBlockade(actual_ot_user_id, actual_id, army_obj.name);
 
               //Print user feedback
               (blockade_creation[0]) ?
