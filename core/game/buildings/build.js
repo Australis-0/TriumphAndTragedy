@@ -29,7 +29,7 @@ module.exports = {
                 var raw_category_name = getBuildingCategoryFromBuilding(raw_building_name, { return_key: true });
 
                 //Check if building slots are available for the building
-                var building_slots = (building_obj.separate_building_slots || usr.modifiers[raw_building_name] != 0) ?
+                var building_slots = (building_obj.separate_building_slots) ?
                   getBuildingSlots(actual_id, city_name, raw_building_name) :
                   getBuildingSlots(actual_id, city_name, raw_category_name);
 
