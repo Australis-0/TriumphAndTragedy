@@ -2363,7 +2363,7 @@ module.exports = {
               });
 
             //[Research]; [Research (Tech)]
-            if (input.startsWith("research ")) {
+            if (input.startsWith("research ") && input != "research list") {
               var tech_to_research = input.replace("research ", "");
 
               research(user_id, tech_to_research);

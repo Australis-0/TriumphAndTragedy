@@ -676,31 +676,30 @@ module.exports = {
       if (building_category) {
         var all_buildings_in_category = Object.keys(building_category);
 
+        //Count all buildings in category in city
+        for (var i = 0; i < city_obj.buildings.length; i++)
+          if (Object.keys(building_category).includes(city_obj.buildings[i].building_type))
+            available_building_slots[1].total_buildings++;
+
+        //Fetch total available slots in city for building_category
+        available_building_slots[1].total_slots =
+          Math.min(usr.modifiers[`${raw_building_category_name}_building_slots`], 1) +
+            Math.max(city_obj[`${raw_building_category_name}_building_slots`] - usr.modifiers[`${raw_building_category_name}_building_slots`], 0) +
+            returnSafeNumber(usr.modifiers[raw_building_name]) +
+            returnSafeNumber(usr.modifiers[`${raw_building_category_name}_building_slots`]) + usr.modifiers.extra_building_slots;
+
+        //Set .available_slots
+        available_building_slots[1].available_slots =
+          available_building_slots[1].total_slots -
+          available_building_slots[1].total_buildings;
+
+        //Reset available/total slots if building slots are disabled for this category
         if (building_category.disable_slots) {
           available_building_slots[1].available_slots = -1;
           available_building_slots[1].total_slots = -1;
-
-          available_building_slots[0] = true;
-        } else {
-          //Count all buildings in category in city
-          for (var i = 0; i < city_obj.buildings.length; i++)
-            if (Object.keys(building_category).includes(city_obj.buildings[i].building_type))
-              available_building_slots[1].total_buildings++;
-
-          //Fetch total available slots in city for building_category
-          available_building_slots[1].total_slots =
-            Math.min(usr.modifiers[`${raw_building_category_name}_building_slots`], 1) +
-              Math.max(city_obj[`${raw_building_category_name}_building_slots`] - usr.modifiers[`${raw_building_category_name}_building_slots`], 0) +
-              returnSafeNumber(usr.modifiers[raw_building_name]) +
-              returnSafeNumber(usr.modifiers[`${raw_building_category_name}_building_slots`]) + usr.modifiers.extra_building_slots;
-
-          //Set .available_slots
-          available_building_slots[1].available_slots =
-            available_building_slots[1].total_slots -
-            available_building_slots[1].total_buildings;
-
-            available_building_slots[0] = true;
         }
+
+        available_building_slots[0] = true;
       } else if (building_obj) {
         //If building_category_name is of type building, fetch available slots for that local building
         //Declare local instance variables

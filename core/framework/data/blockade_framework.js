@@ -22,7 +22,7 @@ module.exports = {
             if (returnSafeNumber(army_obj.blockade_recovery_turns) == 0) {
               //Check if the user currently has a blockade cooldown on them
               if (returnSafeNumber(usr.blockaded.blockade_cooldown) == 0) {
-                if (usr.enable_blockades) {
+                if (usr.modifiers.enable_blockades) {
                   //Check if user is at war or not
                   var at_war = areAtWar(actual_id, actual_ot_user_id);
 
@@ -57,7 +57,7 @@ module.exports = {
                 return [false, `**${ot_user.name}** has been blockaded too recently for you to carry out a blockade on them! Wait **${parseNumber(blockade_obj.blockaded.blockade_cooldown)}** more turn(s) before attempting to carry out another blockade on them.`];
               }
             } else {
-              return [false, `The **${fleet_name}** is still recovering from its recent deployment! Wait **${parseNumber(army_obk.blockade_recovery_turns)}** more turn(s) before trying to blockade **${ot_user.name}** with this fleet.`];
+              return [false, `The **${fleet_name}** is still recovering from its recent deployment! Wait **${parseNumber(army_obj.blockade_recovery_turns)}** more turn(s) before trying to blockade **${ot_user.name}** with this fleet.`];
             }
           } else {
             return [false, `Only ships can carry out a blockade!`];
