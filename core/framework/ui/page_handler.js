@@ -414,7 +414,7 @@ module.exports = {
             });
 
           //[View Alert]
-          if (input == "view alert")
+          if (["view alert", "view_alerts"].includes(input))
             initialisePrintAlert(user_id);
 
         } else if (game_obj.page.startsWith("alert_")) {
