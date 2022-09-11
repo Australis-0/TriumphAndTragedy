@@ -1047,6 +1047,10 @@ module.exports = {
           if (input == "guarantee independence")
             proclaimGuarantee(user_id, actual_ot_user_id);
 
+          //[Liberate]
+          if (input == "liberate")
+            liberate(user_id, actual_ot_user_id);
+
           //[Improve Relations]
           if (input == "improve relations")
             improveRelations(user_id, actual_ot_user_id);
