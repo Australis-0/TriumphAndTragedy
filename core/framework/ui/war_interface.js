@@ -166,12 +166,12 @@ module.exports = {
         .setDescription(war_string.join("\n"))
         .addFields(
           {
-            name: "Attacker Wargoals:",
+            name: `${config.icons.artillery} Attacker Wargoals:`,
             value: attackers_wargoal_string.join("\n"),
             inline: true,
           },
           {
-            name: "Defender Wargoals:",
+            name: `${config.icons.active_personnel} Defender Wargoals:`,
             value: attackers_wargoal_string.join("\n"),
             inline: true,
           },
@@ -180,17 +180,17 @@ module.exports = {
             value: config.icons.blank_1,
           },
           {
-            name: "Attackers:",
+            name: `${config.icons.attacker} Attackers:`,
             value: attackers_string.join("\n"),
             inline: true
           },
           {
-            name: "Defenders:",
+            name: `${config.icons.defender} Defenders:`,
             value: defenders_string.join("\n"),
             inline: true
           },
           {
-            name: `Casualties:`,
+            name: `${config.icons.death} Casualties:`,
             value: bottom_war_string.join("\n")
           }
         );

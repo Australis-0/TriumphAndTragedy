@@ -6,16 +6,16 @@ module.exports = {
 
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
-    var culture_obj = getUserCulture(actual_id, culture_name, { return_objects: true });
+    var culture_obj = getCulture(culture_name);
     var game_obj = getGameObject(user_id);
-    var raw_culture_name = culture_obj.id;
+    var raw_culture_name = getCulture(culture_name, { return_key: true });
     var usr = main.users[actual_id];
 
     //Check to see if culture exists
     if (culture_obj) {
       if (
-        !culture_obj.primary_culture.includes(raw_culture_name) &&
-        !culture_obj.accepted_culture.includes(raw_culture_name)
+        culture_obj.primary_culture.includes(actual_id) ||
+        culture_obj.accepted_culture.includes(actual_id)
       ) {
         if (usr.modifiers.political_capital >= config.defines.politics.accepted_culture_cost) {
           var integration_time = config.defines.politics.integration_turns;
@@ -61,9 +61,7 @@ module.exports = {
     //Initialise visual prompt
     visualPrompt(game_obj.alert_embed, user_id, {
       title: "Add A New Accepted Culture:",
-      prompts: [
-        [`Which culture would you like to begin integrating into your nation's societal fabric?\n\nType **[View Cultures]** for a list of valid cultures.`, "string"]
-      ]
+      prompts: [`Which culture would you like to begin integrating into your nation's societal fabric?\n\nType **[View Cultures]** for a list of valid cultures.`, "string"]
     },
     function (arg) {
       module.exports.addAcceptedCulture(user_id, arg[0]);
