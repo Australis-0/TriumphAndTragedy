@@ -717,10 +717,13 @@ module.exports = {
 
         //Fetch total_buildings
         for (var i = 0; i < city_obj.buildings.length; i++)
-          if (Object.keys(local_building_category).includes(city_obj.buildings[i].building_type)) {
+          if (
+            (Object.keys(local_building_category).includes(city_obj.buildings[i].building_type) && !local_building_category.disable_slots) ||
+            (local_building_category.disable_slots && city_obj.buildings[i].building_type == raw_building_name)
+          ) {
             available_building_slots[1].total_buildings++;
 
-            //Incrmenet for total_building_type
+            //Increment for total_building_type
             if (city_obj.buildings[i].building_type == raw_building_name)
               total_building_type++;
           }
