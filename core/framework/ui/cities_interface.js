@@ -170,7 +170,7 @@ module.exports = {
                     all_buildings++;
 
                 if (all_buildings > 0 || local_slots.total_buildings_under_construction > 0)
-                  city_string.push(` - ${(local_building.icon) ? config.icons[local_building.icon] + " " : ""}${local_building_name}: ${parseNumber(all_buildings)}${(local_building.separate_building_slots && !local_building_category.disable_slots) ? " (" + parseNumber(all_buildings) + "/" + parseNumber(local_slots.total_slots) + ")" : ""} ${(local_slots.total_buildings_under_construction > 0) ? `(+${parseNumber(local_slots.total_buildings_under_construction)} under construction)` : ""}`);
+                  city_string.push(` - ${(local_building.icon) ? config.icons[local_building.icon] + " " : ""}${local_building_name}: ${parseNumber(all_buildings)}${(local_building.separate_building_slots) ? " (" + parseNumber(all_buildings) + "/" + parseNumber(local_slots.total_slots) + ")" : ""} ${(local_slots.total_buildings_under_construction > 0) ? `(+${parseNumber(local_slots.total_buildings_under_construction)} under construction)` : ""}`);
               }
 
             city_string.push("");
