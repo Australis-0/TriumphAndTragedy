@@ -91,6 +91,16 @@ module.exports = {
 
     //Check if war_obj exists
     if (war_obj) {
+      //Recalculate attacker, defender casualties
+      war_obj.attacker_total_casualties = 0;
+      war_obj.defender_total_casualties = 0;
+
+      for (var i = 0; i < war_obj.attackers.length; i++)
+        war_obj.attacker_total_casualties += returnSafeNumber(war_obj[`${war_obj.attackers[i]}_casualties`]);
+      for (var i = 0; i < war_obj.defenders.length; i++)
+        war_obj.defender_total_casualties += returnSafeNumber(war_obj[`${war_obj.defenders[i]}_casualties`]);
+
+      //Check if war is active and whether allies can be called in
       if (!is_archived_war)
         for (var i = 0; i < all_allies.length; i++)
           if (hasAlliance(actual_id, all_allies[i]))

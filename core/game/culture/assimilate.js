@@ -5,7 +5,7 @@ module.exports = {
       hide_display: true/false - Whether or not to display user feedback or prompts. Used for macro assimilation functions. Defaults to false
     }
   */
-  assimilate: function (arg0_user, arg1_province, arg2_culture_name, arg3_options) { //[WIP] - Update assimilation/province UI if user is currently viewing it
+  assimilate: function (arg0_user, arg1_province, arg2_culture_name, arg3_options) {
     //Convert from parameters
     var user_id = arg0_user;
     var province_id = arg1_province;
@@ -71,37 +71,37 @@ module.exports = {
                   }
 
                   //Print user feedback
-                  if (options.hide_display)
+                  if (!options.hide_display)
                     printAlert(game_obj.id, `We have begun assimilating the province of **${province_id}** for ${config.icons.political_capital} **${parseNumber(config.defines.politics.assimilate_cost)}** Political Capital and ${config.icons.money} ${parseNumber(config.defines.politics.assimilate_fiscal_cost)} into our cultural fabric. Your advisor estimates that it will take up to **${parseNumber(assimilation_time)}** turn(s) before the locals learn to embrace our culture.`);
 
                   return true;
                 } else {
-                  if (options.hide_display)
-                    returnError(game_obj.id, `Province **${province_id}** is already being assimilated to the **${getCulture(is_being_assimilated[1].culture_id).adjective}** culture! Your advisor estimates that it will take up to **${parseNumber(is_being_assimilated[1].duration)}** turn(s) to finish the assimilation process.`);
+                  if (!options.hide_display)
+                    printError(game_obj.id, `Province **${province_id}** is already being assimilated to the **${getCulture(is_being_assimilated[1].culture_id).adjective}** culture! Your advisor estimates that it will take up to **${parseNumber(is_being_assimilated[1].duration)}** turn(s) to finish the assimilation process.`);
                 }
               } else {
-                if (options.hide_display)
-                  returnError(game_obj.id, `You don't have enough money to assimilate this province! You need **£${parseNumber(config.defines.politics.assimilate_fiscal_cost - usr.money)}** more to carry out this action.`);
+                if (!options.hide_display)
+                  printError(game_obj.id, `You don't have enough money to assimilate this province! You need **£${parseNumber(config.defines.politics.assimilate_fiscal_cost - usr.money)}** more to carry out this action.`);
               }
             } else {
-              if (options.hide_display)
-                returnError(game_obj.id, `You don't have enough Political Capital to assimilate this province! You need **${parseNumber(config.defines.politics.assimilate_cost - usr.modifiers.political_capital)} more ${config.icons.political_capital} Political Capital to carry out this action.`);
+              if (!options.hide_display)
+                printError(game_obj.id, `You don't have enough Political Capital to assimilate this province! You need **${parseNumber(config.defines.politics.assimilate_cost - usr.modifiers.political_capital)} more ${config.icons.political_capital} Political Capital to carry out this action.`);
             }
           } else {
-            if (options.hide_display)
-              returnError(game_obj.id, `You may not integrate a province that is already of your own primary culture!`);
+            if (!options.hide_display)
+              printError(game_obj.id, `You may not integrate a province that is already of your own primary culture!`);
           }
         } else {
-          if (options.hide_display)
-            returnError(game_obj.id, `You must choose a valid accepted culture to assimilate this province to! Type **[View Cultures]** to see a full list of your nation's accepted cultures.`);
+          if (!options.hide_display)
+            printError(game_obj.id, `You must choose a valid accepted culture to assimilate this province to! Type **[View Cultures]** to see a full list of your nation's accepted cultures.`);
         }
       } else {
-        if (options.hide_display)
-          returnError(game_obj.id, `You must control Province **${province_id}** before you can assimilate its culture into something else!`);
+        if (!options.hide_display)
+          printError(game_obj.id, `You must control Province **${province_id}** before you can assimilate its culture into something else!`);
       }
     } else {
-      if (options.hide_display)
-        returnError(game_obj.id, `The province you have specified wasn't even on the map! Cartographers are scrambling to find a province with the name '**${province_id}**'.`);
+      if (!options.hide_display)
+        printError(game_obj.id, `The province you have specified wasn't even on the map! Cartographers are scrambling to find a province with the name '**${province_id}**'.`);
     }
   },
 

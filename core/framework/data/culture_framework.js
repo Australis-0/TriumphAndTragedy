@@ -312,7 +312,7 @@ module.exports = {
     for (var i = 0; i < all_provinces.length; i++) {
       var local_province = main.provinces[all_provinces[i]];
 
-      if (local_province.controller == actual_id)
+      if (local_province.controller == actual_id || user_id == "all")
         if (local_province.culture == culture_name)
           province_list.push(all_provinces[i]);
     }
@@ -394,5 +394,48 @@ module.exports = {
 
     //Return statement
     return culture_list;
+  },
+
+  /*
+    getUserCulture() - Returns all matching cultures within a user by that name.
+    options: {
+      return_all_cultures: true/false - Whether or not to return all cultures instead of the most common one
+      return_objects: true/false - Whether to return culture objects instead of keys
+    }
+  */
+  getUserCulture: function (arg0_user, arg1_culture, arg2_options) {
+    //Convert from parameters
+    var user_id = arg0_user;
+    var culture_name = arg1_culture.trim().toLowerCase();
+    var options = (arg2_options) ? arg2_options : {};
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var matching_cultures = [];
+    var sorted_cultures = module.exports.getSortedCultures(user_id);
+    var usr = main.users[actual_id];
+
+    //First pass, push hard matches, name/adjective
+    for (var i = 0; i < sorted_cultures.length; i++) {
+      var local_culture = main.global.cultures[sorted_cultures[i].id];
+
+      if (local_culture.name.trim().toLowerCase() == culture_name || local_culture.adjective.trim().toLowerCase() == culture_name)
+        (!options.return_objects) ?
+          matching_cultures.push(sorted_cultures[i].id):
+          matching_cultures.push(local_culture);
+    }
+
+    //Second pass, push soft matches, name/adjective
+    for (var i = 0; i < sorted_cultures.length; i++) {
+      var local_culture = main.global.cultures[sorted_cultures[i].id];
+
+      if (local_culture.name.trim().toLowerCase().indexOf(culture_name) != -1 || local_culture.adjective.trim().toLowerCase().indexOf(culture_name) != -1)
+        (!options.return_objects) ?
+          matching_cultures.push(sorted_cultures[i].id):
+          matching_cultures.push(local_culture);
+    }
+
+    //Return statement
+    return (!options.return_all_cultures) ? matching_cultures[0] : matching_cultures;
   }
 };

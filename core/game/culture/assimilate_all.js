@@ -9,11 +9,11 @@ module.exports = {
 
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
-    var assimilating_culture = getCulture(assimilating_culture_name);
+    var assimilating_culture = getUserCulture(actual_id, assimilating_culture_name, { return_objects: true });
     var assimilated_provinces = 0;
     var core_culture = getCulture(core_culture_name);
     var game_obj = getGameObject(user_id);
-    var raw_assimilating_culture = getCulture(assimilating_culture_name, { return_key: true });
+    var raw_assimilating_culture = assimilating_culture.id;
     var raw_core_culture = getCulture(core_culture_name, { return_key: true });
     var usr = main.users[actual_id];
 
@@ -37,10 +37,13 @@ module.exports = {
                   provinces_to_assimilate.push(all_provinces[i]);
             }
 
+            //Log all provinces marked for assimilation
+            log.info(`Provinces to assimilate: ${provinces_to_assimilate.join(", ")}`);
+
             //Begin trying to assimiilate as any marked provinces as found
             for (var i = 0; i < provinces_to_assimilate.length; i++) {
               var province_assimilation_status = assimilate(
-                actual_id,
+                user_id,
                 provinces_to_assimilate[i],
                 raw_core_culture,
                 {
