@@ -61,7 +61,9 @@ module.exports = {
     //Initialise visual prompt
     visualPrompt(game_obj.alert_embed, user_id, {
       title: "Add A New Accepted Culture:",
-      prompts: [`Which culture would you like to begin integrating into your nation's societal fabric?\n\nType **[View Cultures]** for a list of valid cultures.`, "string"]
+      prompts: [
+        [`Which culture would you like to begin integrating into your nation's societal fabric?\n\nType **[View Cultures]** for a list of valid cultures.`, "string"]
+      ]
     },
     function (arg) {
       module.exports.addAcceptedCulture(user_id, arg[0]);

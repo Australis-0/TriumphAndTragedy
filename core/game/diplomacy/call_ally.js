@@ -57,12 +57,14 @@ module.exports = {
     }
   },
 
-  initialiseCallAlly: function (arg0_user) {
+  initialiseCallAlly: function (arg0_user, arg1_user) {
     //Convert from parameters
     var user_id = arg0_user;
+    var ot_user_id = arg1_user;
 
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
+    var actual_ot_user_id = main.global.user_map[ot_user_id];
     var alliance_list = [];
     var display_alliance_list = [];
     var display_war_list = [];
@@ -78,27 +80,33 @@ module.exports = {
     //Send visual prompt first
     if (all_wars.length > 0) {
       visualPrompt(game_obj.alert_embed, user_id, {
-        title: `Call In Ally Into War:`,
-        prompts: [`Which armed conflict would you like to call an ally into? You are currently involved in the following wars:\n${display_war_list.push("\n- ")}`, "string"]
+        title: `Call An Ally Into War:`,
+        prompts: [
+          [`Which armed conflict would you like to call an ally into? You are currently involved in the following wars:\n${display_war_list.join("\n- ")}`, "string"]
+        ]
       },
       function (arg) {
         var war_obj = getWar(arg[0].trim().toLowerCase());
 
         if (war_obj) {
           for (var i = 0; i < all_allies.lngth; i++)
-            if (!(war_obj.attackers.includes(all_allies[i]) || war_obj.defenders.includes(all_allies[i]))) {
+            if (!(war_obj.attackers.includes(all_allies[i]) && !war_obj.defenders.includes(all_allies[i]))) {
               alliance_list.push(all_allies[i]);
               display_alliance_list.push(`**${main.users[all_allies[i]]}**`);
             }
 
           if (alliance_list.length > 0)
-            visualPrompt(game_obj.alert_embed, user_id, {
-              title: `Choose Ally:`,
-              prompts: [`Which of the following allies would you like to call into the **${war_obj.name}**?\n${alliance_list.push("\n- ")}`, "mention"]
-            },
-            function (arg) {
-              module.exports.callAlly(user_id, arg[0], war_obj.name);
-            });
+            (!ot_user_id) ?
+              visualPrompt(game_obj.alert_embed, user_id, {
+                title: `Choose Ally:`,
+                prompts: [
+                  [`Which of the following allies would you like to call into the **${war_obj.name}**?\n${display_alliance_list.join("\n- ")}`, "mention"]
+                ]
+              },
+              function (arg) {
+                module.exports.callAlly(user_id, arg[0], war_obj.name);
+              }) :
+              module.exports.callAlly(user_id, actual_ot_user_id, war_obj.name);
           else
             printError(game_obj.id, `You don't have any remaining allies to call into this war!`);
         } else {
@@ -108,5 +116,5 @@ module.exports = {
     } else {
       printError(game_obj.id, `You aren't even invovled in any armed conflicts currently!`);
     }
-  }
+  },
 };
