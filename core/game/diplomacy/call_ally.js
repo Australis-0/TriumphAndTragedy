@@ -90,7 +90,7 @@ module.exports = {
 
         if (war_obj) {
           for (var i = 0; i < all_allies.lngth; i++)
-            if (!(war_obj.attackers.includes(all_allies[i]) && !war_obj.defenders.includes(all_allies[i]))) {
+            if (!war_obj.attackers.includes(all_allies[i]) && !war_obj.defenders.includes(all_allies[i])) {
               alliance_list.push(all_allies[i]);
               display_alliance_list.push(`**${main.users[all_allies[i]]}**`);
             }
