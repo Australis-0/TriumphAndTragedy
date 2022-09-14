@@ -75,7 +75,7 @@ module.exports = {
     var all_wars = getWars(actual_id);
 
     for (var i = 0; i < all_wars.length; i++)
-      display_war_list.push(`**${all_wars[i].name}**`);
+      display_war_list.push(`${(display_war_list.length == 0) ? "\n- " : ""}**${all_wars[i].name}**`);
 
     //Send visual prompt first
     if (all_wars.length > 0) {
@@ -92,7 +92,7 @@ module.exports = {
           for (var i = 0; i < all_allies.length; i++)
             if (!war_obj.attackers.includes(all_allies[i]) && !war_obj.defenders.includes(all_allies[i])) {
               alliance_list.push(all_allies[i]);
-              display_alliance_list.push(`**${main.users[all_allies[i]]}**`);
+              display_alliance_list.push(`${(display_alliance_list.length == 0 ? "\n- " : "")}**${main.users[all_allies[i]].name}**`);
             }
 
           if (alliance_list.length > 0)
