@@ -748,50 +748,52 @@ module.exports = {
 
                 switch (mode) {
                   case "convoy":
-                    //Attacks a random import the user might have
-                    var succeed_chance = (army_stats.attack/defender_attack)*0.8 + 0.2; //80% comes from the attacker to defender ratio, 20% base chance
-                    var random_chance = randomNumber(0, 100);
+                    if (Object.keys(usr.trades).length > 0) {
+                      //Attacks a random import the user might have
+                      var succeed_chance = (army_stats.attack/defender_attack)*0.8 + 0.2; //80% comes from the attacker to defender ratio, 20% base chance
+                      var random_chance = randomNumber(0, 100);
 
-                    if (random_chance <= succeed_chance*100) {
-                      //50-50 chance of losing a submarine or two
-                      var actual_sub_losses = 0;
-                      var submarines_lost = randomNumber(0, 2);
-                      var total_submarines_lost = JSON.parse(JSON.stringify(submarines_lost));
+                      if (random_chance <= succeed_chance*100) {
+                        //50-50 chance of losing a submarine or two
+                        var actual_sub_losses = 0;
+                        var submarines_lost = randomNumber(0, 2);
+                        var total_submarines_lost = JSON.parse(JSON.stringify(submarines_lost));
 
-                      for (var i = 0; i < all_units.length; i++) {
-                        if (submarines_lost > 0) {
-                          if (army_obj.units[all_units[i]] > submarines_lost) {
-                            army_obj.units[all_units[i]] -= submarines_lost;
-                            module.exports.killUnitPops(actual_id, submarines_lost, all_units[i]);
-                            submarines_lost = 0;
-                          } else {
-                            submarines_lost -= army_obj.units[all_units[i]];
-                            module.exports.killUnitPops(actual_id, submarines_lost, all_units[i]);
-                            army_obj.units[all_units[i]] = 0;
+                        for (var i = 0; i < all_units.length; i++) {
+                          if (submarines_lost > 0) {
+                            if (army_obj.units[all_units[i]] > submarines_lost) {
+                              army_obj.units[all_units[i]] -= submarines_lost;
+                              module.exports.killUnitPops(actual_id, submarines_lost, all_units[i]);
+                              submarines_lost = 0;
+                            } else {
+                              submarines_lost -= army_obj.units[all_units[i]];
+                              module.exports.killUnitPops(actual_id, submarines_lost, all_units[i]);
+                              army_obj.units[all_units[i]] = 0;
+                            }
                           }
+
+                          if (army_obj.units[all_units[i]] <= 0)
+                            delete army_obj.units[all_units[i]];
                         }
-
-                        if (army_obj.units[all_units[i]] <= 0)
-                          delete army_obj.units[all_units[i]];
                       }
+
+                      army_obj.submarine_cooldown = config.defines.combat.submarine_cooldown;
+
+                      var export_to_remove = randomElement(Object.keys(usr.trades));
+                      var local_export = usr.trades[export_to_remove];
+                      var local_export_good = getGood(local_export.good_type);
+
+                      printAlert(game_obj.id, `Your submarines intercepted a shipment of ${parseInt(local_export.amount)} ${(local_export_good.name) ? local_export_good.name : local_export.good_type} to **${main.users[local_export_good.target].name}** at the cost of **${parseNumber(total_submarines_lost)}** of their own.`);
+
+                      //Send submarine embed
+                      var submarine_result_embed = new Discord.MessageEmbed()
+                        .setColor(settings.bot_colour)
+                        .setTitle(`Trade Interdiction - Submarine Report #${generateRandomID()}`)
+                        .setDescription(`**${getPrimaryCultures(actual_id, { return_objects: true })[0].name}** submarines intercepted a shipment of ${parseInt(local_export.amount)} ${(local_export_good.name) ? local_export_good.name : local_export.good_type} to **${main.users[local_export_good.target].name}** at the cost of **${parseNumber(total_submarines_lost)}** of their own.`);
+
+                      //Send battle_embed to both users as an embed alert
+                      sendEmbedAlert(actual_id, submarine_result_embed);
                     }
-
-                    army_obj.submarine_cooldown = config.defines.combat.submarine_cooldown;
-
-                    var export_to_remove = randomElement(Object.keys(usr.trades));
-                    var local_export = usr.trades[export_to_remove];
-                    var local_export_good = getGood(local_export.good_type);
-
-                    printAlert(game_obj.id, `Your submarines intercepted a shipment of ${parseInt(local_export.amount)} ${(local_export_good.name) ? local_export_good.name : local_export.good_type} to **${main.users[local_export_good.target].name}** at the cost of **${parseNumber(total_submarines_lost)}** of their own.`);
-
-                    //Send submarine embed
-                    var submarine_result_embed = new Discord.MessageEmbed()
-                      .setColor(settings.bot_colour)
-                      .setTitle(`Trade Interdiction - Submarine Report #${generateRandomID()}`)
-                      .setDescription(`**${getPrimaryCultures(actual_id, { return_objects: true })[0].name}** submarines intercepted a shipment of ${parseInt(local_export.amount)} ${(local_export_good.name) ? local_export_good.name : local_export.good_type} to **${main.users[local_export_good.target].name}** at the cost of **${parseNumber(total_submarines_lost)}** of their own.`);
-
-                    //Send battle_embed to both users as an embed alert
-                    sendEmbedAlert(actual_id, submarine_result_embed);
 
                     delete local_export;
 
@@ -808,54 +810,56 @@ module.exports = {
                         all_fleets.push(ot_user.armies[all_ot_armies[i]]);
                     }
 
-                    var random_fleet = randomElement(all_fleets);
+                    if (all_fleets.length > 0) {
+                      var random_fleet = randomElement(all_fleets);
 
-                    //Calculate defender AP
-                    defender_attack = calculateArmyStats(actual_ot_user_id, random_fleet, { mode: "submarine_defence" });
+                      //Calculate defender AP
+                      defender_attack = calculateArmyStats(actual_ot_user_id, random_fleet, { mode: "submarine_defence" });
 
-                    var attacker_losses = [];
-                    var defender_losses = [];
-                    var random_defender_roll = randomNumber(0, defender_attack);
+                      var attacker_losses = [];
+                      var defender_losses = [];
+                      var random_defender_roll = randomNumber(0, defender_attack);
 
-                    //Defender losses go first
-                    var old_attacking_fleet = JSON.parse(JSON.stringify(army_obj));
-                    var old_defending_fleet = JSON.parse(JSON.stringify(random_fleet));
+                      //Defender losses go first
+                      var old_attacking_fleet = JSON.parse(JSON.stringify(army_obj));
+                      var old_defending_fleet = JSON.parse(JSON.stringify(random_fleet));
 
-                    var actual_casualties = module.exports.calculateCasualties(actual_id, army_obj, random_defender_roll);
-                    var ot_casualties = module.exports.calculateCasualties(actual_ot_user_id, random_fleet, random_attacker_roll);
+                      var actual_casualties = module.exports.calculateCasualties(actual_id, army_obj, random_defender_roll);
+                      var ot_casualties = module.exports.calculateCasualties(actual_ot_user_id, random_fleet, random_attacker_roll);
 
-                    //Parse losses
-                    var old_attacking_units = Object.keys(old_attacking_fleet.units);
-                    var old_defending_units = Object.keys(old_defending_fleet.units);
+                      //Parse losses
+                      var old_attacking_units = Object.keys(old_attacking_fleet.units);
+                      var old_defending_units = Object.keys(old_defending_fleet.units);
 
-                    //Push losses to array
-                    for (var i = 0; i < old_attacking_units.length; i++)
-                      if (old_attacking_fleet.units[old_attacking_units[i]] > returnSafeNumber(army_obj.units[old_attacking_units[i]])) {
-                        var local_unit = getUnit(old_attacking_units[i]);
+                      //Push losses to array
+                      for (var i = 0; i < old_attacking_units.length; i++)
+                        if (old_attacking_fleet.units[old_attacking_units[i]] > returnSafeNumber(army_obj.units[old_attacking_units[i]])) {
+                          var local_unit = getUnit(old_attacking_units[i]);
 
-                        attacker_losses.push(`${parseNumber(old_attacking_fleet.units[old_attacking_units[i]] - army_obj.units[old_attacking_units[i]])} ${(local_unit.name) ? local_unit.name : old_attacking_units[i]}`);
-                      }
+                          attacker_losses.push(`${parseNumber(old_attacking_fleet.units[old_attacking_units[i]] - army_obj.units[old_attacking_units[i]])} ${(local_unit.name) ? local_unit.name : old_attacking_units[i]}`);
+                        }
 
-                    for (var i = 0; i < old_defending_units.length; i++)
-                      if (old_defending_fleet.units[old_defending_units[i]] > returnSafeNumber(random_fleet.units[old_defending_units[i]])) {
-                        var local_unit = getUnit(old_attacking_units[i]);
+                      for (var i = 0; i < old_defending_units.length; i++)
+                        if (old_defending_fleet.units[old_defending_units[i]] > returnSafeNumber(random_fleet.units[old_defending_units[i]])) {
+                          var local_unit = getUnit(old_attacking_units[i]);
 
-                        defender_losses.push(`${parseNumber(old_attacking_fleet.units[old_defending_units[i]] - army_obj.units[old_defending_units[i]])} ${(local_unit.name) ? local_unit.name : old_defending_units[i]}`);
-                      }
+                          defender_losses.push(`${parseNumber(old_attacking_fleet.units[old_defending_units[i]] - army_obj.units[old_defending_units[i]])} ${(local_unit.name) ? local_unit.name : old_defending_units[i]}`);
+                        }
 
-                    //Send submarine embed
-                    var submarine_result_embed = new Discord.MessageEmbed()
-                      .setColor(settings.bot_colour)
-                      .setTitle(`Fleet Raid - Submarine Report #${generateRandomID()}`)
-                      .setDescription(`We lost ${parseList(defender_losses)} during a submarine attack on the **${random_fleet.name}**.\n\n${usr.name} also lost **${parseList(attacker_losses)}**.`);
+                      //Send submarine embed
+                      var submarine_result_embed = new Discord.MessageEmbed()
+                        .setColor(settings.bot_colour)
+                        .setTitle(`Fleet Raid - Submarine Report #${generateRandomID()}`)
+                        .setDescription(`We lost ${parseList(defender_losses)} during a submarine attack on the **${random_fleet.name}**.\n\n${usr.name} also lost **${parseList(attacker_losses)}**.`);
 
-                    //Send battle_embed to both users as an embed alert
-                    sendEmbedAlert(actual_id, submarine_result_embed);
+                      //Send battle_embed to both users as an embed alert
+                      sendEmbedAlert(actual_id, submarine_result_embed);
 
-                    //Return user feedback
-                    printAlert(game_obj.id, `${ot_user.name} lost ${parseList(defender_losses)} during a submarine attack on the **${random_fleet.name}**.\n\n${usr.name} also lost **${parseList(attacker_losses)}**.`);
+                      //Return user feedback
+                      printAlert(game_obj.id, `${ot_user.name} lost ${parseList(defender_losses)} during a submarine attack on the **${random_fleet.name}**.\n\n${usr.name} also lost **${parseList(attacker_losses)}**.`);
 
-                    army_obj.submarine_cooldown = config.defines.combat.submarine_cooldown;
+                      army_obj.submarine_cooldown = config.defines.combat.submarine_cooldown;
+                    }
 
                     break;
                   case "reserves":
