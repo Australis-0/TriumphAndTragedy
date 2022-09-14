@@ -15,61 +15,66 @@ module.exports = {
 
     //Go through all units to deal damage
     for (var i = 0; i < defender_units.length; i++) {
-      var local_unit = getUnit(defender_units[i]);
+      if (!isNaN(defending_army_obj.units[defender_units[i]])) {
+        var local_unit = getUnit(defender_units[i]);
 
-      var local_defence = returnSafeNumber(local_unit.defence);
-      var local_manoeuvre = returnSafeNumber(local_unit.manoeuvre);
-      var local_manpower_costs = (local_unit.manpower_cost) ?
-        Object.keys(local_unit.manpower_cost) :
-        [];
-      var manoeuvre_roll = randomNumber(0, 20);
-      var unit_loss_rate = 1;
+        var local_defence = returnSafeNumber(local_unit.defence);
+        var local_manoeuvre = returnSafeNumber(local_unit.manoeuvre);
+        var local_manpower_costs = (local_unit.manpower_cost) ?
+          Object.keys(local_unit.manpower_cost) :
+          [];
+        var manoeuvre_roll = randomNumber(0, 20);
+        var unit_loss_rate = 1;
 
-      //Check for MP first
-      if (manoeuvre_roll > local_manoeuvre)
-        unit_loss_rate = 0.1; //Only 10% of units can be lost if the roll is dodged
+        //Check for MP first
+        if (manoeuvre_roll > local_manoeuvre)
+          unit_loss_rate = 0.1; //Only 10% of units can be lost if the roll is dodged
 
-      //Deal damage
-      for (var x = 0; x < local_manpower_costs.length; x++) {
-        //Check to see if local_manpower_cost is of a military pop or not
-        var local_value = local_unit.manpower_cost[local_manpower_costs[x]]/returnSafeNumber(local_unit.quantity, 1);
-        var pop_obj = config.pops[local_manpower_costs[x]];
-        var total_casualties = (!is_reserves) ?
-          defending_army_obj.units[defender_units[i]] :
-          defending_army_obj[defender_units[i]];
+        //Deal damage
+        for (var x = 0; x < local_manpower_costs.length; x++) {
+          //Check to see if local_manpower_cost is of a military pop or not
+          var local_value = local_unit.manpower_cost[local_manpower_costs[x]]/returnSafeNumber(local_unit.quantity, 1);
+          var pop_obj = config.pops[local_manpower_costs[x]];
+          var total_casualties = (!is_reserves) ?
+            defending_army_obj.units[defender_units[i]] :
+            defending_army_obj[defender_units[i]];
 
-        //Determine unit casualties
-        total_casualties = (
-          (!is_reserves) ?
-            attacker_roll > defending_army_obj.units[defender_units[i]]*local_defence :
-            attacker_roll >
-            defending_army_obj[defender_units[i]]*local_defence
-        ) ?
-          Math.ceil(total_casualties*0.5*unit_loss_rate) :
-          Math.ceil((attacker_roll/local_defence)*unit_loss_rate);
+          //Determine unit casualties
+          total_casualties = (
+            (!is_reserves) ?
+              attacker_roll > defending_army_obj.units[defender_units[i]]*local_defence :
+              attacker_roll >
+              defending_army_obj[defender_units[i]]*local_defence
+          ) ?
+            Math.ceil(total_casualties*0.5*unit_loss_rate) :
+            Math.ceil((attacker_roll/local_defence)*unit_loss_rate);
 
-        //Kill units
-        total_losses += module.exports.killUnitPops(user_id, returnSafeNumber(total_casualties), defender_units[i]);
+          //Kill units
+          total_losses += module.exports.killUnitPops(user_id, returnSafeNumber(total_casualties), defender_units[i]);
+        }
+
+        //Subtract from attacker_roll
+        attacker_roll -= (!is_reserves) ?
+          defending_army_obj.units[defender_units[i]]*local_defence :
+          defending_army_obj[defender_units[i]]*local_defence;
+
+        //Subtract units after attacker roll
+        if (!is_reserves)
+          defending_army_obj.units[defender_units[i]] -= total_casualties;
+        else
+          defending_army_obj[defender_units[i]] -= total_casualties;
+
+        if (!is_reserves)
+          if (defending_army_obj.units[defender_units[i]] <= 0)
+            delete defending_army_obj.units[defender_units[i]];
+        else
+          if (defending_army_obj[defender_units[i]] <= 0)
+            delete defending_army_obj[defender_units[i]];
+
+        attacker_roll = Math.max(attacker_roll, 0);
+      } else {
+        delete defending_army_obj.units[defender_units[i]];
       }
-
-      if (!is_reserves)
-        defending_army_obj.units[defender_units[i]] -= total_casualties;
-      else
-        defending_army_obj[defender_units[i]] -= total_casualties;
-
-      if (!is_reserves)
-        if (defending_army_obj.units[defender_units[i]] <= 0)
-          delete defending_army_obj.units[defender_units[i]];
-      else
-        if (defending_army_obj[defender_units[i]] <= 0)
-          delete defending_army_obj[defender_units[i]];
-
-      //Subtract from attacker_roll
-      attacker_roll -= (!is_reserves) ?
-        defending_army_obj.units[defender_units[i]]*local_defence :
-        defending_army_obj[defender_units[i]]*local_defence;
-
-      attacker_roll = Math.max(attacker_roll, 0);
     }
 
     //Return statement
@@ -470,6 +475,12 @@ module.exports = {
             var defender_casualties;
             var defender_dice_roll = module.exports.calculateRoll(defending_army_obj);
 
+            //Wipe any empty armies
+            if (attacking_army_obj.type == "empty")
+              attacker_stackwiped = true;
+            if (defending_army_obj.type == "empty")
+              defender_stackwiped = true;
+
             //Process stackwipes
             if (attacker_stackwiped)
               attacker_casualties = module.exports.calculateCasualties(actual_id, attacking_army_obj, defender_dice_roll);
@@ -585,7 +596,7 @@ module.exports = {
                 attacker_retreat && attacking_army_obj.province == defending_army_obj.province
               ) || attacker_stackwiped
             )
-              deleteArmy(actual_id, attacking_army_obj.name);
+              deleteArmy(actual_id, attacking_army_obj.id);
 
             if (
               getArmySize(actual_ot_user_id, defending_army_obj) == 0 ||
@@ -593,7 +604,7 @@ module.exports = {
                 defender_retreat && defending_army_obj.province == attacking_army_obj.province
               ) || defender_stackwiped
             )
-              deleteArmy(actual_ot_user_id, defending_army_obj.name);
+              deleteArmy(actual_ot_user_id, defending_army_obj.id);
 
             //Declare battle_embed tracker variables
             var attacker_string = [];
@@ -604,7 +615,7 @@ module.exports = {
             attacker_string.push(`**${usr.name}** (${attacking_army_obj.name}):`);
             attacker_string.push("");
             attacker_string.push(`**Strength:**`);
-            attacker_string.push(`${parseNumber(attacking_army_stats.attack)} Attack | ${parseNumber(attacking_army_stats.defence)} Defence`);
+            attacker_string.push(`${parseNumber(returnSafeNumber(attacking_army_stats.attack))} Attack | ${parseNumber(returnSafeNumber(attacking_army_stats.defence))} Defence`);
 
             for (var i = 0; i < attacker_units.length; i++) {
               var unit_category = getUnitCategoryFromUnit(attacker_units[i]);
@@ -647,7 +658,7 @@ module.exports = {
             defender_string.push(`${config.icons.death} Casualties: **${parseNumber(defender_casualties)}**`);
 
             //Format embed contents - Results
-            result_string.push(`**Dice Rolls:** ${usr.name} - ${config.icons.dice} **${parseNumber(attacker_dice_roll)}** | ${ot_user.name} - ${config.icons.dice} **${parseNumber(defender_dice_roll)}**`);
+            result_string.push(`**Dice Rolls:** ${usr.name} - ${config.icons.dice} **${parseNumber(returnSafeNumber(attacker_dice_roll))}** | ${ot_user.name} - ${config.icons.dice} **${parseNumber(returnSafeNumber(defender_dice_roll))}**`);
             result_string.push(`${config.icons.death} Total Casualties: **${parseNumber(attacker_casualties + defender_casualties)}**`);
 
             if (attacker_stackwiped) {

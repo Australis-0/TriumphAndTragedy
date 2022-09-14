@@ -25,7 +25,8 @@ module.exports = {
 
       //Country name - Soft match first
       for (var i = 0; i < all_users.length; i++)
-        if (main.users[all_users[i]].name.toLowerCase().indexOf(user_id.toLowerCase()) != -1) nation_found = [true, all_users[i]];
+        if (main.users[all_users[i]].name.toLowerCase().indexOf(user_id.toLowerCase()) != -1)
+          nation_found = [true, all_users[i]];
 
       //Country name - Hard match second
       for (var i = 0; i < all_users.length; i++)
@@ -43,9 +44,9 @@ module.exports = {
           if (main.users[all_users[i]].username.toLowerCase() == user_id.toLowerCase())
             local_id = all_users[i];
 
-        user_exists = (main.users[local_id]);
+        return main.global.user_map[local_id];
       } else {
-        return main.global.user_map[mention_id];
+        return main.global.user_map[nation_found[1]];
       }
     }
 

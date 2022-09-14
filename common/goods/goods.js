@@ -133,6 +133,7 @@ config.goods = {
     petroil: {
       name: "Petroil",
       icon: "petroil",
+      is_RGO: true,
 
       buy_price: 2500
     },

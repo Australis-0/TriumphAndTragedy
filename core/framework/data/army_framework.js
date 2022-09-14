@@ -451,20 +451,26 @@ module.exports = {
 
     var all_armies = usr.army_array;
 
-    //Soft match - Reversed
-    for (var i = 0; i < usr.army_array.length; i++) {
-      var local_army = usr.armies[usr.army_array[i]];
+    //Key match
+    if (usr.armies[army_name])
+      army_exists = [true, (!options.return_key) ? usr.armies[army_name] : army_name];
 
-      if (local_army.name.toLowerCase().indexOf(army_name) != -1)
-        army_exists = [true, (!options.return_key) ? local_army : all_armies[i]];
-    }
+    if (!army_exists[0]) {
+      //Soft match - Reversed
+      for (var i = 0; i < usr.army_array.length; i++) {
+        var local_army = usr.armies[usr.army_array[i]];
 
-    //Hard match - Reversed
-    for (var i = 0; i < usr.army_array.length; i++) {
-      var local_army = usr.armies[usr.army_array[i]];
+        if (local_army.name.toLowerCase().indexOf(army_name) != -1)
+          army_exists = [true, (!options.return_key) ? local_army : all_armies[i]];
+      }
 
-      if (local_army.name.toLowerCase() == army_name)
-        army_exists = [true, (!options.return_key) ? local_army : all_armies[i]];
+      //Hard match - Reversed
+      for (var i = 0; i < usr.army_array.length; i++) {
+        var local_army = usr.armies[usr.army_array[i]];
+
+        if (local_army.name.toLowerCase() == army_name)
+          army_exists = [true, (!options.return_key) ? local_army : all_armies[i]];
+      }
     }
 
     //Return statement

@@ -109,13 +109,14 @@ module.exports = {
 
       //If the category meets the conditions, push all the local goods inside of it to goods_array, either with their name, or with their object depending on the options
       if (category_meets_conditions)
-        for (var x = 0; x < local_goods.length; x++) {
-          (options.return_names) ?
-            goods_array.push(local_goods[x]) :
-            goods_array.push(local_category[local_goods[x]]);
+        for (var x = 0; x < local_goods.length; x++)
+          if (!["name", "icon"].includes(local_goods[x])) {
+            (options.return_names) ?
+              goods_array.push(local_goods[x]) :
+              goods_array.push(local_category[local_goods[x]]);
 
-          goods_object[local_goods[x]] = local_category[local_goods[x]];
-        }
+            goods_object[local_goods[x]] = local_category[local_goods[x]];
+          }
     }
 
     //Return statement
@@ -130,7 +131,7 @@ module.exports = {
     var raw_goods = [];
 
     for (var i = 0; i < all_goods.length; i++)
-      if (all_goods[i].mine_action_chance || all_goods[i].quarry_action_chance || all_goods[i].chop_action_chance)
+      if (all_goods[i].mine_action_chance || all_goods[i].quarry_action_chance || all_goods[i].chop_action_chance || all_goods[i].is_RGO)
         raw_goods.push((!options.return_names) ? all_goods[i] : all_good_names[i]);
 
     //Return statement

@@ -55,7 +55,7 @@ module.exports = {
                 printError(game_obj.id, `You can't issue negative urbanisation edicts! Who are you anyway, Pol Pot?`);
             }
           } else {
-            (total_pc_price.toString().indexOf("e") != -1) ?
+            (development_cost.toString().indexOf("e") != -1) ?
               printError(game_obj.id, `You do not currently have enough Political Capital to issue this many urbanisation edicts! You need **infinite** ${config.icons.political_capital} Political Capital before being able to develop your city further to the extent that you have requested.`) :
               printError(game_obj.id, `You don't have enough Political Capital to issue this many urbanisation edicts! You need another **${parseNumber(development_cost)}** ${config.icons.political_capital} Political Capital before being able to develop your city further to the extent that you have requested.`);
           }

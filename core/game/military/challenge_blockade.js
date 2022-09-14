@@ -35,7 +35,7 @@ module.exports = {
             var random_navy = randomElement(blockade_obj.fleets);
 
             //Initialise battle
-            initialiseBattle(actual_id, army_obj, actual_ot_user_id, main.users[random_navy.id].armies[random_navy.fleet_id]);
+            initialiseBattle(actual_id, army_obj, random_navy.id, main.users[random_navy.id].armies[random_navy.fleet_id]);
 
             //Print user feedback
             printAlert(game_obj.id, `You have decided to challenge the blockade imposed on **${ot_user.name}** ..`);
