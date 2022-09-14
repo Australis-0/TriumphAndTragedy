@@ -19,18 +19,18 @@ module.exports = {
     if (hasAlliance(actual_id, actual_ot_user_id)) {
       if (war_obj) {
         //Check for enemy_side, friendly_side
-        if (war_obj.attackers.length.includes(actual_id)) {
+        if (war_obj.attackers.includes(actual_id)) {
           enemy_side = "defenders";
           friendly_side = "attackers";
         }
-        if (war_obj.defenders.length.includes(actual_id)) {
+        if (war_obj.defenders.includes(actual_id)) {
           enemy_side = "attackers";
           friendly_side = "defenders";
         }
 
         if (enemy_side != "") {
           if (ot_user) {
-            if (!war_obj.attackers.length.includes(actual_ot_user_id) && !war_obj.defenders.length.includes(actual_ot_user_id)) {
+            if (!war_obj.attackers.includes(actual_ot_user_id) && !war_obj.defenders.includes(actual_ot_user_id)) {
               sendAlert(actual_ot_user_id, config.defines.diplomacy.call_to_arms_alert_id, {
                 FROM: actual_id,
                 LOCAL: {
