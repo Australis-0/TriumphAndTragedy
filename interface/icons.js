@@ -150,7 +150,7 @@ config.icons = {
 
   attacker: "<:attacker:798003900027240448>",
   blockade: "<:blockade:716817688592252979>",
-  bombing_attack: "<:bombing_attacker:798005448854863893>",
+  bombing_attacker: "<:bombing_attacker:798005448854863893>",
   bombing_defender: "<:bombing_defender:798005448904015872>",
   death: "<:death:798009877469462530>",
   defender: "<:defender:798003900081766420>",
