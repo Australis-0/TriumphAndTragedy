@@ -16,10 +16,13 @@ module.exports = {
         .replace(">", "");
 
       if (main.global.user_map[mention_id]) mention_id = main.global.user_map;
+      user_exists = true;
 
       //Local case return statement
       return mention_id;
-    } else {
+    }
+
+    if (!user_exists) {
       //Declare local ID for resolving user ID
       var local_id;
 

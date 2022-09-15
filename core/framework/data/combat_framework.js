@@ -993,7 +993,7 @@ module.exports = {
 
               //Begin removing pops based on local percentage
               if (raw_unit_name != usr.mobilisation.mobilised_type) {
-                var amount_killed = Math.ceil(local_value/all_mobilised_pops.length)*amount;
+                var amount_killed = returnSafeNumber(Math.ceil(local_value/all_mobilised_pops.length)*amount);
 
                 killPops(actual_id, {
                   type: local_manpower_costs[i],
@@ -1007,7 +1007,7 @@ module.exports = {
 
                 total_losses += amount_killed;
               } else {
-                var amount_killed = Math.ceil(local_value*local_percentage)*amount;
+                var amount_killed = returnSafeNumber(Math.ceil(local_value*local_percentage)*amount);
 
                 killPops(actual_id, {
                   type: local_manpower_costs[i],
@@ -1020,7 +1020,7 @@ module.exports = {
               }
             }
           } else {
-            var amount_killed = Math.ceil(local_value)*amount;
+            var amount_killed = returnSafeNumber(Math.ceil(local_value)*amount);
 
             killPops(user_id, {
               type: local_manpower_costs[i],

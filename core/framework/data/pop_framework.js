@@ -215,7 +215,7 @@ module.exports = {
     var decimation_obj = {};
     var pop_obj = config.pops[options.type];
     var pop_types = getList(options.type);
-    var remaining_population = options.amount;
+    var remaining_population = returnSafeNumber(options.amount);
     var usr = main.users[actual_id];
 
     //Parse 'all' argument as well
