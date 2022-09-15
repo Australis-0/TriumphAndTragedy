@@ -112,7 +112,7 @@ module.exports = {
 
       //Attrition for current_status
       if (army_obj.taking_attrition)
-        current_status += ` Taking attrition at a rate of ${config.icons.death} **${printPercentage(2 - (usr.modifiers.attrition_rate*config.defines.combat.base_attrition_rate))}**!`;
+        current_status += ` Taking attrition at a rate of ${config.icons.death} **${printPercentage(usr.modifiers.attrition_rate*config.defines.combat.base_attrition_rate)}**!`;
 
       //Blockade cooldowns
       if (returnSafeNumber(army_obj.blockade_recovery_turns) > 0)
