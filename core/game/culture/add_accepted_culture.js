@@ -14,8 +14,8 @@ module.exports = {
     //Check to see if culture exists
     if (culture_obj) {
       if (
-        culture_obj.primary_culture.includes(actual_id) ||
-        culture_obj.accepted_culture.includes(actual_id)
+        !(culture_obj.primary_culture.includes(actual_id) ||
+        culture_obj.accepted_culture.includes(actual_id))
       ) {
         if (usr.modifiers.political_capital >= config.defines.politics.accepted_culture_cost) {
           var integration_time = config.defines.politics.integration_turns;

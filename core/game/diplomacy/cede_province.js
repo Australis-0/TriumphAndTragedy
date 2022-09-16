@@ -42,7 +42,7 @@ module.exports = {
               if (!at_war) {
                 if (ot_user.options.allow_ceding.includes(actual_id)) {
                   //Update tracker variables
-                  if (city_obj)
+                  if (city_obj.type == "urban")
                     usr.total_cities_ceded_this_turn++;
                   usr.total_ceded_this_turn++;
 
