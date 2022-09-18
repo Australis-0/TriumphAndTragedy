@@ -336,6 +336,11 @@ client.on("messageCreate", async (message) => {
           }, 1000);
           commandHandler(getGame(user_id), arg.join(" "));
 
+          //Cache usernames/nicknames
+          try {
+            getUsernames(user_id);
+          } catch {}
+
           //Check if game is still active
           if (returnGameFromChannelID(message.channel.id))
             interfaces[returnGameFromChannelID(message.channel.id)].last_active = new Date().getTime();

@@ -203,10 +203,10 @@ module.exports = {
           shortage_array.push(`- ${local_icon} ${parseNumber(local_shortage)} ${(local_good) ? (local_good.name) ? local_good.name : all_resource_shortages[i] : ""}`);
         }
 
-        printError(getGame(user_id), `You don't have resources to found a city! Gather the following resources first:\n\n${shortage_array.join("\n")}`);
+        printError(game_obj.id, `You don't have resources to found a city! Gather the following resources first:\n\n${shortage_array.join("\n")}`);
       }
     } else {
-      printError(getGame(user_id), `You don't have enough provinces to found a new city yet!`);
+      printError(game_obj.id, `You don't have enough provinces to found a new city yet!`);
     }
   },
 
@@ -276,6 +276,7 @@ module.exports = {
 
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
+    var game_obj = getGameObject(user_id);
     var usr = main.users[actual_id];
 
     var city_obj = getCity(city_name, { users: actual_id });
@@ -302,7 +303,7 @@ module.exports = {
           //Set new capital and print feedback
           city_obj.city_type = "capital";
 
-          printAlert(getGame(user_id), `You have successfully moved your capital to **${city_obj.name}** for **${config.defines.politics.move_capital_cost}** ${config.icons.political_capital} Political Capital.`);
+          printAlert(game_obj.id, `You have successfully moved your capital to **${city_obj.name}** for **${config.defines.politics.move_capital_cost}** ${config.icons.political_capital} Political Capital.`);
 
           //Update UIs
           if (game_obj.page == "country_interface")
@@ -325,13 +326,13 @@ module.exports = {
               user: game_obj.user
             });
         } else {
-          printError(getGame(user_id), `**${city_obj.name}** must at least be of one of your accepted cultures before you can consider moving your capital there!`);
+          printError(game_obj.id, `**${city_obj.name}** must at least be of one of your accepted cultures before you can consider moving your capital there!`);
         }
       } else {
-        printError(getGame(user_id), `You don't have enough ${config.icons.political_capital} Political Capital to move your capital city yet! You need **${parseNumber(config.defines.politics.move_capital_cost - usr.modifiers.political_capital)}** more.`);
+        printError(game_obj.id, `You don't have enough ${config.icons.political_capital} Political Capital to move your capital city yet! You need **${parseNumber(config.defines.politics.move_capital_cost - usr.modifiers.political_capital)}** more.`);
       }
     } else {
-      printError(getGame(user_id), `You cannot move your capital to a city that doesn't exist!`);
+      printError(game_obj.id, `You cannot move your capital to a city that doesn't exist!`);
     }
   },
 
@@ -356,7 +357,7 @@ module.exports = {
             if (city_obj) {
               city_obj.name = new_name;
 
-              printAlert(getGame(user_id), `You have renamed **${old_name}** to **${new_name}**!`);
+              printAlert(game_obj.id, `You have renamed **${old_name}** to **${new_name}**!`);
 
               //Update UIs
               if (game_obj.page == "cities_list")
@@ -389,13 +390,13 @@ module.exports = {
                 });
               }
             } else {
-              printError(getGame(user_id), `The city that you have specified is not currently in your possession or doesn't exist!`);
+              printError(game_obj.id, `The city that you have specified is not currently in your possession or doesn't exist!`);
             }
           } else {
-            printError(getGame(user_id), `You cannot have a nameless city!`);
+            printError(game_obj.id, `You cannot have a nameless city!`);
           }
         } else {
-          printError(getGame(user_id), `Your city name exceeded the maximum character limit of **100** characters!`);
+          printError(game_obj.id, `Your city name exceeded the maximum character limit of **100** characters!`);
         }
       } else {
         printError(game_obj.id, `Your city names have been locked in place due to moderation action. Ouch.`);
