@@ -24,8 +24,8 @@ module.exports = {
 
             if (local_user.blockaded.fleets)
               for (var x = 0; x < local_user.blockaded.fleets.length; x++)
-                if (local_user.blockaded.fleets[x].id == army_obj.id)
-                  blockade_index = [local_user.blockaded, x];
+                if (local_user.blockaded.fleets[x].fleet_id == army_obj.id)
+                  blockade_index = [main.users[all_users[i]].blockaded, x];
           }
 
           //Remove fleet from array
