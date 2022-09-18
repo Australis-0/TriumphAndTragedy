@@ -22,10 +22,11 @@ module.exports = {
           for (var i = 0; i < all_users.length; i++) {
             var local_user = main.users[all_users[i]];
 
-            if (local_user.blockaded.fleets)
-              for (var x = 0; x < local_user.blockaded.fleets.length; x++)
-                if (local_user.blockaded.fleets[x].fleet_id == army_obj.id)
-                  blockade_index = [main.users[all_users[i]].blockaded, x];
+            if (local_user.blockaded)
+              if (local_user.blockaded.fleets)
+                for (var x = 0; x < local_user.blockaded.fleets.length; x++)
+                  if (local_user.blockaded.fleets[x].fleet_id == army_obj.id)
+                    blockade_index = [main.users[all_users[i]].blockaded, x];
           }
 
           //Remove fleet from array
@@ -51,6 +52,13 @@ module.exports = {
                 printAlert(game_obj.id, `You have ended your blockade on **${blockaded_user.name}**.`);
             }
 
+            //Update army_list if user is currently viewing it
+            if (game_obj.page == "army_list")
+              createPageMenu(game_obj.middle_embed, {
+                embed_pages: printArmyList(user_id),
+                page: main.interfaces[game_obj.middle_embed.id].page,
+                user: game_obj.user
+              });
           }
         } else {
           if (!do_not_display)
