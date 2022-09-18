@@ -1,16 +1,44 @@
+console.log(`Bot started.`);
+
 //Node.js imports
+console.time(`Loading "underscore" ..`);
 global._ = require("underscore");
+console.timeEnd(`Loading "underscore" ..`);
+console.time(`Loading "ngraph.graph" ..`);
 global.bn_graph = require("ngraph.graph");
+console.timeEnd(`Loading "ngraph.graph" ..`);
+console.time(`Loading "ngraph.path" ..`);
 global.bn_path = require("ngraph.path");
+console.timeEnd(`Loading "ngraph.path" ..`);
+console.time(`Loading "canvas" ..`);
 global.Canvas = require("canvas");
+console.timeEnd(`Loading "canvas" ..`);
+console.time(`Loading "diacriticless" ..`);
 global.diacriticless = require("diacriticless");
+console.timeEnd(`Loading "diacriticless" ..`);
+console.time(`Loading "discord.js" ..`);
 global.Discord = require("discord.js");
+console.timeEnd(`Loading "discord.js" ..`);
+console.time(`Loading "fs" ..`);
 global.fs = require("fs");
+console.timeEnd(`Loading "fs" ..`);
+console.time(`Loading "node-html-parser" ..`);
 global.HTML = require("node-html-parser");
+console.timeEnd(`Loading "node-html-parser" ..`);
+console.time(`Loading "opusscript" ..`);
 global.opus = require("opusscript");
+console.timeEnd(`Loading "opusscript" ..`);
+console.time(`Loading "path" ..`);
 global.path = require("path");
+console.timeEnd(`Loading "path" ..`);
+console.time(`Loading "convert-svg-to-png" ..`);
 global.SVG = require("convert-svg-to-png");
+console.timeEnd(`Loading "convert-svg-to-png" ..`);
+console.time(`Loading "@discordjs/voice" ..`);
 global.voice = require("@discordjs/voice");
+console.timeEnd(`Loading "@discordjs/voice" ..`);
+
+console.log(`Node.js libraries imported.`);
 
 //Import Core Framework
 const FileManager = require("./core/file_manager");
@@ -224,6 +252,8 @@ FileManager.import("./game/units/disband_units");
 
 FileManager.import("./game/war/rename_war");
 
+log.info(`Script files imported.`);
+
 //Declare config loading order
 global.config = {};
 global.load_order = {
@@ -241,6 +271,8 @@ global.load_order = {
 FileManager.loadConfig();
 FileManager.loadFile("settings.js");
 
+log.info(`Mod files imported.`);
+
 //Initialise Discord.js client and related instance variables
 global.client = new Discord.Client({ intents: [
   1, 4, 8, 16, 32, 64, 128, 512, 1024, 2048, 4096, 8192, 16384, 32767
@@ -256,10 +288,14 @@ global.visual_prompts = {};
 
 client.login(settings.bot_token);
 
+log.info(`Client logged in.`);
+
 //Load DB from JSON
 initOptimisation();
 loadBackupArray();
 loadMostRecentSave();
+
+log.info(`Optimisation cache processed.`);
 
 //Global error handling
 process.on("unhandledRejection", (error) => {

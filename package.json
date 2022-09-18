@@ -33,6 +33,7 @@
     "convert-svg-to-png": "^0.6.4",
     "diacriticless": "^1.0.1",
     "discord.js": "^13.6.0",
+    "fast-json-parse": "^1.0.3",
     "form-data": "^4.0.0",
     "fs": "^0.0.1-security",
     "js-clipper": "^1.0.1",

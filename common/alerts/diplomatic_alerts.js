@@ -201,7 +201,7 @@ config.alerts.diplomacy = {
     description: "{FROM.name} is attempting to call us into their war! Although this war may have been started by another country, we hold an alliance with {FROM.name}, and so if we seek to honour our alliance, we'll also need to muster our armed forces together. For us all.",
 
     btn_accept_call_to_arms: {
-      name: "Our nation is one of honour!",
+      title: "Our nation is one of honour!",
       ai_chance: 80,
       description: [
         [`We will join the **{LOCAL.war_name}** on the side of the **{LOCAL.friendly_side}**!`]
@@ -214,10 +214,8 @@ config.alerts.diplomacy = {
       title: "We can't afford this war.",
       ai_chance: 20,
       description: [
-        [
-          `Our alliance with **{FROM.name}** will be immediately terminated.`,
-          `**-1** Used Diplomatic Slot.`
-        ]
+        `Our alliance with **{FROM.name}** will be immediately terminated.`,
+        `**-1** Used Diplomatic Slot.`
       ],
       effect: function (options) {
         var FROM_USER = main.users[options.FROM];

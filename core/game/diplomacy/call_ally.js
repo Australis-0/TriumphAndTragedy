@@ -34,7 +34,8 @@ module.exports = {
               sendAlert(actual_ot_user_id, config.defines.diplomacy.call_to_arms_alert_id, {
                 FROM: actual_id,
                 LOCAL: {
-                  war_name: war_obj.name
+                  war_name: war_obj.name,
+                  friendly_side: friendly_side
                 },
                 TO: actual_ot_user_id
               });
