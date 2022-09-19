@@ -213,6 +213,8 @@ module.exports = {
   },
 
   restartBot: async function () {
+    FileManager.import("./startup");
+
     module.exports.loadBotFiles();
     module.exports.startBot(true);
   },
