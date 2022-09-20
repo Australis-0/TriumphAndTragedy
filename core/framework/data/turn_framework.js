@@ -1214,6 +1214,14 @@ module.exports = {
           applyModifiers(actual_id, modifier_scope);
         }
       }
+
+      //Remove all assimilations_to_remove
+      for (var i = assimilations_to_remove.length - 1; i >= 0; i--)
+        usr.pops.assimilations.splice(events_to_remove[i], 1);
+
+      //Remove all cultural_integrations_to_remove
+      for (var i = cultural_integrations_to_remove.length - 1; i >= 0; i--)
+        usr.pops.cultural_integrations.splice(cultural_integrations_to_remove[i], 1);
     } catch (e) {
       console.log(e);
     }

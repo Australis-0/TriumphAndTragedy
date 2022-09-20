@@ -201,6 +201,7 @@ config.goods = {
 
         if (usr.inventory.food < Math.ceil(usr.population/1000000)) {
           usr.has_famine = true;
+          usr.inventory.food = 0;
 
           killPops(usr.id, {
             type: "all",
