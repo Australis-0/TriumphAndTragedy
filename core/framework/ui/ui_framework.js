@@ -355,35 +355,40 @@ module.exports = {
       //Split by fields if requested
       if (options.maximum_fields) {
         //Split embeds based on fields
-        if (options.fields)
-          for (var i = 0; i < options.fields.length; i++) {
-            if (options.table_width == 2)
-              if ((i + 1) % 2 == 0)
-                local_array_string.push({ name: '\u200b', value: '\u200b', inline: true });
+        if (options.fields) {
+          var total_page_count = Math.ceil(options.fields.length/options.maximum_fields);
 
-            local_array_string.push(options.fields[i]);
+          for (var i = 0; i < total_page_count; i++)
+            for (var x = 0; x < options.maximum_fields; x++)
+              try {
+                var index = i*options.maximum_fields;
 
-            if (i != 0 || options.fields.length == 1)
-              if (i % (options.maximum_fields + 1) == 0 || i == options.fields.length-1) {
-                total_page_count++;
+                if (options.table_width == 2)
+                  if ((x + 1) % 2 == 0)
+                    local_array_string.push({ name: '\u200b', value: '\u200b', inline: true });
 
-                //Initialise page embed
-                var local_embed = new Discord.MessageEmbed()
-                  .setColor(settings.bot_colour)
-                  .setDescription(array_string.join("\n"));
+                local_array_string.push(options.fields[index + x]);
 
-                //Declare local options variables
-                var page_ending = (options.title && options.title_pages) ? `(Page ${all_embeds.length+1} of ${total_page_count}):` : "";
+                if (x != 0 || options.fields.length == 1)
+                  if (x % (options.maximum_fields - 1) == 0) {
+                    //Initialise page embed
+                    var local_embed = new Discord.MessageEmbed()
+                      .setColor(settings.bot_colour)
+                      .setDescription(array_string.join("\n"));
 
-                formatEmbed(local_embed, all_embeds, page_ending, options);
+                    //Declare local options variables
+                    var page_ending = (options.title && options.title_pages) ? `(Page ${all_embeds.length + 1} of ${parseNumber(total_page_count)}):` : "";
 
-                //Add fields
-                for (var x = 0; x < local_array_string.length; x++)
-                  local_embed.addFields(local_array_string[x]);
+                    formatEmbed(local_embed, all_embeds, page_ending, options);
 
-                local_array_string = [];
-              }
-          }
+                    //Add fields
+                    for (var y = 0; y < local_array_string.length; y++)
+                      local_embed.addFields(local_array_string[y]);
+
+                    local_array_string = [];
+                  }
+              } catch {}
+        }
       } else {
         //Split by lines if maximum_lines argument is specified, but split by characters otherwise
         if (!options.maximum_lines) {

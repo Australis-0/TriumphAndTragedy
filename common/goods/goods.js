@@ -199,7 +199,7 @@ config.goods = {
         //At least 1 food per million is required by the population
         usr.inventory.food -= Math.ceil(usr.population/1000000);
 
-        if (usr.inventory.food < Math.ceil(usr.population/1000000)) {
+        if (usr.inventory.food <= 0) {
           usr.has_famine = true;
           usr.inventory.food = 0;
 

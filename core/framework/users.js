@@ -92,7 +92,7 @@ module.exports = {
 
           if (local_user.usernames)
             for (var x = 0; x < local_user.usernames.length; x++)
-              if (local_user.usernames.toLowerCase().indexOf(user_id.toLowerCase()) != -1)
+              if (local_user.usernames[x].toLowerCase().indexOf(user_id.toLowerCase()) != -1)
                 local_id = all_users[i];
         }
 
@@ -102,7 +102,7 @@ module.exports = {
 
           if (local_user.usernames)
             for (var x = 0; x < local_user.usernames.length; x++)
-              if (local_user.usernames.toLowerCase() == user_id.toLowerCase())
+              if (local_user.usernames[x].toLowerCase() == user_id.toLowerCase())
                 local_id = all_users[i];
         }
 
@@ -114,7 +114,7 @@ module.exports = {
 
             if (local_user.nicknames)
               for (var x = 0; x < local_user.nicknames.length; x++)
-                if (local_user.nicknames.toLowerCase().indexOf(user_id.toLowerCase()) != -1)
+                if (local_user.nicknames[x].toLowerCase().indexOf(user_id.toLowerCase()) != -1)
                   local_id = all_users[i];
           }
 
@@ -124,7 +124,7 @@ module.exports = {
 
             if (local_user.nicknames)
               for (var x = 0; x < local_user.nicknames.length; x++)
-                if (local_user.nicknames.toLowerCase() == user_id.toLowerCase())
+                if (local_user.nicknames[x].toLowerCase() == user_id.toLowerCase())
                   local_id = all_users[i];
           }
         }

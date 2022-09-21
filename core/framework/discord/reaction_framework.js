@@ -61,6 +61,7 @@ module.exports = {
                 } else if (reaction.emoji.name == "➡️") {
                   //Check if page is valid
                   ui_obj.page = (ui_obj.embed_array[current_page+1]) ? ui_obj.page + 1 : ui_obj.page;
+                  current_page = ui_obj.page;
 
                   //If its at the beginning, we need both emojis now
                   if (ui_obj.embed_array.length > 2) {

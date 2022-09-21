@@ -103,8 +103,7 @@ module.exports = {
     }
 
     var all_resource_shortages = Object.keys(resource_shortages);
-    if (getCitiesCap(actual_id) - getCities(actual_id).length > 0) {
-
+    if (getCitiesCap(actual_id) - getCities(actual_id).length >= 0) {
       if (all_resource_shortages.length == 0) {
         var local_province = getProvince(province_id);
 

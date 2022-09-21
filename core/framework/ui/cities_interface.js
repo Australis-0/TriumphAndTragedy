@@ -62,14 +62,19 @@ module.exports = {
     }
 
     //Return statement
-    return splitEmbed(city_string, {
-      fields: fields_list,
-      fixed_width: true,
-      maximum_fields: 12,
-      table_width: 2,
-      title: "City List:",
-      title_pages: true
-    });
+    return (fields_list.length > 0) ?
+      splitEmbed(city_string, {
+        fields: fields_list,
+        fixed_width: true,
+        maximum_fields: 12,
+        table_width: 2,
+        title: "City List:",
+        title_pages: true
+      }) :
+      splitEmbed(city_string, {
+        title: "City List:",
+        title_pages: true
+      });
   },
 
   printCity: function (arg0_user, arg1_name) {
