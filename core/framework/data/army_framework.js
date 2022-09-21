@@ -1184,5 +1184,68 @@ module.exports = {
           //Print out return statement
           return [true, `You placed **${parseNumber(amount)}** ${(unit_obj.name) ? unit_obj.name : raw_unit_name} from the **${army_obj.name}** back into reserve.`];
         }
+  },
+
+  /*
+    reorderUnits() - Reorders a stack of units in an army
+    options: {
+      direction: "up"/"down", - Whether units are reordered up or down
+      amount: 3 - How many positions to try and reorganise units by
+    }
+  */
+  reorderUnits: function (arg0_user, arg1_army_name, arg2_unit_name, arg3_options) {
+    //Convert from parameters
+    var user_id = arg0_user;
+    var army_name = arg1_army_name;
+    var unit_name = arg2_unit_name;
+    var options = (arg3_options) ? arg3_options : {};
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var army_obj = (typeof army_name != "object") ?
+      module.exports.getArmy(actual_id, army_name.trim().toLowerCase()) :
+      army_name;
+    var unit_obj = (typeof unit_name != "object") ?
+      getUnit(unit_name.trim().toLowerCase()) :
+      unit_name;
+    var usr = main.users[actual_id];
+
+    var actual_unit_name = getUnit(unit_obj.name, { return_key: true });
+
+    //Find the army if possible and duplicate an object
+    if (usr)
+      if (army_obj) {
+        if (unit_obj) {
+          if (returnSafeNumber(army_obj.units[actual_unit_name])) {
+            //Duplicate army units object
+            var current_units = Object.keys(army_obj.units);
+
+            var current_index = current_units.indexOf(actual_unit_name);
+            var new_units = {};
+
+            //Move element in current_units; up is towards index 0, down is towards last index
+            var new_index = (options.direction == "up") ?
+              Math.max(current_index - options.amount, 0) :
+              Math.min(current_index + options.amount, 0);
+
+            current_units = moveElement(current_units, current_index, new_index);
+
+            //Begin parsing units
+            for (var i = 0; i < current_units.length; i++)
+              new_units[current_units[i]] = army_obj.units[current_units[i]];
+
+            //Set units
+            army_obj.units = new_units;
+
+            return [true, `**${parseNumber(army_obj.units[actual_unit_name])}** ${unit_obj.name} were moved to the **${ordinalise(new_index)}** combat row of the **${army_obj.name}**`];
+          } else {
+            return [false, `The **${army_obj.name}** has no **${unit_obj.name}** in it.`];
+          }
+        } else {
+          return [false, `**${unit_name}** is not a valid type of unit!`];
+        }
+      } else {
+        return [false, `The **${army_name}** could not be found as a combat force.`];
+      }
   }
 };

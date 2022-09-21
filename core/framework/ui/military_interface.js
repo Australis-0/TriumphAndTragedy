@@ -228,6 +228,7 @@ module.exports = {
 
     army_management_array.push(`- **[Mass Deploy]** - For deploying troops to armies en masse.`);
     army_management_array.push(`- **[Mass Relieve]** - Relieves units from several armies, putting them back in reserves.`);
+    army_management_array.push(`- **[Mass Reorder]** - Reorders units in multiple armies.`);
     army_management_array.push(`- **[Move Armies]** - Moves several armies to a single province.`);
 
     mobilisation_array.push(`---`);

@@ -27,6 +27,8 @@ module.exports = {
       culture_string.push(`${config.icons.consciousness} Accepted Culture(s): _We have no accepted cultures apart from our primary culture at this moment._`);
     culture_string.push("");
     culture_string.push(`${config.icons.political_capital} Political Capital: **${parseNumber(usr.modifiers.political_capital)}**`);
+    if (accepted_cultures.length > 0)
+      culture_string.push(`Our **${parseNumber(accepted_cultures.length)}** accepted culture(s) are costing us **${parseNumber(accepted_cultures.length*config.defines.politics.accepted_culture_maintenance_cost)}** Political Capital per turn.`);
 
     if (usr.provinces - accepted_culture_provinces.length > 0)
       culture_string.push(`${config.icons.population} We have **${parseNumber(usr.provinces - accepted_culture_provinces.length)}** non-accepted provinces with a total population of **${parseNumber(total_unaccepted_population)}**, of which we are receiving just **${printPercentage(usr.modifiers.non_core_manpower)}** of in manpower.`);

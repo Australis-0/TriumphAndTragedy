@@ -173,6 +173,7 @@ module.exports = {
     FileManager.import("./game/military/lift_blockade");
     FileManager.import("./game/military/mass_deploy");
     FileManager.import("./game/military/mass_relieve");
+    FileManager.import("./game/military/mass_reorder");
     FileManager.import("./game/military/merge_armies");
     FileManager.import("./game/military/merge_army");
     FileManager.import("./game/military/mobilise");
@@ -182,6 +183,7 @@ module.exports = {
     FileManager.import("./game/military/options");
     FileManager.import("./game/military/relieve_units");
     FileManager.import("./game/military/rename_army");
+    FileManager.import("./game/military/reorder_units");
     FileManager.import("./game/military/split_armies");
     FileManager.import("./game/military/split_army");
     FileManager.import("./game/military/torpedo_fleet");

@@ -1729,6 +1729,10 @@ module.exports = {
           if (input == "rename army")
             initialiseRenameArmy(user_id, viewed_army);
 
+          //[Reorder Units]
+          if (input == "reorder units")
+            initialiseReorderUnits(user_id, viewed_army);
+
           //[Split Army]
           if (input == "split army")
             initialiseSplitArmy(user_id, viewed_army);
@@ -1805,6 +1809,10 @@ module.exports = {
           if (input == "mass relieve")
             initialiseMassRelieve(user_id);
 
+          //[Mass Reorder]
+          if (input == "mass reorder")
+            initialiseMassReorder(user_id);
+
           //[Merge Armies]
           if (input == "merge armies")
             initialiseMergeArmies(user_id);
@@ -1824,6 +1832,10 @@ module.exports = {
           //[Relieve Units]
           if (input == "relieve units")
             initialiseRelieveUnits(user_id);
+
+          //[Reordder Units]
+          if (input == "reorder_units")
+            initialiseReorderUnits(user_id);
 
           //[Rename Army]
           if (input == "rename army")

@@ -130,7 +130,7 @@ module.exports = {
         army_string.push(`${config.icons.aeroplanes} **Aeroplanes** receive a **${printPercentage(config.defines.combat.seaplane_bonus, { base_zero: true, display_prefix: true })}** attack bonus whilst at sea.`);
 
       //Push buttons
-      army_string.push(`**[Rename Army]** | **[Deploy Units]** | ${(all_units.length > 0) ? "**[Relieve Units]** | **[Transfer Units]** |" : ""} **[Delete Army]**`);
+      army_string.push(`**[Rename Army]** | **[Deploy Units]** | ${(all_units.length > 0) ? "**[Relieve Units]** | **[Reorder Units]** | **[Transfer Units]** |" : ""} **[Delete Army]**`);
 
       if (army_obj.type == "army") {
         army_string.push(`**[Merge Army]** | **[Move]**`);
@@ -251,7 +251,7 @@ module.exports = {
 
       description: [
         `**[Create Army]** | **[Delete Army]** | **[Merge Army]** | **[Rename Army]** | **[View Army]**`,
-        `**[Deploy Units]** | **[Transfer Units]** | **[Relieve Units]**`,
+        `- **[Deploy Units]** | **[Transfer Units]** | **[Relieve Units]** | **[Reorder Units]**`,
         ``,
         ``,
       ]
