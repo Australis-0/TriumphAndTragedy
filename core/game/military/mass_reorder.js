@@ -33,8 +33,8 @@ module.exports = {
 
           //Return success messages
           (successfully_reordered == army_array.length) ?
-            printAlert(game_obj.id, `You have successfully moved **${unit_obj.name}** up ${(options.direction == "up") ? "up" : "down"} **${parseNumber(options.amount)}** columns in **${parseNumber(army_array.length)}** armies.`) :
-            printAlert(game_obj.id, `You have successfully moved **${unit_obj.name}** up ${(options.direction == "up") ? "up" : "down"} **${parseNumber(options.amount)}** columns in **${parseNumber(successfully_reordered)}**/${parseNumber(army_array.length)} armies.`);
+            printAlert(game_obj.id, `You have successfully moved **${unit_obj.name}** ${(options.direction == "up") ? "up" : "down"} **${parseNumber(options.amount)}** columns in **${parseNumber(army_array.length)}** armies.`) :
+            printAlert(game_obj.id, `You have successfully moved **${unit_obj.name}** ${(options.direction == "up") ? "up" : "down"} **${parseNumber(options.amount)}** columns in **${parseNumber(successfully_reordered)}**/${parseNumber(army_array.length)} armies.`);
         } else {
           printError(game_obj.id, `No unit by the name of **${unit_name}** could be found!`);
         }
