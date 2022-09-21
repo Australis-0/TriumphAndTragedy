@@ -817,17 +817,6 @@ module.exports = {
     }
     console.timeEnd(`Events processing!`);
 
-    console.time(`Goods processing!`);
-    //Goods processing
-    try {
-      for (var i = 0; i < all_goods.length; i++)
-        if (all_goods[i].special_effect)
-          all_goods[i].special_effect(usr);
-    } catch (e) {
-      console.log(e);
-    }
-    console.timeEnd(`Goods processing!`);
-
     console.time(`Market processing!`);
     //Market processing
     try {
