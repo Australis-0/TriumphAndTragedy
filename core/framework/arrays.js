@@ -55,7 +55,7 @@ module.exports = {
     //Move element in array
     if (new_index >= array.length) {
       var local_index = new_index - array.length + 1;
-      while (k--)
+      while (local_index--)
         array.push(undefined);
     }
     array.splice(new_index, 0, array.splice(old_index, 1)[0]);

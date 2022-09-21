@@ -1226,9 +1226,11 @@ module.exports = {
             //Move element in current_units; up is towards index 0, down is towards last index
             var new_index = (options.direction == "up") ?
               Math.max(current_index - options.amount, 0) :
-              Math.min(current_index + options.amount, 0);
+              Math.min(current_index + options.amount, current_units.length - 1);
 
             current_units = moveElement(current_units, current_index, new_index);
+
+            log.info(`reorderUnits() - New unit array: ${current_units.join(", ")}`);
 
             //Begin parsing units
             for (var i = 0; i < current_units.length; i++)
