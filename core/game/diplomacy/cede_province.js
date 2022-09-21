@@ -1,76 +1,90 @@
 module.exports = {
-  //cedeProvince() - Cedes a province from arg0_user to arg1_user.
-  cedeProvince: function (arg0_user, arg1_user, arg2_province_id) {
+  cedeProvinces: function (arg0_user, arg1_user, arg2_provinces) {
     //Convert from parameters
     var user_id = arg0_user;
     var ot_user_id = arg1_user;
-    var province_id = arg2_province_id.trim().toLowerCase();
+    var provinces = arg2_provinces.split(" ");
 
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
     var actual_ot_user_id = main.global.user_map[ot_user_id];
-    var all_users = Object.keys(main.users);
     var at_war = (getWars(actual_id).length > 0);
-    var city_obj = getCity(province_id);
     var game_obj = getGameObject(user_id);
-    var is_being_justified_on = [false, ""]; //[is_being_justified_on, country_name];
     var ot_user = main.users[actual_ot_user_id];
-    var province_obj = getProvince(province_id);
     var usr = main.users[actual_id];
 
-    //Check if user is being justified on
-    for (var i = 0; i < all_users.length; i++) {
-      var local_user = main.users[all_users[i]];
+    //Trim out invalid provinces
+    var provinces_to_remove = [];
 
-      for (var x = 0; x < local_user.diplomacy.justifications.length; x++) {
-        var local_justification = local_user.diplomacy.justifications[x];
+    for (var i = 0; i < provinces.length; i++) {
+      var local_province = main.provinces[provinces[i]];
 
-        if (local_justification.target == actual_id)
-          is_being_justified_on = [true, local_user.name];
+      if (local_province) {
+        if (local_province.owner != actual_id || local_province.controller != actual_id)
+          provinces_to_remove.push(provinces[i]);
+      } else {
+        if (provinces[i] != "") {
+          var city_obj = getCity(provinces[i]);
+
+          if (!city_obj) {
+            provinces_to_remove.push(provinces[i]);
+          } else {
+            if (city_obj.owner != actual_id || city_obj.controller != actual_id)
+              provinces_to_remove.push(provinces[i]);
+          }
+        } else {
+          provinces_to_remove.push(provinces[i]);
+        }
       }
     }
 
+    for (var i = 0; i < provinces_to_remove.length; i++)
+      provinces = removeElement(provinces, provinces_to_remove[i]);
+
     //Check if the other user even exists in the first place
     if (ot_user) {
-      if (city_obj || province_obj) {
-        if (!province_obj)
-          province_obj = getProvince(city_obj.id);
+      if (!isBeingJustifiedOn(actual_id)) {
+        if (!at_war) {
+          if (ot_user.options.allow_ceding.includes(actual_id)) {
+            if (usr.total_ceded_this_turn + provinces.length < config.defines.diplomacy.cede_province_limit) {
+              //Fetch total number of cities being ceded
+              var number_of_cities = 0;
 
-        if (usr.total_ceded_this_turn < config.defines.diplomacy.cede_province_limit) {
-          if (usr.total_cities_ceded_this_turn < config.defines.diplomacy.cede_city_limit) {
-            if (!is_being_justified_on[0]) {
-              if (!at_war) {
-                if (ot_user.options.allow_ceding.includes(actual_id)) {
-                  //Update tracker variables
-                  if (city_obj.type == "urban")
-                    usr.total_cities_ceded_this_turn++;
-                  usr.total_ceded_this_turn++;
+              for (var i = 0; i < provinces.length; i++) {
+                var local_city = getCity(provinces[i]);
 
-                  //Use framework variable to transfer
+                if (local_city)
+                  if (local_city.type == "urban")
+                    number_of_cities++;
+              }
+
+              if (usr.total_cities_ceded_this_turn + number_of_cities < config.defines.diplomacy.cede_city_limit) {
+                //Use framework function to transfer
+                for (var i = 0; provinces.length; i++)
                   transferProvince(actual_id, {
-                    province_id: province_obj.id,
+                    province_id: provinces[i],
                     target: actual_ot_user_id
                   });
 
-                  //Print alert
-                  printAlert(game_obj.id, `${config.icons.provinces} You have transferred Province **${province_obj.id}** to **${ot_user.name}**.`);
-                } else {
-                  printError(game_obj.id, `**${ot_user.name}** is not currently accepting provinces from you! Ask them to **[Allow Ceding]** from you first before trying to cede more land.`);
-                }
+                usr.total_cities_ceded_this_turn += number_of_cities;
+                usr.total_ceded_this_turn += provinces.length;
+
+                //Print alert
+                printAlert(game_obj.id, `${config.icons.provinces} You have successfully transferred **${parseNumber(number_of_cities)}** urban province(s) and **${parseNumber(provinces.length - number_of_cities)}** rural province(s) to **${ot_user.name}** for a total of **${parseNumber(provinces.length)}** province(s).`);
               } else {
-                printError(game_obj.id, `You can't cede provinces to other nations whilst in an armed conflict! Focus on the war effort first.`);
+                printError(game_obj.id, `You may only cede up to **${parseNumber(config.defines.diplomacy.cede_city_limit)}** cities per turn! You have already ceded **${parseNumber(usr.total_cities_ceded_this_turn)}** cities this turn, and attempted to cede **${parseNumber(number_of_cities)}** more. Wait until next turn to potentially cede more cities.`);
               }
             } else {
-              printError(game_obj.id, `You can't cede provinces to other nations whilst being justified on! Convince them to cancel their justification in order to cede Province **${province_obj.id}**.`);
+              printError(game_obj.id, `You may only cede up to **${parseNumber(config.defines.diplomacy.cede_province_limit)}** provinces each round! You attempted to cede **${parseNumber(provinces.length)}** provinces in addition to **${parseNumber(usr.total_ceded_this_turn)}** more provinces already ceded this turn, for a total of **${parseNumber(provinces.length + usr.total_ceded_this_turn)}**/${parseNumber(config.defines.diplomacy.cede_province)} provinces.`);
             }
           } else {
-            printError(game_obj.id, `You may only cede up to **${parseNumber(config.defines.diplomacy.cede_city_limit)}** cities per turn! Wait until next turn to potentially cede more cities.`);
+            printError(game_obj.id, `**${ot_user.name}** is not currently accepting provinces from you! Ask them to **[Allow Ceding]** from you first before trying to cede more land.`);
           }
         } else {
-          printError(game_obj.id, `You may only cede up to **${parseNumber(config.defines.diplomacy.cede_province_limit)}** provinces each round! Wait until next turn to potentially cede more provinces.`);
+          printError(game_obj.id, `You can't cede provinces to other nations whilst in an armed conflict! Focus on the war effort first.`);
         }
       } else {
-        printError(game_obj.id, `The province/city you have specified, **${province_id}**, could not be found!`);
+        printError(game_obj.id, `You cannot cede provinces to another country whilst being justified on!`);
       }
     } else {
       printError(game_obj.id, `Why not cede a province to Narnia or Xanadu instead? That country doesn't even exist anyway.`);
@@ -88,11 +102,11 @@ module.exports = {
       title: `Cede A Province/City:`,
       prompts: [
         [`Which country would you like to cede a province to?\n\nType **[View Ledger]** to a view a ledger of all valid nations.`, "mention"],
-        [`What is the name of the province you would like to give up to them?\n\nType **[View Provinces]** to see a list of all your provinces.`, "string"]
+        [`Please input the Province ID's of the provinces you would like to cede to this nation. You may choose up to **${parseNumber(config.defines.diplomacy.cede_province_limit - usr.total_ceded_this_turn)}** total province(s), **${parseNumber(config.defines.diplomacy.cede_city_limit - usr.total_cities_ceded_this_turn)}** of which may be urban.\n\nType **[View Provinces]** to see a list of all your provinces.`, "string"]
       ]
     },
     function (arg) {
-      module.exports.cedeProvince(user_id, arg[0], arg[1]);
+      module.exports.cedeProvinces(user_id, arg[0], arg[1]);
     },
     function (arg) {
       switch (arg) {
