@@ -51,7 +51,7 @@ module.exports = {
       if (!isBeingJustifiedOn(actual_id)) {
         if (!at_war) {
           if (ot_user.options.allow_ceding.includes(actual_id)) {
-            if (usr.total_ceded_this_turn + provinces.length < config.defines.diplomacy.cede_province_limit) {
+            if (usr.total_ceded_this_turn + provinces.length <= config.defines.diplomacy.cede_province_limit) {
               //Fetch total number of cities being ceded
               var number_of_cities = 0;
 
@@ -63,9 +63,9 @@ module.exports = {
                     number_of_cities++;
               }
 
-              if (usr.total_cities_ceded_this_turn + number_of_cities < config.defines.diplomacy.cede_city_limit) {
+              if (usr.total_cities_ceded_this_turn + number_of_cities <= config.defines.diplomacy.cede_city_limit) {
                 //Use framework function to transfer
-                for (var i = 0; provinces.length; i++)
+                for (var i = 0; i < provinces.length; i++)
                   transferProvince(actual_id, {
                     province_id: provinces[i],
                     target: actual_ot_user_id
@@ -100,10 +100,13 @@ module.exports = {
   },
 
   initialiseCedeProvince: function (arg0_user) {
+    //Convert from parameters
     var user_id = arg0_user;
 
     //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
     var game_obj = getGameObject(user_id);
+    var usr = main.users[actual_id];
 
     //Initialise visual prompt
     visualPrompt(game_obj.alert_embed, user_id, {

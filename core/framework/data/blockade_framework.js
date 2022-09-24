@@ -100,7 +100,7 @@ module.exports = {
         usr.blockaded.blockade_cooldown = config.defines.combat.blockade_cooldown;
 
         //Delete blockading object
-        delete usr.blockaded;
+        usr.blockaded = {};
       }
   }
 };
