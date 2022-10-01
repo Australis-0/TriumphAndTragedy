@@ -70,11 +70,11 @@ module.exports = {
       var local_export = usr.trades[all_exports[i]];
       var local_good_icon = (local_export == "money") ?
         config.icons.money + " " :
-        (getGood(local_export)) ?
+        (getGood(local_export.good_type)) ?
           config.icons[getGood(local_export).icon] + " " :
           "";
       var local_good_name = (getGood(local_export)) ?
-        (getGood(local_export)) ?
+        (getGood(local_export.good_type)) ?
           getGood(local_export).name :
           local_export :
         local_export;
