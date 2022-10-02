@@ -147,12 +147,12 @@ module.exports = {
             }
 
             //Entry logic
-            if (production_array.length > 0) {
-              production_string = `\nProduces:\n- ${production_array.join("\n- ")}`;
-            }
-            if (maintenance_array.length > 0) {
+            if (production_array.length > 0 || building_obj.description || building_obj.houses || building_obj.modifiers)
+              production_string = `\nProduces:`;
+            if (production_array.length > 0)
+              production_string += `\n- ${production_array.join("\n- ")}`;
+            if (maintenance_array.length > 0)
               production_string += `\nMaintenance:\n- ${maintenance_array.join("\n- ")}`;
-            }
 
             //Custom localisation
             if (building_obj.description)
