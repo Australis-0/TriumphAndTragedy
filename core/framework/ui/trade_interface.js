@@ -117,8 +117,8 @@ module.exports = {
       var local_good_name = (getGood(all_imports[i].good_type)) ?
         (getGood(all_imports[i].good_type)) ?
           getGood(all_imports[i].good_type).name :
-          all_imports[i] :
-        all_imports[i];
+          all_imports[i].good_type :
+        all_imports[i].good_type;
 
       import_string.push(`Importing ${local_good_icon}${parseNumber(all_imports[i].amount)} ${local_good_name} from **${main.users[all_imports[i].exporter].name}**.\nThe shipment will arrive in **${parseNumber(all_imports[i].duration)}** turn(s).`);
     }
