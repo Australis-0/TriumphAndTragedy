@@ -111,12 +111,12 @@ module.exports = {
     for (var i = 0; i < all_imports.length; i++) {
       var local_good_icon = (all_imports[i] == "money") ?
         config.icons.money + " " :
-        (getGood(all_imports[i])) ?
+        (getGood(all_imports[i].good_type)) ?
           config.icons[getGood(all_imports[i]).icon] + " " :
           "";
-      var local_good_name = (getGood(all_imports[i])) ?
-        (getGood(all_imports[i])) ?
-          getGood(all_imports[i]).name :
+      var local_good_name = (getGood(all_imports[i].good_type)) ?
+        (getGood(all_imports[i].good_type)) ?
+          getGood(all_imports[i].good_type).name :
           all_imports[i] :
         all_imports[i];
 
