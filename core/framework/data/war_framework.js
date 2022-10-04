@@ -74,7 +74,7 @@ module.exports = {
         }
 
       //Return statement
-      if (usr_war_side != "none")
+      if (usr_war_side != "none" && ot_user_war_side != "none")
         if (usr_war_side != ot_user_war_side)
           return true;
     }

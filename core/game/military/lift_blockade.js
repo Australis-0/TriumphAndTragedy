@@ -59,9 +59,19 @@ module.exports = {
                 page: main.interfaces[game_obj.middle_embed.id].page,
                 user: game_obj.user
               });
+            //Update army page
+            if (game_obj.page.includes("army_viewer_")) {
+              var army_to_view = game_obj.page.replace("army_viewer_", "");
+
+              createPageMenu(game_obj.middle_embed, {
+                embed_pages: printArmy(user_id, army_to_view),
+                page: interfaces[game_obj.middle_embed.id].page,
+                user: game_obj.user
+              });
+            }
           }
         } else {
-          if (!do_not_display)
+          if (do_not_display)
             printError(game_obj.id, `The **${army_obj.name}** isn't currently blockading anyone!`);
         }
       } else {

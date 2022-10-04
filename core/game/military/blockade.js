@@ -15,43 +15,47 @@ module.exports = {
 
     //Check to see if user is already blockaded
     if (usr.modifiers.enable_blockades) {
-      if (ot_user) {
-        if (army_obj) {
-          if (!army_obj.is_blockading) {
-            if (ot_user.blockaded.fleets) {
-              //Check to make sure fleet is not in recovery from a previous blockade
-              if (returnSafeNumber(army_obj.blockade_recovery_turns) == 0) {
-                //Reinforce the current blockade
-                ot_user.blockaded.fleets.push({
-                  id: actual_id,
-                  fleet_id: army_obj.id
-                });
+      if (actual_id != actual_ot_user_id) {
+        if (ot_user) {
+          if (army_obj) {
+            if (!army_obj.is_blockading) {
+              if (ot_user.blockaded.fleets) {
+                //Check to make sure fleet is not in recovery from a previous blockade
+                if (returnSafeNumber(army_obj.blockade_recovery_turns) == 0) {
+                  //Reinforce the current blockade
+                  ot_user.blockaded.fleets.push({
+                    id: actual_id,
+                    fleet_id: army_obj.id
+                  });
 
-                //Set new army status
-                army_obj.status = `blockading **${ot_user.name}**`;
-                army_obj.is_blockading = true;
+                  //Set new army status
+                  army_obj.status = `blockading **${ot_user.name}**`;
+                  army_obj.is_blockading = true;
+
+                  //Print user feedback
+                  printAlert(game_obj.id, `You have assigvned the **${army_obj.name}** to reinforce the blockade on **${ot_user.name}**.`);
+                } else {
+                  printError(game_obj.id, `The **${army_obj.name}** is still in recovery from a previous blockade! Wait **${parseNumber(army_obj.blockade_recovery_turns)}** more turn(s) before trying to implement a blockade with this army.`)
+                }
+              } else {
+                var blockade_creation = createBlockade(actual_ot_user_id, actual_id, army_obj.name);
 
                 //Print user feedback
-                printAlert(game_obj.id, `You have assigvned the **${army_obj.name}** to reinforce the blockade on **${ot_user.name}**.`);
-              } else {
-                printError(game_obj.id, `The **${army_obj.name}** is still in recovery from a previous blockade! Wait **${parseNumber(army_obj.blockade_recovery_turns)}** more turn(s) before trying to implement a blockade with this army.`)
+                (blockade_creation[0]) ?
+                  printAlert(game_obj.id, blockade_creation[1]) :
+                  printError(game_obj.id, blockade_creation[1]);
               }
             } else {
-              var blockade_creation = createBlockade(actual_ot_user_id, actual_id, army_obj.name);
-
-              //Print user feedback
-              (blockade_creation[0]) ?
-                printAlert(game_obj.id, blockade_creation[1]) :
-                printError(game_obj.id, blockade_creation[1]);
+              printError(game_obj.id, `The **${fleet_name}** is already busy ${army_obj.status}! Try checking your **[Army List]** for a full list of available navies.`);
             }
           } else {
-            printError(game_obj.id, `The **${fleet_name}** is already busy ${army_obj.status}! Try checking your **[Army List]** for a full list of available navies.`);
+            printError(game_obj.id, `The fleet you have specified, **${fleet_name}**, doesn't even exist! Try checking your **[Army List]** for a full list of valid navies.`);
           }
         } else {
-          printError(game_obj.id, `The fleet you have specified, **${fleet_name}**, doesn't even exist! Try checking your **[Army List]** for a full list of valid navies.`);
+          printError(game_obj.id, `You must blockade a country that actually exists! By the way, have you heard of the latest blockade on Narnia?`);
         }
       } else {
-        printError(game_obj.id, `You must blockade a country that actually exists! By the way, have you heard of the latest blockade on Narnia?`);
+        printError(game_obj.id, `You can't blockade yourself!`);
       }
     } else {
       printError(game_obj.id, `Your people haven't even heard of the concept of blockades, let alone how to blockade other users! Try researching the concept of blockades in your **[Technology]** tree first.`);

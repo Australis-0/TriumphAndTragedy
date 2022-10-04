@@ -109,16 +109,18 @@ module.exports = {
     var all_imports = getImports(actual_id);
 
     for (var i = 0; i < all_imports.length; i++) {
+      var good_type = all_imports[i].good_type;
+
       var local_good_icon = (all_imports[i] == "money") ?
         config.icons.money + " " :
-        (getGood(all_imports[i].good_type)) ?
+        (getGood(good_type)) ?
           config.icons[getGood(all_imports[i]).icon] + " " :
           "";
-      var local_good_name = (getGood(all_imports[i].good_type)) ?
-        (getGood(all_imports[i].good_type)) ?
-          getGood(all_imports[i].good_type).name :
-          all_imports[i].good_type :
-        all_imports[i].good_type;
+      var local_good_name = (getGood(good_type)) ?
+        (getGood(good_type)) ?
+          getGood(good_type).name :
+          good_type :
+        good_type;
 
       import_string.push(`Importing ${local_good_icon}${parseNumber(all_imports[i].amount)} ${local_good_name} from **${main.users[all_imports[i].exporter].name}**.\nThe shipment will arrive in **${parseNumber(all_imports[i].duration)}** turn(s).`);
     }
