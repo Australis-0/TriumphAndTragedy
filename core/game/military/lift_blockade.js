@@ -34,7 +34,7 @@ module.exports = {
             var blockaded_user = JSON.parse(JSON.stringify(main.users[blockade_index[0].id]));
 
             //Splice from blockade
-            blockade_index[0].fleets.splice(blockade_index[1], 1);
+            blockade_index[0].fleets = blockade_index[0].fleets.splice(blockade_index[1], 1);
 
             army_obj.blockade_recovery_turns = config.defines.combat.blockade_cooldown;
             army_obj.status = "in harbour";
@@ -69,13 +69,17 @@ module.exports = {
                 user: game_obj.user
               });
             }
+          } else {
+            if (!do_not_display)
+              printError(game_obj.id, `The fleet you have specified, the **${army_obj.name}** could not be found actively blockading a country.`);
           }
         } else {
           if (!do_not_display)
             printError(game_obj.id, `The **${army_obj.name}** isn't currently blockading anyone!`);
         }
       } else {
-        printError(game_obj.id, `You can't enforce air/land blockades!`);
+        if (!do_not_display)
+          printError(game_obj.id, `You can't enforce air/land blockades!`);
       }
     } else {
       if (!do_not_display)
