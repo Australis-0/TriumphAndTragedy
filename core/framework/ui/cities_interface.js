@@ -88,7 +88,7 @@ module.exports = {
     var usr = main.users[actual_id];
 
     //Declare local tracker variables
-    var city_obj = main.provinces[getCity(city_name).id];
+    var city_obj = getCity(city_name);
     var culture_obj = main.global.cultures[city_obj.culture];
 
     if (city_obj) {

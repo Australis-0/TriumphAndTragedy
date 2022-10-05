@@ -71,7 +71,7 @@ module.exports = {
             }
           }
         } else {
-          if (do_not_display)
+          if (!do_not_display)
             printError(game_obj.id, `The **${army_obj.name}** isn't currently blockading anyone!`);
         }
       } else {
