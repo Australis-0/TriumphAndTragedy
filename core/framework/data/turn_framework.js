@@ -393,6 +393,13 @@ module.exports = {
         usr.transactions_this_turn = 0;
       }
 
+      //Military modifiers
+      {
+        if (usr.mobilisation)
+          if (usr.mobilisation.last_mobilised > main.global.round_count)
+            usr.mobilisation.last_mobilised = main.global.round_count;
+      }
+
       //Population modifiers/trackers
       usr.population = getPopulation(actual_id);
       delete usr.has_famine;
