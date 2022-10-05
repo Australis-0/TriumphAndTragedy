@@ -64,11 +64,15 @@ module.exports = {
     var all_cultures = Object.keys(main.global.cultures);
     var all_mapped_users = Object.keys(main.global.user_map);
     var all_provinces = module.exports.getProvinces(actual_id, { include_occupations: true, include_hostile_occupations: true });
+    var usr = main.users[actual_id];
 
     //Remove all occupations
     for (var i = 0; i < all_provinces.length; i++)
       if (all_provinces[i].controller != all_provinces[i].owner)
         all_provinces[i].controller = all_provinces[i].owner;
+
+    //Clear all blockades
+    deleteBlockade(actual_id);
 
     //Cultural handler
     for (var i = 0; i < all_cultures.length; i++) {

@@ -29,16 +29,17 @@ module.exports = {
                     blockade_index = [main.users[all_users[i]].blockaded, x];
           }
 
+          //Pull fleet back to harbour
+          army_obj.blockade_recovery_turns = config.defines.combat.blockade_cooldown;
+          army_obj.status = "in harbour";
+          delete army_obj.is_blockading;
+
           //Remove fleet from array
           if (blockade_index[1] != -1) {
             var blockaded_user = JSON.parse(JSON.stringify(main.users[blockade_index[0].id]));
 
             //Splice from blockade
             blockade_index[0].fleets = blockade_index[0].fleets.splice(blockade_index[1], 1);
-
-            army_obj.blockade_recovery_turns = config.defines.combat.blockade_cooldown;
-            army_obj.status = "in harbour";
-            delete army_obj.is_blockading;
 
             //Print user feedback
             if (blockade_index[0].fleets.length >= 1) {
