@@ -17,12 +17,19 @@ module.exports = {
         if (flag_url.length >= 0) {
           if (flag_url.includes(".png") || flag_url.includes(".jpg") || flag_url.includes(".jpeg")) {
             if (!flag_url.includes("file:")) {
-              usr.flag = flag_url;
+              if (isImage(flag_url)) {
+                usr.flag = flag_url;
 
-              if (!do_not_display)
-                printAlert(game_obj.id, `${config.icons.checkmark} You have successfully changed your nation's standard! It should now start appearing in your National Interface.`);
-              else
-                return [true, `You have successfully changed your vassal's standard! It should now start appearing in their diplomacy view.`];
+                if (!do_not_display)
+                  printAlert(game_obj.id, `${config.icons.checkmark} You have successfully changed your nation's standard! It should now start appearing in your National Interface.`);
+                else
+                  return [true, `You have successfully changed your vassal's standard! It should now start appearing in their diplomacy view.`];
+              } else {
+                if (!do_not_display)
+                  printError(game_obj.id, `Please insert a valid URL! URL's must start with http:// or https://.`)
+                else
+                  return [false, `Please insert a valid URL! URL's must start with http:// or https://.`];
+              }
             } else {
               if (!do_not_display)
                 printError(game_obj.id, `Please copy/paste a valid image URL instead of a local file address!`);

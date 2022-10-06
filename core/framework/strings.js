@@ -71,6 +71,14 @@ module.exports = {
     return `${module.exports.ordinalise(date_obj.day)} ${module.exports.months[date_obj.month - 1]} ${date_obj.year}, ${Math.round(date_obj.hour).toString().padStart(2, "0")}:00`;
   },
 
+  isImage: function (arg0_link) {
+    //Convert from parameters
+    var image_link = arg0_link;
+
+    //Return statement
+    return /^https?:\/\/.+\.(jpg|jpeg|png|webp|avif|gif|svg)$/.test(image_link);
+  },
+
   ordinalise: function (arg0_number) {
     //Convert from parameters
     var i = arg0_number;
