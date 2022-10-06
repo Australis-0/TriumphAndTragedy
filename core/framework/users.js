@@ -54,7 +54,7 @@ module.exports = {
 
     //Declare local instance variables
     var all_users = Object.keys(main.users);
-    var mention_id;
+    var mention_id = user_id;
     var nation_found = [false, ""];
     var user_exists = false;
 
@@ -64,11 +64,13 @@ module.exports = {
         .replace(/(<)(@)/g, "")
         .replace(">", "");
 
-      if (main.global.user_map[mention_id]) mention_id = main.global.user_map;
-      user_exists = true;
+      if (main.global.user_map[mention_id]) {
+        mention_id = main.global.user_map;
+        user_exists = true;
 
-      //Local case return statement
-      return mention_id;
+        //Local case return statement
+        return mention_id;
+      }
     }
 
     if (!user_exists) {
