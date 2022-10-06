@@ -74,7 +74,7 @@ module.exports = {
                   } else if (local_prompt.prompts[current_step][1] == "string") {
                     local_prompt.answers.push(input);
                   } else if (local_prompt.prompts[current_step][1] == "mention") {
-                    var parsed_mention = parseMention(input);
+                    var parsed_mention = returnMention(input);
 
                     if (parsed_mention) {
                       local_prompt.answers.push(parsed_mention);
