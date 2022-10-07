@@ -49,7 +49,7 @@ module.exports = {
                       var actual_justification_time = (hasRivalry(actual_id, actual_ot_user_id)) ?
                         Math.round(config.defines.diplomacy.justify_wargoal_time/2) :
                         config.defines.diplomacy.justify_wargoal_time;
-                      var actual_infamy = (cb_obj.infamy) ? cb_obj.infamy : 0;
+                      usr.modifiers.infamy += returnSafeNumber(cb_obj.number);
 
                       usr.diplomacy.justifications.push({
                         type: raw_cb_name,

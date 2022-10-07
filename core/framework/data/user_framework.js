@@ -602,6 +602,7 @@ module.exports = {
 
     //Remove all diplomatic relations and delete user object
     destroyAllDiplomaticRelations(actual_id);
+    deleteCountry(actual_id);
 
     //Remove all connections in user map
     for (var i = 0; i < all_mapped_users.length; i++)
