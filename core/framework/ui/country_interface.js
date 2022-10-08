@@ -140,6 +140,11 @@ module.exports = {
     if (has_no_provinces && !atWar(actual_id))
       stats_string.push(`\n- Your country doesn't have any provinces currently! Consider typing **[Settle Starting Provinces]** to settle down your peoples.`);
 
+    if (getVassal(actual_id)) {
+      stats_string.push("");
+      stats_string.push(`We are a vassal of **${main.users[getVassal(actual_id).overlord].name}**.`);
+    }
+
     stats_string.push("");
     stats_string.push(`${config.icons.prestige} Prestige: **${parseNumber(usr.prestige)}** (${(usr.modifiers.prestige_gain > 0) ? "+" : ""}${usr.modifiers.prestige_gain} per turn)`);
     stats_string.push(`${config.icons.provinces} Provinces: **${parseNumber(usr.provinces)}**`);

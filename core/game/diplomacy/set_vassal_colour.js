@@ -48,24 +48,28 @@ module.exports = {
     var vassal_obj = getVassal(actual_ot_user_id);
 
     //Check to see if user is actually a vassal
-    if (ot_user) {
-      if (vassal_obj) {
-        if (vassal_obj.overlord == actual_id) {
-          //Set vassal colour
-          var change_vassal_colour = setColour(actual_ot_user_id, r, g, b, true, true);
+    if (actual_id != actual_ot_user_id) {
+      if (ot_user) {
+        if (vassal_obj) {
+          if (vassal_obj.overlord == actual_id) {
+            //Set vassal colour
+            var change_vassal_colour = setColour(actual_ot_user_id, r, g, b, true, true);
 
-          //Print user feedback
-          (change_vassal_colour[0]) ?
-            printAlert(game_obj.id, change_vassal_colour[1]) :
-            printError(game_obj.id, change_vassal_colour[1]);
+            //Print user feedback
+            (change_vassal_colour[0]) ?
+              printAlert(game_obj.id, change_vassal_colour[1]) :
+              printError(game_obj.id, change_vassal_colour[1]);
+          } else {
+            printError(game_obj.id, `**${ot_user.name}** might be a vassal, but they certainly aren't _your_ vassal, and that's what matters here.`)
+          }
         } else {
-          printError(game_obj.id, `**${ot_user.name}** might be a vassal, but they certainly aren't _your_ vassal, and that's what matters here.`)
+          printError(game_obj.id, `The target country of **${ot_user.name}** must be vassalised to begin with before it can be bossed around by someone else!`);
         }
       } else {
-        printError(game_obj.id, `The target country of **${ot_user.name}** must be vassalised to begin with before it can be bossed around by someone else!`);
+        printError(game_obj.id, `No one at the Cartography Office seems to know whom that is! Try specifying a valid country name, or type **[View Ledger]** to view a full list of all diplomatically recognised nations.`);
       }
     } else {
-      printError(game_obj.id, `No one at the Cartography Office seems to know whom that is! Try specifying a valid country name, or type **[View Ledger]** to view a full list of all diplomatically recognised nations.`);
+      printError(game_obj.id, `Use **[Set Colour]** instead in order to change your own colour instead of that of a vassal's!`);
     }
   }
 };
