@@ -448,6 +448,6 @@ module.exports = {
           } catch {}
         });
       });
-    }, 3000);
+    }, 5000); //[WIP] - move to fully async for large files
   }
 };
