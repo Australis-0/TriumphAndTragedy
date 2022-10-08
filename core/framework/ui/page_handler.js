@@ -967,7 +967,7 @@ module.exports = {
           //[Vassal Customisation]
           if (Object.keys(usr.diplomacy.vassals).length > 0)
             if (["vassal customisation", "vassal customization"].includes(input)) {
-              printCustomisation(user_id, 2);
+              printCustomisation(user_id, 1);
               game_obj.page = "view_customisation";
             }
 

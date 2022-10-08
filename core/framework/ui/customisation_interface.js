@@ -74,13 +74,13 @@ module.exports = {
     (Object.keys(usr.diplomacy.vassals).length > 0) ?
       createPageMenu(game_obj.middle_embed, {
         embed_pages: [embed_customisation, embed_vassal_customisation],
-        page: starting_page,
+        starting_page: starting_page,
         user: game_obj.user,
 
       }) :
       createPageMenu(game_obj.middle_embed, {
         embed_pages: [embed_customisation],
-        page: starting_page,
+        starting_page: starting_page,
         user: game_obj.user
       });
   }
