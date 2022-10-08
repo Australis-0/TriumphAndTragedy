@@ -226,7 +226,7 @@ module.exports = {
               var local_fleet = local_user.blockaded.fleets[x];
 
               if (local_fleet.id == actual_id && local_fleet.fleet_id == army_obj.id)
-                local_user.blockaded.fleets.splice(x, 1);
+                local_user.blockaded.fleets = local_user.blockaded.fleets.splice(x, 1);
             }
 
           //Delete blockade if no fleet is left to blockade

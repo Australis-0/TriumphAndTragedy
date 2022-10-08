@@ -532,7 +532,7 @@ module.exports = {
                 setAllProvinceColours(actual_id, attacking_army_obj.province, true);
               } else if (battle_type == "sea") {
                 if (defending_army_obj.is_blockading)
-                  liftBlockade(actual_id, defending_army_obj.name, true);
+                  liftBlockade(actual_id, defending_army_obj.id, true);
               }
             } else if (
               (

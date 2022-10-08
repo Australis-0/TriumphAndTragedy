@@ -42,7 +42,7 @@ module.exports = {
             blockade_index[0].fleets = blockade_index[0].fleets.splice(blockade_index[1], 1);
 
             //Print user feedback
-            if (blockade_index[0].fleets.length >= 1) {
+            if (blockade_index[0].fleets.length > 0) {
               if (!do_not_display)
                 printAlert(game_obj.id, `You have withdrawn the **${army_obj.name}** from the blockade on **${blockaded_user.name}**.`);
             } else {
