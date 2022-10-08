@@ -46,9 +46,11 @@ module.exports = {
 
     //Declare local tracker variables
     var accepted_cultures = getAcceptedCultures(actual_id, { exclude_primary_culture: true });
+    var all_vassals = Object.keys(usr.diplomacy.vassals);
     var defensive_wars = 0;
     var enemies = [];
     var offensive_wars = 0;
+    var vassal_obj = usr.diplomacy.vassals;
 
     //Initialise war trackers
     for (var i = 0; i < all_wars.length; i++) {
@@ -81,8 +83,12 @@ module.exports = {
     diplomacy_string.push(`${config.icons.political_capital} Political Capital: **${parseNumber(usr.modifiers.political_capital)}** (${parseNumber(usr.modifiers.political_capital_gain, { display_prefix: true })} per turn)`);
 
     //Check if user has any vassals or accepted cultures dragging down their gain per turn
-    if (Object.keys(usr.diplomacy.vassals).length > 0)
-      diplomacy_string.push(`Our **${parseNumber(Object.keys(usr.diplomacy.vassals).length)}** vassal(s) are costing us **${parseNumber(getVassalMaintenance(actual_id))}** Political Capital per turn.`);
+    if (all_vassals.length > 0) {
+      diplomacy_string.push(`Our **${parseNumber(all_vassals.length)}** vassal(s) are costing us **${parseNumber(getVassalMaintenance(actual_id))}** Political Capital per turn.`);
+
+      for (var i = 0; i < all_vassals.length; i++)
+        diplomacy_string.push(`- **${main.users[vassal_obj[all_vassals[i]].id].name}**`);
+    }
     if (accepted_cultures.length > 0)
       diplomacy_string.push(`Our **${parseNumber(accepted_cultures.length)}** accepted culture(s) are costing us **${parseNumber(accepted_cultures.length*config.defines.politics.accepted_culture_maintenance_cost)}** Political Capital per turn.`);
 

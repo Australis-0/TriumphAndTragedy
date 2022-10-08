@@ -64,7 +64,7 @@ module.exports = {
   		.setColor(settings.bot_colour)
   		.setTitle(`[Back] | Vassal Customisation Menu:\n${config.localisation.divider}`)
   		.setThumbnail(usr.flag)
-  		.setDescription(customisation_array.join("\n"))
+  		.setDescription(vassal_customisation_array.join("\n"))
       .setImage("https://cdn.discordapp.com/attachments/722997700391338046/736141424315203634/margin.png");
 
     //Remove control panel if one exists
