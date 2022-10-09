@@ -111,63 +111,67 @@ module.exports = {
         if (local_province.owner == actual_id && local_province.controller == actual_id) {
           if (local_province.type == "rural") {
             if (!city_name.toLowerCase().startsWith("province")) {
-              //Initialise city object, determine capital status first
-              //If user has no other cities, set it to their capital
+              if (isNaN(city_name)) {
+                //Initialise city object, determine capital status first
+                //If user has no other cities, set it to their capital
 
-              local_province.city_type = (getCities(actual_id).length == 0) ? "capital" : "city";
-              local_province.culture = getPrimaryCultures(actual_id)[0];
-              local_province.name = city_name;
-              local_province.type = "urban";
+                local_province.city_type = (getCities(actual_id).length == 0) ? "capital" : "city";
+                local_province.culture = getPrimaryCultures(actual_id)[0];
+                local_province.name = city_name;
+                local_province.type = "urban";
 
-              var population_amount = (local_province.city_type == "capital") ?
-                randomNumber(250000, 1000000) :
-                randomNumber(250000, 800000);
+                var population_amount = (local_province.city_type == "capital") ?
+                  randomNumber(250000, 1000000) :
+                  randomNumber(250000, 800000);
 
-              //Generate city pop object
-              generatePops(province_id, {
-                type: "all",
-                amount: population_amount
-              });
-
-              //Set city RGO
-              local_province.resource = randomElement(getRawGoods({ return_names: true }));
-
-              //Set building objects
-              local_province.buildings = [];
-              local_province.development = 0;
-              local_province.housing = 0;
-
-              //Set building slot capacity per category
-              for (var i = 0; i < all_building_categories.length; i++)
-                local_province[`${all_building_categories[i]}_building_slots`] = usr.modifiers[`${all_building_categories[i]}_building_slots`];
-              //Increase city_count tracker variable
-              usr.city_count++;
-
-              //Update UIs
-              if (game_obj.page == "country_interface")
-                printStats(game_obj.user);
-
-              if (game_obj.page == "economy")
-                printEconomy(game_obj.user);
-
-              if (game_obj.page == "provinces_list")
-                createPageMenu(game_obj.middle_embed, {
-                  embed_pages: printProvinces(game_obj.user),
-                  page: interfaces[game_obj.middle_embed.id].page,
-                  user: game_obj.user
+                //Generate city pop object
+                generatePops(province_id, {
+                  type: "all",
+                  amount: population_amount
                 });
 
-              if (game_obj.page == "cities_list")
-                createPageMenu(game_obj.middle_embed, {
-                  embed_pages: printCities(game_obj.user),
-                  page: interfaces[game_obj.middle_embed.id].page,
-                  user: game_obj.user
-                });
+                //Set city RGO
+                local_province.resource = randomElement(getRawGoods({ return_names: true }));
 
-              printAlert(game_obj.id, (local_province.city_type == "capital") ?
-                `Capital city founded as **${city_name}** in Province **${province_id}**! Over **${parseNumber(local_province.pops.population)}** inhabitants are now legally residents of the capital city of **${usr.name}**!` :
-                `A new city was founded as **${city_name}** in Province **${province_id}**! Over **${parseNumber(local_province.pops.population)}** inhabitants are now legally residents of the city of **${city_name}** in Province **${province_id}**.`
-              );
+                //Set building objects
+                local_province.buildings = [];
+                local_province.development = 0;
+                local_province.housing = 0;
+
+                //Set building slot capacity per category
+                for (var i = 0; i < all_building_categories.length; i++)
+                  local_province[`${all_building_categories[i]}_building_slots`] = usr.modifiers[`${all_building_categories[i]}_building_slots`];
+                //Increase city_count tracker variable
+                usr.city_count++;
+
+                //Update UIs
+                if (game_obj.page == "country_interface")
+                  printStats(game_obj.user);
+
+                if (game_obj.page == "economy")
+                  printEconomy(game_obj.user);
+
+                if (game_obj.page == "provinces_list")
+                  createPageMenu(game_obj.middle_embed, {
+                    embed_pages: printProvinces(game_obj.user),
+                    page: interfaces[game_obj.middle_embed.id].page,
+                    user: game_obj.user
+                  });
+
+                if (game_obj.page == "cities_list")
+                  createPageMenu(game_obj.middle_embed, {
+                    embed_pages: printCities(game_obj.user),
+                    page: interfaces[game_obj.middle_embed.id].page,
+                    user: game_obj.user
+                  });
+
+                printAlert(game_obj.id, (local_province.city_type == "capital") ?
+                  `Capital city founded as **${city_name}** in Province **${province_id}**! Over **${parseNumber(local_province.pops.population)}** inhabitants are now legally residents of the capital city of **${usr.name}**!` :
+                  `A new city was founded as **${city_name}** in Province **${province_id}**! Over **${parseNumber(local_province.pops.population)}** inhabitants are now legally residents of the city of **${city_name}** in Province **${province_id}**.`
+                );
+              } else {
+                printError(game_obj.id, `A city name cannot be a number!`);
+              }
             } else {
               printError(game_obj.id, `You cannot have a city name that overlaps with the name of an existing province!`);
             }
@@ -350,46 +354,50 @@ module.exports = {
       if (!usr.options.city_names_locked) {
         if (new_name.length <= 100) {
           if (new_name.length > 0) {
-            var city_obj = getCity(old_name, { users: actual_id });
+            if (isNaN(new_name)) {
+              var city_obj = getCity(old_name, { users: actual_id });
 
-            //Set city_obj.name to a new name
-            if (city_obj) {
-              city_obj.name = new_name;
+              //Set city_obj.name to a new name
+              if (city_obj) {
+                city_obj.name = new_name;
 
-              printAlert(game_obj.id, `You have renamed **${old_name}** to **${new_name}**!`);
+                printAlert(game_obj.id, `You have renamed **${old_name}** to **${new_name}**!`);
 
-              //Update UIs
-              if (game_obj.page == "cities_list")
-                createPageMenu(game_obj.middle_embed, {
-                  embed_pages: printCities(game_obj.user),
-                  page: interfaces[game_obj.middle_embed.id].page,
-                  user: game_obj.user
-                });
+                //Update UIs
+                if (game_obj.page == "cities_list")
+                  createPageMenu(game_obj.middle_embed, {
+                    embed_pages: printCities(game_obj.user),
+                    page: interfaces[game_obj.middle_embed.id].page,
+                    user: game_obj.user
+                  });
 
-              if (game_obj.page == "country_interface")
-                printStats(game_obj.user);
+                if (game_obj.page == "country_interface")
+                  printStats(game_obj.user);
 
-              if (game_obj.page == "economy")
-                printEconomy(game_obj.user);
+                if (game_obj.page == "economy")
+                  printEconomy(game_obj.user);
 
-              if (game_obj.page == "provinces_list")
-                createPageMenu(game_obj.middle_embed, {
-                  embed_pages: printProvinces(game_obj.user),
-                  page: interfaces[game_obj.middle_embed.id].page,
-                  user: game_obj.user
-                });
+                if (game_obj.page == "provinces_list")
+                  createPageMenu(game_obj.middle_embed, {
+                    embed_pages: printProvinces(game_obj.user),
+                    page: interfaces[game_obj.middle_embed.id].page,
+                    user: game_obj.user
+                  });
 
-              if (game_obj.page.startsWith("view_city_")) {
-                var viewed_city = game_obj.page.replace("view_city_", "");
+                if (game_obj.page.startsWith("view_city_")) {
+                  var viewed_city = game_obj.page.replace("view_city_", "");
 
-                createPageMenu(game_obj.middle_embed, {
-                  embed_pages: printCity(game_obj.user, viewed_city),
-                  page: interfaces[game_obj.middle_embed.id].page,
-                  user: game_obj.user
-                });
+                  createPageMenu(game_obj.middle_embed, {
+                    embed_pages: printCity(game_obj.user, viewed_city),
+                    page: interfaces[game_obj.middle_embed.id].page,
+                    user: game_obj.user
+                  });
+                }
+              } else {
+                printError(game_obj.id, `The city that you have specified is not currently in your possession or doesn't exist!`);
               }
             } else {
-              printError(game_obj.id, `The city that you have specified is not currently in your possession or doesn't exist!`);
+              printError(game_obj.id, `You cannot rename a city into a number!`);
             }
           } else {
             printError(game_obj.id, `You cannot have a nameless city!`);

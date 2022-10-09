@@ -17,6 +17,9 @@ module.exports = {
       if (actual_id != actual_ot_user_id) {
         //Check if user is underneath their overlordship
         if (getVassal(actual_ot_user_id).overlord == actual_id) {
+          //Dissolve vassal
+          dissolveVassal(actual_ot_user_id);
+
           //Remove used diplomatic slot
           usr.diplomacy.used_diplomatic_slots--;
 
