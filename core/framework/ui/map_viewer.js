@@ -1,9 +1,10 @@
 //Initialise map viewer framework
 module.exports = {
-  changeImage: function (arg0_game_id, arg1_map) {
+  changeImage: function (arg0_game_id, arg1_map, arg2_initialisation) {
     //Convert from parameters
     var game_id = arg0_game_id;
     var map_file = arg1_map;
+    var initialisation = arg2_initialisation;
 
     //Declare local instance variables
     var game_obj = interfaces[game_id];
@@ -23,7 +24,7 @@ module.exports = {
           map_obj.original_img = attachment[1].url;
 
           //Reload map
-          reloadMap(game_id, false, true,
+          reloadMap(game_id, initialisation, true,
             (map_obj.x == 0 && map_obj.y == 0 && map_obj.zoom == 1) ?
               attachment[1].url :
               undefined
@@ -99,7 +100,7 @@ module.exports = {
 
         Attachment.forEach(function(attachment) {
           //Reload map
-          reloadMap(game_id, true);
+          reloadMap(game_id, true, true);
 
           //Initialise map
           map_obj.original_img = attachment[1].url;
