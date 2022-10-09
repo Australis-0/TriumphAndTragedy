@@ -43,7 +43,7 @@ module.exports = {
         ]
       },
       function (arg) {
-        module.exports.initialiseSubmarineRaid(user_id, army_name, arg[0], "naval");
+        initialiseSubmarineRaid(user_id, army_name, arg[0], "naval");
       },
       function (arg) {
         switch (arg) {
