@@ -796,6 +796,8 @@ module.exports = {
                       sendEmbedAlert(actual_id, submarine_result_embed);
 
                       delete usr.trades[export_to_remove];
+                    } else {
+                      printError(game_obj.id, `The nation you are targeting has no active merchant fleets to intercept!`);
                     }
 
                     break;
@@ -861,6 +863,8 @@ module.exports = {
                       printAlert(game_obj.id, `${ot_user.name} lost ${parseList(defender_losses)} during a submarine attack on the **${random_fleet.name}**.\n\n${usr.name} also lost **${parseList(attacker_losses)}**.`);
 
                       army_obj.submarine_cooldown = config.defines.combat.submarine_cooldown;
+                    } else {
+                      printError(game_obj.id, `The enemy has no active fleets that you can ambush on the high seas!`);
                     }
 
                     break;
@@ -948,11 +952,12 @@ module.exports = {
 
                       //Print user feedback
                       printAlert(game_obj.id, `${ot_user.name} lost ${parseList(defender_losses)} during a submarine attack on their reserves.\n\n${usr.name} also lost **${parseList(attacker_losses)}** themselves.`);
+                    } else {
+                      printError(game_obj.id, `The country you are trying to target has no naval reserves!`);
                     }
 
                     break;
                 }
-
               }
         }
   },
