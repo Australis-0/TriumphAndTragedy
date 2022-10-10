@@ -34,54 +34,58 @@ module.exports = {
     var province_obj = getProvince(province_id);
 
     if (province_obj) {
-      //Initialise province_string
-      var province_string = [];
+      if (province_obj.type != "urban") {
+        //Initialise province_string
+        var province_string = [];
 
-      //Initialise tracker variables
-      var culture_obj = main.global.cultures[province_obj.culture];
+        //Initialise tracker variables
+        var culture_obj = main.global.cultures[province_obj.culture];
 
-      //Format embed
-      province_string.push(`**[Back]** | **[Jump To Page]**`);
-      province_string.push("");
-      province_string.push(`**Ownership:**`);
-      province_string.push("");
-      province_string.push(`Owned by **${main.users[province_obj.owner].name}**.`);
+        //Format embed
+        province_string.push(`**[Back]** | **[Jump To Page]** | **[View]**`);
+        province_string.push("");
+        province_string.push(`**Ownership:**`);
+        province_string.push("");
+        province_string.push(`Owned by **${main.users[province_obj.owner].name}**.`);
 
-      //Display occupation status
-      if (province_obj.owner != province_obj.controller)
-        province_string.push(`- Currently occupied by **${main.users[province_obj.controller].name}** in a war! This province will not be able to produce anything of value until it is either liberated, or the war is over.`);
+        //Display occupation status
+        if (province_obj.owner != province_obj.controller)
+          province_string.push(`- Currently occupied by **${main.users[province_obj.controller].name}** in a war! This province will not be able to produce anything of value until it is either liberated, or the war is over.`);
 
-      province_string.push("");
+        province_string.push("");
 
-      //Display supply limit
-      (province_obj.supply_limit) ?
-        province_string.push(`- ${config.icons.railways} Supply Limit: ${province_obj.supply_limit}`) :
-        province_string.push(`- ${config.icons.railways} Supply Limit: ${config.defines.combat.base_supply_limit}`);
+        //Display supply limit
+        (province_obj.supply_limit) ?
+          province_string.push(`- ${config.icons.railways} Supply Limit: ${province_obj.supply_limit}`) :
+          province_string.push(`- ${config.icons.railways} Supply Limit: ${config.defines.combat.base_supply_limit}`);
 
-      //Display population statistics
-      province_string.push("");
-      province_string.push(config.localisation.divider);
-      province_string.push("");
-      province_string.push(`**Population Statistics:**`);
-      province_string.push("");
+        //Display population statistics
+        province_string.push("");
+        province_string.push(config.localisation.divider);
+        province_string.push("");
+        province_string.push(`**Population Statistics:**`);
+        province_string.push("");
 
-      //Dynamically display all pops
-      for (var i = 0; i < all_pops.length; i++)
-        province_string.push(`- ${(config.pops[all_pops[i]].icon) ? config.pops[all_pops[i]].icon + " " : ""}${(config.pops[all_pops[i]].name) ? config.pops[all_pops[i]].name : all_pops[i]}: ${parseNumber(province_obj.pops[all_pops[i]])}`);
+        //Dynamically display all pops
+        for (var i = 0; i < all_pops.length; i++)
+          province_string.push(`- ${(config.pops[all_pops[i]].icon) ? config.pops[all_pops[i]].icon + " " : ""}${(config.pops[all_pops[i]].name) ? config.pops[all_pops[i]].name : all_pops[i]}: ${parseNumber(province_obj.pops[all_pops[i]])}`);
 
-      //Display total population, culture
-      province_string.push(`- ${config.icons.population} Population: ${parseNumber(province_obj.pops.population)}`);
-      province_string.push(`- ${config.icons.culture} Culture: ${culture_obj.name}`);
+        //Display total population, culture
+        province_string.push(`- ${config.icons.population} Population: ${parseNumber(province_obj.pops.population)}`);
+        province_string.push(`- ${config.icons.culture} Culture: ${culture_obj.name}`);
 
-      //Change game_obj.page
-      game_obj.page = `view_province_${province_id}`;
+        //Change game_obj.page
+        game_obj.page = `view_province_${province_id}`;
 
-      //Return statement
-      return splitEmbed(province_string, {
-        title: `Viewing ${parseString(province_obj.type)} Province ${province_id}:`,
-        title_pages: true,
-        fixed_width: true
-      });
+        //Return statement
+        return splitEmbed(province_string, {
+          title: `Viewing ${parseString(province_obj.type)} Province ${province_id}:`,
+          title_pages: true,
+          fixed_width: true
+        });
+      } else {
+        printCity(user_id, province_obj.name);
+      }
     } else {
       printError(game_obj.id, `The province of ${province_id} couldn't be found anywhere in your territory or otherwise!`);
     }

@@ -19,7 +19,7 @@ module.exports = {
     var fields_list = [];
 
     //Format string
-    city_string.push(`**[Back]** | **[Jump To Page]**`);
+    city_string.push(`**[Back]** | **[Jump To Page]** | **[View]**`);
     city_string.push("");
     city_string.push(`${config.icons.globe} Country: **${usr.name}**`);
     city_string.push("");
