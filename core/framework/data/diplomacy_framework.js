@@ -309,12 +309,12 @@ module.exports = {
 
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
-    var vassal_obj = module.exports.getVassal(user_id);
+    var overlord_id = module.exports.getVassal(user_id, true);
     var usr = main.users[actual_id];
 
     //Delete vassal_obj
     delete usr.options.customisation_locked; //Customisation can't be locked by their overlords anymore
-    delete vassal_obj;
+    delete main.users[overlord_id].diplomacy.vassals[actual_id];
 
     usr.vassal_years = 0;
   },
@@ -396,9 +396,10 @@ module.exports = {
     return current_relations;
   },
 
-  getVassal: function (arg0_user) {
+  getVassal: function (arg0_user, arg1_return_user) {
     //Convert from parameters
     var user_id = arg0_user;
+    var return_user = arg1_return_user;
 
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
@@ -410,7 +411,7 @@ module.exports = {
 
       if (local_user.diplomacy.vassals[actual_id])
         //Return statement
-        return local_user.diplomacy.vassals[actual_id];
+        return (!return_user) ? local_user.diplomacy.vassals[actual_id] : all_users[i];
     }
   },
 
