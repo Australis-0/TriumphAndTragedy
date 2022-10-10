@@ -1697,9 +1697,13 @@ module.exports = {
     }
 
     //Initialise map viewer
-    (!change_image) ?
-      initialiseMapViewer(game_obj.id, map_file) :
-      changeImage(game_obj.id, map_file);
+    cacheSVG(map_file);
+    
+    setTimeout(function(){
+      (!change_image) ?
+        initialiseMapViewer(game_obj.id, map_file) :
+        changeImage(game_obj.id, map_file);
+    }, 5000);
 
     //Visual interface using visualPrompt() before creating a page menu
     module.exports.initialiseModifyPeaceTreaty(user_id, peace_obj);

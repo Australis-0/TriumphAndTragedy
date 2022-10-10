@@ -250,7 +250,10 @@ setInterval(function(){
       nextGlobalTurn();
     }
   }
+}, 1000);
 
+//Logic loops, 30-second logic loop
+setTimeout(function(){
   //Write to database.js
   try {
   	fs.writeFile('database.js', JSON.stringify(main), function (err,data) {
@@ -259,4 +262,4 @@ setInterval(function(){
   } catch (e) {
     log.error(`Ran into an error whilst attempting to save to database.js! ${e}.`);
   }
-}, 1000);
+}, 30000);

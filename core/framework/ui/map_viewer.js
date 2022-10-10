@@ -12,7 +12,8 @@ module.exports = {
 
     if (map_obj) {
       //Cache SVG first
-      cacheSVG(map_file);
+      if (!initialisation)
+        cacheSVG(map_file);
 
       returnCacheChannel().send({
         content: `${generateRandomID()}_${game_id}`,
@@ -87,133 +88,127 @@ module.exports = {
     //Add collector reactions
     initialiseControlPanel(game_id, "map");
 
-    //Initialise map and upload it to a separate cache channel
-    cacheSVG(map_obj.mapmode);
+    returnCacheChannel().send({
+      content: `${generateRandomID()}_${game_id}`,
+      files: [`./map/cache/${map_obj.mapmode}.jpg`]
+    }).then((message) => {
+      var Attachment = Array.from(message.attachments);
 
-    //setTimeout() just for safety
-    setTimeout(function(){
-      returnCacheChannel().send({
-        content: `${generateRandomID()}_${game_id}`,
-        files: [`./map/cache/${map_obj.mapmode}.jpg`]
-      }).then((message) => {
-        var Attachment = Array.from(message.attachments);
+      Attachment.forEach(function(attachment) {
+        //Reload map
+        reloadMap(game_id, true, true);
 
-        Attachment.forEach(function(attachment) {
-          //Reload map
-          reloadMap(game_id, true, true);
+        //Initialise map
+        map_obj.original_img = attachment[1].url;
+        map_obj.image_url = attachment[1].url;
 
-          //Initialise map
-          map_obj.original_img = attachment[1].url;
-          map_obj.image_url = attachment[1].url;
-
-          //Establish logic loop
-          var logic_loop = setInterval(function(){
-            try {
-              const map_interface_embed = {
-                title: map_obj.title,
-                color: 9686188,
-                thumbnail: {
-                  url: map_obj.thumbnail_url
-                },
-                description: map_obj.interface_string.join("\n"),
-                image: {
-                  url: map_obj.image_url
-                }
-              };
-
-              map_obj.current_embed = map_interface_embed;
-
-              //Keep track of embed_history (interface string), and objects (map image)
-              map_obj.embed_history.push(map_obj.interface_string.join("\n"));
-              map_obj.objects.push(map_obj.image_url);
-
-              //End of loop
-              if (map_obj.embed_history.length > 3) map_obj.embed_history.splice(0, 1);
-              if (map_obj.objects.length > 3) map_obj.objects.splice(0, 1);
-
-              //Controls
-              if (map_obj.zoom_in) map_obj.zoom = (map_obj.zoom < 11) ? map_obj.zoom + 1 : 11;
-              if (map_obj.zoom_out) map_obj.zoom = (map_obj.zoom > 1) ? map_obj.zoom - 1 : 1;
-
-              if (map_obj.decrease_pan_speed) map_obj.speed = map_obj.speed*0.9;
-              if (map_obj.increase_pan_speed) map_obj.speed = map_obj.speed*1.1;
-
-              if (map_obj.left_arrow) map_obj.x += (map_obj.speed/map_obj.zoom);
-              if (map_obj.right_arrow) map_obj.x -= (map_obj.speed/map_obj.zoom);
-              if (map_obj.up_arrow) map_obj.y += (map_obj.speed/map_obj.zoom);
-              if (map_obj.down_arrow) map_obj.y -= (map_obj.speed/map_obj.zoom);
-
-              //Mapmode controls
-              if (map_obj.political) {
-                map_obj.mapmode = "political";
-                module.exports.changeImage(game_id, "political");
+        //Establish logic loop
+        var logic_loop = setInterval(function(){
+          try {
+            const map_interface_embed = {
+              title: map_obj.title,
+              color: 9686188,
+              thumbnail: {
+                url: map_obj.thumbnail_url
+              },
+              description: map_obj.interface_string.join("\n"),
+              image: {
+                url: map_obj.image_url
               }
-              if (map_obj.colonisation) {
-                map_obj.mapmode = "colonisation";
-                module.exports.changeImage(game_id, "colonisation");
-              }
-              if (map_obj.supply) {
-                map_obj.mapmode = "supply";
-                module.exports.changeImage(game_id, "supply");
-              }
-              if (map_obj.atlas) {
-                map_obj.mapmode = "atlas";
-                module.exports.changeImage(game_id, "atlas");
-              }
+            };
 
-              //Reset map data states
-              reloadMap(game_id);
-              reloadMapInterface(map_interface_embed, game_id);
+            map_obj.current_embed = map_interface_embed;
 
-              map_obj.increase_pan_speed = false;
-              map_obj.decrease_pan_speed = false;
+            //Keep track of embed_history (interface string), and objects (map image)
+            map_obj.embed_history.push(map_obj.interface_string.join("\n"));
+            map_obj.objects.push(map_obj.image_url);
 
-              map_obj.zoom_in = false;
-              map_obj.zoom_out = false;
+            //End of loop
+            if (map_obj.embed_history.length > 3) map_obj.embed_history.splice(0, 1);
+            if (map_obj.objects.length > 3) map_obj.objects.splice(0, 1);
 
-              map_obj.left_arrow = false;
-              map_obj.right_arrow = false;
-              map_obj.up_arrow = false;
-              map_obj.down_arrow = false;
+            //Controls
+            if (map_obj.zoom_in) map_obj.zoom = (map_obj.zoom < 11) ? map_obj.zoom + 1 : 11;
+            if (map_obj.zoom_out) map_obj.zoom = (map_obj.zoom > 1) ? map_obj.zoom - 1 : 1;
 
-              //Mapmodes
-              map_obj.political = false;
-              map_obj.colonisation = false;
-              map_obj.supply = false;
+            if (map_obj.decrease_pan_speed) map_obj.speed = map_obj.speed*0.9;
+            if (map_obj.increase_pan_speed) map_obj.speed = map_obj.speed*1.1;
 
-              map_obj.atlas = false;
-            } catch (e) {
-              log.warn(`logic_loop under initialiseMapViewer() was unable to proceed! ${e}.`);
-              clearInterval(logic_loop);
+            if (map_obj.left_arrow) map_obj.x += (map_obj.speed/map_obj.zoom);
+            if (map_obj.right_arrow) map_obj.x -= (map_obj.speed/map_obj.zoom);
+            if (map_obj.up_arrow) map_obj.y += (map_obj.speed/map_obj.zoom);
+            if (map_obj.down_arrow) map_obj.y -= (map_obj.speed/map_obj.zoom);
+
+            //Mapmode controls
+            if (map_obj.political) {
+              map_obj.mapmode = "political";
+              module.exports.changeImage(game_id, "political");
             }
-          }, 100);
+            if (map_obj.colonisation) {
+              map_obj.mapmode = "colonisation";
+              module.exports.changeImage(game_id, "colonisation");
+            }
+            if (map_obj.supply) {
+              map_obj.mapmode = "supply";
+              module.exports.changeImage(game_id, "supply");
+            }
+            if (map_obj.atlas) {
+              map_obj.mapmode = "atlas";
+              module.exports.changeImage(game_id, "atlas");
+            }
 
-          //Initialise control panel outside of loop
-          initialiseControlPanel(game_id, "map");
+            //Reset map data states
+            reloadMap(game_id);
+            reloadMapInterface(map_interface_embed, game_id);
 
-          //Set control function of interface
-          game_obj.control_function = function (arg0_actions) {
-            //Convert from parameters
-            var actions = arg0_actions;
+            map_obj.increase_pan_speed = false;
+            map_obj.decrease_pan_speed = false;
 
-            if (actions.zoom_in) map_obj.zoom_in = true;
-            if (actions.zoom_out) map_obj.zoom_out = true;
+            map_obj.zoom_in = false;
+            map_obj.zoom_out = false;
 
-            if (actions.up_arrow) map_obj.up_arrow = true;
-            if (actions.down_arrow) map_obj.down_arrow = true;
-            if (actions.left_arrow) map_obj.left_arrow = true;
-            if (actions.right_arrow) map_obj.right_arrow = true;
+            map_obj.left_arrow = false;
+            map_obj.right_arrow = false;
+            map_obj.up_arrow = false;
+            map_obj.down_arrow = false;
 
             //Mapmodes
-            if (actions.political) map_obj.political = true;
-            if (actions.colonisation) map_obj.colonisation = true;
-            if (actions.supply) map_obj.supply = true;
+            map_obj.political = false;
+            map_obj.colonisation = false;
+            map_obj.supply = false;
 
-            if (actions.atlas) map_obj.atlas = true;
-          };
-        });
+            map_obj.atlas = false;
+          } catch (e) {
+            log.warn(`logic_loop under initialiseMapViewer() was unable to proceed! ${e}.`);
+            clearInterval(logic_loop);
+          }
+        }, 100);
+
+        //Initialise control panel outside of loop
+        initialiseControlPanel(game_id, "map");
+
+        //Set control function of interface
+        game_obj.control_function = function (arg0_actions) {
+          //Convert from parameters
+          var actions = arg0_actions;
+
+          if (actions.zoom_in) map_obj.zoom_in = true;
+          if (actions.zoom_out) map_obj.zoom_out = true;
+
+          if (actions.up_arrow) map_obj.up_arrow = true;
+          if (actions.down_arrow) map_obj.down_arrow = true;
+          if (actions.left_arrow) map_obj.left_arrow = true;
+          if (actions.right_arrow) map_obj.right_arrow = true;
+
+          //Mapmodes
+          if (actions.political) map_obj.political = true;
+          if (actions.colonisation) map_obj.colonisation = true;
+          if (actions.supply) map_obj.supply = true;
+
+          if (actions.atlas) map_obj.atlas = true;
+        };
       });
-    }, 3000);
+    });
   },
 
   reloadMapInterface: function (arg0_embed_obj, arg1_game_id, arg2_message) {
