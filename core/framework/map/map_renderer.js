@@ -427,27 +427,29 @@ module.exports = {
     var map_file = global[`${map_name}_file`];
 
     //Upload newest map to cache channel
-    returnCacheChannel().send({
-      content: `${generateRandomID()}_reload`,
-      files: [`./map/cache/${map_name}.jpg`]
-    }).then((message) => {
-      var Attachment = Array.from(message.attachments);
+    setTimeout(function(){
+      returnCacheChannel().send({
+        content: `${generateRandomID()}_reload`,
+        files: [`./map/cache/${map_name}.jpg`]
+      }).then((message) => {
+        var Attachment = Array.from(message.attachments);
 
-      Attachment.forEach(function(attachment) {
-        //Iterate through all interfaces, checking for open maps and reloading their respective maps
-        for (var i = 0; i < all_interfaces.length; i++) try {
-          if (interfaces[all_interfaces[i]].type == "game")
-            if (["founding_map", "map"].includes(interfaces[all_interfaces[i]].page)) {
-              var map_obj = interfaces[all_interfaces[i]].map;
+        Attachment.forEach(function(attachment) {
+          //Iterate through all interfaces, checking for open maps and reloading their respective maps
+          for (var i = 0; i < all_interfaces.length; i++) try {
+            if (interfaces[all_interfaces[i]].type == "game")
+              if (["founding_map", "map"].includes(interfaces[all_interfaces[i]].page)) {
+                var map_obj = interfaces[all_interfaces[i]].map;
 
-              //Check to make sure mapmode is indeed compatible
-              if (map_obj.mapmode == map_name) {
-                map_obj.original_img = attachment[1].url.toString();
-                reloadMap(all_interfaces[i], false, true);
+                //Check to make sure mapmode is indeed compatible
+                if (map_obj.mapmode == map_name) {
+                  map_obj.original_img = attachment[1].url.toString();
+                  reloadMap(all_interfaces[i], false, true);
+                }
               }
-            }
-        } catch {}
+          } catch {}
+        });
       });
-    });
+    }, 3000);
   }
 };
