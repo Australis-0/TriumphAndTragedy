@@ -178,7 +178,7 @@ module.exports = {
       ledger_string.push(`**${local_user.name}**:`);
       ledger_string.push("---");
       ledger_string.push(`- ${config.icons.prestige} Score: **${parseNumber(local_score)}**`);
-      ledger_string.push(`- ${config.icons.provinces} Provinces: ${parseNumber(local_user.provinces)}`);
+      ledger_string.push(`- ${config.icons.provinces} Provinces: **${parseNumber(local_user.provinces)}**`);
       ledger_string.push(`- ${config.icons.population} Population: ${parseNumber(local_user.population)}`);
       ledger_string.push(`- ${config.icons.soldiers} Active Soldiers: ${parseNumber(getTotalActiveDuty(sorted_user_array[i]))}`);
       ledger_string.push(`- ${config.icons.money} Money: ${parseNumber(local_user.money)}`);
