@@ -142,19 +142,19 @@ module.exports = {
             //Mapmode controls
             if (map_obj.political) {
               map_obj.mapmode = "political";
-              module.exports.changeImage(game_id, "political");
+              module.exports.changeImage(game_id, "political", true);
             }
             if (map_obj.colonisation) {
               map_obj.mapmode = "colonisation";
-              module.exports.changeImage(game_id, "colonisation");
+              module.exports.changeImage(game_id, "colonisation", true);
             }
             if (map_obj.supply) {
               map_obj.mapmode = "supply";
-              module.exports.changeImage(game_id, "supply");
+              module.exports.changeImage(game_id, "supply", true);
             }
             if (map_obj.atlas) {
               map_obj.mapmode = "atlas";
-              module.exports.changeImage(game_id, "atlas");
+              module.exports.changeImage(game_id, "atlas", true);
             }
 
             //Reset map data states
