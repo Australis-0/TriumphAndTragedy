@@ -787,7 +787,7 @@ module.exports = {
         description: [
           `---`,
           "",
-          `**[Add Wargoal]**${(Object.keys(peace_obj.peace_demands).length > 0) ? ` | **[Remove Wargoal]**` : ""} | **[Send Peace Offer]**`
+          `**[Add Wargoal]**${(Object.keys(peace_obj.peace_demands).length > 0) ? ` | **[Remove Wargoal]**` : ""} | **[Send Peace Offer]**\n\n`
         ],
         title_pages: true,
         fixed_width: true

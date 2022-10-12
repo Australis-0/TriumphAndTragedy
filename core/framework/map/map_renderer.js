@@ -165,19 +165,20 @@ module.exports = {
                     var local_user = main.users[all_users[i]];
 
                     //Only display label if user is not eliminated and has more than zero provinces
-                    if (!local_user.eliminated && local_user.provinces > 0)
-                      if (label_placement[current_element]) {
-                        if (counter == label_placement[current_element]) {
-                          counter = 0;
-                          current_element++;
-                        }
+                    if (local_user)
+                      if (!local_user.eliminated && local_user.provinces > 0)
+                        if (label_placement[current_element]) {
+                          if (counter == label_placement[current_element]) {
+                            counter = 0;
+                            current_element++;
+                          }
 
-                        counter++;
-                        if (labels[current_element])
-                          labels[current_element].push(all_users[i]);
-                        else
-                          labels[current_element] = [all_users[i]];
-                      }
+                          counter++;
+                          if (labels[current_element])
+                            labels[current_element].push(all_users[i]);
+                          else
+                            labels[current_element] = [all_users[i]];
+                        }
                   }
 
                   //Initialise canvas and draw key for political map
