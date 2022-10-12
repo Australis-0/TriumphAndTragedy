@@ -747,7 +747,10 @@ module.exports = {
           sendPeaceTreaty(user_id, peace_obj);
 
           setTimeout(function(){
-            module.exports.modifyPeaceTreaty(user_id, peace_obj, true);
+            //Catch in-case of unconditional warscore
+            try {
+              module.exports.modifyPeaceTreaty(user_id, peace_obj, true);
+            } catch {}
           }, 3000);
 
           break;
@@ -1698,7 +1701,7 @@ module.exports = {
 
     //Initialise map viewer
     cacheSVG(map_file);
-    
+
     setTimeout(function(){
       (!change_image) ?
         initialiseMapViewer(game_obj.id, map_file) :
