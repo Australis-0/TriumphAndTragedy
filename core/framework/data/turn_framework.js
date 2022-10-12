@@ -273,6 +273,7 @@ module.exports = {
     }
 
     //Increment global round-count
+    log.info(`Incrementing round_count from ${main.global.round_count} to ${main.global.round_count + 1}!`);
     main.global.round_count++;
   },
 
@@ -798,7 +799,11 @@ module.exports = {
 
                   //Execute effect
                   if (option_obj.effect)
-                    option_obj.effect(usr.events[i].scopes);
+                    try {
+                      option_obj.effect(usr.events[i].scopes);
+                    } catch (e) {
+                      console.error(e);
+                    }
                 }
             } else {
               var dice_roll = randomNumber(0, event_options.length - 1);
