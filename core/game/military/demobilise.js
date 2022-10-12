@@ -15,7 +15,7 @@ module.exports = {
     if (usr.mobilisation.is_mobilised) {
       if (usr.modifiers.enable_mobilisation) {
         //Check if user has passed demobilisation cooldown first
-        if (main.global.round_count - last_mobilised > config.defines.combat.mobilisation_cooldown) {
+        if (main.round_count - last_mobilised > config.defines.combat.mobilisation_cooldown) {
           //Begin standing down troops
           var all_mobilisation_modifiers = Object.keys(config.defines.combat.base_mobilisation_impact);
           var all_mobilised_pops = Object.keys(usr.mobilisation.mobilised_pops);
@@ -84,13 +84,13 @@ module.exports = {
               delete usr.mobilisation[all_mobilisation_keys[i]];
 
           //Update last_mobilised modifier to be the last turn the user demobilised
-          usr.mobilisation.last_mobilised = JSON.parse(JSON.stringify(main.global.round_count));
+          usr.mobilisation.last_mobilised = JSON.parse(JSON.stringify(main.round_count));
 
           //Update military UI
           if (game_obj.page == "military")
             printMilitary(user_id);
         } else {
-          printError(game_obj.id, `Your people can't mobilise and demobilise instantly! Wait for **${parseNumber((main.global.round_count - last_mobilised) + 1)}** more turn(s).`);
+          printError(game_obj.id, `Your people can't mobilise and demobilise instantly! Wait for **${parseNumber((main.round_count - last_mobilised) + 1)}** more turn(s).`);
         }
       } else {
         printError(game_obj.id, `Your people haven't even heard about mobilisation yet! Research mobilisation first before attempting to demobilise.`);

@@ -22,7 +22,7 @@ module.exports = {
       if (!main.date.day) main.date.day = (config.defines.common.starting_day) ? config.defines.common.starting_day : 1;
       if (!main.date.hour) main.date.hour = 0;
     if (!main.round_count) main.round_count = 0;
-    if (!main.tick_count) main.round_count = 0;
+    if (!main.tick_count) main.tick_count = 0;
 
     //Market trackers - Initialise buy price/sell price/stock
     if (!main.market) main.market = {};

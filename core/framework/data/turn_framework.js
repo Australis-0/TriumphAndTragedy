@@ -273,8 +273,8 @@ module.exports = {
     }
 
     //Increment global round-count
-    log.info(`Incrementing round_count from ${main.global.round_count} to ${main.global.round_count + 1}!`);
-    main.global.round_count++;
+    log.info(`Incrementing round_count from ${main.round_count} to ${main.round_count + 1}!`);
+    main.round_count++;
   },
 
   nextTurn: function (arg0_user, arg1_options) { //[WIP] - Add newspaper section later, subtract political capital by vassal maintenance each turn, war exhaustion handler
@@ -397,8 +397,8 @@ module.exports = {
       //Military modifiers
       {
         if (usr.mobilisation)
-          if (usr.mobilisation.last_mobilised > main.global.round_count)
-            usr.mobilisation.last_mobilised = main.global.round_count;
+          if (usr.mobilisation.last_mobilised > main.round_count)
+            usr.mobilisation.last_mobilised = main.round_count;
       }
 
       //Population modifiers/trackers
@@ -965,7 +965,7 @@ module.exports = {
             most_popular_party = [usr.politics[all_governments[i]].popularity, all_governments[i]];
 
         //Conduct election if more than 5 turns have passed since the last one
-        if (main.global.round_count >= usr.last_election + 5) {
+        if (main.round_count >= usr.last_election + 5) {
           var election_winner = most_popular_party[1];
 
           if (config.governments[usr.government].effect)
@@ -973,7 +973,7 @@ module.exports = {
               setGovernment(actual_id, election_winner);
 
           //Set last election
-          usr.last_election = main.global.round_count;
+          usr.last_election = main.round_count;
         }
 
         //Reset political parties if anarchy

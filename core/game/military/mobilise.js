@@ -40,7 +40,7 @@ module.exports = {
 
     //Check if user is already mobilised
     if (!usr.mobilisation.is_mobilised) {
-      if (main.global.round_count - last_mobilised > config.defines.combat.mobilisation_cooldown) {
+      if (main.round_count - last_mobilised > config.defines.combat.mobilisation_cooldown) {
         if (usr.modifiers.enable_mobilisation) {
           //Sum up all non-military pops as being eligible for mobilisation, add them collectively to a moblisation pops object
           var manpower_mobilised = 0;
@@ -73,7 +73,7 @@ module.exports = {
           //Create mobilisation object
           usr.mobilisation = {
             is_mobilised: true,
-            last_mobilised: JSON.parse(JSON.stringify(main.global.round_count)),
+            last_mobilised: JSON.parse(JSON.stringify(main.round_count)),
 
             current_manpower_mobilised: 0,
             total_manpower_mobilised: manpower_mobilised,
@@ -95,7 +95,7 @@ module.exports = {
           printError(game_obj.id, `Your people haven't even heard of such a concept yet! Research mobilisation first.`);
         }
       } else {
-        printError(game_obj.id, `Your people can't mobilise and demobilise instantly! Wait for **${parseNumber(config.defines.combat.mobilisation_cooldown - (main.global.round_count - last_mobilised) + 1)}** more turn(s).`);
+        printError(game_obj.id, `Your people can't mobilise and demobilise instantly! Wait for **${parseNumber(config.defines.combat.mobilisation_cooldown - (main.round_count - last_mobilised) + 1)}** more turn(s).`);
       }
     } else {
       printError(game_obj.id, `You can't mobilise more personnel if you're already fully mobilised! Demobilise first before mobilising again.`);
