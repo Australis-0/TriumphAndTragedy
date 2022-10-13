@@ -9,17 +9,26 @@ module.exports = {
       var bad_ui = false;
       var local_ui = main.interfaces[all_interfaces[i]];
 
-      if (!local_ui.channel) {
-        bad_ui = true;
-      } else {
-        if (!returnChannel(local_ui.channel))
+      if (local_ui) {
+        if (!local_ui.channel) {
           bad_ui = true;
+        } else {
+          if (!returnChannel(local_ui.channel))
+            bad_ui = true;
+        }
+      } else {
+        bad_ui = true;
       }
 
       if (bad_ui) {
         //Bad UI, clear game
-        if (local_ui.type == "game")
-          module.exports.clearGame(local_ui.id);
+        try {
+          if (local_ui.type == "game")
+            module.exports.clearGame(local_ui.id);
+        } catch {
+          delete interfaces[all_interfaces[i]];
+          delete main.interfaces[all_interfaces[i]];
+        }
       }
     }
   },

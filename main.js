@@ -246,6 +246,8 @@ setInterval(function(){
 
     //Process nextGlobalTurn() for global processes and calculations
     if (main.season_started) {
+      clearBadGames();
+
       nextBattleTick(true);
       nextGlobalTurn();
     }
