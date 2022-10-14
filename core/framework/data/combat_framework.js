@@ -739,7 +739,7 @@ module.exports = {
           var army_stats = calculateArmyStats(actual_id, army_obj);
 
           if (army_stats.pure_submarines)
-            if (areAtWar(actual_id, actual_ot_user_id))
+            //if (areAtWar(actual_id, actual_ot_user_id))
               if (returnSafeNumber(army_obj.submarine_cooldown) == 0) {
                 var all_defender_armies = Object.keys(ot_user.armies);
                 var all_units = Object.keys(army_obj.units);
@@ -811,8 +811,11 @@ module.exports = {
                     var all_fleets = [];
 
                     for (var i = 0; i < all_ot_armies.length; i++) {
-                      if (Object.keys(ot_user.armies[all_ot_armies[i]].units).length > 0)
-                        all_fleets.push(ot_user.armies[all_ot_armies[i]]);
+                      var local_fleet = ot_user.armies[all_ot_armies[i]];
+
+                      if (local_fleet.type == "navy")
+                        if (Object.keys(local_fleet.units).length > 0)
+                          all_fleets.push(local_fleet);
                     }
 
                     //Only attack if an enemy fleet can be targeted
@@ -820,7 +823,7 @@ module.exports = {
                       var random_fleet = randomElement(all_fleets);
 
                       //Calculate defender AP
-                      defender_attack = calculateArmyStats(actual_ot_user_id, random_fleet, { mode: "submarine_defence" });
+                      defender_attack = calculateArmyStats(actual_ot_user_id, random_fleet, { mode: "submarine_defence" }).attack;
 
                       var attacker_losses = [];
                       var defender_losses = [];
@@ -832,6 +835,11 @@ module.exports = {
 
                       var actual_casualties = module.exports.calculateCasualties(actual_id, army_obj, random_defender_roll);
                       var ot_casualties = module.exports.calculateCasualties(actual_ot_user_id, random_fleet, random_attacker_roll);
+
+                      console.log(random_fleet);
+                      console.log(random_defender_roll);
+                      console.log(random_attacker_roll);
+                      console.log(actual_casualties);
 
                       //Parse losses
                       var old_attacking_units = Object.keys(old_attacking_fleet.units);
@@ -847,9 +855,9 @@ module.exports = {
 
                       for (var i = 0; i < old_defending_units.length; i++)
                         if (old_defending_fleet.units[old_defending_units[i]] > returnSafeNumber(random_fleet.units[old_defending_units[i]])) {
-                          var local_unit = getUnit(old_attacking_units[i]);
+                          var local_unit = getUnit(old_defending_units[i]);
 
-                          defender_losses.push(`${parseNumber(old_attacking_fleet.units[old_defending_units[i]] - army_obj.units[old_defending_units[i]])} ${(local_unit.name) ? local_unit.name : old_defending_units[i]}`);
+                          defender_losses.push(`${parseNumber(old_defending_units.units[old_defending_units[i]] - army_obj.units[old_defending_units[i]])} ${(local_unit.name) ? local_unit.name : old_defending_units[i]}`);
                         }
 
                       //Send submarine embed
@@ -875,7 +883,7 @@ module.exports = {
                     defender_attack = 0;
 
                     for (var i = 0; i < all_defender_armies.length; i++)
-                      defender_attack += calculateArmyStats(actual_ot_user_id, ot_user.armies[all_defender_armies[i]], { mode: "submarine_defence" });
+                      defender_attack += calculateArmyStats(actual_ot_user_id, ot_user.armies[all_defender_armies[i]], { mode: "submarine_defence" }).attack;
 
                     //Reserves guard themselves
                     var has_naval_reserves = false;
@@ -918,6 +926,7 @@ module.exports = {
                       //Defender losses go first
                       var old_attacking_fleet = JSON.parse(JSON.stringify(army_obj));
                       var old_defending_fleet = JSON.parse(JSON.stringify(ot_user.reserves));
+                      var random_defender_roll = randomNumber(0, reserves_attack);
 
                       var actual_casualties = module.exports.calculateCasualties(actual_id, army_obj, random_defender_roll);
                       var ot_casualties = module.exports.calculateCasualties(actual_ot_user_id, ot_user.reserves, random_attacker_roll, true);
@@ -936,9 +945,9 @@ module.exports = {
 
                       for (var i = 0; i < old_defending_units.length; i++)
                         if (old_defending_fleet[old_defending_units[i]] > returnSafeNumber(ot_user.reserves[old_defending_units[i]])) {
-                          var local_unit = getUnit(old_attacking_units[i]);
+                          var local_unit = getUnit(old_defending_units[i]);
 
-                          defender_losses.push(`${parseNumber(old_attacking_fleet.units[old_defending_units[i]] - army_obj.units[old_defending_units[i]])} ${(local_unit.name) ? local_unit.name : old_defending_units[i]}`);
+                          defender_losses.push(`${parseNumber(old_defending_units.units[old_defending_units[i]] - army_obj.units[old_defending_units[i]])} ${(local_unit.name) ? local_unit.name : old_defending_units[i]}`);
                         }
 
                       army_obj.submarine_cooldown = config.defines.combat.submarine_cooldown;
