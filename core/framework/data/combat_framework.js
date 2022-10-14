@@ -191,10 +191,10 @@ module.exports = {
             var defender_defence = ((defender_attack/total_buildings)*100) + 500;
 
             //Deduct buildings, floored
-            var deducted_buildings = Math.min(
+            var deducted_buildings = Math.max(
               Math.max(
-                Math.floor(attacker_roll/defender_defence),
-                  total_buildings - 1),
+                Math.floor(attacker_roll/defender_defence), total_buildings - 1
+              ),
               Math.ceil(total_buildings*0.2)
             );
 
