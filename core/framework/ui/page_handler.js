@@ -1833,7 +1833,10 @@ module.exports = {
           if (input == "relieve units")
             initialiseRelieveUnits(user_id);
 
-          //[Reordder Units]
+          if (input == "rename armies")
+            initialiseRenameArmies(user_id);
+
+          //[Reorder Units]
           if (input == "reorder_units")
             initialiseReorderUnits(user_id);
 

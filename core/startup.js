@@ -182,6 +182,7 @@ module.exports = {
     FileManager.import("./game/military/move_army");
     FileManager.import("./game/military/options");
     FileManager.import("./game/military/relieve_units");
+    FileManager.import("./game/military/rename_armies");
     FileManager.import("./game/military/rename_army");
     FileManager.import("./game/military/reorder_units");
     FileManager.import("./game/military/split_armies");

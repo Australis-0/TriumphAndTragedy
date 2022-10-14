@@ -223,7 +223,8 @@ module.exports = {
 
     army_creation_array.push(`- **[Create Armies]** - Create multiple armies.`);
     army_creation_array.push(`- **[Delete Armies]** - Delete multiple armies.`);
-    army_creation_array.push(`- **[Merge Armies]** - Power-merges several armies into an existing one.`)
+    army_creation_array.push(`- **[Merge Armies]** - Power-merges several armies into an existing one.`);
+    army_creation_array.push(`- **[Rename Armies]** - Renames multiple armies.`);
     army_creation_array.push(`- **[Split Armies]** - Splits off multiple armies from an existing one.`);
 
     army_management_array.push(`- **[Mass Deploy]** - For deploying troops to armies en masse.`);

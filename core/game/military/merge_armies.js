@@ -67,7 +67,7 @@ module.exports = {
       }
 
     } else {
-      printError(game_obj.id, `You currently don't have any active armies in service that you can merge! Create some new ones by either typing **[Create Armies]** to create multiple armies, or by typing **[Create Army]** to create an individual army unit.`);
+      printError(game_obj.id, `You currently don't have any active armies in service that you can merge! Create some new ones by typing either **[Create Armies]** to create multiple armies, or by typing **[Create Army]** to create an individual army unit.`);
     }
   }
 }
