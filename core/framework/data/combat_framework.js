@@ -191,7 +191,7 @@ module.exports = {
             var defender_defence = ((defender_attack/total_buildings)*100) + 500;
 
             //Deduct buildings, floored
-            var deducted_buildings = Math.max(
+            var deducted_buildings = Math.min(
               Math.max(
                 Math.floor(attacker_roll/defender_defence), total_buildings - 1
               ),
@@ -298,7 +298,7 @@ module.exports = {
                 var old_building_count = getTotalBuildings(old_city_obj, defender_buildings[i]);
                 var new_building_count = getTotalBuildings(city_obj, defender_buildings[i]);
 
-                if (old_building_count < new_building_count)
+                if (old_building_count > new_building_count)
                   defender_casualties.push(`- ${parseNumber(old_building_count - new_building_count)} ${(local_building.name) ? local_building.name : defender_buildings[i]}`);
               }
 
