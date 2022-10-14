@@ -246,11 +246,11 @@ module.exports = {
             }
 
             if (attacker_losses > 0)
-              attacker_war_exhaustion = parseInt(
+              attacker_war_exhaustion = parseFloat(
                 (attacker_losses/getTotalActiveDuty(actual_id)).toFixed(2)
               );
             if (total_casualties > 0)
-              defender_war_exhaustion = parseInt(
+              defender_war_exhaustion = parseFloat(
                 (total_casualties/getTotalActiveDuty(city_obj.controller)).toFixed(2)
               );
 
@@ -298,7 +298,7 @@ module.exports = {
                 var old_building_count = getTotalBuildings(old_city_obj, defender_buildings[i]);
                 var new_building_count = getTotalBuildings(city_obj, defender_buildings[i]);
 
-                if (old_building_count > new_building_count)
+                if (new_building_count < old_building_count)
                   defender_casualties.push(`- ${parseNumber(old_building_count - new_building_count)} ${(local_building.name) ? local_building.name : defender_buildings[i]}`);
               }
 

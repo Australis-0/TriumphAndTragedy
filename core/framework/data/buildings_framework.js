@@ -985,7 +985,7 @@ module.exports = {
 
     //Declare local instance variables
     var city_obj = (typeof city_name != "object") ? getCity(city_name) : city_name;
-    var raw_building_name = module.exports.getBuilding(building_name);
+    var raw_building_name = module.exports.getBuilding(building_name, { return_key: true });
     var total = 0;
 
     //Iterate over all buildings in province
