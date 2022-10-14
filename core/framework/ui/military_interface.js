@@ -39,7 +39,7 @@ module.exports = {
 
       army_orders[local_army.status] = (army_orders[local_army.status]) ?
         army_orders[local_army.status] + 1 :
-        army_orders[local_army.status];
+        1;
       army_types[local_army.type]++;
     }
 
@@ -275,9 +275,9 @@ module.exports = {
     }
 
     for (var i = 0; i < sorted_army_orders.length; i++)
-      (i != sorted_army_orders.length - 1) ?
-      army_orders_array.push(`*- *${parseNumber(sorted_army_orders[i][0])}** are ${sorted_army_orders[i][1]},`) :
-      army_orders_array.push(`- and **${parseNumber(sorted_army_orders[i][0])}** are ${sorted_army_orders[i][1]}.`);
+      (i != sorted_army_orders.length - 1 || sorted_army_orders.length == 1) ?
+        army_orders_array.push(`*- *${parseNumber(sorted_army_orders[i][0])}** are ${sorted_army_orders[i][1]},`) :
+        army_orders_array.push(`- and **${parseNumber(sorted_army_orders[i][0])}** are ${sorted_army_orders[i][1]}.`);
 
     //Create embed object
     const embed_military_hq = new Discord.MessageEmbed()
