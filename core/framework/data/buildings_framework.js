@@ -980,11 +980,11 @@ module.exports = {
 
   getTotalBuildings: function (arg0_city_name, arg1_building_name) {
     //Convert from parameters
-    var city_name = arg0_city_name.toLowerCase().trim();
+    var city_name = (typeof arg0_city_name != "object") ? arg0_city_name.toLowerCase().trim() : arg0_city_name;
     var building_name = arg1_building_name.toLowerCase().trim();
 
     //Declare local instance variables
-    var city_obj = getCity(city_name);
+    var city_obj = (typeof city_name != "object") ? getCity(city_name) : city_name;
     var raw_building_name = module.exports.getBuilding(building_name);
     var total = 0;
 

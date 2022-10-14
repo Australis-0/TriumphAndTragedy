@@ -187,7 +187,7 @@ module.exports = {
 
             //Attacker rolls, each building has ((defender_ap/building_count)*100) + 500 HP
             var attacker_roll = randomNumber(0, army_stats.attack);
-            var defender_attack = getTotalBuildings(city_obj.name, config.defines.combat.anti_aircraft_building)*main_unit_ap*config.defines.combat.anti_aircraft_effectiveness*returnSafeNumber(ot_user.modifiers.ack_ack_effectiveness, 1);
+            var defender_attack = returnSafeNumber(getTotalBuildings(city_obj.name, config.defines.combat.anti_aircraft_building))*main_unit_ap*config.defines.combat.anti_aircraft_effectiveness*returnSafeNumber(ot_user.modifiers.ack_ack_effectiveness, 1);
             var defender_defence = ((defender_attack/total_buildings)*100) + 500;
 
             //Deduct buildings, floored
@@ -198,8 +198,10 @@ module.exports = {
               Math.ceil(total_buildings*0.2)
             );
 
+            log.info(`Air raid over ${city_obj.name}! Deducted buildings: ${parseNumber(deducted_buildings)}/${parseNumber(city_obj.buildings.length)}.`);
+
             //20% destruction cap, population killed = percentage of deducted buildings, soft cap at 120k
-            for (var i = 0; i < Math.ceil(total_buildings*0.2); i++)
+            for (var i = 0; i < deducted_buildings; i++)
               destroyBuilding(1, randomElement(city_obj.buildings).building_type, city_obj.id);
 
             for (var i = 0; i < all_pops.length; i++)
