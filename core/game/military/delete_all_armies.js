@@ -21,12 +21,18 @@ module.exports = {
             var local_army = usr.armies[all_armies[i]];
             deleteArmy(actual_id, local_army.name);
           }
-
-          console.log(all_armies);
         } else {
           break;
         }
       }
+
+      //Update army_list if user is currently viewing it
+      if (game_obj.page == "army_list")
+        createPageMenu(game_obj.middle_embed, {
+          embed_pages: printArmyList(user_id),
+          page: main.interfaces[game_obj.middle_embed.id].page,
+          user: game_obj.user
+        });
 
       //Print user feedback
       printAlert(game_obj.id, `You have successfully deleted all of your **${parseNumber(old_army_count)}** armies. Their men and materiel have been returned to your reserves.\n\nTo mass-create new armies, type **[Create Armies]**. To create an individual army unit, type **[Create Army]**.`);

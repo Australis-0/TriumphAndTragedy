@@ -38,6 +38,14 @@ module.exports = {
         for (var i = all_armies.length - 1; i >= 0; i--)
           successful_moves = (moveArmy(actual_id, usr.armies[all_armies[i]], province_id)) ? successful_moves + 1 : successful_moves;
 
+        //Update army_list if user is currently viewing it
+        if (game_obj.page == "army_list")
+          createPageMenu(game_obj.middle_embed, {
+            embed_pages: printArmyList(user_id),
+            page: main.interfaces[game_obj.middle_embed.id].page,
+            user: game_obj.user
+          });
+
         printAlert(game_obj.id, `You have begun moving **${parseNumber(successful_moves)}**/**${parseNumber(all_armies.length)}** total armies to Province #${province_id}, wherever possible.`);
       } else {
         printError(game_obj.id, `You can't move around fictitious armies! Consider creating armies and putting soldiers in them first before ordering to coalesce somewhere.`);

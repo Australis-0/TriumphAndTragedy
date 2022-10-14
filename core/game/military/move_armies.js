@@ -61,6 +61,14 @@ module.exports = {
             } catch {}
           }
 
+          //Update army_list if user is currently viewing it
+          if (game_obj.page == "army_list")
+            createPageMenu(game_obj.middle_embed, {
+              embed_pages: printArmyList(user_id),
+              page: main.interfaces[game_obj.middle_embed.id].page,
+              user: game_obj.user
+            });
+
           printAlert(game_obj.id, `You have begun successfully moving **${parseNumber(successfully_moved_armies)}**/**${parseNumber(moving_armies.length)}** requested armies to their destination, Province **${province_id}**.\n\nDifferent armies may arrive at different times.\nType **[View Army]** to see when an army will arrive at a given province.`);
         } else {
           printError(game_obj.id, `You can't move a bunch of nonexistent armies around! Check your spelling and formatting first.\n\nConsider viewing your **[Army List]** to see a full list of your current Order of Battle.`);

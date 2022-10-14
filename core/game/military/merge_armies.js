@@ -58,6 +58,14 @@ module.exports = {
         var current_armies = Object.keys(usr.armies).length;
         var successfully_merged = all_armies.length - current_armies;
 
+        //Update army_list if user is currently viewing it
+        if (game_obj.page == "army_list")
+          createPageMenu(game_obj.middle_embed, {
+            embed_pages: printArmyList(user_id),
+            page: main.interfaces[game_obj.middle_embed.id].page,
+            user: game_obj.user
+          });
+
         //Display user success/error messages
         (all_armies.length == current_armies) ?
           printError(game_obj.id, `Your Military High Command were unable to merge all the specified armies into the **${army_obj.name}**! Make sure to check your spelling and formatting before trying again.`) :

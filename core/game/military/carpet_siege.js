@@ -81,6 +81,14 @@ module.exports = {
 
       var required_armies = occupation_target_list.length - (all_armies.length - successful_moves - failed_moves);
 
+      //Update army_list if user is currently viewing it
+      if (game_obj.page == "army_list")
+        createPageMenu(game_obj.middle_embed, {
+          embed_pages: printArmyList(user_id),
+          page: main.interfaces[game_obj.middle_embed.id].page,
+          user: game_obj.user
+        });
+
       //Print out error/success message
       printAlert(game_obj.id, `You have successfully begun sending out **${parseNumber(successful_moves)}** armies to occupy **${ot_user.name}**.\n\nOf the **${parseNumber(successful_moves)}** total armies sent out, ${(failed_moves > 0 || missing_armies > 0) ? `**${parseNumber(nonexistent_armies)}** of the armies specified could not be found, and **${parseNumber(acceptable_armies.length - successful_moves)}** failed to move to their destinations.` : `all managed to successfully move to their destinations.`} ${(occupation_target_list.length > 0) ? `**${parseNumber(missing_armies)}** remaining armies are required to be created for the full occupation of **${ot_user.name}** out of **${parseNumber(ot_user.provinces)}** total.` : `**${ot_user.name}** will be fully occupied when all units arrive at their destination.`}`);
     } else {

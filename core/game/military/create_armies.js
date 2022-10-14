@@ -22,6 +22,14 @@ module.exports = {
               for (var i = 0; i < new_army_array.length; i++)
                 createArmy(actual_id, new_army_array[i], capital_obj.id);
 
+              //Update army_list if user is currently viewing it
+              if (game_obj.page == "army_list")
+                createPageMenu(game_obj.middle_embed, {
+                  embed_pages: printArmyList(user_id),
+                  page: main.interfaces[game_obj.middle_embed.id].page,
+                  user: game_obj.user
+                });
+
               //Print user feedback
               printAlert(game_obj.id, `You have successfully created up to **${parseNumber(new_army_array.length)}** new armies in Province **${capital_obj.id.toString()}**!`)
             } else {

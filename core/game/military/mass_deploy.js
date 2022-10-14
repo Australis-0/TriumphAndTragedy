@@ -74,6 +74,14 @@ module.exports = {
               var new_unit_count = returnSafeNumber(usr.reserves[raw_unit_name]);
               var successful_deployments = old_unit_count - new_unit_count;
 
+              //Update army_list if user is currently viewing it
+              if (game_obj.page == "army_list")
+                createPageMenu(game_obj.middle_embed, {
+                  embed_pages: printArmyList(user_id),
+                  page: main.interfaces[game_obj.middle_embed.id].page,
+                  user: game_obj.user
+                });
+
               //Return success/error messages
               (successful_deployments > 0) ?
                 printAlert(game_obj.id, `You have successfully deployed up to **${parseNumber(successful_deployments)}** ${(unit_obj.name) ? unit_obj.name : raw_unit_name} in **${parseNumber(deploy_in_armies.length)}** armies.`) :

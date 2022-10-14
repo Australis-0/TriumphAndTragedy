@@ -22,6 +22,14 @@ module.exports = {
 
         var current_armies = Object.keys(usr.armies).length;
 
+        //Update army_list if user is currently viewing it
+        if (game_obj.page == "army_list")
+          createPageMenu(game_obj.middle_embed, {
+            embed_pages: printArmyList(user_id),
+            page: main.interfaces[game_obj.middle_embed.id].page,
+            user: game_obj.user
+          });
+
         //Return success or error messages
         (all_armies.length == current_armies) ?
           printError(game_obj.id, `No armies of the specified name(s) could be found! Please check your spelling and formatting.`) :
