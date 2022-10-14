@@ -295,8 +295,8 @@ module.exports = {
                     (local_category.icon) ?
                       config.icons[local_category.icon] + " " :
                       "";
-                var old_building_count = getTotalBuildings(old_city_obj.name, defender_buildings[i]);
-                var new_building_count = getTotalBuildings(city_obj.name, defender_buildings[i]);
+                var old_building_count = getTotalBuildings(old_city_obj, defender_buildings[i]);
+                var new_building_count = getTotalBuildings(city_obj, defender_buildings[i]);
 
                 if (old_building_count < new_building_count)
                   defender_casualties.push(`- ${parseNumber(old_building_count - new_building_count)} ${(local_building.name) ? local_building.name : defender_buildings[i]}`);
