@@ -290,13 +290,22 @@ module.exports = {
 				{ name: "**Recent Casualties:**", value: military_civilian_casualties.join("\n"), inline: true },
         { name: `**Military Overview:**`, value: military_overview_commands.join("\n") },
 				{ name: "**Military Options:**", value: options_array.join("\n") },
-				{ name: "**Military Organisation Commands:**", value: command_list_array.join("\n") },
-				{ name: "**Global Orders:**", value: global_orders_array.join("\n") },
-				{ name: "**Army Creation:**", value: army_creation_array.join("\n") },
-				{ name: "**Army Management:**", value: army_management_array.join("\n") },
 				{ name: "**Mobilisation:**", value: mobilisation_array.join("\n") }
 			)
       .setImage("https://cdn.discordapp.com/attachments/722997700391338046/736141424315203634/margin.png");
+
+    const embed_military_organisation = new Discord.MessageEmbed()
+      .setColor(settings.bot_colour)
+      .setTitle(`Military Organisation Commands:\n${config.localisation.divider}`)
+      .setThumbnail(usr.flag)
+      .setDescription(command_list_array.join("\n"))
+      .addFields(
+				{ name: "**Global Orders:**", value: global_orders_array.join("\n") },
+				{ name: "**Army Creation:**", value: army_creation_array.join("\n") },
+				{ name: "**Army Management:**", value: army_management_array.join("\n") }
+      )
+      .setImage("https://cdn.discordapp.com/attachments/722997700391338046/736141424315203634/margin.png");
+
     const embed_military_orders = new Discord.MessageEmbed()
 			.setColor(settings.bot_colour)
 			.setTitle(`Order Breakdown:\n${config.localisation.divider}`)
@@ -309,7 +318,7 @@ module.exports = {
 
     //Edit main embed display
     createPageMenu(game_obj.middle_embed, {
-      embed_pages: [embed_military_hq, embed_military_orders],
+      embed_pages: [embed_military_hq, embed_military_organisation, embed_military_orders],
       user: game_obj.user
     });
 
