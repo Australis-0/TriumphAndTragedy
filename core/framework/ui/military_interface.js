@@ -276,7 +276,7 @@ module.exports = {
 
     for (var i = 0; i < sorted_army_orders.length; i++)
       (i != sorted_army_orders.length - 1 || sorted_army_orders.length == 1) ?
-        army_orders_array.push(`*- *${parseNumber(sorted_army_orders[i][0])}** are ${sorted_army_orders[i][1]},`) :
+        army_orders_array.push(`- **${parseNumber(sorted_army_orders[i][0])}** are ${sorted_army_orders[i][1]},`) :
         army_orders_array.push(`- and **${parseNumber(sorted_army_orders[i][0])}** are ${sorted_army_orders[i][1]}.`);
 
     //Create embed object
