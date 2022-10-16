@@ -343,7 +343,7 @@ config.alerts.diplomacy = {
     btn_rival_declared: {
       title: "It's either us or them.",
       description: [
-        `**-50** Relations with {FROM.name}.`
+        `**-50** Relations with **{FROM.name}**.`
       ],
       effect: function (options) {
         modifyRelations(options.TO, {
@@ -401,6 +401,35 @@ config.alerts.diplomacy = {
       ],
       effect: function (options) {
         inherit(options.TO, options.FROM);
+      }
+    }
+  },
+
+  the_coming_thaw: {
+    name: "The Coming Thaw.",
+    description: `Relations between us and **{FROM.name}** are beginning to thaw as our diplomats begin approaching them with a mutual policy of detente. Our citizens are increasingly seeing them not as a menace, but rather as a potential trade partner, or at the very least, a nation like any other.`,
+
+    btn_can_relations_improve: {
+      title: "Can relations improve?",
+      ai_chance: 100,
+      description: [
+        `We will end our rivalry with **{FROM.name}**.`
+      ],
+      effect: function (options) {
+        dissolveRivalry(options.FROM, options.TO);
+      }
+    },
+    btn_what_a_silly_idea: {
+      title: "What a silly idea.",
+      description: [
+        `Our historical enmity with **{FROM.name}** will continue.`,
+        `**-20** Relations with **{FROM.name}**.`
+      ],
+      effect: function (options) {
+        modifyRelations(options.TO, {
+          target: options.FROM,
+          value: -20
+        });
       }
     }
   },
