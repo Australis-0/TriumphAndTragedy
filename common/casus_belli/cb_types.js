@@ -49,8 +49,9 @@ config.casus_belli = {
         }
 
       //Return statement
-      if (is_blockading && areAtWar(usr.id, ot_user.id))
-        return true;
+      if (is_blockading)
+        if (areAtWar(usr.id, ot_user.id))
+          return true;
     },
 
     peace_demands: ["status_quo", "war_reparations"]

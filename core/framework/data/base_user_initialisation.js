@@ -302,6 +302,7 @@ module.exports = {
     if (!usr.army_array) usr.army_array = [];
     if (!usr.auto_trades) usr.auto_trades = {};
     if (!usr.blockaded) usr.blockaded = {};
+    if (!usr.client_states) usr.client_states = {};
     if (!usr.events) usr.events = [];
     if (!usr.expeditions) usr.expeditions = {};
     if (!usr.inventory) usr.inventory = {};

@@ -1,4 +1,20 @@
 module.exports = {
+  generateUserID: function () {
+    //Declare local instance variables
+    var all_users = Object.keys(main.users);
+
+    //While loop to find ID, just in-case of conflicting random ID's:
+    while (true) {
+      var local_id = generateRandomID();
+
+      //Return and break once a true ID is found
+      if (!all_users.includes(local_id)) {
+        return local_id;
+        break;
+      }
+    }
+  },
+
   /*
     getUsernames() - Returns a list of usernames/nicknames from a given ID
     options: {
