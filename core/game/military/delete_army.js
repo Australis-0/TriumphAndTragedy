@@ -12,19 +12,23 @@ module.exports = {
 
     //Check to see if army_obj exists
     if (army_obj) {
-      var old_name = JSON.parse(JSON.stringify(army_obj.name));
+      if (!army_obj.is_blockading) {
+        var old_name = JSON.parse(JSON.stringify(army_obj.name));
 
-      deleteArmy(actual_id, army_name);
+        deleteArmy(actual_id, army_name);
 
-      //Update army_list if user is currently viewing it
-      if (game_obj.page == "army_list")
-        createPageMenu(game_obj.middle_embed, {
-          embed_pages: printArmyList(user_id),
-          page: main.interfaces[game_obj.middle_embed.id].page,
-          user: game_obj.user
-        });
+        //Update army_list if user is currently viewing it
+        if (game_obj.page == "army_list")
+          createPageMenu(game_obj.middle_embed, {
+            embed_pages: printArmyList(user_id),
+            page: main.interfaces[game_obj.middle_embed.id].page,
+            user: game_obj.user
+          });
 
-      printAlert(game_obj.id, `You have demobilised the **${old_name}**! All their units and equipment have been returned to your **[Reserves]**.`);
+        printAlert(game_obj.id, `You have demobilised the **${old_name}**! All their units and equipment have been returned to your **[Reserves]**.`);
+      } else {
+        printError(game_obj.id, `You cannot delete an army that is currently blockading someone! Withdraw it from the blockade first before deleting it.`);
+      }
     } else {
       printError(game_obj.id, `The **${army_name}** is not currently a valid army in active service! Check your **[Army List]** for a full list of valid field armies.`);
     }

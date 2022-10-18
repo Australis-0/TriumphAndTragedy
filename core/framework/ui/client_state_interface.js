@@ -1,5 +1,5 @@
 module.exports = {
-  initialiseAddProvinces: function (arg0_user, arg1_client_state) { //[WIP]
+  initialiseAddProvinces: function (arg0_user, arg1_client_state) {
     //Convert from parameters
     var user_id = arg0_user;
     var client_obj = arg1_client_state;
@@ -19,7 +19,6 @@ module.exports = {
     },
     function (arg) {
       var all_provinces = unique(arg[0].trim().split(" "));
-      var has_error = []; //[error_array];
 
       var neutral_provinces = [];
       var nonexistent_provinces = [];
@@ -48,14 +47,20 @@ module.exports = {
       //Add provinces to client_obj.provinces if no errors are detected and shade in provinces on the map
       if (neutral_provinces.length + nonexistent_provinces.length + occupied_provinces.length + redundant_provinces.length == 0) {
         for (var i = 0; i < all_provinces.length; i++) {
-          client_obj.provinces.push(all_provinces[i]);
+          client_obj.provinces.push(all_provinces[i].trim());
 
           //Shade in province
-          setProvinceColour(map_file, user_provinces[i].id, client_obj.colour);
+          setProvinceColour(map_file, all_provinces[i].trim(), client_obj.colour);
         }
 
         //Print alert
         printAlert(game_obj.id, `${config.icons.checkmark} You have successfully requested that the provinces of **${all_provinces.join(", ")}** be granted to the new client state of **${client_obj.name}**.`);
+
+        //Go back to the client state menu
+        module.exports.modifyPeaceTreaty(user_id, client_obj, true);
+
+        module.exports.initialiseModifyClientState(user_id, client_obj);
+        module.exports.initialiseClientStateScreen(user_id, client_obj);
       } else {
         //Print error
         printError(game_obj.id, `Your petition to add provinces on the behalf of your client state of **${local_user.name}** failed for the following reasons:${(neutral_provinces.length > 0) ? `\n- The following provinces don't even belong to you! ${neutral_provinces.join(", ")}` : ``}${(nonexistent_provinces.length > 0) ? `\n- Your cartographers are currently puzzling over your maps, as the following provinces don't even exist! ${nonexistent_provinces.join(", ")}` : ``}${(occupied_provinces.length > 0) ? `\n- You can't request occupied provinces to join your client state! The following provinces are currently occupied by the enemy: ${occupied_provinces.join(", ")}` : ``}${(redundant_provinces.length > 0) ? `\n- The following provinces are already being given to **${client_obj.name}**! ${redundant_provinces.join(", ")}` : ``}`);
@@ -237,6 +242,67 @@ module.exports = {
     },
     function (arg) {
 
+    });
+  },
+
+  initialiseRemoveProvinces: function (arg0_user, arg1_client_state) { //[WIP]
+    //Convert from parameters
+    var user_id = arg0_user;
+    var client_obj = arg1_client_state;
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var game_obj = getGameObject(user_id);
+    var usr = main.users[actual_id];
+
+    //Send visual prompt
+    visualPrompt(game_obj.id, user_id, {
+      title: `Remove Provinces from Client State:`,
+      prompts: [
+        [`Which provinces would you like to remove from the posession of **${client_obj.name}**?\nPlease separate each province with a space like so: '4702 4703 4709'.\n\nType **[Back]** to cancel taking away provinces from this client state's control.`, "string"]
+      ],
+      do_not_cancel: true
+    },
+    function (arg) {
+      var all_provinces = unique(arg[0].trim().split(" "));
+      var successfully_removed = 0;
+
+      //Go through all provinces and try removing them
+      for (var i = 0; i < all_provinces.length; i++) {
+        var local_element = all_provinces[i].trim();
+
+        if (client_obj.provinces.includes(local_element)) {
+          client_obj.provinces = removeElement(client_obj.provinces, local_element);
+          successfully_removed++;
+        }
+      }
+
+      //Print output
+      if (successfully_removed > 0) {
+        printAlert(game_obj.id, `${config.icons.checkmark} You have successfully removed **${parseNumber(successfully_removed)}** provinces from the control of **${client_obj.name}**.`);
+
+        //Go back to the client state menu
+        module.exports.modifyPeaceTreaty(user_id, client_obj, true);
+
+        module.exports.initialiseModifyClientState(user_id, client_obj);
+        module.exports.initialiseClientStateScreen(user_id, client_obj);
+      } else {
+        printError(game_obj.id, `All of the provinces you have specified were either invalid or simply didn't exist!`);
+
+        //Wait 3 seconds before reinitialising prompt
+        setTimeout(function(){
+          module.exports.initialiseRemoveProvinces(user_id, client_obj);
+        }, 3000);
+      }
+    },
+    function (arg) {
+      switch (arg) {
+        case "back":
+          module.exports.initialiseModifyClientState(user_id, client_obj);
+          module.exports.initialiseClientStateScreen(user_id, client_obj);
+
+          break;
+      }
     });
   },
 

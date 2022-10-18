@@ -334,6 +334,21 @@ module.exports = {
         if (usr.blockaded.blockade_cooldown)
           usr.blockaded.blockade_cooldown--;
 
+        //Check if all armies still exist, remove those that don't from .fleets
+        if (usr.blockaded)
+          if (usr.blockaded.fleets) {
+            for (var i = usr.blockaded.fleets.length - 1; i >= 0; i--) {
+              var local_fleet = usr.blockaded.fleets[i];
+
+              //If fleet is not found, splice from array
+              if (!main.users[local_fleet.id].armies[local_fleet.fleet_id])
+                usr.blockaded.fleets.splice(i, 1);
+            }
+
+            if (usr.blockaded.fleets.length == 0)
+              deleteBlockade(actual_id);
+          }
+
         //Civilian/military casualties
         usr.recent_civilian_casualties.push(0);
         usr.recent_military_casualties.push(0);
