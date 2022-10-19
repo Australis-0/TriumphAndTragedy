@@ -241,7 +241,7 @@ module.exports = {
     });
   },
 
-  initialiseRemoveProvinces: function (arg0_user, arg1_client_state) { //[WIP]
+  initialiseRemoveProvinces: function (arg0_user, arg1_client_state) {
     //Convert from parameters
     var user_id = arg0_user;
     var client_obj = arg1_client_state;
@@ -353,5 +353,164 @@ module.exports = {
     //Visual interface using visualPrompt() before creating a page menu
     module.exports.initialiseModifyClientState(user_id, client_obj);
     module.exports.initialiseClientStateScreen(user_id, client_obj);
+  },
+
+  setClientStateCapital: function (arg0_user, arg1_client_state) {
+    //Convert from parameters
+    var user_id = arg0_user;
+    var client_obj = arg1_client_state;
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var client_state_id = arg1_client_state;
+    var usr = main.users[actual_id];
+
+    //Initialise visual prompt
+    visualPrompt(game_obj.id, user_id, {
+      title: `Set Client State Capital:`,
+      prompts: [
+        [`What city would you like to set as your client state's new capital?\n\nType **[View Cities]** to view a full list of your cities.`, "text"]
+      ]
+    },
+    function (arg) {
+      var city_obj = getCity(arg[0], { users: actual_id });
+
+      if (city_obj) {
+        if (client_obj.provinces.includes(city_obj.id)) {
+          //Set capital
+          client_obj.capital_id = city_obj.id;
+
+          //Print user feedback
+          printAlert(game_obj.id, `You have successfully set **${city_obj.name}** as the proposed capital of the future state of **${client_obj.name}**.`);
+        } else {
+          printError(game_obj.id, `**${client_obj.name}** isn't in proposed possession of this province! Add this province to **${client_obj.name}** first before setting it as their capital.`);
+        }
+      } else {
+        printError(game_obj.id, `You must specify a valid city to set as the capital of **${client_obj.name}**!`)
+      }
+
+      //Go back to the main client state menu
+      module.exports.initialiseModifyClientState(user_id, client_obj);
+      module.exports.initialiseClientStateScreen(user_id, client_obj);
+    },
+    function (arg) {
+      switch (arg) {
+        case "view cities":
+          createPageMenu(game_obj.middle_embed, {
+            embed_pages: printCities(game_obj.user),
+            user: game_obj.user
+          });
+
+          return true;
+
+          break;
+      }
+    });
+  },
+
+  setClientStateColour: function (arg0_user, arg1_client_state) {
+    //Convert from parameters
+    var user_id = arg0_user;
+    var client_obj = arg1_client_state;
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var client_state_id = arg1_client_state;
+    var usr = main.users[actual_id];
+
+    //Initialise visual prompt
+    visualPrompt(game_obj.id, user_id, {
+      title: `Set Client State Colour:`,
+      prompts: [
+        [`Please insert the R code of your colour.\n\nOnly RGB values between 20-175 and 185-255 are accepted.`, "number", { min: 20, max: 255 }],
+        [`Please insert the G code of your colour.\n\nOnly RGB values between 20-175 and 185-255 are accepted.`, "number", { min: 20, max: 255 }],
+        [`Please insert the B code of your colour.\n\nOnly RGB values between 20-175 and 185-255 are accepted.`, "number", { min: 20, max: 255 }]
+      ]
+    },
+    function (arg) {
+      var change_client_state_colour = setColour(client_obj.id, arg[0], arg[1], arg[2], true, true);
+
+      //Check if command went through
+      if (change_client_state_colour[0]) {
+        printAlert(game_obj.id, `You have successfully changed the colour of **${client_obj.name}** to **${arg[0]}**, **${arg[1]}**, **${arg[2]}**.`);
+        client_obj.colour = [arg[0], arg[1], arg[2]];
+      } else {
+        printError(game_obj.id, change_client_state_colour[1]);
+      }
+
+      //Go back to the main client state menu
+      module.exports.modifyClientState(user_id, client_obj, true);
+
+      module.exports.initialiseModifyClientState(user_id, client_obj);
+      module.exports.initialiseClientStateScreen(user_id, client_obj);
+    });
+  },
+
+  setClientStateFlag: function (arg0_user, arg1_client_state) {
+    //Convert from parameters
+    var user_id = arg0_user;
+    var client_obj = arg1_client_state;
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var client_state_id = arg1_client_state;
+    var usr = main.users[actual_id];
+
+    //Initialise visual prompt
+    visualPrompt(game_obj.id, user_id, {
+      title: `Set Client State Flag:`,
+      prompts: [
+        [`What would you like to change the standard of **${client_obj.name}** to? Please insert a valid image URL.`, "string"]
+      ]
+    },
+    function (arg) {
+      var change_client_state_flag = setFlag(client_obj.id, arg[0], true, true);
+
+      //Print user feedback
+      if (change_client_state_flag[0]) {
+        printAlert(game_obj.id, `You have successfully changed the flag of **${client_obj.name}**.`);
+        client_obj.flag = arg[0];
+      } else {
+        printError(game_obj.id, change_client_state_flag[1]);
+      }
+
+      //Go back to the main client state menu
+      module.exports.initialiseModifyClientState(user_id, client_obj);
+      module.exports.initialiseClientStateScreen(user_id, client_obj);
+    });
+  },
+
+  setClientStateName: function (arg0_user, arg1_client_state) {
+    //Convert from parameters
+    var user_id = arg0_user;
+    var client_obj = arg1_client_state;
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var client_state_id = arg1_client_state;
+    var usr = main.users[actual_id];
+
+    //Initialise visual prompt
+    visualPrompt(game_obj.id, user_id, {
+      title: `Rename Client State:`,
+      prompts: [
+        [`What would you like to rename the client state of **${client_obj.name}** to?`, "text"]
+      ]
+    },
+    function (arg) {
+      var change_client_state_name = renameCountry(client_obj.id, arg[0], true, true);
+
+      //Print user feedback
+      if (change_client_state_name[0]) {
+        printAlert(game_obj.id, `You have successfully changed the name of **${client_obj.name}** to **${arg[0]}**.`);
+        client_obj.name = arg[0];
+      } else {
+        printError(game_obj.id, change_client_state_name[1]);
+      }
+
+      //Go back to the main client state menu
+      module.exports.initialiseModifyClientState(user_id, client_obj);
+      module.exports.initialiseClientStateScreen(user_id, client_obj);
+    });
   }
 };

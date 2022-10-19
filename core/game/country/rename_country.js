@@ -18,10 +18,12 @@ module.exports = {
     });
   },
 
-  renameCountry: function (arg0_user, arg1_new_country_name) {
+  renameCountry: function (arg0_user, arg1_new_country_name, arg2_vassal, arg3_do_not_display) {
     //Convert from parameters
     var user_id = arg0_user;
     var new_country_name = arg1_new_country_name.trim().toLowerCase();
+    var is_vassal = arg2_vassal;
+    var do_not_display = arg3_do_not_display;
 
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
@@ -32,7 +34,7 @@ module.exports = {
 
     //Make sure user is able to change their name
     if (!usr.options.name_locked) {
-      if (!usr.options.customisation_locked) {
+      if (!usr.options.customisation_locked || is_vassal) {
         //Check to make sure that the new country name is less than 100 characters
         if (parseString(new_country_name).length <= 100) {
           var new_name = parseString(new_country_name);
@@ -51,18 +53,31 @@ module.exports = {
             usr.name = new_name;
 
             //Print user feedback
-            printAlert(game_obj.id, `You have changed the name of your country from the **${old_name}** to the **${new_name}**.`);
+            if (!do_not_display)
+              printAlert(game_obj.id, `You have changed the name of your country from the **${old_name}** to **${new_name}**.`);
+            if (is_vassal)
+              return [true, `You have successfully renamed your vassal from **${old_name} to **${new_name}**`];
           } else {
-            printError(game_obj.id, `There already exists a country by the name of **${parseString(new_country_name)}**! Try changing your name to something else instead.`);
+            if (!do_not_display)
+              printError(game_obj.id, `There already exists a country by the name of **${parseString(new_country_name)}**! Try changing your name to something else instead.`);
+            if (is_vassal)
+              return [false, `A country by the name of your vassal's proposed name already exists! Please try another name.`];
           }
         } else {
-          printError(game_obj.id, `The new name of your country, **${parseString(new_country_name)}**, must be less than **100** characters! Its current proposed length is **${parseNumber(parseString(new_country_name).length)}**.`);
+          if (!do_not_display)
+            printError(game_obj.id, `The new name of your country, **${parseString(new_country_name)}**, must be less than **100** characters! Its current proposed length is **${parseNumber(parseString(new_country_name).length)}**.`);
+          if (is_vassal)
+            return [false, `The proposed name of your vassal must be shorter than **100** characters!`];
         }
       } else {
-        printError(game_obj.id, `Your vassal overlord has issued a decree stating the name of their colony! Try to request a licence of change from your overlord before attempting to change your name again. Further acts of rebellion will not be tolerated!`);
+        if (!do_not_display)
+          printError(game_obj.id, `Your vassal overlord has issued a decree stating the name of their colony! Try to request a licence of change from your overlord before attempting to change your name again. Further acts of rebellion will not be tolerated!`);
+        return [false, `Your vassal overlord has barred any changes to the name of your country!`];
       }
     } else {
-      printError(game_obj.id, `Your name has been locked in place by moderator action due to prior abuses.`);
+      if (!do_not_display)
+        printError(game_obj.id, `Your name has been locked in place by moderator action due to prior abuses.`);
+      return [false, `This country's name was locked into place by moderator action.`];
     }
   }
 };
