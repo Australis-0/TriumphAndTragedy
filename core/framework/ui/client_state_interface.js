@@ -1,5 +1,5 @@
 module.exports = {
-  closeClientState: function (arg0_user, arg1_client_state) { //[WIP] - Redirect to diplomacy menu instead of country interface
+  closeClientState: function (arg0_user, arg1_client_state) {
     //Convert from parameters
     var user_id = arg0_user;
     var client_obj = arg1_client_state;
@@ -10,8 +10,8 @@ module.exports = {
 
     //Close UI
     removeControlPanel(game_obj.id);
-    printStats(user_id);
-    game_obj.page = "country_interface";
+    printDiplomacy(user_id);
+    game_obj.page = "diplomacy";
 
     //Delete map file
     try {
@@ -430,11 +430,53 @@ module.exports = {
     module.exports.initialiseClientStateScreen(user_id, client_obj);
   },
 
-  printClientStateProposals: function (arg0_user) { //[WIP]
+  printClientStateProposals: function (arg0_user) {
+    //Convert from parameters
+    var user_id = arg0_user;
 
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var game_obj = getGameObject(user_id);
+    var usr = main.users[actual_id];
+
+    var all_client_states = Object.keys(usr.client_states);
+
+    //Declare proposals_string
+    var proposals_string = [];
+
+    //Format embed
+    if (all_client_states.length > 0) {
+      proposals_string.push(`Name | Capital | Provinces`);
+      proposals_string.push("");
+      proposals_string.push(config.localisation.divider);
+      proposals_string.push("");
+
+      //Iterate through all client states and push to proposals_string
+      for (var i = 0; i < all_client_states.length; i++) {
+        var local_client_state = usr.client_states[all_client_states[i]];
+
+        proposals_string.push(`**${local_client_state.name}** - ${(local_client_state.capital_id) ? main.provinces[local_client_state.capital_id].name : "_None_"} | ${parseNumber(local_client_state.provinces.length)}`);
+        proposals_string.push(`- **[Edit ${local_client_state.name}]**`);
+      }
+    } else {
+      proposals_string.push(`_You currently have no proposals to form new client states._`);
+    }
+
+    //Return statement
+    return splitEmbed(proposals_string, {
+      title: "[Back] | Client State Proposal List:",
+      description: [
+        `**[Delete Client State]** | **[Edit Client State]** | **[Release Client State]**`,
+        "",
+        config.localisation.divider,
+        ""
+      ],
+      title_pages: true,
+      fixed_width: true
+    });
   },
 
-  releaseClientState: function (arg0_user, arg1_client_state) { //[WIP]
+  releaseClientState: function (arg0_user, arg1_client_state) { //[WIP] - Make sure client states cannot be released when being justified on or when at war
 
   },
 
