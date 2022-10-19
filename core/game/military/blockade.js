@@ -33,7 +33,7 @@ module.exports = {
                   army_obj.is_blockading = true;
 
                   //Print user feedback
-                  printAlert(game_obj.id, `You have assigvned the **${army_obj.name}** to reinforce the blockade on **${ot_user.name}**.`);
+                  printAlert(game_obj.id, `You have assigned the **${army_obj.name}** to reinforce the blockade on **${ot_user.name}**.`);
                 } else {
                   printError(game_obj.id, `The **${army_obj.name}** is still in recovery from a previous blockade! Wait **${parseNumber(army_obj.blockade_recovery_turns)}** more turn(s) before trying to implement a blockade with this army.`)
                 }

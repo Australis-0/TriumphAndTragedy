@@ -1,5 +1,6 @@
 backups/*
 .installation/PATH
+map/
 node_modules/
 database.js
 settings.js

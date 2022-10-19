@@ -26,21 +26,25 @@ module.exports = {
 
       if (!is_being_blockaded_by_own_forces) {
         if (army_obj) {
-          if (returnSafeNumber(army_obj.challenged_this_turn) <= config.defines.combat.blockade_challenge_limit) {
-            //Increment how much the army in question has challenged blockades this turn
-            army_obj.challenged_this_turn = (army_obj.challenged_this_turn) ?
-              army_obj.challenged_this_turn + 1 :
-              1;
+          if (!army_obj.is_blockading) {
+            if (returnSafeNumber(army_obj.challenged_this_turn) <= config.defines.combat.blockade_challenge_limit) {
+              //Increment how much the army in question has challenged blockades this turn
+              army_obj.challenged_this_turn = (army_obj.challenged_this_turn) ?
+                army_obj.challenged_this_turn + 1 :
+                1;
 
-            var random_navy = randomElement(blockade_obj.fleets);
+              var random_navy = randomElement(blockade_obj.fleets);
 
-            //Initialise battle
-            initialiseBattle(actual_id, army_obj, random_navy.id, main.users[random_navy.id].armies[random_navy.fleet_id]);
+              //Initialise battle
+              initialiseBattle(actual_id, army_obj, random_navy.id, main.users[random_navy.id].armies[random_navy.fleet_id]);
 
-            //Print user feedback
-            printAlert(game_obj.id, `You have decided to challenge the blockade imposed on **${ot_user.name}** ..`);
+              //Print user feedback
+              printAlert(game_obj.id, `You have decided to challenge the blockade imposed on **${ot_user.name}** ..`);
+            } else {
+              printError(game_obj.id, `You can only challenge a blockade with the same fleet for up to **${parseNumber(config.defines.combat.blockade_challenge_limit)}** times per turn! Wait until next turn to challenge more blockades with this fleet.`);
+            }
           } else {
-            printError(game_obj.id, `You can only challenge a blockade with the same fleet for up to **${parseNumber(config.defines.combat.blockade_challenge_limit)}** times per turn! Wait until next turn to challenge more blockades with this fleet.`);
+            printError(game_obj.id, `**${army_obj.name}** is currently blockading someone! Withdraw it from an active blockade first before using it to challenge someone.`);
           }
         } else {
           printError(game_obj.id, `The fleet you have specified, the **${army_name}**, could not be found!`);

@@ -46,18 +46,14 @@ module.exports = {
 
       //Add provinces to client_obj.provinces if no errors are detected and shade in provinces on the map
       if (neutral_provinces.length + nonexistent_provinces.length + occupied_provinces.length + redundant_provinces.length == 0) {
-        for (var i = 0; i < all_provinces.length; i++) {
+        for (var i = 0; i < all_provinces.length; i++)
           client_obj.provinces.push(all_provinces[i].trim());
-
-          //Shade in province
-          setProvinceColour(map_file, all_provinces[i].trim(), client_obj.colour);
-        }
 
         //Print alert
         printAlert(game_obj.id, `${config.icons.checkmark} You have successfully requested that the provinces of **${all_provinces.join(", ")}** be granted to the new client state of **${client_obj.name}**.`);
 
         //Go back to the client state menu
-        module.exports.modifyPeaceTreaty(user_id, client_obj, true);
+        module.exports.modifyClientState(user_id, client_obj, true);
 
         module.exports.initialiseModifyClientState(user_id, client_obj);
         module.exports.initialiseClientStateScreen(user_id, client_obj);
@@ -282,7 +278,7 @@ module.exports = {
         printAlert(game_obj.id, `${config.icons.checkmark} You have successfully removed **${parseNumber(successfully_removed)}** provinces from the control of **${client_obj.name}**.`);
 
         //Go back to the client state menu
-        module.exports.modifyPeaceTreaty(user_id, client_obj, true);
+        module.exports.modifyClientState(user_id, client_obj, true);
 
         module.exports.initialiseModifyClientState(user_id, client_obj);
         module.exports.initialiseClientStateScreen(user_id, client_obj);

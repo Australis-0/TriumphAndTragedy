@@ -36,13 +36,13 @@ module.exports = {
 
           //Remove fleet from array
           if (blockade_index[1] != -1) {
-            var blockaded_user = JSON.parse(JSON.stringify(main.users[blockade_index[0].id]));
+            var blockaded_user = main.users[blockade_index[0].id];
 
             //Splice from blockade
-            blockade_index[0].fleets = blockade_index[0].fleets.splice(blockade_index[1], 1);
+            blockaded_user.blockaded.fleets.splice(blockade_index[1], 1);
 
             //Print user feedback
-            if (blockade_index[0].fleets.length > 0) {
+            if (blockaded_user.blockaded.fleets.length > 0) {
               if (!do_not_display)
                 printAlert(game_obj.id, `You have withdrawn the **${army_obj.name}** from the blockade on **${blockaded_user.name}**.`);
             } else {

@@ -138,9 +138,9 @@ module.exports = {
         var submarine_string = (army_power.pure_submarines) ?
           ` | **[Convoy Raid]** | **[Harbour Raid]** | **[Torpedo Fleet]**` :
           "";
-        (army_obj.is_blockading) ?
+        (!army_obj.is_blockading) ?
           army_string.push(`**[Blockade]** | **[Challenge Blockade]** ${submarine_string}`) :
-          army_string.push(`**[Challenge Blockade]** | **[Lift Blockade]** ${submarine_string}`)
+          army_string.push(`**[Lift Blockade]** ${submarine_string}`)
       } else if (army_obj.type == "air") {
         army_string.push(`**[Merge Army]** | **[Move]** | **[Air Raid]**`);
       }

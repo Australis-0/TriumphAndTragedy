@@ -1621,8 +1621,9 @@ module.exports = {
             initialiseHarbourRaid(user_id);
 
           //[Lift Blockade]
-          if (input == "lift blockade")
-            initialiseLiftBlockade(user_id);
+          if (!game_obj.page.startsWith("army_viewer_"))
+            if (input == "lift blockade")
+              initialiseLiftBlockade(user_id);
 
           //[Merge Army]
           if (input == "merge army")

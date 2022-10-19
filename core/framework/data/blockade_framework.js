@@ -40,7 +40,7 @@ module.exports = {
 
                   //If users are not already at war, grant a theft CB to the other user; print to news
                   if (!at_war) {
-                    ot_user.casus_belli.push({
+                    ot_user.diplomacy.casus_belli.push({
                       type: "theft",
                       target: actual_id,
 
@@ -49,15 +49,15 @@ module.exports = {
                     usr.modifiers.infamy += config.defines.diplomacy.peacetime_blockade_penalty;
                   }
 
-                  return [true, `You have instituted a blockade on **${ot_user.name}**. They may challenge it at any time by typing **[Challenge Blockade]**.`];
+                  return [true, `You have instituted a blockade on **${usr.name}**. They may challenge it at any time by typing **[Challenge Blockade]**.`];
                 } else {
                   return [false, `Your people haven't even heard of the concept of a blockade before, let alone of how to implement it on someone else!`];
                 }
               } else {
-                return [false, `**${ot_user.name}** has been blockaded too recently for you to carry out a blockade on them! Wait **${parseNumber(blockade_obj.blockaded.blockade_cooldown)}** more turn(s) before attempting to carry out another blockade on them.`];
+                return [false, `**${usr.name}** has been blockaded too recently for you to carry out a blockade on them! Wait **${parseNumber(blockade_obj.blockaded.blockade_cooldown)}** more turn(s) before attempting to carry out another blockade on them.`];
               }
             } else {
-              return [false, `The **${fleet_name}** is still recovering from its recent deployment! Wait **${parseNumber(army_obj.blockade_recovery_turns)}** more turn(s) before trying to blockade **${ot_user.name}** with this fleet.`];
+              return [false, `The **${fleet_name}** is still recovering from its recent deployment! Wait **${parseNumber(army_obj.blockade_recovery_turns)}** more turn(s) before trying to blockade **${usr.name}** with this fleet.`];
             }
           } else {
             return [false, `Only ships can carry out a blockade!`];
