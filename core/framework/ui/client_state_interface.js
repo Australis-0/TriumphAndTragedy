@@ -1,5 +1,49 @@
 module.exports = {
-  initialiseAddProvinces: function (arg0_user, arg1_client_state) {
+  closeClientState: function (arg0_user, arg1_client_state) { //[WIP] - Redirect to diplomacy menu instead of country interface
+    //Convert from parameters
+    var user_id = arg0_user;
+    var client_obj = arg1_client_state;
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var game_obj = getGameObject(user_id);
+
+    //Close UI
+    removeControlPanel(game_obj.id);
+    printStats(user_id);
+    game_obj.page = "country_interface";
+
+    //Delete map file
+    try {
+      fs.unlinkSync(`./map/${client_obj.id}_client_state`);
+    } catch {}
+  },
+
+  deleteClientState: function (arg0_user, arg1_client_state) {
+    //Convert from parameters
+    var user_id = arg0_user;
+    var client_obj = arg1_client_state;
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var game_obj = getGameObject(user_id);
+    var usr = main.users[actual_id];
+
+    //Deep copy client_obj for preservation
+    var old_client_obj = JSON.parse(JSON.stringify(client_obj));
+
+    //Delete client state
+    deleteCountry(client_obj.id);
+    delete usr.client_states[client_obj.id];
+
+    //Print user feedback
+    printAlert(game_obj.id, `You have successfully shelved the prospects of **${old_client_obj.name}** as a viable state.`);
+
+    //Close client state UI
+    module.exports.closeClientState(user_id, old_client_obj.id);
+  },
+
+  initialiseClientStateAddProvinces: function (arg0_user, arg1_client_state) {
     //Convert from parameters
     var user_id = arg0_user;
     var client_obj = arg1_client_state;
@@ -86,162 +130,7 @@ module.exports = {
     });
   },
 
-  initialiseCreateClientState: function (arg0_user) {
-    //Convert from parameters
-    var user_id = arg0_user;
-
-    //Declare local instance variables
-    var actual_id = main.global.user_map[user_id];
-    var game_obj = getGameObject(user_id);
-    var usr = main.users[actual_id];
-
-    //Initialise visual prompt asking for name
-    visualPrompt(game_obj.alert_embed, user_id, {
-      title: `Create A New Client State:`,
-      prompts: [
-        [`What would you like to name your new client state?`, "string"]
-      ]
-    },
-    function (arg) {
-      //Create new country object with that name
-      var client_state_obj = createClientState(client_state_id, arg[0]);
-
-      //Check to make sure name was valid
-      if (client_state_obj) {
-        var client_state_id = client_state_obj[0].id;
-
-        //Set it as a vassal
-        createVassal(actual_id, {
-          target: client_state_id
-        });
-
-        //Call initialiseClientStateScreen()
-        module.exports.initialiseClientStateScreen(user_id);
-      } else {
-        printError(game_obj.id, `The name you have specified was already taken or otherwise invalid!`);
-
-        setTimeout(function(){
-          module.exports.initialiseCreateClientState(user_id);
-        }, 3000);
-      }
-    });
-  },
-
-  initialiseClientStateScreen: function (arg0_user, arg1_client_state) { //[WIP]
-    //Convert from parameters
-    var user_id = arg0_user;
-    var client_obj = arg1_client_state;
-
-    //Declare local instance variables
-    var actual_id = main.global.user_map[user_id];
-    var embed_list = [];
-    var game_obj = getGameObject(user_id);
-    var usr = main.users[actual_id];
-
-    //Format client_string
-    var client_string = [];
-
-    //Push name
-    client_string.push(`${config.icons.globe} Country: **${client_obj.name}**`);
-    client_string.push(`${config.icons.old_scroll} Colour: **${client_obj.colour.join(", ")}**`);
-    client_string.push(`${config.icons.provinces} Provinces: **${parseNumber(client_obj.provinces.length)}**`);
-    client_string.push("");
-    client_string.push(config.localisation.divider);
-    client_string.push("");
-    client_string.push(`- **[Add Provinces]**`);
-    client_string.push(`- **[Remove Provinces]**`);
-    client_string.push("");
-    client_string.push(`- **[Set Colour]**`);
-    client_string.push(`- **[Set Flag]**`);
-    client_string.push(`- **[Set Name]**`);
-
-    //Format province_list_string
-    var cede_province_embeds = [];
-    var cede_provinces = client_obj.provinces.map(Number)
-      .sort(function(a, b) { return a - b }); //Convert string to sorted int array
-    var province_list_string = [];
-
-    //Push province list to a separate page [WIP]
-    province_list_string.push(`**Province Holdings:**`);
-    province_list_string.push(config.localisation.divider);
-    province_list_string.push("");
-
-    //Display provinces being ceded
-    if (cede_provinces.length > 0) {
-      province_list_string.push(`We currently plan on ceding the following provinces to **${client_obj.name}**:`);
-      province_list_string.push("");
-      province_list_string.push(config.localisation.divider);
-      province_list_string.push("");
-
-      for (var i = 0; i - 5 < cede_provinces.length; i += 5) {
-        var local_cede_string = [];
-
-        for (var x = 0; x < 5; x++)
-          if (cede_provinces[i*5 + x])
-            local_cede_string.push(`**${cede_provinces[i*5 + x]}**`)
-
-        //Push to province_list_string
-        province_list_string.push(`- ${cede_provinces.join(", ")}`);
-      }
-    } else {
-      province_list_string.push(`_We are not currently ceding any provinces to this nation._`);
-      province_list_string.push("");
-      province_list_string.push(`Client states cannot be formed without any provinces! Type **[Add Provinces]** to give provinces to this Client State.`);
-    }
-
-    cede_province_embeds = splitEmbed(local_cede_string, {
-      title: `Province Holdings for **${client_obj.name}**:`,
-      title_pages: true,
-      fixed_width: true
-    });
-
-    //Declare client_stats embed
-    const client_stats_embed = new Discord.MessageEmbed()
-      .setColor(RGBToHex(...client_obj.colour))
-      .setTitle(`**Client State Overview:**`)
-      .setThumbnail(client_obj.flag)
-      .setDescription(client_string.join("\n"));
-
-    embed_list = [client_stats_embed];
-
-    //Add cede_province_embeds
-    for (var i = 0; i < cede_province_embeds.length; i++)
-      embed_list.push(cede_province_embeds[i]);
-
-    //Initialise 1-page menu showing client state properties
-    createPageMenu(game_obj.alert_embed, {
-      embed_pages: embed_list,
-      fixed_width: true,
-      user: user_id
-    });
-  },
-
-  initialiseModifyClientState: function (arg0_user, arg1_client_state) { //[WIP]
-    //Convert from parameters
-    var user_id = arg0_user;
-    var client_obj = arg1_client_state;
-
-    //Declare local instance variables
-    var actual_id = main.global.user_map[user_id];
-    var game_obj = getGameObject(user_id);
-    var usr = main.users[actual_id];
-
-    //Create invisible visualPrompt()
-    visualPrompt(game_obj.alert_embed, user_id, {
-      title: `Editing the Client State of **${client_obj.name}**:`,
-      do_not_cancel: true,
-      do_not_display: true,
-
-      prompts: [
-        [`Which of the above actions would you like to take?`, "string"]
-      ]
-    },
-    function (arg) {
-
-    });
-  },
-
-  initialiseRemoveProvinces: function (arg0_user, arg1_client_state) {
+  initialiseClientStateRemoveProvinces: function (arg0_user, arg1_client_state) {
     //Convert from parameters
     var user_id = arg0_user;
     var client_obj = arg1_client_state;
@@ -302,6 +191,192 @@ module.exports = {
     });
   },
 
+  initialiseClientStateScreen: function (arg0_user, arg1_client_state) {
+    //Convert from parameters
+    var user_id = arg0_user;
+    var client_obj = arg1_client_state;
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var embed_list = [];
+    var game_obj = getGameObject(user_id);
+    var usr = main.users[actual_id];
+
+    //Format client_string
+    var client_string = [];
+
+    //Push name
+    client_string.push(`${config.icons.globe} Country: **${client_obj.name}**`);
+    client_string.push("");
+    client_string.push(`${config.icons.political_capital} Capital City: ${(client_obj.capital_id) ? main.provinces[client_obj.capital_id].name : "None"}`);
+    client_string.push(`${config.icons.old_scroll} Colour: **${client_obj.colour.join(", ")}**`);
+    client_string.push(`${config.icons.provinces} Provinces: **${parseNumber(client_obj.provinces.length)}**`);
+    client_string.push("");
+    client_string.push(config.localisation.divider);
+    client_string.push("");
+    client_string.push(`- **[Add Provinces]**`);
+    client_string.push(`- **[Remove Provinces]**`);
+    client_string.push("");
+    client_string.push(`- **[Set Colour]**`);
+    client_string.push(`- **[Set Flag]**`);
+    client_string.push(`- **[Set Name]**`);
+    client_string.push("");
+    client_string.push(`- **[Delete Client State]**`);
+    client_string.push(`- **[Release Client State]**`);
+
+    //Format province_list_string
+    var cede_province_embeds = [];
+    var cede_provinces = client_obj.provinces.map(Number)
+      .sort(function(a, b) { return a - b }); //Convert string to sorted int array
+    var province_list_string = [];
+
+    //Push province list to a separate page [WIP]
+    province_list_string.push(`**Province Holdings:**`);
+    province_list_string.push(config.localisation.divider);
+    province_list_string.push("");
+
+    //Display provinces being ceded
+    if (cede_provinces.length > 0) {
+      province_list_string.push(`We currently plan on ceding the following provinces to **${client_obj.name}**:`);
+      province_list_string.push("");
+      province_list_string.push(config.localisation.divider);
+      province_list_string.push("");
+
+      for (var i = 0; i - 5 < cede_provinces.length; i += 5) {
+        var local_cede_string = [];
+
+        for (var x = 0; x < 5; x++)
+          if (cede_provinces[i*5 + x])
+            local_cede_string.push(`**${cede_provinces[i*5 + x]}**`)
+
+        //Push to province_list_string
+        province_list_string.push(`- ${cede_provinces.join(", ")}`);
+      }
+    } else {
+      province_list_string.push(`_We are not currently ceding any provinces to this nation._`);
+      province_list_string.push("");
+      province_list_string.push(`Client states cannot be formed without any provinces! Type **[Add Provinces]** to give provinces to this Client State.`);
+    }
+
+    cede_province_embeds = splitEmbed(local_cede_string, {
+      title: `Province Holdings for **${client_obj.name}**:`,
+      title_pages: true,
+      fixed_width: true
+    });
+
+    //Declare client_stats embed
+    const client_stats_embed = new Discord.MessageEmbed()
+      .setColor(RGBToHex(...client_obj.colour))
+      .setTitle(`[Back] | **Client State Overview:**`)
+      .setThumbnail(client_obj.flag)
+      .setDescription(client_string.join("\n"));
+
+    embed_list = [client_stats_embed];
+
+    //Add cede_province_embeds
+    for (var i = 0; i < cede_province_embeds.length; i++)
+      embed_list.push(cede_province_embeds[i]);
+
+    //Initialise 1-page menu showing client state properties
+    createPageMenu(game_obj.alert_embed, {
+      embed_pages: embed_list,
+      fixed_width: true,
+      user: user_id
+    });
+  },
+
+  initialiseCreateClientState: function (arg0_user) {
+    //Convert from parameters
+    var user_id = arg0_user;
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var game_obj = getGameObject(user_id);
+    var usr = main.users[actual_id];
+
+    //Initialise visual prompt asking for name
+    visualPrompt(game_obj.alert_embed, user_id, {
+      title: `Create A New Client State:`,
+      prompts: [
+        [`What would you like to name your new client state?`, "string"]
+      ]
+    },
+    function (arg) {
+      //Create new country object with that name
+      var client_state_obj = createClientState(client_state_id, arg[0]);
+
+      //Check to make sure name was valid
+      if (client_state_obj) {
+        var client_state_id = client_state_obj[0].id;
+
+        //Set it as a vassal
+        createVassal(actual_id, {
+          target: client_state_id
+        });
+
+        //Call initialiseClientStateScreen()
+        module.exports.initialiseClientStateScreen(user_id);
+      } else {
+        printError(game_obj.id, `The name you have specified was already taken or otherwise invalid!`);
+
+        setTimeout(function(){
+          module.exports.initialiseCreateClientState(user_id);
+        }, 3000);
+      }
+    });
+  },
+
+  initialiseModifyClientState: function (arg0_user, arg1_client_state) { //[WIP] - Add a way to save client states and release them
+    //Convert from parameters
+    var user_id = arg0_user;
+    var client_obj = arg1_client_state;
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var game_obj = getGameObject(user_id);
+    var usr = main.users[actual_id];
+
+    //Create invisible visualPrompt()
+    visualPrompt(game_obj.alert_embed, user_id, {
+      title: `Editing the Client State of **${client_obj.name}**:`,
+      do_not_cancel: true,
+      do_not_display: true,
+
+      prompts: [
+        [`Which of the above actions would you like to take?`, "string"]
+      ]
+    },
+    function (arg) {
+      switch (arg[0]) {
+        case "add provinces":
+          initialiseClientStateAddProvinces(user_id, client_obj);
+
+          break;
+        case "delete client state":
+          deleteClientState(user_id, client_obj);
+
+          break;
+        case "remove provinces":
+          initialiseClientStateRemoveProvinces(user_id, client_obj);
+
+          break;
+        case "set color":
+        case "set colour":
+          setClientStateColour(user_id, client_obj);
+
+          break;
+        case "set flag":
+          setClientStateFlag(user_id, client_obj);
+
+          break;
+        case "set name":
+          setClientStateName(user_id, client_obj);
+
+          break;
+      }
+    });
+  },
+
   modifyClientState: function (arg0_user, arg1_client_state, arg2_change_image) {
     //Convert from parameters
     var user_id = arg0_user;
@@ -355,6 +430,14 @@ module.exports = {
     module.exports.initialiseClientStateScreen(user_id, client_obj);
   },
 
+  printClientStateProposals: function (arg0_user) { //[WIP]
+
+  },
+
+  releaseClientState: function (arg0_user, arg1_client_state) { //[WIP]
+
+  },
+
   setClientStateCapital: function (arg0_user, arg1_client_state) {
     //Convert from parameters
     var user_id = arg0_user;
@@ -400,7 +483,6 @@ module.exports = {
             embed_pages: printCities(game_obj.user),
             user: game_obj.user
           });
-
           return true;
 
           break;
