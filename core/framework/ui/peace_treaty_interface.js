@@ -1704,7 +1704,7 @@ module.exports = {
 
     setTimeout(function(){
       (!change_image) ?
-        initialiseMapViewer(game_obj.id, map_file) :
+        initialiseMapViewer(game_obj.id, map_file, true) :
         changeImage(game_obj.id, map_file);
     }, 5000);
 

@@ -99,10 +99,12 @@ module.exports = {
         printAlert(game_obj.id, `${config.icons.checkmark} You have successfully requested that the provinces of **${all_provinces.join(", ")}** be granted to the new client state of **${client_obj.name}**.`);
 
         //Go back to the client state menu
-        module.exports.modifyClientState(user_id, client_obj, true);
+        setTimeout(function(){
+          module.exports.modifyClientState(user_id, client_obj, true);
 
-        module.exports.initialiseModifyClientState(user_id, client_obj);
-        module.exports.initialiseClientStateScreen(user_id, client_obj);
+          module.exports.initialiseModifyClientState(user_id, client_obj);
+          module.exports.initialiseClientStateScreen(user_id, client_obj);
+        }, 3000);
       } else {
         //Print error
         printError(game_obj.id, `Your petition to add provinces on the behalf of your client state of **${local_user.name}** failed for the following reasons:${(neutral_provinces.length > 0) ? `\n- The following provinces don't even belong to you! ${neutral_provinces.join(", ")}` : ``}${(nonexistent_provinces.length > 0) ? `\n- Your cartographers are currently puzzling over your maps, as the following provinces don't even exist! ${nonexistent_provinces.join(", ")}` : ``}${(occupied_provinces.length > 0) ? `\n- You can't request occupied provinces to join your client state! The following provinces are currently occupied by the enemy: ${occupied_provinces.join(", ")}` : ``}${(redundant_provinces.length > 0) ? `\n- The following provinces are already being given to **${client_obj.name}**! ${redundant_provinces.join(", ")}` : ``}`);
@@ -169,10 +171,12 @@ module.exports = {
         printAlert(game_obj.id, `${config.icons.checkmark} You have successfully removed **${parseNumber(successfully_removed)}** provinces from the control of **${client_obj.name}**.`);
 
         //Go back to the client state menu
-        module.exports.modifyClientState(user_id, client_obj, true);
+        setTimeout(function(){
+          module.exports.modifyClientState(user_id, client_obj, true);
 
-        module.exports.initialiseModifyClientState(user_id, client_obj);
-        module.exports.initialiseClientStateScreen(user_id, client_obj);
+          module.exports.initialiseModifyClientState(user_id, client_obj);
+          module.exports.initialiseClientStateScreen(user_id, client_obj);
+        }, 3000);
       } else {
         printError(game_obj.id, `All of the provinces you have specified were either invalid or simply didn't exist!`);
 
@@ -219,6 +223,7 @@ module.exports = {
     client_string.push(`- **[Add Provinces]**`);
     client_string.push(`- **[Remove Provinces]**`);
     client_string.push("");
+    client_string.push(`- **[Set Capital]**`);
     client_string.push(`- **[Set Colour]**`);
     client_string.push(`- **[Set Flag]**`);
     client_string.push(`- **[Set Name]**`);
@@ -260,7 +265,7 @@ module.exports = {
       province_list_string.push(`Client states cannot be formed without any provinces! Type **[Add Provinces]** to give provinces to this Client State.`);
     }
 
-    cede_province_embeds = splitEmbed(local_cede_string, {
+    cede_province_embeds = splitEmbed(province_list_string, {
       title: `Province Holdings for **${client_obj.name}**:`,
       title_pages: true,
       fixed_width: true
@@ -271,7 +276,8 @@ module.exports = {
       .setColor(RGBToHex(...client_obj.colour))
       .setTitle(`[Back] | **Client State Overview:**`)
       .setThumbnail(client_obj.flag)
-      .setDescription(client_string.join("\n"));
+      .setDescription(client_string.join("\n"))
+      .setImage("https://cdn.discordapp.com/attachments/722997700391338046/736141424315203634/margin.png");
 
     embed_list = [client_stats_embed];
 
@@ -305,7 +311,7 @@ module.exports = {
     },
     function (arg) {
       //Create new country object with that name
-      var client_state_obj = createClientState(client_state_id, arg[0]);
+      var client_state_obj = createClientState(actual_id, arg[0]);
 
       //Check to make sure name was valid
       if (client_state_obj) {
@@ -317,7 +323,7 @@ module.exports = {
         });
 
         //Call initialiseClientStateScreen()
-        module.exports.initialiseClientStateScreen(user_id);
+        module.exports.modifyClientState(user_id, client_state_obj[1]);
       } else {
         printError(game_obj.id, `The name you have specified was already taken or otherwise invalid!`);
 
@@ -346,6 +352,14 @@ module.exports = {
     },
     function (arg) {
       module.exports.deleteClientState(user_id, arg[0], true);
+
+      //Update client_state_proposals if user is currently viewing it
+      if (game_obj.page == "client_state_proposals")
+        createPageMenu(game_obj.middle_embed, {
+          embed_pages: module.exports.printClientStateProposals(user_id),
+          page: main.interfaces[game_obj.middle_embed.id].page,
+          user: game_obj.user
+        });
     },
     function (arg) {
       switch (arg) {
@@ -443,6 +457,10 @@ module.exports = {
           module.exports.initialiseClientStateRemoveProvinces(user_id, client_obj);
 
           break;
+        case "set capital":
+          module.exports.setClientStateCapital(user_id, client_obj);
+
+          break;
         case "set color":
         case "set colour":
           module.exports.setClientStateColour(user_id, client_obj);
@@ -482,6 +500,14 @@ module.exports = {
       //Check if client_obj actually exists
       if (client_obj) {
         module.exports.releaseClientState(user_id, client_obj, true);
+
+        //Update client_state_proposals if user is currently viewing it
+        if (game_obj.page == "client_state_proposals")
+          createPageMenu(game_obj.middle_embed, {
+            embed_pages: module.exports.printClientStateProposals(user_id),
+            page: main.interfaces[game_obj.middle_embed.id].page,
+            user: game_obj.user
+          });
       } else {
         printError(game_obj.id, `The client state proposal you have specified, **${arg[0]}**, turned out to be entirely nonexistent!\n\nType **[View Client State Proposals]** in your diplomacy menu for a full list.`);
       }
@@ -544,13 +570,15 @@ module.exports = {
 
     setTimeout(function(){
       (!change_image) ?
-        initialiseMapViewer(game_obj.id, map_file) :
+        initialiseMapViewer(game_obj.id, map_file, true) :
         changeImage(game_obj.id, map_file);
-    }, 5000);
+    }, 10000);
 
     //Visual interface using visualPrompt() before creating a page menu
-    module.exports.initialiseModifyClientState(user_id, client_obj);
-    module.exports.initialiseClientStateScreen(user_id, client_obj);
+    setTimeout(function(){
+      module.exports.initialiseModifyClientState(user_id, client_obj);
+      module.exports.initialiseClientStateScreen(user_id, client_obj);
+    }, 3000);
   },
 
   printClientStateProposals: function (arg0_user) {
@@ -589,7 +617,7 @@ module.exports = {
     return splitEmbed(proposals_string, {
       title: "[Back] | Client State Proposal List:",
       description: [
-        `**[Delete Client State]** | **[Edit Client State]** | **[Release Client State]**`,
+        `**[Create Client State]** | **[Delete Client State]** | **[Edit Client State]** | **[Release Client State]**`,
         "",
         config.localisation.divider,
         ""
@@ -609,6 +637,7 @@ module.exports = {
     var actual_id = main.global.user_map[user_id];
     var game_obj = getGameObject(user_id);
     var ot_user = main.users[client_obj.id];
+    var reload_interface = false;
     var usr = main.users[actual_id];
 
     //Check if usr is currently being justified on or is at war
@@ -666,16 +695,26 @@ module.exports = {
             printAlert(game_obj.id, `You have successfully released the client state of **${client_obj.name}** under your control with **${parseNumber(client_obj.provinces.length)}** province(s).`);
           } else {
             printError(game_obj.id, `The capital of your client state, **${main.provinces[client_obj.capital_id].name}**, is not under its control! Please specify a different capital city for your client nation.`);
+            reload_interface = true;
           }
         } else {
           printError(game_obj.id, `You must set a capital city for **${client_obj.name}** before being able to release them!`);
+          reload_interface = true;
         }
       } else {
         printError(game_obj.id, `You cannot release client states whilst being justified on!`);
+        reload_interface = true;
       }
     } else {
       printError(game_obj.id, `You can't release client states whilst at war!`);
+      reload_interface = true;
     }
+
+    if (reload_interface)
+      setTimeout(function(){
+        module.exports.initialiseModifyClientState(user_id, client_obj);
+        module.exports.initialiseClientStateScreen(user_id, client_obj);
+      }, 3000);
   },
 
   setClientStateCapital: function (arg0_user, arg1_client_state) {
@@ -713,8 +752,10 @@ module.exports = {
       }
 
       //Go back to the main client state menu
-      module.exports.initialiseModifyClientState(user_id, client_obj);
-      module.exports.initialiseClientStateScreen(user_id, client_obj);
+      setTimeout(function(){
+        module.exports.initialiseModifyClientState(user_id, client_obj);
+        module.exports.initialiseClientStateScreen(user_id, client_obj);
+      }, 3000);
     },
     function (arg) {
       switch (arg) {
@@ -761,10 +802,12 @@ module.exports = {
       }
 
       //Go back to the main client state menu
-      module.exports.modifyClientState(user_id, client_obj, true);
+      setTimeout(function(){
+        module.exports.modifyClientState(user_id, client_obj, true);
 
-      module.exports.initialiseModifyClientState(user_id, client_obj);
-      module.exports.initialiseClientStateScreen(user_id, client_obj);
+        module.exports.initialiseModifyClientState(user_id, client_obj);
+        module.exports.initialiseClientStateScreen(user_id, client_obj);
+      }, 3000);
     });
   },
 
@@ -797,8 +840,10 @@ module.exports = {
       }
 
       //Go back to the main client state menu
-      module.exports.initialiseModifyClientState(user_id, client_obj);
-      module.exports.initialiseClientStateScreen(user_id, client_obj);
+      setTimeout(function(){
+        module.exports.initialiseModifyClientState(user_id, client_obj);
+        module.exports.initialiseClientStateScreen(user_id, client_obj);
+      }, 3000);
     });
   },
 
@@ -831,8 +876,10 @@ module.exports = {
       }
 
       //Go back to the main client state menu
-      module.exports.initialiseModifyClientState(user_id, client_obj);
-      module.exports.initialiseClientStateScreen(user_id, client_obj);
+      setTimeout(function(){
+        module.exports.initialiseModifyClientState(user_id, client_obj);
+        module.exports.initialiseClientStateScreen(user_id, client_obj);
+      }, 3000);
     });
   }
 };

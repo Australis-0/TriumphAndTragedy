@@ -38,6 +38,8 @@ module.exports = {
         provinces: []
       };
 
+      console.log(client_state);
+
       usr.client_states[client_state_id] = client_state;
 
       //Return statement
@@ -76,6 +78,7 @@ module.exports = {
     //Convert from parameters
     var user_id = arg0_user;
     var client_state = arg1_client_state.toLowerCase().trim();
+    var options = (arg2_options) ? arg2_options : {};
 
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];

@@ -959,6 +959,10 @@ module.exports = {
             game_obj.page = "diplomacy";
           }
 
+          //[Create Client State]
+          if (input == "create client state")
+            initialiseCreateClientState(user_id);
+
           //[Delete Client State]
           if (input == "delete client state")
             initialiseDeleteClientState(user_id);

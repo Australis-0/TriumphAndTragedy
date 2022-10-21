@@ -35,11 +35,12 @@ module.exports = {
     }
   },
 
-  initialiseMapViewer: function (arg0_game_id, arg1_map) {
+  initialiseMapViewer: function (arg0_game_id, arg1_map, arg2_hide_mapmodes) {
     //Convert from parameters
     var game_id = arg0_game_id;
     var game_obj = interfaces[game_id];
     var map = (arg1_map) ? arg1_map : "political";
+    var hide_mapmodes = arg2_hide_mapmodes;
 
     //Declare local instance variables
     var map_defines = config.defines.map;
@@ -86,7 +87,7 @@ module.exports = {
     map_obj.zoom = 1;
 
     //Add collector reactions
-    initialiseControlPanel(game_id, "map");
+    initialiseControlPanel(game_id, (hide_mapmodes) ? "map" : "special_map");
 
     returnCacheChannel().send({
       content: `${generateRandomID()}_${game_id}`,

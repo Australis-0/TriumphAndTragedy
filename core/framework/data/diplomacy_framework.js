@@ -208,7 +208,7 @@ module.exports = {
         if (local_user.diplomacy.vassals[actual_id]) {
           local_user.diplomacy.used_diplomatic_slots--;
 
-          module.exports.dissolveVassal(all_users[i], actual_id);
+          module.exports.dissolveVassal(actual_id);
         }
 
         //Wars

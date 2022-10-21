@@ -70,6 +70,9 @@ module.exports = {
       initUser(user_id);
       var usr = main.users[user_id];
 
+      //Automatically map the user ID of the initialiser
+      main.global.user_map[user_id] = user_id;
+
       //Set name of country
       usr.name = processed_country_name;
 

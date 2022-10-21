@@ -790,7 +790,7 @@ config.technology.economic_technology = {
     unlocks: {
       production_efficiency: 0.05,
       construction_speed: -0.10,
-      unlock_reform: "maximum_workhours",
+      unlock_reform: "workhours",
       obsolete_building: "mills"
     }
   },
