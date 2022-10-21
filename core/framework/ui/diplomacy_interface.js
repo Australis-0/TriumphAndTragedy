@@ -99,7 +99,9 @@ module.exports = {
     diplomacy_string.push("");
     diplomacy_string.push(config.localisation.divider);
     diplomacy_string.push("");
+    diplomacy_string.push(`- **[View Client State Proposals]**`);
     diplomacy_string.push(`- **[View Ledger]** | **[View Relations]**`);
+    diplomacy_string.push("");
     diplomacy_string.push(`- **[Cede Province]** | **[Allow Ceding]** | **[Deny Ceding]**`);
     if (Object.keys(usr.diplomacy.vassals).length > 0) {
       diplomacy_string.push("");

@@ -235,6 +235,15 @@ module.exports = {
               game_obj.page = "view_constructions";
 
               break;
+            case "client states":
+            case "client state proposals":
+              createPageMenu(game_obj.middle_embed, {
+                embed_pages: printClientStateProposals(user_id),
+                user: game_obj.user
+              });
+              game_obj.page = "client_state_proposals";
+
+              break;
             case "culture":
             case "cultures":
               createPageMenu(game_obj.middle_embed, {
@@ -940,6 +949,36 @@ module.exports = {
                 user: game_obj.user
               });
             });
+        }
+
+        if (game_obj.page == "client_state_proposals") {
+          //Button Handler
+          //[Back]
+          if (input == "back") {
+            printDiplomacy(user_id);
+            game_obj.page = "diplomacy";
+          }
+
+          //[Delete Client State]
+          if (input == "delete client state")
+            initialiseDeleteClientState(user_id);
+
+          //[Edit Client State]
+          if (input == "edit client state")
+            initialiseEditClientState(user_id);
+
+          //[Edit (Client State Name)]
+          if (input.startsWith("edit ") && input != "edit client state") {
+            var client_state_name = input.replace("edit ", "");
+            var client_state_obj = getClientState(user_id, client_state_name);
+
+            if (client_state_obj)
+              modifyClientState(user_id, client_state_obj);
+          }
+
+          //[Release Client State]
+          if (input == "release client state")
+            initialiseReleaseClientState(user_id);
         }
 
         if (game_obj.page == "diplomacy") {

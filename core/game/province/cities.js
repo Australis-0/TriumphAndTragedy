@@ -272,10 +272,12 @@ module.exports = {
     });
   },
 
-  moveCapital: function (arg0_user, arg1_city_name) {
+  moveCapital: function (arg0_user, arg1_city_name, arg2_force_move, arg3_do_not_display) {
     //Convert from parameters
     var user_id = arg0_user;
     var city_name = arg1_city_name;
+    var force_move = arg2_force_move;
+    var do_not_display = arg3_do_not_display;
 
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
@@ -285,12 +287,13 @@ module.exports = {
     var city_obj = getCity(city_name, { users: actual_id });
 
     if (city_obj) {
-      if (usr.modifiers.political_capital >= config.defines.politics.move_capital_cost) {
+      if (usr.modifiers.political_capital >= config.defines.politics.move_capital_cost || force_move) {
         var culture_obj = main.global.cultures[city_obj.culture];
 
         if (
           culture_obj.primary_culture.includes(actual_id) ||
-          culture_obj.accepted_cultures.includes(actual_id)
+          culture_obj.accepted_cultures.includes(actual_id) ||
+          force_move
         ) {
           //Get rid of old capital
           var all_cities = getCities(actual_id, {
@@ -306,36 +309,42 @@ module.exports = {
           //Set new capital and print feedback
           city_obj.city_type = "capital";
 
-          printAlert(game_obj.id, `You have successfully moved your capital to **${city_obj.name}** for **${config.defines.politics.move_capital_cost}** ${config.icons.political_capital} Political Capital.`);
+          if (!do_not_display)
+            printAlert(game_obj.id, `You have successfully moved your capital to **${city_obj.name}** for **${config.defines.politics.move_capital_cost}** ${config.icons.political_capital} Political Capital.`);
 
           //Update UIs
-          if (game_obj.page == "country_interface")
-            printStats(game_obj.user);
+          if (!do_not_display) {
+            if (game_obj.page == "country_interface")
+              printStats(game_obj.user);
 
-          if (game_obj.page == "economy")
-            printEconomy(game_obj.user);
+            if (game_obj.page == "economy")
+              printEconomy(game_obj.user);
 
-          if (game_obj.page == "provinces_list")
-            createPageMenu(game_obj.middle_embed, {
-              embed_pages: printProvinces(game_obj.user),
-              page: interfaces[game_obj.middle_embed.id].page,
-              user: game_obj.user
-            });
+            if (game_obj.page == "provinces_list")
+              createPageMenu(game_obj.middle_embed, {
+                embed_pages: printProvinces(game_obj.user),
+                page: interfaces[game_obj.middle_embed.id].page,
+                user: game_obj.user
+              });
 
-          if (game_obj.page == "cities_list")
-            createPageMenu(game_obj.middle_embed, {
-              embed_pages: printCities(game_obj.user),
-              page: interfaces[game_obj.middle_embed.id].page,
-              user: game_obj.user
-            });
+            if (game_obj.page == "cities_list")
+              createPageMenu(game_obj.middle_embed, {
+                embed_pages: printCities(game_obj.user),
+                page: interfaces[game_obj.middle_embed.id].page,
+                user: game_obj.user
+              });
+          }
         } else {
-          printError(game_obj.id, `**${city_obj.name}** must at least be of one of your accepted cultures before you can consider moving your capital there!`);
+          if (!do_not_display)
+            printError(game_obj.id, `**${city_obj.name}** must at least be of one of your accepted cultures before you can consider moving your capital there!`);
         }
       } else {
-        printError(game_obj.id, `You don't have enough ${config.icons.political_capital} Political Capital to move your capital city yet! You need **${parseNumber(config.defines.politics.move_capital_cost - usr.modifiers.political_capital)}** more.`);
+        if (!do_not_display)
+          printError(game_obj.id, `You don't have enough ${config.icons.political_capital} Political Capital to move your capital city yet! You need **${parseNumber(config.defines.politics.move_capital_cost - usr.modifiers.political_capital)}** more.`);
       }
     } else {
-      printError(game_obj.id, `You cannot move your capital to a city that doesn't exist!`);
+      if (!do_not_display)
+        printError(game_obj.id, `You cannot move your capital to a city that doesn't exist!`);
     }
   },
 

@@ -19,10 +19,11 @@ module.exports = {
     } catch {}
   },
 
-  deleteClientState: function (arg0_user, arg1_client_state) {
+  deleteClientState: function (arg0_user, arg1_client_state, arg2_force_delete) {
     //Convert from parameters
     var user_id = arg0_user;
     var client_obj = arg1_client_state;
+    var force_delete = arg2_force_delete;
 
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
@@ -40,7 +41,8 @@ module.exports = {
     printAlert(game_obj.id, `You have successfully shelved the prospects of **${old_client_obj.name}** as a viable state.`);
 
     //Close client state UI
-    module.exports.closeClientState(user_id, old_client_obj.id);
+    if (!force_delete)
+      module.exports.closeClientState(user_id, old_client_obj.id);
   },
 
   initialiseClientStateAddProvinces: function (arg0_user, arg1_client_state) {
@@ -326,7 +328,80 @@ module.exports = {
     });
   },
 
-  initialiseModifyClientState: function (arg0_user, arg1_client_state) { //[WIP] - Add a way to save client states and release them
+  initialiseDeleteClientState: function (arg0_user) {
+    //Convert from parameters
+    var user_id = arg0_user;
+
+    //Declare local instance variables
+    var actual_id = main.global.user[user_id];
+    var game_obj = getGameObject(user_id);
+    var usr = main.users[actual_id];
+
+    //Initialise visual prompt
+    visualPrompt(game_obj.alert_embed, user_id, {
+      title: `Delete Client State:`,
+      prompts: [
+        [`Which of your client states would you like to delete?\n\nType **[View Client States]** for a full list of your client state proposals.`, "string"]
+      ]
+    },
+    function (arg) {
+      module.exports.deleteClientState(user_id, arg[0], true);
+    },
+    function (arg) {
+      switch (arg) {
+        case "view client states":
+          createPageMenu(game_obj.middle_embed, {
+            embed_pages: printClientStateProposals(user_id),
+            user: game_obj.user
+          });
+          return true;
+
+          break;
+      }
+    });
+  },
+
+  initialiseEditClientState: function (arg0_user) {
+    //Convert from parameters
+    var user_id = arg0_user;
+
+    //Declare local instance variables
+    var actual_id = main.global.user[user_id];
+    var game_obj = getGameObject(user_id);
+    var usr = main.users[actual_id];
+
+    //Initialise visual prompt
+    visualPrompt(game_obj.alert_embed, user_id, {
+      title: `Edit Client State:`,
+      prompts: [
+        [`Which of your client states would you like to delete?\n\nType **[View Client States]** for a full list of your client state proposals.`, "string"]
+      ]
+    },
+    function (arg) {
+      var client_obj = getClientState(user_id, arg[0]);
+
+      //Check if client_obj actually exists
+      if (client_obj) {
+        module.exports.modifyClientState(user_id, client_obj);
+      } else {
+        printError(game_obj.id, `The client state proposal you have specified, **${arg[0]}**, turned out to be entirely nonexistent!\n\nType **[View Client State Proposals]** in your diplomacy menu for a full list.`);
+      }
+    },
+    function (arg) {
+      switch (arg) {
+        case "view client states":
+          createPageMenu(game_obj.middle_embed, {
+            embed_pages: printClientStateProposals(user_id),
+            user: game_obj.user
+          });
+          return true;
+
+          break;
+      }
+    });
+  },
+
+  initialiseModifyClientState: function (arg0_user, arg1_client_state) {
     //Convert from parameters
     var user_id = arg0_user;
     var client_obj = arg1_client_state;
@@ -349,28 +424,76 @@ module.exports = {
     function (arg) {
       switch (arg[0]) {
         case "add provinces":
-          initialiseClientStateAddProvinces(user_id, client_obj);
+          module.exports.initialiseClientStateAddProvinces(user_id, client_obj);
+
+          break;
+        case "back":
+          module.exports.closeClientState(user_id, client_obj);
 
           break;
         case "delete client state":
-          deleteClientState(user_id, client_obj);
+          module.exports.deleteClientState(user_id, client_obj);
+
+          break;
+        case "release client state":
+          module.exports.releaseClientState(user_id, client_obj);
 
           break;
         case "remove provinces":
-          initialiseClientStateRemoveProvinces(user_id, client_obj);
+          module.exports.initialiseClientStateRemoveProvinces(user_id, client_obj);
 
           break;
         case "set color":
         case "set colour":
-          setClientStateColour(user_id, client_obj);
+          module.exports.setClientStateColour(user_id, client_obj);
 
           break;
         case "set flag":
-          setClientStateFlag(user_id, client_obj);
+          module.exports.setClientStateFlag(user_id, client_obj);
 
           break;
         case "set name":
-          setClientStateName(user_id, client_obj);
+          module.exports.setClientStateName(user_id, client_obj);
+
+          break;
+      }
+    });
+  },
+
+  initialiseReleaseClientState: function (arg0_user) {
+    //Convert from parameters
+    var user_id = arg0_user;
+
+    //Declare local instance variables
+    var actual_id = main.global.user[user_id];
+    var game_obj = getGameObject(user_id);
+    var usr = main.users[actual_id];
+
+    //Initialise visual prompt
+    visualPrompt(game_obj.alert_embed, user_id, {
+      title: `Release Client State:`,
+      prompts: [
+        [`Which of your client states would you like to release?\n\nType **[View Client States]** for a full list of your client state proposals.`, "string"]
+      ]
+    },
+    function (arg) {
+      var client_obj = getClientState(user_id, arg[0]);
+
+      //Check if client_obj actually exists
+      if (client_obj) {
+        module.exports.releaseClientState(user_id, client_obj, true);
+      } else {
+        printError(game_obj.id, `The client state proposal you have specified, **${arg[0]}**, turned out to be entirely nonexistent!\n\nType **[View Client State Proposals]** in your diplomacy menu for a full list.`);
+      }
+    },
+    function (arg) {
+      switch (arg) {
+        case "view client states":
+          createPageMenu(game_obj.middle_embed, {
+            embed_pages: printClientStateProposals(user_id),
+            user: game_obj.user
+          });
+          return true;
 
           break;
       }
@@ -476,8 +599,83 @@ module.exports = {
     });
   },
 
-  releaseClientState: function (arg0_user, arg1_client_state) { //[WIP] - Make sure client states cannot be released when being justified on or when at war
+  releaseClientState: function (arg0_user, arg1_client_state, arg2_force_release) {
+    //Convert from parameters
+    var user_id = arg0_user;
+    var client_obj = JSON.parse(JSON.stringify(arg1_client_state));
+    var force_release = arg2_force_release;
 
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var game_obj = getGameObject(user_id);
+    var ot_user = main.users[client_obj.id];
+    var usr = main.users[actual_id];
+
+    //Check if usr is currently being justified on or is at war
+    if (!atWar(actual_id)) {
+      if (!isBeingJustifiedOn(actual_id)) {
+        //Check if client state has a capital
+        if (client_obj.capital_id) {
+          var capital_obj = main.provinces[client_obj.capital_id];
+          var culture_obj = main.global.cultures[capital_obj.culture];
+
+          //Remove all provinces that are not under the full control of the client state's owner
+          for (var i = client_obj.provinces.length - 1; i >= 0; i--) {
+            var local_province = main.provinces[client_obj.provinces[i]];
+
+            if (local_province.owner != actual_id)
+              client_obj.provinces.splice(i, 1);
+          }
+
+          //Check if the capital is actually in the client state's possession
+          if (client_obj.provinces.includes(client_obj.capital_id)) {
+            //Release client state
+            for (var i = 0; i < client_obj.provinces.length; i++)
+              try {
+                var local_province = main.provinces[client_obj.provinces[i]];
+
+                if (local_province.owner == actual_id && local_province.controller == actual_id) {
+                  //Transfer province
+                  transferProvince(actual_id, {
+                    province_id: client_obj.provinces[i],
+                    target: client_obj.id
+                  });
+                } else if (local_province.owner == actual_id) {
+                  //Set owner instead
+                  local_province.owner = client_obj.id;
+                }
+              } catch {}
+
+            //Set client state capital
+            moveCapital(client_obj.id, client_obj.capital_id, true, true);
+
+            //Set client state culture to culture of capital
+            culture_obj.primary_culture.push(client_obj.id);
+
+            ot_user.pops.accepted_culture = [culture_obj.id];
+            ot_user.pops.primary_culture = culture_obj.id;
+
+            //Close client state if open
+            if (!force_release)
+              module.exports.closeClientState(user_id, client_obj);
+
+            //Delete client_state object
+            delete usr.client_states[client_obj.id];
+
+            //Print user feedback
+            printAlert(game_obj.id, `You have successfully released the client state of **${client_obj.name}** under your control with **${parseNumber(client_obj.provinces.length)}** province(s).`);
+          } else {
+            printError(game_obj.id, `The capital of your client state, **${main.provinces[client_obj.capital_id].name}**, is not under its control! Please specify a different capital city for your client nation.`);
+          }
+        } else {
+          printError(game_obj.id, `You must set a capital city for **${client_obj.name}** before being able to release them!`);
+        }
+      } else {
+        printError(game_obj.id, `You cannot release client states whilst being justified on!`);
+      }
+    } else {
+      printError(game_obj.id, `You can't release client states whilst at war!`);
+    }
   },
 
   setClientStateCapital: function (arg0_user, arg1_client_state) {
