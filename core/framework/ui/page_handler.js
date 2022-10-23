@@ -1597,6 +1597,8 @@ module.exports = {
           if (input == "manage co-op") {
             game_obj.old_page = JSON.parse(JSON.stringify(game_obj.page));
             game_obj.page = "coop_menu";
+
+            printCoopMenu(user_id);
           }
 
           //[Resign]
