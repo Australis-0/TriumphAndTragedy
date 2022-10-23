@@ -250,16 +250,8 @@ module.exports = {
 
     switch (interaction.customId) {
       case "main_menu_btn":
-        //Create a confirmation dialogue for quitting the game
-        returnChannel(game_obj.channel).send("Loading ..").then((msg) => {
-          confirmDialogue(msg, {
-            text: "**Save and Exit Game**\n\nAre you sure you want to quit the game and return to the main menu?",
-            user: game_obj.user,
-            delete_after: true
-          }, function () {
-            clearGame(game_obj.id);
-          })
-        });
+        //Print main menu
+        printMainMenu(user_id);
 
         break;
       case "map_btn":

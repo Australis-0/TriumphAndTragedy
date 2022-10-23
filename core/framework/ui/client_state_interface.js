@@ -645,56 +645,72 @@ module.exports = {
       if (!isBeingJustifiedOn(actual_id)) {
         //Check if client state has a capital
         if (client_obj.capital_id) {
-          var capital_obj = main.provinces[client_obj.capital_id];
-          var culture_obj = main.global.cultures[capital_obj.culture];
+          //Make sure user has a capital in the first place
+          if (getCapital(actual_id)) {
+            if (client_obj.capital_id != getCapital(actual_id)) {
+              if (usr.provinces > 1) {
+                var capital_obj = main.provinces[client_obj.capital_id];
+                var culture_obj = main.global.cultures[capital_obj.culture];
 
-          //Remove all provinces that are not under the full control of the client state's owner
-          for (var i = client_obj.provinces.length - 1; i >= 0; i--) {
-            var local_province = main.provinces[client_obj.provinces[i]];
+                //Remove all provinces that are not under the full control of the client state's owner
+                for (var i = client_obj.provinces.length - 1; i >= 0; i--) {
+                  var local_province = main.provinces[client_obj.provinces[i]];
 
-            if (local_province.owner != actual_id)
-              client_obj.provinces.splice(i, 1);
-          }
-
-          //Check if the capital is actually in the client state's possession
-          if (client_obj.provinces.includes(client_obj.capital_id)) {
-            //Release client state
-            for (var i = 0; i < client_obj.provinces.length; i++)
-              try {
-                var local_province = main.provinces[client_obj.provinces[i]];
-
-                if (local_province.owner == actual_id && local_province.controller == actual_id) {
-                  //Transfer province
-                  transferProvince(actual_id, {
-                    province_id: client_obj.provinces[i],
-                    target: client_obj.id
-                  });
-                } else if (local_province.owner == actual_id) {
-                  //Set owner instead
-                  local_province.owner = client_obj.id;
+                  if (local_province.owner != actual_id)
+                    client_obj.provinces.splice(i, 1);
                 }
-              } catch {}
 
-            //Set client state capital
-            moveCapital(client_obj.id, client_obj.capital_id, true, true);
+                //Check if the capital is actually in the client state's possession
+                if (client_obj.provinces.includes(client_obj.capital_id)) {
+                  //Release client state
+                  for (var i = 0; i < client_obj.provinces.length; i++)
+                    try {
+                      var local_province = main.provinces[client_obj.provinces[i]];
 
-            //Set client state culture to culture of capital
-            culture_obj.primary_culture.push(client_obj.id);
+                      if (local_province.owner == actual_id && local_province.controller == actual_id) {
+                        //Transfer province
+                        transferProvince(actual_id, {
+                          province_id: client_obj.provinces[i],
+                          target: client_obj.id
+                        });
+                      } else if (local_province.owner == actual_id) {
+                        //Set owner instead
+                        local_province.owner = client_obj.id;
+                      }
+                    } catch {}
 
-            ot_user.pops.accepted_culture = [culture_obj.id];
-            ot_user.pops.primary_culture = culture_obj.id;
+                  //Set client state capital
+                  moveCapital(client_obj.id, client_obj.capital_id, true, true);
 
-            //Close client state if open
-            if (!force_release)
-              module.exports.closeClientState(user_id, client_obj);
+                  //Set client state culture to culture of capital
+                  culture_obj.primary_culture.push(client_obj.id);
 
-            //Delete client_state object
-            delete usr.client_states[client_obj.id];
+                  ot_user.pops.accepted_culture = [culture_obj.id];
+                  ot_user.pops.primary_culture = culture_obj.id;
 
-            //Print user feedback
-            printAlert(game_obj.id, `You have successfully released the client state of **${client_obj.name}** under your control with **${parseNumber(client_obj.provinces.length)}** province(s).`);
+                  //Close client state if open
+                  if (!force_release)
+                    module.exports.closeClientState(user_id, client_obj);
+
+                  //Delete client_state object
+                  delete usr.client_states[client_obj.id];
+
+                  //Print user feedback
+                  printAlert(game_obj.id, `You have successfully released the client state of **${client_obj.name}** under your control with **${parseNumber(client_obj.provinces.length)}** province(s).`);
+                } else {
+                  printError(game_obj.id, `The capital of your client state, **${main.provinces[client_obj.capital_id].name}**, is not under its control! Please specify a different capital city for your client nation.`);
+                  reload_interface = true;
+                }
+              } else {
+                printError(game_obj.id, `You must have more than **1** Province in order to release client states!`);
+                reload_interface = true;
+              }
+            } else {
+              printError(game_obj.id, `The capital of your client state cannot be the same as the capital city of your nation!`);
+              reload_interface = true;
+            }
           } else {
-            printError(game_obj.id, `The capital of your client state, **${main.provinces[client_obj.capital_id].name}**, is not under its control! Please specify a different capital city for your client nation.`);
+            printError(game_obj.id, `You must have a capital city yourself before you can release any client states!`);
             reload_interface = true;
           }
         } else {

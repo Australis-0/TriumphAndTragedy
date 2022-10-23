@@ -311,6 +311,7 @@ module.exports = {
       unit_type: "none"
     };
     if (!usr.national_modifiers) usr.national_modifiers = {};
+    if (!usr.players) usr.players = {};
     if (!usr.researching) usr.researching = [];
     if (!usr.reserves) usr.reserves = {};
     if (!usr.temporary_modifiers) usr.temporary_modifiers = {};

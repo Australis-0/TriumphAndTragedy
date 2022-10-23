@@ -23,7 +23,7 @@ module.exports = {
     customisation_array.push(`_For that flag I die!_`);
     customisation_array.push("");
     customisation_array.push(`${config.icons.government} Set Your Nation's Colour: **[Set Colour]**`);
-    customisation_array.push(`Change your nation's colour to something else using RGB colour codes.`);
+    customisation_array.push(`_Change your nation's colour to something else using RGB colour codes._`);
     customisation_array.push("");
     customisation_array.push(`${config.icons.culture} Customise Your Culture: **[Rename Culture]**`);
     customisation_array.push(`_A truly fascinating name for ethnographers._`);

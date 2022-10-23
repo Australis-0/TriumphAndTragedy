@@ -58,6 +58,7 @@ module.exports = {
 
     //Declare local instance variables
     var all_users = Object.keys(main.users);
+    var actual_id = JSON.parse(JSON.stringify(user_id));
     var country_name_taken = false;
     var processed_country_name = formaliseString(country_name);
 
@@ -67,14 +68,21 @@ module.exports = {
 
     //Initialise user data
     if (!country_name_taken) {
-      initUser(user_id);
-      var usr = main.users[user_id];
+      //Check if user already exists
+      if (main.users[actual_id])
+        actual_id = generateUserID();
+
+      initUser(actual_id);
+      var usr = main.users[actual_id];
 
       //Automatically map the user ID of the initialiser
-      main.global.user_map[user_id] = user_id;
+      main.global.user_map[user_id] = actual_id;
 
       //Set name of country
       usr.name = processed_country_name;
+
+      //Set owner
+      usr.owner = user_id;
 
       //Add new culture object to main.global
       var culture_id = generateCultureID();
@@ -86,7 +94,7 @@ module.exports = {
         name: processed_country_name,
         adjective: processed_country_name,
 
-        primary_culture: [user_id],
+        primary_culture: [actual_id],
         accepted_culture: []
       };
 

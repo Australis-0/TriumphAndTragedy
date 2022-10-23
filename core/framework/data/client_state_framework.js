@@ -38,8 +38,6 @@ module.exports = {
         provinces: []
       };
 
-      console.log(client_state);
-
       usr.client_states[client_state_id] = client_state;
 
       //Return statement
@@ -61,7 +59,7 @@ module.exports = {
     while (true) {
       var local_id = generateUserID();
 
-      if (!all_client_states.includes(local_id)) {
+      if (!all_client_states.includes(local_id) && !main.users[local_id]) {
         return local_id;
         break;
       }

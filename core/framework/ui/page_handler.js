@@ -1586,6 +1586,65 @@ module.exports = {
         }
       }
 
+      //Main Menu handler
+      {
+        if (game_obj.main_menu_embed) {
+          //[Resume Game]
+          if (input == "resume game")
+            closeMainMenu(user_id);
+
+          //[Manage Co-Op]
+          if (input == "manage co-op") {
+            game_obj.old_page = JSON.parse(JSON.stringify(game_obj.page));
+            game_obj.page = "coop_menu";
+          }
+
+          //[Resign]
+          if (input == "resign")
+            initialiseResign(user_id);
+
+          //[Exit Game]
+          if (input == "exit game")
+            initialiseExitGame(user_id);
+
+          if (game_obj.page == "coop_menu") {
+            //[Back]
+            if (input == "back") {
+              game_obj.page = JSON.parse(JSON.stringify(game_obj.old_page));
+              delete game_obj.old_page;
+
+              printMainMenu(user_id);
+            }
+
+            //[Invite Player]
+            if (input == "invite player")
+              initialiseInvitePlayer(user_id);
+
+            //[Kick Player]
+            if (input == "kick player")
+              initialiseKickPlayer(user_id);
+
+            //[Kick (Player ID)]
+            if (input.startsWith("kick ")) {
+              var player_id = input.replace("kick ", "").trim();
+
+              kickPlayer(user_id, player_id);
+            }
+
+            //[Promote (Player ID)]
+            if (input.startsWith("promote ")) {
+              var player_id = input.replace("kick ", "").trim();
+
+              promotePlayer(user_id, player_id);
+            }
+
+            //[Transfer Leadership]
+            if (input == "transfer leadership")
+              initialiseTransferLeadership(user_id);
+          }
+        }
+      }
+
       //Military page handler
       {
         if (game_obj.page == "army_list") {

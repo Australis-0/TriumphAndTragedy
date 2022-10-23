@@ -81,6 +81,14 @@ module.exports = {
                     } else {
                       satisfies_requirements = [false, `You must type out a valid nation name or ping a valid user! ${input} was not a valid nation/user.`];
                     }
+                  } else if (local_prompt.prompts[current_step[1]] == "user") {
+                    var parsed_mention = returnMention(input, true);
+
+                    if (parsed_mention) {
+                      local_prompt.answers.push(parsed_mention);
+                    } else {
+                      satisfies_requirements = [false, `You must type out the username of a valid user! ${input} was not a valid user.`];
+                    }
                   } else {
                     log.error(`The argument type ${local_prompt.prompts[current_step][1]} specified with the visual prompt at User ID ${user_id} does not exist!`);
                   }

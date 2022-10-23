@@ -77,6 +77,7 @@ module.exports = {
     FileManager.import("./framework/ui/global_market_interface");
     FileManager.import("./framework/ui/government_interface");
     FileManager.import("./framework/ui/laws_interface");
+    FileManager.import("./framework/ui/main_menu_interface");
     FileManager.import("./framework/ui/map_viewer");
     FileManager.import("./framework/ui/military_interface");
     FileManager.import("./framework/ui/modifier_interface");
