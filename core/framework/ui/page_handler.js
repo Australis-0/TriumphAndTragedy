@@ -885,7 +885,7 @@ module.exports = {
             initialiseRenameCultureAdjective(user_id);
 
           //[Set Colour]
-          if (input == "set colour")
+          if (["set colour", "set color"].includes(input))
             initialiseSetColour(user_id);
 
           //[Set Flag]
