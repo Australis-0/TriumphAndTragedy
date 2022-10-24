@@ -20,7 +20,7 @@ module.exports = {
   printNationalModifiers: function (arg0_user, arg1_page) {
     //Convert from parameters
     var user_id = arg0_user;
-    var page = (arg1_page) ? Math.ceil(parseInt(arg1_page)) - 1 : 0;
+    var page = (arg1_page) ? Math.ceil(parseInt(arg1_page)) : 0;
 
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
@@ -45,7 +45,7 @@ module.exports = {
 
         const spirit_embed = new Discord.MessageEmbed()
           .setColor(settings.bot_colour)
-          .setTitle(`**${(local_modifier.name) ? local_modifier.name : all_national_modifiers[i]}`)
+          .setTitle(`**${(local_modifier.name) ? local_modifier.name : all_national_modifiers[i]}**`)
           .setThumbnail((local_modifier.image) ? local_modifier.image : "https://media.discordapp.net/attachments/432295472598614028/712203943241056326/unknown.png")
           .setDescription((local_modifier.description) ? local_modifier.description : `This modifier currently has no effect. Events in the world may change this at a later date.`);
 
@@ -68,7 +68,7 @@ module.exports = {
     //Create page menu for user
     createPageMenu(game_obj.middle_embed, {
       embed_pages: all_embeds,
-      page: page,
+      starting_page: page,
       user: user_id
     });
   }

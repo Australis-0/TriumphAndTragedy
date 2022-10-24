@@ -416,6 +416,11 @@ module.exports = {
             usr.mobilisation.last_mobilised = main.round_count;
       }
 
+      //National modifiers
+      {
+        processNationalModifiers(actual_id);
+      }
+
       //Population modifiers/trackers
       usr.population = getPopulation(actual_id);
       delete usr.has_famine;

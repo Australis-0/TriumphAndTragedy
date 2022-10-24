@@ -177,7 +177,7 @@ config.casus_belli = {
 
     limit: function (usr, ot_user) {
       //Return statement
-      if (["communism", "fascism", "absolute_monarchy"].includes(usr.government))
+      if (["fascism"].includes(usr.government))
         return true;
     },
 

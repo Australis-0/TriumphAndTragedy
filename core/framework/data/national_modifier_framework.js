@@ -21,6 +21,99 @@ module.exports = {
     }
   },
 
+  /*
+    getNationalModifier() - Returns a national modifier key/object based on the provided name.
+    options: {
+      return_key: true/false - Whether or not to return a key or object. Defaults to false
+    }
+  */
+  getNationalModifier: function (arg0_national_modifier_name, arg1_options) {
+    //Convert from parameters
+    var national_modifier_name = arg0_national_modifier_name;
+    var options = (arg1_options) ? arg1_options : {};
+
+    //Declare local instance variables
+    var all_national_modifier_categories = Object.keys(config.national_modifiers);
+    var national_modifier_found = [false, ""]; //[national_modifier_found, national_modifier_obj];
+
+    //Soft-match first
+    for (var i = 0; i < all_national_modifier_categories.length; i++) {
+      var local_national_modifier_category = config.national_modifiers[all_national_modifier_categories[i]];
+      var local_national_modifiers = Object.keys(local_national_modifier_category);
+
+      for (var x = 0; x < local_national_modifiers.length; x++)
+        if (local_national_modifiers[x].indexOf(national_modifier_name) != -1)
+          national_modifier_found = [true, (!options.return_key) ? local_national_modifier_category[local_national_modifiers[x]] : local_national_modifiers[x]];
+    }
+
+    //Hard-match second
+    for (var i = 0; i < all_national_modifier_categories.length; i++) {
+      var local_national_modifier_category = config.national_modifiers[all_national_modifier_categories[i]];
+      var local_national_modifiers = Object.keys(local_national_modifier_category);
+
+      for (var x = 0; x < local_national_modifiers.length; x++)
+        if (local_national_modifiers[x] == national_modifier_name)
+          national_modifier_found = [true, (!options.return_key) ? local_national_modifier_category[local_national_modifiers[x]] : local_national_modifiers[x]];
+    }
+
+    //Return statement
+    return (national_modifier_found[0]) ? national_modifier_found[1] : undefined;
+  },
+
+  /*
+    getNationalModifiers() - Returns an array of keys/objects.
+    options: {
+      return_names: true/false - Whether or not to return the keys of the individual national modifiers
+    }
+  */
+  getNationalModifiers: function (arg0_options) {
+    //Convert from parameters
+    var options = (arg0_options) ? arg0_options : {};
+
+    //Declare local instance variables
+    var all_national_modifiers = [];
+    var all_national_modifier_categories = Object.keys(config.national_modifiers);
+
+    //Iterate over all categories and events in them
+    for (var i = 0; i < all_national_modifier_categories.length; i++) {
+      var local_national_modifier_category = config.national_modifiers[all_national_modifier_categories[i]];
+      var local_national_modifiers = Object.keys(local_national_modifier_category);
+
+      for (var x = 0; x < local_national_modifiers.length; x++)
+        all_national_modifiers.push((!options.return_names) ? local_national_modifier_category[local_national_modifiers[x]] : local_national_modifiers[x]);
+    }
+
+    //Return statement
+    return all_national_modifiers;
+  },
+
+  processNationalModifiers: function (arg0_user) {
+    //Convert from parameters
+    var user_id = arg0_user;
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var national_modifier_names = lookup.all_national_modifier_names;
+    var national_modifiers = lookup.all_national_modifiers;
+    var usr = main.users[user_id];
+
+    //Iterate over all national modifiers and check triggers
+    for (var i = 0; i < national_modifiers.length; i++)
+      if (national_modifiers[i].trigger)
+        (national_modifiers[i].trigger(usr)) ?
+          module.exports.setNationalModifier(actual_id, national_modifier_names[i], {
+            name: national_modifiers[i].name,
+            image: national_modifiers[i].image,
+            icon: national_modifiers[i].icon,
+            description: national_modifiers[i].description,
+
+            modifiers: (national_modifiers[i].effect) ?
+              national_modifiers[i].effect(usr) :
+              {}
+          }) :
+          module.exports.removeNationalModifier(actual_id, national_modifier_names[i]);
+  },
+
   removeNationalModifier: function (arg0_user, arg1_id) {
     //Convert from parameters
     var user_id = arg0_user;

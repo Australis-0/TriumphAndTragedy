@@ -11,8 +11,8 @@ module.exports = {
     var options = (arg1_options) ? arg1_options : {};
 
     //Declare local instance variables
-    var event_found = [false, ""]; //[event_found, event_obj];
     var all_event_categories = Object.keys(config.events);
+    var event_found = [false, ""]; //[event_found, event_obj];
 
     //Soft-match first
     for (var i = 0; i < all_event_categories.length; i++) {
@@ -41,7 +41,7 @@ module.exports = {
   /*
     getEvents() - Returns an array of keys/objects.
     options: {
-      return_names: true/false - Whether or not to return the keys of the individual events or not
+      return_names: true/false - Whether or not to return the keys of the individual events
     }
   */
   getEvents: function (arg0_options) {
