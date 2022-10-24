@@ -1155,6 +1155,7 @@ module.exports = {
                     scalar*
                     usr.modifiers.pop_growth_modifier
                   );
+                  local_pop_growth_rate = Math.min(local_pop_growth_rate, config.defines.economy.urban_pop_growth_cap);
 
                   var local_pop_growth =
                     Math.ceil(

@@ -109,7 +109,7 @@ config.buildings.infrastructure = {
     },
     maximum: 5,
     modifiers: {
-      pop_growth_modifier: 0.005
+      pop_growth_modifier: 0.0001
     },
     produces: {
       money: 3000

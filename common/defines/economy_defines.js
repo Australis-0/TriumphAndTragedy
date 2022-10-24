@@ -57,10 +57,10 @@ config.defines.economy = {
   supply_limit_rgo_modifier: 100, //How much extra supply limit should it take for an extra +1% boost to RGO throughput in the province?
   urbanisation_cost: 25, //Initial Political Capital cost for urbanisation
   urbanisation_cost_percentile_growth: 1.2, //How fast should the cost grow exponentially?
-  urban_pop_growth_cap: 1.05, //How fast should urban provinces be able to grow?
+  urban_pop_growth_cap: 1.05, //How fast should urban provinces be able to grow at most?
   urban_pop_growth_penalty_threshold: 500000, //At what population should the urban population threshold kick in?
   urban_pop_growth_penalty_per_million: -0.03, //-3% growth per million
-  
+
   //Trade and World Market
   resource_init_max_percentile: 0.80, //Maximum percentage of shipment capacity that new countries (for the first 10 turns) can use on buying/selling goods from the World Market
   resource_max_percentile: 0.20, //Maximum percentage of shipment capacity that you can use per turn on buying/selling goods from the World Market
