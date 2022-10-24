@@ -241,25 +241,25 @@ module.exports = {
 
     //Format coop_menu_string
     var coop_menu_string = [];
-
-    coop_menu_string.push("");
-    coop_menu_string.push(config.localisation.divider);
-    coop_menu_string.push("");
+    
     coop_menu_string.push(`**Current Players**:`);
     coop_menu_string.push("");
 
     //Push the owner
-    coop_menu_string.push(`<@${usr.owner}> - ${(!getVassal(actual_id)) ? "_Overlord_" : "_Owner_"}`);
+    coop_menu_string.push(`<@${usr.owner}> - ${(!getVassal(actual_id)) ? "_Owner_" : "_Overlord_"}`);
 
     if (current_players.length > 0)
       coop_menu_string.push("");
 
-    for (var i = 0; i < current_players.length; i++)
+    for (var i = 0; i < current_players.length; i++) {
+      var user_obj = client.users.cache.find(user => user.id == current_players[i]);
+
       //Exclude user if it is not an actual User ID
-      if (client.users.cache.find(user => user.id == current_players[i])) {
+      if (user_obj) {
         coop_menu_string.push(`<@${current_players[i]}> - Player`);
-        coop_menu_string.push(`- **[Kick ${current_players[i]}]** | **[Promote ${current_players[i]}]**`);
+        coop_menu_string.push(`- **[Kick ${user_obj.username}]** | **[Promote ${user_obj.username}]**`);
       }
+    }
 
     coop_menu_string.push("");
     coop_menu_string.push(config.localisation.divider);

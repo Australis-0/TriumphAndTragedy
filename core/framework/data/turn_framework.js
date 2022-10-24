@@ -1142,17 +1142,25 @@ module.exports = {
             if (owned_provinces[i].type == "urban") {
               var scalar = 1;
 
-              if (owned_provinces[i].pops.population > 500000) //-3% per million
+              if (owned_provinces[i].pops.population > config.defines.economy.urban_pop_growth_penalty_threshold) //-3% per million
                 scalar -= Math.ceil(
-                  (owned_provinces[i].pops.population - 500000)/1000000
-                )*0.03;
-              scalar = Math.max(0.775, scalar);
+                  (owned_provinces[i].pops.population - config.defines.economy.urban_pop_growth_penalty_threshold)/1000000
+                )*config.defines.economy.urban_pop_growth_penalty_per_million;
 
               //Calculate urban pop growth for all pops
               if (owned_provinces[i].housing > owned_provinces[i].pops.population)
                 for (var x = 0; x < all_pops.length; x++) {
+                  var local_pop_growth_rate = (
+                    usr.pops[`${all_pops[x]}_growth_modifier`]*
+                    scalar*
+                    usr.modifiers.pop_growth_modifier
+                  );
+
                   var local_pop_growth =
-                    Math.ceil(owned_provinces[i].pops[all_pops[x]]*usr.pops[`${all_pops[x]}_growth_modifier`]*scalar*usr.modifiers.pop_growth_modifier) - owned_provinces[i].pops[all_pops[x]];
+                    Math.ceil(
+                      owned_provinces[i].pops[all_pops[x]]*
+                      local_pop_growth_rate
+                    ) - owned_provinces[i].pops[all_pops[x]];
 
                   usr.pops[all_pops[x]] += local_pop_growth;
                   usr.population += local_pop_growth;
