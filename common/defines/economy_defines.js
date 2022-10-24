@@ -57,6 +57,14 @@ config.defines.economy = {
   supply_limit_rgo_modifier: 100, //How much extra supply limit should it take for an extra +1% boost to RGO throughput in the province?
   urbanisation_cost: 25, //Initial Political Capital cost for urbanisation
   urbanisation_cost_percentile_growth: 1.2, //How fast should the cost grow exponentially?
+  urban_pop_growth_cap: [
+    [5000000, 0.05],
+    [10000000, 0.04],
+    [20000000, 0.02],
+    [50000000, 0.01],
+    [70000000, 0.005],
+    [100000000, 0.001]
+  ], //At what population levels should growth be capped? Caps only start at the first element: [population, % growth cap]
   urban_pop_growth_cap: 1.05, //How fast should urban provinces be able to grow at most?
   urban_pop_growth_penalty_threshold: 500000, //At what population should the urban population threshold kick in?
   urban_pop_growth_penalty_per_million: -0.03, //-3% growth per million

@@ -1155,7 +1155,18 @@ module.exports = {
                     scalar*
                     usr.modifiers.pop_growth_modifier
                   );
-                  local_pop_growth_rate = Math.min(local_pop_growth_rate, config.defines.economy.urban_pop_growth_cap);
+
+                  //Set local pop growth cap from economy defines
+                  var urban_growth_cap;
+                  for (var y = 0; y < config.defines.economy.urban_pop_growth_cap.length; y++) {
+                    var local_element = config.defines.economy.urban_pop_growth_cap[y];
+
+                    if (owned_provinces[i].pops.population >= local_element[0])
+                      urban_growth_cap = local_element[1];
+                  }
+
+                  if (urban_growth_cap)
+                    local_pop_growth_rate = Math.min(local_pop_growth_rate, urban_growth_cap);
 
                   var local_pop_growth =
                     Math.ceil(
