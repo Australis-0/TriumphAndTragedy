@@ -19,19 +19,9 @@ module.exports = {
           //Begin standing down troops
           var all_mobilisation_modifiers = Object.keys(config.defines.combat.base_mobilisation_impact);
           var all_mobilised_pops = Object.keys(usr.mobilisation.mobilised_pops);
-          var inverted_mobilisation_modifiers = {};
-
-          //Invert the mobilisation modifiers first before applying them to the user
-          for (var i = 0; i < all_mobilisation_modifiers.length; i++) {
-            var local_mobilisation_modifier = config.defines.combat.base_mobilisation_impact[all_mobilisation_modifiers[i]];
-
-            inverted_mobilisation_modifiers[all_mobilisation_modifiers[i]] = local_mobilisation_modifier*-1;
-          }
-
-          //Apply this new inverted modifier object to the given user
-          try {
-            applyModifiers(actual_id, inverted_mobilisation_modifiers);
-          } catch {}
+          
+          //Apply national modifiers
+          processNationalModifiers(actual_id);
 
           //Restore all remaining mobilised pops to the fore
           for (var i = 0; i < all_mobilised_pops.length; i++) {

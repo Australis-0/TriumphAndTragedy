@@ -319,6 +319,7 @@ module.exports = {
     try {
       //Generic trackers
       usr.country_age++;
+      usr.demographics = getDemographics(actual_id);
       usr.provinces = owned_provinces.length;
 
       //Base action gain

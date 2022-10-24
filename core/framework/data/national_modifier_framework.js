@@ -100,18 +100,34 @@ module.exports = {
     //Iterate over all national modifiers and check triggers
     for (var i = 0; i < national_modifiers.length; i++)
       if (national_modifiers[i].trigger)
-        (national_modifiers[i].trigger(usr)) ?
+        if (national_modifiers[i].trigger(usr)) {
+          //Declare modifier object
+          var modifiers = (national_modifiers[i].effect) ?
+            national_modifiers[i].effect(usr) :
+            {};
+
+          //Check for static modifiers
+          if (national_modifiers[i].modifiers) {
+            var all_modifiers = Object.keys(national_modifiers[i].modifiers);
+
+            for (var x = 0; x < all_modifiers.length; x++)
+              modifiers[all_modifiers[x]] = (modifiers[all_modifiers[x]]) ?
+                modifiers[all_modifiers[x]] + national_modifiers[i].modifiers[all_modifiers[x]] :
+                national_modifiers[i].modifiers[all_modifiers[x]];
+          }
+
+          //Set national modifier
           module.exports.setNationalModifier(actual_id, national_modifier_names[i], {
             name: national_modifiers[i].name,
             image: national_modifiers[i].image,
             icon: national_modifiers[i].icon,
             description: national_modifiers[i].description,
 
-            modifiers: (national_modifiers[i].effect) ?
-              national_modifiers[i].effect(usr) :
-              {}
-          }) :
+            modifiers: modifiers
+          });
+        } else {
           module.exports.removeNationalModifier(actual_id, national_modifier_names[i]);
+        }
   },
 
   removeNationalModifier: function (arg0_user, arg1_id) {

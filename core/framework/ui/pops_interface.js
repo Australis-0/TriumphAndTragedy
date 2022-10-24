@@ -12,37 +12,7 @@ module.exports = {
     var all_modifiers = getAllModifiers();
     var all_pops = Object.keys(config.pops);
     var all_provinces = getProvinces(actual_id);
-    var rural_pops = {
-      population: 0
-    };
-    var urban_pops = {
-      population: 0
-    };
-
-    for (var i = 0; i < all_provinces.length; i++)
-      for (var x = 0; x < all_pops.length; x++)
-        switch (all_provinces[i].type) {
-          case "rural":
-              rural_pops[all_pops[x]] = (rural_pops[all_pops[x]]) ?
-                rural_pops[all_pops[x]] + all_provinces[i].pops[all_pops[x]] :
-                all_provinces[i].pops[all_pops[x]];
-
-            break;
-          case "urban":
-              urban_pops[all_pops[x]] = (urban_pops[all_pops[x]]) ?
-                urban_pops[all_pops[x]] + all_provinces[i].pops[all_pops[x]] :
-                all_provinces[i].pops[all_pops[x]];
-
-            break;
-        }
-
-    //Calculate total rural population
-    for (var i = 0; i < all_pops.length; i++)
-      rural_pops.population += returnSafeNumber(rural_pops[all_pops[i]]);
-
-    //Calculate total urban population
-    for (var i = 0; i < all_pops.length; i++)
-      urban_pops.population += returnSafeNumber(urban_pops[all_pops[i]]);
+    var pop_obj = getDemographics(actual_id);
 
     //Initialise pops_string and other formatting variables
     var pops_string = [];
@@ -60,7 +30,7 @@ module.exports = {
     for (var i = 0; i < all_pops.length; i++) {
       var local_pop = config.pops[all_pops[i]];
 
-      urban_pops_string.push(`${(local_pop.icon) ? local_pop.icon + " " : ""}${(local_pop.name) ? local_pop.name : all_pops[i]}: \n- **${parseNumber(returnSafeNumber(urban_pops[all_pops[i]]))}**`);
+      urban_pops_string.push(`${(local_pop.icon) ? local_pop.icon + " " : ""}${(local_pop.name) ? local_pop.name : all_pops[i]}: \n- **${parseNumber(pop_obj[`urban_${all_pops[i]}`])}**`);
     }
 
     urban_pops_string.push("");
@@ -72,7 +42,7 @@ module.exports = {
     for (var i = 0; i < all_pops.length; i++) {
       var local_pop = config.pops[all_pops[i]];
 
-      rural_pops_string.push(`${(local_pop.icon) ? local_pop.icon + " " : ""}${(local_pop.name) ? local_pop.name : all_pops[i]}: \n- **${parseNumber(returnSafeNumber(rural_pops[all_pops[i]]))}**`);
+      rural_pops_string.push(`${(local_pop.icon) ? local_pop.icon + " " : ""}${(local_pop.name) ? local_pop.name : all_pops[i]}: \n- **${parseNumber(pop_obj[`rural_${all_pops[i]}`])}**`);
     }
 
     rural_pops_string.push("");
@@ -155,8 +125,8 @@ module.exports = {
       .setImage("https://cdn.discordapp.com/attachments/722997700391338046/736141424315203634/margin.png")
       .setDescription(pops_string.join("\n"))
       .addFields(
-        { name: `${config.icons.development} __Urban Population:__ **${printPercentage(urban_pops.population/getPopulation(actual_id))}**\n-`, value: urban_pops_string.join("\n"), inline: true },
-        { name: `${config.icons.provinces} __Rural Population:__ **${printPercentage(rural_pops.population/getPopulation(actual_id))}**\n-`, value: rural_pops_string.join("\n"), inline: true },
+        { name: `${config.icons.development} __Urban Population:__ **${printPercentage(pop_obj.urban_population/pop_obj.population)}**\n-`, value: urban_pops_string.join("\n"), inline: true },
+        { name: `${config.icons.provinces} __Rural Population:__ **${printPercentage(pop_obj.rural_population/pop_obj.population)}**\n-`, value: rural_pops_string.join("\n"), inline: true },
         { name: "__Total Population:__\n━━", value: total_pops_string.join("\n") }
       );
 

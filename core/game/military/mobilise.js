@@ -67,8 +67,8 @@ module.exports = {
             manpower_mobilised += local_mobilised_pop;
           }
 
-          //Parse through all modifiers in config.defines.combat.base_mobilisation_impact
-          applyModifiers(actual_id, config.defines.combat.base_mobilisation_impact);
+          //Apply national modifiers
+          processNationalModifiers(actual_id);
 
           //Create mobilisation object
           usr.mobilisation = {

@@ -90,6 +90,57 @@ module.exports = {
     }
   },
 
+  getDemographics: function (arg0_user) {
+    //Convert from parameters
+    var user_id = arg0_user;
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var all_pops = Object.keys(config.pops);
+    var all_provinces = getProvinces(actual_id);
+    var pop_obj = {};
+    var usr = main.users[actual_id];
+
+    //Iterate over all provinces and calculate population
+    for (var i = 0; i < all_provinces.length; i++)
+      for (var x = 0; x < all_pops.length; x++) {
+        var local_key = `${all_provinces[i].type}_${all_pops[x]}`;
+
+        pop_obj[local_key] = (pop_obj[local_key]) ?
+          pop_obj[local_key] + all_provinces[i].pops[all_pops[x]] :
+          all_provinces[i].pops[all_pops[x]];
+      }
+
+    //Get unique province types
+    var all_pop_keys = Object.keys(pop_obj);
+    var unique_province_types = [];
+
+    for (var i = 0; i < all_pop_keys.length; i++) {
+      var local_pop_array = all_pop_keys[i].split("_");
+
+      if (!unique_province_types.includes(local_pop_array[0]))
+        unique_province_types.push(local_pop_array[0]);
+    }
+
+    //Calculate total population for each province type
+    for (var i = 0; i < unique_province_types.length; i++) {
+      var local_key = `${unique_province_types[i]}_population`;
+
+      pop_obj[local_key] = 0;
+
+      for (var x = 0; x < all_pops.length; x++)
+        pop_obj[local_key] += pop_obj[`${unique_province_types[i]}_${all_pops[x]}`];
+
+      //Add to total population
+      pop_obj.population = (pop_obj.population) ?
+        pop_obj.population + pop_obj[local_key] :
+        pop_obj[local_key];
+    }
+
+    //Return statement
+    return pop_obj;
+  },
+
   getFaminePenalty: function (arg0_user) {
     //Convert from parameters
     var user_id = arg0_user;
@@ -152,15 +203,10 @@ module.exports = {
     var usr = main.users[user_id];
 
     //Declare local instance variables
-    var all_pops = Object.keys(config.pops);
-    var total_population = 0;
-
-    //Fetch total population
-    for (var i = 0; i < all_pops.length; i++)
-      total_population += usr.pops[all_pops[i]];
+    var pop_obj = module.exports.getDemographics(user_id);
 
     //Return statement
-    return total_population;
+    return pop_obj.population;
   },
 
   getTotalActiveDuty: function (arg0_user) {
