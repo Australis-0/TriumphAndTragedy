@@ -5,6 +5,11 @@ module.exports = {
     var all_good_names = getGoods({ exclude_hidden: true, return_names: true });
     var all_goods = getGoods({ exclude_hidden: true });
 
+    //Force render all maps
+    if (!main.global)
+      for (var i = 0; i < mapmodes.length; i++)
+        cacheSVG(mapmodes[i]);
+
     //Declare objects
     if (!main.global) main.global = {};
       if (!main.global.archived_wars) main.global.archived_wars = {};

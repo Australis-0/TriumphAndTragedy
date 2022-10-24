@@ -7,7 +7,7 @@ config.defines.common = {
   resign_cooldown: 4, //How often should players be able to switch nations? (in turns)
   starting_players: 10, //How many players should the game require before it can start? Set to 0 to disable starting queue
   starting_provinces: 1,
-  starting_year: 1500,
+  starting_year: 1933,
 
   starting_kit: {
     set_government: "anarchy",
@@ -20,8 +20,9 @@ config.defines.common = {
     money: 50000,
     wood: 10,
     stone: 15,
+    machine_parts: 35,
     food: 50,
-    research_to: 0,
+    research_to: 5000,
 
     magnates: [3, 15],
     unlock_building: [
