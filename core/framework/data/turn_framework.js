@@ -304,7 +304,8 @@ module.exports = {
     var all_goods = lookup.all_goods_array;
     var all_good_names = lookup.all_good_names;
     var all_governments = Object.keys(config.governments);
-    var all_modifiers = Object.keys(config.modifiers);
+    var all_modifiers = lookup.all_modifiers;
+    var all_modifier_names = lookup.all_modifier_names;
     var all_non_aggression_pacts = Object.keys(usr.diplomacy.non_aggression_pacts);
     var all_pops = Object.keys(config.pops);
     var all_production = getProduction(actual_id);
@@ -461,14 +462,11 @@ module.exports = {
       //Modifier cap handling
       {
         //Make sure modifiers cannot go beneath the minimum set in modifiers.js
-        for (var i = 0; i < all_modifiers.length; i++) {
-          var local_modifier = config.modifiers[all_modifiers[i]];
-
-          if (usr.modifiers[all_modifiers[i]])
-            if (local_modifier.minimum)
-              if (usr.modifiers[all_modifiers[i]] < local_modifier.minimum)
-                usr.modifiers[all_modifiers[i]] = local_modifier.minimum;
-        }
+        for (var i = 0; i < all_modifiers.length; i++)
+          if (usr.modifiers[all_modifier_names[i]])
+            if (all_modifiers[i].minimum)
+              if (usr.modifiers[all_modifier_names[i]] < all_modifiers[i].minimum)
+                usr.modifiers[all_modifier_names[i]] = all_modifiers[i].minimum;
       }
     } catch (e) {
       console.log(e);

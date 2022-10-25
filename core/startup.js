@@ -68,6 +68,7 @@ module.exports = {
     FileManager.import("./framework/ui/client_state_interface");
     FileManager.import("./framework/ui/colonisation_interface");
     FileManager.import("./framework/ui/country_interface");
+    FileManager.import("./framework/ui/country_picker_interface");
     FileManager.import("./framework/ui/culture_interface");
     FileManager.import("./framework/ui/customisation_interface");
     FileManager.import("./framework/ui/diplomacy_interface");
@@ -106,7 +107,6 @@ module.exports = {
     FileManager.import("./game/colonisation/cancel_charter");
     FileManager.import("./game/colonisation/settle");
 
-    FileManager.import("./game/country/create_country");
     FileManager.import("./game/country/rename_country");
     FileManager.import("./game/country/rename_primary_culture");
     FileManager.import("./game/country/set_colour");

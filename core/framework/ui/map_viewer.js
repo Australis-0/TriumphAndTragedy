@@ -87,7 +87,7 @@ module.exports = {
     map_obj.zoom = 1;
 
     //Add collector reactions
-    initialiseControlPanel(game_id, (hide_mapmodes) ? "map" : "special_map");
+    initialiseControlPanel(game_id, (!hide_mapmodes) ? "map" : "special_map");
 
     returnCacheChannel().send({
       content: `${generateRandomID()}_${game_id}`,

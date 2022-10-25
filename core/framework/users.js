@@ -15,6 +15,25 @@ module.exports = {
     }
   },
 
+  //getUsers() - Returns an array of all matching user ID's to the actual ID
+  getUsers: function (arg0_user) {
+    //Convert from parameters
+    var user_id = arg0_user;
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var all_users = Object.keys(main.users);
+    var user_ids = [];
+
+    //Iterate over all_users and push
+    for (var i = 0; i < all_users.length; i++)
+      if (main.global.user_map[all_users[i]] == actual_id)
+        user_ids.push(all_users[i]);
+
+    //Return statement
+    return user_ids;
+  },
+
   /*
     getUsernames() - Returns a list of usernames/nicknames from a given ID
     options: {
