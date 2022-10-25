@@ -131,7 +131,7 @@ module.exports = {
       },
       function (arg) {
         //Check to see if input is valid
-        switch (arg) {
+        switch (arg[0]) {
           case "create country":
           case "create a new country":
             module.exports.initialiseFoundCountry(user_id);
