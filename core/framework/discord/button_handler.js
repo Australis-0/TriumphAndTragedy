@@ -33,6 +33,10 @@ module.exports = {
 
                 //Automatically delete prompt, but only if told to
                 deleteCheck(msg_obj);
+
+                //Clear interface object
+                delete interfaces[msg_id];
+                delete main.interfaces[msg_id];
               } else if (interaction.customId == "no_btn") {
                 //Edit embed to no_text
                 const new_embed_dialogue_prompt = new Discord.MessageEmbed()
@@ -43,6 +47,10 @@ module.exports = {
 
                 //Delete if prompted to
                 deleteCheck(msg_obj);
+
+                //Clear interface object
+                delete interfaces[msg_id];
+                delete main.interfaces[msg_id];
               }
               break;
             case "game":
