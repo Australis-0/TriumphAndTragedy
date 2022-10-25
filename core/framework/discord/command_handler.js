@@ -81,7 +81,7 @@ module.exports = {
                     } else {
                       satisfies_requirements = [false, `You must type out a valid nation name or ping a valid user! ${input} was not a valid nation/user.`];
                     }
-                  } else if (local_prompt.prompts[current_step[1]] == "user") {
+                  } else if (local_prompt.prompts[current_step][1] == "user") {
                     var parsed_mention = returnMention(input, true);
 
                     if (parsed_mention) {
