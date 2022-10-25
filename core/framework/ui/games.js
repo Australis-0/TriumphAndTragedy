@@ -332,11 +332,19 @@ module.exports = {
         try {
           if (returnChannel(game_obj.channel)) {
             game_obj.header.edit({ embeds: [topbar_embed] });
-
+            
             if (game_obj.page == "founding_map")
-              (!main.global.user_map[game_obj.user]) ?
-                initialiseFoundCountry(game_obj.user) :
+              if (!main.global.user_map[game_obj.user]) {
+                if (config.defines.common.enable_choose_countries && config.defines.common.enable_custom_countries) {
+                  initialiseCountryMenu(game_obj.user);
+                } else if (config.defines.common.enable_choose_countries) {
+                  initialiseClaimCountry(game_obj.user);
+                } else {
+                  initialiseFoundCountry(game_obj.user);
+                }
+              } else {
                 initialiseSettleStartingProvinces(game_obj.user);
+              }
           } else {
             if (game_obj)
               clearGame(game_id);
