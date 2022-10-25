@@ -199,7 +199,7 @@ config.casus_belli = {
         for (var x = 0; x < user_provinces[i].adjacencies.length; x++) {
           var local_province = main.users[user_provinces[i].adjacencies[x]];
 
-          if (local_province.owner == ot_user.id && local_province.controller == ot_user.id)
+          if (local_province.controller == ot_user.id)
             return true;
         }
     },
