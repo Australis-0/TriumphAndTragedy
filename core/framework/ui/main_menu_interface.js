@@ -125,7 +125,7 @@ module.exports = {
     //Initialise confirmation prompt
     returnChannel(game_obj.channel).send("Loading ..").then((msg) => {
       confirmDialogue(msg, {
-        text: `**Resign**\n\nAre you sure you wish to abandon this nation? ${(config.defines.common.enable_choose_countries) ? `If another player chooses to pick your abandoned country, you won't be able to get back in unless they invite you!` : `If no other players are on this nation, it will be permanently abandoned and you will not be able to pick it again!`}`,
+        text: `**Resign**\n\nAre you sure you wish to abandon this nation? ${(config.defines.common.enable_choose_countries) ? `If another player chooses to pick your abandoned country, you won't be able to get back in unless they invite you!` : `If no other players are on this nation, it will be permanently abandoned and you won't be able to pick it again!`}`,
         user: game_obj.user,
         delete_after: true
       }, function () {
