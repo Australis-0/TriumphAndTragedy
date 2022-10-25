@@ -1630,14 +1630,14 @@ module.exports = {
             if (input.startsWith("kick ")) {
               var player_id = input.replace("kick ", "").trim();
 
-              kickPlayer(user_id, player_id);
+              kickPlayer(user_id, parseMention(player_id));
             }
 
             //[Promote (Player ID)]
             if (input.startsWith("promote ")) {
               var player_id = input.replace("kick ", "").trim();
 
-              promotePlayer(user_id, player_id);
+              promotePlayer(user_id, parseMention(player_id));
             }
 
             //[Transfer Leadership]

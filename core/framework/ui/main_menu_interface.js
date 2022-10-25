@@ -198,10 +198,10 @@ module.exports = {
     var usr = main.users[actual_id];
 
     //Check if user is even playing that country
-    if (main.global.user_map[arg[0]] == actual_id) {
-      if (client.users.cache.find(user => user.id == arg[0])) {
+    if (main.global.user_map[ot_user_id] == actual_id) {
+      if (client.users.cache.find(user => user.id == ot_user_id)) {
         //Kick from party
-        delete main.global.user_map[arg[0]];
+        delete main.global.user_map[ot_user_id];
 
         //Reload UI
         if (game_obj.page == "coop_menu")
@@ -212,13 +212,13 @@ module.exports = {
           });
 
         //Print user feedback
-        returnChannel(settings.alert_channel).send(`<@${arg[0]}> was kicked from the country of **${usr.name}**.`);
-        printAlert(game_obj.id, `You have kicked <@${arg[0]}> from being able to play on your country.`);
+        returnChannel(settings.alert_channel).send(`<@${ot_user_id}> was kicked from the country of **${usr.name}**.`);
+        printAlert(game_obj.id, `You have kicked <@${ot_user_id}> from being able to play on your country.`);
       } else {
         printError(game_obj.id, `You must specify a real user to kick from your country! This player has either left all servers the bot is in, or was not a real user.`);
       }
     } else {
-      printError(game_obj.id, `<@${arg[0]}> could not be found playing your country!`);
+      printError(game_obj.id, `<@${ot_user_id}> could not be found playing your country!`);
     }
   },
 
@@ -326,10 +326,10 @@ module.exports = {
     var usr = main.users[actual_id];
 
     //Make sure player is playing that country to begin with
-    if (main.global.user_map[arg[0]] == actual_id) {
-      if (client.users.cache.find(user => user.id == arg[0])) {
+    if (main.global.user_map[ot_user_id] == actual_id) {
+      if (client.users.cache.find(user => user.id == ot_user_id)) {
         //Set as owner
-        usr.owner = arg[0];
+        usr.owner = ot_user_id;
 
         //Reload UI
         if (game_obj.page == "coop_menu")
@@ -340,13 +340,13 @@ module.exports = {
           });
 
         //Print user feedback
-        returnChannel(settings.alert_channel).send(`<@${arg[0]}> was granted ownership of the country of **${usr.name}**.`);
-        printAlert(game_obj.id, `You have transferred ownership of your country to <@${arg[0]}>. You remain playing this country until you **[Resign]**.`);
+        returnChannel(settings.alert_channel).send(`<@${ot_user_id}> was granted ownership of the country of **${usr.name}**.`);
+        printAlert(game_obj.id, `You have transferred ownership of your country to <@${ot_user_id}>. You remain playing this country until you **[Resign]**.`);
       } else {
         printError(game_obj.id, `You must specify a real user to transfer ownership of your country to! This player has either left all servers the bot is in, or was not a real user.`);
       }
     } else {
-      printError(game_obj.id, `<@${arg[0]}> could not be found playing your country!`);
+      printError(game_obj.id, `<@${ot_user_id}> could not be found playing your country!`);
     }
   }
 };
