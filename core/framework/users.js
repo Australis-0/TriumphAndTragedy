@@ -22,13 +22,13 @@ module.exports = {
 
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
-    var all_users = Object.keys(main.users);
+    var all_user_keys = Object.keys(main.global.user_map);
     var user_ids = [];
 
-    //Iterate over all_users and push
-    for (var i = 0; i < all_users.length; i++)
-      if (main.global.user_map[all_users[i]] == actual_id)
-        user_ids.push(all_users[i]);
+    //Iterate over all_user_keys and push
+    for (var i = 0; i < all_user_keys.length; i++)
+      if (main.global.user_map[all_user_keys[i]] == actual_id)
+        user_ids.push(all_user_keys[i]);
 
     //Return statement
     return user_ids;

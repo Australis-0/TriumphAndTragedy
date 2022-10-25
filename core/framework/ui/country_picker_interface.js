@@ -113,24 +113,162 @@ module.exports = {
     }
   },
 
-  initialiseFoundCountry: function (arg0_user) {
+  initialiseCountryMenu: function (arg0_user) {
     //Convert from parameters
     var user_id = arg0_user;
 
     //Declare local instance variables
     var game_obj = getGameObject(user_id);
 
+    //Initialise visual prompt
+    if (game_obj)
+      visualPrompt(game_obj.alert_embed, user_id, {
+        title: `Pick A Country:`,
+        prompts: [
+          [`Would you like to pick an existing country to play as, or create a country of your own?\n\nType **[Pick An Existing Country]** to pick an unclaimed country.\nType **[Create A New Country]** to pick a new country to play as.`, "string"]
+        ],
+        do_not_cancel: true
+      },
+      function (arg) {
+        //Check to see if input is valid
+        switch (arg) {
+          case "create country":
+          case "create a new country":
+            module.exports.initialiseFoundCountry(user_id);
+
+            break;
+          case "pick existing country":
+          case "pick an existing country":
+            module.exports.initialiseClaimCountry(user_id);
+
+            break;
+          default:
+            printError(game_obj.id, `You must specify a valid option!\n\nEither **[Pick an Existing Country]** to play as, or **[Create A New Country]**.`);
+
+            setTimeout(function(){
+              module.exports.initialiseCountryMenu(user_id);
+            }, 3000);
+
+            break;
+        }
+      });
+  },
+
+  initialiseClaimCountry: function (arg0_user) {
+    //Convert from parameters
+    var user_id = arg0_user;
+
+    //Declare local instance variables
+    var all_users = Object.keys(main.users);
+    var game_obj = getGameObject(user_id);
+    var has_previous_menu = (config.defines.common.enable_choose_countries && config.defines.common.enable_custom_countries);
+    var unclaimed_countries = [];
+    var unclaimed_country_string = [];
+
+    //Fetch array of unclaimed countries
+    for (var i = 0; i < all_users.length; i++) {
+      var local_users = getUsers(all_users[i]);
+
+      if (local_users.length == 0 && !getVassal(all_users[i]))
+        unclaimed_countries.push(all_users[i]);
+    }
+
+    if (unclaimed_countries.length > 0)
+      for (var i = 0; i < unclaimed_countries.length; i++)
+        unclaimed_country_string.push(`- **${main.users[unclaimed_countries[i]].name}**`);
+    else
+      unclaimed_country_string.push(`_No unclaimed countries are currently available to be played._`);
+
+    //Initialise visual prompt
+    if (game_obj)
+      visualPrompt(game_obj.alert_embed, user_id, {
+        title: `Claim An Existing Nation ..`,
+        prompts: [
+          [`Which country would you like to choose? The following countries have no players on them:\n\n${unclaimed_country_string.join("\n")}${(has_previous_menu) ? `\n\nType **[Back]** if you wish to create a custom country instead.` : ""}`, "mention"]
+        ],
+        do_not_cancel: true
+      },
+      function (arg) {
+        var reload_interface = false;
+
+        if (unclaimed_countries.includes(arg[0])) {
+          main.global.user_map[user_id] = arg[0];
+
+          printAlert(game_obj.id, `You have successfully claimed the nation of **${main.users[arg[0]].name}** for yourself.`);
+
+          //Reload all maps, initialise user topbar
+          reloadAllMaps("political");
+          game_obj.page = "country_interface";
+
+          //Open country interface
+          setTimeout(function(){
+            if (main.season_started) {
+              initialiseTopbar(user_id);
+              printStats(user_id);
+            } else {
+              createPageMenu(game_obj.middle_embed, {
+                embed_pages: printQueue(user_id),
+                user: user_id
+              });
+            }
+          }, 3000);
+        } else {
+          printError(game_obj.id, `The country you have specified, **${arg[0]}**, was not available to be claimed!`);
+          reload_interface = true;
+        }
+
+        if (reload_interface)
+          setTimeout(function(){
+            module.exports.initialiseClaimCountry(user_id);
+          }, 3000);
+      },
+      function (arg) {
+        switch (arg) {
+          case "back":
+          case "cancel":
+            if (has_previous_menu) {
+              module.exports.initialiseCountryMenu(user_id);
+
+              return true;
+            }
+
+            break;
+        }
+      });
+  },
+
+  initialiseFoundCountry: function (arg0_user) {
+    //Convert from parameters
+    var user_id = arg0_user;
+
+    //Declare local instance variables
+    var game_obj = getGameObject(user_id);
+    var has_previous_menu = (config.defines.common.enable_choose_countries && config.defines.common.enable_custom_countries);
+
     //Reinitialise visual prompt
     if (game_obj)
       visualPrompt(game_obj.alert_embed, user_id, {
         title: "Creating A New Nation ..",
         prompts: [
-          [`What would you like to name your country?`, "string"]
+          [`What would you like to name your country?${(has_previous_menu) ? `\n\nType **[Back]** if you wish to pick an unclaimed country instead.` : ""}`, "string"]
         ],
         do_not_cancel: true
       },
       function (arg) {
         foundCountry(user_id, arg[0]);
+      },
+      function (arg) {
+        switch (arg) {
+          case "back":
+          case "cancel":
+            if (has_previous_menu) {
+              module.exports.initialiseCountryMenu(user_id);
+
+              return true;
+            }
+
+            break;
+        }
       });
   }
 };
