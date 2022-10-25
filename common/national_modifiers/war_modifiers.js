@@ -22,5 +22,22 @@ config.national_modifiers.war_modifiers = {
       //Return modifier object
       return modifiers;
     }
+  },
+
+  peacetime_mobilisation: {
+    name: "Peacetime Mobilisation",
+    image: "https://media.discordapp.net/attachments/829862963485474827/1034476782570704976/peacetime_mobilisation.png",
+    icon: "infamy",
+    description: "With us still mobilised despite being at peace, our neighbours have begun to look upon us with more and more concern. If we do not demobilise soon, we risk becoming an international pariah, with a serious drain on our productivity.",
+
+    trigger: function (usr) {
+      if (usr.mobilisation.is_mobilised && !atWar(user_id))
+        return true;
+    },
+
+    modifiers: {
+      infamy_loss: 1, //+1.00 Infamy per turn
+      production_efficiency: -0.15
+    }
   }
 };

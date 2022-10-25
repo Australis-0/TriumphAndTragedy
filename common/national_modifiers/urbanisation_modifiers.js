@@ -27,7 +27,7 @@ config.national_modifiers.urbanisation_modifiers = {
     name: "Low Urbanisation",
     image: "https://media.discordapp.net/attachments/829862963485474827/893307116889178162/low_urbanisation.png",
     icon: "canals",
-    description: "As more and more people have begun moving from their agricultural posts to take up residence in our humble cities, production efficiency has begun to rise at the cost of raw resource production as human capital flight has begun to become noticeable throughout our country.",
+    description: "As more and more people have begun moving from their agricultural posts to take up residence in our humble cities, production efficiency has begun to rise at the cost of raw resource production as human capital flight has started to become more noticeable throughout our country.",
 
     trigger: function (usr) {
       var urban_pop_percentile = usr.demographics.urban_population/usr.demographics.population;

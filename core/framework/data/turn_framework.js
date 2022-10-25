@@ -368,8 +368,8 @@ module.exports = {
 
       //Diplomatic modifiers
       {
-        //Reduce infamy if at peace
-        if (!atWar(user_id)) {
+        //Make sure infamy is capped at start
+        if (usr.country_age <= 1) {
           //Make sure infamy loss is set to minimum
           if (usr.modifiers.infamy_loss > config.defines.diplomacy.infamy_loss)
             usr.modifiers.infamy_loss = config.defines.diplomacy.infamy_loss;

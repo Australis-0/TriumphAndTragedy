@@ -186,22 +186,22 @@ config.casus_belli = {
 
   acquire_state: {
     name: "Acquire State",
-    description: "Attacker's capital is less than 15 provinces away from target's capital. Attacker's total AP are over twice that of target's.",
+    description: "Attacker's provinces are adjacent to target provinces.",
     icon: "provinces",
     infamy: 5,
 
     limit: function (usr, ot_user) {
-      //Return statement
-      var capital_obj = getCapital(usr.id);
-      var ot_capital_obj = getCapital(ot_user.id);
-      var ot_user_strength = getMilitaryStrength(ot_user.id);
-      var usr_strength = getMilitaryStrength(usr.id);
+      //Declare local instance variables
+      var user_provinces = getProvinces(usr.id);
 
       //Return statement
-      if (capital_obj && ot_capital_obj)
-        if (moveTo(capital_obj.id, ot_capital_obj.id).length < 15)
-          if (usr_strength.attack > ot_user_strength*1.5)
+      for (var i = 0; i < user_provinces.length; i++)
+        for (var x = 0; x < user_provinces[i].adjacencies.length; x++) {
+          var local_province = main.users[user_provinces[i].adjacencies[x]];
+
+          if (local_province.owner == ot_user.id && local_province.controller == ot_user.id)
             return true;
+        }
     },
 
     peace_demands: ["puppet", "annexation"]
