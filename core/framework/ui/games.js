@@ -332,7 +332,7 @@ module.exports = {
         try {
           if (returnChannel(game_obj.channel)) {
             game_obj.header.edit({ embeds: [topbar_embed] });
-            
+
             if (game_obj.page == "founding_map")
               if (!main.global.user_map[game_obj.user]) {
                 if (config.defines.common.enable_choose_countries && config.defines.common.enable_custom_countries) {
@@ -396,37 +396,38 @@ module.exports = {
 
           //Try to fetch existing messages first
           var reinitialisation_loop = setInterval(function(local_ui, local_interface){
-            if (returnChannel(local_ui.channel))
-              var local_messages = returnChannel(local_ui.channel).messages.fetch({ limit: 100 }).then((messages) => {
-                var all_messages = [...messages];
-                var fetched_game_embeds = [];
+            if (local_ui.type == "game")
+              if (returnChannel(local_ui.channel))
+                var local_messages = returnChannel(local_ui.channel).messages.fetch({ limit: 100 }).then((messages) => {
+                  var all_messages = [...messages];
+                  var fetched_game_embeds = [];
 
-                for (var x = 0; x < all_messages.length; x++) {
-                  var is_game_embed = [false, ""];
+                  for (var x = 0; x < all_messages.length; x++) {
+                    var is_game_embed = [false, ""];
 
-                  try {
-                    for (var y = 0; y < game_embeds.length; y++)
-                      if (local_ui[game_embeds[y]].id == all_messages[x][0])
-                        is_game_embed = [true, game_embeds[y]];
-
-                    if (is_game_embed[0]) {
-                      local_ui[is_game_embed[1]] = all_messages[x][1];
-                      fetched_game_embeds.push(all_messages[x][0]);
-                    }
-                  } catch {}
-                }
-
-                //Initialise game loop
-                module.exports.initialiseGameLoop(local_interface);
-                clearInterval(reinitialisation_loop);
-
-                for (var x = 0; x < all_messages.length; x++)
-                  if (!fetched_game_embeds.includes(all_messages[x][0]))
                     try {
-                      if (!all_messages[x][1].author.bot)
-                        all_messages[x][1].delete();
+                      for (var y = 0; y < game_embeds.length; y++)
+                        if (local_ui[game_embeds[y]].id == all_messages[x][0])
+                          is_game_embed = [true, game_embeds[y]];
+
+                      if (is_game_embed[0]) {
+                        local_ui[is_game_embed[1]] = all_messages[x][1];
+                        fetched_game_embeds.push(all_messages[x][0]);
+                      }
                     } catch {}
-              });
+                  }
+
+                  //Initialise game loop
+                  module.exports.initialiseGameLoop(local_interface);
+                  clearInterval(reinitialisation_loop);
+
+                  for (var x = 0; x < all_messages.length; x++)
+                    if (!fetched_game_embeds.includes(all_messages[x][0]))
+                      try {
+                        if (!all_messages[x][1].author.bot)
+                          all_messages[x][1].delete();
+                      } catch {}
+                });
           }, 3000, local_ui, local_interface);
         }
 

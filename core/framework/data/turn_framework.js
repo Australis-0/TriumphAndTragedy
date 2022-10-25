@@ -373,9 +373,9 @@ module.exports = {
           //Make sure infamy loss is set to minimum
           if (usr.modifiers.infamy_loss > config.defines.diplomacy.infamy_loss)
             usr.modifiers.infamy_loss = config.defines.diplomacy.infamy_loss;
-
-          usr.modifiers.infamy += usr.modifiers.infamy_loss;
         }
+
+        usr.modifiers.infamy += usr.modifiers.infamy_loss;
 
         //Reset tracker variables
         usr.total_ceded_this_turn = 0;
