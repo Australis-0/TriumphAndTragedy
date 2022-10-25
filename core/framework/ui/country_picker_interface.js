@@ -125,7 +125,7 @@ module.exports = {
       visualPrompt(game_obj.alert_embed, user_id, {
         title: `Pick A Country:`,
         prompts: [
-          [`Would you like to pick an existing country to play as, or create a country of your own?\n\nType **[Pick An Existing Country]** to pick an unclaimed country.\nType **[Create A New Country]** to pick a new country to play as.\n\nType **[Quit Game]** to close this channel.`, "string"]
+          [`Would you like to pick an existing country to play as, or create a country of your own?\n\nType **[Pick An Existing Country]** to pick an unclaimed country.\nType **[Create A New Country]** to pick a new country to play as.\n\nType **[Quit Game]** to close this channel instead.`, "string"]
         ],
         do_not_cancel: true
       },
