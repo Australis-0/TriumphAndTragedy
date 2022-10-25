@@ -113,6 +113,9 @@ module.exports = {
       //Declare local ID for resolving user ID
       var local_id;
 
+      if (!return_id) {
+
+      }
       //Country name - Soft match first
       for (var i = 0; i < all_users.length; i++)
         if (main.users[all_users[i]].name.toLowerCase().indexOf(user_id.toLowerCase()) != -1)
@@ -166,27 +169,6 @@ module.exports = {
                   local_id = all_users[i];
           }
         }
-
-        //Cached users
-        if (!local_id)
-          try {
-            //Username - Soft match first
-            var soft_username = client.users.cache.find(user => user.username.toLowerCase().indexOf(user_id.toLowerCase()) != -1);
-
-            //Username - Hard match second
-            var hard_username = client.users.cache.find(user => user.username.toLowerCase() == user_id.toLowerCase());
-
-            if (soft_username)
-              local_id = soft_username.id;
-            if (hard_username)
-              local_id = hard_username.id;
-
-            //Mention
-            var mention_obj = client.users.cache.find(user => user.id == parseMention(user_id));
-
-            if (mention_obj)
-              local_id = mention_obj.id;
-          } catch {}
 
         return (!return_id) ? main.global.user_map[local_id] : local_id;
       } else {

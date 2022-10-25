@@ -79,10 +79,10 @@ module.exports = {
                     if (parsed_mention) {
                       local_prompt.answers.push(parsed_mention);
                     } else {
-                      satisfies_requirements = [false, `You must type out a valid nation name or ping a valid user! ${input} was not a valid nation/user.`];
+                      satisfies_requirements = [false, `You must type out a valid username or ping them! ${input} was not a valid user.`];
                     }
                   } else if (local_prompt.prompts[current_step][1] == "user") {
-                    var parsed_mention = returnMention(input, true);
+                    var parsed_mention = parseMention(input);
 
                     if (parsed_mention) {
                       local_prompt.answers.push(parsed_mention);
