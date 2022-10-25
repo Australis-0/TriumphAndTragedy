@@ -9,7 +9,10 @@ config.national_modifiers.urbanisation_modifiers = {
     trigger: function (usr) {
       var urban_pop_percentile = usr.demographics.urban_population/usr.demographics.population;
 
-      if (urban_pop_percentile < 0.50)
+      if (
+        urban_pop_percentile < 0.50 &&
+        usr.provinces > 10
+      )
         return true;
     },
 
@@ -29,7 +32,10 @@ config.national_modifiers.urbanisation_modifiers = {
     trigger: function (usr) {
       var urban_pop_percentile = usr.demographics.urban_population/usr.demographics.population;
 
-      if (urban_pop_percentile >= 0.50 && urban_pop_percentile < 0.60)
+      if (
+        urban_pop_percentile >= 0.50 && urban_pop_percentile < 0.60 &&
+        usr.provinces > 10
+      )
         return true;
     },
 
@@ -48,7 +54,10 @@ config.national_modifiers.urbanisation_modifiers = {
     trigger: function (usr) {
       var urban_pop_percentile = usr.demographics.urban_population/usr.demographics.population;
 
-      if (urban_pop_percentile >= 0.60 && urban_pop_percentile < 0.75)
+      if (
+        urban_pop_percentile >= 0.60 && urban_pop_percentile < 0.75 &&
+        usr.provinces > 10
+      )
         return true;
     },
 
@@ -68,7 +77,10 @@ config.national_modifiers.urbanisation_modifiers = {
     trigger: function (usr) {
       var urban_pop_percentile = usr.demographics.urban_population/usr.demographics.population;
 
-      if (urban_pop_percentile >= 0.75 && urban_pop_percentile < 0.85)
+      if (
+        urban_pop_percentile >= 0.75 && urban_pop_percentile < 0.85 &&
+        usr.provinces > 10
+      )
         return true;
     },
 
@@ -92,7 +104,8 @@ config.national_modifiers.urbanisation_modifiers = {
 
       if (
         urban_pop_percentile >= 0.85 && urban_pop_percentile < 0.90 &&
-        usr.researched_technologies.length >= 150
+        usr.researched_technologies.length >= 150 &&
+        usr.provinces > 10
       )
         return true;
     },
@@ -115,7 +128,8 @@ config.national_modifiers.urbanisation_modifiers = {
 
       if (
         urban_pop_percentile >= 0.90 && urban_pop_percentile < 0.95 &&
-        usr.researched_technologies.length >= 175
+        usr.researched_technologies.length >= 175 &&
+        usr.provinces > 10
       )
         return true;
     },
@@ -137,7 +151,8 @@ config.national_modifiers.urbanisation_modifiers = {
 
       if (
         urban_pop_percentile > 0.95 &&
-        usr.researched_technologies.length >= 175
+        usr.researched_technologies.length >= 175 &&
+        usr.provinces > 10
       )
         return true;
     },
@@ -160,7 +175,8 @@ config.national_modifiers.urbanisation_modifiers = {
 
       if (
         urban_pop_percentile >= 0.85 && urban_pop_percentile < 0.90 &&
-        usr.researched_technologies.length < 150
+        usr.researched_technologies.length < 150 &&
+        usr.provinces > 10
       )
         return true;
     },
@@ -182,7 +198,8 @@ config.national_modifiers.urbanisation_modifiers = {
 
       if (
         urban_pop_percentile >= 0.90 && urban_pop_percentile < 0.95 &&
-        usr.researched_technologies.length < 175
+        usr.researched_technologies.length < 175 &&
+        usr.provinces > 10
       )
         return true;
     },
@@ -206,7 +223,8 @@ config.national_modifiers.urbanisation_modifiers = {
 
       if (
         urban_pop_percentile >= 0.95 &&
-        usr.researched_technologies.length < 175
+        usr.researched_technologies.length < 175 &&
+        usr.provinces > 10
       )
         return true;
     },

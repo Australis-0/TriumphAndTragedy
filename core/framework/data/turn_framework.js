@@ -304,6 +304,7 @@ module.exports = {
     var all_goods = lookup.all_goods_array;
     var all_good_names = lookup.all_good_names;
     var all_governments = Object.keys(config.governments);
+    var all_modifiers = Object.keys(config.modifiers);
     var all_non_aggression_pacts = Object.keys(usr.diplomacy.non_aggression_pacts);
     var all_pops = Object.keys(config.pops);
     var all_production = getProduction(actual_id);
@@ -366,8 +367,14 @@ module.exports = {
 
       //Diplomatic modifiers
       {
-        //Reduce infamy
-        usr.modifiers.infamy += usr.modifiers.infamy_loss;
+        //Reduce infamy if at peace
+        if (!atWar(user_id)) {
+          //Make sure infamy loss is set to minimum
+          if (usr.modifiers.infamy_loss > config.defines.diplomacy.infamy_loss)
+            usr.modifiers.infamy_loss = config.defines.diplomacy.infamy_loss;
+
+          usr.modifiers.infamy += usr.modifiers.infamy_loss;
+        }
 
         //Reset tracker variables
         usr.total_ceded_this_turn = 0;
@@ -448,6 +455,19 @@ module.exports = {
 
             delete usr.temporary_modifiers[all_temporary_modifiers[i]];
           }
+        }
+      }
+
+      //Modifier cap handling
+      {
+        //Make sure modifiers cannot go beneath the minimum set in modifiers.js
+        for (var i = 0; i < all_modifiers.length; i++) {
+          var local_modifier = config.modifiers[all_modifiers[i]];
+
+          if (usr.modifiers[all_modifiers[i]])
+            if (local_modifier.minimum)
+              if (usr.modifiers[all_modifiers[i]] < local_modifier.minimum)
+                usr.modifiers[all_modifiers[i]] = local_modifier.minimum;
         }
       }
     } catch (e) {

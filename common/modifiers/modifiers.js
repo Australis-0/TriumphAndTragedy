@@ -263,25 +263,28 @@ config.modifiers = {
     type: "percentage",
     default_value: 1,
 
-    minimum: 0,
-    maximum: 1
+    minimum: 0.05
   },
   research_efficiency: {
     name: "Research Efficiency",
     type: "percentage",
-    default_value: 1
+    default_value: 1,
+
+    minimum: 0.05,
   },
   research_slots: {
     name: "Research Slots",
     type: "integer",
     default_value: 3,
 
-    minimum: 0
+    minimum: 1
   },
   rgo_throughput: {
     name: "RGO Throughput",
     type: "percentage",
-    default_value: 1
+    default_value: 1,
+
+    minimum: 0.05
   },
   shipment_capacity: {
     name: "Shipment Capacity",
@@ -293,12 +296,16 @@ config.modifiers = {
   shipment_time: {
     name: "Shipment Time",
     type: "percentage",
-    default_value: 1
+    default_value: 1,
+
+    minimum: 0.05
   },
   tax_efficiency: {
     name: "Tax Efficiency",
     type: "percentage",
-    default_value: 1
+    default_value: 1,
+
+    minimum: 0.10
   },
 
   //Military
