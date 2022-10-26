@@ -12,7 +12,9 @@ module.exports = {
 
       //Error trapping just in case
       try {
-        if (local_ui.channel) returnChannel(local_ui.channel).delete();
+        if (local_ui.channel)
+          if (local_ui.channel != settings.alert_channel)
+            returnChannel(local_ui.channel).delete();
       } catch {}
 
       main.interfaces = {};

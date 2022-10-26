@@ -53,7 +53,8 @@ module.exports = {
       if (game_obj)
         var delete_loop = setInterval(function(channel_id) {
           try {
-            returnChannel(channel_id).delete();
+            if (game_obj.channel != settings.alert_channel)
+              returnChannel(channel_id).delete();
           } catch {
             clearInterval(delete_loop);
           }
@@ -87,7 +88,8 @@ module.exports = {
       if (local_game_obj.type == "game") {
         //Error trapping just in case channel doesn't exist
         try {
-          returnChannel(local_game_obj.channel).delete();
+          if (local_ui.channel != settings.alert_channel)
+            returnChannel(local_game_obj.channel).delete();
         } catch (e) {
           log.warn(`Game channel for Game ID ${all_interfaces[i]} could not be found: ${e}.`);
         }

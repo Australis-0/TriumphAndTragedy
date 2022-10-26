@@ -471,21 +471,35 @@ module.exports = {
     var distance = parseInt(arg1_distance);
 
     //Declare local instance variables
-    var new_province_cache = [];
+    var dead_province_cache = [];
+    var new_province_cache = [province_id];
     var province_cache = [province_id];
 
     for (var i = 0; i < distance; i++) {
-      for (var x = 0; x < province_cache.length; x++) {
-        var local_province = main.provinces[province_cache[x]];
+      //Push everything in dead_province_cache to province_cache
+      for (var x = 0; x < dead_province_cache.length; x++)
+        if (!province_cache.includes(dead_province_cache[x]))
+          province_cache.push(dead_province_cache[x]);
 
-        if (local_province.adjacencies)
-          for (var y = 0; y < local_province.adjacencies.length; y++)
-            if (!province_cache.includes(local_province.adjacencies[y]))
-              new_province_cache.push(local_province.adjacencies[y]);
+      //Move old new_province_cache to dead_province_cache
+      dead_province_cache = JSON.parse(JSON.stringify(new_province_cache));
+      new_province_cache = [];
+
+      for (var x = 0; x < dead_province_cache.length; x++) {
+        var local_province = main.provinces[dead_province_cache[x]];
+
+        if (local_province)
+          if (local_province.adjacencies)
+            for (var y = 0; y < local_province.adjacencies.length; y++)
+              if (!new_province_cache.includes(local_province.adjacencies[y]))
+                new_province_cache.push(local_province.adjacencies[y]);
       }
-      for (var x = 0; x < new_province_cache.length; x++)
-        province_cache.push(new_province_cache[x]);
     }
+
+    //Push anything remaining in new_province_cache to province_cache
+    for (var i = 0; i < new_province_cache.length; i++)
+      if (!province_cache.includes(new_province_cache[i]))
+        province_cache.push(new_province_cache[i]);
 
     //Return statement
     return province_cache;
