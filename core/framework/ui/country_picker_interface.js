@@ -120,6 +120,9 @@ module.exports = {
     //Declare local instance variables
     var game_obj = getGameObject(user_id);
 
+    //Mark page
+    game_obj.country_picker_page = "country_menu";
+
     //Initialise visual prompt
     if (game_obj)
       visualPrompt(game_obj.alert_embed, user_id, {
@@ -186,6 +189,9 @@ module.exports = {
     else
       unclaimed_country_string.push(`_No unclaimed countries are currently available to be played._`);
 
+    //Mark page
+    game_obj.country_picker_page = "claim_country";
+
     //Initialise visual prompt
     if (game_obj)
       visualPrompt(game_obj.alert_embed, user_id, {
@@ -206,6 +212,7 @@ module.exports = {
           //Reload all maps, initialise user topbar
           reloadAllMaps("political");
           game_obj.page = "country_interface";
+          delete game_obj.country_picker_page;
 
           //Open country interface
           setTimeout(function(){
@@ -252,6 +259,9 @@ module.exports = {
     var game_obj = getGameObject(user_id);
     var has_previous_menu = (config.defines.common.enable_choose_countries && config.defines.common.enable_custom_countries);
 
+    //Mark page
+    game_obj.country_picker_page = "found_country";
+
     //Reinitialise visual prompt
     if (game_obj)
       visualPrompt(game_obj.alert_embed, user_id, {
@@ -263,6 +273,7 @@ module.exports = {
       },
       function (arg) {
         foundCountry(user_id, arg[0]);
+        delete game_obj.country_picker_page;
       },
       function (arg) {
         switch (arg) {

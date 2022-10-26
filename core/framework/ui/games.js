@@ -337,12 +337,12 @@ module.exports = {
 
             if (game_obj.page == "founding_map")
               if (!main.global.user_map[game_obj.user]) {
-                if (config.defines.common.enable_choose_countries && config.defines.common.enable_custom_countries) {
-                  initialiseCountryMenu(game_obj.user);
-                } else if (config.defines.common.enable_choose_countries) {
+                if (game_obj.country_picker_page == "claim_country") {
                   initialiseClaimCountry(game_obj.user);
+                } else if (game_obj.country_picker_page == "found_country") {
+                  initialiseFoundCountry(user_id);
                 } else {
-                  initialiseFoundCountry(game_obj.user);
+                  initialiseCountryMenu(user_id);
                 }
               } else {
                 initialiseSettleStartingProvinces(game_obj.user);
