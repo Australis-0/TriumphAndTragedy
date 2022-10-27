@@ -156,12 +156,12 @@ module.exports = {
     visualPrompt(game_obj.alert_embed, user_id, {
       title: `Train Units:`,
       prompts: [
-        [`What type of unit would you like to build?\n\nCheck your **[Unit List]** for a full list of available units to construct.`, "string"],
-        [`How many units would you like to train?`, "number", { min: 1 }]
+        [`How many units would you like to train?`, "number", { min: 1 }],
+        [`What type of unit would you like to build?\n\nCheck your **[Unit List]** for a full list of available units to construct.`, "string"]
       ]
     },
     function (arg) {
-      module.exports.craft(user_id, arg[1], arg[0]);
+      module.exports.craft(user_id, arg[0], arg[1]);
     },
     function (arg) {
       switch (arg) {

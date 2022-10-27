@@ -83,10 +83,9 @@ module.exports = {
     return (options.return_nicknames) ? nicknames : usernames;
   },
 
-  returnMention: function (arg0_user, arg1_return_id) {
+  returnMention: function (arg0_user) {
     //Convert from parameters
     var user_id = arg0_user;
-    var return_id = arg1_return_id;
 
     //Declare local instance variables
     var all_users = Object.keys(main.users);
@@ -113,9 +112,6 @@ module.exports = {
       //Declare local ID for resolving user ID
       var local_id;
 
-      if (!return_id) {
-
-      }
       //Country name - Soft match first
       for (var i = 0; i < all_users.length; i++)
         if (main.users[all_users[i]].name.toLowerCase().indexOf(user_id.toLowerCase()) != -1)
@@ -169,10 +165,12 @@ module.exports = {
                   local_id = all_users[i];
           }
         }
-
-        return (!return_id) ? main.global.user_map[local_id] : local_id;
+        
+        return (main.global.user_map[local_id]) ?
+          main.global.user_map[local_id] : local_id;
       } else {
-        return (!return_id) ? main.global.user_map[nation_found[1]] : nation_found[1];
+        return (main.global.user_map[nation_found[1]]) ?
+          main.global.user_map[nation_found[1]] : nation_found[1];
       }
     }
 

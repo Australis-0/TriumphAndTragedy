@@ -112,8 +112,8 @@ config.national_modifiers.urbanisation_modifiers = {
 
     modifiers: {
       rgo_throughput: -0.60,
-      production_efficiency: -0.50,
-      research_efficiency: -0.50
+      production_efficiency: -0.10,
+      research_efficiency: 0.35
     }
   },
 
