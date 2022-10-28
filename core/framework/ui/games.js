@@ -235,6 +235,9 @@ module.exports = {
 
             break;
           case "map":
+            initialiseTopbar(game_obj.user);
+
+            break;
           case "founding_map":
             //Initialise map viewer and found country dialogue prompt
             initialiseMapViewer(game_id);
@@ -250,8 +253,6 @@ module.exports = {
               } else {
                 initialiseSettleStartingProvinces(game_obj.user);
               }
-
-            if (["map"].includes(game_obj.page)) initialiseTopbar(game_obj.user);
 
             break;
         }

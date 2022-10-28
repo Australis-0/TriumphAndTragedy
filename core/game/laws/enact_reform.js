@@ -191,7 +191,7 @@ module.exports = {
                     user: game_obj.user
                   });
 
-              } else if (reform_index == current_reform_index) {
+              } else if (new_reform_index == current_reform_index) {
                 printError(game_obj.id, `You have already enacted **${actual_reform_name}** as your stance on **${reform_category_name}**!`);
               } else {
                 printError(game_obj.id, `You cannot proceed to that reform yet!`);
