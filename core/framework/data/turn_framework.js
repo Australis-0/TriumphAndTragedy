@@ -132,9 +132,10 @@ module.exports = {
     }
 
     //Force render maps after turn processing
-    for (var i = main.tick_count % 10; i < mapmodes.length; i += 10)
-      if (mapmodes[i])
-        forceRender(mapmodes[i]);
+    if (config.defines.common.force_render_on_turn)
+      for (var i = main.tick_count % 10; i < mapmodes.length; i += 10)
+        if (mapmodes[i])
+          forceRender(mapmodes[i]);
   },
 
   nextGlobalTurn: function () {
@@ -269,6 +270,16 @@ module.exports = {
 
         //amount_sold deteriorates each turn to simulate large market demand
         local_market_good.amount_sold = Math.ceil(local_market_good.amount_sold*0.5);
+      }
+    }
+
+    //Force render all maps
+    {
+      if (config.defines.common.force_render_on_turn) {
+        console.time(`Force rendering all maps!`);
+        for (var i = 0; i < mapmodes.length; i++)
+          forceRender(mapmodes[i]);
+        console.timeEnd(`Force rendering all maps!`);
       }
     }
 
