@@ -288,7 +288,7 @@ module.exports = {
     main.round_count++;
   },
 
-  nextTurn: function (arg0_user, arg1_options) { //[WIP] - Add newspaper section later, subtract political capital by vassal maintenance each turn, war exhaustion handler
+  nextTurn: function (arg0_user, arg1_options) { //[WIP] - Add newspaper section later
     //Convert from parameters
     var user_id = arg0_user;
     var options = (arg1_options) ? arg1_options : {};
@@ -323,6 +323,7 @@ module.exports = {
     var all_relations = Object.keys(usr.diplomacy.relations);
     var all_temporary_modifiers = Object.keys(usr.temporary_modifiers);
     var all_users = Object.keys(main.users);
+    var all_vassals = Object.keys(usr.diplomacy.vassals);
     var controlled_provinces = getProvinces(actual_id);
     var is_being_justified_on = isBeingJustifiedOn(actual_id);
     var owned_provinces = getProvinces(actual_id, { include_hostile_occupations: true });
@@ -636,16 +637,17 @@ module.exports = {
         if (usr.under_construction[i].construction_turns <= 0) {
           var local_city_obj = getProvince(usr.under_construction[i].province_id);
 
-          if (local_city_obj.buildings)
-            //Individual buildings are treated as objects in an array here because this allows for further granularity in the future
-            constructBuilding(usr.under_construction[i].building_amount, usr.under_construction[i].building_type, usr.under_construction[i].province_id, i);
+          //Try/catch to prevent duplication
+          try {
+            if (local_city_obj.buildings)
+              //Individual buildings are treated as objects in an array here because this allows for further granularity in the future
+              constructBuilding(usr.under_construction[i].building_amount, usr.under_construction[i].building_type, usr.under_construction[i].province_id, i);
+          } catch {}
+
+          //Remove construction
+          usr.under_construction.splice(i, 1);
         }
       }
-
-      //Remove glitched constructions
-      for (var i = usr.under_construction.length - 1; i >= 0; i--)
-        if (usr.under_construction[i].construction_turns <= 0)
-          usr.under_construction.splice(i, 1);
     } catch (e) {
       console.log(e);
     }
@@ -656,105 +658,111 @@ module.exports = {
     try {
       if (!options.is_simulation) {
         //Casus Belli
-        var cbs_to_remove = [];
+        {
+          var cbs_to_remove = [];
 
-        for (var i = 0; i < usr.diplomacy.casus_belli.length; i++) {
-          var local_casus_belli = usr.diplomacy.casus_belli[i];
+          for (var i = 0; i < usr.diplomacy.casus_belli.length; i++) {
+            var local_casus_belli = usr.diplomacy.casus_belli[i];
 
-          local_casus_belli.duration--;
+            local_casus_belli.duration--;
 
-          if (local_casus_belli.duration <= 0)
-            cbs_to_remove.push(i);
-        }
+            if (local_casus_belli.duration <= 0)
+              cbs_to_remove.push(i);
+          }
 
-        //Remove all cbs in cbs_to_remove
-        for (var i = cbs_to_remove.length - 1; i >= 0; i--)
-          usr.diplomacy.casus_belli.splice(cbs_to_remove[i], 1);
+          //Remove all cbs in cbs_to_remove
+          for (var i = cbs_to_remove.length - 1; i >= 0; i--)
+            usr.diplomacy.casus_belli.splice(cbs_to_remove[i], 1);
 
-        for (var i = 0; i < all_casus_belli.length; i++) {
-          var local_cb = config.casus_belli[all_casus_belli[i]];
+          for (var i = 0; i < all_casus_belli.length; i++) {
+            var local_cb = config.casus_belli[all_casus_belli[i]];
 
-          if (local_cb.limit)
-            for (var x = 0; x < all_users.length; x++)
-              if (all_users[x] != actual_id)
-                //Make sure user can't have the same CB twice
-                try {
-                  if (local_cb.limit(usr, main.users[all_users[x]])) {
-                    var already_has_this_cb = false;
+            if (local_cb.limit)
+              for (var x = 0; x < all_users.length; x++)
+                if (all_users[x] != actual_id)
+                  //Make sure user can't have the same CB twice
+                  try {
+                    if (local_cb.limit(usr, main.users[all_users[x]])) {
+                      var already_has_this_cb = false;
 
-                    for (var y = 0; y < usr.diplomacy.casus_belli.length; y++) {
-                      var local_casus_belli = usr.diplomacy.casus_belli[y];
+                      for (var y = 0; y < usr.diplomacy.casus_belli.length; y++) {
+                        var local_casus_belli = usr.diplomacy.casus_belli[y];
 
-                      if (
-                        local_casus_belli.type == all_casus_belli[i] &&
-                        local_casus_belli.target == all_users[x]
-                      )
-                        already_has_this_cb = true;
+                        if (
+                          local_casus_belli.type == all_casus_belli[i] &&
+                          local_casus_belli.target == all_users[x]
+                        )
+                          already_has_this_cb = true;
+                      }
+
+                      if (!already_has_this_cb)
+                        usr.diplomacy.casus_belli.push({
+                          type: all_casus_belli[i],
+                          target: all_users[x],
+
+                          duration: 1
+                        });
                     }
-
-                    if (!already_has_this_cb)
-                      usr.diplomacy.casus_belli.push({
-                        type: all_casus_belli[i],
-                        target: all_users[x],
-
-                        duration: 1
-                      });
-                  }
-                } catch {}
+                  } catch {}
+          }
         }
 
         //Improve/decrease relations
-        for (var i = 0; i < all_relations.length; i++) {
-          var local_relation = usr.diplomacy.relations[all_relations[i]];
+        {
+          for (var i = 0; i < all_relations.length; i++) {
+            var local_relation = usr.diplomacy.relations[all_relations[i]];
 
-          //Check if improving_to value exists
-          if (local_relation.improving_to)
-            if (local_relation.improving_to != local_relation.value) {
-              var relation_change = (local_relation.improving_to - local_relation.value)/local_relation.duration;
+            //Check if improving_to value exists
+            if (local_relation.improving_to)
+              if (local_relation.improving_to != local_relation.value) {
+                var relation_change = (local_relation.improving_to - local_relation.value)/local_relation.duration;
 
-              //Set new relation value
-              local_relation.value += relation_change;
+                //Set new relation value
+                local_relation.value += relation_change;
 
-              //Cap off at whatever relation_change was, negative/positive
-              //Negative handler
-              if (
-                (relation_change < 0 && local_relation.value < local_relation.improving_to) ||
-                (relation_change > 0 && local_relation.value > local_relation.improving_to)
-              )
-                local_relation.value = local_relation.improving_to;
+                //Cap off at whatever relation_change was, negative/positive
+                //Negative handler
+                if (
+                  (relation_change < 0 && local_relation.value < local_relation.improving_to) ||
+                  (relation_change > 0 && local_relation.value > local_relation.improving_to)
+                )
+                  local_relation.value = local_relation.improving_to;
 
-              //Check if the current value is equal to the improved relation
-              if (local_relation.value >= local_relation.improving_to) {
-                //Set status to stagnant
-                local_relation.status = "stagnant";
+                //Check if the current value is equal to the improved relation
+                if (local_relation.value >= local_relation.improving_to) {
+                  //Set status to stagnant
+                  local_relation.status = "stagnant";
 
-                //If so, delete the keys
-                delete local_relation.improving_to;
-                delete local_relation.duration;
+                  //If so, delete the keys
+                  delete local_relation.improving_to;
+                  delete local_relation.duration;
+                }
+
+                if (local_relation.duration > 0)
+                  local_relation.duration--;
+
+                //Cap it out at -100 and +100
+                local_relation.value = Math.max(local_relation.value, -100);
+                local_relation.value = Math.min(local_relation.value, 100);
+                local_relation.improving_to = Math.max(local_relation.improving_to, -100);
+                local_relation.improving_to = Math.max(local_relation.improving_to, 100);
               }
-
-              if (local_relation.duration > 0)
-                local_relation.duration--;
-
-              //Cap it out at -100 and +100
-              local_relation.value = Math.max(local_relation.value, -100);
-              local_relation.value = Math.min(local_relation.value, 100);
-              local_relation.improving_to = Math.max(local_relation.improving_to, -100);
-              local_relation.improving_to = Math.max(local_relation.improving_to, 100);
-            }
+          }
         }
 
         //Non-aggression pacts
-        for (var i = 0; i < all_non_aggression_pacts.length; i++) {
-          var local_non_aggression_pact = usr.diplomacy.non_aggression_pacts[all_non_aggression_pacts[i]];
+        {
+          for (var i = 0; i < all_non_aggression_pacts.length; i++) {
+            var local_non_aggression_pact = usr.diplomacy.non_aggression_pacts[all_non_aggression_pacts[i]];
 
-          //Decrement duration if greater than zero
-          if (local_non_aggression_pact.duration > 0)
-            local_non_aggression_pact.duration--;
+            //Decrement duration if greater than zero
+            if (local_non_aggression_pact.duration > 0)
+              local_non_aggression_pact.duration--;
 
-          //Delete non aggression pact once time runs out
-          if (local_non_aggression_pact.duration == 0)
-            dissolveNonAggressionPact(actual_id, local_non_aggression_pact.id);
+            //Delete non aggression pact once time runs out
+            if (local_non_aggression_pact.duration == 0)
+              dissolveNonAggressionPact(actual_id, local_non_aggression_pact.id);
+          }
         }
 
         //Prestige
@@ -763,8 +771,15 @@ module.exports = {
         }
 
         //Vassalage
-        if (getVassal(actual_id))
-          usr.vassal_years++;
+        {
+          //Overlordship
+          if (all_vassals.length > 0)
+            usr.modifiers.political_capital -= getVassalMaintenance(actual_id);
+
+          //Vassal status
+          if (getVassal(actual_id))
+            usr.vassal_years++;
+        }
 
         //Wargoal justification
         {

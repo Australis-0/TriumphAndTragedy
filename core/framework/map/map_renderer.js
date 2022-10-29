@@ -11,7 +11,7 @@ module.exports = {
     var label_placement = config.defines.map.map_label_placement;
     var labels = [];
 
-    log.info(`cacheSVG() called for ${map_file}!`);
+    log.info(`cacheSVG() called for ${map_file} from ${module.exports.cacheSVG.caller.name}!`);
 
     var current_file_data = global[`${map_name}_parsed`].toString()
       .replace(/><\/path>/gm, " />")
@@ -402,9 +402,6 @@ module.exports = {
 
         break;
     }
-
-    //Reload all maps
-    module.exports.reloadAllMaps(map_name);
   },
 
   reloadAllMaps: function (arg0_map_name) {
