@@ -1,4 +1,14 @@
 module.exports = {
+  initGlobalLoop: function () {
+    try {
+      initGlobal();
+    } catch {
+      setTimeout(function(){
+        module.exports.initGlobalLoop();
+      }, 1000);
+    }
+  },
+
   loadBotFiles: function () {
     //Automated Backup and Restoration System (ABRS)
     FileManager.import("./ABRS");

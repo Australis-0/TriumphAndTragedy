@@ -140,7 +140,7 @@ client.on("messageCreate", async (message) => {
 });
 
 //Initialise variables before anything else!
-initGlobal();
+initGlobalLoop();
 
 //Logic loops, 1-second logic loop
 setInterval(function(){
@@ -164,6 +164,7 @@ setInterval(function(){
   //Backup processing
 	if (time_difference > settings.backup_timer*1000) {
 		main.last_backup = current_date;
+    log.info(`Saving automatic backup.`);
 		writeSave({ file_limit: settings.backup_limit });
 	}
 
@@ -242,7 +243,6 @@ setInterval(function(){
   if (turn_time_difference > settings.turn_timer*1000) {
     main.last_backup = current_date;
     main.last_turn = current_date;
-    writeSave({ file_limit: settings.backup_limit });
 
     //Process nextGlobalTurn() for global processes and calculations
     if (main.season_started) {

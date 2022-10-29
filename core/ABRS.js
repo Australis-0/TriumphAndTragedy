@@ -58,14 +58,29 @@ module.exports = {
 
   loadMostRecentSave: function () {
   	//Declare local instance variables
-    var rawdata = fs.readFileSync('database.js');
+    var invalid_save = false;
+    var rawdata = fs.readFileSync("database.js");
 
+    //Check if current DB is valid
   	if (rawdata.toString().length != 0) {
-  		global.main = JSON.parse(rawdata);
-      interfaces = main.interfaces;
+      try {
+    		global.main = JSON.parse(rawdata);
+        interfaces = main.interfaces;
 
-      setTimeout(reinitialiseGameEmbeds, 1000);
+        log.info(`Loaded default savedata.`);
+
+        setTimeout(reinitialiseGameEmbeds, 1000);
+      } catch {
+        invalid_save = true;
+      }
   	} else {
+      invalid_save = true;
+    }
+
+    //Restore automatic backup if DB isn't valid
+    if (invalid_save) {
+      log.warn(`Current database detected as invalid! Attempting to restore backup.`);
+
   		for (var i = 0; i < backup_array.length; i++) {
   			if (!backup_loaded) {
   				var current_backup = fs.readFileSync("./backups/" + backup_array[i]);
@@ -78,6 +93,7 @@ module.exports = {
   						is_valid_json = true;
   					} catch (error) {
   						is_valid_json = false;
+              log.error(`Error when parsing backup file '${backup_array[i]}' ...`);
   					}
 
             //Load backup if a backup is detected as valid JSON
@@ -86,13 +102,13 @@ module.exports = {
               global.backup_loaded = true;
 
               //Overwrite database.js with new backup file
-  						log.info("Going through backup file '" + backup_array[i] + "' ...");
+  						log.info("Loading backup file '" + backup_array[i] + "' ...");
   						fs.copyFile("./backups/" + backup_array[i], "database.js", (err) => {
                 if (err) throw err;
               });
 
   						setTimeout(function(){
-  							rawdata = fs.readFileSync('database.js');
+  							rawdata = fs.readFileSync("database.js");
   							global.main = JSON.parse(rawdata);
 
                 //Restore interfaces
