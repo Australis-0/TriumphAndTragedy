@@ -312,7 +312,7 @@ module.exports = {
     if (options.pop_type == "all") {
       for (var i = 0; i < all_pops.length; i++)
         total_growth += Math.ceil(
-          city_obj.pops.population*
+          city_obj.pops[all_pops[i]]*
           module.exports.getCityPopGrowthRate(city_obj, { pop_type: all_pops[i] })
         );
     } else {
@@ -343,7 +343,7 @@ module.exports = {
     var usr = main.users[city_obj.controller];
 
     var local_growth_modifier = (options.pop_type != "all") ?
-      usr.pops[`${options.pop_type}}_growth_modifier`] : 1;
+      usr.pops[`${options.pop_type}_growth_modifier`] : 1;
 
     //Calculate scalar
     if (city_obj.pops.population > config.defines.economy.urban_pop_growth_penalty_threshold) //-3% per million
@@ -372,6 +372,10 @@ module.exports = {
 
     if (config.defines.economy.urban_pop_maximum_growth_rate)
       local_pop_growth_rate = Math.min(local_pop_growth_rate, config.defines.economy.urban_pop_maximum_growth_rate);
+
+    //Make sure population can't drop by more than 100%
+    if (local_pop_growth_rate < -1)
+      local_pop_growth_rate = local_pop_growth_rate % 1;
 
     //Return statement
     return local_pop_growth_rate;
