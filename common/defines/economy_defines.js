@@ -66,7 +66,7 @@ config.defines.economy = {
     [70000000, 0.005],
     [100000000, 0.001]
   ], //At what population levels should growth be capped? Caps only start at the first element: [population, % growth cap]
-  urban_pop_maximum_growth_rate: 1.05, //How fast should urban provinces be able to grow at most?
+  urban_pop_maximum_growth_rate: 0.05, //How fast should urban provinces be able to grow at most?
   urban_pop_growth_penalty_threshold: 500000, //At what population should the urban population threshold kick in?
   urban_pop_growth_penalty_per_million: 0.03, //-3% growth per million
 

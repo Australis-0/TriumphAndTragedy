@@ -47,7 +47,7 @@ module.exports = {
             local_field.push(`- This city is currently occupied by us in a war! We won't be able to gain resources from it until it is legally annexed by us.`);
 
         local_field.push(`- ${config.icons.provinces} Province: ${cities[i].id}`);
-        local_field.push(`- ${config.icons.population} Population: ${parseNumber(cities[i].pops.population)}/${parseNumber(cities[i].housing)}`);
+        local_field.push(`- ${config.icons.population} Population: ${parseNumber(cities[i].pops.population)}/${parseNumber(cities[i].housing)}\n• **${printPercentage(getCityPopGrowthRate(cities[i]), { base_zero: true, display_prefix: true })}`);
         local_field.push(`- RGO: ${(getGood(cities[i].resource).icon) ? config.icons[getGood(cities[i].resource).icon] + " " : ""} ${(getGood(cities[i].resource).name) ? getGood(cities[i].resource).name : cities[i].resource}`);
 
         //Print culture
@@ -118,7 +118,7 @@ module.exports = {
       city_string.push(`**${city_obj.name}:**`);
       city_string.push("");
       city_string.push(`**Province:** ${config.icons.provinces} ${city_obj.id}`);
-      city_string.push(`**Population:** ${config.icons.population} ${parseNumber(city_obj.pops.population)}`);
+      city_string.push(`**Population:** ${config.icons.population} ${parseNumber(city_obj.pops.population)} (**${printPercentage(getCityPopGrowthRate(city_obj), { base_zero: true, display_prefix: true })}** per turn)`);
       city_string.push(`**Development:** ${config.icons.development} ${parseNumber(city_obj.development)}`);
       city_string.push(`**RGO:** ${rgo_icon}${rgo_name}`);
       city_string.push(`- **${(usr.modifiers.rgo_throughput-1 >= 0) ? "+" : ""}${printPercentage(usr.modifiers.rgo_throughput)}** modifier to ${rgo_icon}${rgo_name} production in this province.`);

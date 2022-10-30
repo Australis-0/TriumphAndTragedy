@@ -165,14 +165,12 @@ module.exports = {
     var number = arg0_number;
     var options = (arg1_options) ? arg1_options : {};
 
+    //Adjust for base_one
     if (options.base_one)
       number--;
 
     //Return statement
-    return `${(options.display_prefix) ? (
-      (number > 1 && !options.base_zero) ||
-      (number > 0 && options.base_zero)
-    ) ? "+" : "" : ""}${Math.round(number*100)}%`;
+    return `${(options.display_prefix && number > 0) ? "+" : ""}${Math.round(number*100)}%`;
   },
 
   /*
