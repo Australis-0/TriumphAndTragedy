@@ -255,10 +255,10 @@ setInterval(function(){
 }, 1000);
 
 //Logic loops, 30-second logic loop
-setTimeout(function(){
+setInterval(function(){
   //Write to database.js
   try {
-  	fs.writeFile('database.js', JSON.stringify(main), function (err,data) {
+  	fs.writeFile('database.js', JSON.stringify(main), function (err, data) {
   		if (err) return log.info(err);
   	});
   } catch (e) {

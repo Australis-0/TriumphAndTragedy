@@ -119,5 +119,6 @@ config.wargoals = {
     name: "Complete Annexation",
     infamy: 10,
 
+    
   }
 };

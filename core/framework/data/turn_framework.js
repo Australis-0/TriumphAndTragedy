@@ -14,6 +14,8 @@ module.exports = {
     main.global.battle_tick = current_date;
     main.last_backup = current_date;
     main.tick_count++;
+
+    log.info(`Saving battle tick backup.`);
 		writeSave({ file_limit: settings.backup_limit });
 
     //Clear all combat flags
