@@ -345,37 +345,45 @@ module.exports = {
     var local_growth_modifier = (options.pop_type != "all") ?
       usr.pops[`${options.pop_type}_growth_modifier`] : 1;
 
-    //Calculate scalar
-    if (city_obj.pops.population > config.defines.economy.urban_pop_growth_penalty_threshold) //-3% per million
-      scalar -= Math.ceil(
-        (city_obj.pops.population - config.defines.economy.urban_pop_growth_penalty_threshold)/1000000
-      )*config.defines.economy.urban_pop_growth_penalty_per_million;
+    //Local pop growth logic
+    {
+      //Calculate scalar
+      if (city_obj.pops.population > config.defines.economy.urban_pop_growth_penalty_threshold) //-3% per million
+        scalar -= Math.ceil(
+          (city_obj.pops.population - config.defines.economy.urban_pop_growth_penalty_threshold)/1000000
+        )*config.defines.economy.urban_pop_growth_penalty_per_million;
 
-    //Calculate urban pop growth rate for chosen pop
-    var local_pop_growth_rate = (
-      local_growth_modifier*
-      scalar*
-      usr.modifiers.pop_growth_modifier
-    );
+      //Calculate urban pop growth rate for chosen pop
+      var local_pop_growth_rate = (
+        local_growth_modifier*
+        scalar*
+        usr.modifiers.pop_growth_modifier
+      );
 
-    //Set local pop growth cap from economy defines
-    var urban_growth_cap;
-    for (var y = 0; y < config.defines.economy.urban_pop_growth_cap.length; y++) {
-      var local_element = config.defines.economy.urban_pop_growth_cap[y];
+      //Set local pop growth cap from economy defines
+      var urban_growth_cap;
+      for (var y = 0; y < config.defines.economy.urban_pop_growth_cap.length; y++) {
+        var local_element = config.defines.economy.urban_pop_growth_cap[y];
 
-      if (city_obj.pops.population >= local_element[0])
-        urban_growth_cap = local_element[1];
+        if (city_obj.pops.population >= local_element[0])
+          urban_growth_cap = local_element[1];
+      }
+
+      if (urban_growth_cap)
+        local_pop_growth_rate = Math.min(local_pop_growth_rate, urban_growth_cap);
+
+      //Cap to maximum
+      if (config.defines.economy.urban_pop_maximum_growth_rate)
+        local_pop_growth_rate = Math.min(local_pop_growth_rate, config.defines.economy.urban_pop_maximum_growth_rate);
+
+      //Occupation penalty
+      if (city_obj.controller != city_obj.owner)
+        local_pop_growth_rate = local_pop_growth_rate*config.defines.economy.occupation_pop_growth_penalty;
+
+      //Make sure population can't drop by more than 100%
+      if (local_pop_growth_rate < -1)
+        local_pop_growth_rate = local_pop_growth_rate % 1;
     }
-
-    if (urban_growth_cap)
-      local_pop_growth_rate = Math.min(local_pop_growth_rate, urban_growth_cap);
-
-    if (config.defines.economy.urban_pop_maximum_growth_rate)
-      local_pop_growth_rate = Math.min(local_pop_growth_rate, config.defines.economy.urban_pop_maximum_growth_rate);
-
-    //Make sure population can't drop by more than 100%
-    if (local_pop_growth_rate < -1)
-      local_pop_growth_rate = local_pop_growth_rate % 1;
 
     //Return statement
     return local_pop_growth_rate;
