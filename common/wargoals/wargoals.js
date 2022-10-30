@@ -268,6 +268,27 @@ config.wargoals = {
     }
   },
 
+  syphon_actions: {
+    name: "Syphon Actions",
+    description: "Steers actions from a target country towards us for up to 15 turns.",
+
+    demand_limit: 1,
+    infamy: {
+      infamy_per_percentage: 0.01,
+
+      minimum_infamy: 0.5
+    },
+
+    effect: {
+      syphon_actions: {
+        custom_recipient: false,
+        minimum_number_allowed: 10,
+        maximum_percentage_allowed: 0.90,
+        maximum_turns_allowed: 15
+      }
+    }
+  },
+
   raid: {
     name: "Raid",
     description: "Loots an enemy country's stockpiles for ourselves.",
@@ -290,22 +311,99 @@ config.wargoals = {
   },
 
   release_client_state: {
+    name: "Release Client State",
+    description: "Releases a client state of your choice from the target.",
 
+    demand_limit: 1,
+    infamy: {
+      infamy_per_province: 0.03,
+
+      minimum_infamy: 3,
+      maximum_infamy: 5
+    },
+
+    effect: {
+      can_release_client_state: true,
+      can_take_capital: false,
+
+      maximum_percentage_allowed: 0.20,
+      minimum_provinces_allowed: 15,
+      maximum_provinces_allowed: 100,
+
+      requires_capital_city: false
+    }
   },
 
   revoke_war_reparations: {
+    name: "Revokes War Reparations",
+    description: "Abrogates all tributary and debt agreements between a country of our election and its fiscal master.",
 
+    demand_limit: 1,
+    infamy: {
+      minimum_infamy: 0
+    },
+
+    effect: {
+      revoke_reparations: {
+        custom_recipient: true
+      }
+    }
   },
 
   take_treaty_port: {
+    name: "Take Treaty Port",
+    description: "Cedes up to 2 provinces from the target.",
 
+    demand_limit: 1,
+    infamy: {
+      minimum_infamy: 1
+    },
+
+    effect: {
+      limited_annexation: {
+        can_take_capital: true,
+        minimum_provinces_allowed: 2,
+        maximum_provinces_allowed: 2
+      }
+    }
   },
 
   war_indemnities: {
+    name: "War Indemnities",
+    description: "Inherits a percentage of another country's fiscal reserves.",
 
+    demand_limit: 1,
+    infamy: {
+      infamy_per_percentage: 0.02,
+
+      minimum_infamy: 1
+    },
+
+    effect: {
+      seize_resources: {
+        custom_recipient: false,
+        inherit_money_maximum: 1
+      }
+    }
   },
 
   war_reparations: {
+    name: "War Reparations",
+    description: "Forces another country to make turnly payments to a recipient of our choice.",
 
+    demand_limit: 1,
+    infamy: {
+      infamy_per_percentage: 0.03,
+
+      minimum_infamy: 1.5
+    },
+
+    effect: {
+      war_reparations: {
+        custom_recipient: true,
+        maximum_percentage_allowed: 0.90,
+        maximum_turns_allowed: 50
+      }
+    }
   }
 };
