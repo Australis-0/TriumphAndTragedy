@@ -65,9 +65,9 @@ config.defines.economy = {
     [70000000, 0.005],
     [100000000, 0.001]
   ], //At what population levels should growth be capped? Caps only start at the first element: [population, % growth cap]
-  urban_pop_growth_cap: 1.05, //How fast should urban provinces be able to grow at most?
+  urban_pop_maximum_growth_rate: 1.05, //How fast should urban provinces be able to grow at most?
   urban_pop_growth_penalty_threshold: 500000, //At what population should the urban population threshold kick in?
-  urban_pop_growth_penalty_per_million: -0.03, //-3% growth per million
+  urban_pop_growth_penalty_per_million: 0.03, //-3% growth per million
 
   //Trade and World Market
   resource_init_max_percentile: 0.80, //Maximum percentage of shipment capacity that new countries (for the first 10 turns) can use on buying/selling goods from the World Market

@@ -112,6 +112,7 @@ config.national_modifiers.urbanisation_modifiers = {
 
     modifiers: {
       rgo_throughput: -0.60,
+      pop_growth_modifier: -0.20,
       production_efficiency: -0.10,
       research_efficiency: 0.35
     }
@@ -136,6 +137,7 @@ config.national_modifiers.urbanisation_modifiers = {
 
     modifiers: {
       rgo_throughput: -1.00,
+      pop_growth_modifier: -0.50,
       production_efficiency: 0.50
     }
   },
@@ -159,6 +161,7 @@ config.national_modifiers.urbanisation_modifiers = {
 
     modifiers: {
       rgo_throughput: -2.50,
+      pop_growth_modifier: -0.60,
       production_efficiency: -0.50
     }
   },

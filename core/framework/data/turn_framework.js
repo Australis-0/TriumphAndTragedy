@@ -1200,38 +1200,25 @@ module.exports = {
                 )*config.defines.economy.urban_pop_growth_penalty_per_million;
 
               //Calculate urban pop growth for all pops
-              if (owned_provinces[i].housing > owned_provinces[i].pops.population)
-                for (var x = 0; x < all_pops.length; x++) {
-                  var local_pop_growth_rate = (
-                    usr.pops[`${all_pops[x]}_growth_modifier`]*
-                    scalar*
-                    usr.modifiers.pop_growth_modifier
-                  );
+              for (var x = 0; x < all_pops.length; x++) {
+                var local_pop_growth = getCityPopGrowth(owned_provinces[i], { pop_type: all_pops[x] });
 
-                  //Set local pop growth cap from economy defines
-                  var urban_growth_cap;
-                  for (var y = 0; y < config.defines.economy.urban_pop_growth_cap.length; y++) {
-                    var local_element = config.defines.economy.urban_pop_growth_cap[y];
-
-                    if (owned_provinces[i].pops.population >= local_element[0])
-                      urban_growth_cap = local_element[1];
-                  }
-
-                  if (urban_growth_cap)
-                    local_pop_growth_rate = Math.min(local_pop_growth_rate, urban_growth_cap);
-
-                  var local_pop_growth =
-                    Math.ceil(
-                      owned_provinces[i].pops[all_pops[x]]*
-                      local_pop_growth_rate
-                    ) - owned_provinces[i].pops[all_pops[x]];
-
+                if (
+                  owned_provinces[i].housing > owned_provinces[i].pops.population ||
+                  local_pop_growth < 0
+                ) {
                   usr.pops[all_pops[x]] += local_pop_growth;
                   usr.population += local_pop_growth;
                   owned_provinces[i].pops[all_pops[x]] += local_pop_growth;
                   owned_provinces[i].pops.population += local_pop_growth;
-                }
 
+                  //Population can only go to zero
+                  usr.pops[all_pops[x]] = Math.max(usr.pops[all_pops[x]], 0);
+                  usr.population = Math.max(usr.population, 0);
+                  owned_provinces[i].pops[all_pops[x]] = Math.max(owned_provinces[i].pops[all_pops[x]], 0);
+                  owned_provinces[i].pops.population = Math.max(owned_provinces[i].pops.population, 0);
+                }
+              }
             } else {
               //Make sure .pop_cap is a thing
               if (!owned_provinces[i].pop_cap)

@@ -113,7 +113,9 @@ module.exports = {
         wargoal_string.push(`${config.icons.infamy} Infamy: **0**`);
       }
 
-      wargoal_string.push(`This wargoal can be demanded up to **${parseNumber(returnSafeNumber(wargoal_obj.demand_limit, 1))}** time(s).`);
+      (wargoal_obj.demand_limit != -1) ?
+        wargoal_string.push(`This wargoal can be demanded up to **${parseNumber(returnSafeNumber(wargoal_obj.demand_limit, 1))}** time(s).`) :
+        wargoal_string.push(`This wargoal can be demanded as many times as we like.`);
       wargoal_string.push("");
 
       //Wargoal effects
@@ -288,6 +290,12 @@ module.exports = {
               break;
             case "retake_cores":
               wargoal_string.push(`${prefix}May retake cores for another country from the target.`);
+
+              break;
+            case "revoke reparations":
+              (local_effect.custom_recipient) ?
+                wargoal_string.push(`${prefix}Frees a country of our choice from paying reparations to its economic overlord.`) :
+                wargoal_string.push(`${prefix}We will no longer have to pay reparations.`);
 
               break;
             case "seize_resources":
