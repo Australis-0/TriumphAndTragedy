@@ -42,10 +42,10 @@ The data structure of Triumph & Tragedy is brutally simple, and separated into t
 - `core/framework/data/turn_framework.js` is used for all turn processing.
 
 - `core/framework/discord/command_handler.js` provides our visual prompt system, an alternative to Discord's base slash commands.
+- `core/framework/discord/ui_framework.js` contains the base framework for most Discord UI elements.
 
 - `core/framework/ui/page_handler.js` handles all buttons and commands.
 - `core/framework/ui/topbar_handler.js` handles all topbar buttons (e.g. Country/Economy, etc).
-- `core/framework/ui/ui_framework.js` contains the base framework for most UI elements.
 
 - `main.js` contains an overview and directory of all files used in the bot.
 
