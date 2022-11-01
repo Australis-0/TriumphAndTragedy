@@ -102,6 +102,7 @@ module.exports = {
     //Declare local instance variables
     var starting_page = 0;
 
+    starting_page = (options.page) ? options.page : starting_page;
     starting_page = (options.starting_page) ? options.starting_page : starting_page;
 
     if (options.embed_pages) {

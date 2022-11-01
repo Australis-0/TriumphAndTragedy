@@ -111,7 +111,7 @@ module.exports = {
 
         //Wait 3 seconds before reinitialising prompt
         setTimeout(function(){
-          module.exports.initialiseAddProvinces(user_id, client_obj);
+          module.exports.initialiseClientStateAddProvinces(user_id, client_obj);
         }, 3000);
       }
     },
@@ -182,7 +182,7 @@ module.exports = {
 
         //Wait 3 seconds before reinitialising prompt
         setTimeout(function(){
-          module.exports.initialiseRemoveProvinces(user_id, client_obj);
+          module.exports.initialiseClientStateRemoveProvinces(user_id, client_obj);
         }, 3000);
       }
     },

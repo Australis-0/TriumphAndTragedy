@@ -50,12 +50,21 @@ module.exports = {
                 printAlert(game_id, `${config.icons.cancel} You have cancelled the current command.`);
               } else {
                 try {
+                  var satisfies_requirements = [true, ""];
+
+                  //Custom error handler [false, "Error message"];
+                  if (local_prompt.prompts[current_step][2].limit) {
+                    var result = local_prompt.prompts[current_step][2].limit(game_obj.user, local_prompt.answers, input);
+
+                    if (Array.isArray(result))
+                      if (result[0] == false)
+                        satisfies_requirements = [false, result[1]];
+                  }
+
                   //Check if new answer is valid or not for the current prompt
                   if (local_prompt.prompts[current_step][1] == "number") {
                     //Check to make sure that the input is actually a number
                     if (!isNaN(parseInt(input))) {
-                      var satisfies_requirements = [true, ""];
-
                       if (local_prompt.prompts[current_step].length > 2) {
                         //Minimum check
                         if (local_prompt.prompts[current_step][2].min)
@@ -67,17 +76,20 @@ module.exports = {
                             satisfies_requirements = [false, `The highest number you can specify for this command is ${local_prompt.prompts[current_step][2].max}!`];
                       }
 
-                      if (satisfies_requirements[0]) local_prompt.answers.push(parseInt(input));
+                      if (satisfies_requirements[0])
+                        local_prompt.answers.push(parseInt(input));
                     } else {
                       satisfies_requirements = [false, `You must input a valid number for this command! ${input} is not a valid number.`];
                     }
                   } else if (local_prompt.prompts[current_step][1] == "string") {
-                    local_prompt.answers.push(input);
+                    if (satisfies_requirements[0])
+                      local_prompt.answers.push(input);
                   } else if (local_prompt.prompts[current_step][1] == "mention") {
                     var parsed_mention = returnMention(input);
 
                     if (parsed_mention) {
-                      local_prompt.answers.push(parsed_mention);
+                      if (satisfies_requirements[0])
+                        local_prompt.answers.push(parsed_mention);
                     } else {
                       satisfies_requirements = [false, `You must type out a valid username or ping them! ${input} was not a valid user.`];
                     }
@@ -85,7 +97,8 @@ module.exports = {
                     var parsed_mention = parseMention(input);
 
                     if (parsed_mention) {
-                      local_prompt.answers.push(parsed_mention);
+                      if (satisfies_requirements[0])
+                        local_prompt.answers.push(parsed_mention);
                     } else {
                       satisfies_requirements = [false, `You must type out the username of a valid user! ${input} was not a valid user.`];
                     }

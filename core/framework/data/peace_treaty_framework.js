@@ -2,31 +2,91 @@ module.exports = {
   /*
     Peace treaty data structure:
     {
-      status_quo: true/false,
-      install_government: {
-        "actual_user_id": {
-          id: "actual_user_id",
-          type: "democracy"
-        }
-      },
-      cut_down_to_size: ["actual_user_id", "actual_user_id_2", "actual_user_id_3"],
-      liberation: true/false,
-      puppet: {
-        "actual_user_id": {
-          id: "actual_user_id",
-          overlord: "overlord_id"
-        }
-      },
-      retake_cores: ["actual_user_id", "actual_user_id_2"],
-      annexation: {
-        "actual_user_id": {
-          id: "actual_user_id",
-          provinces: ["4082", "2179", ...],
-          annex_all: ["ot_user_id", "ot_user_id2"]
-        }
-      }
-    }
+      //Wargoals are stored in an array to keep track of demand_limit
+      wargoals: [
+        {
+          id: "cut_down_to_size",
+          effect: {
+            annex_all: ["user_id", ..],
+            annexation: {
+              user_id: {
+                provinces: ["9701", "9702", ..] - Provinces to be annexed to user_id
+              }
+            },
+            cut_down_to_size: {
+              user_id: {
+                air_force_removal: 1, - All <type>_removal fields are set to the same value if the demilitarisation of individual army types are not specified by the user
+                army_removal: 0.50,
+                navy_removal: 0.10,
+                turns: -
+              }
+            },
+            demilitarisation: {
+              demilitarised_provinces: ["9701", "9702", ..],
+              turns: -
+            },
+            free_oppressed_people: {
+              user_id: {
+                culture_id: {
+                  provinces: ["9701", "9702", ..] - This is automatically as many provinces as possible held by that culture if not specified by the user
+                }
+              }
+            },
+            install_government: {
+              user_id: {
+                government_type: "democracy"
+              }
+            },
+            liberation: ["user_id", ..],
+            puppet: {
+              vassal_id: "overlord_id"
+            },
+            release_client_state: {
+              client_state_id: {
+                overlord: "overlord_id",
 
+                name: "Bufferland",
+                colour: [100, 100, 100]
+                flag: "",
+
+                capital_id: "725",
+                provinces: ["9701", "9702", ..]
+              }
+            },
+            retake_cores: {
+              user_id: "oppressor_id" - Takes all core provinces from oppressor_id
+            },
+            revoke_reparations: ["user_id", ..],
+            seize_resources: [{
+              owner_id: {
+                debtor: "debtor_id", - vassal_id pays resources to user_id
+
+                inherit_actions: 0.50,
+                inherit_money: 0.50,
+                seize_iron: 0.70,
+                seize_inventory: 0.25 - Seized goods go to
+              }
+            }],
+            steer_trade: {
+              vassal_id: "overlord_id" - Trade of vassal_id is commandeered by overlord_id
+            },
+            syphon_actions: [{
+              owner_id: "user_id",
+              debtor: "debtor_id", - Payments are made from debtor_id to user_id
+              amount: 500,
+              percentage_amount: 0.50, - Number of actions syphoned are determined by whether amount or percentage_amount are higher
+              turns: 50
+            }],
+            war_reparations: [{
+              owner_id: "user_id",
+              debtor_id: "debtor_id", - Payments are made from debtor_id to user_id
+              percentage_amount: 0.50,
+              turns: 35
+            }]
+          }
+        }
+      ],
+    }
   */
 
   createPeaceTreaty: function (arg0_user, arg1_war_name) {
@@ -44,7 +104,7 @@ module.exports = {
         id: actual_id,
         war_id: war_obj.id,
 
-        peace_demands: {}
+        wargoals: []
       };
 
       war_obj.peace_treaties[actual_id] = peace_treaty_obj;

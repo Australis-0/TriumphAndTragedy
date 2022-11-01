@@ -47,7 +47,7 @@ module.exports = {
             local_field.push(`- This city is currently occupied by us in a war! We won't be able to gain resources from it until it is legally annexed by us.`);
 
         local_field.push(`- ${config.icons.provinces} Province: ${cities[i].id}`);
-        local_field.push(`- ${config.icons.population} Population: ${parseNumber(cities[i].pops.population)}/${parseNumber(cities[i].housing)}\n• **${printPercentage(getCityPopGrowthRate(cities[i]), { base_zero: true, display_prefix: true })}`);
+        local_field.push(`- ${config.icons.population} Population: ${parseNumber(cities[i].pops.population)}/${parseNumber(cities[i].housing)} (**${printPercentage(getCityPopGrowthRate(cities[i]), { base_zero: true, display_prefix: true })}**)`);
         local_field.push(`- RGO: ${(getGood(cities[i].resource).icon) ? config.icons[getGood(cities[i].resource).icon] + " " : ""} ${(getGood(cities[i].resource).name) ? getGood(cities[i].resource).name : cities[i].resource}`);
 
         //Print culture

@@ -113,8 +113,9 @@ module.exports = {
           war_string.push(`**[Sign Peace Treaty]**${(can_call_allies) ? "\n**[Call Ally]**" : ""}`) :
           war_string.push(`**[Add Wargoal]** | **[Remove Wargoal]** | **[View Peace Offer]** | **[Send Peace Offer]**${(can_call_allies) ? "\n**[Call Ally]**" : ""}`);
 
-      if (is_archived_war)
-        war_string.push(`**${getDate(war_obj.starting_date)}** - **${getDate(war_obj.end_date)}**\n`);
+      (is_archived_war) ?
+        war_string.push(`**${getDate(war_obj.starting_date)}** - **${getDate(war_obj.end_date)}**\n`) :
+        war_string.push(`**${getDate(war_obj.starting_date)}** - Present`);
 
       war_string.push(`Attacker Warscore: **${printPercentage(war_obj.attacker_warscore)}** | Defender Warscore: **${printPercentage(war_obj.defender_warscore)}**`);
       war_string.push("");

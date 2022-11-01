@@ -19,7 +19,7 @@ module.exports = {
     } catch {}
   },
 
-  initialiseAddWargoal: function (arg0_user, arg1_peace_treaty_object) {
+  initialiseAddWargoal: function (arg0_user, arg1_peace_treaty_object) { //[WIP] - Custom wargoal UI parser
     //Convert from parameters
     var user_id = arg0_user;
     var peace_obj = arg1_peace_treaty_object;
@@ -27,6 +27,7 @@ module.exports = {
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
     var actual_wargoal_array = [];
+    var enemy_countries = [];
     var enemy_side = "";
     var friendly_side = "";
     var has_error = [false, ""]; //[has_error, error_msg];
@@ -44,6 +45,10 @@ module.exports = {
       enemy_side = "attackers";
     }
 
+    //Add all enemy countries to display
+    for (var i = 0; i < war_obj[enemy_side].length; i++)
+      enemy_countries.push(`**${main.users[war_obj[enemy_side][i]].name}**`);
+
     //Fetch a list of all available wargoals
     for (var i = 0; i < war_obj.wargoals.length; i++)
       wargoal_array.push(`${(war_obj.wargoals.length - 1 == i) ? "or ": ""}**${(config.localisation[war_obj.wargoals[i]]) ? config.localisation[war_obj.wargoals[i]] : war_obj.wargoals[i]}**`);
@@ -60,45 +65,233 @@ module.exports = {
     },
     function (arg) {
       var current_wargoal = arg[0].trim().toLowerCase();
+      var local_ui = {
+        prompts: []
+      };
+      var reload_ui = false;
+      var wargoal_name = getWargoal(current_wargoal, { return_key: true });
+      var wargoal_obj = getWargoal(current_wargoal);
 
-      if (actual_wargoal_array.includes(current_wargoal))
-        switch (current_wargoal) {
-          case "status quo":
-            peace_obj.peace_demands.status_quo = true;
+      if (wargoal_obj) {
+        //Check if demand_limit has already been reached
+        var wargoal_demanded = 0;
 
-            printAlert(game_obj.id, `${config.icons.checkmark} You have successfully demanded that all enemy beligerents should pay **15%** of their cash reserves in reparations to the victor countries at the end of the war.`);
+        for (var i = 0; i < peace_obj.wargoals.length; i++)
+          if (peace_obj.wargoals[i].id == wargoal_name)
+            wargoal_demanded++;
 
-            setTimeout(function(){
-              module.exports.initialiseAddWargoal(user_id, peace_obj);
-            }, 1000);
+        //Parse effects in order to create a visual prompt
+        if (wargoal_demanded >= returnSafeNumber(wargoal_obj.demand_limit, 1)) {
+          if (wargoal_obj.effect) {
+            var all_effects = Object.keys(wargoal_obj.effect);
 
-            break;
-          case "install government":
-            module.exports.initialiseInstallGovernment(user_id, peace_obj);
+            for (var i = 0; i < all_effects.length; i++) {
+              var local_value = wargoal_obj.effects[all_effects[i]];
 
-            break;
-          case "cut down to size":
-            module.exports.initialiseCutDownToSize(user_id, peace_obj);
+              switch (all_effects[i]) {
+                case "annex_all":
+                  local_ui.prompts.push([`For which country would you like to motion a total annexation request for?\nNote: You can choose any country (even if they are currently at war with you), so long as they are not the same country you are annexing.`, "mention"]);
+                  local_ui.prompts.push([`Which enemy country in this conflict would you like to be fully annexed by them?\n- ${enemy_countries.join("\n- ")}`, "mention", {
+                    limit: function (user_id, arg, input) {
+                      //Declare local instance variables
+                      var actual_id = main.global.user_map[user_id];
+                      var ot_user_id = returnMention(input);
+                      var usr = main.users[actual_id];
 
-            break;
-          case "liberation":
-            module.exports.initialiseLiberation(user_id, peace_obj);
+                      var actual_ot_user_id = main.global.user_map[ot_user_id];
 
-            break;
-          case "puppet":
-            module.exports.initialisePuppet(user_id, peace_obj);
+                      //Check to see if enemy country is valid
+                      if (!main.global.user_map[actual_ot_user_id])
+                        return [false, `The country you have specified for annexation did not exist!`];
+                      if (!war_obj.enemy_side.includes(actual_ot_user_id))
+                        return [false, `You can't annex a neutral/allied country!`];
+                      if (actual_ot_user_id == arg[arg.length - 1])
+                        return [false, `You can't have a country annex itself!`];
+                    }
+                  }]);
 
-            break;
-          case "retake_cores":
-            module.exports.initialiseRetakeCores(user_id, peace_obj);
+                  local_ui.annex_all = true;
+                  local_ui.annex_all_prompts = [
+                    { index: local_ui.prompts.length - 2, type: "recipient" },
+                    { index: local_ui.prompts.length - 1, type: "target"}
+                  ];
 
-            break;
-          case "annexation":
-            module.exports.initialiseAnnexation(user_id, peace_obj);
+                  break;
+                case "cut_down_to_size":
+                  local_ui.prompts.push([`Whom would you like to cut down to size?\n- ${enemy_countries.join("\n- ")}`, "mention", {
+                    limit: function (user_id, arg, input) {
+                      //Declare local instance variables
+                      var actual_id = main.global.user_map[user_id];
+                      var ot_user_id = returnMention(input);
+                      var usr = main.users[actual_id];
 
-            break;
+                      var actual_ot_user_id = main.global.user_map[ot_user_id];
+
+                      //Check to see if enemy country is valid
+                      if (!main.global.user_map[actual_ot_user_id])
+                        return [false, `The country you have specified for annexation did not exist!`];
+                      if (!war_obj.enemy_side.includes(actual_ot_user_id))
+                        return [false, `You can't force a neutral/allied country to cut itself down to size!`];
+                    }
+                  }]);
+
+                  local_ui.cut_down_to_size_prompts = [
+                    { index: local_ui.prompts.length - 1, type: "target" }
+                  ];
+
+                  //Cut down to size clause
+                  if (local_value.can_cut_army_types_down_to_size) {
+                    //If true, only specified army types can be cut down to size, not everything
+                    var all_local_effects = Object.keys(local_value.can_cut_army_types_down_to_size);
+                    var default_keys = ["can_cut_army_types_down_to_size", "minimum_removal", "maximum_removal", "minimum_turns_demilitarised", "maximum_turns_demilitarised"];
+                    var potential_army_types = [];
+
+                    for (var x = 0; x < all_local_effects.length; x++)
+                      if (!default_keys.includes(all_local_effects[x])) {
+                        var potential_army_type = all_local_effects[x].split("_")[1];
+
+                        if (!potential_army_types.includes(potential_army_type))
+                          potential_army_types.push(potential_army_type);
+                      }
+
+                    //Push army type prompts to to local_ui.prompts
+                    for (var x = 0; x < potential_army_types.length; x++) {
+                      local_ui.prompts.push(`By how many percent should the **${parseString(potential_army_types[x])}** of this country be cut down by?`, "number", {
+                        min: returnSafeNumber(local_value[`minimum_${potential_army_types[x]}_removal`], 0),
+                        max: returnSafeNumber(local_value[`maximum_${potential_army_types[x]}_removal`], 1)
+                      });
+
+                      local_ui.cut_down_to_size_prompts.push(
+                        { index: local_ui.prompts.length - 1, type: `${potential_army_types[x]}_removal` }
+                      );
+                    }
+                  } else {
+                    //General cut down on all army types
+                    local_ui.prompts.push(`How much should the opposing nation's armed forces be cut down by? (in percent)`, "number", {
+                      min: returnSafeNumber(local_value.minimum_removal, 0),
+                      max: returnSafeNumber(local_value.maximum_removal, 1)
+                    });
+
+                    local_ui.cut_down_to_size_prompts.push(
+                      { index: local_ui.prompts.length - 1, type: `general_removal` }
+                    );
+                  }
+
+                  //Demilitarisation clause
+                  if (local_value.minimum_turns_demilitarised || local_value.maximum_turns_demilitarised) {
+                    local_ui.prompts.push(`For how many turns should the target nation be unable to raise forces?`, "number", {
+                      min: returnSafeNumber(local_value.minimum_turns_demilitarised, 0),
+                      max: returnSafeNumber(local_value.maximum_turns_demilitarised, 1)
+                    });
+
+                    local_ui.cut_down_to_size_prompts.push(
+                      { index: local_ui.prompts.length - 1, type: `turns` }
+                    );
+                  }
+
+                  break;
+                case "demilitarisation":
+                  local_ui.prompts.push(`Which provinces would you like to demilitarise?${(local_value.can_demilitarise_capital) ? " You may not demilitarise capital cities." : ""}\nPlease separate each province with a space like so: '4702 4703 4709'.`, "text", {
+                    limit: function (user_id, arg, input) {
+                      //Declare local instance variables
+                      var actual_id = main.global.user_map[user_id];
+                      var ot_user_id = returnMention(input);
+                      var provinces = input.trim().split(" ");
+                      var usr = main.users[actual_id];
+
+                      //Demilitarisation maximum provinces clause
+                      var maximum_provinces = returnSafeNumber(local_value.maximum_provinces_allowed, 1);
+                      var minimum_provinces = returnSafeNumber(local_value.minimum_provinces_allowed, 1);
+
+                      if (provinces.length > maximum_provinces)
+                        return [false, `You can't demilitarise more than **${parseNumber(maximum_provinces)}**! Remove **${parseNumber(provinces.length - maximum_provinces)}** province(s) to stay below the limit.`];
+
+                      //Make sure all province ID's to be demilitarised are valid
+                      for (var i = 0; i < provinces.length; i++)
+                        if (!main.provinces[provinces[i]]) {
+                          return [false, `**${provinces[i]}** could not be found on the map as a valid province!`];
+                        } else {
+                          var local_province = main.provinces[provinces[i]];
+
+                          //Check that it belongs to an enemy country or their own country
+                          if (!war_obj.enemy_side.includes(local_province.owner) && local_province.owner != actual_id)
+                            return [false, `You cannot demilitarise neutral/allied provinces!`];
+
+                          //Check to make sure it doesn't include a capital city
+                          if (!local_value.can_demilitarise_capital) {
+                            for (var x = 0; x < war_obj.enemy_side.length; x++)
+                              try {
+                                var local_capital = getCapital(war_obj.enemy_side[x]);
+
+                                if (local_capital.id == provinces[i])
+                                  return [false, `You cannot demilitarise Province **${provinces[i]}**, as it remains the capital of **${main.users[war_obj.enemy_side[x]].name}**!`];
+                              } catch {}
+
+                            //Check if capital demilitarised is their own
+                            try {
+                              var local_capital = getCapital(actual_id);
+
+                              if (local_capital.id == provinces[i])
+                                return [false, `You can't demilitarise Province **${provinces[i]}**, as it remains your own capital!`];
+                            } catch {}
+                          }
+                        }
+                    }
+                  });
+
+                  local_ui.demilitarisation_prompts = [
+                    { index: local_ui.prompts.length - 1, type: `provinces` }
+                  ];
+
+                  //Turns clause
+                  if (local_value.minimum_turns_allowed || local_value.maximum_turns_allowed) {
+                    local_ui.prompts(`How many turns should these provinces remain demilitarised for?`, "number", {
+                      min: returnSafeNumber(local_value.minimum_turns_allowed, 0),
+                      max: returnSafeNumber(local_value.maximum_turns_allowed, 1000)
+                    });
+
+                    local_ui.demilitarisation_prompts.push(
+                      { index: local_ui.prompts.length - 1, type: `turns` }
+                    );
+                  }
+
+                  break;
+                case "free_oppressed_people":
+                  break;
+                case "install_government":
+                  break;
+                case "liberation":
+                  break;
+                case "limited_annexation":
+                  break;
+                case "puppet":
+                  break;
+                case "release_client_state":
+                  break;
+                case "retake_cores":
+                  break;
+                case "revoke_reparations":
+                  break;
+                case "seize_resources":
+                  break;
+                case "steer_trade":
+                  break;
+                case "syphon_actions":
+                  break;
+                case "war_reparations":
+                  break;
+              }
+            }
+          } else {
+            //Automatically add wargoal to peace treaty without any additional arguments
+          }
+        } else {
+          //Print error
+          printError(game_obj.id, `You have already added the maximum number of **${wargoal_obj.name}** wargoals possible on this peace treaty!`);
+
+          reload_ui = true;
         }
-      else
+      } else
         switch (current_wargoal) {
           case "back":
             module.exports.modifyPeaceTreaty(user_id, peace_obj, true);
@@ -107,13 +300,15 @@ module.exports = {
           default:
             //Print error
             printError(game_obj.id, `**${current_wargoal}** is not a valid wargoal you can add to this conflict!`);
-
-            setTimeout(function(){
-              module.exports.initialiseAddWargoal(user_id, peace_obj);
-            }, 3000);
+            reload_ui = true;
 
             break;
         }
+
+      if (reload_ui)
+        setTimeout(function(){
+          module.exports.initialiseAddWargoal(user_id, peace_obj);
+        }, 3000);
     });
   },
 

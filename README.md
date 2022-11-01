@@ -47,7 +47,8 @@ The data structure of Triumph & Tragedy is brutally simple, and separated into t
 - `core/framework/ui/page_handler.js` handles all buttons and commands.
 - `core/framework/ui/topbar_handler.js` handles all topbar buttons (e.g. Country/Economy, etc).
 
-- `main.js` contains an overview and directory of all files used in the bot.
+- `main.js` contains the main event handlers and startup order.
+- `startup.js` contains a directory of all files used in the bot and startup functions.
 
 ## Documentation
 
