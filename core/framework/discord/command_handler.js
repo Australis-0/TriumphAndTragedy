@@ -53,13 +53,14 @@ module.exports = {
                   var satisfies_requirements = [true, ""];
 
                   //Custom error handler [false, "Error message"];
-                  if (local_prompt.prompts[current_step][2].limit) {
-                    var result = local_prompt.prompts[current_step][2].limit(game_obj.user, local_prompt.answers, input);
+                  if (local_prompt.prompts[current_step][2])
+                    if (local_prompt.prompts[current_step][2].limit) {
+                      var result = local_prompt.prompts[current_step][2].limit(game_obj.user, local_prompt.answers, input);
 
-                    if (Array.isArray(result))
-                      if (result[0] == false)
-                        satisfies_requirements = [false, result[1]];
-                  }
+                      if (Array.isArray(result))
+                        if (result[0] == false)
+                          satisfies_requirements = [false, result[1]];
+                    }
 
                   //Check if new answer is valid or not for the current prompt
                   if (local_prompt.prompts[current_step][1] == "number") {
@@ -75,37 +76,37 @@ module.exports = {
                           if (parseInt(input) > local_prompt.prompts[current_step][2].max)
                             satisfies_requirements = [false, `The highest number you can specify for this command is ${local_prompt.prompts[current_step][2].max}!`];
                       }
-
-                      if (satisfies_requirements[0])
-                        local_prompt.answers.push(parseInt(input));
                     } else {
                       satisfies_requirements = [false, `You must input a valid number for this command! ${input} is not a valid number.`];
                     }
+
+                    if (satisfies_requirements[0])
+                      local_prompt.answers.push(parseInt(input));
                   } else if (local_prompt.prompts[current_step][1] == "string") {
                     if (satisfies_requirements[0])
                       local_prompt.answers.push(input);
                   } else if (local_prompt.prompts[current_step][1] == "mention") {
                     var parsed_mention = returnMention(input);
 
-                    if (parsed_mention) {
-                      if (satisfies_requirements[0])
-                        local_prompt.answers.push(parsed_mention);
-                    } else {
+                    if (!parsed_mention)
                       satisfies_requirements = [false, `You must type out a valid username or ping them! ${input} was not a valid user.`];
-                    }
+
+                    if (satisfies_requirements[0])
+                      local_prompt.answers.push(parsed_mention);
                   } else if (local_prompt.prompts[current_step][1] == "user") {
                     var parsed_mention = parseMention(input);
 
-                    if (parsed_mention) {
-                      if (satisfies_requirements[0])
-                        local_prompt.answers.push(parsed_mention);
-                    } else {
+                    if (!parsed_mention)
                       satisfies_requirements = [false, `You must type out the username of a valid user! ${input} was not a valid user.`];
-                    }
+
+                    if (satisfies_requirements[0])
+                      local_prompt.answers.push(parsed_mention);
                   } else {
                     log.error(`The argument type ${local_prompt.prompts[current_step][1]} specified with the visual prompt at User ID ${user_id} does not exist!`);
                   }
-                } catch {}
+                } catch (e) {
+                  log.error(e);
+                }
               }
             }
 

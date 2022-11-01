@@ -32,6 +32,7 @@ module.exports = {
     var friendly_side = "";
     var has_error = [false, ""]; //[has_error, error_msg];
     var game_obj = getGameObject(user_id);
+    var usr = main.users[actual_id];
     var war_obj = main.global.wars[peace_obj.war_id];
     var wargoal_array = [];
 
@@ -156,10 +157,10 @@ module.exports = {
 
                     //Push army type prompts to to local_ui.prompts
                     for (var x = 0; x < potential_army_types.length; x++) {
-                      local_ui.prompts.push(`By how many percent should the **${parseString(potential_army_types[x])}** of this country be cut down by?`, "number", {
+                      local_ui.prompts.push([`By how many percent should the **${parseString(potential_army_types[x])}** of this country be cut down by?`, "number", {
                         min: returnSafeNumber(local_value[`minimum_${potential_army_types[x]}_removal`], 0),
                         max: returnSafeNumber(local_value[`maximum_${potential_army_types[x]}_removal`], 1)
-                      });
+                      }]);
 
                       local_ui.cut_down_to_size_prompts.push(
                         { index: local_ui.prompts.length - 1, type: `${potential_army_types[x]}_removal` }
@@ -167,10 +168,10 @@ module.exports = {
                     }
                   } else {
                     //General cut down on all army types
-                    local_ui.prompts.push(`How much should the opposing nation's armed forces be cut down by? (in percent)`, "number", {
+                    local_ui.prompts.push([`How much should the opposing nation's armed forces be cut down by? (in percent)`, "number", {
                       min: returnSafeNumber(local_value.minimum_removal, 0),
                       max: returnSafeNumber(local_value.maximum_removal, 1)
-                    });
+                    }]);
 
                     local_ui.cut_down_to_size_prompts.push(
                       { index: local_ui.prompts.length - 1, type: `general_removal` }
@@ -179,10 +180,10 @@ module.exports = {
 
                   //Demilitarisation clause
                   if (local_value.minimum_turns_demilitarised || local_value.maximum_turns_demilitarised) {
-                    local_ui.prompts.push(`For how many turns should the target nation be unable to raise forces?`, "number", {
+                    local_ui.prompts.push([`For how many turns should the target nation be unable to raise forces?`, "number", {
                       min: returnSafeNumber(local_value.minimum_turns_demilitarised, 0),
                       max: returnSafeNumber(local_value.maximum_turns_demilitarised, 1)
-                    });
+                    }]);
 
                     local_ui.cut_down_to_size_prompts.push(
                       { index: local_ui.prompts.length - 1, type: `turns` }
@@ -191,7 +192,7 @@ module.exports = {
 
                   break;
                 case "demilitarisation":
-                  local_ui.prompts.push(`Which provinces would you like to demilitarise?${(local_value.can_demilitarise_capital) ? " You may not demilitarise capital cities." : ""}\nPlease separate each province with a space like so: '4702 4703 4709'.`, "text", {
+                  local_ui.prompts.push([`Which provinces would you like to demilitarise?${(local_value.can_demilitarise_capital) ? " You may not demilitarise capital cities." : ""}\nPlease separate each province with a space like so: '4702 4703 4709'.`, "text", {
                     limit: function (user_id, arg, input) {
                       //Declare local instance variables
                       var actual_id = main.global.user_map[user_id];
@@ -237,7 +238,7 @@ module.exports = {
                           }
                         }
                     }
-                  });
+                  }]);
 
                   local_ui.demilitarisation_prompts = [
                     { index: local_ui.prompts.length - 1, type: `provinces` }
@@ -245,10 +246,10 @@ module.exports = {
 
                   //Turns clause
                   if (local_value.minimum_turns_allowed || local_value.maximum_turns_allowed) {
-                    local_ui.prompts(`How many turns should these provinces remain demilitarised for?`, "number", {
+                    local_ui.prompts.push([`How many turns should these provinces remain demilitarised for?`, "number", {
                       min: returnSafeNumber(local_value.minimum_turns_allowed, 0),
                       max: returnSafeNumber(local_value.maximum_turns_allowed, 1000)
-                    });
+                    }]);
 
                     local_ui.demilitarisation_prompts.push(
                       { index: local_ui.prompts.length - 1, type: `turns` }
@@ -257,10 +258,237 @@ module.exports = {
 
                   break;
                 case "free_oppressed_people":
+                  var all_cultures = Object.keys(main.global.cultures);
+                  var potential_culture_display_list = [];
+                  var potential_culture_list = [];
+
+                  local_ui.free_oppressed_people_prompts = [];
+
+                  //Fetch a list of all releasable cultures
+                  for (var x = 0; x < all_cultures.length; x++) {
+                    var local_culture = main.global.cultures[all_cultures[x]];
+
+                    for (var y = 0; y < war_obj.enemy_side.length; y++) {
+                      var local_user = main.users[war_obj.enemy_side[y]];
+
+                      var accepted_cultures = getAcceptedCultures(local_user.id, { exclude_primary_culture: true });
+                      var local_provinces = getProvinces(local_user.id, {
+                        include_hostile_occupations: true
+                      });
+                      var primary_cultures = getPrimaryCultures(local_user.id);
+
+                      //Can accepted cultures be released?
+                      if (local_value.can_free_accepted_cultures)
+                        for (var z = 0; z < accepted_cultures.length; z++)
+                          if (!potential_culture_list.includes(accepted_cultures[z]))
+                            potential_culture_list.push(accepted_cultures[z]);
+
+                      //Check for unaccepted cultures
+                      for (var z = 0; z < local_provinces.length; z++)
+                        if (local_provinces[y].culture)
+                          if (
+                            !accepted_cultures.includes(local_provinces[z].culture) && !primary_cultures.includes(local_provinces[z].culture))
+                            if (!potential_culture_list.includes(local_provinces[z].culture))
+                              potential_culture_list.push(local_provinces[z].culture);
+                    }
+                  }
+
+                  //Format potential_culture_display_list
+                  for (var x = 0; x < potential_culture_list.length; x++)
+                    potential_culture_display_list.push(`**${main.global.cultures[potential_culture_list[x]].name}**`);
+
+                  //Display release culture visual prompt
+                  local_ui.prompts.push([`Which culture would you like to release as an independent nation?\n- ${potential_culture_display_list.join("\n- ")}`, "string", {
+                    limit: function (user_id, arg, input) {
+                      //Declare local instance variables
+                      var culture_obj = getCulture(input.trim().toLowerCase());
+
+                      //Check to see if this culture exists
+                      if (!culture_obj)
+                        return [false, `The culture you have specified, **${input}** could not be found as a valid culture!`];
+
+                      //Check to see if this culture is releasable
+                      if (!potential_culture_list.includes(culture_obj.id))
+                        return [false, `The **${culture_obj.adjective}** is not a releasable culture! Please refer to the list of potential releasable cultures for more information.`];
+                    }
+                  }]);
+
+                  local_ui.free_oppressed_people_prompts.push(
+                    { index: local_ui.prompts.length - 1, type: `culture` }
+                  );
+
+                  //Custom provinces clause
+                  if (local_value.can_choose_provinces) {
+                    local_ui.prompts.push([`Which provinces should this new state be granted?\nPlease separate each province with a space like so: '4702 4703 4709'.`, "string", {
+                      limit: function (user_id, arg, input) {
+                        //Declare local instance variables
+                        var culture_obj = getCulture(arg[arg.length - 1].trim().toLowerCase());
+                        var provinces = input.trim().split(" ");
+                        var total_population = 0;
+
+                        //Check province length limit
+                        if (local_value.maximum_provinces_allowed)
+                          if (provinces.length > local_value.maximum_provinces_allowed)
+                            return [false, `You may only demand up to **${parseNumber(local_value.maximum_provinces_allowed)}** for the **${culture_obj.adjective}** culture! Remove **${parseNumber(provinces.length - local_value.maximum_provinces_allowed)}** to meet this limit.`];
+
+                        //Check to see if all provinces are valid
+                        for (var i = 0; i < provinces.length; i++)
+                          if (!main.provinces[provinces[i]]) {
+                            return [false, `**${provinces[i]}** could not be found on the map as a valid province!`];
+                          } else {
+                            var local_province = main.provinces[provinces[i]];
+
+                            //Make sure all motioned provinces belong to enemies
+                            if (!local_province.owner)
+                              return [false, `You cannot liberate an uncolonised province! Province **${provinces[i]}** was not owned by anyone.`];
+                            if (!war_obj.enemy_side.includes(provinces[i]))
+                              return [false, `All motioned provinces, including Province **${provinces[i]}** must belong to the enemy!`];
+
+                            if (local_province.pops)
+                              total_population += returnSafeNumber(local_province.pops.population);
+                          }
+
+                        //Check province population limit
+                        if (local_value.maximum_country_population_size)
+                          if (total_population > local_value.maximum_country_population_size)
+                            return [false, `A released homeland under this wargoal can only have up to **${parseNumber(local_value.maximum_country_population_size)}** people! Your demand exceeded this amount by **${parseNumber(total_population - local_value.maximum_country_population_size)}** inhabitants. Try removing a few province(s) from your motion to meet this criterion.`];
+                      }
+                    }]);
+
+                    local_ui.free_oppressed_people_prompts.push(
+                      { index: local_ui.prompts.length - 1, type: `provinces` }
+                    );
+                  } else {
+                    //Else, which country should they be released from?
+                    local_ui.prompts.push([`Which enemy nation should this culture be released from`, "mention", {
+                      limit: function (user_id, arg, input) {
+                        //Declare local instance variables
+                        var culture_obj = getCulture(arg[arg.length - 1].trim().toLowerCase());
+                        var ot_user_id = returnMention(input);
+
+                        var actual_ot_user_id = main.global.user_map[ot_user_id];
+                        var ot_user = main.users[actual_ot_user_id];
+
+                        //Fetch a list of potential countries
+                        var potential_countries = [];
+
+                        for (var i = 0; i < war_obj.enemy_side.length; i++) {
+                          var local_provinces = getProvinces(war_obj.enemy_side[i], { include_hostile_occupations: true });
+
+                          for (var x = 0; x < local_provinces.length; x++)
+                            if (local_provinces[x].culture)
+                              if (local_provinces[x].culture == culture_obj.id)
+                                if (!potential_countries.includes(war_obj.enemy_side[i]))
+                                  potential_countries.push(war_obj.enemy_side[i]);
+                        }
+
+                        //Check to see if current user is on the list of potential_countries
+                        if (!potential_countries.includes(actual_ot_user_id))
+                          return [false, `**${ot_user.name}** does not hold any **${culture_obj.adjective}** majority provinces! Please select a different enemy nation to release this culture from.`];
+                      }
+                    }]);
+
+                    local_ui.free_oppressed_people_prompts.push(
+                      { index: local_ui.prompts.length - 1, type: `target` }
+                    );
+                  }
+
                   break;
                 case "install_government":
+                  //Format potential_governments
+                  var all_governments = Object.keys(config.governments);
+                  var display_potential_governments = [];
+                  var potential_governments = [
+                    usr.government
+                  ];
+
+                  //Check for can_install_any_government
+                  if (local_value.can_install_any_government)
+                    for (var x = 0; x < all_governments.length; x++)
+                      if (!potential_governments.includes(all_governments[x]))
+                        potential_governments.push(all_governments[x]);
+
+                  //Format display_potential_governments
+                  for (var x = 0; x < potential_governments.length; x++) {
+                    var local_government = config.governments[potential_governments[x]];
+
+                    display_potential_governments.push((local_government.name) ? local_government.name : potential_governments[x]);
+                  }
+
+                  //User prompt
+                  local_ui.prompts.push([`Which enemy nation's government would you like to change? You must specify one of the following nations:\n- ${enemy_countries.join("\n- ")}`, "mention", {
+                    limit: function (user_id, arg, input) {
+                      var ot_user_id = returnMention(input);
+
+                      var actual_ot_user_id = main.global.user_map[ot_user_id];
+
+                      //Check to see if the nation specified is actually an enemy nation
+                      if (!war_obj.enemy_side.includes(actual_ot_user_id))
+                        return [false, `You must specify a user of the enemy faction!`];
+                    }
+                  }]);
+
+                  //List valid governments
+                  local_ui.prompts.push([`Which of the following governments would you like to install in this country?\n- ${display_potential_governments.join("\n- ")}`, "string", {
+                    limit: function (user_id, arg, input) {
+                      var government_obj = getGovernment(input.trim().toLowerCase());
+                      var government_key = getGovernment(input.trim().toLowerCase(), { return_key: true });
+
+                      if (!government_obj)
+                        return [false, `The government type you have specified, **${input}**, turned out to be entirely nonexistent!`];
+                      if (!potential_governments.includes(government_key))
+                        return [false, `You must specify a valid government type to force a regime change to!`];
+                    }
+                  }]);
+
+                  local_ui.install_government_prompts = [
+                    { index: local_ui.prompts.length - 2, type: `target` },
+                    { index: local_ui.prompts.length - 1, type: `government` }
+                  ];
+
                   break;
                 case "liberation":
+                  //Format potential_vassals
+                  var display_potential_vassals = [];
+                  var potential_vassals = [];
+
+                  //Which of the enemy's vassals should be liberated?
+                  for (var x = 0; x < war_obj.enemy_side.length; x++) {
+                    var local_country = main.users[war_obj.enemy_side[x]];
+
+                    var all_vassals = Object.keys(usr.diplomacy.vassals);
+
+                    for (var y = 0; y < all_vassals.length; y++)
+                      if (!potential_vassals.includes(all_vassals[y]))
+                        potential_vassals.push(all_vassals[y]);
+                  }
+
+                  //Format display_potential_vassals
+                  for (var x = 0; x < potential_vassals.length; x++)
+                    display_potential_vassals.push(main.users[potential_vassals[x]].name);
+
+                  //User prompt
+                  local_ui.prompts.push([`Which of the following vassals would you like to liberate from the enemy?`, "mention", {
+                    limit: function (user_id, arg, input) {
+                      var ot_user_id = returnMention(input);
+
+                      var actual_ot_user_id = main.global.user_map[ot_user_id];
+                      var ot_user = main.users[actual_ot_user_id];
+
+                      //Check to see if the liberated user exists
+                      if (!ot_user)
+                        return [false, `The country you have specified, **${input}**, doesn't even exist!`];
+
+                      //Check if actual_ot_user_id is included in potential_vassals
+                      if (!potential_vassals.includes(actual_ot_user_id))
+                        return [false, `You must choose one of the above vassals to liberate from their oppressors, not just anything!`];
+                    }
+                  }]);
+
+                  local_ui.liberation_prompts = [
+                    { index: local_ui.prompts.length - 1, type: `target` }
+                  ];
+
                   break;
                 case "limited_annexation":
                   break;
