@@ -119,7 +119,7 @@ module.exports = {
                   local_ui.annex_all = true;
                   local_ui.annex_all_prompts = [
                     { index: local_ui.prompts.length - 2, type: "recipient" },
-                    { index: local_ui.prompts.length - 1, type: "target"}
+                    { index: local_ui.prompts.length - 1, type: "target" }
                   ];
 
                   break;
@@ -582,8 +582,34 @@ module.exports = {
                     }
                   }]);
 
+                  //User prompt
+                  local_ui.prompts.push([`Whom should the recipient of these annexed provinces be? You may specify any country, even if they are currently at war with you, so long as they are not the same country you are annexing land from.`, "mention", {
+                    limit: function (user_id, arg, input) {
+                      var actual_id = main.global.user_map[user_id];
+                      var ot_user_id = returnMention(input);
+                      var provinces = arg[arg.length - 1].trim().split(" ");
+                      var usr = main.users[actual_id];
+
+                      var actual_ot_user_id = main.global.user_map[ot_user_id];
+
+                      //Check to see if enemy country is valid
+                      if (!main.global.user_map[actual_ot_user_id])
+                        return [false, `The country you have specified for annexation did not exist!`];
+
+                      //Check to see if any of the provinces have the same owner as the recipient
+                      for (var i = 0; i < provinces.length; i++)
+                        try {
+                          var local_province = main.provinces[provinces[i]];
+
+                          if (local_province.owner == actual_ot_user_id)
+                            return [false, `People can't annex themselves! Specify a valid recipient for these territories, not someone you're annexing land from.`];
+                        } catch {}
+                    }
+                  }]);
+
                   local_ui.limited_annexation_prompts = [
-                    { index: local_ui.prompts.length - 1, type: `provinces` }
+                    { index: local_ui.prompts.length - 2, type: `provinces` },
+                    { index: local_ui.prompts.length - 1, type: `recipient` }
                   ];
 
                   break;
@@ -785,7 +811,7 @@ module.exports = {
                   );
 
                   //Client state overlord clause
-                  local_ui.prompts.push(`Whom should the overlord of this new client state be? You may choose from a list of allied nations involved in this conflict:\n- ${friendly_countries.join("\n- ")}`, "mention", {
+                  local_ui.prompts.push([`Whom should the overlord of this new client state be? You may choose from a list of allied nations involved in this conflict:\n- ${friendly_countries.join("\n- ")}`, "mention", {
                     limit: function (user_id, arg, input) {
                       var ot_user_id = returnMention(input);
 
@@ -804,7 +830,7 @@ module.exports = {
                       if (!war_obj.friendly_side.includes(actual_ot_user_id))
                         return [false, `You cannot specify an enemy nation as the new overlord of your client state! Please select a new overlord from the above list.`];
                     }
-                  });
+                  }]);
 
                   local_ui.release_client_state_prompts.push(
                     { index: local_ui.prompts.length - 1, type: `overlord_id` }
@@ -813,11 +839,82 @@ module.exports = {
                   break;
                 case "retake_cores":
                   //Allied country's cores to retake
+                  local_ui.prompts.push([`Which of the following countries' cores would you like to rightfully demand be returned to them?\n- ${friendly_countries.join("\n- ")}`, "mention", {
+                    limit: function (user_id, arg, input) {
+                      var ot_user_id = returnMention(input);
+
+                      var actual_ot_user_id = main.global.user_map[ot_user_id];
+                      var ot_user = main.users[actual_ot_user_id];
+
+                      //Check to see if ot_user even exists
+                      if (!ot_user)
+                        return [false, `The user you have specified, **${input}**, turned out to be entirely nonexistent! Please select from the above list.`];
+
+                      //Check for involvement in the war
+                      if (!war_obj.enemy_side.includes(actual_ot_user_id) && !war_obj.friendly_side.includes(actual_ot_user_id))
+                        return [false, `You cannot retake cores for a completely neutral state! Please select a valid allied country from the above list.`];
+
+                      //Check to see if they're on the allied side
+                      if (!war_obj.friendly_side.includes(actual_ot_user_id))
+                        return [false, `You cannot retake cores for an enemy state! Please select a valid country from the above list.`];
+                    }
+                  }]);
+
                   //Enemy country to take back provinces from
+                  local_ui.prompts.push([`Which enemy nation should be held responsible for returning these core provinces?\n- ${enemy_countries.join("\n- ")}`, "mention", {
+                    limit: function (user_id, arg, input) {
+                      var ot_user_id = returnMention(input);
+
+                      var actual_ot_user_id = main.global.user_map[ot_user_id];
+                      var ot_user = main.users[actual_ot_user_id];
+
+                      //Check to see if ot_user even exists
+                      if (!ot_user)
+                        return [false, `The user you have specified, **${input}**, turned out to be entirely nonexistent! Please select from the above list.`];
+
+                      //Check for involvement in the war
+                      if (!war_obj.enemy_side.includes(actual_ot_user_id) && !war_obj.friendly_side.includes(actual_ot_user_id))
+                        return [false, `You cannot demand a completely neutral state to return their cores to this country! Please select a valid allied country from the above list.`];
+
+                      if (!war_obj.enemy_side.includes(actual_ot_user_id))
+                        return [false, `You must specify a valid enemy country for them to be able to return their cores! **${input}** was not recognised as a valid country.`];
+                    }
+                  }]);
+
+                  local_ui.retake_cores_prompts = [
+                    { index: local_ui.prompts.length - 2, type: `recipient` },
+                    { index: local_ui.prompts.length - 1, type: `target` }
+                  ];
 
                   break;
                 case "revoke_reparations":
                   //Allied country's reparations to revoke
+                  if (local_value.custom_recipient) {
+                    local_ui.prompts.push([`Whom would you like to free from their debt bondage? Please select one of the allied countries below.\n- ${friendly_countries.join("\n- ")}`, "mention", {
+                      limit: function (user_id, arg, input) {
+                        var ot_user_id = returnMention(input);
+
+                        var actual_ot_user_id = main.global.user_map[ot_user_id];
+                        var ot_user = main.users[actual_ot_user_id];
+
+                        //Check to see if ot_user even exists
+                        if (!ot_user)
+                          return [false, `The user you have specified, **${input}**, turned out to be entirely nonexistent! Please select from the above list.`];
+
+                        //Check for involvement in the war
+                        if (!war_obj.enemy_side.includes(actual_ot_user_id) && !war_obj.friendly_side.includes(actual_ot_user_id))
+                          return [false, `You cannot free a completely neutral state from their war reparations! Please select a valid allied country from the above list.`];
+
+                        //Check to see if they're on the friendly_side
+                        if (!war_obj.friendly_side.includes(actual_ot_user_id))
+                          return [false, `You must specify a valid friendly country to cease debt repayments! **${input}** was not recognised as a valid country.`];
+                      }
+                    }]);
+
+                    local_ui.revoke_reparations_prompts = [
+                      { index: local_ui.prompts.length - 1, type: `target` }
+                    ];
+                  }
 
                   break;
                 case "seize_resources":
