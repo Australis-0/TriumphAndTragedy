@@ -143,7 +143,7 @@ module.exports = {
                   //Cut down to size clause
                   if (local_value.can_cut_army_types_down_to_size) {
                     //If true, only specified army types can be cut down to size, not everything
-                    var all_local_effects = Object.keys(local_value.can_cut_army_types_down_to_size);
+                    var all_local_effects = Object.keys(local_value);
                     var default_keys = ["can_cut_army_types_down_to_size", "minimum_removal", "maximum_removal", "minimum_turns_demilitarised", "maximum_turns_demilitarised"];
                     var potential_army_types = [];
 
@@ -360,7 +360,7 @@ module.exports = {
                     );
                   } else {
                     //Else, which country should they be released from?
-                    local_ui.prompts.push([`Which enemy nation should this culture be released from`, "mention", {
+                    local_ui.prompts.push([`Which enemy nation should this culture be released from?`, "mention", {
                       limit: function (user_id, arg, input) {
                         //Declare local instance variables
                         var culture_obj = getCulture(arg[arg.length - 1].trim().toLowerCase());
@@ -431,6 +431,7 @@ module.exports = {
                   //List valid governments
                   local_ui.prompts.push([`Which of the following governments would you like to install in this country?\n- ${display_potential_governments.join("\n- ")}`, "string", {
                     limit: function (user_id, arg, input) {
+                      //Declare local instance variables
                       var government_obj = getGovernment(input.trim().toLowerCase());
                       var government_key = getGovernment(input.trim().toLowerCase(), { return_key: true });
 
@@ -470,6 +471,7 @@ module.exports = {
                   //User prompt
                   local_ui.prompts.push([`Which of the following vassals would you like to liberate from the enemy?`, "mention", {
                     limit: function (user_id, arg, input) {
+                      //Declare local instance variables
                       var ot_user_id = returnMention(input);
 
                       var actual_ot_user_id = main.global.user_map[ot_user_id];
@@ -491,6 +493,94 @@ module.exports = {
 
                   break;
                 case "limited_annexation":
+                  var all_local_effects = Object.keys(local_value);
+                  var default_keys = ["can_take_capital", "free_annexation", "maximum_provinces_allowed", "minimum_provinces_allowed", "maximum_percentage_allowed", "minimum_percentage_allowed"];
+
+                  //Provinces prompt
+                  local_ui.prompts.push([`Which provinces would you like to motion an annexation request for?\nPlease separate each province with a space like so: '4702 4703 4709'.`, "string", {
+                    limit: function (user_id, arg, input) {
+                      //Declare local instance variables
+                      var actual_id = main.global.user_map[user_id];
+                      var annexed_provinces = {};
+                      var province_types_annexed = {};
+                      var provinces = input.trim().split(" ");
+                      var usr = main.users[actual_id];
+
+                      //Check all provinces to see if they're valid
+                      for (var i = 0; i < provinces.length; i++)
+                        if (!main.provinces[provinces[i]]) {
+                          return [false, `One of the provinces you have specified, Province **${provinces[i]}** proved to be entirely nonexistent!`];
+                        } else {
+                          var local_province = main.provinces[provinces[i]];
+
+                          //Make sure provinces belong to enemy nations
+                          if (!war_obj.enemy_side.includes(local_province.owner))
+                            return [false, `Province **${provinces[i]}** wasn't owned by an enemy nation! You may only petition for annexation requests from enemy countries engaged in this war.`];
+
+                          //Capital clause
+                          if (!local_value.can_take_capital)
+                            for (var x = 0; x < war_obj.enemy_side.length; x++) {
+                              var capital_obj = getCapital(war_obj.enemy_side[x]);
+                              var local_user = main.users[war_obj.enemy_side[x]];
+
+                              if (capital_obj)
+                                if (capital_obj.id == provinces[i])
+                                  return [false, `One of the provinces you have specified, Province **${provinces[i]}** was the capital of **${local_user.name}**! You cannot take another country's capital.`];
+                            }
+
+                          //Otherwise rack it up
+                          if (!annexed_provinces[local_province.owner])
+                            annexed_provinces[local_province.owner] = 0;
+                          annexed_provinces[local_province.owner]++;
+
+                          if (!province_types_annexed[local_province.type])
+                            province_types_annexed[local_province.type] = 0;
+                          province_types_annexed[local_province.type]++;
+                        }
+
+                      //Free annexation clause
+                      var all_targets = Object.keys(annexed_provinces);
+
+                      if (!local_value.free_annexation)
+                        if (all_targets.length > 1)
+                          return [false, `You may only annex territory from a single nation! You annexed territory from **${parseNumber(all_targets.length)}** countries instead.`];
+
+                      //Check to make sure all enemy countries fit within the limited annexation wargoal
+                      for (var i = 0; i < all_targets.length; i++) {
+                        var local_user = main.users[all_targets[i]];
+                        var provinces_allowed = returnSafeNumber(local_value.minimum_provinces_allowed, 0);
+
+                        //Order of precedence - minimum provinces allowed > minimum % allowed > maximum provinces allowed > maximum % allowed
+                        if (local_value.minimum_percentage_allowed)
+                          provinces_allowed = Math.ceil(local_user.provinces*local_value.minimum_percentage_allowed);
+                        if (local_value.maximum_provinces_allowed)
+                          if (provinces_allowed > local_value.maximum_provinces_allowed)
+                            provinces_allowed = local_value.maximum_provinces_allowed;
+                        if (local_value.maximum_percentage_allowed)
+                          if (provinces_allowed > Math.ceil(local_user.provinces*local_value.maximum_percentage_allowed))
+                            provinces_allowed = Math.ceil(local_user.provinces*local_value.maximum_percentage_allowed);
+
+                        //Print error if applicable
+                        if (annexed_provinces[all_targets[i]] > provinces_allowed)
+                          return [false, `You may only annex up to **${parseNumber(provinces_allowed)}** from the country of **${main.users[all_targets[i]].name}**! You tried annexing **${annexed_provinces[all_targets[i]]}** province(s) instead, try removing **${annexed_provinces[all_targets[i]] - provinces_allowed}** province(s) to stay under the limit.`];
+                      }
+
+                      //Check for minimum/maximum_<type>_allowed
+                      for (var i = 0; i < all_local_effects.length; i++)
+                        if (!default_keys.includes(all_local_effects[i])) {
+                          var local_type_limit = local_value[all_local_effects[i]];
+                          var province_type = all_local_effects[i].split("_")[1];
+
+                          if (province_types_annexed[province_type] > local_type_limit)
+                            return [false, `You may only annex up to **${parseNumber(local_type_limit)}** ${parseString(province_type)} province(s)! You tried annexing **${parseNumber(province_types_annexed[province_type])}** instead. Try removing **${parseNumber(province_types_annexed[province_type] - local_type_limit)}** motioned province(s) to stay under the limit.`];
+                        }
+                    }
+                  }]);
+
+                  local_ui.limited_annexation_prompts = [
+                    { index: local_ui.prompts.length - 1, type: `provinces` }
+                  ];
+
                   break;
                 case "puppet":
                   break;

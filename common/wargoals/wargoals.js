@@ -66,6 +66,7 @@ config.wargoals = {
     effect: {
       limited_annexation: {
         can_take_capital: false,
+        free_annexation: true,
         minimum_provinces_allowed: 3,
         maximum_provinces_allowed: 5
       }
@@ -86,6 +87,7 @@ config.wargoals = {
     effect: {
       limited_annexation: {
         can_take_capital: true,
+        free_annexation: false, //Whether or not a user
         minimum_provinces_allowed: 20,
         maximum_percentage_allowed: 0.50
       }
@@ -208,6 +210,7 @@ config.wargoals = {
     effect: {
       limited_annexation: {
         can_take_capital: true,
+        free_annexation: false,
         minimum_provinces_allowed: 8,
         minimum_percentage_allowed: 0.20,
         maximum_provinces_allowed: 50
@@ -362,6 +365,7 @@ config.wargoals = {
     effect: {
       limited_annexation: {
         can_take_capital: true,
+        free_annexation: false,
         minimum_provinces_allowed: 2,
         maximum_provinces_allowed: 2
       }

@@ -215,6 +215,10 @@ module.exports = {
                 wargoal_string.push(`We may annex the target country's capital.`) :
                 wargoal_string.push(`We may not annex the target capital.`);
 
+              (local_effect.free_annexation) ?
+                wargoal_string.push(`We may annex territory from multiple countries.`) :
+                wargoal_string.push(`We may only annex territory from the same country.`);
+
               if (local_effect.minimum_provinces_allowed)
                 wargoal_string.push(`${prefix}We can annex at least **${parseNumber(local_effect.minimum_provinces_allowed)}** province(s) from the target.`);
               if (local_effect.maximum_provinces_allowed)
