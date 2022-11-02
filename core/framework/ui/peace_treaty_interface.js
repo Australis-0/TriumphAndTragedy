@@ -651,20 +651,174 @@ module.exports = {
                 case "release_client_state": //[WIP]
                   //Name of client state
                   local_ui.prompts.push([`What would you like to name your new client state?`, "string", {
+                    limit: function (user_id, arg, input) {
+                      //Declare local instance variables
+                      var valid_country_name = isValidCountryName(input);
 
+                      if (!valid_country_name[0])
+                        return [false, valid_country_name[1]];
+                    }
                   }]);
 
+                  local_ui.release_client_state_prompts = [
+                    { index: local_ui.prompts.length - 1, type: `client_state_name` }
+                  ];
+
                   //Capital of client state clause
-                  if (local_value.can_take_capital)
+                  if (local_value.requires_capital_city) {
+                    local_ui.prompts.push([`What should the capital ID of this client state be? Please specify an Urban Province ID like so: '4702', 'Tokyo'.`, "string", {
+                      limit: function (user_id, arg, input) {
+                        //Declare local instance variables
+                        var city_obj = getCity(input.trim().toLowerCase());
+
+                        //Check to see if city_obj could be found
+                        if (!city_obj)
+                          return [false, `The city you have specified, **${input}**, proved entirely nonexistent! Please specify a valid Urban Province ID.`];
+
+                        //Check to see that city_obj belongs to an enemy nation
+                        if (!war_obj.enemy_side.includes(city_obj.controller))
+                          return [false, `The capital city of your new client state must belong to an enemy nation involved in this conflict!`];
+
+                        //Check if client state can_take_capital
+                        if (!local_value.can_take_capital)
+                          for (var i = 0; i < war_obj.enemy_side.length; i++) {
+                            var capital_obj = getCapital(war_obj.enemy_side[i]);
+
+                            if (capital_obj)
+                              if (capital_obj.id == city_obj.id)
+                                return [false, `You may not set the capital city of an enemy country as the capital of your fledgling client state! Please specify a non-capital city for use.`];
+                          }
+                      }
+                    }]);
+
+                    local_ui.release_client_state_prompts.push(
+                      { index: local_ui.prompts.length - 1, type: `client_state_capital` }
+                    );
+                  }
 
                   //Provinces of client state clause
+                  local_ui.prompts.push([`Which enemy provinces should be ceded to this new client state?\nPlease separate each province with a space like so: '4702 4703 4709'.`, "string", {
+                    limit: function (user_id, arg, input) {
+                      var annexed_population = {};
+                      var annexed_provinces = {};
+                      var capital_ids = [];
+                      var province_types_annexed = {};
+                      var provinces = input.trim().split(" ");
+
+                      //Format capital_ids
+                      for (var i = 0; i < war_obj.enemy_side.length; i++) {
+                        var capital_obj = getCapital(war_obj.enemy_side[i]);
+
+                        if (capital_obj)
+                          capital_ids.push(capital_obj.id);
+                      }
+
+                      //Iterate over all provinces and check if they even exist
+                      for (var i = 0; i < provinces.length; i++)
+                        if (!main.provinces[provinces[i]]) {
+                          return [false, `One of the provinces you have specified, Province ID **${provinces[i]}** turned out to be entirely nonexistent!`];
+                        } else {
+                          var local_province = main.provinces[provinces[i]];
+
+                          //All provinces must belong to enemy nations
+                          if (!war_obj.enemy_side.includes(local_province.owner))
+                            return [false, `You cannot annex neutral/allied provinces! Province **${provinces[i]}** did not belong to an enemy country involved in this war.`];
+
+                          //Check if client state can_take_capital
+                          if (!local_value.can_take_capital)
+                            if (capital_ids.includes(provinces[i]))
+                              return [false, `**${provinces[i]}** is the capital of an enemy nation! You cannot annex enemy capitals to a client state using this wargoal.`];
+
+                          //Otherwise rack it up
+                          if (!annexed_population[local_province.owner])
+                            annexed_population[local_province.owner] = 0;
+                          annexed_population[local_province.owner] += returnSafeNumber(local_province.pops.population);
+
+                          if (!annexed_provinces[local_province.owner])
+                            annexed_provinces[local_province.owner] = 0;
+                          annexed_provinces[local_province.owner]++;
+
+                          if (!province_types_annexed[local_province.type])
+                            province_types_annexed[local_province.type] = 0;
+                          province_types_annexed[local_province.type]++;
+                        }
+
+                      //Check to make sure all enemy countries fit within the release client state wargoal
+                      for (var i = 0; i < war_obj.enemy_side.length; i++) {
+                        var local_user = main.users[war_obj.enemy_side[i]];
+                        var provinces_allowed = returnSafeNumber(local_value.minimum_provinces_allowed, 0);
+
+                        //Order of precedence - minimum provinces allowed > minimum % allowed > maximum provinces allowed > maximum % allowed
+                        if (local_value.minimum_percentage_allowed)
+                          provinces_allowed = Math.ceil(local_user.provinces*local_value.minimum_percentage_allowed);
+                        if (local_value.maximum_provinces_allowed)
+                          if (provinces_allowed > local_value.maximum_provinces_allowed)
+                            provinces_allowed = local_value.maximum_provinces_allowed;
+                        if (local_value.maximum_percentage_allowed)
+                          if (provinces_allowed > Math.ceil(local_user.provinces*local_value.maximum_percentage_allowed))
+                            provinces_allowed = Math.ceil(local_user.provinces*local_value.maximum_percentage_allowed);
+
+                        //Print error if applicable
+                        if (annexed_provinces[all_targets[i]] > provinces_allowed)
+                          return [false, `Your client state may only annex up to **${parseNumber(provinces_allowed)}** from the country of **${main.users[all_targets[i]].name}**! You tried annexing **${annexed_provinces[all_targets[i]]}** province(s) instead, try removing **${annexed_provinces[all_targets[i]] - provinces_allowed}** province(s) to stay under the limit.`];
+
+                        //Population clause
+                        if (local_value.maximum_population_allowed)
+                          if (total_population > local_value.maximum_population_allowed)
+                            return [false, `**${arg[arg.length - 1]}** may only have up to **${parseNumber(local_value.maximum_population_allowed)}* citizens! This limit was exceeded by **${parseNumber(total_population - local_value.maximum_population_allowed)}** inhabitants.`];
+                      }
+
+                      //Check for minimum/maximum_<type>_allowed
+                      for (var i = 0; i < all_local_effects.length; i++)
+                        if (!default_keys.includes(all_local_effects[i])) {
+                          var local_type_limit = local_value[all_local_effects[i]];
+                          var province_type = all_local_effects[i].split("_")[1];
+
+                          if (province_types_annexed[province_type] > local_type_limit)
+                            return [false, `You may only annex up to **${parseNumber(local_type_limit)}** ${parseString(province_type)} province(s)! You tried annexing **${parseNumber(province_types_annexed[province_type])}** instead. Try removing **${parseNumber(province_types_annexed[province_type] - local_type_limit)}** motioned province(s) to stay under the limit.`];
+                        }
+                    }
+                  }]);
+
+                  local_ui.release_client_state_prompts.push(
+                    { index: local_ui.prompts.length - 1, type: `provinces` }
+                  );
 
                   //Client state overlord clause
+                  local_ui.prompts.push(`Whom should the overlord of this new client state be? You may choose from a list of allied nations involved in this conflict:\n- ${friendly_countries.join("\n- ")}`, "mention", {
+                    limit: function (user_id, arg, input) {
+                      var ot_user_id = returnMention(input);
+
+                      var actual_ot_user_id = main.global.user_map[ot_user_id];
+                      var ot_user = main.users[actual_ot_user_id];
+
+                      //Check to see if ot_user even exists
+                      if (!ot_user)
+                        return [false, `The user you have specified, **${input}**, turned out to be entirely nonexistent! Please select from the above list.`];
+
+                      //Check for involvement in the war
+                      if (!war_obj.enemy_side.includes(actual_ot_user_id) && !war_obj.friendly_side.includes(actual_ot_user_id))
+                        return [false, `The overlord you have specified for your new client state isn't even involved in this conflict! Please select a new overlord from the above list.`];
+
+                      //Check to see if they're on the allied side
+                      if (!war_obj.friendly_side.includes(actual_ot_user_id))
+                        return [false, `You cannot specify an enemy nation as the new overlord of your client state! Please select a new overlord from the above list.`];
+                    }
+                  });
+
+                  local_ui.release_client_state_prompts.push(
+                    { index: local_ui.prompts.length - 1, type: `overlord_id` }
+                  );
 
                   break;
                 case "retake_cores":
+                  //Allied country's cores to retake
+                  //Enemy country to take back provinces from
+
                   break;
                 case "revoke_reparations":
+                  //Allied country's reparations to revoke
+
                   break;
                 case "seize_resources":
                   break;

@@ -771,6 +771,31 @@ module.exports = {
     }
   },
 
+  isValidCountryName: function (arg0_name) {
+    //Convert from parameters
+    var country_name = arg0_name;
+
+    //Declare local instance variables
+    var all_users = Object.keys(main.users);
+    var country_name_taken = false;
+    var processed_country_name = formaliseString(country_name);
+
+    //Check to see if country name is already taken
+    for (var i = 0; i < all_users.length; i++)
+      country_name_taken = (processed_country_name == main.users[all_users[i]].name) ?
+        true : country_name_taken;
+
+    if (country_name_taken)
+      return [false, `The country name **${processed_country_name}** was already taken by another nation! Try renaming your country to something else.`];
+
+    //See if country name meets length requirements
+    if (processed_country_name.length <= 100)
+      return [false, `The new name of your country, **${parseString(country_name)}** must be less than **100** characters! Its current proposed length is **${parseNumber(parseString(country_name).length)}** characters long.`];
+
+    //Return statement
+    return [true, `This country name was available.`];
+  },
+
   moveTo: function (arg0_province, arg1_province) {
     //Convert from parameters
     var starting_province = arg0_province;

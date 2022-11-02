@@ -59,15 +59,11 @@ module.exports = {
     //Declare local instance variables
     var all_users = Object.keys(main.users);
     var actual_id = JSON.parse(JSON.stringify(user_id));
-    var country_name_taken = false;
     var processed_country_name = formaliseString(country_name);
+    var valid_country_name = isValidCountryName(processed_country_name);
 
-    //Check to see if country name is already taken
-    for (var i = 0; i < all_users.length; i++)
-      country_name_taken = (processed_country_name == main.users[all_users[i]].name) ? true : country_name_taken;
-
-    //Initialise user data
-    if (!country_name_taken) {
+    //Check if country name is valid
+    if (valid_country_name[0]) {
       //Check if user already exists
       if (main.users[actual_id])
         actual_id = generateUserID();
