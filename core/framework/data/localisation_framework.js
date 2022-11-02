@@ -246,6 +246,8 @@ module.exports = {
 
               if (Object.keys(local_effect).length == 0)
                 wargoal_string.push(`${prefix}We may puppet the target country.`);
+              if (local_effect.custom_recipient)
+                wargoal_string.push(`${prefix}We may choose an overlord for the target country.`)
               if (local_effect.maximum_population)
                 wargoal_string.push(`${prefix}We may puppet the target country as long as it has less than **${parseNumber(local_effect.maximum_population)}** inhabitants.`);
               if (local_effect.maximum_provinces)

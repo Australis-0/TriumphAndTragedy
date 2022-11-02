@@ -29,6 +29,7 @@ module.exports = {
     var actual_wargoal_array = [];
     var enemy_countries = [];
     var enemy_side = "";
+    var friendly_countries = [];
     var friendly_side = "";
     var has_error = [false, ""]; //[has_error, error_msg];
     var game_obj = getGameObject(user_id);
@@ -49,6 +50,10 @@ module.exports = {
     //Add all enemy countries to display
     for (var i = 0; i < war_obj[enemy_side].length; i++)
       enemy_countries.push(`**${main.users[war_obj[enemy_side][i]].name}**`);
+
+    //Add all friendly countries to display
+    for (var i = 0; i < war_obj[friendly_side].length; i++)
+      friendly_countries.push(`**${main.users[war_obj[friendly_side][i]].name}**`);
 
     //Fetch a list of all available wargoals
     for (var i = 0; i < war_obj.wargoals.length; i++)
@@ -583,8 +588,79 @@ module.exports = {
 
                   break;
                 case "puppet":
+                  //Country to puppet prompt
+                  local_ui.prompts.push([`Which enemy nation would you like to puppet? You may choose from the following countries:\n- ${enemy_countries.join("\n- ")}`, "mention", {
+                    limit: function (user_id, arg, input) {
+                      //Declare local instance variables
+                      var ot_user_id = returnMention(input);
+
+                      var actual_ot_user_id = main.global.user_map[ot_user_id];
+                      var ot_user = main.users[actual_ot_user_id];
+
+                      //Check that target exists
+                      if (!ot_user)
+                        return [false, `The country you have specified, **${input}**, doesn't even exist!`];
+
+                      //Check that target is an enemy
+                      if (!war_obj.enemy_side.includes(actual_ot_user_id))
+                        return [false, `You may only puppet enemy nations engaged in this conflict.`];
+
+                      //Population clause
+                      if (local_value.maximum_population)
+                        if (ot_user.population > local_value.maximum_population)
+                          return [false, `**${ot_user.name}** has too many inhabitants for you to puppet in its entirety! You may only puppet countries with up to **${parseNumber(local_value.maximum_population)}** inhabitants. ${ot_user.name} exceeded this limit by **${parseNumber(ot_user.population - local_value.maximum_population)}** people.`];
+
+                      //Provinces clause
+                      if (local_value.maximum_provinces)
+                        if (ot_user.provinces > local_value.maximum_provinces)
+                          return [false, `**${ot_user.name}** is too big for you to puppet! You may only puppet countries with up to **${parseNumber(local_value.maximum_provinces)}** province(s), ${ot_user.name} exceeded this amount by **${parseNumber(ot_user.provinces - local_value.maximum_provinces)}** province(s).`];
+                    }
+                  }]);
+
+                  local_ui.puppet_prompts = [
+                    { index: local_ui.prompts.length - 1, type: `vassal_id` }
+                  ];
+
+                  //Who should puppet this user?
+                  if (local_value.custom_recipient) {
+                    local_ui.prompts.push([`Who should be the overlord of this country? You may only select from allied countries:\n- ${friendly_countries.join("\n- ")}`, "mention", {
+                      limit: function (user_id, arg, input) {
+                        //Declare local instance variables
+                        var ot_user_id = returnMention(input);
+
+                        var actual_ot_user_id = main.global.user_map[ot_user_id];
+                        var ot_user = main.users[actual_ot_user_id];
+
+                        //Check that target exists
+                        if (!ot_user)
+                          return [false, `The country you have specified, **${input}**, doesn't even exist!`];
+
+                        //Check that target is on the allied side
+                        if (!war_obj.friendly_side.includes(actual_ot_user_id))
+                          return [false, `Only allied countries may inherit this vassal as an overlord!`];
+                      }
+                    }]);
+
+                    //Push prompt to puppet_prompts
+                    puppet_prompts.push(
+                      { index: local_ui.prompts.length - 1, type: `overlord_id` }
+                    );
+                  }
+
                   break;
-                case "release_client_state":
+                case "release_client_state": //[WIP]
+                  //Name of client state
+                  local_ui.prompts.push([`What would you like to name your new client state?`, "string", {
+
+                  }]);
+
+                  //Capital of client state clause
+                  if (local_value.can_take_capital)
+
+                  //Provinces of client state clause
+
+                  //Client state overlord clause
+
                   break;
                 case "retake_cores":
                   break;
