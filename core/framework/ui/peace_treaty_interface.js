@@ -1524,6 +1524,13 @@ module.exports = {
 
                       var target_obj = effect_obj.release_client_state[local_client_state_id];
 
+                      //Cache random colour
+                      target_obj.colour = [
+                        randomNumber(0, 235),
+                        randomNumber(0, 235),
+                        randomNumber(0, 235)
+                      ];
+
                       //Create target_obj
                       if (local_capital)
                         target_obj.capital_id = local_capital.id;
