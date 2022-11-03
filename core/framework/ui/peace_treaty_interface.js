@@ -1409,20 +1409,94 @@ module.exports = {
                       if (!effect_obj.install_government)
                         effect_obj.install_government = {};
 
+                      //target object
+                      var local_government;
+                      var local_target;
+
+                      for (var x = 0; x < local_prompts.length; x++) {
+                        if (local_prompts[x].type == "government")
+                          local_government = arg[local_prompts[x].index];
+                        if (local_prompts[x].type == "target")
+                          local_target = arg[local_prompts[x].index];
+                      }
+
+                      effect_obj.install_government[local_target] = {
+                        government_type: local_government
+                      };
+
                       break;
-                    case "liberation": //[WIP]
+                    case "liberation":
                       if (!effect_obj.liberation)
-                        effect_obj.liberation = {};
+                        effect_obj.liberation = [];
+
+                      //target object
+                      var local_target;
+
+                      for (var x = 0; x < local_prompts.length; x++)
+                        if (local_prompts[x].type == "target")
+                          local_target = arg[local_prompts[x].index];
+
+                      if (local_target)
+                        if (!effect_obj.liberation.includes(local_target))
+                          effect_obj.liberation.push(local_target);
 
                       break;
                     case "limited_annexation": //[WIP]
                       if (!effect_obj.annexation)
                         effect_obj.annexation = {};
 
+                      //recipient object
+                      var local_provinces;
+                      var local_recipient;
+
+                      for (var x = 0; x < local_prompts.length; x++) {
+                        if (local_prompts[x].type == "provinces")
+                          local_provinces = arg[local_prompts[x].index].trim().split(" ");
+                        if (local_prompts[x].type == "recipient")
+                          local_recipient = arg[local_prompts[x].index];
+                      }
+
+                      if (!effect_obj.annexation[local_recipient])
+                        effect_obj.annexation[local_recipient] = {};
+
+                      var target_obj = effect_obj.annexation[local_recipient];
+
+                      //Push provinces to target_obj
+                      for (var x = 0; x < local_provinces.length; x++)
+                        if (!target_obj.includes(local_provinces[x]))
+                          target_obj.push(local_provinces[x]);
+
                       break;
                     case "puppet":
+                      if (!effect_obj.puppet)
+                        effect_obj.puppet = {};
+
+                      //target object
+                      var local_overlord = actual_id; //Default overlord
+                      var local_vassal;
+
+                      for (var x = 0; x < local_prompts.length; x++) {
+                        if (local_prompts[x].type == "overlord_id")
+                          local_overlord = arg[local_prompts[x].index];
+                        if (local_prompts[x].type == "vassal_id")
+                          local_vassal = arg[local_prompts[x].index];
+                      }
+
+                      //Push vassal:overlord matrix
+                      effect_obj.puppet[local_vassal] = local_overlord;
+
                       break;
-                    case "release_client_state":
+                    case "release_client_state": //[WIP]
+                      if (!effect_obj.release_client_state)
+                        effect_obj.release_client_state;
+
+                      //Create temporary client state ID; target object
+                      var local_capital;
+                      var local_client_state_id = generateClientStateID(actual_id);
+                      var local_name;
+                      var local_overlord;
+                      var local_provinces;
+
                       break;
                     case "retake_cores":
                       break;
