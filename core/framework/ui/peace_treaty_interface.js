@@ -675,7 +675,7 @@ module.exports = {
                   }
 
                   break;
-                case "release_client_state": //[WIP]
+                case "release_client_state":
                   //Name of client state
                   local_ui.prompts.push([`What would you like to name your new client state?`, "string", {
                     limit: function (user_id, arg, input) {
