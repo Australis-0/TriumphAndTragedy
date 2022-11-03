@@ -1486,7 +1486,7 @@ module.exports = {
                       effect_obj.puppet[local_vassal] = local_overlord;
 
                       break;
-                    case "release_client_state": //[WIP]
+                    case "release_client_state":
                       if (!effect_obj.release_client_state)
                         effect_obj.release_client_state;
 
@@ -1497,18 +1497,63 @@ module.exports = {
                       var local_overlord;
                       var local_provinces;
 
+                      for (var x = 0; x < local_prompts.length; x++) {
+                        if (local_prompts[x].type == "client_state_capital")
+                          local_capital = getCity(arg[local_prompts[x].index].trim().toLowerCase());
+                        if (local_prompts[x].type == "client_state_name")
+                          local_name = formaliseString(arg[local_prompts[x].index]);
+                        if (local_prompts[x].type == "overlord_id")
+                          local_overlord = arg[local_prompts[x].index];
+                        if (local_prompts[x].type == "provinces")
+                          local_provinces = arg[local_prompts[x].index].trim().split(" ");
+                      }
+
+                      //Push target_obj
+                      if (!effect_obj.release_client_state[local_client_state_id])
+                        effect_obj.release_client_state[local_client_state_id] = {};
+
+                      var target_obj = effect_obj.release_client_state[local_client_state_id];
+
+                      //Create target_obj
+                      if (local_capital)
+                        target_obj.capital_id = local_capital.id;
+                      if (local_name)
+                        target_obj.name = local_name;
+                      if (local_overlord)
+                        target_obj.overlord = local_overlord;
+                      if (local_provinces)
+                        target_obj.provinces = local_provinces;
+
                       break;
                     case "retake_cores":
+                      if (!effect_obj.retake_cores)
+                        effect_obj.retake_cores = {};
+
                       break;
                     case "revoke_reparations":
+                      if (!effect_obj.revoke_reparations)
+                        effect_obj.revoke_reparations = [];
+
                       break;
                     case "seize_resources":
+                      if (!effect_obj.seize_resources)
+                        effect_obj.seize_resources = [];
+
                       break;
                     case "steer_trade":
+                      if (!effect_obj.steer_trade)
+                        effect_obj.steer_trade = {};
+
                       break;
                     case "syphon_actions":
+                      if (!effect_obj.syphon_actions)
+                        effect_obj.syphon_actions = [];
+
                       break;
                     case "war_reparations":
+                      if (!effect_obj.war_reparations)
+                        effect_obj.war_reparations = [];
+
                       break;
                   }
                 }
