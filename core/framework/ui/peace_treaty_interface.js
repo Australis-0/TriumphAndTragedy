@@ -585,6 +585,7 @@ module.exports = {
                   //User prompt
                   local_ui.prompts.push([`Whom should the recipient of these annexed provinces be? You may specify any country, even if they are currently at war with you, so long as they are not the same country you are annexing land from.`, "mention", {
                     limit: function (user_id, arg, input) {
+                      //Declare local instance variables
                       var actual_id = main.global.user_map[user_id];
                       var ot_user_id = returnMention(input);
                       var provinces = arg[arg.length - 1].trim().split(" ");
@@ -918,6 +919,100 @@ module.exports = {
 
                   break;
                 case "seize_resources":
+                  var all_local_effects = Object.keys(local_value);
+                  var default_keys = ["custom_recipient", "inherit_actions_maximum", "inherit_actions_minimum", "inherit_money_maximum", "inherit_money_minimum", "seize_inventory_maximum", "seize_inventory_minimum"];
+
+                  //Target prompt
+                  local_ui.prompts.push([`Whom would you like to seize resources from?\n- ${enemy_countries.join("\n- ")}`, "mention", {
+                    limit: function (user_id, arg, input) {
+                      //Declare local instance variables
+                      var ot_user_id = returnMention(input);
+
+                      var actual_ot_user_id = main.global.user_map[ot_user_id];
+                      var ot_user = main.users[actual_ot_user_id];
+
+                      //Check to make sure that target even exists
+                      if (!ot_user)
+                        return [false, `The country you have specified, **${input}**, didn't even exist! Please select a country from the above list.`];
+
+                      //Check to make sure that target is involved in the war
+                      if (!war_obj.enemy_side.includes(actual_ot_user_id) && !war_obj.friendly_side.includes(actual_ot_user_id))
+                        return [false, `**${ot_user.name}** isn't even involved in the current conflict! Please select a country from the above list.`];
+
+                      //Check to make sure that target is on the enemy side
+                      if (!war_obj.enemy_side.includes(actual_ot_user_id))
+                        return [false, `You can't take stuff from an allied nation in a peace deal like that! Please select a country from the above list.`];
+                    }
+                  }]);
+
+                  local_ui.seize_resources_prompts = [
+                    { index: local_ui.prompts.length - 1, type: `target` }
+                  ];
+
+                  //Action prompts
+                  if (local_value.inherit_actions_minimum || local_value.inherit_actions_maximum) {
+                    local_ui.prompts.push([`What percentage of Actions would you like to seize from the current target? (by percentage)`, "number", {
+                      min: returnSafeNumber(local_value.inherit_actions_minimum, 0),
+                      max: returnSafeNumber(local_value.inherit_actions_maximum, 100)
+                    }]);
+
+                    local_ui.seize_resources_prompts.push(
+                      { index: local_ui.prompts.length - 1, type: `inherit_actions` }
+                    );
+                  }
+
+                  //Inventory prompts
+                  if (local_value.seize_inventory_minimum || local_value.seize_inventory_maximum) {
+                    local_ui.prompts.push([`How much of the target's inventory stockpiles should be seized by the recipient? (in percentage)`, "number", {
+                      min: returnSafeNumber(local_value.seize_inventory_minimum, 0),
+                      max: returnSafeNumber(local_value.seize_inventory_maximum, 100)
+                    }]);
+
+                    local_ui.seize_resources_prompts.push(
+                      { index: local_ui.prompts.length - 1, type: `seize_inventory` }
+                    );
+                  }
+
+                  //Money prompts
+                  if (local_value.inherit_money_minimum || local_value.inherit_money_maximum) {
+                    local_ui.prompts.push([`What percentage of fiscal assets should be inherited by the recipient?`, "number", {
+                      min: returnSafeNumber(`inherit_money_minimum`, 0),
+                      max: returnSafeNumber(`inherit_money_maximum`, 100)
+                    }]);
+
+                    local_ui.seize_resources_prompts.push(
+                      { index: local_ui.prompts.length - 1, type: `inherit_money` }
+                    );
+                  }
+
+                  //Goods prompts
+                  for (var x = 0; x < all_local_effects.length; x++)
+                    if (!default_keys.includes(all_local_effects[x])) {
+                      var potential_good_type = all_local_effects[x].split("_")[1];
+
+                      var good_type = getGood(potential_good_type);
+
+                      if (good_type) {
+                        local_ui.prompts.push([`What percentage of ${(good_type.name) ? good_type.name : potential_resource_type} would you like to inherit from the target country? (by percentage)`, "number", {
+                          min: returnSafeNumber(`minimum_${potential_good_type}_allowed`, 0),
+                          max: returnSafeNumber(`maximum_${potential_good_type}_allowed`, 100);
+                        }]);
+
+                        local_ui.seize_resources_prompts.push(
+                          { index: local_ui.prompts.length - 1, type: `seize_${potential_good_type}` }
+                        );
+                      }
+                    }
+
+                  //Recipient prompt
+                  if (local_value.custom_recipient) {
+                    local_ui.prompts.push([`Whom should the recipient of these reparations be? You may choose any country.`, "mention"]);
+
+                    local_ui.seize_resources_prompts.push(
+                      { index: local_ui.prompts.length - 1, type: `recipient` }
+                    );
+                  }
+
                   break;
                 case "steer_trade":
                   break;

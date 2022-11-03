@@ -644,7 +644,9 @@ module.exports = {
             if (local_city_obj.buildings)
               //Individual buildings are treated as objects in an array here because this allows for further granularity in the future
               constructBuilding(usr.under_construction[i].building_amount, usr.under_construction[i].building_type, usr.under_construction[i].province_id, i);
-          } catch {}
+          } catch (e) {
+            console.log(e);
+          }
 
           //Remove construction
           usr.under_construction.splice(i, 1);
