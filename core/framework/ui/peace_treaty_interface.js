@@ -1660,7 +1660,7 @@ module.exports = {
                         target_obj.turns = local_duration;
 
                       break;
-                    case "syphon_actions": //[WIP]
+                    case "syphon_actions":
                       if (!effect_obj.syphon_actions)
                         effect_obj.syphon_actions = [];
 
