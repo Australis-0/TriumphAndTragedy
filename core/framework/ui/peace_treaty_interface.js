@@ -1529,6 +1529,27 @@ module.exports = {
                       if (!effect_obj.retake_cores)
                         effect_obj.retake_cores = {};
 
+                      //target object
+                      var local_recipient;
+                      var local_target;
+
+                      for (var x = 0; x < local_prompts.length; x++) {
+                        if (local_prompts[x].type == "recipient")
+                          local_recipient = arg[local_prompts[x].index];
+                        if (local_prompts[x].type == "target")
+                          local_target = arg[local_prompts[x].index];
+                      }
+
+                      //Create target_obj
+                      if (!effect_obj.retake_cores[local_target])
+                        effect_obj.retake_cores[local_target] = [];
+
+                      var target_obj = effect_obj.retake_cores[local_target];
+
+                      //Push to target_obj
+                      if (!target_obj.includes(local_recipient))
+                        target_obj.push(local_recipient);
+
                       break;
                     case "revoke_reparations":
                       if (!effect_obj.revoke_reparations)
