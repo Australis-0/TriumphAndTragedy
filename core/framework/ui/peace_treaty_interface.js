@@ -71,6 +71,7 @@ module.exports = {
     },
     function (arg) {
       var current_wargoal = arg[0].trim().toLowerCase();
+      var default_effects = ["annex_all", "cut_down_to_size", "demilitarisation", "free_oppressed_people", "install_government", "liberation", "limited_annexation", "puppet", "release_client_state", "retake_cores", "revoke_reparations", "seize_resources", "steer_trade", "syphon_actions", "war_reparations"];
       var local_ui = {
         prompts: []
       };
@@ -88,6 +89,8 @@ module.exports = {
 
         //Parse effects in order to create a visual prompt
         if (wargoal_demanded >= returnSafeNumber(wargoal_obj.demand_limit, 1)) {
+          var effect_obj = {};
+
           if (wargoal_obj.effect) {
             var all_effects = Object.keys(wargoal_obj.effect);
 
@@ -1217,8 +1220,224 @@ module.exports = {
                   break;
               }
             }
+
+            //Execute visual prompt first
+            visualPrompt(game_obj.alert_embed, user_id, {
+              title: `[Back] | Adding Demand for ${(wargoal_obj.name) ? wargoal_obj.name : wargoal_name}`,
+              prompts: local_ui.prompts,
+              do_not_cancel: true
+            },
+            function (arg) {
+              switch (arg) {
+                case "back":
+                  module.exports.initialiseAddWargoal(user_id, peace_obj);
+
+                  break;
+              }
+            },
+            function (arg) {
+              //3rd parser - parse from prompts to effects
+              for (var i = 0; i < default_effects.length; i++)
+                if (local_ui[`${default_effects[i]}_prompts`]) {
+                  var local_value = wargoal_obj.effect[default_effects[i]];
+                  var local_prompts = local_ui[`${default_effects[i]}_prompts`];
+
+                  switch (default_effects[i]) {
+                    case "annex_all":
+                      if (!effect_obj.annex_all)
+                        effect_obj.annex_all = {};
+
+                      //Push target:recipient matrix
+                      var local_recipient;
+                      var local_target;
+
+                      for (var x = 0; x < local_prompts.length; x++) {
+                        if (local_prompts[x].type == "recipient")
+                          local_recipient = arg[local_prompts[x].index];
+                        if (local_prompts[x].type == "target")
+                          local_target = arg[local_prompts[x].index];
+                      }
+
+                      effect_obj.annex_all[local_target] = local_recipient;
+
+                      break;
+                    case "cut_down_to_size":
+                      var all_army_categories = Object.keys(config.units);
+                      var all_army_types = [];
+                      var default_keys = ["duration", "general_removal", "target"];
+
+                      if (!effect_obj.cut_down_to_size)
+                        effect_obj.cut_down_to_size = {};
+
+                      //Format all_army_types
+                      for (var x = 0; x < all_army_categories.length; x++) {
+                        var local_army_category = config.units[all_army_categories[x]];
+
+                        if (local_army_category.type)
+                          if (!all_army_types.includes(local_army_category.type))
+                            all_army_types.push(local_army_category.type);
+                      }
+
+                      //target object
+                      var local_duration;
+                      var local_general_removal;
+                      var local_target;
+
+                      //Create target object
+                      for (var x = 0; x < local_prompts.length; x++)
+                        if (local_prompts[x].type == "target")
+                          local_target = arg[local_prompts[x].index];
+
+                      effect_obj.cut_down_to_size[local_target] = {};
+
+                      //Target subclauses
+                      for (var x = 0; x < local_prompts.length; x++) {
+                        if (local_prompts[x].type == "duration")
+                          local_duration = arg[local_prompts[x].index];
+                        if (local_prompts[x].type == "general_removal")
+                          for (var y = 0; y < all_army_types.length; y++)
+                            effect_obj.cut_down_to_size[`${all_army_types[y]}_removal`] = arg[local_prompts[x].index]/100;
+
+                        //Custom keys
+                        if (!default_keys.includes(local_prompts[x].type))
+                          effect_obj.cut_down_to_size[local_prompts[x].type] = arg[local_prompts[x].index]/100;
+                      }
+
+                      //Finish setting .cut_down_to_size object fields
+                      var target_obj = effect_obj.cut_down_to_size[local_target];
+
+                      if (local_duration)
+                        target_obj.turns = local_duration;
+
+                      break;
+                    case "demilitarisation":
+                      if (!effect_obj.demilitarisation)
+                        effect_obj.demilitarisation = {};
+
+                      //Push provinces and turns fields
+                      var local_duration;
+                      var local_provinces;
+
+                      for (var x = 0; x < local_prompts.length; x++) {
+                        if (local_prompts[x].type == "duration")
+                          local_duration = arg[local_prompts.index];
+                        if (local_prompts[x].type == "provinces")
+                          local_provinces = arg[local_prompts.index].trim().split(" ");
+                      }
+
+                      //Finish setting demilitarisation object fields
+                      var target_obj = effect_obj.demilitarisation;
+
+                      if (local_duration)
+                        target_obj.turns = local_duration;
+                      if (local_provinces)
+                        target_obj.demilitarised_provinces = local_provinces;
+
+                      break;
+                    case "free_oppressed_people": //[WIP]
+                      if (!effect_obj.free_oppressed_people)
+                        effect_obj.free_oppressed_people = {};
+
+                      //target object
+                      var local_culture;
+                      var local_provinces;
+                      var local_target;
+
+                      for (var x = 0; x < local_prompts.length; x++)
+                        if (local_prompts[x].type == "target")
+                          local_target = arg[local_prompts[x].index];
+
+                      effect_obj.free_oppressed_people[local_target] = {};
+
+                      //Target subclauses
+                      for (var x = 0; x < local_prompts.length; x++) {
+                        if (local_prompts[x].type == "culture")
+                          local_culture = getCulture(arg[local_prompts[x].index], { return_key: true });
+                        if (local_prompts[x].type == "provinces")
+                          local_provinces = arg[local_prompts.index].trim().split(" ");
+                      }
+
+                      //Generate provinces from target by majority culture, highest populations first if local_provinces is undefined
+                      if (!local_provinces) {
+                        var finalised_provinces = [];
+                        var ot_user_provinces = getProvinces(local_target, { include_hostile_occupations: true });
+                        var sorted_provinces = []; //[[province_id, population]];
+                        var total_population = 0;
+
+                        for (var x = 0; x < ot_user_provinces.length; x++)
+                          if (ot_user_provinces[x].culture)
+                            if (ot_user_provinces[x].culture == local_culture)
+                              sorted_provinces.push([ot_user_provinces[x].id, returnSafeNumber(ot_user_provinces[x].pops.population)]);
+
+                        //Sort by population
+                        sorted_provinces.sort(function(a, b){ return b[1] - a[1] });
+
+                        //Provinces handler
+                        for (var x = 0; x < returnSafeNumber(local_value.maximum_provinces_allowed, sorted_provinces.length); x++) {
+                          var local_province = main.provinces[sorted_provinces[x][0]];
+
+                          finalised_provinces.push(sorted_provinces[x][0]);
+
+                          //Track total_population for population trimmer
+                          total_population += returnSafeNumber(local_province.pops.population);
+                        }
+
+                        //Population trimmer
+                        if (local_value.maximum_population_allowed)
+                          while (total_population > local_value.maximum_population_allowed) {
+                            //Trim off the last province by population
+                            var local_province = main.provinces[finalised_provinces.length - 1];
+
+                            total_population -= returnSafeNumber(local_province.pops.population);
+                            finalised_provinces.pop();
+                          }
+
+                        //Set local_provinces to finalised_provinces
+                        local_provinces = finalised_provinces;
+                      }
+
+                      //Finish setting culture object fields
+                      effect_obj.free_oppressed_people[local_culture] = {};
+
+                      var target_obj = effect_obj.free_oppressed_people[local_culture];
+
+                      if (local_provinces)
+                        target_obj.provinces = local_provinces;
+
+                      break;
+                    case "install_government":
+                      break;
+                    case "liberation":
+                      break;
+                    case "limited_annexation":
+                      break;
+                    case "puppet":
+                      break;
+                    case "release_client_state":
+                      break;
+                    case "retake_cores":
+                      break;
+                    case "revoke_reparations":
+                      break;
+                    case "seize_resources":
+                      break;
+                    case "steer_trade":
+                      break;
+                    case "syphon_actions":
+                      break;
+                    case "war_reparations":
+                      break;
+                  }
+                }
+
+              //Print feedback message
+              printAlert(game_obj.id, `${config.icons.checkmark} You have successfully added the **${(wargoal_obj.name) ? wargoal_obj.name : wargoal_name}** wargoal to your current peace offer.`);
+            });
           } else {
+            peace_obj.wargoals.push({ id: wargoal_name });
+
             //Automatically add wargoal to peace treaty without any additional arguments
+            printAlert(game_obj.id, `${config.icons.checkmark} You have successfully added the **${(wargoal_obj.name) ? wargoal_obj.name : wargoal_name}** wargoal to your current peace offer.`);
           }
         } else {
           //Print error

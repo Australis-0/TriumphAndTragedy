@@ -7,7 +7,9 @@ module.exports = {
         {
           id: "cut_down_to_size",
           effect: {
-            annex_all: ["user_id", ..],
+            annex_all: {
+              target_id: "user_id"
+            },
             annexation: {
               user_id: {
                 provinces: ["9701", "9702", ..] - Provinces to be annexed to user_id
