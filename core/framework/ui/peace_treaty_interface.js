@@ -191,7 +191,7 @@ module.exports = {
                     }]);
 
                     local_ui.cut_down_to_size_prompts.push(
-                      { index: local_ui.prompts.length - 1, type: `turns` }
+                      { index: local_ui.prompts.length - 1, type: `duration` }
                     );
                   }
 
@@ -257,7 +257,7 @@ module.exports = {
                     }]);
 
                     local_ui.demilitarisation_prompts.push(
-                      { index: local_ui.prompts.length - 1, type: `turns` }
+                      { index: local_ui.prompts.length - 1, type: `duration` }
                     );
                   }
 
@@ -1015,10 +1015,205 @@ module.exports = {
 
                   break;
                 case "steer_trade":
+                  //Target prompt
+                  local_ui.prompts.push([`Which enemy country would you like to force into only being able to trade with you? You may choose one of the following countries:\n- ${enemy_countries.join("\n- ")}`, "mention", {
+                    limit: function (user_id, arg, input) {
+                      //Declare local instance variables
+                      var ot_user_id = returnMention(input);
+
+                      var actual_ot_user_id = main.global.user_map[ot_user_id];
+                      var ot_user = main.users[actual_ot_user_id];
+
+                      //Check to see if target exists
+                      if (!ot_user)
+                        return [false, `The country you have specified, **${input}**, turned out to be entirely nonexistent! Please select from the above list.`]
+
+                      //Check to see if target is an enemy
+                      if (!war_obj.enemy_side.includes(actual_ot_user_id))
+                        return [false, `**${ot_user.name}** is not currently on the opposing side of this conflict! You can't force neutral/allied countries into trading with you.`];
+                    }
+                  }]);
+
+                  local_ui.steer_trade_prompts = [
+                    { index: local_ui.prompts.length - 1, type: `target` }
+                  ];
+
+                  //Recipient prompt
+                  if (local_value.custom_recipient) {
+                    local_ui.prompts.push([`Whom would you like to be the recipient of this compact? You may choose any nation, so long as it is not the same nation you are forcing to trade.`, "mention", {
+                      limit: function (user_id, arg, input) {
+                        //Declare local instance variables
+                        var ot_user_id = returnMention(input);
+                        var target_user_id = returnMention(arg[arg.length - 1]);
+
+                        var actual_ot_user_id = main.global.user_map[ot_user_id];
+                        var actual_target_id = main.global.user_map[target_user_id];
+
+                        //Check to see if they're the same
+                        if (actual_ot_user_id == actual_target_id)
+                          return [false, `You can't force a country into trading with itself! Pick another country to force this nation into trading with.`];
+                      }
+                    }]);
+
+                    local_ui.steer_trade_prompts.push(
+                      { index: local_ui.prompts.length - 1, type: `recipient` }
+                    );
+                  }
+
+                  //Turns prompt
+                  if (local_value.minimum_turns_allowed || local_value.maximum_turns_allowed) {
+                    local_ui.prompts.push([`For how many turns should this trade agreement be binding?`, "number", {
+                      min: returnSafeNumber(local_value.minimum_turns_allowed, 1),
+                      max: returnSafeNumber(local_value.maximum_turns_allowed, 100)
+                    }]);
+
+                    local_ui.steer_trade_prompts.push(
+                      { index: local_ui.prompts.length - 1, type: `duration` }
+                    );
+                  }
+
                   break;
                 case "syphon_actions":
+                  //Target prompt
+                  local_ui.prompts.push([`Which enemy nation would you like to syphon actions from? You may choose one of the following countries:\n- ${enemy_countries.join("\n- ")}`, "mention", {
+                    limit: function (user_id, arg, input) {
+                      //Declare local instance variables
+                      var ot_user_id = returnMention(input);
+
+                      var actual_ot_user_id = main.global.user_map[ot_user_id];
+                      var ot_user = main.users[actual_ot_user_id];
+
+                      //Check to see if target exists
+                      if (!ot_user)
+                        return [false, `The country you have specified, **${input}**, turned out to be entirely nonexistent! Please select from the above list.`]
+
+                      //Check to see if target is an enemy
+                      if (!war_obj.enemy_side.includes(actual_ot_user_id))
+                        return [false, `**${ot_user.name}** is not currently on the opposing side of this conflict! You can't syphon actions from neutral/allied nations.`];
+                    }
+                  }]);
+
+                  local_ui.syphon_actions_prompts = [
+                    { index: local_ui.prompts.length - 1, type: `target` }
+                  ];
+
+                  //Recipient prompt
+                  if (local_value.custom_recipient) {
+                    local_ui.prompts.push([`Which country should be the recipient of these action obligations? You may choose any country, so long as it is not the same country you are syphoning actions from.`, "mention", {
+                      limit: function (user_id, arg, input) {
+                        //Declare local instance variables
+                        var ot_user_id = returnMention(input);
+                        var target_user_id = returnMention(arg[arg.length - 1]);
+
+                        var actual_ot_user_id = main.global.user_map[ot_user_id];
+                        var actual_target_id = main.global.user_map[target_user_id];
+
+                        //Check to see if they're the same
+                        if (actual_ot_user_id == actual_target_id)
+                          return [false, `You can't syphon a country's actions to themselves! How would that even work?`];
+                      }
+                    }]);
+
+                    local_ui.syphon_actions_prompts.push(
+                      { index: local_ui.prompts.length - 1, type: `recipient` }
+                    );
+                  }
+
+                  //Amount prompt (number)
+                  if (local_value.minimum_number_allowed || local_value.maximum_number_allowed) {
+                    local_ui.prompts.push([`How many actions should be syphoned from this country turnly?`, "number", {
+                      min: returnSafeNumber(local_value.minimum_number_allowed, 0),
+                      max: returnSafeNumber(local_value.maximum_number_allowed, 1000000)
+                    }]);
+
+                    local_ui.syphon_actions_prompts.push(
+                      { index: local_ui.prompts.length - 1, type: `number` }
+                    );
+                  }
+
+                  //Amount prompt (percentage), overrides number
+                  if (local_value.minimum_percentage_allowed || local_value.maximum_percentage_allowed) {
+                    local_ui.prompts.push([`How many percent of this country's actions should be syphoned off per turn? Note that this overrides absolute amounts whenever higher during a given turn.`, "number", {
+                      min: returnSafeNumber(local_value.minimum_number_allowed, 0),
+                      max: returnSafeNumber(local_value.maximum_number_allowed, 100)
+                    }]);
+
+                    local_ui.syphon_actions_prompts.push(
+                      { index: local_ui.prompts.length - 1, type: `percentage` }
+                    );
+                  }
+
+                  //Turns prompt
+                  if (local_value.minimum_turns_allowed || local_value.maximum_turns_allowed) {
+                    local_ui.prompts.push([`For how many turns should this clause be binding?`, "number", {
+                      min: returnSafeNumber(local_value.minimum_turns_allowed, 1),
+                      max: returnSafeNumber(local_value.maximum_turns_allowed, 100)
+                    }]);
+
+                    local_ui.syphon_actions_prompts.push(
+                      { index: local_ui.prompts.length - 1, type: `duration` }
+                    );
+                  }
+
                   break;
                 case "war_reparations":
+                  //Target prompt
+                  local_ui.prompts.push([`Whom would you like to force war reparations upon? You may choose one of the following countries:\n- ${enemy_countries.join("\n- ")}`, "mention", {
+                    limit: function (user_id, arg, input) {
+                      //Declare local instance variables
+                      var ot_user_id = returnMention(input);
+
+                      var actual_ot_user_id = main.global.user_map[ot_user_id];
+                      var ot_user = main.users[actual_ot_user_id];
+
+                      //Check to see if target exists
+                      if (!ot_user)
+                        return [false, `The country you have specified, **${input}**, turned out to be entirely nonexistent! Please select from the above list.`]
+
+                      //Check to see if target is an enemy
+                      if (!war_obj.enemy_side.includes(actual_ot_user_id))
+                        return [false, `**${ot_user.name}** is not currently on the opposing side of this conflict! You can't force neutral/allied countries to pay war reparations`];
+                    }
+                  }]);
+
+                  local_ui.war_reparations_prompts = [
+                    { index: local_ui.prompts.length - 1, type: `target` }
+                  ]
+
+                  //Recipient prompt
+                  if (local_value.custom_recipient) {
+                    local_ui.prompts.push([`Whom should these payments be conferred upon? You may choose any country, so long as it is not the same as the debtor nation.`, "mention", {
+                      limit: function (user_id, arg, input) {
+                        //Declare local instance variables
+                        var ot_user_id = returnMention(input);
+                        var target_user_id = returnMention(arg[arg.length - 1]);
+
+                        var actual_ot_user_id = main.global.user_map[ot_user_id];
+                        var actual_target_id = main.global.user_map[target_user_id];
+
+                        //Check to see if they're the same
+                        if (actual_ot_user_id == actual_target_id)
+                          return [false, `You can't have a country pay war reparations to themselves!`];
+                      }
+                    }]);
+
+                    local_ui.war_reparations_prompts.push(
+                      { index: local_ui.prompts.length - 1, type: `recipient` }
+                    );
+                  }
+
+                  //Turns prompt
+                  if (local_value.minimum_turns_allowed || local_value.maximum_turns_allowed) {
+                    local_ui.prompts.push([`For how many turns should this be binding?`, "number", {
+                      min: returnSafeNumber(local_value.minimum_turns_allowed, 1),
+                      max: returnSafeNumber(local_value.maximum_turns_allowed, 100)
+                    }]);
+
+                    local_ui.war_reparations_prompts.push(
+                      { index: local_ui.prompts.length - 1, type: `duration` }
+                    );
+                  }
+
                   break;
               }
             }
