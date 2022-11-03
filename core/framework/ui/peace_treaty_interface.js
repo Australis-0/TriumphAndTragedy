@@ -1405,11 +1405,20 @@ module.exports = {
                         target_obj.provinces = local_provinces;
 
                       break;
-                    case "install_government":
+                    case "install_government": //[WIP]
+                      if (!effect_obj.install_government)
+                        effect_obj.install_government = {};
+
                       break;
-                    case "liberation":
+                    case "liberation": //[WIP]
+                      if (!effect_obj.liberation)
+                        effect_obj.liberation = {};
+
                       break;
-                    case "limited_annexation":
+                    case "limited_annexation": //[WIP]
+                      if (!effect_obj.annexation)
+                        effect_obj.annexation = {};
+
                       break;
                     case "puppet":
                       break;
