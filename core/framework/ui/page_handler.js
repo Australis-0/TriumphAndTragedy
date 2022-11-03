@@ -309,6 +309,10 @@ module.exports = {
               game_obj.page = "unit_list";
 
               break;
+            case "war":
+              initialisePrintWar(user_id);
+            
+              break;
             default:
               var army_obj = getArmy(actual_id, view_obj);
               var city_obj = getCity(view_obj, { users: actual_id });
@@ -1278,10 +1282,6 @@ module.exports = {
               }
             }
           }
-
-          //[View War]
-          if (input == "view war")
-            initialisePrintWar(user_id);
 
           //[(War Name)]
           var archived_war_report = printWar(user_id, input, true, true);
