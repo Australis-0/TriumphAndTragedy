@@ -1205,6 +1205,16 @@ module.exports = {
                     );
                   }
 
+                  //Amount prompt
+                  local_ui.prompts.push([`What percentage of income should be paid from the target to the recipient nation each turn?`, "number", {
+                    min: returnSafeNumber(local_value.minimum_percentage_allowed, 0),
+                    max: returnSafeNumber(local_value.maximum_percentage_allowed, 100)
+                  }]);
+
+                  local_ui.war_reparations_prompts.push(
+                    { index: local_ui.prompts.length - 1, type: `percentage` }
+                  );
+
                   //Turns prompt
                   if (local_value.minimum_turns_allowed || local_value.maximum_turns_allowed) {
                     local_ui.prompts.push([`For how many turns should this be binding?`, "number", {
@@ -1334,7 +1344,7 @@ module.exports = {
                         target_obj.demilitarised_provinces = local_provinces;
 
                       break;
-                    case "free_oppressed_people": //[WIP]
+                    case "free_oppressed_people":
                       if (!effect_obj.free_oppressed_people)
                         effect_obj.free_oppressed_people = {};
 
@@ -1405,7 +1415,7 @@ module.exports = {
                         target_obj.provinces = local_provinces;
 
                       break;
-                    case "install_government": //[WIP]
+                    case "install_government":
                       if (!effect_obj.install_government)
                         effect_obj.install_government = {};
 
@@ -1441,7 +1451,7 @@ module.exports = {
                           effect_obj.liberation.push(local_target);
 
                       break;
-                    case "limited_annexation": //[WIP]
+                    case "limited_annexation":
                       if (!effect_obj.annexation)
                         effect_obj.annexation = {};
 
@@ -1555,25 +1565,182 @@ module.exports = {
                       if (!effect_obj.revoke_reparations)
                         effect_obj.revoke_reparations = [];
 
+                      //target object
+                      var local_target;
+
+                      for (var x = 0; x < local_prompts.length; x++)
+                        if (local_prompts[x].type == "target")
+                          local_target = arg[local_prompts[x].index];
+
+                      if (!effect_obj.revoke_reparations.includes(local_target))
+                        effect_obj.revoke_reparations.push(local_target);
+
                       break;
                     case "seize_resources":
+                      var default_keys = ["inherit_actions", "inherit_money", "seize_inventory", "target"];
+                      var local_goods = [];
+
                       if (!effect_obj.seize_resources)
                         effect_obj.seize_resources = [];
+
+                      //target object
+                      var local_inherit_actions;
+                      var local_inherit_money;
+                      var local_recipient = actual_id; //Default value
+                      var local_seize_inventory;
+                      var local_target;
+
+                      //Push to target_obj
+                      var target_obj = {};
+
+                      //Target subclauses
+                      for (var x = 0; x < local_prompts.length; x++) {
+                        if (local_prompts[x].type == "inherit_actions")
+                          local_inherit_actions = arg[local_prompts[x]].index/100;
+                        if (local_prompts[x].type == "inherit_money")
+                          local_inherit_money = arg[local_prompts[x].index]/100;
+                        if (local_prompts[x].type == "owner")
+                          local_recipient = arg[local_prompts[x].index];
+                        if (local_prompts[x].type == "seize_inventory")
+                          local_seize_inventory = arg[local_prompts[x].index]/100;
+                        if (local_prompts[x].type == "target")
+                          local_target = arg[local_prompts[x].index];
+
+                        //Custom keys
+                        if (!default_keys.includes(local_prompts[x].type)) {
+                          var local_good_type = local_prompts[x].type.split("_")[1];
+
+                          target_obj[`seize_${local_good_type}`] = arg[local_prompts[x].index]/100;
+                        }
+                      }
+
+                      //Format target_obj
+                      if (local_target)
+                        target_obj.debtor = local_target;
+                      if (local_inherit_actions)
+                        target_obj.inherit_actions = local_inherit_actions;
+                      if (local_inherit_money)
+                        target_obj.inherit_money = local_inherit_money;
+                      if (local_recipient)
+                        target_obj.owner = local_recipient;
+                      if (local_seize_inventory)
+                        target_obj.seize_inventory = local_seize_inventory;
+
+                      //Push target_obj to seize_resources
+                      effect_obj.seize_resources.push(target_obj);
 
                       break;
                     case "steer_trade":
                       if (!effect_obj.steer_trade)
                         effect_obj.steer_trade = {};
 
+                      //target object
+                      var local_duration;
+                      var local_recipient = actual_id; //Default value
+                      var local_target;
+
+                      for (var x = 0; x < local_prompts.length; x++) {
+                        if (local_prompts[x].type == "duration")
+                          local_duration = arg[local_prompts[x].index];
+                        if (local_prompts[x].type == "recipient")
+                          local_recipient = arg[local_prompts[x].index];
+                        if (local_prompts[x].type == "target")
+                          local_target = arg[local_prompts[x].index];
+                      }
+
+                      //Define target_obj
+                      effect_obj.steer_trade[local_target] = {};
+
+                      var target_obj = effect_obj.steer_trade[local_target];
+
+                      //Push to target_obj
+                      target_obj.overlord = local_recipient;
+
+                      if (local_duration)
+                        target_obj.turns = local_duration;
+
                       break;
-                    case "syphon_actions":
+                    case "syphon_actions": //[WIP]
                       if (!effect_obj.syphon_actions)
                         effect_obj.syphon_actions = [];
+
+                      //target object
+                      var local_amount;
+                      var local_duration;
+                      var local_percentage_amount;
+                      var local_recipient = actual_id; //Default value
+                      var local_target;
+
+                      //Target subclauses
+                      for (var x = 0; x < local_prompts.length; x++) {
+                        if (local_prompts[x].type == "duration")
+                          local_duration = arg[local_prompts[x].index];
+                        if (local_prompts[x].type == "number")
+                          local_amount = arg[local_prompts[x].index];
+                        if (local_prompts[x].type == "percentage")
+                          local_percentage_amount = arg[local_prompts[x].index]/100;
+                        if (local_prompts[x].type == "recipient")
+                          local_recipient = arg[local_prompts[x].index];
+                        if (local_prompts[x].type == "target")
+                          local_target = arg[local_prompts[x].index];
+                      }
+
+                      //Push to target_obj
+                      var target_obj = {};
+
+                      //Format target_obj
+                      if (local_amount)
+                        target_obj.amount = local_amount;
+                      if (local_target)
+                        target_obj.debtor = local_target;
+                      if (local_recipient)
+                        target_obj.owner = local_recipient;
+                      if (local_percentage_amount)
+                        target_obj.percentage_amount = local_percentage_amount;
+                      if (local_duration)
+                        target_obj.turns = local_duration;
+
+                      //Push target_obj to syphon_actions
+                      effect_obj.syphon_actions.push(target_obj);
 
                       break;
                     case "war_reparations":
                       if (!effect_obj.war_reparations)
                         effect_obj.war_reparations = [];
+
+                      //target object
+                      var local_duration;
+                      var local_percentage_amount;
+                      var local_recipient;
+                      var local_target;
+
+                      //Target subclauses
+                      for (var x = 0; x < local_prompts.length; x++) {
+                        if (local_prompts[x].type == "duration")
+                          local_duration = arg[local_prompts[x].index];
+                        if (local_prompts[x].type == "percentage")
+                          local_percentage_amount = arg[local_prompts[x].index]/100;
+                        if (local_prompts[x].type == "recipient")
+                          local_recipient = arg[local_prompts[x].index];
+                        if (local_prompts[x].type == "target")
+                          local_target = arg[local_prompts[x].index];
+                      }
+
+                      //Push to target_obj
+                      var target_obj = {};
+
+                      //Format target_obj
+                      if (local_target)
+                        target_obj.debtor = local_target;
+                      if (local_recipient)
+                        target_obj.owner = local_recipient;
+                      if (local_percentage_amount)
+                        target_obj.percentage_amount = local_percentage_amount;
+                      if (local_duration)
+                        target_obj.turns = local_duration;
+
+                      //Push target_obj to war_reparations
+                      effect_obj.war_reparations.push(target_obj);
 
                       break;
                   }

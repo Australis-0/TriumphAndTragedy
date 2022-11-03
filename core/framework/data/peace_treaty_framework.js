@@ -60,28 +60,30 @@ module.exports = {
             },
             revoke_reparations: ["user_id", ..],
             seize_resources: [{
-              owner_id: {
-                debtor: "debtor_id", - vassal_id pays resources to user_id
+              owner: "owner_id", - The new owner of the seized resources
+              debtor: "debtor_id", - vassal_id pays resources to owner_id
 
-                inherit_actions: 0.50,
-                inherit_money: 0.50,
-                seize_iron: 0.70,
-                seize_inventory: 0.25 - Seized goods go to
-              }
+              inherit_actions: 0.50,
+              inherit_money: 0.50,
+              seize_iron: 0.70,
+              seize_inventory: 0.25 - What % of the entire inventory is seized?
             }],
             steer_trade: {
-              vassal_id: "overlord_id" - Trade of vassal_id is commandeered by overlord_id
+              vassal_id: {
+                overlord: "overlord_id" - Trade of vassal_id is commandeered by overlord_id,
+                turns: 50 (optional)
+              }
             },
             syphon_actions: [{
-              owner_id: "user_id",
+              owner: "user_id",
               debtor: "debtor_id", - Payments are made from debtor_id to user_id
               amount: 500,
               percentage_amount: 0.50, - Number of actions syphoned are determined by whether amount or percentage_amount are higher
               turns: 50
             }],
             war_reparations: [{
-              owner_id: "user_id",
-              debtor_id: "debtor_id", - Payments are made from debtor_id to user_id
+              owner: "user_id",
+              debtor: "debtor_id", - Payments are made from debtor_id to user_id
               percentage_amount: 0.50,
               turns: 35
             }]
