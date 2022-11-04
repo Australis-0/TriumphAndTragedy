@@ -2,5 +2,6 @@ backups/*
 .installation/PATH
 map/
 node_modules/
+scenarios/
 database.js
 settings.js

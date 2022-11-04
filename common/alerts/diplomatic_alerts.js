@@ -1,10 +1,10 @@
 config.alerts.diplomacy = {
   access_cancelled: {
     name: "Military Access Cancelled.",
-    description: "{FROM.name} has cancelled our right to passage through their territorial claims for our military assets. Oh, well, we didn't need those traitorious scum anyway.",
+    description: "{FROM.name} has cancelled our right to passage through their territorial claims for our military assets. Oh, well, we didn't need those traitorous scum anyway.",
 
     btn_access_cancelled: {
-      title: "We really should have beaten them to it",
+      title: "We really should have beaten them to it.",
       description: [
         "Your military access has been cancelled by **{FROM.name}**!"
       ]
