@@ -239,10 +239,8 @@ module.exports = {
           game_obj.page = (main.global.user_map[game_obj.user]) ? "country_interface" : "founding_map";
 
         if (main.global.user_map[game_obj.user])
-          if (main.users[main.global.user_map[game_obj.user]]) {
+          if (main.users[main.global.user_map[game_obj.user]])
             game_obj.page = "country_interface";
-            delete country_picker_page;
-          }
 
         //Load up either the starting map viewer or country interface depending on the starting page
         switch (game_obj.page) {
