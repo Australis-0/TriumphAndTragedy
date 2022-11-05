@@ -12,6 +12,7 @@ module.exports = {
     var options = (arg1_options) ? arg1_options : {};
 
     //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
     var all_provinces = Object.keys(main.provinces);
     var army_size = returnSafeNumber(options.army_size);
     var local_graph = global.bn_graph();
@@ -167,7 +168,9 @@ module.exports = {
     var user_id = arg0_user;
 
     //Declare local instance variables
-    var all_cities = module.exports.getCities(user_id, {
+    var actual_id = main.global.user_map[user_id];
+
+    var all_cities = module.exports.getCities(actual_id, {
       include_hostile_occupations: true
     });
 
@@ -191,9 +194,10 @@ module.exports = {
     var options = (arg1_options) ? arg1_options : {};
 
     //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
     var all_provinces = Object.keys(main.provinces);
     var all_owned_cities = [];
-    var usr = main.users[user_id];
+    var usr = main.users[actual_id];
 
     try {
       for (var i = 0; i < all_provinces.length; i++)
@@ -201,13 +205,13 @@ module.exports = {
         if (main.provinces[all_provinces[i]].type == "urban")
           if (
             //Complex boolean to parse options field; core cities
-            (main.provinces[all_provinces[i]].owner == user_id &&
-            (main.provinces[all_provinces[i]].controller == user_id ||
+            (main.provinces[all_provinces[i]].owner == actual_id &&
+            (main.provinces[all_provinces[i]].controller == actual_id ||
                 options.include_hostile_occupations
             )) ||
 
             //Complex boolean to parse options field; cities occupied by user
-            (main.provinces[all_provinces[i]].controller == user_id && options.include_occupations)
+            (main.provinces[all_provinces[i]].controller == actual_id && options.include_occupations)
 
             //Push if any of these options are valid. Geez. This is messy
           ) all_owned_cities.push(main.provinces[all_provinces[i]]);
@@ -221,7 +225,7 @@ module.exports = {
 
       //Look for core capital and move it to the zeroth index if possible
       for (var i = 0; i < all_owned_cities.length; i++)
-        if (all_owned_cities[i].city_type == "capital" && all_owned_cities[i].owner == user_id)
+        if (all_owned_cities[i].city_type == "capital" && all_owned_cities[i].owner == actual_id)
           capital_index = i;
 
       if (capital_index)
@@ -230,7 +234,7 @@ module.exports = {
       //Return statement
       return all_owned_cities;
     } catch (e) {
-      log.error(`getCities() - ran into an error with User ID ${user_id}: ${e}`);
+      log.error(`getCities() - ran into an error with User ID ${actual_id}: ${e}`);
     }
   },
 
@@ -239,9 +243,10 @@ module.exports = {
     var user_id = arg0_user;
 
     //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
     var calculated_cap = 0;
     var city_caps = config.defines.economy.city_unlock_caps;
-    var usr = main.users[user_id];
+    var usr = main.users[actual_id];
 
     //Iterate over city_unlock_caps to check for certain province bounds
     for (var i = 0; i < city_caps.length; i++) {
@@ -411,7 +416,8 @@ module.exports = {
     var user_id = arg0_user;
 
     //Ddeclare local instance variables
-    var usr = main.users[user_id];
+    var actual_id = main.global.user_map[user_id];
+    var usr = main.users[actual_id];
 
     //Return statement
     return Math.ceil(
@@ -426,9 +432,10 @@ module.exports = {
     var amount = (arg2_amount) ? parseInt(arg2_amount) : 1;
 
     //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
     var cached_amount = 0;
     var city_obj = (!main.provinces[city_name]) ? getCity(city_name) : main.provinces[city_name];
-    var usr = main.users[user_id];
+    var usr = main.users[actual_id];
 
     //Declare local tracker variables
     if (usr.total_cities < 1)
@@ -455,8 +462,9 @@ module.exports = {
     var raw_production = arg1_production;
 
     //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
     var calculated_income = 0;
-    var usr = main.users[user_id];
+    var usr = main.users[actual_id];
 
     //Declare local tracker variables
     var civilian_actions = Math.ceil(usr.actions*usr.modifiers.civilian_actions);
@@ -516,9 +524,10 @@ module.exports = {
     var options = (arg1_options) ? arg1_options : {};
 
     //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
     var all_provinces = Object.keys(main.provinces);
     var all_owned_provinces = [];
-    var usr = main.users[user_id];
+    var usr = main.users[actual_id];
 
     try {
       for (var i = 0; i < all_provinces.length; i++)
@@ -662,8 +671,10 @@ module.exports = {
     var ot_user_id = arg1_user;
 
     //Declare local instance variables
-    var usr = main.users[user_id];
-    var ot_user = main.users[ot_user_id];
+    var actual_id = main.global.user_map[user_id];
+    var actual_ot_user_id = main.global.user_map[ot_user_id];
+    var usr = main.users[actual_id];
+    var ot_user = main.users[actual_ot_user_id];
 
     //Iterate over all wargoals to check
     for (var i = 0; i < usr.diplomacy.wargoals.length; i++) {
@@ -723,6 +734,7 @@ module.exports = {
     var user_id = arg0_user;
 
     //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
     var all_users = Object.keys(main.users);
 
     for (var i = 0; i < all_users.length; i++) {
@@ -732,7 +744,7 @@ module.exports = {
         for (var x = 0; x < local_user.diplomacy.justifications.length; x++) {
           var local_justification = local_user.diplomacy.justifications[x];
 
-          if (local_justification.target == user_id)
+          if (local_justification.target == actual_id)
             return true;
         }
       } catch {}
@@ -744,7 +756,8 @@ module.exports = {
     var user_id = arg0_user;
 
     //Declare local instance variables
-    var usr = main.users[user_id];
+    var actual_id = main.global.user_map[user_id];
+    var usr = main.users[actual_id];
 
     //Return statement
     if (usr.blockaded)
@@ -759,14 +772,16 @@ module.exports = {
     var ot_user_id = arg1_user;
 
     //Declare local instance variables
-    var usr = main.users[user_id];
-    var ot_user = main.users[ot_user_id];
+    var actual_id = main.global.user_map[user_id];
+    var actual_ot_user_id = main.global.user_map[ot_user_id];
+    var usr = main.users[actual_id];
+    var ot_user = main.users[actual_ot_user_id];
 
     //Check for justification against ot_user
     for (var i = 0; i < usr.diplomacy.justifications.length; i++) {
       var local_justification = usr.diplomacy.justifications[i];
 
-      if (local_justification.target == ot_user_id)
+      if (local_justification.target == actual_ot_user_id)
         return true;
     }
   },

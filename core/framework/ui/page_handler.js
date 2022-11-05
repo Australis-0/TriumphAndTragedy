@@ -314,71 +314,73 @@ module.exports = {
 
               break;
             default:
-              var army_obj = getArmy(actual_id, view_obj);
-              var city_obj = getCity(view_obj, { users: actual_id });
-              var province_name = input.replace("view", "").trim()
-                .replace("province", "").trim();
+              if (!["view army"].includes(input)) {
+                var army_obj = getArmy(actual_id, view_obj);
+                var city_obj = getCity(view_obj, { users: actual_id });
+                var province_name = input.replace("view", "").trim()
+                  .replace("province", "").trim();
 
-              if (main.provinces[view_obj]) {
-                printProvince(game_obj.user, view_obj);
-              } else {
-                var army_name_exact_match = false;
-                var city_name_exact_match = false;
+                if (main.provinces[view_obj]) {
+                  printProvince(game_obj.user, view_obj);
+                } else {
+                  var army_name_exact_match = false;
+                  var city_name_exact_match = false;
 
-                if (army_obj)
-                  if (army_obj.name.trim().toLowerCase() == view_obj)
-                    army_name_exact_match = true;
-                if (city_obj)
-                  if (city_obj.name.trim().toLowerCase() == view_obj)
-                    city_name_exact_match = true;
+                  if (army_obj)
+                    if (army_obj.name.trim().toLowerCase() == view_obj)
+                      army_name_exact_match = true;
+                  if (city_obj)
+                    if (city_obj.name.trim().toLowerCase() == view_obj)
+                      city_name_exact_match = true;
 
-                //Army smart display
-                if (army_obj) {
-                  if (city_name_exact_match && !army_name_exact_match) {
-                    createPageMenu(game_obj.middle_embed, {
-                      embed_pages: printCity(game_obj.user, city_obj.name),
-                      user: game_obj.user
-                    });
+                  //Army smart display
+                  if (army_obj) {
+                    if (city_name_exact_match && !army_name_exact_match) {
+                      createPageMenu(game_obj.middle_embed, {
+                        embed_pages: printCity(game_obj.user, city_obj.name),
+                        user: game_obj.user
+                      });
 
-                    game_obj.page = `view_city_${city_obj.name}`;
-                  } else {
-                    var viewed_army = printArmy(user_id, army_obj.name);
+                      game_obj.page = `view_city_${city_obj.name}`;
+                    } else {
+                      var viewed_army = printArmy(user_id, army_obj.name);
 
-                    createPageMenu(game_obj.middle_embed, {
-                      embed_pages: viewed_army,
-                      user: game_obj.user
-                    });
-                    game_obj.page = `army_viewer_${army_obj.name}`;
+                      createPageMenu(game_obj.middle_embed, {
+                        embed_pages: viewed_army,
+                        user: game_obj.user
+                      });
+                      game_obj.page = `army_viewer_${army_obj.name}`;
+                    }
                   }
+
+                  //City smart display
+                  if (city_obj)
+                    if (army_name_exact_match && !city_name_exact_match) {
+                      var viewed_army = printArmy(user_id, army_obj.name);
+
+                      createPageMenu(game_obj.middle_embed, {
+                        embed_pages: viewed_army,
+                        user: game_obj.user
+                      });
+                      game_obj.page = `army_viewer_${army_obj.name}`;
+                    } else {
+                      createPageMenu(game_obj.middle_embed, {
+                        embed_pages: printCity(game_obj.user, city_obj.name),
+                        user: game_obj.user
+                      });
+
+                      game_obj.page = `view_city_${city_obj.name}`;
+                    }
+
+                  //Province smart display
+                  if (!city_obj)
+                    if (main.provinces[province_name])
+                      if (main.provinces[province_name].owner == actual_id)
+                      createPageMenu(game_obj.middle_embed, {
+                        embed_pages: printProvince(game_obj.user, province_name),
+                        user: game_obj.user
+                      });
                 }
-
-                //City smart display
-                if (city_obj)
-                  if (army_name_exact_match && !city_name_exact_match) {
-                    var viewed_army = printArmy(user_id, army_obj.name);
-
-                    createPageMenu(game_obj.middle_embed, {
-                      embed_pages: viewed_army,
-                      user: game_obj.user
-                    });
-                    game_obj.page = `army_viewer_${army_obj.name}`;
-                  } else {
-                    createPageMenu(game_obj.middle_embed, {
-                      embed_pages: printCity(game_obj.user, city_obj.name),
-                      user: game_obj.user
-                    });
-
-                    game_obj.page = `view_city_${city_obj.name}`;
-                  }
-
-                //Province smart display
-                if (!city_obj)
-                  if (main.provinces[province_name])
-                    if (main.provinces[province_name].owner == actual_id)
-                    createPageMenu(game_obj.middle_embed, {
-                      embed_pages: printProvince(game_obj.user, province_name),
-                      user: game_obj.user
-                    });
               }
 
               break;
@@ -452,7 +454,11 @@ module.exports = {
             //Execute if button is found
             if (button_obj) {
               if (button_obj.effect) {
-                button_obj.effect(alert_obj.options);
+                try {
+                  button_obj.effect(alert_obj.options);
+                } catch (e) {
+                  console.log(e);
+                }
 
                 //Send user feedback
                 printAlert(game_obj.id, `${config.icons.checkmark} You have successfully resolved **${alert_obj.name}** by choosing **${button_obj.title}**.`);
@@ -1671,20 +1677,6 @@ module.exports = {
                 user: game_obj.user
               });
             });
-
-          //[View (Army Name)]
-          if (input.startsWith("view ") && !["view armies", "view army", "view reserves"].includes(input)) {
-            var army_to_view = input.replace("view ", "");
-            var viewed_army = printArmy(user_id, army_to_view);
-
-            if (viewed_army) {
-              createPageMenu(game_obj.middle_embed, {
-                embed_pages: viewed_army,
-                user: game_obj.user
-              });
-              game_obj.page = `army_viewer_${getArmy(actual_id, army_to_view).name}`;
-            }
-          }
         }
 
         if (game_obj.page == "army_list" || game_obj.page.startsWith("army_viewer_")) {

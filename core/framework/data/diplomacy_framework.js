@@ -167,7 +167,7 @@ module.exports = {
     var actual_id = main.global.user_map[user_id];
     var all_users = Object.keys(main.users);
     var all_wars = Object.keys(main.global.wars);
-    var usr = main.users[user_id];
+    var usr = main.users[actual_id];
 
     //Iterate over all users, destroying any diplomatic relations that currently exist
     for (var i = 0; i < all_users.length; i++)

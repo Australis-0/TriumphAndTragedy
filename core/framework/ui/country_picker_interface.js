@@ -117,47 +117,54 @@ module.exports = {
     var game_obj = getGameObject(user_id);
 
     //Mark page
-    game_obj.country_picker_page = "country_menu";
+    if (!main.global.user_map[user_id]) {
+      try {
+        console.log(`Country menu initialised for ${user_id}!`);
+        game_obj.country_picker_page = "country_menu";
 
-    //Initialise visual prompt
-    if (game_obj)
-      visualPrompt(game_obj.alert_embed, user_id, {
-        title: `Pick A Country:`,
-        prompts: [
-          [`Would you like to pick an existing country to play as, or create a country of your own?\n\nType **[Pick An Existing Country]** to pick an unclaimed country.\nType **[Create A New Country]** to pick a new country to play as.\n\nType **[Quit Game]** to close this channel instead.`, "string"]
-        ],
-        do_not_cancel: true
-      },
-      function (arg) {
-        //Check to see if input is valid
-        switch (arg[0]) {
-          case "create country":
-          case "create a new country":
-            module.exports.initialiseFoundCountry(user_id);
+        //Initialise visual prompt
+        if (game_obj)
+          visualPrompt(game_obj.alert_embed, user_id, {
+            title: `Pick A Country:`,
+            prompts: [
+              [`Would you like to pick an existing country to play as, or create a country of your own?\n\nType **[Pick An Existing Country]** to pick an unclaimed country.\nType **[Create A New Country]** to pick a new country to play as.\n\nType **[Quit Game]** to close this channel instead.`, "string"]
+            ],
+            do_not_cancel: true
+          },
+          function (arg) {
+            //Check to see if input is valid
+            switch (arg[0]) {
+              case "create country":
+              case "create a new country":
+                module.exports.initialiseFoundCountry(user_id);
 
-            break;
-          case "pick existing country":
-          case "pick an existing country":
-            module.exports.initialiseClaimCountry(user_id);
+                break;
+              case "pick existing country":
+              case "pick an existing country":
+                module.exports.initialiseClaimCountry(user_id);
 
-            break;
-          case "exit":
-          case "exit game":
-          case "quit":
-          case "quit game":
-            clearGame(game_obj.id);
+                break;
+              case "exit":
+              case "exit game":
+              case "quit":
+              case "quit game":
+                clearGame(game_obj.id);
 
-            break;
-          default:
-            printError(game_obj.id, `You must specify a valid option!\n\nEither **[Pick an Existing Country]** to play as, or **[Create A New Country]**.`);
+                break;
+              default:
+                printError(game_obj.id, `You must specify a valid option!\n\nEither **[Pick an Existing Country]** to play as, or **[Create A New Country]**.`);
 
-            setTimeout(function(){
-              module.exports.initialiseCountryMenu(user_id);
-            }, 3000);
+                setTimeout(function(){
+                  module.exports.initialiseCountryMenu(user_id);
+                }, 3000);
 
-            break;
-        }
-      });
+                break;
+            }
+          });
+      } catch {}
+    } else {
+      delete game_obj.country_picker_page;
+    }
   },
 
   initialiseClaimCountry: function (arg0_user) {
