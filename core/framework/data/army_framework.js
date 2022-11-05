@@ -267,62 +267,63 @@ module.exports = {
     //Check if unit_obj and army_obj exist
     if (usr)
       if (army_obj)
-        if (amount > 0)
-          if (unit_obj) {
-            //Declare secondary local instance variables
-            var all_units = Object.keys(army_obj.units);
-            var at_peace = (!atWar(actual_id));
-            var capital_obj = getCapital(actual_id);
-            var category_obj = getUnitCategoryFromUnit(raw_unit_name);
-            var province_obj = getProvince(army_obj.province);
-            var receiving_unit_type = category_obj.type;
-            var unit_types = module.exports.calculateArmyType(actual_id, army_obj);
+        if (usr.reserves[raw_unit_name] >= amount || options.spawn_units)
+          if (amount > 0)
+            if (unit_obj) {
+              //Declare secondary local instance variables
+              var all_units = Object.keys(army_obj.units);
+              var at_peace = (!atWar(actual_id));
+              var capital_obj = getCapital(actual_id);
+              var category_obj = getUnitCategoryFromUnit(raw_unit_name);
+              var province_obj = getProvince(army_obj.province);
+              var receiving_unit_type = category_obj.type;
+              var unit_types = module.exports.calculateArmyType(actual_id, army_obj);
 
-            var culture_obj = getCulture(province_obj.culture);
+              var culture_obj = getCulture(province_obj.culture);
 
-            //Guard clauses to check for errors
-            if (!options.spawn_units)
-              if (amount > usr.reserves[raw_unit_name])
-                return [false, `You don't have that many troops in your reserves! You may only deploy up to **${parseNumber(usr.reserves[raw_unit_name])}** ${(unit_obj.name) ? unit_obj.name : raw_unit_name} in this army.`];
+              //Guard clauses to check for errors
+              if (!options.spawn_units)
+                if (amount > usr.reserves[raw_unit_name])
+                  return [false, `You don't have that many troops in your reserves! You may only deploy up to **${parseNumber(usr.reserves[raw_unit_name])}** ${(unit_obj.name) ? unit_obj.name : raw_unit_name} in this army.`];
 
-            if (receiving_unit_type == "reserves")
-              return [false, `You can't transfer specialist units to an army! To use your colonial units instead, check out the **Colonisation** tab.`];
+              if (receiving_unit_type == "reserves")
+                return [false, `You can't transfer specialist units to an army! To use your colonial units instead, check out the **Colonisation** tab.`];
 
-            if (at_peace) {
-              if (army_obj.type != "navy" && !culture_obj.primary_culture.includes(actual_id))
-                return [false, `You can't deploy your reserves outside non-core provinces!`];
-            } else {
-              if (army_obj.province != capital_obj.id)
-                return [false, `You may only deploy forces in your capital city whilst at war!`];
+              if (at_peace) {
+                if (army_obj.type != "navy" && !culture_obj.primary_culture.includes(actual_id))
+                  return [false, `You can't deploy your reserves outside non-core provinces!`];
+              } else {
+                if (army_obj.province != capital_obj.id)
+                  return [false, `You may only deploy forces in your capital city whilst at war!`];
+              }
+
+              if (unit_types.has_naval_unit) {
+                if (receiving_unit_type == "land")
+                  return [false, `Your soldiers can't swim that far!`];
+              } else if (unit_types.has_air_unit) {
+                if (receiving_unit_type == "naval")
+                  return [false, `Research flying aircraft carriers somewhere else!`];
+              } else if (unit_types.has_land_unit)
+                if (receiving_unit_type == "naval")
+                  return [false, `That's not what I meant when I said landship ...`];
+
+              //Deploy troops
+              army_obj.units[raw_unit_name] = (army_obj.units[raw_unit_name]) ?
+                army_obj.units[raw_unit_name] + amount :
+                amount;
+
+              //Modify reserves
+              if (!options.spawn_units)
+                usr.reserves[raw_unit_name] -= amount;
+
+              if (usr.reserves[raw_unit_name] == 0)
+                delete usr.reserves[raw_unit_name];
+
+              //Recalculate army type
+              module.exports.calculateArmyType(actual_id, army_obj);
+
+              return [true, `**${parseNumber(amount)}** ${(unit_obj.name) ? unit_obj.name : raw_unit_name} were ${(!options.spawn_units) ? "transferred to" : "deployed in"} the **${army_obj.name}**.`];
             }
-
-            if (unit_types.has_naval_unit) {
-              if (receiving_unit_type == "land")
-                return [false, `Your soldiers can't swim that far!`];
-            } else if (unit_types.has_air_unit) {
-              if (receiving_unit_type == "naval")
-                return [false, `Research flying aircraft carriers somewhere else!`];
-            } else if (unit_types.has_land_unit)
-              if (receiving_unit_type == "naval")
-                return [false, `That's not what I meant when I said landship ...`];
-
-            //Deploy troops
-            army_obj.units[raw_unit_name] = (army_obj.units[raw_unit_name]) ?
-              army_obj.units[raw_unit_name] + amount :
-              amount;
-
-            //Modify reserves
-            if (!options.spawn_units)
-              usr.reserves[raw_unit_name] -= amount;
-
-            if (usr.reserves[raw_unit_name] == 0)
-              delete usr.reserves[raw_unit_name];
-
-            //Recalculate army type
-            module.exports.calculateArmyType(actual_id, army_obj);
-
-            return [true, `**${parseNumber(amount)}** ${(unit_obj.name) ? unit_obj.name : raw_unit_name} were ${(!options.spawn_units) ? "transferred to" : "deployed in"} the **${army_obj.name}**.`];
-          }
   },
 
   generateArmyID: function (arg0_user) {
