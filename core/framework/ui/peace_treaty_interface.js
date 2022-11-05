@@ -1944,8 +1944,10 @@ module.exports = {
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
     var belligerents = [];
+    var fill_cache = {};
     var game_obj = getGameObject(user_id);
     var map_file = `${actual_id}_peace_treaty`;
+    var outline_cache = {};
     var usr = main.users[actual_id];
     var war_obj = main.global.wars[peace_obj.war_id];
 
@@ -1953,7 +1955,56 @@ module.exports = {
     if (!change_image)
       loadMap(`${map_file}.svg`, map_file);
 
-    //Shade in the base provinces - but only for the belligerents currently involved in the war
+    //Process fill_cache and outline_cache
+    for (var i = 0; i < peace_obj.wargoals.length; i++)
+      if (peace_obj.wargoals[i].effect) {
+        var all_effects = Object.keys(peace_obj.wargoals[i].effect);
+
+        for (var x = 0; x < all_effects.length; x++) {
+          var local_effect = peace_obj.wargoals[i].effect[all_effects[x]];
+
+          //Annex all parser
+          if (all_effects[x] == "annex_all") {
+            var local_effects = Object.keys(local_effect);
+
+            for (var y = 0; y < local_effects.length; y++) {
+              var local_user = main.users[local_effect[local_effects[y]]];
+              var target_provinces = getProvinces(local_effects[y], { include_hostile_occupations: true });
+
+              for (var z = 0; z < target_provinces.length; z++)
+                fill_cache[target_provinces[z].id] = local_user.colour;
+            }
+          }
+
+          //Annexation parser
+          if (all_effects[x] == "annexation") {
+            var local_effects = Object.keys(local_effect);
+
+            for (var y = 0; y < local_effects.length; y++) {
+              var effect_obj = local_effect[local_effects[y]];
+              var local_user = main.users[local_effects[y]];
+
+              for (var z = 0; z < effect_obj.provinces.length; z++)
+                fill_cache[effect_obj.provinces[z]] = local_user.colour;
+            }
+          }
+
+          //Demilitarisation parser
+          if (all_effects[x] == "demilitarisation")
+            for (var y = 0; y < local_effect.demilitarised_provinces.length; y++)
+              outline_cache[local_effect.demilitarised_provinces[y]] = [240, 60, 60];
+
+          //Free oppressed people parser
+
+          //Puppet parser
+
+          //Release client state parser
+
+          //Retake cores parser
+        }
+      }
+
+    //Shade in the base provinces and treaty changes - but only for the belligerents currently involved in the war
     for (var i = 0; i < war_obj.attackers.length; i++)
       belligerents.push(war_obj.attackers[i]);
     for (var i = 0; i < war_obj.defenders.length; i++)

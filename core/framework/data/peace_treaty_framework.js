@@ -2,6 +2,11 @@ module.exports = {
   /*
     Peace treaty data structure:
     {
+      //Used for stabilising free_oppressed_people and release_client_state tag colours
+      cached_colours: {
+        <culture_id/client_state_id>: [r, g, b]
+      },
+
       //Wargoals are stored in an array to keep track of demand_limit
       wargoals: [
         {
