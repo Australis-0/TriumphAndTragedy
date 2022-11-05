@@ -2033,8 +2033,14 @@ module.exports = {
           }
 
           //Release client state parser
+          if (all_effects[x] == "release_client_state") {
+
+          }
 
           //Retake cores parser
+          if (all_effects[x] == "retake_cores") {
+            
+          }
         }
       }
 
