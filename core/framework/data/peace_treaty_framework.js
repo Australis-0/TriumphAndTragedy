@@ -2,11 +2,6 @@ module.exports = {
   /*
     Peace treaty data structure:
     {
-      //Used for stabilising free_oppressed_people and release_client_state tag colours
-      cached_colours: {
-        <culture_id/client_state_id>: [r, g, b]
-      },
-
       //Wargoals are stored in an array to keep track of demand_limit
       wargoals: [
         {
@@ -61,7 +56,7 @@ module.exports = {
               }
             },
             retake_cores: {
-              user_id: "oppressor_id" - Takes all core provinces from oppressor_id
+              oppressor_id: ["user_id"] - Takes all core provinces from oppressor_id
             },
             revoke_reparations: ["user_id", ..],
             seize_resources: [{
@@ -113,7 +108,6 @@ module.exports = {
         id: actual_id,
         war_id: war_obj.id,
 
-        cached_colours: {},
         wargoals: []
       };
 

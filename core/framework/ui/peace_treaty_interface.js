@@ -2034,12 +2034,31 @@ module.exports = {
 
           //Release client state parser
           if (all_effects[x] == "release_client_state") {
+            var local_effects = Object.keys(local_effect);
 
+            for (var y = 0; y < local_effects.length; y++) {
+              var client_state_obj = local_effect[local_effects[y]];
+
+              peace_obj.cached_colours[local_effects[y]] = (client_state_obj.colour) ?
+                client_state_obj.colour :
+                generateRandomColour();
+
+              //Iterate over all provinces the client state holds
+              for (var z = 0; z < client_state_obj.provinces.length; z++)
+                fill_cache[client_state_obj.provinces[z]] = peace_obj.cached_colours[local_effects[y]];
+            }
           }
 
           //Retake cores parser
           if (all_effects[x] == "retake_cores") {
-            
+            var local_effects = Object.keys(local_effect);
+
+            for (var y = 0; y < local_effects.length; y++) {
+              var culture_ids = [];
+              var local_value = local_effect[local_effects[y]];
+
+              //Get primary cultures of local_value[z] and push them to culture_ids for liberation
+            }
           }
         }
       }
