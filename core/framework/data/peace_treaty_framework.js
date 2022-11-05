@@ -113,6 +113,7 @@ module.exports = {
         id: actual_id,
         war_id: war_obj.id,
 
+        cached_colours: {},
         wargoals: []
       };
 

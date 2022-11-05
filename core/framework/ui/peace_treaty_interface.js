@@ -1525,11 +1525,7 @@ module.exports = {
                       var target_obj = effect_obj.release_client_state[local_client_state_id];
 
                       //Cache random colour
-                      target_obj.colour = [
-                        randomNumber(0, 235),
-                        randomNumber(0, 235),
-                        randomNumber(0, 235)
-                      ];
+                      target_obj.colour = generateRandomColour();
 
                       //Create target_obj
                       if (local_capital)
@@ -1968,11 +1964,11 @@ module.exports = {
             var local_effects = Object.keys(local_effect);
 
             for (var y = 0; y < local_effects.length; y++) {
-              var local_user = main.users[local_effect[local_effects[y]]];
+              var local_recipient = main.users[local_effect[local_effects[y]]];
               var target_provinces = getProvinces(local_effects[y], { include_hostile_occupations: true });
 
               for (var z = 0; z < target_provinces.length; z++)
-                fill_cache[target_provinces[z].id] = local_user.colour;
+                fill_cache[target_provinces[z].id] = local_recipient.colour;
             }
           }
 
@@ -1982,10 +1978,10 @@ module.exports = {
 
             for (var y = 0; y < local_effects.length; y++) {
               var effect_obj = local_effect[local_effects[y]];
-              var local_user = main.users[local_effects[y]];
+              var local_recipient = main.users[local_effects[y]];
 
               for (var z = 0; z < effect_obj.provinces.length; z++)
-                fill_cache[effect_obj.provinces[z]] = local_user.colour;
+                fill_cache[effect_obj.provinces[z]] = local_recipient.colour;
             }
           }
 
@@ -1995,8 +1991,46 @@ module.exports = {
               outline_cache[local_effect.demilitarised_provinces[y]] = [240, 60, 60];
 
           //Free oppressed people parser
+          if (all_effects[x] == "free_oppressed_people") {
+            var local_effects = Object.keys(local_effect);
+
+            for (var y = 0; y < local_effects.length; y++) {
+              var effect_obj = local_effect[local_effects[y]];
+              var local_target = main.users[local_effects[y]];
+
+              var culture_ids = Object.keys(effect_obj);
+
+              for (var z = 0; z < culture_ids.length; z++) {
+                var local_recipient = effect_obj[culture_ids[z]];
+
+                //Cache colour if not already cached
+                if (!peace_obj.cached_colours[culture_ids[z]])
+                  peace_obj.cached_colours[culture_ids[z]] = generateRandomColour();
+
+                for (var a = 0; a < local_recipient.provinces.length; a++)
+                  fill_cache[local_recipient.provinces[a]] = peace_obj.cached_colours[culture_ids[z]];
+              }
+            }
+          }
 
           //Puppet parser
+          if (all_effects[x] == "puppet") {
+            var local_effects = Object.keys(local_effect);
+
+            for (var y = 0; y < local_effects.length; y++) {
+              var local_recipient = main.users[local_effect[local_effects[y]]];
+
+              var target_provinces = getProvinces(local_effects[y], { include_hostile_occupations: true });
+
+              for (var z = 0; z < target_provinces.length; z++)
+                if (!fill_cache[target_provinces[z].id])
+                  fill_cache[target_provinces[z].id] = [
+                    Math.min(local_recipient.colour[0] + 20, 255),
+                    Math.min(local_recipient.colour[1] + 20, 255),
+                    Math.min(local_recipient.colour[2] + 20, 255)
+                  ];
+            }
+          }
 
           //Release client state parser
 
