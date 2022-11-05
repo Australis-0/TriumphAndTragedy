@@ -30,7 +30,7 @@ module.exports = {
         delete_after: true
       }, function () {
         clearGame(game_obj.id);
-      })
+      });
     });
   },
 

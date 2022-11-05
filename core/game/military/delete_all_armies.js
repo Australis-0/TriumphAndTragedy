@@ -19,7 +19,7 @@ module.exports = {
         if (all_armies.length > 0) {
           for (var i = 0; i < all_armies.length; i++) {
             var local_army = usr.armies[all_armies[i]];
-            deleteArmy(actual_id, local_army.name);
+            deleteArmy(actual_id, local_army.id);
           }
         } else {
           break;

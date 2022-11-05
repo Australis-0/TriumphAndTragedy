@@ -311,7 +311,7 @@ module.exports = {
               break;
             case "war":
               initialisePrintWar(user_id);
-            
+
               break;
             default:
               var army_obj = getArmy(actual_id, view_obj);
@@ -1607,7 +1607,7 @@ module.exports = {
 
           //[Exit Game]
           if (input == "exit game")
-            initialiseExitGame(user_id);
+            clearGame(game_obj.id);
 
           if (game_obj.page == "coop_menu") {
             //[Back]
@@ -1683,8 +1683,6 @@ module.exports = {
                 user: game_obj.user
               });
               game_obj.page = `army_viewer_${getArmy(actual_id, army_to_view).name}`;
-            } else {
-              printError(game_obj.id, `**${army_to_view}** isn't a valid army you can inspect! Take a look at your **[Army List]** first to see which armies you can view.`);
             }
           }
         }
@@ -1992,7 +1990,7 @@ module.exports = {
           //[View (Army Name)]
           if (input.startsWith("view ") && !["view armies", "view army", "view reserves"].includes(input)) {
             var army_obj = getArmy(user_id, arg[0]);
-            var army_to_view = input.replace("view army ", "");
+            var army_to_view = input.replace("view army ", "").replace("view ", "");
             var army_report = printArmy(user_id, arg[0]);
 
             if (army_report) {

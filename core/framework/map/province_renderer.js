@@ -63,5 +63,25 @@ module.exports = {
         if (main.provinces[province_id])
           main.provinces[province_id][`${file}_colour`] = new_colour;
       } catch {}
+  },
+
+  setProvinceOutline: function (arg0_file, arg1_province_id, arg2_colour) {
+    //Convert from parameters
+    var file = arg0_file;
+    var local_map = global[`${file}_parsed`];
+    var province_id = arg1_province_id;
+    var colour = arg2_colour;
+
+    //Declare local instance variables
+    var new_colour = RGBToHex(colour[0], colour[1], colour[2]);
+
+    try {
+      var local_element = local_map.querySelector(`#${province_id}`);
+
+      local_element.setAttribute(
+        "style", local_element.getAttribute("style")
+          .replace(/stroke:#[0-9a-fA-F]+/gm, `stroke:${new_colour}`)
+      );
+    } catch {}
   }
 };
