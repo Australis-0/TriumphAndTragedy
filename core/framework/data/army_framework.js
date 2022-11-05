@@ -316,7 +316,7 @@ module.exports = {
               if (!options.spawn_units)
                 usr.reserves[raw_unit_name] -= amount;
 
-              if (usr.reserves[raw_unit_name] == 0)
+              if (usr.reserves[raw_unit_name] <= 0)
                 delete usr.reserves[raw_unit_name];
 
               //Recalculate army type
