@@ -515,7 +515,7 @@ module.exports = {
       stats_string.push(`**Economic Statistsics:**`);
       stats_string.push("");
 
-      stats_string.push(`${config.icons.development} Cities: (**${parseNumber(getCitiesCap(actual_ot_user_id))}**/**${parseNumber(cities.length)}**): ${name_string}`);
+      stats_string.push(`${config.icons.development} Cities: (**${parseNumber(cities.length)}**/**${parseNumber(getCitiesCap(actual_ot_user_id))}**): ${name_string}`);
 
       //Civilian pops display
       for (var i = 0; i < all_pops.length; i++) {
