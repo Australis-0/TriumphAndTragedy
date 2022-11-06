@@ -2118,7 +2118,7 @@ module.exports = {
       (!change_image) ?
         initialiseMapViewer(game_obj.id, map_file, true) :
         changeImage(game_obj.id, map_file);
-    }, 5000);
+    }, 10000);
 
     //Visual interface using visualPrompt() before creating a page menu
     module.exports.initialiseModifyPeaceTreaty(user_id, peace_obj);
