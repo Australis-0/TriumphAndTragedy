@@ -2056,8 +2056,27 @@ module.exports = {
             for (var y = 0; y < local_effects.length; y++) {
               var culture_ids = [];
               var local_value = local_effect[local_effects[y]];
+              var target_provinces = getProvinces(local_effects[y], { include_hostile_occupations: true });
 
               //Get primary cultures of local_value[z] and push them to culture_ids for liberation
+              for (var z = 0; z < local_value.length; z++) {
+                var local_primary_cultures = getPrimaryCultures(local_value[z]);
+
+                for (var a = 0; a < local_primary_cultures.length; a++)
+                  if (!culture_ids.includes(local_primary_cultures[a]))
+                    culture_ids.push([local_primary_cultures[a], local_value[z]]);
+              }
+
+              //Iterate over all provinces and test against culture_ids
+              for (var z = 0; z < target_provinces.length; z++)
+                try {
+                  for (var a = 0; a < culture_ids.length; a++)
+                    if (target_provinces[z].culture == culture_ids[a][0]) {
+                      var local_recipient = main.users[culture_ids[a][1]];
+
+                      fill_cache[target_provinces[z].id] = local_recipient.colour;
+                    }
+                } catch {}
             }
           }
         }
@@ -2076,31 +2095,19 @@ module.exports = {
       for (var x = 0; x < local_provinces.length; x++) {
         //Check if province will be annexed (either by retaking cores, or by outright annexation)
         var new_colour = local_user.colour;
-        var new_owner = hasProvinceOwnerChange(local_provinces[x].id, peace_obj);
+        var new_outline = [0, 0, 0];
 
-        //Check if province owner is proposed for vassalisation
-        if (peace_obj.puppet) {
-          var all_demands = Object.keys(peace_obj.puppet);
+        //Check for fill change
+        if (fill_cache[local_provinces[x].id])
+          new_colour = fill_cache[local_provinces[x].id];
 
-          for (var y = 0; y < all_demands.length; y++)
-            if (all_demands[y] == local_provinces[x].owner) {
-              var overlord_obj = main.users[peace_obj.puppet[all_demands[y]].overlord];
-
-              new_colour = [
-                Math.min(overlord_obj.colour[0] + 20, 255),
-                Math.min(overlord_obj.colour[1] + 20, 255),
-                Math.min(overlord_obj.colour[2] + 20, 255),
-              ];
-            }
-        }
-
-        //Check for annexation
-        if (new_owner)
-          if (new_owner != local_provinces[x].owner)
-            new_colour = main.users[new_owner].colour;
+        //Check for outline change
+        if (outline_cache[local_provinces[x].id])
+          new_outline = outline_cache[local_provinces[x].id];
 
         //Shade in province
         setProvinceColour(map_file, local_provinces[x].id, new_colour);
+        setProvinceOutline(map_file, local_provinces[x].id, new_outline);
       }
     }
 
