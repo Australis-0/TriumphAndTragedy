@@ -306,6 +306,8 @@ module.exports = {
 
             construction_string.push(`Currently constructing **${parseNumber(local_constructions[x].building_amount)}** ${(local_building_obj.name) ? local_building_obj.name : local_constructions[x].building_type} in this city. They will finish in **${local_constructions[x].construction_turns}** turn(s).`);
           }
+
+          construction_string.push("");
         }
       }
 
