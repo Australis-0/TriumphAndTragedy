@@ -247,13 +247,13 @@ module.exports = {
 
           break;
         default:
-          game_obj.middle_embed.react("778437227276402688")
+          game_obj.middle_embed.react("⏫")
             .then(() => { game_obj.middle_embed.react("⬆️"); })
             .then(() => { game_obj.middle_embed.react("785931430215155754"); });
           game_obj.middle_control_panel.react("⬅️")
             .then(() => { game_obj.middle_control_panel.react("🔘"); } )
             .then(() => { game_obj.middle_control_panel.react("➡️"); } );
-          game_obj.bottom_control_panel.react("778437227276402688")
+          game_obj.bottom_control_panel.react("⏬")
             .then(() => { game_obj.bottom_control_panel.react("⬇️"); } )
             .then(() => { game_obj.bottom_control_panel.react("785931430407700482"); } );
 
