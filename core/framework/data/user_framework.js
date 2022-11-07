@@ -804,7 +804,7 @@ module.exports = {
       return [false, `The country name **${processed_country_name}** was already taken by another nation! Try renaming your country to something else.`];
 
     //See if country name meets length requirements
-    if (processed_country_name.length <= 100)
+    if (processed_country_name.length >= 100)
       return [false, `The new name of your country, **${parseString(country_name)}** must be less than **100** characters! Its current proposed length is **${parseNumber(parseString(country_name).length)}** characters long.`];
 
     //Return statement

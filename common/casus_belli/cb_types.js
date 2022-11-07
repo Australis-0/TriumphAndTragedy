@@ -28,7 +28,9 @@ config.casus_belli = {
         return true;
     },
 
-    peace_demands: ["status_quo", "war_reparations"]
+    peace_demands: {
+      war_reparations: 1
+    }
   },
 
   theft: {
@@ -54,7 +56,9 @@ config.casus_belli = {
           return true;
     },
 
-    peace_demands: ["status_quo", "war_reparations"]
+    peace_demands: {
+      war_reparations: 1
+    }
   },
 
   containment: {
@@ -69,7 +73,11 @@ config.casus_belli = {
         return true;
     },
 
-    peace_demands: ["status_quo", "war_reparations" , "install_government", "cut_down_to_size"]
+    peace_demands: {
+      cut_down_to_size: 1,
+      install_government: 1,
+      war_reparations: 1
+    }
   },
 
   colonial_integration: {
@@ -87,7 +95,11 @@ config.casus_belli = {
         return true;
     },
 
-    peace_demands: ["status_quo", "war_reparations", "puppet", "annexation"]
+    peace_demands: {
+      annexation: 1,
+      puppet: 1,
+      war_reparations: 1
+    }
   },
 
   free_oppressed_people: {
@@ -105,7 +117,10 @@ config.casus_belli = {
         return true;
     },
 
-    peace_demands: ["status_quo", "war_reparations", "install_government"]
+    peace_demands: {
+      install_government: 1,
+      war_reparations: 1
+    }
   },
 
   independence: {
@@ -123,7 +138,10 @@ config.casus_belli = {
           return true;
     },
 
-    peace_demands: ["status_quo", "war_reparations", "liberation"]
+    peace_demands: {
+      liberation: 1,
+      war_reparations: 1
+    }
   },
 
   revanchism: {
@@ -146,7 +164,10 @@ config.casus_belli = {
         }
     },
 
-    peace_demands: ["status_quo", "war_reparations", "retake_cores"]
+    peace_demands: {
+      retake_cores: 1,
+      war_reparations: 1
+    }
   },
 
   //Is triggered only by event/diplomatic dialogue
@@ -156,7 +177,9 @@ config.casus_belli = {
     icon: "old_scroll",
     infamy: 3,
 
-    peace_demands: ["status_quo", "annexation"]
+    peace_demands: {
+      annexation: 1
+    }
   },
 
   //Is triggered only by event/diplomatic dialogue
@@ -166,7 +189,9 @@ config.casus_belli = {
     icon: "cb",
     infamy: 5,
 
-    peace_demands: ["status_quo", "war_reparations"]
+    peace_demands: {
+      war_reparations: 1
+    }
   },
 
   lebensraum: {
@@ -181,7 +206,10 @@ config.casus_belli = {
         return true;
     },
 
-    peace_demands: ["puppet", "annexation"]
+    peace_demands: {
+      annexation: 1,
+      puppet: 1
+    }
   },
 
   acquire_state: {
@@ -204,6 +232,9 @@ config.casus_belli = {
         }
     },
 
-    peace_demands: ["puppet", "annexation"]
+    peace_demands: {
+      annexation: 1,
+      puppet: 1
+    }
   }
 };
