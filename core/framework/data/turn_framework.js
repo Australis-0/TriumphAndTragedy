@@ -632,26 +632,29 @@ module.exports = {
     console.time(`Construction processing!`);
     //Construction processing
     try {
-      for (var i = usr.under_construction.length - 1; i >= 0; i--) {
-        usr.under_construction[i].construction_turns--;
+      for (var i = usr.under_construction.length - 1; i >= 0; i--)
+        try {
+          usr.under_construction[i].construction_turns--;
 
-        //Check if building(s) are done being built
-        if (usr.under_construction[i].construction_turns <= 0) {
-          var local_city_obj = getProvince(usr.under_construction[i].province_id);
+          //Check if building(s) are done being built
+          if (usr.under_construction[i].construction_turns <= 0) {
+            var local_city_obj = getProvince(usr.under_construction[i].province_id);
 
-          //Try/catch to prevent duplication
-          try {
-            if (local_city_obj.buildings)
-              //Individual buildings are treated as objects in an array here because this allows for further granularity in the future
-              constructBuilding(usr.under_construction[i].building_amount, usr.under_construction[i].building_type, usr.under_construction[i].province_id, i);
-          } catch (e) {
-            console.log(e);
+            //Try/catch to prevent duplication
+            try {
+              if (local_city_obj.buildings)
+                //Individual buildings are treated as objects in an array here because this allows for further granularity in the future
+                constructBuilding(usr.under_construction[i].building_amount, usr.under_construction[i].building_type, usr.under_construction[i].province_id, i);
+            } catch (e) {
+              console.log(e);
+            }
+
+            //Remove construction
+            usr.under_construction.splice(i, 1);
           }
-
-          //Remove construction
-          usr.under_construction.splice(i, 1);
+        } catch (e) {
+          console.log(e);
         }
-      }
     } catch (e) {
       console.log(e);
     }

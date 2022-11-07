@@ -998,7 +998,7 @@ module.exports = {
                       if (good_type) {
                         local_ui.prompts.push([`What percentage of ${(good_type.name) ? good_type.name : potential_resource_type} would you like to inherit from the target country? (by percentage)`, "number", {
                           min: returnSafeNumber(`minimum_${potential_good_type}_allowed`, 0),
-                          max: returnSafeNumber(`maximum_${potential_good_type}_allowed`, 100);
+                          max: returnSafeNumber(`maximum_${potential_good_type}_allowed`, 100)
                         }]);
 
                         local_ui.seize_resources_prompts.push(
