@@ -152,10 +152,12 @@ module.exports = {
               var defender_armies_in_province = getArmiesInProvince(potential_interception_provinces[i]);
 
               for (var x = 0; x < defender_armies_in_province.length; x++)
-                if (defender_armies_in_province[x].owner == city_obj.controller && defender_armies_in_province.type == "air")
+                if (defender_armies_in_province[x].owner == city_obj.controller && defender_armies_in_province[x].type == "air")
                   module.exports.initialiseBattle(actual_ot_user_id, defender_armies_in_province[x], actual_id, army_obj);
             }
-          } catch {}
+          } catch (e) {
+            console.log(e);
+          }
 
           //Calculate largest_wing
           var all_units = Object.keys(army_obj.units);
