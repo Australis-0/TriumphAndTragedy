@@ -153,7 +153,7 @@ module.exports = {
 
               for (var x = 0; x < defender_armies_in_province.length; x++)
                 if (defender_armies_in_province[x].owner == city_obj.controller && defender_armies_in_province.type == "air")
-                  module.exports.initialiseBattle(actual_ot_user_id, defender_armies_in_province[x].name, actual_id, army_obj.name);
+                  module.exports.initialiseBattle(actual_ot_user_id, defender_armies_in_province[x], actual_id, army_obj);
             }
           } catch {}
 
