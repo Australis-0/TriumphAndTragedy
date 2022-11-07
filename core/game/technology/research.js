@@ -217,18 +217,20 @@ module.exports = {
               });
 
               //Update UI
-              if (game_obj.page == "research")
-                printResearch(user_id);
+              if (game_obj) {
+                if (game_obj.page == "research")
+                  printResearch(user_id);
 
-              if (game_obj.page == "research_list")
-                createPageMenu(game_obj.middle_embed, {
-                  embed_pages: printResearchList(actual_id),
-                  user: game_obj.user,
-                  page: interfaces[game_obj.middle_embed.id].page
-                });
+                if (game_obj.page == "research_list")
+                  createPageMenu(game_obj.middle_embed, {
+                    embed_pages: printResearchList(actual_id),
+                    user: game_obj.user,
+                    page: interfaces[game_obj.middle_embed.id].page
+                  });
 
-              if (game_obj.page == "technology")
-                printTechnology(user_id);
+                if (game_obj.page == "technology")
+                  printTechnology(user_id);
+              }
 
               //Return statement used for research_queue processing
               return true;
