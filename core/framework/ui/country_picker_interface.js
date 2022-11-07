@@ -59,6 +59,7 @@ module.exports = {
     //Declare local instance variables
     var all_users = Object.keys(main.users);
     var actual_id = JSON.parse(JSON.stringify(user_id));
+    var game_obj = getGameObject(user_id);
     var processed_country_name = formaliseString(country_name);
     var valid_country_name = isValidCountryName(processed_country_name);
 
@@ -106,6 +107,10 @@ module.exports = {
       }
 
       return usr;
+    } else {
+      //Print out country name error
+      if (game_obj)
+        printError(game_obj.alert_embed, valid_country_name[1]);
     }
   },
 
