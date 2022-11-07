@@ -1385,7 +1385,7 @@ module.exports = {
           if (!usr.researched_technologies.includes(usr.research_queue[i])) {
             try {
               //Attempt to research everything in queue
-              var research_status = research(user_id, usr.research_queue[i], true, true);
+              var research_status = research(user_id, usr.research_queue[i], true, true, all_production.knowledge);
 
               //If research command went through, remove it from the queue
               if (research_status)

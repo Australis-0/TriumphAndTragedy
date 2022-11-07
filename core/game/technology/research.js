@@ -103,12 +103,13 @@ module.exports = {
     });
   },
 
-  research: function (arg0_user, arg1_technology_name, arg2_display, arg3_force_research) {
+  research: function (arg0_user, arg1_technology_name, arg2_display, arg3_force_research, arg4_knowledge_production) {
     //Convert from parameters
     var user_id = arg0_user;
     var raw_technology_name = arg1_technology_name.toString().toLowerCase();
     var display = arg2_display;
     var force_research = arg3_force_research;
+    var knowledge_production = arg4_knowledge_production;
 
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
@@ -121,7 +122,7 @@ module.exports = {
     var can_research = false;
     var is_being_researched = false;
     var is_in_queue = false;
-    var knowledge_gain = getKnowledgeGain(actual_id);
+    var knowledge_gain = getKnowledgeGain(actual_id, knowledge_production);
     var tech_array_dump = [];
     var tech_name = getTechnology(raw_technology_name, { return_key: true });
     var tech_obj = getTechnology(raw_technology_name);

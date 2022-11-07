@@ -29,11 +29,11 @@ module.exports = {
   getKnowledgeGain: function (arg0_user, arg1_knowledge) {
     //Convert from parameters
     var user_id = arg0_user;
+    var local_knowledge_production = arg1_knowledge;
 
     //Declare local tracker variables
     var actual_id = main.global.user_map[user_id];
     var all_pops = Object.keys(config.pops);
-    var local_knowledge_production = arg1_knowledge;
     var pop_knowledge_gain = 0;
 
     if (!local_knowledge_production) {
