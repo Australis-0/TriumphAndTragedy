@@ -52,7 +52,7 @@ The data structure of Triumph & Tragedy is brutally simple, and separated into t
 
 ## Documentation
 
-Documentation is available for modders! [Click here](https://docs.google.com/document/d/14cIguINtzcLS0-rSkRPAV5VJOIcJPIA1pZzO2k5jEYQ/edit?usp=sharing) to start reading.
+Documentation is available for modders! [Click here](https://docs.google.com/document/d/1uLfSMooByn0jtm6hfKK8rn8c9Qj9FCWv8JibFgOQwhc/edit?usp=sharing) to start reading.
 
 The game's code is structured in a reasonable and simple way! Filenames tell you what mechanic and category they sit in, and all functions inside are automatically made global for convenience, and sorted alphabetically. The code inside tries to be as simple and readable as possible.
 
