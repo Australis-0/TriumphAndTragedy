@@ -22,7 +22,7 @@ module.exports = {
         });
 
         //Print out user feedback
-        printAlert(game_obj.id, `${config.icons.checkmark} We have attempted to begin a process of mutual reconciliation with **${ot_user.name}**.`);
+        printAlert(game_obj.id, `${config.icons.checkmark} We have attempted to begin a process of mutual reconciliation with **${ot_user.name}**. TThey must accept our offer for the rivalry to be ended.`);
       } else {
         printError(game_obj.id, `**${ot_user.id}** is not currently considered by your country to be a valid rival!`);
       }

@@ -342,8 +342,8 @@ module.exports = {
               //Results string
               result_string.push(`${config.icons.death} Total Casualties: **${parseNumber(total_casualties + attacker_losses)}**`);
               result_string.push("");
-              result_string.push(`**${usr.name}** gained ${config.icons.infamy} **${parseNumber(attacker_war_exhaustion*100, { display_prefix: true })}** war exhaustion.`);
-              result_string.push(`**${ot_user.name}** gained ${config.icons.infamy} **${parseNumber(defender_war_exhaustion*100, { display_prefix: true })}** war exhaustion.`);
+              result_string.push(`**${usr.name}** gained ${config.icons.infamy} **${parseNumber(attacker_war_exhaustion*100, { display_float: true, display_prefix: true })}** war exhaustion.`);
+              result_string.push(`**${ot_user.name}** gained ${config.icons.infamy} **${parseNumber(defender_war_exhaustion*100, { display_float: true, display_prefix: true })}** war exhaustion.`);
 
               //Format embed
               const air_raid_embed = new Discord.MessageEmbed()

@@ -313,6 +313,15 @@ module.exports = {
               initialisePrintWar(user_id);
 
               break;
+            case "conflicts":
+            case "wars":
+              createPageMenu(game_obj.middle_embed, {
+                embed_pages: printWars(game_obj.user),
+                user: game_obj.user
+              });
+              game_obj.page = "war_list";
+
+              break;
             default:
               if (!["view army"].includes(input)) {
                 var army_obj = getArmy(actual_id, view_obj);

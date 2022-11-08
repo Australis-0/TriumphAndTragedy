@@ -96,7 +96,7 @@ config.buildings.infrastructure = {
   aeroports: {
     name: "Aeroports",
     singular: "Aeroport",
-    aliases: ["airport"],
+    aliases: ["airport", "airports"],
     icon: "aeroports",
 
     construction_turns: 5,
