@@ -95,7 +95,7 @@ module.exports = {
     var actual_id = main.global.user_map[user_id];
     var national_modifier_names = lookup.all_national_modifier_names;
     var national_modifiers = lookup.all_national_modifiers;
-    var usr = main.users[user_id];
+    var usr = main.users[actual_id];
 
     //Iterate over all national modifiers and check triggers
     for (var i = 0; i < national_modifiers.length; i++)
