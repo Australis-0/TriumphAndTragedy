@@ -197,7 +197,6 @@ module.exports = {
     var opposing_side = "";
     var war_obj = JSON.parse(JSON.stringify(getWar(war_name)));
 
-
     //Fetch friendly side
     if (war_obj.attackers.includes(peace_obj.id)) {
       friendly_side = "attackers";
