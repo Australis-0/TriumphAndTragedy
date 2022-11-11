@@ -62,11 +62,12 @@ module.exports = {
     var peace_obj = arg1_peace_treaty_object;
 
     //Declare local instance variables
-    var all_demands = Object.keys(peace_obj.peace_demands);
     var all_participants = [];
     var friendly_side = "";
     var opposing_side = "";
     var peace_string = [];
+    var sorted_wargoals = [];
+    var wargoals_demanded = {};
 
     //Fetch friendly side
     if (war_obj.attackers.includes(peace_obj.id)) {
@@ -78,73 +79,52 @@ module.exports = {
       opposing_side = "attackers";
     }
 
-    //Parse through all demands
-    for (var i = 0; i < all_demands.length; i++) {
-      var local_value = peace_obj.peace_demands[all_demands[i]];
+    //Fetch wargoals_demanded
+    for (var i = 0; i < peace_obj.wargoals.length; i++) {
+      var local_wargoal_id = peace_obj.wargoals[i].id;
 
-      switch (all_demands[i]) {
-        case "status_quo:":
-          peace_string.push(`• The opposing side will be required to pay **15%** of their cash reserves as war reparations.`);
-
-          break;
-        case "install_government":
-          var local_demands = Object.keys(local_value);
-
-          for (var x = 0; x < local_demands.length; x++)
-            peace_string.push(`• The nation of **${main.users[local_demands[x]].name}** will be forced to change their government to ${config.governments[local_value[local_demands[x]].type].name.totoLowerCase()}.`);
-
-          break;
-        case "cut_down_to_size":
-          for (var x = 0; x < local_value.length; x++)
-            peace_string.push(`• **${main.users[local_value[x]].name}** will be required to demobilise and disband **90%** of its active forces in all its divisions and armies.`);
-
-          break;
-        case "liberation":
-          peace_string.push(`• The country of **${main.users[peace_obj.id]}** has demanded their liberation from its overlord.`);
-
-          break;
-        case "puppet":
-          var local_demands = Object.keys(local_value);
-
-          for (var x = 0; x < local_demands.length; x++)
-            peace_string.push(`• **${main.users[local_value[local_demands[x]].overlord].name}** will gain overlordship over the nation of **${main.users[local_demands[x]].name}**.`);
-
-          break;
-        case "retake_cores":
-          for (var x = 0; x < local_demands.length; x++)
-            peace_string.push(`• **${main.users[local_demands[x]].name}** will be returned all of their core provinces from the opposing side.`);
-
-          break;
-        case "annexation":
-          var local_demands = Object.keys(local_value);
-
-          for (var x = 0; x < local_demands.length; x++)
-            if (local_value[local_demands[x]].annex_all)
-              for (var y = 0; y < local_value[local_demands[x]].annex_all.length; y++)
-                peace_string.push(`• **${main.users[local_value[local_demands[x]].annex_all[y]].name}** will be annexed in their entirety by **${main.users[local_demands[x]].name}**.`);
-            else {
-              var local_provinces = local_value[local_demands[x]].provinces;
-              var lost_provinces = {};
-
-              for (var y = 0; y < local_provinces.length; y++) {
-                var local_province = main.provinces[local_provinces[y]];
-
-                if (local_province.owner)
-                  if (lost_provinces[local_province.owner])
-                    lost_provinces[local_province.owner].push(local_provinces[y]);
-                  else
-                    lost_provinces[local_province.owner] = [local_provinces[y]];
-              }
-
-              var all_losers = Object.keys(lost_provinces);
-
-              for (var y = 0; y < all_losers.length; y++)
-                peace_string.push(`• **${main.users[local_demands[x]].name}** will be ceded the provinces of **${lost_provinces[all_losers[y]].join(", ")}** from the nation of **${main.users[all_losers[y]].name}**.`);
-            }
-
-          break;
-      }
+      //Increment wargoals_demanded field
+      wargoals_demanded[local_wargoal_id] = (wargoals_demanded[local_wargoal_id]) ?
+        wargoals_demanded[local_wargoal_id] + 1 :
+        1;
     }
+
+    //Parse through all demands to sort by ID's
+    for (var i = 0; i < peace_obj.wargoals.length; i++)
+      sorted_wargoals.push(peace_obj.wargoals[i].id);
+
+    //Unique sorted_wargoals, then .sort()
+    sorted_wargoals = unique(sorted_wargoals).sort();
+
+    for (var i = 0; i < sorted_wargoals.length; i++)
+      for (var x = 0; x < peace_obj.wargoals.length; x++)
+        if (peace_obj.wargoals[x].id == sorted_wargoals[i])
+          if (peace_obj.wargoals[x].effect) {
+            var all_effects = Object.keys(peace_obj.wargoals[x].effect);
+            var wargoal_id = peace_obj.wargoals[x].id;
+            var wargoal_obj = getWargoal(wargoal_id);
+
+            var demand_limit = returnSafeNumber(wargoal_obj.demand_limit, 1);
+
+            //Get actual demand_limit from war_obj.wargoals
+            demand_limit = Math.ceil(
+              demand_limit*returnSafeNumber(war_obj.wargoals[wargoal_name])
+            );
+
+            //Push wargoal name and (wargoals demanded/wargoals limit) to string
+            peace_string.push(`• __${(wargoal_obj.name) ? wargoal_obj.name : }__ (**${parseNumber(returnSafeNumber(wargoals_demanded[wargoal_id]))}**/${parseNumber(demand_limit)}):`);
+
+            for (var y = 0; y < all_effects.length; y++) {
+              var local_value = peace_obj.wargoals[x].effect[all_effects[y]];
+
+              switch (all_effects[y]) {
+                case "annex_all":
+                  //Check for all annexation cues
+
+                  break;
+              }
+            }
+          }
 
     if (peace_string.length == 0)
       peace_string.push(`• White Peace`);
