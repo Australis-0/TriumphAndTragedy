@@ -56,7 +56,7 @@ module.exports = {
     return localisation_string;
   },
 
-  parsePeaceTreatyLocalisation: function (arg0_war_obj, arg1_peace_treaty_object) { //[WIP] - Needs to be refactored to current data structure
+  parsePeaceTreatyLocalisation: function (arg0_war_obj, arg1_peace_treaty_object) {
     //Convert from parameters
     var war_obj = arg0_war_obj;
     var peace_obj = arg1_peace_treaty_object;
@@ -96,6 +96,19 @@ module.exports = {
     //Unique sorted_wargoals, then .sort()
     sorted_wargoals = unique(sorted_wargoals).sort();
 
+    //Print all sorted_wargoals to the first page
+    for (var i = 0; i < sorted_wargoals.length; i++) {
+      var wargoal_id = sorted_wargoals[i];
+      var wargoal_obj = getWargoal(wargoal_id);
+
+      peace_string.push(`**${(wargoal_obj.name) ? wargoal_obj.name : wargoal_id}** - (**${parseNumber(returnSafeNumber(wargoals_demanded[wargoal_id]))}**/${parseNumber(demand_limit)} demanded)`);
+    }
+
+    peace_string.push("");
+    peace_string.push(config.localisation.divider);
+    peace_string.push("");
+
+    //Second page terms
     for (var i = 0; i < sorted_wargoals.length; i++)
       for (var x = 0; x < peace_obj.wargoals.length; x++)
         if (peace_obj.wargoals[x].id == sorted_wargoals[i])
@@ -112,7 +125,7 @@ module.exports = {
             );
 
             //Push wargoal name and (wargoals demanded/wargoals limit) to string
-            peace_string.push(`• __${(wargoal_obj.name) ? wargoal_obj.name : }__ (**${parseNumber(returnSafeNumber(wargoals_demanded[wargoal_id]))}**/${parseNumber(demand_limit)}):`);
+            peace_string.push(`• __${(wargoal_obj.name) ? wargoal_obj.name : }__:`);
             peace_string.push("");
 
             for (var y = 0; y < all_effects.length; y++) {
@@ -171,14 +184,14 @@ module.exports = {
                 case "demilitarisation":
                   //Push to peace string
                   if (local_value.demilitarised_provinces)
-                    peace_string.push(`The province(s) of **${local_value.demilitarised_provinces.join(", ")}** will be demilitarised${(local_value.turns) ? ` for the next **${parseNumber(local_value.turns)}** turn(s).` : ` in perpetuity.`}`);
+                    peace_string.push(`- The province(s) of **${local_value.demilitarised_provinces.join(", ")}** will be demilitarised${(local_value.turns) ? ` for the next **${parseNumber(local_value.turns)}** turn(s).` : ` in perpetuity.`}`);
 
                   break;
                 case "free_oppressed_people":
                   //Check for all free_oppressed_people demands
                   var all_local_effects = Object.keys(local_value);
 
-                  //Push to peace string
+                  //Push to peace_string
                   for (var z = 0; z < all_local_effects.length; z++) {
                     var local_clauses = Object.keys(local_value[all_local_effects[z]]);
                     var local_target = main.users[all_local_effects[z]];
@@ -189,15 +202,142 @@ module.exports = {
 
                       var culture_obj = main.global.cultures[local_clauses[a]];
 
-                      //Push to peace string
+                      //Push to formatted string
                       if (culture_obj)
-                        peace_string.push(`The **${culture_obj.name}** culture will be released as an independent nation from **${local_target.name}**, along with the province(s) of **${local_clause.provinces.join(", ")}**.`);
+                        peace_string.push(`- The **${culture_obj.name}** culture will be released as an independent nation from **${local_target.name}**, along with the province(s) of **${local_clause.provinces.join(", ")}**.`);
                     }
                   }
 
                   break;
                 case "install_government":
                   //Check for all install_government demands
+                  var all_local_effects = Object.keys(local_value);
+
+                  //Push to peace string
+                  for (var z = 0; z < all_local_effects.length; z++) {
+                    var local_target = main.users[all_local_effects[z]];
+                    var target_obj = local_value[all_local_effects[z]];
+
+                    //Push to peace string
+                    var government_id = getGovernment(target_obj.government_type, { return_key: true });
+                    var government_obj = getGovernment(target_obj.government_type);
+
+                    peace_string.push(`- **${local_target.name}** will be forced to change their government type to **${(government_obj.name) ? government_obj.name : government_id}**.`);
+                  }
+
+                  break;
+                case "liberation":
+                  //Iterate over all liberation demands
+                  for (var z = 0; z < local_value.length; z++)
+                    peace_string.push(`- **${main.users[local_value[z]].name}** will be released from their overlord.`);
+
+                  break;
+                case "puppet":
+                  //Check for all puppet demands
+                  var all_local_effects = Object.keys(local_value);
+
+                  //Push to peace_string
+                  for (var z = 0; z < all_local_effects.length; z++) {
+                    var local_recipient = main.users[local_value[all_local_effects[z]]];
+                    var local_target = main.users[all_local_effects[z]];
+
+                    //Push formatted string
+                    peace_string.push(`- **${local_target.name}** will be vassalised by **${local_recipient.name}**`);
+                  }
+
+                  break;
+                case "release_client_state":
+                  //Check for all client state demands
+                  var all_local_effects = Object.keys(local_value);
+
+                  //Push to peace_string
+                  for (var z = 0; z < all_local_effects.length; z++) {
+                    var local_effect = local_value[all_local_effects[z]];
+
+                    //Push formatted string
+                    peace_string.push(`- **${(local_effect.name) ? local_effect.name : all_local_effects[z]}** will become a client state underneath the supervision of **${main.users[local_effect.overlord].name}**. They will hold the following province(s) upon secession. **${local_effect.provinces.join(", ")}**.`);
+                  }
+
+                  break;
+                case "retake_cores":
+                  //Check for all retake_core demands
+                  var all_local_effects = Object.keys(local_value);
+
+                  //Push to peace_string
+                  for (var z = 0; z < all_local_effects.length; z++) {
+                    var local_effect = local_value[all_local_effects[z]];
+                    var recipient_array = [];
+
+                    //Push formatted string
+                    for (var a = 0; a < local_effect.length; a++)
+                      recipient_array.push(`**${main.users[local_effect[a]].name}**'s`);
+
+                      peace_string.push(`- **${main.users[all_local_effects[z]].name}** will return all of ${recipient_array.join(", ")} core provinces to their rightful owners.`);
+                  }
+
+                  break;
+                case "revoke_reparations":
+                  //Push to peace_string
+                  for (var z = 0; z < local_value.length; z++)
+                    peace_string.push(`- **${main.users[local_value[z]].name}** will stop paying any reparations to the enemy side.`);
+
+                  break;
+                case "seize_resources":
+                  //Check for all seize_resources demands
+                  for (var z = 0; z < local_value.length; z++) {
+                    var local_clauses = Object.keys(local_value[z]);
+                    var resource_demands = [];
+
+                    //Iterate over all local keys
+                    for (var a = 0; a < local_clauses.length; a++) {
+                      var local_clause = local_value[z][local_clauses[a]];
+
+                      if (local_clauses[a] == "inherit_actions")
+                        resource_demands.push(`**${printPercentage(local_clause)}** of their current actions`);
+                      if (local_clauses[a] == "inherit_money")
+                        resource_demands.push(`**${printPercentage(local_clause)}** of their fiscal reserves`);
+                      if (local_clauses[a].includes("seize_"))
+                        resource_demands.push(`**${printPercentage(local_clause)}** of their **${parseString(local_clauses[a].replace("seize_", ""))}** stockpile`);
+
+                      //Push formatted string
+                      peace_string.push(`- **${main.users[local_value[z].debtor].name}** will cede ${resource_demands.join(", ")} to **${main.users[local_value[z].owner].name}**.`);
+                    }
+                  }
+
+                  break;
+                case "steer_trade":
+                  //Check for all steer_trade demands
+                  var all_local_effects = Object.keys(local_value);
+
+                  //Push to peace_string
+                  for (var z = 0; z < all_local_effects.length; z++) {
+                    var local_effect = local_value[all_local_effects[z]];
+                    var local_recipient = main.users[local_effect.overlord];
+                    var local_target = main.users[all_local_effects[z]];
+
+                    //Push to formatted string
+                    peace_string.push(`- **${local_target.name}** will only be able to trade with **${local_recipient.name}**${(local_effect.turns) ? ` for the next **${parseNumber(local_effect.turns)}** turn(s).` : `.`}`);
+                  }
+
+                  break;
+                case "syphon_actions":
+                  //Check for all syphon_actions demands
+                  for (var z = 0; z < local_value.length; z++) {
+                    //Push formatted string
+                    (local_value[z].amount && local_value[z].percentage_amount) ?
+                      peace_string.push(`- **${main.users[local_value[z].owner].name}** will syphon either **${parseNumber(local_value[z].amount)}** or **${printPercentage(local_value[z].percentage_amount)}** of  **${main.users[local_value[z].debtor].name}'s actions each turn, whichever one is higher.` :
+                      (local_value[z].amount) ?
+                        peace_string.push(`**${main.users[local_value[z].owner].name} will syphon **${parseNumber(local_value[z].amount)}** action(s) from **${main.users[local_value[z].debtor].name} each turn.`) :
+                        peace_string.push(`**${main.users[local_value[z].owner].name} will syphon **${printPercentage(local_value[z].percentage_amount)}** of **${main.users[local_value[z].debtor].name}**'s actions each turn.`)
+                    : "";
+                  }
+
+                  break;
+                case "war_reparations":
+                  //Check for all war_reparations demands
+                  for (var z = 0; z < local_value.length; z++)
+                    //Push formatted string
+                    peace_string.push(`**${main.users[local_value[z].debtor].name}** will have to pay **${printPercentage(local_value[z].percentage_amount)}** of their income to **${main.users[local_value[z].owner].name}${(local_value[z].turns) ? ` for the next **${parseNumber(local_value[z].turns)} turns.` : `.`}`);
 
                   break;
               }
