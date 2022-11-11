@@ -113,17 +113,97 @@ module.exports = {
 
             //Push wargoal name and (wargoals demanded/wargoals limit) to string
             peace_string.push(`• __${(wargoal_obj.name) ? wargoal_obj.name : }__ (**${parseNumber(returnSafeNumber(wargoals_demanded[wargoal_id]))}**/${parseNumber(demand_limit)}):`);
+            peace_string.push("");
 
             for (var y = 0; y < all_effects.length; y++) {
               var local_value = peace_obj.wargoals[x].effect[all_effects[y]];
 
               switch (all_effects[y]) {
                 case "annex_all":
-                  //Check for all annexation cues
+                  //Check for all total annexation cues
+                  var all_local_effects = Object.keys(local_value);
+
+                  //Push to peace_string
+                  for (var z = 0; z < all_local_effects.length; z++) {
+                    var local_recipient = main.users[local_value[all_local_effects[z]]];
+                    var local_target = main.users[all_local_effects[z]];
+
+                    //Push formatted string
+                    peace_string.push(`- **${local_target.name}** will be completely annexed by **${local_recipient.name}**`);
+                  }
+
+                  break;
+                case "annexation":
+                  //Check for all limited annexation demands
+                  var all_local_effects = Object.keys(local_value);
+
+                  //Push to peace_string
+                  for (var z = 0; z < all_local_effects.length; z++) {
+                    var local_effect = local_value[all_local_effects[z]];
+                    var local_recipient = main.users[all_local_effects[z]];
+
+                    //Push formatted string
+                    peace_string.push(`- **${local_recipient.name}** will receive the province(s) of **${local_effect.provinces.join(", ")}**.`);
+                  }
+
+                  break;
+                case "cut_down_to_size":
+                  //Check for all cut_down_to_size demands
+                  var all_local_effects = Object.keys(local_value);
+
+                  //Push to peace string
+                  for (var z = 0; z < all_local_effects.length; z++) {
+                    var local_clauses = Object.keys(local_value[all_local_effects[z]]);
+                    var local_target = main.users[all_local_effects[z]];
+                    var target_obj = local_value[all_local_effects[z]];
+
+                    for (var a = 0; a < local_clauses.length; a++) {
+                      var local_clause = target_obj[local_clauses[a]];
+
+                      if (local_clauses[a].includes("_removal"))
+                        peace_string.push(`- **${local_target.name}** must disband **${printPercentage(local_clause)}** of their **${parseString(local_clauses[a].replace("_removal", ""))}**.`);
+                      if (local_clauses[a] == "turns")
+                        peace_string.push(`- **${local_target.name}** will be prohibited from raising combat forces for **${parseNumber(local_clause)}** turn(s).`);
+                    }
+                  }
+
+                  break;
+                case "demilitarisation":
+                  //Push to peace string
+                  if (local_value.demilitarised_provinces)
+                    peace_string.push(`The province(s) of **${local_value.demilitarised_provinces.join(", ")}** will be demilitarised${(local_value.turns) ? ` for the next **${parseNumber(local_value.turns)}** turn(s).` : ` in perpetuity.`}`);
+
+                  break;
+                case "free_oppressed_people":
+                  //Check for all free_oppressed_people demands
+                  var all_local_effects = Object.keys(local_value);
+
+                  //Push to peace string
+                  for (var z = 0; z < all_local_effects.length; z++) {
+                    var local_clauses = Object.keys(local_value[all_local_effects[z]]);
+                    var local_target = main.users[all_local_effects[z]];
+                    var target_obj = local_value[all_local_effects[z]];
+
+                    for (var a = 0; a < local_clauses.length; a++) {
+                      var local_clause = target_obj[local_clauses[a]];
+
+                      var culture_obj = main.global.cultures[local_clauses[a]];
+
+                      //Push to peace string
+                      if (culture_obj)
+                        peace_string.push(`The **${culture_obj.name}** culture will be released as an independent nation from **${local_target.name}**, along with the province(s) of **${local_clause.provinces.join(", ")}**.`);
+                    }
+                  }
+
+                  break;
+                case "install_government":
+                  //Check for all install_government demands
 
                   break;
               }
             }
+
+            peace_string.push("");
           }
 
     if (peace_string.length == 0)
