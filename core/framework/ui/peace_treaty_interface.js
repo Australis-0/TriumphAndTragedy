@@ -81,14 +81,20 @@ module.exports = {
 
       if (wargoal_obj) {
         //Check if demand_limit has already been reached
+        var demand_limit = returnSafeNumber(wargoal_obj.demand_limit, 1);
         var wargoal_demanded = 0;
+
+        //Get actual demand_limit from war_obj.wargoals
+        demand_limit = Math.ceil(
+          demand_limit*returnSafeNumber(war_obj.wargoals[wargoal_name]);
+        );
 
         for (var i = 0; i < peace_obj.wargoals.length; i++)
           if (peace_obj.wargoals[i].id == wargoal_name)
             wargoal_demanded++;
 
         //Parse effects in order to create a visual prompt
-        if (wargoal_demanded >= returnSafeNumber(wargoal_obj.demand_limit, 1)) {
+        if (wargoal_demanded >= demand_limit) {
           var effect_obj = {};
 
           if (wargoal_obj.effect) {

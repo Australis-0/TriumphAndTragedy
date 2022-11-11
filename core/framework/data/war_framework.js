@@ -322,8 +322,7 @@ module.exports = {
 
     //Add wargoals
     if (cb_obj.peace_demands)
-      for (var i = 0; i < cb_obj.peace_demands.length; i++)
-        war_obj.wargoals.push(cb_obj.peace_demands[i]);
+      war_obj.wargoals = JSON.parse(JSON.stringify(cb_obj.peace_demands));
 
     //Set war_obj
     main.global.wars[war_id] = war_obj;
