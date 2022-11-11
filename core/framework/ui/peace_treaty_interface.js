@@ -1803,7 +1803,7 @@ module.exports = {
 
     //Initialise page menu showing peace treaty effects
     createPageMenu(game_obj.alert_embed, {
-      embed_pages: splitEmbed(parsePeaceTreatyString(war_obj, peace_obj), {
+      embed_pages: splitEmbed(parsePeaceTreatyLocalisation(war_obj, peace_obj), {
         title: `[Back] | Editing Peace Offer For **${war_obj.name}**:`,
         description: [
           `---`,

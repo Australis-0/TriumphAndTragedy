@@ -32,7 +32,7 @@ module.exports = {
         LOCAL: {
           war_name: war_obj.name,
           peace_treaty: JSON.parse(JSON.stringify(peace_obj)),
-          peace_treaty_string: parsePeaceTreatyString(war_obj, peace_obj)
+          peace_treaty_string: parsePeaceTreatyLocalisation(war_obj, peace_obj)
         },
         TO: war_obj[`${enemy_side}_war_leader`]
       });
@@ -48,7 +48,7 @@ module.exports = {
         LOCAL: {
           war_name: war_obj.name,
           peace_treaty: peace_obj,
-          peace_treaty_string: parsePeaceTreatyString(war_obj, peace_obj)
+          peace_treaty_string: parsePeaceTreatyLocalisation(war_obj, peace_obj)
         },
         TO: war_obj[`${enemy_side}_war_leader`]
       });
