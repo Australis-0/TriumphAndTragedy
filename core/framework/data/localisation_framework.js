@@ -119,9 +119,9 @@ module.exports = {
 
             var demand_limit = returnSafeNumber(wargoal_obj.demand_limit, 1);
 
-            //Get actual demand_limit from war_obj.wargoals
+            //Get actual demand_limit from war_obj.[friendly_side]_wargoals
             demand_limit = Math.ceil(
-              demand_limit*returnSafeNumber(war_obj.wargoals[wargoal_name])
+              demand_limit*returnSafeNumber(war_obj[`${friendly_side}_wargoals`][wargoal_name], 1)
             );
 
             //Push wargoal name and (wargoals demanded/wargoals limit) to string

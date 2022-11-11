@@ -125,8 +125,19 @@ module.exports = {
       war_string.push("");
 
       //Format attacker wargoal string
-      for (var i = 0; i < war_obj.wargoals.length; i++)
-        attackers_wargoal_string.push(`${(config.localisation[war_obj.wargoals[i]]) ? config.localisation[war_obj.wargoals[i]] : war_obj.wargoals[i]}`);
+      var attacker_wargoals = Object.keys(war_obj.attackers_wargoals);
+
+      for (var i = 0; i < attacker_wargoals.length; i++) {
+        var wargoal_obj = getWargoal(attacker_wargoals[i]);
+
+        var demand_limit = returnSafeNumber(wargoal_obj.demand_limit, 1);
+
+        demand_limit = Math.ceil(
+          demand_limit*returnSafeNumber(war_obj.attackers_wargoals[attacker_wargoals[i]], 1);
+        );
+
+        attackers_wargoal_string.push(`${(wargoal_obj.name) ? wargoal_obj.name : attacker_wargoals[i]} (__${parseNumber(demand_limit)}__)`);
+      }
 
       //Format attacker description
       attackers_string.push(`Participant Name | Military Casualties`);
@@ -141,8 +152,19 @@ module.exports = {
       }
 
       //Format defender wargoal string; this is put here for future flexibility
-      for (var i = 0; i < war_obj.wargoals.length; i++)
-        defenders_wargoal_string.push(`${(config.localisation[war_obj.wargoals[i]]) ? config.localisation[war_obj.wargoals[i]] : war_obj.wargoals[i]}`);
+      var defender_wargoals = Object.keys(war_obj.defenders_wargoals);
+
+      for (var i = 0; i < defender_wargoals.length; i++) {
+        var wargoal_obj = getWargoal(defender_wargoals[i]);
+
+        var demand_limit = returnSafeNumber(wargoal_obj.demand_limit, 1);
+
+        demand_limit = Math.ceil(
+          demand_limit*returnSafeNumber(war_obj.defenders_wargoals[defender_wargoals[i]], 1);
+        );
+
+        defenders_wargoal_string.push(`${(wargoal_obj.name) ? wargoal_obj.name : defender_wargoals[i]} (__${parseNumber(demand_limit)}__)`);
+      }
 
       //Format defender description
       defenders_string.push(`Participant Name | User | Military Casualties`);

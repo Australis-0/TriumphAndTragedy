@@ -47,6 +47,8 @@ module.exports = {
       enemy_side = "attackers";
     }
 
+    var wargoals = war_obj[`${friendly_side}_wargoals`];
+
     //Add all enemy countries to display
     for (var i = 0; i < war_obj[enemy_side].length; i++)
       enemy_countries.push(`**${main.users[war_obj[enemy_side][i]].name}**`);
@@ -56,10 +58,10 @@ module.exports = {
       friendly_countries.push(`**${main.users[war_obj[friendly_side][i]].name}**`);
 
     //Fetch a list of all available wargoals
-    for (var i = 0; i < war_obj.wargoals.length; i++)
-      wargoal_array.push(`${(war_obj.wargoals.length - 1 == i) ? "or ": ""}**${(config.localisation[war_obj.wargoals[i]]) ? config.localisation[war_obj.wargoals[i]] : war_obj.wargoals[i]}**`);
-    for (var i = 0; i < war_obj.wargoals.length; i++)
-      actual_wargoal_array.push(((config.localisation[war_obj.wargoals[i]]) ? config.localisation[war_obj.wargoals[i]] : war_obj.wargoals[i]).toLowerCase());
+    for (var i = 0; i < wargoals.length; i++)
+      wargoal_array.push(`${(wargoals.length - 1 == i) ? "or ": ""}**${(config.localisation[wargoals[i]]) ? config.localisation[wargoals[i]] : wargoals[i]}**`);
+    for (var i = 0; i < wargoals.length; i++)
+      actual_wargoal_array.push(((config.localisation[wargoals[i]]) ? config.localisation[wargoals[i]] : wargoals[i]).toLowerCase());
 
     //Initialise visual prompt
     visualPrompt(game_obj.alert_embed, user_id, {
@@ -84,9 +86,9 @@ module.exports = {
         var demand_limit = returnSafeNumber(wargoal_obj.demand_limit, 1);
         var wargoal_demanded = 0;
 
-        //Get actual demand_limit from war_obj.wargoals
+        //Get actual demand_limit from wargoals
         demand_limit = Math.ceil(
-          demand_limit*returnSafeNumber(war_obj.wargoals[wargoal_name]);
+          demand_limit*returnSafeNumber(wargoals[wargoal_name], 1);
         );
 
         for (var i = 0; i < peace_obj.wargoals.length; i++)
@@ -1757,12 +1759,20 @@ module.exports = {
 
               //Print feedback message
               printAlert(game_obj.id, `${config.icons.checkmark} You have successfully added the **${(wargoal_obj.name) ? wargoal_obj.name : wargoal_name}** wargoal to your current peace offer.`);
+
+              setTimeout(function(){
+                module.exports.modifyPeaceTreaty(user_id, peace_obj, true);
+              }, 3000);
             });
           } else {
             peace_obj.wargoals.push({ id: wargoal_name });
 
             //Automatically add wargoal to peace treaty without any additional arguments
             printAlert(game_obj.id, `${config.icons.checkmark} You have successfully added the **${(wargoal_obj.name) ? wargoal_obj.name : wargoal_name}** wargoal to your current peace offer.`);
+
+            setTimeout(function(){
+              module.exports.modifyPeaceTreaty(user_id, peace_obj, true);
+            }, 3000);
           }
         } else {
           //Print error
@@ -1831,6 +1841,8 @@ module.exports = {
     var game_obj = getGameObject(user_id);
     var war_obj = main.global.wars[peace_obj.war_id];
     var wargoal_array = [];
+    var wargoal_counter = {};
+    var wargoal_map = [];
 
     //Fetch a list of all enemies
     if (war_obj.attackers.includes(actual_id)) {
@@ -1843,71 +1855,59 @@ module.exports = {
     }
 
     //Fetch a list of available wargoals
-    for (var i = 0; i < war_obj.wargoals.length; i++)
-      wargoal_array.push(`${(war_obj.wargoals.length - 1 == i) ? "or ": ""}**${(config.localisation[war_obj.wargoals[i]]) ? config.localisation[war_obj.wargoals[i]] : war_obj.wargoals[i]}**`);
-    for (var i = 0; i < war_obj.wargoals.length; i++)
-      actual_wargoal_array.push(((config.localisation[war_obj.wargoals[i]]) ? config.localisation[war_obj.wargoals[i]] : war_obj.wargoals[i]).toLowerCase());
+    for (var i = 0; i < peace_obj.wargoals.length; i++) {
+      var wargoal_id = peace_obj.wargoals[i].id;
+      var wargoal_obj = getWargoal(peace_obj.wargoals[i].id);
+
+      //Set wargoal_counter
+      wargoal_counter[wargoal_id] = (wargoal_counter[wargoal_id]) ?
+        wargoal_counter[wargoal_id] + 1 :
+        1;
+
+      wargoal_map.push([`${(wargoal_obj.name) ? wargoal_obj.name : wargoal_id} #${wargoal_counter[wargoal_id]}`, i];
+
+      //Push to wargoal_array
+      wargoal_array.push(wargoal_map[wargoal_map.length - 1][0]);
+    }
 
     //Send visual_prompt
     visualPrompt(game_obj.alert_embed, user_id, {
       title: `Remove Wargoal From Peace Treaty:`,
       prompts: [
-        [`Which type of wargoal would you like to remove from this peace treaty?\n\nPlease type either ${wargoal_array.join(", ")}.\n\nTo go back to viewing this peace treaty, type **[Back]**.`, "string"]
+        [`Which type of wargoal would you like to remove from this peace treaty? Added wargoals are sorted by recency.\n\n- ${wargoal_array.join("\n- ")}.\n\nTo go back to viewing this peace treaty, type **[Back]**.`, "string"]
       ],
       do_not_cancel: true
     },
     function (arg) {
       var current_wargoal = arg[0].trim().toLowerCase();
+      var wargoal_exists = [false, ""];
 
-      if (actual_wargoal_array.includes(current_wargoal))
-        switch (current_wargoal) {
-          //[WIP] - Add wargoal handler so that users can't go around removing empty wargoals
-          case "status_quo":
-            if (peace_obj.peace_demands.status_quo) {
-              delete peace_obj.peace_demands.status_quo;
+      //Check to see if wargoal_exists
+      //Soft match
+      for (var i = 0; i < wargoal_map.length; i++)
+        if (wargoal_map[i][0].toLowerCase().indexOf(current_wargoal) != -1)
+          wargoal_exists = [true, wargoal_map[i][1]];
 
-              printAlert(game_obj.id, `${config.icons.cb} You have successfully removed your demand for the enemy to pay **15%** in war reparations to cocombatant countries.`);
+      //Hard match
+      for (var i = 0; i < wargoal_map.length; i++)
+        if (wargoal_map[i][1].toLowerCase() == current_wargoal)
+          wargoal_exists = [true, wargoal_map[i][1]];
 
-              setTimeout(function(){
-                module.exports.initialiseRemoveWargoal(user_id, peace_obj);
-              }, 1000);
-            } else {
-              has_error = [true, `You aren't currently demanding any war reparations from the enemy!`];
-            }
+      if (wargoal_exists[0]) {
+        var wargoal_id = peace_obj.wargoals[wargoal_exists[1]].id;
+        var wargoal_obj = getWargoal(wargoal_id);
 
-            break;
-          case "install government":
-            module.exports.initialiseInstallGovernment(user_id, peace_obj);
+        //Print user feedback
+        printAlert(game_obj.id, `You have removed a **${(wargoal_obj.name) ? wargoal_obj.name : wargoal_id}** wargoal from this peace offer.`);
 
-            break;
-          case "cut down to size":
-            module.exports.initialiseCutDownToSize(user_id, peace_obj);
+        //Simply remove the wargoal index from peace_obj.wargoals
+        peace_obj.wargoals.splice(wargoal_exists[1], 1);
 
-            break;
-          case "liberation":
-            if (peace_obj.peace_demands.liberation) {
-              var vassal_obj = getVassal(actual_id);
-
-              delete peace_obj.peace_demands.liberation;
-
-              printAlert(game_obj.id, `${config.icons.cb} You are no longer demanding your liberation from your overlord, **${main.users[vassal_obj.overlord].name}**.`);
-
-              setTimeout(function(){
-                module.exports.initialiseRemoveWargoal(user_id, peace_obj);
-              }, 1000);
-            } else {
-              has_error = [true, `You aren't currently demanding your liberation from the enemy!`];
-            }
-          case "retake cores":
-            module.exports.initialiseRemoveRetakeCores(user_id, peace_obj);
-
-            break;
-          case "annexation":
-            module.exports.initialiseRemoveAnnexation(user_id, peace_obj);
-
-            break;
-        }
-      else
+        //Go back to main peace treaty UI
+        setTimeout(function(){
+          module.exports.modifyPeaceTreaty(user_id, peace_obj, true);
+        }, 3000);
+      } else {
         switch (current_wargoal) {
           case "back":
             module.exports.initialisePeaceOfferScreen(user_id, peace_obj);
@@ -1920,6 +1920,7 @@ module.exports = {
 
             break;
         }
+      }
 
       //Error handler
       if (has_error[0]) {

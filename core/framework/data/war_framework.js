@@ -284,8 +284,9 @@ module.exports = {
       starting_date: JSON.parse(JSON.stringify(main.date)),
       starting_round: JSON.parse(JSON.stringify(main.round_count)),
 
+      attackers_wargoals: [],
+      defenders_wargoals: [],
       cb: options.type,
-      wargoals: [],
 
       attackers_war_leader: attacker_id,
       defenders_war_leader: defender_id,
@@ -321,8 +322,10 @@ module.exports = {
     }
 
     //Add wargoals
-    if (cb_obj.peace_demands)
-      war_obj.wargoals = JSON.parse(JSON.stringify(cb_obj.peace_demands));
+    if (cb_obj.peace_demands) {
+      war_obj.attackers_wargoals = JSON.parse(JSON.stringify(cb_obj.peace_demands));
+      war_obj.defenders_wargoals = JSON.parse(JSON.stringify(cb_obj.peace_demands));
+    }
 
     //Set war_obj
     main.global.wars[war_id] = war_obj;
