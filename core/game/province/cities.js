@@ -289,7 +289,7 @@ module.exports = {
     if (city_obj) {
       if (usr.modifiers.political_capital >= config.defines.politics.move_capital_cost || force_move) {
         var culture_obj = main.global.cultures[city_obj.culture];
-
+        
         if (
           culture_obj.primary_culture.includes(actual_id) ||
           culture_obj.accepted_cultures.includes(actual_id) ||

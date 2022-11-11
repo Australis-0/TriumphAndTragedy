@@ -130,6 +130,7 @@ config.alerts.diplomacy = {
     description: "We have received an official diplomatic delegation from {FROM.name}. They are requesting our mutual aid and support in military and economic affairs, and a formal agreement regarding an alliance. How should our government respond?",
 
     btn_accept_alliance: {
+      ai_chance: 80,
       title: "It is in our best interest to conclude an alliance.",
       description: [
         `We will sign an alliance with **{FROM.name}**.`,
@@ -148,6 +149,7 @@ config.alerts.diplomacy = {
       }
     },
     btn_decline_alliance: {
+      ai_chance: 20,
       title: "Respectfully decline the offer for now.",
       effect: function (options) {
         var FROM_USER = main.users[options.FROM];
@@ -171,6 +173,7 @@ config.alerts.diplomacy = {
     description: "{FROM.name} is offering us peace in exchange for the terms listed below for the **{LOCAL.war_name}**. We have the option to either accept or deny this.\n\n---\n\n{LOCAL.peace_treaty_string}",
 
     btn_accept_conditional_peace: {
+      ai_chance: 0,
       title: "We accept this offer.",
       description: [
         `The war will end immediately, and we will accept **{FROM.name}**'s peace offer.`
@@ -180,6 +183,7 @@ config.alerts.diplomacy = {
       }
     },
     btn_decline_conditional_peace: {
+      ai_chance: 100,
       title: "And they call it ''peace''?",
       description: [
         "The war rages on .."
