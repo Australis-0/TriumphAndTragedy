@@ -143,10 +143,25 @@ module.exports = {
   nextGlobalTurn: function () {
     //Declare local instance variables
     var all_armies = getAllArmies();
+    var all_cooldowns = Object.keys(main.global.cooldowns);
     var all_market_goods = Object.keys(main.market);
     var all_provinces = Object.keys(main.provinces);
     var all_users = Object.keys(main.users);
     var all_wars = Object.keys(main.global.wars);
+
+    //Cooldowns and modifiers
+    {
+      for (var i = 0; i < all_cooldowns.length; i++) {
+        var local_cooldown = main.global.cooldowns[all_cooldowns[i]];
+
+        //Decrement local_cooldown.duration
+        local_cooldown.duration--;
+
+        if (returnSafeNumber(local_cooldown.duration) <= 0)
+          //Delete local_cooldown
+          delete main.global.cooldowns[all_cooldowns[i]];
+      }
+    }
 
     //Optimisation processing
     {
@@ -311,6 +326,7 @@ module.exports = {
     var all_armies = (usr.armies) ? Object.keys(usr.armies) : [];
     var all_casus_belli = Object.keys(config.casus_belli);
     var all_cities = getCities(actual_id);
+    var all_cooldowns = Object.keys(usr.cooldowns);
     var all_enemies = getEnemies(actual_id);
     var all_events = lookup.all_events;
     var all_expeditions = Object.keys(usr.expeditions);
@@ -344,6 +360,20 @@ module.exports = {
       //City modifiers/trackers
       usr.city_cap = getCitiesCap(actual_id);
       usr.total_cities += getCities(actual_id, { include_hostile_occupations: true }).length;
+
+      //Cooldowns
+      {
+        for (var i = 0; i < all_cooldowns.length; i++) {
+          var local_cooldown = usr.cooldowns[all_cooldowns[i]];
+
+          //Decrement cooldown
+          local_cooldown.duration--;
+
+          //Delete if invalid
+          if (returnSafeNumber(local_cooldown.duration) <= 0)
+            delete usr.cooldowns[all_cooldowns[i]];
+        }
+      }
 
       //Combat modifiers
       {

@@ -17,7 +17,7 @@ module.exports = {
             },
             cut_down_to_size: {
               user_id: {
-                air_force_removal: 1, - All <type>_removal fields are set to the same value if the demilitarisation of individual army types are not specified by the user
+                air_removal: 1, - All <type>_removal fields are set to the same value if the demilitarisation of individual army types are not specified by the user
                 army_removal: 0.50,
                 navy_removal: 0.10,
                 turns: -
@@ -211,10 +211,64 @@ module.exports = {
 
               break;
             case "cut_down_to_size":
+              var local_clauses = Object.keys(local_value.cut_down_to_size);
+
+              for (var y = 0; y < local_clauses.length; y++) {
+                var local_target = main.users[local_clauses[y]];
+                var target_obj = local_value.cut_down_to_size[local_clauses[y]];
+
+                var target_keys = Object.keys(target_obj);
+
+                //Loop through all cut_down_to_size keys
+                for (var z = 0; z < target_keys.length; z++)
+                  if (target_keys[z].includes("_removal")) {
+                    var army_type = target_keys[z].replace("_removal", "");
+                    var local_value = target_obj[target_keys[z]];
+
+                    dissolveUnits(local_clauses[y], {
+                      type: army_type,
+                      percentage_amount: local_value
+                    });
+                  } else if (target_keys[z] == "turns") {
+                    var current_duration = 0;
+
+                    //Check for current_duration, add to it if it already exists
+                    if (target_obj.cooldowns.recruitment_disabled)
+                      current_duration = returnSafeNumber(target_obj.cooldowns.recruitment_disabled.duration);
+
+                    target_obj.cooldowns.recruitment_disabled = {
+                      duration: current_duration + local_value
+                    };
+                  }
+              }
+
               break;
             case "demilitarisation":
+              var demilitarised_provinces = local_value.demilitarisation.demilitarised_provinces;
+
+              //Check for demilitarised provinces
+              if (demilitarised_provinces)
+                for (var y = 0; y < demilitarised_provinces.length; y++) {
+                  var local_province = demilitarised_provinces[y];
+
+                  //Set province as demiltiarised
+                  local_province[y].demilitarised = true;
+                }
+
+              //Push to main.global.cooldowns
+              if (local_value.demilitarisation.turns) {
+                var cooldown_id = generateGlobalCooldownID();
+
+                main.global.cooldowns[cooldown_id] = {
+                  demilitarised_provinces: demilitarised_provinces,
+
+                  duration: local_value.demilitarisation.turns
+                };
+              }
+
               break;
-            case "free_oppressed_people":
+            case "free_oppressed_people": //[WIP] - Needs to create new user object/country
+
               break;
             case "install_government":
               break;
@@ -222,7 +276,8 @@ module.exports = {
               break;
             case "puppet":
               break;
-            case "release_client_state":
+            case "release_client_state": //[WIP] - Needs to create new user object/country
+              
               break;
             case "retake_cores":
               break;

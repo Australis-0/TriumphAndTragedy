@@ -13,6 +13,7 @@ module.exports = {
     //Declare objects
     if (!main.global) main.global = {};
       if (!main.global.archived_wars) main.global.archived_wars = {};
+      if (!main.global.cooldowns) main.global.cooldowns = {}; //Used for timed effects
       if (!main.global.cultures) main.global.cultures = {};
       if (!main.global.user_map) main.global.user_map = {};
       if (!main.global.wars) main.global.wars = {};

@@ -143,6 +143,25 @@ module.exports = {
     }
   },
 
+  generateGlobalCooldownID: function (arg0_formatter) {
+    //Convert from parameters
+    var formatter = (arg0_formatter) ? `${arg0_formatter}-` : "";
+
+    //Declare local instance variables
+    var local_id;
+
+    //While loop to find ID, just in-case of conflicting random ID's
+    while (true) {
+      local_id = generateRandomID();
+
+      //Return and break once a true ID is found
+      if (!main.global.cooldowns[`${formatter}${local_id}`]) {
+        return local_id;
+        break;
+      }
+    }
+  },
+
   generateTemporaryModifierID: function (arg0_user) {
     //Convert from parameters
     var user_id = arg0_user;
@@ -155,10 +174,32 @@ module.exports = {
 
     //While loop to find ID, just in-case of conflicting random ID's:
     while (true) {
-      var local_id = generateRandomID();
+      local_id = generateRandomID();
 
       //Return and break once a true ID is found
       if (!usr.temporary_modifiers[local_id]) {
+        return local_id;
+        break;
+      }
+    }
+  },
+
+  generateUserCooldownID: function (arg0_user, arg1_formatter) {
+    //Convert from parameters
+    var user_id = arg0_user;
+    var formatter = (arg1_formatter) ? `${arg1_formatter}-` : "";
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var local_id;
+    var usr = main.users[actual_id];
+
+    //While loop to find ID, just in-case of conflicting random ID's
+    while (true) {
+      local_id = generateRandomID();
+
+      //Return and break once a true ID is found
+      if (!usr.cooldowns[`${formatter}${local_id}`]) {
         return local_id;
         break;
       }
