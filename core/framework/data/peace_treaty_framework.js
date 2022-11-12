@@ -257,7 +257,7 @@ module.exports = {
 
               //Push to main.global.cooldowns
               if (local_value.demilitarisation.turns) {
-                var cooldown_id = generateGlobalCooldownID();
+                var cooldown_id = generateGlobalCooldownID("demilitarisation");
 
                 main.global.cooldowns[cooldown_id] = {
                   demilitarised_provinces: demilitarised_provinces,
@@ -394,11 +394,41 @@ module.exports = {
                     transferProvince(local_clauses[y], { target: local_clause[z], province_id: local_provinces[a] });
                 }
               }
-              
+
               break;
             case "revoke_reparations":
+              for (var y = 0; y < local_value.revoke_reparations.length; y++) {
+                var local_recipient = main.users[local_value.revoke_reparations[y]];
+                var recipient_cooldowns = Object.keys(local_recipient.cooldowns);
+
+                //Remove reparations cooldown from this user
+                for (var z = 0; z < recipient_cooldowns.length; z++)
+                  if (
+                    recipient_cooldowns.includes("steer_trade") ||
+                    recipient_cooldowns.includes("syphon_actions")
+                    recipient_cooldowns.includes("war_reparations")
+                  )
+                    delete local_recipient.cooldowns[recipient_cooldowns[z]];
+              }
+
               break;
-            case "seize_resources":
+            case "seize_resources": //[WIP]
+              for (var y = 0; y < local_value.seize_resources.length; y++) {
+                var goods_obj = {};
+                var local_clause = local_value.seize_resources[y];
+                var local_clauses = Object.keys(local_clause);
+                var local_recipient = main.users[local_clause.owner];
+                var local_target = main.users[local_clause.debtor];
+
+                for (var z = 0; z < local_clauses.length; z++) {
+                  var target_obj = lcoal_clause[local_clauses[z]];
+
+                  //Add both custom and default keys to goods_obj
+                }
+
+                //Add goods_obj from local_target to local_recipient's inventory
+              }
+
               break;
             case "steer_trade":
               break;
