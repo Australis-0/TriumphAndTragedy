@@ -13,10 +13,15 @@ module.exports = {
 
     //Check if a war is currently active
     if (war_obj) {
-      //Create a new peace treaty
-      createPeaceTreaty(actual_id, war_obj.name);
+      //Check if user is actually involved
+      if (war_obj.attackers.includes(actual_id) || war_obj.defenders.includes(actual_id)) {
+        //Create a new peace treaty
+        createPeaceTreaty(actual_id, war_obj.name);
 
-      printAlert(game_obj.id, `${config.icons.checkmark} You have successfully cleared your demands and created a new peace offer for the **${war_obj.name}**.\nIn order to view it, please type **[View Peace Offer]**.`);
+        printAlert(game_obj.id, `${config.icons.checkmark} You have successfully cleared your demands and created a new peace offer for the **${war_obj.name}**.\nIn order to view it, please type **[View Peace Offer]**.`);
+      } else {
+        printError(game_obj.id, `You must be involved in the **${war_obj.name}** for you to be able to even think about proposing a peace deal!`);
+      }
     } else {
       printError(game_obj.id, `You can't sign a peace treaty for a war that is no longer currently ongoing!`);
     }
