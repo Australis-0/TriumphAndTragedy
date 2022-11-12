@@ -1,4 +1,29 @@
 module.exports = {
+  /*
+    dissolveUnits() - Dissolves a % amount of all units a user holds.
+    options: {
+      type: ["army", ..], //A list of army types to target. 'all' targets all armies
+      percentage_amount: 0.15, //The percentage amount to remove
+      unit_categories: ["aeroplanes", ..], //Optional. Defaults to 'all'
+      units: ["arquebusiers", ..] //Optional. Defaults to 'all'
+    }
+  */
+  dissolveUnits: function (arg0_user, arg1_options) { //[WIP] - Flesh out function
+    //Convert from parameters
+    var user_id = arg0_user;
+    var options = (arg1_options) ? arg1_options : {};
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var army_types = [];
+    var disband_units = [];
+    var usr = main.users[actual_id];
+
+    //Fetch army types to disband units in
+
+    //Fetch list of units to disband
+  },
+
   disbandUnits: function (arg0_user, arg1_amount, arg2_unit_name) {
     //Convert from parameters
     var user_id = arg0_user;
