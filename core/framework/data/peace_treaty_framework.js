@@ -268,6 +268,21 @@ module.exports = {
 
               break;
             case "free_oppressed_people": //[WIP] - Needs to create new user object/country
+              var local_clauses = Object.keys(local_value.free_oppressed_people);
+
+              for (var y = 0; y < local_clauses.length; y++) {
+                var local_target = main.users[local_clauses[y]];
+                var target_obj = local_value.free_oppressed_people[local_clauses[y]];
+
+                var local_keys = Object.keys(target_obj);
+
+                for (var z = 0; z < local_keys.length; z++) {
+                  //Initialise country, set local_recipient
+                  
+
+                  //var local_recipient = main.users[local_keys[z]];
+                }
+              }
 
               break;
             case "install_government":
@@ -277,7 +292,7 @@ module.exports = {
             case "puppet":
               break;
             case "release_client_state": //[WIP] - Needs to create new user object/country
-              
+
               break;
             case "retake_cores":
               break;
