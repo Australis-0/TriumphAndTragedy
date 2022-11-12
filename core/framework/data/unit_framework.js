@@ -8,7 +8,7 @@ module.exports = {
       units: ["arquebusiers", ..] //Optional. Defaults to 'all'
     }
   */
-  dissolveUnits: function (arg0_user, arg1_options) { //[WIP] - Flesh out function
+  dissolveUnits: function (arg0_user, arg1_options) {
     //Convert from parameters
     var user_id = arg0_user;
     var options = (arg1_options) ? arg1_options : {};
@@ -19,6 +19,7 @@ module.exports = {
     var all_units = true;
     var army_types = [];
     var disband_units = [];
+    var relieve_units = {};
     var usr = main.users[actual_id];
 
     //Fetch army types to disband units in
@@ -60,8 +61,33 @@ module.exports = {
     try {
       var all_armies = Object.keys(usr.armies);
 
-      //for (var i = 0; i < )
+      for (var i = 0; i < all_armies.length; i++)
+        if (army_types.includes(usr.armies[all_armies[i]].type)) {
+          var local_army = usr.armies[all_armies[i]];
+          var local_units = Object.keys(local_army.units);
+
+          for (var x = 0; x < local_units.length; x++)
+            if (disband_units.includes(local_units[x])) {
+              var local_value = local_army.units[local_units[x]];
+
+              //Amount to relieve
+              var local_amount = returnSafeNumber(Math.ceil(local_value*(1 - options.percentage_amount)));
+
+              relieveUnits(user_id, local_amount, local_units[x], local_army);
+
+              //Add to relieve_units
+              relieve_units[local_units[x]] = (relieve_units[local_units[x]]) ?
+                relieve_units[local_units[x]] + local_amount :
+                local_amount;
+            }
+        }
     } catch {}
+
+    //Disband everything in relieve_units
+    var all_relieved_units = Object.keys(relieve_units);
+
+    for (var i = 0; i < all_relieved_units.length; i++)
+      disbandUnits(user_id, relieve_units[all_relieved_units[i]], all_relieved_units[i]);
   },
 
   disbandUnits: function (arg0_user, arg1_amount, arg2_unit_name) {
