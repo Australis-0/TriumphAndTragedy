@@ -232,6 +232,10 @@ module.exports = {
     var all_unit_categories = Object.keys(config.units);
     var unit_exists = [false, ""];
 
+    //Lookup optimisation guard clause
+    if (lookup.all_units[unit_name])
+      return (!options.return_key) ? lookup.all_units[unit_name] : unit_name;
+
     //Unit key, soft search
     for (var i = 0; i < all_unit_categories.length; i++) {
       var local_unit_category = config.units[all_unit_categories[i]];
