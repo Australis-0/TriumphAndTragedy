@@ -373,6 +373,28 @@ module.exports = {
 
               break;
             case "retake_cores":
+              var local_clauses = Object.keys(local_value.retake_cores);
+
+              for (var y = 0; y < local_clauses.length; y++) {
+                var local_clause = local_value.retake_cores[local_clauses[y]];
+                var local_target = main.users[local_clauses[y]];
+
+                for (var z = 0; z < local_clause.length; z++) {
+                  var all_target_provinces = getProvinces(local_clauses[y], { include_hostile_occupations: true });
+                  var local_provinces = [];
+                  var local_recipient = main.users[local_clause[z]];
+
+                  //Fetch local_provinces with a .culture matching the primary culture of local_recipient
+                  for (var a = 0; a < all_target_provinces.length; a++)
+                    if (all_target_provinces[a].culture == local_recipient.pops.primary_culture)
+                      local_provinces.push(all_target_provinces[a]);
+
+                  //Transfer provinces
+                  for (var a = 0; a < local_provinces.length; a++)
+                    transferProvince(local_clauses[y], { target: local_clause[z], province_id: local_provinces[a] });
+                }
+              }
+              
               break;
             case "revoke_reparations":
               break;
