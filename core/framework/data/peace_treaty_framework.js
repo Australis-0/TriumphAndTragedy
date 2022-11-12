@@ -267,7 +267,7 @@ module.exports = {
               }
 
               break;
-            case "free_oppressed_people": //[WIP] - Needs to create new user object/country
+            case "free_oppressed_people":
               var local_clauses = Object.keys(local_value.free_oppressed_people);
 
               for (var y = 0; y < local_clauses.length; y++) {
@@ -276,22 +276,100 @@ module.exports = {
 
                 var local_keys = Object.keys(target_obj);
 
-                for (var z = 0; z < local_keys.length; z++) {
-                  //Initialise country, set local_recipient
-                  
+                for (var z = 0; z < local_keys.length; z++)
+                  try {
+                    //Initialise country, set local_recipient
+                    var culture_obj = main.global.cultures[local_keys[z]];
+                    var local_culture = target_obj[local_keys[z]];
+                    var recipient_state_id = module.exports.generateClientStateID(local_clauses[y]);
 
-                  //var local_recipient = main.users[local_keys[z]];
-                }
+                    var local_recipient = initCountry(recipient_state_id, culture_obj.name);
+
+                    //Transfer provinces to recipient
+                    for (var a = 0; a < local_culture.provinces.length; a++)
+                      transferProvince(local_clauses[y], { target: recipient_state_id, province_id: local_culture.provinces[a] });
+                  } catch {}
               }
 
               break;
             case "install_government":
+              var local_clauses = Object.keys(local_value.install_government);
+
+              for (var y = 0; y < local_clauses.length; y++) {
+                var local_target = main.users[local_clauses[y]];
+
+                //Change government type, but don't set party popularity
+                local_target.government = local_value.install_government[local_clauses[y]];
+              }
+
               break;
             case "liberation":
+              for (var y = 0; y < local_value.liberation.length; y++)
+                dissolveVassal(local_value.liberation[y]);
+
               break;
             case "puppet":
+              var local_clauses = Object.keys(local_value.puppet);
+
+              for (var y = 0; y < local_clauses.length; y++) {
+                var local_clause = local_value.puppet[local_clauses[y]];
+
+                //Set target as vassal
+                createVassal(local_clause, local_clauses[y]);
+              }
+
               break;
-            case "release_client_state": //[WIP] - Needs to create new user object/country
+            case "release_client_state":
+              var local_clauses = Object.keys(local_value.release_client_state);
+
+              for (var y = 0; y < local_clauses.length; y++) {
+                var local_clause = local_value.release_client_state[local_clauses[y]];
+                var local_recipient = initCountry(local_clauses[y], local_clause.name);
+                var local_user = main.users[local_clauses[y]];
+
+                //Cede provinces
+                for (var z = 0; z < local_clause.provinces.length; z++) {
+                  var local_province = main.provinces[local_clause.provinces[z]];
+
+                  //Transfer local_province to local_clauses[y]
+                  transferProvince(local_province.owner, { target: local_clauses[y], province_id: local_clause.provinces[z] });
+                }
+
+                //Edit culture
+                try {
+                  var culture_obj;
+
+                  if (local_clause.capital_id) {
+                    var capital_obj = main.provinces[local_clause.capital_id];
+
+                    if (capital_obj.culture)
+                      culture_obj = main.global.cultures[capital_obj.culture];
+                  } else {
+                    var random_province = main.provinces[randomElement(local_clause.provinces[z])];
+
+                    culture_obj = main.global.cultures[random_province.culture];
+                  }
+
+                  //Add as primary and accepted culture
+                  culture_obj.primary_culture.push(local_clauses[y]);
+
+                  local_user.pops.accepted_culture = [culture_obj.id];
+                  local_user.pops.primary_culture = culture_obj.id;
+                } catch (e) {
+                  console.log(e);
+                }
+
+                //Edit client state fields
+                if (local_clause.capital_id)
+                  moveCapital(local_recipient, local_clause.capital_id, true, true);
+                if (local_clause.colour)
+                  setColour(local_clauses[y], local_clause.colour[0], local_clause.colour[1], local_clause.colour[2], true, true);
+                if (local_clause.flag)
+                  setFlag(local_clauses[y], local_clause.flag, true, true);
+
+                //Add as vassal
+                createVassal(local_clause.overlord, { target: local_clauses[y] });
+              }
 
               break;
             case "retake_cores":
