@@ -83,11 +83,20 @@ module.exports = {
         }
     } catch {}
 
-    //Disband everything in relieve_units
+    //Disband everything in relieve_units; disband units in reserve
     var all_relieved_units = Object.keys(relieve_units);
+    var all_reserve_units = Object.keys(usr.reserves);
 
     for (var i = 0; i < all_relieved_units.length; i++)
-      disbandUnits(user_id, relieve_units[all_relieved_units[i]], all_relieved_units[i]);
+      module.exports.disbandUnits(user_id, relieve_units[all_relieved_units[i]], all_relieved_units[i]);
+    for (var i = 0; i < all_reserve_units.length; i++) {
+      var local_value = usr.reserves[all_reserve_units[i]];
+
+      //Amount to disband
+      var local_amount = returnSafeNumber(Math.ceil(local_value*(1 - options.percentage_amount)));
+
+      module.exports.disbandUnits(user_id, local_amount, all_reserve_units[i]);
+    }
   },
 
   disbandUnits: function (arg0_user, arg1_amount, arg2_unit_name) {
