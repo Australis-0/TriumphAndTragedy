@@ -157,6 +157,36 @@ module.exports = {
         //Decrement local_cooldown.duration
         local_cooldown.duration--;
 
+        //Demilitarisation handler
+        if (all_cooldowns[i].includes("demilitarisation")) {
+          var user_map = [];
+          var user_war_map = [];
+
+          //Initialise unique user map
+          for (var x = 0; x < local_cooldown.demilitarised_provinces.length; x++) {
+            var local_province = main.provinces[local_cooldown.demilitarised_provinces[x]];
+
+            if (!user_map.includes(local_province.controller))
+              user_map.push(local_province.controller);
+          }
+
+          //Check if controllers are at war
+          for (var x = 0; x < user_map.length; x++)
+            //Demilitarise everything if they are
+            if (atWar(user_map[x])) {
+              var local_provinces = getProvinces(user_map[x], { include_hostile_occupations: true, include_occupations: true });
+
+              for (var y = 0; y < local_provinces.length; y++)
+                if (local_provinces[y].demilitarised) {
+                  for (var z = 0; z < local_cooldown.demilitarised_provinces.length; z++)
+                    if (local_cooldown.demilitarised_provinces[z] == local_provinces[y].id)
+                      local_cooldown.demilitarised_provinces.splice(z, 1);
+
+                  delete local_provinces[y].demilitarised;
+                }
+            }
+        }
+
         if (returnSafeNumber(local_cooldown.duration) <= 0) {
           //Demilitarisation scope
           if (all_cooldowns[i].includes("demilitarisation"))

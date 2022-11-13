@@ -82,6 +82,9 @@ module.exports = {
         "style", local_element.getAttribute("style")
           .replace(/stroke:#[0-9a-fA-F]+/gm, `stroke:${new_colour}`)
       );
+
+      if (main.provinces[province_id])
+        main.provinces[province_id][`${file}_stroke`] = new_colour;
     } catch {}
   }
 };

@@ -128,7 +128,7 @@ module.exports = {
     delete war_obj.peace_treaties[actual_id];
   },
 
-  parsePeaceTreaty: function (arg0_war_name, arg1_peace_treaty_object) { //[WIP] - Refactor to new peace treaty data structure
+  parsePeaceTreaty: function (arg0_war_name, arg1_peace_treaty_object) { //[WIP] - Add infamy scaling
     //Convert from parameters
     var war_name = arg0_war_name.trim().toLowerCase();
     var peace_obj = arg1_peace_treaty_object;

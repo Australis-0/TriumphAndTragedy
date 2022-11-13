@@ -357,6 +357,15 @@ module.exports = {
                   Math.min(local_user.colour[1] + 20, 255),
                   Math.min(local_user.colour[2] + 20, 255)
                 ]);
+
+              //Demilitarised shader
+              var outline_colour = [0, 0, 0];
+
+              if (local_province.demilitarised)
+                outline_colour = [240, 60, 60];
+
+              if (local_province[`${map_name}_stroke`] != RGBToHex(outline_colour))
+                setProvinceOutline(map_name, all_provinces[i], outline_colour);
             }
           } catch {}
         }

@@ -15,6 +15,7 @@ module.exports = {
     var actual_id = main.global.user_map[user_id];
     var all_provinces = Object.keys(main.provinces);
     var army_size = returnSafeNumber(options.army_size);
+    var at_war = atWar(actual_id);
     var local_graph = global.bn_graph();
 
     for (var i = 0; i < all_provinces.length; i++) {
@@ -24,6 +25,7 @@ module.exports = {
       //Check if province is uncolonised
       valid_province = (local_province.controller) ? true : valid_province;
 
+      //Check if province is valid
       if (local_province.controller) {
         //Check for alliances, military access, vassalage, or being at war
         if (usr.options.avoid_territorial_violation != "never") {
@@ -45,6 +47,10 @@ module.exports = {
         if (options.avoid_attrition != "never")
           if (getTroopsInProvince(all_provinces[i]) + army_size > local_supply)
             valid_province = false;
+          
+        //Check for demilitarisation
+        if (local_province.demilitarised && !at_war)
+          valid_province = false;
 
         if (valid_province)
           for (var x = 0; x < local_province.adjacencies.length; x++)
