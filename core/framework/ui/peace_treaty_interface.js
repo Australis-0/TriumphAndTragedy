@@ -88,7 +88,7 @@ module.exports = {
 
         //Get actual demand_limit from wargoals
         demand_limit = Math.ceil(
-          demand_limit*returnSafeNumber(wargoals[wargoal_name], 1);
+          demand_limit*returnSafeNumber(wargoals[wargoal_name], 1)
         );
 
         for (var i = 0; i < peace_obj.wargoals.length; i++)
@@ -1864,7 +1864,7 @@ module.exports = {
         wargoal_counter[wargoal_id] + 1 :
         1;
 
-      wargoal_map.push([`${(wargoal_obj.name) ? wargoal_obj.name : wargoal_id} #${wargoal_counter[wargoal_id]}`, i];
+      wargoal_map.push([`${(wargoal_obj.name) ? wargoal_obj.name : wargoal_id} #${wargoal_counter[wargoal_id]}`, i]);
 
       //Push to wargoal_array
       wargoal_array.push(wargoal_map[wargoal_map.length - 1][0]);

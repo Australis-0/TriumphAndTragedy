@@ -134,7 +134,7 @@ module.exports = {
         var demand_limit = returnSafeNumber(wargoal_obj.demand_limit, 1);
 
         demand_limit = Math.ceil(
-          demand_limit*returnSafeNumber(war_obj.attackers_wargoals[attacker_wargoals[i]], 1);
+          demand_limit*returnSafeNumber(war_obj.attackers_wargoals[attacker_wargoals[i]], 1)
         );
 
         attackers_wargoal_string.push(`${(wargoal_obj.name) ? wargoal_obj.name : attacker_wargoals[i]} (__${parseNumber(demand_limit)}__)`);
@@ -161,7 +161,7 @@ module.exports = {
         var demand_limit = returnSafeNumber(wargoal_obj.demand_limit, 1);
 
         demand_limit = Math.ceil(
-          demand_limit*returnSafeNumber(war_obj.defenders_wargoals[defender_wargoals[i]], 1);
+          demand_limit*returnSafeNumber(war_obj.defenders_wargoals[defender_wargoals[i]], 1)
         );
 
         defenders_wargoal_string.push(`${(wargoal_obj.name) ? wargoal_obj.name : defender_wargoals[i]} (__${parseNumber(demand_limit)}__)`);

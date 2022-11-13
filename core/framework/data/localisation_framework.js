@@ -125,7 +125,7 @@ module.exports = {
             );
 
             //Push wargoal name and (wargoals demanded/wargoals limit) to string
-            peace_string.push(`• __${(wargoal_obj.name) ? wargoal_obj.name : }__:`);
+            peace_string.push(`• __${(wargoal_obj.name) ? wargoal_obj.name : wargoal_id}__:`);
             peace_string.push("");
 
             for (var y = 0; y < all_effects.length; y++) {
@@ -325,11 +325,10 @@ module.exports = {
                   for (var z = 0; z < local_value.length; z++) {
                     //Push formatted string
                     (local_value[z].amount && local_value[z].percentage_amount) ?
-                      peace_string.push(`- **${main.users[local_value[z].owner].name}** will syphon either **${parseNumber(local_value[z].amount)}** or **${printPercentage(local_value[z].percentage_amount)}** of  **${main.users[local_value[z].debtor].name}'s actions each turn, whichever one is higher.` :
+                      peace_string.push(`- **${main.users[local_value[z].owner].name}** will syphon either **${parseNumber(local_value[z].amount)}** or **${printPercentage(local_value[z].percentage_amount)}** of  **${main.users[local_value[z].debtor].name}'s actions each turn, whichever one is higher.`) :
                       (local_value[z].amount) ?
-                        peace_string.push(`**${main.users[local_value[z].owner].name} will syphon **${parseNumber(local_value[z].amount)}** action(s) from **${main.users[local_value[z].debtor].name} each turn.`) :
-                        peace_string.push(`**${main.users[local_value[z].owner].name} will syphon **${printPercentage(local_value[z].percentage_amount)}** of **${main.users[local_value[z].debtor].name}**'s actions each turn.`)
-                    : "";
+                        peace_string.push(`**${main.users[local_value[z].owner].name} will syphon **${parseNumber(local_value[z].amount)}** action(s) from **${main.users[local_value[z].debtor].name}** each turn.`) :
+                        peace_string.push(`**${main.users[local_value[z].owner].name}** will syphon **${printPercentage(local_value[z].percentage_amount)}** of **${main.users[local_value[z].debtor].name}**'s actions each turn.`);
                   }
 
                   break;
