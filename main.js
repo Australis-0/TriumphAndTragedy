@@ -116,28 +116,36 @@ client.on("messageCreate", async (message) => {
             if (typeof actual_code == "object")
               actual_string = JSON.stringify(actual_code);
 
-            console.time(`Splitting log string!`);
             var log_array = splitString(actual_string, 200);
-            console.timeEnd(`Splitting log string!`);
 
-            console.log(log_array);
+            var log_embed_array = splitEmbed(log_array, {
+              title: truncateString(full_code.join(" "), 60),
+              title_pages: true,
+              fixed_width: true
+            });
+
+            console.log(`Finished splitting embed!`);
+
+            //Remove functionality for previous debug logs
+            var all_interfaces = Object.keys(interfaces);
+
+            for (var i = 0; i < all_interfaces.length; i++) {
+              var local_ui = interfaces[all_interfaces[i]];
+
+              if (local_ui.debug) {
+                delete main.interfaces[all_interfaces[i]];
+                delete interfaces[all_interfaces[i]];
+              }
+            }
 
             message.channel.send(config.localisation.blank).then((msg) => {
               createPageMenu(msg, {
-                embed_pages: splitEmbed(log_array, {
-                  title: truncateString(full_code.join(" "), 60),
-                  title_pages: true,
-                  fixed_width: true
-                }),
+                embed_pages: log_embed_array,
+
+                debug: true,
                 user: message.author.id
               });
             });
-
-            //Send back prompt
-            message.channel.send("Console command executed. Warning! This command can be highly unstable if not used correctly.").then((msg) => {
-  						//Delete console command output after 10 seconds
-  						setTimeout(function() { msg.delete(); }, 10000);
-  					});
           }
         }
       }

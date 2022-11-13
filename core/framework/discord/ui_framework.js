@@ -113,6 +113,8 @@ module.exports = {
 
         ui_obj.channel = msg.channel.id;
         ui_obj.type = "page_menu";
+        
+        ui_obj.debug = (options.debug);
         ui_obj.embed_array = options.embed_pages;
         ui_obj.page = starting_page;
         ui_obj.user = options.user;
