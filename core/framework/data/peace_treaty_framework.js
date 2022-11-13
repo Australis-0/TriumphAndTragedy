@@ -405,7 +405,7 @@ module.exports = {
                 for (var z = 0; z < recipient_cooldowns.length; z++)
                   if (
                     recipient_cooldowns.includes("steer_trade") ||
-                    recipient_cooldowns.includes("syphon_actions")
+                    recipient_cooldowns.includes("syphon_actions") ||
                     recipient_cooldowns.includes("war_reparations")
                   )
                     delete local_recipient.cooldowns[recipient_cooldowns[z]];
