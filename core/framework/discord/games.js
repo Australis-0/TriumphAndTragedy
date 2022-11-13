@@ -2,35 +2,47 @@
 module.exports = {
   game_embeds: ["header", "middle_embed", "middle_control_panel", "bottom_control_panel", "alert_embed"],
 
-  clearBadGames: function () {
+  clearBadInterfaces: function () {
     //Declare local instance variables
-    var all_interfaces = Object.keys(main.interfaces);
+    var all_interfaces = Object.keys(interfaces);
 
-    //Loop through all of them and clear the bad ones
+    //Check if game has a .channel field
     for (var i = 0; i < all_interfaces.length; i++) {
-      var bad_ui = false;
-      var local_ui = main.interfaces[all_interfaces[i]];
+      var delete_channel = false;
+      var local_ui = interfaces[all_interfaces[i]];
 
-      if (local_ui) {
-        if (!local_ui.channel) {
-          bad_ui = true;
-        } else {
-          if (!returnChannel(local_ui.channel))
-            bad_ui = true;
+      //Check if UI has channel field but no channel
+      if (local_ui.channel)
+        if (!returnChannel(local_ui.channel)) {
+          delete_channel = true;
         }
-      } else {
-        bad_ui = true;
-      }
 
-      if (bad_ui) {
-        //Bad UI, clear game
-        try {
-          if (local_ui.type == "game")
-            module.exports.clearGame(local_ui.id);
-        } catch {
-          delete interfaces[all_interfaces[i]];
-          delete main.interfaces[all_interfaces[i]];
-        }
+      //Check if UI is of type 'game' but has no .middle_embed
+      if (local_ui.type == "game")
+        if (!local_ui.middle_embed)
+          delete_channel = true;
+
+      if (delete_channel) {
+        //Attempt to delete the channel
+        var local_channel = returnChannel(local_ui.channel);
+
+        if (local_channel)
+          if (
+            !settings.cache_channels.includes(local_ui.channel) &&
+            !settings.ignore_channels.includes(local_ui.channel) &&
+            local_ui.channel != settings.alert_channel &&
+            local_channel.messages.cache.size < 50
+          ) {
+            try {
+              clearGame(all_interfaces[i]);
+            } catch {}
+
+            local_channel.delete();
+          }
+
+        //Delete from interfaces
+        delete interfaces[all_interfaces[i]];
+        delete main.interfaces[all_interfaces[i]];
       }
     }
   },
