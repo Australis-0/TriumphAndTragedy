@@ -691,15 +691,24 @@ module.exports = {
         if (!["empty", "navy"].includes(army_obj.type))
           if (main.provinces[province_id]) {
             if (province_id != army_obj.province) {
-              var moving_to_array = smartMove(actual_id, army_obj.name, army_obj.province, province_id);
+              //Check if target province is valid
+              var local_province = main.provinces[province_id];
+              var valid_province = true;
 
-              if (moving_to_array) {
-                army_obj.moving_to = moving_to_array;
-                army_obj.status = "moving";
+              if (local_province.demilitarised)
+                valid_province = (atWar(actual_id));
 
-                var time_to_arrival = Math.ceil(army_obj.moving_to.length/(config.defines.combat.army_speed*usr.modifiers.army_travel_speed));
+              if (valid_province) {
+                var moving_to_array = smartMove(actual_id, army_obj.name, army_obj.province, province_id);
 
-                return [true, `The **${army_obj.name}** is now en route to Province **${province_id}**. It will arrive in approximately **${parseNumber(time_to_arrival)}** turn(s).`];
+                if (moving_to_array) {
+                  army_obj.moving_to = moving_to_array;
+                  army_obj.status = "moving";
+
+                  var time_to_arrival = Math.ceil(army_obj.moving_to.length/(config.defines.combat.army_speed*usr.modifiers.army_travel_speed));
+
+                  return [true, `The **${army_obj.name}** is now en route to Province **${province_id}**. It will arrive in approximately **${parseNumber(time_to_arrival)}** turn(s).`];
+                }
               }
             } else {
               army_obj.moving_to = [];

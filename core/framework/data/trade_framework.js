@@ -98,6 +98,29 @@ module.exports = {
     return usr.modifiers.shipment_capacity - module.exports.getUsedCapacity(user_id);
   },
 
+  getTradeWhitelist: function (arg0_user) {
+    //Convert from parameters
+    var user_id = arg0_user;
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var usr = main.users[actual_id];
+
+    //Check cooldowns
+    var all_cooldowns = Object.keys(usr.cooldowns);
+    var all_users = Object.keys(main.users);
+    var trade_whitelist = (all_cooldowns.indexOf("steer_trade") != -1) ?
+      all_users : [];
+
+    //Check if trade is being steered by someone
+    for (var i = 0; i < all_cooldowns.length; i++)
+      if (all_cooldowns[i].includes("steer_trade"))
+        trade_whitelist.push(usr.cooldowns[all_cooldowns[i]].overlord);
+
+    //Return statement
+    return trade_whitelist;
+  },
+
   getUsedCapacity: function (arg0_user) {
     //Convert from parameters
     var user_id = arg0_user;

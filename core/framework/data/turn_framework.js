@@ -157,9 +157,19 @@ module.exports = {
         //Decrement local_cooldown.duration
         local_cooldown.duration--;
 
-        if (returnSafeNumber(local_cooldown.duration) <= 0)
+        if (returnSafeNumber(local_cooldown.duration) <= 0) {
+          //Demilitarisation scope
+          if (all_cooldowns[i].includes("demilitarisation"))
+            for (var x = 0; x < local_cooldown.demilitarised_provinces.length; x++) {
+              var local_province = main.provinces[local_cooldown.demilitarised_provinces[x]];
+
+              //Remove demilitarised flag
+              delete local_province.demilitarised;
+            }
+
           //Delete local_cooldown
           delete main.global.cooldowns[all_cooldowns[i]];
+        }
       }
     }
 
@@ -368,6 +378,18 @@ module.exports = {
 
           //Decrement cooldown
           local_cooldown.duration--;
+
+          //Peace treaty cooldowns
+          if (all_cooldowns[i].includes("syphon_actions")) {
+            var actions_taken = Math.ceil(Math.max(
+              usr.actions*local_cooldown.percentage_amount,
+              Math.min(usr.actions, local_cooldown.amount)
+            ));
+            var local_recipient = main.users[local_cooldown.owner];
+
+            usr.actions -= actions_taken;
+            local_recipient.actions += actions_taken;
+          }
 
           //Delete if invalid
           if (returnSafeNumber(local_cooldown.duration) <= 0)
@@ -626,6 +648,19 @@ module.exports = {
       //Add money based on calculated user income
       var user_income = getIncome(actual_id, all_production);
       usr.money += randomNumber(user_income[0], user_income[1]);
+
+      //Check cooldowns for war_reparations
+      for (var i = 0; i < all_cooldowns.length; i++) {
+        var local_cooldown = usr.cooldowns[all_cooldowns[i]];
+
+        if (all_cooldowns[i].includes("war_reparations")) {
+          var local_recipient = main.users[local_cooldown.owner];
+          var money_taken = Math.ceil(usr.money*local_cooldown.percentage_amount);
+
+          usr.money -= money_taken;
+          local_recipient.money += money_taken;
+        }
+      }
     } catch (e) {
       console.log(e);
     }
@@ -1452,19 +1487,25 @@ module.exports = {
     try {
       //Autotrade processing
       var all_auto_trades = Object.keys(usr.auto_trades);
+      var trade_whitelist = getTradeWhitelist(user_id);
 
       for (var i = 0; i < all_auto_trades.length; i++) {
         var local_auto_trade = usr.auto_trades[all_auto_trades[i]];
 
         //Initiate local shipment to user per turn
-        give(
-          local_auto_trade.exporter,
-          local_auto_trade.target,
+        if (trade_whitelist.includes(local_auto_trade.target)) {
+          give(
+            local_auto_trade.exporter,
+            local_auto_trade.target,
 
-          local_auto_trade.amount,
-          local_auto_trade.good_type,
-          { hide_display: true }
-        );
+            local_auto_trade.amount,
+            local_auto_trade.good_type,
+            { hide_display: true }
+          );
+        } else {
+          //Delete shipment because trade is being steered
+          delete usr.auto_trades[all_auto_trades[i]];
+        }
       }
 
       //Conventional trade processing

@@ -20,10 +20,16 @@ module.exports = {
     var game_obj = getGameObject(user_id);
     var ot_actual_id = main.global.user_map[other_user];
     var ot_user = main.users[ot_actual_id];
+    var trade_display_whitelist = [];
+    var trade_whitelist = getTradeWhitelist(user_id);
     var usr = main.users[actual_id];
 
     if (raw_good_name == "money")
       good_obj = {};
+
+    //Render trade_display_whitelist
+    for (var i = 0; i < trade_whitelist.length; i++)
+      trade_display_whitelist.push(`**${main.users[trade_whitelist[i]].name}**`);
 
     //Check to make sure that user isn't giving goods to themselves
     if (ot_user) {
@@ -42,59 +48,64 @@ module.exports = {
                           (raw_good_name == "money" && usr.money >= raw_amount) ||
                           (good_obj && usr.inventory[good_name] >= raw_amount)
                         ) {
-                          try {
-                            //Fetch user variables
-                            var distance = moveTo(getCapital(actual_id).id, getCapital(ot_actual_id).id).length;
-                            var amount_of_turns = Math.ceil(
-                              config.defines.combat.base_transfer_time + (
-                                distance/config.defines.combat.shipment_time
-                              )*usr.modifiers.shipment_time
-                            );
-                            var trade_id = generateTradeID(actual_id, ot_actual_id);
+                          if (trade_whitelist.includes(ot_actual_id)) {
+                            try {
+                              //Fetch user variables
+                              var distance = moveTo(getCapital(actual_id).id, getCapital(ot_actual_id).id).length;
+                              var amount_of_turns = Math.ceil(
+                                config.defines.combat.base_transfer_time + (
+                                  distance/config.defines.combat.shipment_time
+                                )*usr.modifiers.shipment_time
+                              );
+                              var trade_id = generateTradeID(actual_id, ot_actual_id);
 
-                            if (good_obj || raw_good_name == "money") {
-                              //Deduct goods from inventory first
-                              if (good_obj)
-                                usr.inventory[good_name] -= raw_amount;
-                              if (raw_good_name)
-                                usr.money -= raw_amount;
+                              if (good_obj || raw_good_name == "money") {
+                                //Deduct goods from inventory first
+                                if (good_obj)
+                                  usr.inventory[good_name] -= raw_amount;
+                                if (raw_good_name)
+                                  usr.money -= raw_amount;
 
-                              //Append to trade object
-                              usr.trades[trade_id] = {
-                                target: other_user,
-                                exporter: actual_id,
+                                //Append to trade object
+                                usr.trades[trade_id] = {
+                                  target: other_user,
+                                  exporter: actual_id,
 
-                                amount: raw_amount,
-                                good_type: (raw_good_name == "money") ?
-                                  "money" :
-                                  good_name,
+                                  amount: raw_amount,
+                                  good_type: (raw_good_name == "money") ?
+                                    "money" :
+                                    good_name,
 
-                                duration: amount_of_turns
-                              };
+                                  duration: amount_of_turns
+                                };
 
-                              var local_good_icon = (raw_good_name == "money") ?
-                                config.icons.money + " " :
-                                (getGood(good_name)) ?
-                                  config.icons[getGood(good_name).icon] + " " :
-                                  "";
-                              var local_good_name;
-                              try {
-                                local_good_name = (getGood(good_name)) ?
-                                  getGood(good_name).name :
-                                  good_name;
-                              } catch {
-                                local_good_name = "Money";
+                                var local_good_icon = (raw_good_name == "money") ?
+                                  config.icons.money + " " :
+                                  (getGood(good_name)) ?
+                                    config.icons[getGood(good_name).icon] + " " :
+                                    "";
+                                var local_good_name;
+                                try {
+                                  local_good_name = (getGood(good_name)) ?
+                                    getGood(good_name).name :
+                                    good_name;
+                                } catch {
+                                  local_good_name = "Money";
+                                }
+
+                                if (!options.hide_display)
+                                  printAlert(game_obj.id, `Your transports have begun to ship ${parseNumber(raw_amount)} ${local_good_icon}${local_good_name} to **${ot_user.name}**. They will arrive in **${parseNumber(amount_of_turns)}** turn(s).`);
+                              } else {
+                                if (!options.hide_display)
+                                  printError(game_obj.id, `You may only ship inventory goods or money!`);
                               }
-
+                            } catch {
                               if (!options.hide_display)
-                                printAlert(game_obj.id, `Your transports have begun to ship ${parseNumber(raw_amount)} ${local_good_icon}${local_good_name} to **${ot_user.name}**. They will arrive in **${parseNumber(amount_of_turns)}** turn(s).`);
-                            } else {
-                              if (!options.hide_display)
-                                printError(game_obj.id, `You may only ship inventory goods or money!`);
+                                printError(game_obj.id, `**${ot_user.name}** does ot have a capital city capable of storing these items! Wait until they found a capital city first.`);
                             }
-                          } catch {
+                          } else {
                             if (!options.hide_display)
-                              printError(game_obj.id, `**${ot_user.name}** does ot have a capital city capable of storing these items! Wait until they found a capital city first.`);
+                              printError(game_obj.id, `Our trade is currently being steered by the following countries! We are only allowed to trade with them.\n\n- ${trade_display_whitelist.join("\n- ")}`);
                           }
                         } else {
                           if (!options.hide_display)
