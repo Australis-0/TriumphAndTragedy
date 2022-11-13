@@ -465,6 +465,33 @@ module.exports = {
     );
   },
 
+  getDemilitarisedTurns: function (arg0_province) {
+    //Convert from parameters
+    var province_id = arg0_province;
+
+    //Declare local instance variables
+    var all_cooldowns = Object.keys(main.global.cooldowns);
+    var demilitarised_turns = 0;
+    var province_obj = getProvince(province_id);
+
+    //Iterate over all cooldowns
+    if (province_obj)
+      if (province_obj.demilitarised)
+        for (var i = 0; i < all_cooldowns.length; i++)
+          if (all_cooldowns.includes("demiltiarisation")) {
+            var local_cooldown = main.global.cooldowns[all_cooldowns[i]];
+
+            if (local_cooldown.demilitarised_provinces.includes(province_obj.id))
+              demilitarised_turns = Math.max(
+                returnSafeNumber(local_cooldown.turns),
+                demilitarised_turns
+              );
+          }
+
+    //Return statement
+    return demilitarised_turns;
+  },
+
   getDevelopmentCost: function (arg0_user, arg1_name, arg2_amount) {
     //Convert from parameters
     var user_id = arg0_user;
@@ -651,7 +678,7 @@ module.exports = {
     return province_cache;
   },
 
-  getTotalSoldiers: function (arg0_user) { //Needs to account for mobilised soldiers
+  getTotalSoldiers: function (arg0_user) {
     //Convert from parameters
     var user_id = arg0_user;
 
