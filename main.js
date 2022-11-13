@@ -110,17 +110,15 @@ client.on("messageCreate", async (message) => {
             var full_code = [];
             for (var i = 2; i < arg.length; i++) full_code.push(arg[i]);
 
-            var actual_string;
+            var actual_code = eval(full_code.join(" "));
+            var actual_string = actual_code.toString();
 
-            try {
-              actual_string = eval(full_code.join(" ")).toString();
-            } catch {
-              actual_string = JSON.stringify(eval(full_code.join(" ")));
-            }
+            if (typeof actual_code == "object")
+              actual_string = JSON.stringify(actual_code);
 
             message.channel.send(config.localisation.blank).then((msg) => {
               createPageMenu(msg, {
-                embed_pages: splitEmbed(actual_string.match(/.{1,3000}/g), {
+                embed_pages: splitEmbed(actual_string.match(/.{1,200}/g), {
                   title: truncateString(full_code.join(" "), 60),
                   title_pages: true,
                   fixed_width: true
