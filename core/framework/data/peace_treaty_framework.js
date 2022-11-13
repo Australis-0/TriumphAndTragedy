@@ -412,7 +412,7 @@ module.exports = {
               }
 
               break;
-            case "seize_resources": //[WIP]
+            case "seize_resources":
               for (var y = 0; y < local_value.seize_resources.length; y++) {
                 var goods_obj = {};
                 var local_clause = local_value.seize_resources[y];
@@ -421,12 +421,49 @@ module.exports = {
                 var local_target = main.users[local_clause.debtor];
 
                 for (var z = 0; z < local_clauses.length; z++) {
-                  var target_obj = lcoal_clause[local_clauses[z]];
+                  var local_clause_value = local_clause[local_clauses[z]];
 
                   //Add both custom and default keys to goods_obj
+                  if (local_clauses[z] == "inherit_actions")
+                    goods_obj.actions = local_clause_value;
+                  if (local_clauses[z] == "inherit_money")
+                    goods_obj.money = local_clause_value;
+
+                  if (local_clauses[z].includes("seize_"))
+                    goods_obj[local_clauses[z].replace("seize_", "")] = local_clause_value;
                 }
 
                 //Add goods_obj from local_target to local_recipient's inventory
+                var all_goods = Object.keys(goods_obj);
+
+                for (var z = 0; z < all_goods.length; z++) {
+                  var local_percentage = goods_obj[all_goods[z]];
+
+                  if (all_goods[z] == "actions" || all_goods[z] == "money") {
+                    var local_amount = Math.ceil(local_target[all_goods[z]]*(1 - local_percentage));
+
+                    local_target[all_goods[z]] -= local_amount;
+                    local_recipient[all_goods[z]] += local_amount;
+                  } else if (all_goods[z] == "inventory") {
+                    var all_goods = Object.keys(lookup.all_goods);
+
+                    for (var a = 0; a < all_goods.length; a++) {
+                      var local_good = lookup.all_goods[all_goods[a]];
+
+                      if (!local_good.is_cp && !local_good.doesnt_stack) {
+                        var local_amount = Math.ceil(local_target.inventory[local_goods[a]]*(1 - local_percentage));
+
+                        local_target.inventory[local_goods[a]] -= local_amount;
+                        local_recipient.inventory[local_goods[a]] += local_amount;
+                      }
+                    }
+                  } else {
+                    var local_amount = Math.ceil(local_target.inventory[all_goods[z]]*(1 - local_percentage));
+
+                    local_target.inventory[all_goods[z]] -= local_amount;
+                    local_recipient.inventory[all_goods[z]] += local_amount;
+                  }
+                }
               }
 
               break;
