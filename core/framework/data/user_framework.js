@@ -1,5 +1,39 @@
 module.exports = {
   /*
+    canRecruit() - Checks whether a user can recruit new units
+    options: {
+      get_duration: true/false - False by default. Returns the number of turns before the user can build new units
+    }
+  */
+  canRecruit: function (arg0_user, arg1_options) {
+    //Convert from parameters
+    var user_id = arg0_user;
+    var options = (arg1_options) ? arg1_options : {};
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var can_recruit = true;
+    var disabled_duration = 0;
+    var usr = main.users[actual_id];
+
+    var all_cooldowns = Object.keys(usr.cooldowns);
+
+    //Check usr.cooldowns
+    if (all_cooldowns.indexOf("recruitment_disabled") != -1)
+      can_recruit = false;
+
+    if (options.get_duration)
+      for (var i = 0; i < all_cooldowns.length; i++) {
+        var local_cooldown = usr.cooldowns[all_cooldowns[i]];
+
+        disabled_duration = Math.max(local_cooldown.duration, disabled_duration);
+      }
+
+    //Return statement
+    return (!options.get_duration) ? can_recruit : disabled_duration;
+  },
+
+  /*
     createUserGraph() - Creates a new user graph from options
     options: {
       army_size: 0, - Whatever the army size is. 0 by default
@@ -47,7 +81,7 @@ module.exports = {
         if (options.avoid_attrition != "never")
           if (getTroopsInProvince(all_provinces[i]) + army_size > local_supply)
             valid_province = false;
-          
+
         //Check for demilitarisation
         if (local_province.demilitarised && !at_war)
           valid_province = false;
