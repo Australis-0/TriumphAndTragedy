@@ -1,4 +1,104 @@
 module.exports = {
+  /*
+    dissolveUnits() - Dissolves a % amount of all units a user holds.
+    options: {
+      type: ["army", ..], //A list of army types to target. 'all' targets all armies
+      percentage_amount: 0.15, //The percentage amount to remove
+      unit_categories: ["aeroplanes", ..], //Optional. Defaults to 'all'
+      units: ["arquebusiers", ..] //Optional. Defaults to 'all'
+    }
+  */
+  dissolveUnits: function (arg0_user, arg1_options) {
+    //Convert from parameters
+    var user_id = arg0_user;
+    var options = (arg1_options) ? arg1_options : {};
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var all_army_types = true;
+    var all_units = true;
+    var army_types = [];
+    var disband_units = [];
+    var relieve_units = {};
+    var usr = main.users[actual_id];
+
+    //Fetch army types to disband units in
+    if (options.type)
+      if (!options.type.includes("all")) {
+        all_army_types = false;
+        army_types = getList(options.type);
+      }
+
+    if (all_army_types)
+      army_types = ["air", "army", "navy"];
+
+    //Fetch list of units to disband
+    if (options.units)
+      if (!options.units.includes("all")) {
+        all_units = false;
+        disband_units = getList(options.units);
+      }
+
+    if (all_units)
+      disband_units = lookup.all_unit_names;
+
+    //Push any units found in options.unit_categories to disband_units
+    if (options.unit_categories) {
+      var local_categories = getList(options.unit_categories);
+
+      for (var i = 0; i < local_categories.length; i++) {
+        var local_units = module.exports.getAllUnitsInCategory(local_categories[i], { return_names: true });
+
+        for (var x = 0; x < local_units.length; x++)
+          disband_units.push(local_units[x]);
+      }
+    }
+
+    //Make sure all disband_units are unique
+    disband_units = unique(disband_units);
+
+    //Iterate over all user armies
+    try {
+      var all_armies = Object.keys(usr.armies);
+
+      for (var i = 0; i < all_armies.length; i++)
+        if (army_types.includes(usr.armies[all_armies[i]].type)) {
+          var local_army = usr.armies[all_armies[i]];
+          var local_units = Object.keys(local_army.units);
+
+          for (var x = 0; x < local_units.length; x++)
+            if (disband_units.includes(local_units[x])) {
+              var local_value = local_army.units[local_units[x]];
+
+              //Amount to relieve
+              var local_amount = returnSafeNumber(Math.ceil(local_value*(1 - options.percentage_amount)));
+
+              relieveUnits(user_id, local_amount, local_units[x], local_army);
+
+              //Add to relieve_units
+              relieve_units[local_units[x]] = (relieve_units[local_units[x]]) ?
+                relieve_units[local_units[x]] + local_amount :
+                local_amount;
+            }
+        }
+    } catch {}
+
+    //Disband everything in relieve_units; disband units in reserve
+    var all_relieved_units = Object.keys(relieve_units);
+    var all_reserve_units = Object.keys(usr.reserves);
+
+    for (var i = 0; i < all_relieved_units.length; i++)
+      module.exports.disbandUnits(user_id, relieve_units[all_relieved_units[i]], all_relieved_units[i]);
+    for (var i = 0; i < all_reserve_units.length; i++) {
+      var local_value = usr.reserves[all_reserve_units[i]];
+
+      //Amount to disband
+      var local_amount = returnSafeNumber(Math.ceil(local_value*(1 - options.percentage_amount)));
+
+      module.exports.disbandUnits(user_id, local_amount, all_reserve_units[i]);
+    }
+  },
+
   disbandUnits: function (arg0_user, arg1_amount, arg2_unit_name) {
     //Convert from parameters
     var user_id = arg0_user;
@@ -98,6 +198,35 @@ module.exports = {
   },
 
   /*
+    getAllUnitsInCategory() - Fetches an object/key list of all units in a category.
+    options: {
+      return_names: true/false - Whether or not to return the keys instead. False by default
+    }
+  */
+  getAllUnitsInCategory: function (arg0_name, arg1_options) {
+    //Convert from parameters
+    var category_name = arg0_name.trim().toLowerCase();
+    var options = (arg1_options) ? arg1_options : {};
+
+    //Declare local instance variables
+    var category_obj = module.exports.getUnitCategory(category_name);
+    var units = [];
+
+    //Iterate over all units in category
+    if (category_obj) {
+      var local_units = Object.keys(category_obj);
+
+      //Format units
+      for (var i = 0; i < local_units.length; i++)
+        if (!["icon", "name", "order", "type"].includes(local_units[i]))
+          units.push((!options.return_names) ? category_obj[local_units[i]] : local_units[i]);
+
+      //Return statement
+      return units;
+    }
+  },
+
+  /*
     getUnit() - Returns the true object/key of a unit.
     options: {
       return_key: true/false - Whether or not to return the key of the unit instead.
@@ -111,6 +240,10 @@ module.exports = {
     //Declare local instance variables
     var all_unit_categories = Object.keys(config.units);
     var unit_exists = [false, ""];
+
+    //Lookup optimisation guard clause
+    if (lookup.all_units[unit_name])
+      return (!options.return_key) ? lookup.all_units[unit_name] : unit_name;
 
     //Unit key, soft search
     for (var i = 0; i < all_unit_categories.length; i++) {

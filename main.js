@@ -88,12 +88,33 @@ client.on("messageCreate", async (message) => {
     //Debug commands (these ones have a prefix)
     {
       if (equalsIgnoreCase(arg[0], settings.prefix)) {
+        //Used to eval
         if (equalsIgnoreCase(arg[1], "console")) {
           if (message.member.roles.cache.find(role => settings.administrator_roles.includes(role.id))) {
             var full_code = [];
             for (var i = 2; i < arg.length; i++) full_code.push(arg[i]);
 
             eval(full_code.join(" "));
+
+            //Send back prompt
+            message.channel.send("Console command executed. Warning! This command can be highly unstable if not used correctly.").then((msg) => {
+  						//Delete console command output after 10 seconds
+  						setTimeout(function() { msg.delete(); }, 10000);
+  					});
+          }
+        }
+
+        //console.log
+        if (equalsIgnoreCase(arg[1], "console.log") || equalsIgnoreCase(arg[1], "log")) {
+          if (message.member.roles.cache.find(role => settings.administrator_roles.includes(role.id))) {
+            var full_code = [];
+            for (var i = 2; i < arg.length; i++) full_code.push(arg[i]);
+
+            try {
+              message.channel.send(eval(full_code.join(" ")).toString())
+            } catch {
+              message.channel.send(JSON.stringify(eval(full_code.join(" "))));
+            }
 
             //Send back prompt
             message.channel.send("Console command executed. Warning! This command can be highly unstable if not used correctly.").then((msg) => {

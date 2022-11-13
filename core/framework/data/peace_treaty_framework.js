@@ -1,7 +1,7 @@
 module.exports = {
   /*
     Peace treaty data structure:
-    {
+     {
       //Wargoals are stored in an array to keep track of demand_limit
       wargoals: [
         {
@@ -17,7 +17,7 @@ module.exports = {
             },
             cut_down_to_size: {
               user_id: {
-                air_force_removal: 1, - All <type>_removal fields are set to the same value if the demilitarisation of individual army types are not specified by the user
+                air_removal: 1, - All <type>_removal fields are set to the same value if the demilitarisation of individual army types are not specified by the user
                 army_removal: 0.50,
                 navy_removal: 0.10,
                 turns: -
@@ -128,70 +128,12 @@ module.exports = {
     delete war_obj.peace_treaties[actual_id];
   },
 
-  hasProvinceOwnerChange: function (arg0_province_id, arg1_peace_treaty_object) {
-    //Convert from parameters
-    var province_id = arg0_province_id;
-    var peace_obj = arg1_peace_treaty_object;
-
-    //Declare local instance variables
-    var all_demands = Object.keys(peace_obj.peace_demands);
-    var friendly_side = "";
-    var new_owner;
-    var opposing_side = "";
-    var province_obj = main.provinces[province_id];
-    var war_obj = main.global.wars[peace_obj.war_id];
-
-    //Fetch friendly side
-    if (war_obj.attackers.includes(peace_obj.id)) {
-      friendly_side = "attackers";
-      opposing_side = "defenders";
-    }
-    if (war_obj.defenders.includes(peace_obj.id)) {
-      friendly_side = "defenders";
-      opposing_side = "attackers";
-    }
-
-    //Cycle through all demands; only retake_cores and annexation can actually change the owner currently
-    for (var i = 0; i < all_demands.length; i++) {
-      var local_value = peace_obj.peace_demands[all_demands[i]];
-
-      switch (all_demands[i]) {
-        case "retake_cores":
-          for (var x = 0; x < local_demands.length; x++) {
-            var culture_obj = getCulture(province_obj.culture);
-
-            if (war_obj[opposing_side].includes(province_obj.owner))
-              if (culture_obj.primary_culture.includes(local_demands[x]))
-                new_owner = local_value[i];
-          }
-
-          break;
-        case "annexation":
-          var local_demands = Object.keys(local_value);
-
-          for (var x = 0; x < local_demands.length; x++) {
-
-            if (local_value[local_demands[x]].annex_all)
-              if (local_value[local_demands[x]].annex_all.includes(province_obj.owner))
-                new_owner = local_value[local_demands[x]].id;
-            if (local_value[local_demands[x]].provinces)
-              if (local_value[local_demands[x]].provinces.includes(province_obj.id));
-                new_owner = local_value[local_demands[x]].id;
-          }
-      }
-    }
-
-    //Return statement
-    return new_owner;
-  },
-
-  parsePeaceTreaty: function (arg0_war_name, arg1_peace_treaty_object) {
+  parsePeaceTreaty: function (arg0_war_name, arg1_peace_treaty_object) { //[WIP] - Refactor to new peace treaty data structure
     //Convert from parameters
     var war_name = arg0_war_name.trim().toLowerCase();
     var peace_obj = arg1_peace_treaty_object;
 
     //Declare local instance variables
-    var all_demands = Object.keys(peace_obj.peace_demands);
     var all_participants = [];
     var friendly_side = "";
     var opposing_side = "";
@@ -239,135 +181,322 @@ module.exports = {
     }
 
     //Parse peace treaty
-    for (var i = 0; i < all_demands.length; i++) {
-      var local_value = peace_obj.peace_demands[all_demands[i]];
+    for (var i = 0; i < peace_obj.wargoals.length; i++)
+      if (peace_obj.wargoals[i].effect) {
+        var all_local_effects = Object.keys(peace_obj.wargoals[i].effect);
+        var local_value = peace_obj.wargoals[i].effect;
 
-      switch (all_demands[i]) {
-        case "status_quo":
-          //Extract value from opposing side
-          var total_money = 0;
+        for (var x = 0; x < all_local_effects.length; x++)
+          switch (all_local_effects[x]) {
+            case "annex_all":
+              var local_clauses = Object.keys(local_value.annex_all);
 
-          for (var x = 0; x < war_obj[opposing_side].length; x++) {
-            var local_user = main.users[war_obj[opposing_side][x]];
+              for (var y = 0; y < local_clauses.length; y++)
+                inherit(local_clauses[y], local_value.annex_all[local_clauses[y]]);
 
-            //Take 15% of their money
-            local_user.money -= local_user.money*0.15;
-            total_money += Math.ceil(local_user.money*0.15);
-          }
+              break;
+            case "annexation":
+              var local_clauses = Object.keys(local_value.annexation);
 
-          //Distribute total_money equally
-          for (var x = 0; x < war_obj[friendly_side].length; x++) {
-            var local_user = main.users[war_obj[friendly_side][x]];
+              for (var y = 0; y < local_clauses.length; y++) {
+                var local_clause = local_value.annexation[local_clauses[y]];
 
-            local_user.money += Math.ceil(total_money/war_obj[friendly_side].length);
-          }
+                for (var z = 0; z < local_clause.provinces.length; z++)
+                  try {
+                    var local_province = main.provinces[local_clause.provinces[z]];
 
-          break;
-        case "install government":
-          var local_demands = Object.keys(local_value);
-
-          //Set government for all local demands
-          for (var x = 0; x < local_demands.length; x++)
-            setGovernment(local_demands[x], local_value[local_demands[x]].type);
-
-          break;
-        case "cut_down_to_size":
-          //Cuts down each user to 10% of their military size
-          for (var x = 0; x < local_value.length; x++) {
-            var local_user = main.users[local_value[x]];
-            var all_armies = Object.keys(local_user.armies);
-            var all_reserve_units = Object.keys(local_user.reserves);
-
-            //Disband all troops in reserves first
-            for (var y = 0; y < all_reserve_units.length; y++)
-              disbandUnits(local_value[i], Math.ceil(local_user.reserves[all_reserve_units[y]]*0.9), all_reserve_units[y]);
-
-            for (var y = 0; y < all_armies.length; y++) {
-              var local_army = local_user.armies[all_armies[y]];
-              var all_units = Object.keys(local_army.units);
-
-
-              //Relieve, then disband
-              for (var z = 0; z < all_units.length; z++) {
-                var amount = Math.ceil(local_army.units[all_units[z]]*0.9);
-
-                relieveUnits(local_value[i], amount, all_units[z], local_army);
-                disbandUnits(local_value[i], amount, all_units[z]);
+                    transferProvince(local_province.owner, { target: local_clauses[y], province_id: local_clause.provinces[z] });
+                  } catch {}
               }
-            }
-          }
 
-          break;
-        case "liberation":
-          //Liberates peace_obj.id from their overlord
-          var vassal_obj = getVassal(peace_obj.id);
+              break;
+            case "cut_down_to_size":
+              var local_clauses = Object.keys(local_value.cut_down_to_size);
 
-          if (vassal_obj)
-            if (war_obj.attackers.includes(vassal_obj.overlord) || war_obj.defenders.includes(vassal_obj.overlord))
-              dissolveVassal(peace_obj.id, vassal_obj.overlord);
+              for (var y = 0; y < local_clauses.length; y++) {
+                var local_target = main.users[local_clauses[y]];
+                var target_obj = local_value.cut_down_to_size[local_clauses[y]];
 
-          break;
-        case "puppet":
-          var local_demands = Object.keys(local_value);
+                var target_keys = Object.keys(target_obj);
 
-          for (var x = 0; x < local_demands.length; x++) {
-            var local_user = main.users[local_demands[x]];
-            var overlord_id = local_value[local_demands[x]].overlord;
-            var overlord_obj = main.users[overlord_id];
-            var vassal_obj = getVassal(local_demands[x]);
+                //Loop through all cut_down_to_size keys
+                for (var z = 0; z < target_keys.length; z++)
+                  if (target_keys[z].includes("_removal")) {
+                    var army_type = target_keys[z].replace("_removal", "");
+                    var local_value = target_obj[target_keys[z]];
 
-            //Preexisting vassal handler
-            if (vassal_obj) {
-              main.users[vassal_obj.overlord].diplomacy.used_diplomatic_slots--;
-              dissolveVassal(local_demands[x]);
-            }
+                    dissolveUnits(local_clauses[y], {
+                      type: army_type,
+                      percentage_amount: local_value
+                    });
+                  } else if (target_keys[z] == "turns") {
+                    var current_duration = 0;
 
-            createVassal(local_demands[x], { target: overlord_id });
-            overlord_obj.diplomacy.used_diplomatic_slots++;
-          }
+                    //Check for current_duration, add to it if it already exists
+                    if (target_obj.cooldowns.recruitment_disabled)
+                      current_duration = returnSafeNumber(target_obj.cooldowns.recruitment_disabled.duration);
 
-          break;
-        case "retake_cores":
-          for (var x = 0; x < local_value.length; x++) {
-            var local_user = main.users[local_value[x]];
-
-            //Go through all provinces on opposing side, and if the primary culutre of that province is the primary culture of local_user, set its controller and owner to them
-            for (var y = 0; y < war_obj[opposing_side].length; y++) {
-              var local_provinces = getProvinces(war_obj[opposing_side][y], { include_hostile_occupations: true });
-
-              for (var z = 0; z < local_provinces.length; z++) {
-                var culture_obj = getCulture(local_provinces[z].culture);
-
-                if (culture_obj.primary_culture.includes(local_value[i]))
-                  transferProvince(local_provinces[z].owner, { target: local_value[i], province_id: local_provinces[z].id });
+                    target_obj.cooldowns.recruitment_disabled = {
+                      duration: current_duration + local_value
+                    };
+                  }
               }
-            }
-          }
 
-          break;
-        case "annexation":
-          var local_demands = Object.keys(local_value);
+              break;
+            case "demilitarisation":
+              var demilitarised_provinces = local_value.demilitarisation.demilitarised_provinces;
 
-          for (var x = 0; x < local_demands.length; x++) {
-            if (local_value[local_demands[x]].annex_all)
-              for (var y = 0; y < local_value[local_demands[x]].annex_all.length; y++)
-                inherit(local_value[local_demands[x]].annex_all[y], local_demands[x]);
-            if (local_value[local_demands[x]].provinces)
-              for (var y = 0; y < local_value[local_demands[x]].provinces.length; y++) {
-                var is_owned_by_enemy = false;
-                var local_province = main.provinces[local_value[local_demands[x]].provinces[y]];
+              //Check for demilitarised provinces
+              if (demilitarised_provinces)
+                for (var y = 0; y < demilitarised_provinces.length; y++) {
+                  var local_province = demilitarised_provinces[y];
 
-                //Check if the province is owned by enemy in the same war
-                if (war_obj[opposing_side].includes(local_province.owner))
-                  is_owned_by_enemy = true;
+                  //Set province as demiltiarised
+                  local_province[y].demilitarised = true;
+                }
 
-                if (is_owned_by_enemy)
-                  transferProvince(local_province.owner, { target: local_demands[x], province_id: local_province.id });
+              //Push to main.global.cooldowns
+              if (local_value.demilitarisation.turns) {
+                var cooldown_id = generateGlobalCooldownID("demilitarisation");
+
+                main.global.cooldowns[cooldown_id] = {
+                  demilitarised_provinces: demilitarised_provinces,
+
+                  duration: local_value.demilitarisation.turns
+                };
               }
-          }
 
-          break;
+              break;
+            case "free_oppressed_people":
+              var local_clauses = Object.keys(local_value.free_oppressed_people);
+
+              for (var y = 0; y < local_clauses.length; y++) {
+                var local_target = main.users[local_clauses[y]];
+                var target_obj = local_value.free_oppressed_people[local_clauses[y]];
+
+                var local_keys = Object.keys(target_obj);
+
+                for (var z = 0; z < local_keys.length; z++)
+                  try {
+                    //Initialise country, set local_recipient
+                    var culture_obj = main.global.cultures[local_keys[z]];
+                    var local_culture = target_obj[local_keys[z]];
+                    var recipient_state_id = module.exports.generateClientStateID(local_clauses[y]);
+
+                    var local_recipient = initCountry(recipient_state_id, culture_obj.name);
+
+                    //Transfer provinces to recipient
+                    for (var a = 0; a < local_culture.provinces.length; a++)
+                      transferProvince(local_clauses[y], { target: recipient_state_id, province_id: local_culture.provinces[a] });
+                  } catch {}
+              }
+
+              break;
+            case "install_government":
+              var local_clauses = Object.keys(local_value.install_government);
+
+              for (var y = 0; y < local_clauses.length; y++) {
+                var local_target = main.users[local_clauses[y]];
+
+                //Change government type, but don't set party popularity
+                local_target.government = local_value.install_government[local_clauses[y]];
+              }
+
+              break;
+            case "liberation":
+              for (var y = 0; y < local_value.liberation.length; y++)
+                dissolveVassal(local_value.liberation[y]);
+
+              break;
+            case "puppet":
+              var local_clauses = Object.keys(local_value.puppet);
+
+              for (var y = 0; y < local_clauses.length; y++) {
+                var local_clause = local_value.puppet[local_clauses[y]];
+
+                //Set target as vassal
+                createVassal(local_clause, local_clauses[y]);
+              }
+
+              break;
+            case "release_client_state":
+              var local_clauses = Object.keys(local_value.release_client_state);
+
+              for (var y = 0; y < local_clauses.length; y++) {
+                var local_clause = local_value.release_client_state[local_clauses[y]];
+                var local_recipient = initCountry(local_clauses[y], local_clause.name);
+                var local_user = main.users[local_clauses[y]];
+
+                //Cede provinces
+                for (var z = 0; z < local_clause.provinces.length; z++) {
+                  var local_province = main.provinces[local_clause.provinces[z]];
+
+                  //Transfer local_province to local_clauses[y]
+                  transferProvince(local_province.owner, { target: local_clauses[y], province_id: local_clause.provinces[z] });
+                }
+
+                //Edit culture
+                try {
+                  var culture_obj;
+
+                  if (local_clause.capital_id) {
+                    var capital_obj = main.provinces[local_clause.capital_id];
+
+                    if (capital_obj.culture)
+                      culture_obj = main.global.cultures[capital_obj.culture];
+                  } else {
+                    var random_province = main.provinces[randomElement(local_clause.provinces[z])];
+
+                    culture_obj = main.global.cultures[random_province.culture];
+                  }
+
+                  //Add as primary and accepted culture
+                  culture_obj.primary_culture.push(local_clauses[y]);
+
+                  local_user.pops.accepted_culture = [culture_obj.id];
+                  local_user.pops.primary_culture = culture_obj.id;
+                } catch (e) {
+                  console.log(e);
+                }
+
+                //Edit client state fields
+                if (local_clause.capital_id)
+                  moveCapital(local_recipient, local_clause.capital_id, true, true);
+                if (local_clause.colour)
+                  setColour(local_clauses[y], local_clause.colour[0], local_clause.colour[1], local_clause.colour[2], true, true);
+                if (local_clause.flag)
+                  setFlag(local_clauses[y], local_clause.flag, true, true);
+
+                //Add as vassal
+                createVassal(local_clause.overlord, { target: local_clauses[y] });
+              }
+
+              break;
+            case "retake_cores":
+              var local_clauses = Object.keys(local_value.retake_cores);
+
+              for (var y = 0; y < local_clauses.length; y++) {
+                var local_clause = local_value.retake_cores[local_clauses[y]];
+                var local_target = main.users[local_clauses[y]];
+
+                for (var z = 0; z < local_clause.length; z++) {
+                  var all_target_provinces = getProvinces(local_clauses[y], { include_hostile_occupations: true });
+                  var local_provinces = [];
+                  var local_recipient = main.users[local_clause[z]];
+
+                  //Fetch local_provinces with a .culture matching the primary culture of local_recipient
+                  for (var a = 0; a < all_target_provinces.length; a++)
+                    if (all_target_provinces[a].culture == local_recipient.pops.primary_culture)
+                      local_provinces.push(all_target_provinces[a]);
+
+                  //Transfer provinces
+                  for (var a = 0; a < local_provinces.length; a++)
+                    transferProvince(local_clauses[y], { target: local_clause[z], province_id: local_provinces[a] });
+                }
+              }
+
+              break;
+            case "revoke_reparations":
+              for (var y = 0; y < local_value.revoke_reparations.length; y++) {
+                var local_recipient = main.users[local_value.revoke_reparations[y]];
+                var recipient_cooldowns = Object.keys(local_recipient.cooldowns);
+
+                //Remove reparations cooldown from this user
+                for (var z = 0; z < recipient_cooldowns.length; z++)
+                  if (
+                    recipient_cooldowns.includes("steer_trade") ||
+                    recipient_cooldowns.includes("syphon_actions")
+                    recipient_cooldowns.includes("war_reparations")
+                  )
+                    delete local_recipient.cooldowns[recipient_cooldowns[z]];
+              }
+
+              break;
+            case "seize_resources":
+              for (var y = 0; y < local_value.seize_resources.length; y++) {
+                var goods_obj = {};
+                var local_clause = local_value.seize_resources[y];
+                var local_clauses = Object.keys(local_clause);
+                var local_recipient = main.users[local_clause.owner];
+                var local_target = main.users[local_clause.debtor];
+
+                for (var z = 0; z < local_clauses.length; z++) {
+                  var local_clause_value = local_clause[local_clauses[z]];
+
+                  //Add both custom and default keys to goods_obj
+                  if (local_clauses[z] == "inherit_actions")
+                    goods_obj.actions = local_clause_value;
+                  if (local_clauses[z] == "inherit_money")
+                    goods_obj.money = local_clause_value;
+
+                  if (local_clauses[z].includes("seize_"))
+                    goods_obj[local_clauses[z].replace("seize_", "")] = local_clause_value;
+                }
+
+                //Add goods_obj from local_target to local_recipient's inventory
+                var all_goods = Object.keys(goods_obj);
+
+                for (var z = 0; z < all_goods.length; z++) {
+                  var local_percentage = goods_obj[all_goods[z]];
+
+                  if (all_goods[z] == "actions" || all_goods[z] == "money") {
+                    var local_amount = Math.ceil(local_target[all_goods[z]]*(1 - local_percentage));
+
+                    local_target[all_goods[z]] -= local_amount;
+                    local_recipient[all_goods[z]] += local_amount;
+                  } else if (all_goods[z] == "inventory") {
+                    var all_goods = Object.keys(lookup.all_goods);
+
+                    for (var a = 0; a < all_goods.length; a++) {
+                      var local_good = lookup.all_goods[all_goods[a]];
+
+                      if (!local_good.is_cp && !local_good.doesnt_stack) {
+                        var local_amount = Math.ceil(local_target.inventory[local_goods[a]]*(1 - local_percentage));
+
+                        local_target.inventory[local_goods[a]] -= local_amount;
+                        local_recipient.inventory[local_goods[a]] += local_amount;
+                      }
+                    }
+                  } else {
+                    var local_amount = Math.ceil(local_target.inventory[all_goods[z]]*(1 - local_percentage));
+
+                    local_target.inventory[all_goods[z]] -= local_amount;
+                    local_recipient.inventory[all_goods[z]] += local_amount;
+                  }
+                }
+              }
+
+              break;
+            case "steer_trade":
+              var local_clauses = Object.keys(local_value.steer_trade);
+
+              for (var y = 0; y < local_clauses.length; y++) {
+                var local_clause = local_value.steer_trade[local_clauses[y]];
+                var local_recipient = main.users[local_clause.overlord];
+                var local_target = main.users[local_clauses[y]];
+
+                //Append to cooldown
+                var cooldown_id = generateUserCooldownID(local_clauses[y], "steer_trade");
+
+                local_target.cooldowns[cooldown_id] = {
+                  overlord: local_clause.overlord,
+
+                  duration: (local_clause.turns) ? local_clause.turns : 1000
+                };
+              }
+
+              break;
+            case "syphon_actions":
+              for (var y = 0; y < local_value.syphon_actions.length; y++) {
+                var local_clause = local_value.syphon_actions[y];
+
+
+              }
+
+              break;
+            case "war_reparations":
+              break;
+          }
       }
-    }
   }
 };
