@@ -468,6 +468,23 @@ module.exports = {
 
               break;
             case "steer_trade":
+              var local_clauses = Object.keys(local_value.steer_trade);
+
+              for (var y = 0; y < local_clauses.length; y++) {
+                var local_clause = local_value.steer_trade[local_clauses[y]];
+                var local_recipient = main.users[local_clause.overlord];
+                var local_target = main.users[local_clauses[y]];
+
+                //Append to cooldown
+                var cooldown_id = generateUserCooldownID(local_clauses[y], "steer_trade");
+
+                local_target.cooldowns[cooldown_id] = {
+                  overlord: local_clause.overlord,
+
+                  duration: (local_clause.turns) ? local_clause.turns : 1000
+                };
+              }
+
               break;
             case "syphon_actions":
               break;
