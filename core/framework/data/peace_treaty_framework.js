@@ -1,7 +1,7 @@
 module.exports = {
   /*
     Peace treaty data structure:
-    {
+     {
       //Wargoals are stored in an array to keep track of demand_limit
       wargoals: [
         {
@@ -487,6 +487,12 @@ module.exports = {
 
               break;
             case "syphon_actions":
+              for (var y = 0; y < local_value.syphon_actions.length; y++) {
+                var local_clause = local_value.syphon_actions[y];
+
+
+              }
+
               break;
             case "war_reparations":
               break;
