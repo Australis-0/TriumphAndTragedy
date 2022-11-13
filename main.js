@@ -110,11 +110,24 @@ client.on("messageCreate", async (message) => {
             var full_code = [];
             for (var i = 2; i < arg.length; i++) full_code.push(arg[i]);
 
+            var actual_string;
+
             try {
-              message.channel.send(eval(full_code.join(" ")).toString())
+              actual_string = eval(full_code.join(" ")).toString();
             } catch {
-              message.channel.send(JSON.stringify(eval(full_code.join(" "))));
+              actual_string = JSON.stringify(eval(full_code.join(" ")));
             }
+
+            message.channel.send(config.localisation.blank).then((msg) => {
+              createPageMenu(msg, {
+                embed_pages: splitEmbed(actual_string.match(/.{1,3000}/g), {
+                  title: truncateString(full_code.join(" "), 60),
+                  title_pages: true,
+                  fixed_width: true
+                }),
+                user: message.author.id
+              });
+            });
 
             //Send back prompt
             message.channel.send("Console command executed. Warning! This command can be highly unstable if not used correctly.").then((msg) => {
