@@ -116,9 +116,15 @@ client.on("messageCreate", async (message) => {
             if (typeof actual_code == "object")
               actual_string = JSON.stringify(actual_code);
 
+            console.time(`Splitting log string!`);
+            var log_array = splitString(actual_string, 200);
+            console.timeEnd(`Splitting log string!`);
+
+            console.log(log_array);
+
             message.channel.send(config.localisation.blank).then((msg) => {
               createPageMenu(msg, {
-                embed_pages: splitEmbed(actual_string.match(/.{1,200}/g), {
+                embed_pages: splitEmbed(log_array, {
                   title: truncateString(full_code.join(" "), 60),
                   title_pages: true,
                   fixed_width: true

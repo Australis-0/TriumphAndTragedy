@@ -227,6 +227,28 @@ module.exports = {
 		return current_string;
 	},
 
+  splitString: function (arg0_string, arg1_length) {
+    //Convert from parameters
+    var string = arg0_string;
+    var length = returnSafeNumber(arg1_length, 200);
+
+    //Process string
+    var current_string = "";
+    var string_array = [];
+
+    for (var i = 0; i < string.length; i++) {
+      current_string += string[i];
+
+      if ((i % length == 0 || i == string.length - 1) && i != 0) {
+        string_array.push(current_string);
+        current_string = "";
+      }
+    }
+
+    //Return statement
+    return string_array;
+  },
+
   stripMarkdown: function (arg0_string) {
     //Convert from parameters
     var processed_string = arg0_string.toString();
