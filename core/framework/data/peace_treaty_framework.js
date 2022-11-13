@@ -257,7 +257,21 @@ module.exports = {
 
               //Push to main.global.cooldowns
               if (local_value.demilitarisation.turns) {
+                var all_cooldowns = Object.keys(main.global.cooldowns);
                 var cooldown_id = generateGlobalCooldownID("demilitarisation");
+
+                //Remove demilitarised_provinces from all cooldowns
+                for (var y = 0; y < all_cooldowns.length; y++) {
+                  var local_cooldown = main.global.cooldowns[all_cooldowns[y]];
+
+                  if (all_cooldowns[y].includes("demilitarisation"))
+                    for (var z = 0; z < demilitarised_provinces.length; z++) {
+                      var local_index = local_cooldown.demilitarised_provinces.indexOf(demilitarised_provinces[z]);
+
+                      //If local_index is found, splice it
+                      local_cooldown.demilitarised_provinces.splice(local_index, 1);
+                    }
+                }
 
                 main.global.cooldowns[cooldown_id] = {
                   demilitarised_provinces: demilitarised_provinces,

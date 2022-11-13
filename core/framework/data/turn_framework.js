@@ -148,44 +148,16 @@ module.exports = {
     var all_provinces = Object.keys(main.provinces);
     var all_users = Object.keys(main.users);
     var all_wars = Object.keys(main.global.wars);
+    var demilitarisation_user_map = {};
 
     //Cooldowns and modifiers
     {
+      //Main cooldown handler
       for (var i = 0; i < all_cooldowns.length; i++) {
         var local_cooldown = main.global.cooldowns[all_cooldowns[i]];
 
         //Decrement local_cooldown.duration
         local_cooldown.duration--;
-
-        //Demilitarisation handler
-        if (all_cooldowns[i].includes("demilitarisation")) {
-          var user_map = [];
-          var user_war_map = [];
-
-          //Initialise unique user map
-          for (var x = 0; x < local_cooldown.demilitarised_provinces.length; x++) {
-            var local_province = main.provinces[local_cooldown.demilitarised_provinces[x]];
-
-            if (!user_map.includes(local_province.controller))
-              user_map.push(local_province.controller);
-          }
-
-          //Check if controllers are at war
-          for (var x = 0; x < user_map.length; x++)
-            //Demilitarise everything if they are
-            if (atWar(user_map[x])) {
-              var local_provinces = getProvinces(user_map[x], { include_hostile_occupations: true, include_occupations: true });
-
-              for (var y = 0; y < local_provinces.length; y++)
-                if (local_provinces[y].demilitarised) {
-                  for (var z = 0; z < local_cooldown.demilitarised_provinces.length; z++)
-                    if (local_cooldown.demilitarised_provinces[z] == local_provinces[y].id)
-                      local_cooldown.demilitarised_provinces.splice(z, 1);
-
-                  delete local_provinces[y].demilitarised;
-                }
-            }
-        }
 
         if (returnSafeNumber(local_cooldown.duration) <= 0) {
           //Demilitarisation scope
@@ -199,7 +171,52 @@ module.exports = {
 
           //Delete local_cooldown
           delete main.global.cooldowns[all_cooldowns[i]];
+        } else {
+          for (var x = 0; x < local_cooldown.demilitarised_provinces.length; x++) {
+            var local_province = main.provinces[local_cooldown.demilitarised_provinces[x]];
+
+            if (!demilitarisation_user_map[local_province.controller]) {
+              demilitarisation_user_map[local_province.controller] = [];
+            } else {
+              demilitarisation_user_map[local_province.controller].push(local_cooldown.demilitarised_provinces[x]);
+            }
+          }
         }
+      }
+
+      //Peace treaty cooldown handlers
+      {
+        //Demilitarisation (province objects)
+        var all_demilitarised_users = Object.keys(demilitarisation_user_map);
+        var remilitarised_provinces = [];
+
+        for (var i = 0; i < all_demilitarised_users.length; i++) {
+          var local_provinces = demilitarisation_user_map[all_demilitarised_users[i]];
+
+          if (atWar(all_demilitarised_users))
+            for (var x = 0; x < local_provinces.length; x++) {
+              var local_province = main.provinces[local_provinces[x]];
+
+              remilitarised_provinces.push(local_provinces[x]);
+              delete local_province.demilitarised;
+            }
+        }
+
+        //Demilitarisation (cooldowns)
+        if (remilitarised_provinces.length > 0)
+          for (var i = 0; i < all_cooldowns.length; i++)
+            if (all_cooldowns[i].includes("demilitarisation")) {
+              var local_cooldown = main.global.cooldowns[all_cooldowns[i]];
+              var local_provinces = local_cooldown.demilitarised_provinces;
+
+              for (var x = local_provinces.length - 1; x >= 0; x--)
+                if (remilitarised_provinces.includes(local_provinces[x]))
+                  local_cooldown.demilitarised_provinces.splice(x, 1);
+
+              //Check if local_cooldown.demilitarised_provinces has anything left
+              if (local_cooldown.demilitarised_provinces.length <= 0)
+                delete main.global.cooldowns[all_cooldowns[i]];
+            }
       }
     }
 
