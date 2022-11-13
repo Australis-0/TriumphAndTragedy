@@ -128,6 +128,33 @@ module.exports = {
     delete war_obj.peace_treaties[actual_id];
   },
 
+  getDemilitarisedTurns: function (arg0_province) {
+    //Convert from parameters
+    var province_id = arg0_province;
+
+    //Declare local instance variables
+    var all_cooldowns = Object.keys(main.global.cooldowns);
+    var demilitarised_turns = 0;
+    var province_obj = getProvince(province_id);
+
+    //Iterate over all cooldowns
+    if (province_obj)
+      if (province_obj.demilitarised)
+        for (var i = 0; i < all_cooldowns.length; i++)
+          if (all_cooldowns.includes("demiltiarisation")) {
+            var local_cooldown = main.global.cooldowns[all_cooldowns[i]];
+
+            if (local_cooldown.demilitarised_provinces.includes(province_obj.id))
+              demilitarised_turns = Math.max(
+                returnSafeNumber(local_cooldown.turns),
+                demilitarised_turns
+              );
+          }
+
+    //Return statement
+    return demilitarised_turns;
+  },
+
   parsePeaceTreaty: function (arg0_war_name, arg1_peace_treaty_object) { //[WIP] - Add infamy scaling
     //Convert from parameters
     var war_name = arg0_war_name.trim().toLowerCase();

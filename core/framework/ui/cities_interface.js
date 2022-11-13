@@ -119,7 +119,7 @@ module.exports = {
       city_string.push("");
 
       if (city_obj.demilitarised) {
-        city_string.push(`- Currently demilitarised.`);
+        city_string.push(`- Currently demilitarised for **${parseNumber(getDemilitarisedTurns(city_obj.id))}** turn(s).`);
         city_string.push("");
       }
 

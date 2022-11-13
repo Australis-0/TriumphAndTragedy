@@ -539,6 +539,11 @@ module.exports = {
     //Declare local instance variables
     var all_provinces = Object.keys(main.provinces);
 
+    //Optimisation guard clause
+    if (main.provinces[province_id])
+      return main.provinces[province_id];
+
+    //Iterate over all provinces to find it
     for (var i = 0; i < all_provinces.length; i++)
       if (all_provinces[i] == province_id) {
         //Set ID tracker variable just in case
