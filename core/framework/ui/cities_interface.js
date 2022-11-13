@@ -117,6 +117,12 @@ module.exports = {
       //Print city information
       city_string.push(`**${city_obj.name}:**`);
       city_string.push("");
+
+      if (city_obj.demilitarised) {
+        city_string.push(`- Currently demilitarised.`);
+        city_string.push("");
+      }
+
       city_string.push(`**Province:** ${config.icons.provinces} ${city_obj.id}`);
       city_string.push(`**Population:** ${config.icons.population} ${parseNumber(city_obj.pops.population)} (**${printPercentage(getCityPopGrowthRate(city_obj), { base_zero: true, display_prefix: true })}** per turn)`);
       city_string.push(`**Development:** ${config.icons.development} ${parseNumber(city_obj.development)}`);

@@ -51,6 +51,8 @@ module.exports = {
         //Display occupation status
         if (province_obj.owner != province_obj.controller)
           province_string.push(`- Currently occupied by **${main.users[province_obj.controller].name}** in a war! This province will not be able to produce anything of value until it is either liberated, or the war is over.`);
+        if (province_obj.demilitarised)
+          province_string.push(`- Currently demilitarised! None of our combat formations can move into this province.`);
 
         province_string.push("");
 
