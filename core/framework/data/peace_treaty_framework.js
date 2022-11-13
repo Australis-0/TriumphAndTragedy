@@ -262,7 +262,7 @@ module.exports = {
                 main.global.cooldowns[cooldown_id] = {
                   demilitarised_provinces: demilitarised_provinces,
 
-                  duration: local_value.demilitarisation.turns
+                  duration: (local_value.demilitarisation.turns) ? local_value.demilitarisation.turns : 1000
                 };
               }
 
@@ -489,12 +489,41 @@ module.exports = {
             case "syphon_actions":
               for (var y = 0; y < local_value.syphon_actions.length; y++) {
                 var local_clause = local_value.syphon_actions[y];
+                var local_recipient = main.users[local_clause.owner];
+                var local_target = main.users[local_clause.debtor];
 
+                //Add to local_target.cooldowns
+                var cooldown_id = generateUserCooldownID(local_clause.debtor, "syphon_actions");
 
+                local_target.cooldowns[cooldown_id] = {
+                  owner: local_clause.owner,
+
+                  amount: local_clause.amount,
+                  percentage_amount: local_clause.percentage_amount,
+
+                  duration: (local_clause.turns) ? local_clause.turns : 1000
+                };
               }
 
               break;
             case "war_reparations":
+              for (var y = 0; y < local_value.war_reparations.length; y++) {
+                var local_clause = local_value.war_reparations[y];
+                var local_recipient = main.users[local_clause.owner];
+                var local_target = main.users[local_clause.debtor];
+
+                //Add to local_target.cooldowns
+                var cooldown_id = generateUserCooldownID(local_clause.debtor, "war_reparations");
+
+                local_target.cooldowns[cooldown_id] = {
+                  owner: local_clause.owner,
+
+                  percentage_amount: local_clause.amount,
+
+                  duration: (local_clause.turns) ? local_clause.turns : 1000
+                };
+              }
+
               break;
           }
       }
