@@ -372,7 +372,7 @@ module.exports = {
 
     //Return statement
     return (wargoal_localisation) ? wargoal_localisation : [];
-  }
+  },
 
   /*
     parseWargoalLocalisation() - Parses tooltip localisation for a wargoal.
