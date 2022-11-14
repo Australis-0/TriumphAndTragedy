@@ -366,10 +366,9 @@ module.exports = {
 
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
+    var peace_treaty_simulation = createPeaceTreaty(user_id, war_obj, true);
     var usr = main.users[actual_id];
-
-    var peace_treaty_simulation = createPeaceTreaty(actual_id, war_obj, true);
-
+    
     //Push current wargoal
     peace_treaty_simulation.wargoals.push(wargoal_obj);
 

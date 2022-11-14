@@ -139,7 +139,7 @@ module.exports = {
 
   getPeaceTreatyInfamy: function (arg0_war_name, arg1_peace_treaty_object) {
     //Convert from parameters
-    var war_name = arg0_war_name.trim().toLowerCase();
+    var war_name = (typeof arg0_war_name != "object") ? arg0_war_name.trim().toLowerCase() : arg0_war_name;
     var peace_obj = arg1_peace_treaty_object;
 
     //Declare local instance variables
@@ -150,7 +150,7 @@ module.exports = {
     var infamy_map = {};
     var opposing_side = "";
     var usr = main.users[peace_obj.id];
-    var war_obj = JSON.parse(JSON.stringify(getWar(war_name)));
+    var war_obj = (typeof war_name != "object") ? JSON.parse(JSON.stringify(getWar(war_name))) : war_name;
 
     //Fetch friendly side
     if (war_obj.attackers.includes(peace_obj.id)) {
@@ -667,6 +667,24 @@ module.exports = {
 
     //Return statement
     return infamy_map;
+  },
+
+  getWargoalInfamy: function (arg0_user, arg1_war_obj, arg2_wargoal_obj) {
+    //Convert from parameters
+    var user_id = arg0_user;
+    var war_obj = arg1_war_obj;
+    var wargoal_obj = arg2_wargoal_obj;
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var peace_treaty_simulation = module.exports.createPeaceTreaty(user_id, war_obj, true);
+    var usr = main.users[actual_id];
+
+    //Push current wargoal
+    peace_treaty_simulation.wargoals.push(wargoal_obj);
+
+    //Return statement
+    return module.exports.getPeaceTreatyInfamy(war_obj, peace_treaty_simulation);
   },
 
   parsePeaceTreaty: function (arg0_war_name, arg1_peace_treaty_object) { //[WIP] - Add infamy scaling
