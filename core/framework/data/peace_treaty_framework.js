@@ -482,12 +482,67 @@ module.exports = {
 
                   break;
                 case "seize_resources":
+                  for (var y = 0; y < local_value.seize_resources.length; y++) {
+                    var target_obj = local_value.seize_resources[y];
+
+                    var local_clauses = Object.keys(target_obj);
+                    var local_target = main.users[target_obj.debtor];
+
+                    //Percentage calculations are by user - actions, money, and inventory all equal 100%, each resource is 1/total_goods that
+                    for (var z = 0; z < local_clauses.length; z++) {
+                      var local_amount = target_obj[local_clauses[z]];
+
+                      if (local_clauses[z].startsWith("inherit_")) {
+                        var local_key = local_clauses[z].replace("inherit_", "");
+
+                        total_percentage_affected += local_amount;
+                        total_percentage++;
+                      } else if (local_clauses[z] == "seize_inventory") {
+                        total_percentage_affected += local_amount;
+                        total_percentage++;
+                      } else if (local_clauses[z].startsWith("seize_")) {
+                        var local_key = local_clauses[z].replace("seize_", "");
+
+                        total_percentage_affected += local_amount/lookup.all_goods_array.length;
+                        total_percentage += 1/lookup.all_goods_array.length;
+                      }
+                    }
+                  }
+
                   break;
                 case "steer_trade":
+                  //Percentage calculation
+                  total_percentage_affected += Object.keys(local_value.steer_trade).length/war_obj[opposing_side].length;
+                  total_percentage++;
+
                   break;
                 case "syphon_actions":
+                  var total_percentage_amount = 0;
+
+                  for (var y = 0; y < local_value.syphon_actions.length; y++) {
+                    var target_obj = local_value.syphon_actions[y];
+
+                    total_percentage_amount += returnSafeNumber(target_obj.percentage_amount);
+                  }
+
+                  //Percentage calculation
+                  total_percentage_affected += total_percentage_amount/war_obj[opposing_side].length;
+                  total_percentage++;
+
                   break;
                 case "war_reparations":
+                  var total_percentage_amount = 0;
+
+                  for (var y = 0; y < local_value.war_reparations.length; y++) {
+                    var target_obj = local_value.war_reparations[y];
+
+                    total_percentage_amount += returnSafeNumber(target_obj.percentage_amount);
+                  }
+
+                  //Percentage calculation
+                  total_percentage_affected += total_percentage_amount/war_obj[opposing_side].length;
+                  total_percentage++;
+
                   break;
               }
           }
