@@ -96,17 +96,20 @@ module.exports = {
     }
   */
 
-  createPeaceTreaty: function (arg0_user, arg1_war_name) {
+  createPeaceTreaty: function (arg0_user, arg1_war_name, arg2_simulation) {
     //Convert from parameters
     var user_id = arg0_user;
-    var war_name = arg1_war_name.trim().toLowerCase();
+    var war_name = (typeof arg1_war_name != "object") ?
+      arg1_war_name.trim().toLowerCase() :
+      arg1_war_name;
+    var simulation = arg2_simulation;
 
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
-    var war_obj = getWar(war_name);
+    var war_obj = (typeof war_name != "object") ? getWar(war_name) : war_name;
 
     //Make sure user doesn't already have a peace treaty registered
-    if (!war_obj.peace_treaties[actual_id]) {
+    if (!war_obj.peace_treaties[actual_id] || simulation) {
       var peace_treaty_obj = {
         id: actual_id,
         war_id: war_obj.id,
@@ -114,7 +117,10 @@ module.exports = {
         wargoals: []
       };
 
-      war_obj.peace_treaties[actual_id] = peace_treaty_obj;
+      if (!simulation)
+        war_obj.peace_treaties[actual_id] = peace_treaty_obj;
+      if (simulation)
+        return peace_treaty_obj;
     }
   },
 
