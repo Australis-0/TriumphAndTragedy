@@ -115,6 +115,7 @@ module.exports = {
           if (peace_obj.wargoals[x].effect) {
             var all_effects = Object.keys(peace_obj.wargoals[x].effect);
             var wargoal_id = peace_obj.wargoals[x].id;
+            var wargoal_number = 0;
             var wargoal_obj = getWargoal(wargoal_id);
 
             var demand_limit = returnSafeNumber(wargoal_obj.demand_limit, 1);
@@ -124,8 +125,13 @@ module.exports = {
               demand_limit*returnSafeNumber(war_obj[`${friendly_side}_wargoals`][wargoal_name], 1)
             );
 
+            //Fetch wargoal_number
+            for (var y = 0; y < (x + 1); y++)
+              if (peace_obj.wargoals[y].id == sorted_wargoals[i])
+                wargoal_number++;
+
             //Push wargoal name and (wargoals demanded/wargoals limit) to string
-            peace_string.push(`• __${(wargoal_obj.name) ? wargoal_obj.name : wargoal_id}__:`);
+            peace_string.push(`• __${(wargoal_obj.name) ? wargoal_obj.name : wargoal_id} #${wargoal_number}__:`);
             peace_string.push("");
 
             for (var y = 0; y < all_effects.length; y++) {
