@@ -305,16 +305,19 @@ module.exports = {
     };
 
     //Automatically call in all vassals on both sides
-    for (var i = 0; i < attacker_obj.diplomacy.vassals.length; i++) {
-      var local_vassal = attacker_obj.diplomacy.vassals[i];
+    var all_attacker_vassals = Object.keys(attacker_obj.diplomacy.vassals);
+    var all_defender_vassals = Object.keys(defender_obj.diplomacy.vassals);
+
+    for (var i = 0; i < all_attacker_vassals.length; i++) {
+      var local_vassal = attacker_obj.diplomacy.vassals[all_attacker_vassals[i]];
 
       if (local_vassal.overlord == attacker_id)
         if (!war_obj.defenders.includes(local_vassal.id))
           war_obj.attackers.push(local_vassal.id);
     }
 
-    for (var i = 0; i < defender_obj.diplomacy.vassals.length; i++) {
-      var local_vassal = defender_obj.diplomacy.vassals[i];
+    for (var i = 0; i < all_defender_vassals.length; i++) {
+      var local_vassal = defender_obj.diplomacy.vassals[all_defender_vassals[i]];
 
       if (local_vassal.overlord == defender_id)
         if (!war_obj.attackers.includes(local_vassal.id))

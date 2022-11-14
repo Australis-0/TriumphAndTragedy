@@ -131,13 +131,15 @@ module.exports = {
     delete war_obj.peace_treaties[actual_id];
   },
 
-  getPeaceTreatyInfamy: function (arg0_war_name, arg1_peace_treaty_object) {
+  getPeaceTreatyInfamy: function (arg0_war_name, arg1_peace_treaty_object) { //[WIP] - Get main beneficiary, return object map
     //Convert from parameters
     var war_name = arg0_war_name.trim().toLowerCase();
     var peace_obj = arg1_peace_treaty_object;
 
     //Declare local instance variables
     var all_users = Object.keys(main.users);
+    var enemy_provinces = 0;
+    var enemy_vassals = [];
     var friendly_side = "";
     var infamy_map = {};
     var opposing_side = "";
@@ -154,6 +156,24 @@ module.exports = {
       opposing_side = "attackers";
     }
 
+    //Fetch enemy_provinces
+    for (var i = 0; i < war_obj[opposing_side].length; i++)
+      enemy_provinces += main.users[war_obj[opposing_side][i]].provinces;
+
+    //Fetch enemy_vassals
+    for (var i = 0; i < war_obj[opposing_side].length; i++) {
+      var local_user = main.users[war_obj[opposing_side][i]];
+      var local_vassals = Object.keys(local_user.diplomacy.vassals);
+
+      for (var x = 0; x < local_vassals.length; x++) {
+        var local_vassal = local_user.diplomacy.vassals[local_vassals[x]];
+
+        if (local_vassal.overlord == war_obj[opposing_side][i])
+          if (!enemy_vassals.includes(local_vassal.id))
+            enemy_vassals.push(local_vassal.id);
+      }
+    }
+
     //Iterate over each wargoal to determine the infamy map and primary recipients
     for (var i = 0; i < peace_obj.wargoals.length; i++) {
       var local_wargoal = getWargoal(peace_obj.wargoals[i].id);
@@ -161,7 +181,6 @@ module.exports = {
 
       if (local_wargoal)
         if (local_wargoal.infamy) {
-          var enemy_provinces = 0;
           var enemy_soldiers = 0;
           var provinces_affected = [];
           var recipient_count = {};
@@ -169,10 +188,6 @@ module.exports = {
           var total_percentage_affected = 0;
           var total_wargoal_infamy = 0; //All infamy lands on the primary beneficiary of the wargoal
           var type_count = {};
-
-          //Initialise enemy_provinces
-          for (var i = 0; i < war_obj[opposing_side].length; i++)
-            enemy_provinces += main.users[war_obj[opposing_side][i]].provinces;
 
           //Initialise enemy soldiers
           for (var i = 0; i < war_obj[opposing_side].length; i++)
@@ -221,7 +236,7 @@ module.exports = {
                   var percentage_affected = provinces_taken/enemy_provinces;
 
                   total_percentage_affected += percentage_affected;
-                  total_percentage += 1;
+                  total_percentage++;
 
                   break;
                 case "annexation":
@@ -263,7 +278,7 @@ module.exports = {
                   percentage_affected = percentage_affected/all_targets.length;
 
                   total_percentage_affected += percentage_affected;
-                  total_percentage += 1;
+                  total_percentage++;
 
                   break;
                 case "cut_down_to_size":
@@ -295,7 +310,7 @@ module.exports = {
 
                     //Percentage calculation
                     total_percentage_affected = enemy_soldiers_disbanded/enemy_soldiers;
-                    total_percentage += 1;
+                    total_percentage++;
                   }
 
                   break;
@@ -318,22 +333,153 @@ module.exports = {
 
                   //Percentage calculation
                   total_percentage_affected += provinces_demilitarised/enemy_provinces;
-                  total_percentage += 1;
+                  total_percentage++;
 
                   break;
                 case "free_oppressed_people":
+                  var local_clauses = Object.keys(local_value.free_oppressed_people);
+
+                  for (var y = 0; y < local_clauses.length; y++) {
+                    var local_target = main.users[local_clauses[y]];
+                    var provinces_taken = 0;
+                    var target_obj = local_value.free_oppressed_people[local_clauses[y]];
+
+                    //Get local_culture
+                    var culture_ids = Object.keys(target_obj);
+
+                    for (var z = 0; z < culture_ids.length; z++) {
+                      var local_culture = target_obj[culture_ids[z]];
+
+                      for (var a = 0; a < local_culture.provinces.length; a++) {
+                        var local_province = main.provinces[local_culture.provinces[a]];
+
+                        if (!provinces_affected.includes(local_culture.provinces[a]))
+                          provinces_affected.push(local_culture.provinces[a]);;
+
+                        if (local_province.type)
+                          type_count[local_province.type] = (type_count[local_province.type]) ?
+                            type_count[local_province.type] + 1 :
+                            1;
+                      }
+
+                      provinces_taken += local_culture.provinces.length;
+                    }
+
+                    //Percentage calculation is per user
+                    total_percentage_affected += provinces_taken/local_target.provinces;
+                    total_percentage++;
+                  }
+
                   break;
                 case "install_government":
+                  var local_clauses = Object.keys(local_value.install_government);
+
+                  //Percentage calculation
+                  total_percentage_affected += local_clauses.length/war_obj[opposing_side].length;
+                  total_percentage++;
+
                   break;
                 case "liberation":
+                  //Percentage calculation
+                  total_percentage_affected += local_value.liberation.length/enemy_vassals.length;
+                  total_percentage++;
+
                   break;
                 case "puppet":
+                  var local_clauses = Object.keys(local_value.puppet);
+
+                  for (var y = 0; y < local_clauses.length; y++) {
+                    var local_recipient = main.users[local_value.puppet[local_clauses[y]]];
+                    var local_target = main.users[local_clauses[y]];
+
+                    var local_provinces = getProvinces(local_clauses[y], { include_hostile_occupations: true });
+
+                    for (var a = 0; a < local_provinces.length; a++) {
+                      if (!provinces_affected.includes(local_provinces[a].id))
+                        provinces_affected.push(local_provinces[a].id);
+
+                      if (local_provinces[a].type)
+                        type_count[local_provinces[a].type] = (type_count[local_provinces[a].type]) ?
+                          type_count[local_provinces[a].type] + 1 :
+                          1;
+                    }
+                  }
+
+                  //Percentage calculation is per user
+                  total_percentage_affected += local_clauses.length/war_obj[opposing_side].length;
+                  total_percentage++;
+
                   break;
                 case "release_client_state":
+                  var local_clauses = Object.keys(local_value.release_client_state);
+                  var provinces_taken = 0;
+
+                  for (var y = 0; y < local_clauses.length; y++) {
+                    var target_obj = local_value.release_client_state[local_clauses[y]];
+
+                    for (var a = 0; a < target_obj.provinces.length; a++) {
+                      var local_province = main.provinces[target_obj.provinces[a]];
+
+                      if (!provinces_affected.includes(target_obj.provinces[a]))
+                        provinces_affected.push(target_obj.provinces[a]);
+
+                      if (local_province.type)
+                        type_count[local_province.type] = (type_count[local_province.type]) ?
+                          type_count[local_province.type] + 1 :
+                          1;
+                    }
+
+                    provinces_taken += target_obj.provinces.length;
+                  }
+
+                  //Percentage calculation
+                  total_percentage_affected += provinces_taken/enemy_provinces;
+                  total_percentage++;
+
                   break;
                 case "retake_cores":
+                  var local_clauses = Object.keys(local_value.release_client_state);
+                  var provinces_taken = 0;
+
+                  for (var y = 0; y < local_clauses.length; y++) {
+                    var local_clause = local_value.retake_cores[local_clauses[y]];
+                    var local_target = main.users[local_clauses[y]];
+
+                    for (var z = 0; z < local_clause.length; z++) {
+                      var all_target_provinces = getProvinces(local_clauses[y], { include_hostile_occupations: true });
+                      var local_provinces = [];
+                      var local_recipient = main.users[local_clause[z]];
+
+                      //Fetch local_provinces with a .culture matching the primary culture of local_recipient
+                      for (var a = 0; a < all_target_provinces.length; a++)
+                        if (all_target_provinces[a].culture == local_recipient.pops.primary_culture)
+                          local_provinces.push(all_target_provinces[a]);
+
+                      //Province counter
+                      for (var a = 0; a < local_provinces.length; a++) {
+                        if (!provinces_affected.includes(local_provinces[a].id))
+                          provinces_affected.push(local_provinces[a].id);
+
+                        if (local_provinces[a].type)
+                          type_count[local_provinces[a].type] = (type_count[local_provinces[a].type]) ?
+                            type_count[local_provinces[a].type] + 1 :
+                            1;
+                      }
+
+                      provinces_taken += local_provinces.length;
+                    }
+
+                    //Percentage calculation
+                    total_percentage_affected += provinces_taken/enemy_provinces;
+                    total_percentage++;
+                  }
+
                   break;
                 case "revoke_reparations":
+                  //Percentage calculation
+                  total_percentage_affected += local_value.revoke_reparations.length/war_obj[friendly_side].length;
+                  total_percentage++;
+
                   break;
                 case "seize_resources":
                   break;
