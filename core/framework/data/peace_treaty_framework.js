@@ -131,33 +131,6 @@ module.exports = {
     delete war_obj.peace_treaties[actual_id];
   },
 
-  getDemilitarisedTurns: function (arg0_province) {
-    //Convert from parameters
-    var province_id = arg0_province;
-
-    //Declare local instance variables
-    var all_cooldowns = Object.keys(main.global.cooldowns);
-    var demilitarised_turns = 0;
-    var province_obj = getProvince(province_id);
-
-    //Iterate over all cooldowns
-    if (province_obj)
-      if (province_obj.demilitarised)
-        for (var i = 0; i < all_cooldowns.length; i++)
-          if (all_cooldowns.includes("demiltiarisation")) {
-            var local_cooldown = main.global.cooldowns[all_cooldowns[i]];
-
-            if (local_cooldown.demilitarised_provinces.includes(province_obj.id))
-              demilitarised_turns = Math.max(
-                returnSafeNumber(local_cooldown.turns),
-                demilitarised_turns
-              );
-          }
-
-    //Return statement
-    return demilitarised_turns;
-  },
-
   getPeaceTreatyInfamy: function (arg0_war_name, arg1_peace_treaty_object) {
     //Convert from parameters
     var war_name = arg0_war_name.trim().toLowerCase();
@@ -189,6 +162,7 @@ module.exports = {
       if (local_wargoal)
         if (local_wargoal.infamy) {
           var enemy_provinces = 0;
+          var enemy_soldiers = 0;
           var provinces_affected = [];
           var recipient_count = {};
           var total_percentage = 0; //Counts total percentage of all wargoals to adjust for
@@ -199,6 +173,10 @@ module.exports = {
           //Initialise enemy_provinces
           for (var i = 0; i < war_obj[opposing_side].length; i++)
             enemy_provinces += main.users[war_obj[opposing_side][i]].provinces;
+
+          //Initialise enemy soldiers
+          for (var i = 0; i < war_obj[opposing_side].length; i++)
+            enemy_soldiers += getTotalSoldiers(war_obj[opposing_side][i]);
 
           //Initialise recipient_count
           for (var i = 0; i < all_users.length; i++)
@@ -248,11 +226,10 @@ module.exports = {
                   break;
                 case "annexation":
                   var local_clauses = Object.keys(local_value.annexation);
-                  var provinces_taken = 0;
+                  var provinces_taken = {};
 
                   for (var y = 0; y < local_clauses.length; y++) {
                     var local_recipient = main.users[local_clauses[y]];
-                    var provinces_taken = {};
                     var target_obj = local_value.annexation[local_clauses[y]];
 
                     //Iterate over all provinces
@@ -290,8 +267,59 @@ module.exports = {
 
                   break;
                 case "cut_down_to_size":
+                  var local_clauses = Object.keys(local_value.cut_down_to_size);
+                  var enemy_soldiers_disbanded = 0;
+
+                  //Fetch enemy_soldiers_disbanded
+                  for (var y = 0; y < local_clauses.length; y++) {
+                    var local_target = main.users[local_clauses[y]];
+                    var target_armies = Object.keys(local_target.armies);
+                    var target_obj = local_value.cut_down_to_size[local_clauses[y]];
+
+                    var local_keys = Object.keys(target_obj);
+
+                    for (var z = 0; z < local_keys.length; z++) {
+                      var local_amount = target_obj[local_keys[z]];
+
+                      if (local_keys[z].includes("_removal")) {
+                        var local_key = local_keys[z].replace("_removal", "");
+
+                        for (var a = 0; a < target_armies.length; a++) {
+                          var local_army = local_target.armies[target_armies[a]];
+
+                          if (local_army.type == local_key)
+                            enemy_soldiers_disbanded += getArmySize(local_clauses[y], local_army);
+                        }
+                      }
+                    }
+
+                    //Percentage calculation
+                    total_percentage_affected = enemy_soldiers_disbanded/enemy_soldiers;
+                    total_percentage += 1;
+                  }
+
                   break;
                 case "demilitarisation":
+                  var provinces_demilitarised = 0;
+
+                  for (var y = 0; y < local_value.demilitarisation.demilitarised_provinces.length; y++) {
+                    var local_province = main.provinces[local_value.demilitarisation.demilitarised_provinces.length];
+
+                    if (!provinces_affected.includes(local_provinces[z]))
+                      provinces_affected.push(local_provinces[z]);
+
+                    if (local_province.type)
+                      type_count[local_province.type] = (type_count[local_province.type]) ?
+                        type_count[local_province.type] + 1 :
+                        1;
+
+                    provinces_demilitarised++;
+                  }
+
+                  //Percentage calculation
+                  total_percentage_affected += provinces_demilitarised/enemy_provinces;
+                  total_percentage += 1;
+
                   break;
                 case "free_oppressed_people":
                   break;
