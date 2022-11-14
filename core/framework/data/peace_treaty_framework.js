@@ -131,7 +131,7 @@ module.exports = {
     delete war_obj.peace_treaties[actual_id];
   },
 
-  getPeaceTreatyInfamy: function (arg0_war_name, arg1_peace_treaty_object) { //[WIP] - Get main beneficiary, return object map
+  getPeaceTreatyInfamy: function (arg0_war_name, arg1_peace_treaty_object) {
     //Convert from parameters
     var war_name = arg0_war_name.trim().toLowerCase();
     var peace_obj = arg1_peace_treaty_object;
@@ -182,12 +182,13 @@ module.exports = {
       if (local_wargoal)
         if (local_wargoal.infamy) {
           var enemy_soldiers = 0;
+          var infamy_obj = local_wargoal.infamy;
           var provinces_affected = [];
           var recipient_count = {};
           var total_percentage = 0; //Counts total percentage of all wargoals to adjust for
           var total_percentage_affected = 0;
-          var total_wargoal_infamy = 0; //All infamy lands on the primary beneficiary of the wargoal
           var type_count = {};
+          var wargoal_infamy = 0; //All infamy lands on the primary beneficiary of the wargoal
 
           //Initialise enemy soldiers
           for (var i = 0; i < war_obj[opposing_side].length; i++)
@@ -213,6 +214,9 @@ module.exports = {
 
                     var local_recipient = main.users[local_clauses[y]];
                     var local_target = main.users[local_target_id];
+
+                    //Track recipient
+                    recipient_count[local_recipient.id]++;
 
                     //Add to tracker variables
                     provinces_taken += local_target.provinces;
@@ -246,6 +250,9 @@ module.exports = {
                   for (var y = 0; y < local_clauses.length; y++) {
                     var local_recipient = main.users[local_clauses[y]];
                     var target_obj = local_value.annexation[local_clauses[y]];
+
+                    //Track recipient
+                    recipient_count[local_recipient.id]++;
 
                     //Iterate over all provinces
                     for (var y = 0; y < target_obj.provinces.length; y++) {
@@ -285,6 +292,9 @@ module.exports = {
                   var local_clauses = Object.keys(local_value.cut_down_to_size);
                   var enemy_soldiers_disbanded = 0;
 
+                  //Track recipient
+                  recipient_count[peace_obj.id]++;
+
                   //Fetch enemy_soldiers_disbanded
                   for (var y = 0; y < local_clauses.length; y++) {
                     var local_target = main.users[local_clauses[y]];
@@ -317,6 +327,9 @@ module.exports = {
                 case "demilitarisation":
                   var provinces_demilitarised = 0;
 
+                  //Track recipient
+                  recipient_count[peace_obj.id]++;
+
                   for (var y = 0; y < local_value.demilitarisation.demilitarised_provinces.length; y++) {
                     var local_province = main.provinces[local_value.demilitarisation.demilitarised_provinces.length];
 
@@ -338,6 +351,9 @@ module.exports = {
                   break;
                 case "free_oppressed_people":
                   var local_clauses = Object.keys(local_value.free_oppressed_people);
+
+                  //Track recipient
+                  recipient_count[peace_obj.id]++;
 
                   for (var y = 0; y < local_clauses.length; y++) {
                     var local_target = main.users[local_clauses[y]];
@@ -374,12 +390,19 @@ module.exports = {
                 case "install_government":
                   var local_clauses = Object.keys(local_value.install_government);
 
+                  //Track recipient
+                  recipient_count[peace_obj.id]++;
+
                   //Percentage calculation
                   total_percentage_affected += local_clauses.length/war_obj[opposing_side].length;
                   total_percentage++;
 
                   break;
                 case "liberation":
+                  //Track recipient
+                  for (var y = 0; y < local_value.liberation.length; y++)
+                    recipient_count[local_value.liberation[y]]++;
+
                   //Percentage calculation
                   total_percentage_affected += local_value.liberation.length/enemy_vassals.length;
                   total_percentage++;
@@ -391,6 +414,9 @@ module.exports = {
                   for (var y = 0; y < local_clauses.length; y++) {
                     var local_recipient = main.users[local_value.puppet[local_clauses[y]]];
                     var local_target = main.users[local_clauses[y]];
+
+                    //Track recipient
+                    recipient_count[local_recipient.id]++;
 
                     var local_provinces = getProvinces(local_clauses[y], { include_hostile_occupations: true });
 
@@ -416,6 +442,11 @@ module.exports = {
 
                   for (var y = 0; y < local_clauses.length; y++) {
                     var target_obj = local_value.release_client_state[local_clauses[y]];
+
+                    var local_recipient = main.users[target_obj.overlord];
+
+                    //Track recipient
+                    recipient_count[local_recipient.id]++;
 
                     for (var a = 0; a < target_obj.provinces.length; a++) {
                       var local_province = main.provinces[target_obj.provinces[a]];
@@ -450,6 +481,9 @@ module.exports = {
                       var local_provinces = [];
                       var local_recipient = main.users[local_clause[z]];
 
+                      //Track recipient
+                      recipient_count[local_recipient.id]++;
+
                       //Fetch local_provinces with a .culture matching the primary culture of local_recipient
                       for (var a = 0; a < all_target_provinces.length; a++)
                         if (all_target_provinces[a].culture == local_recipient.pops.primary_culture)
@@ -476,6 +510,10 @@ module.exports = {
 
                   break;
                 case "revoke_reparations":
+                  //Track recipient
+                  for (var i = 0; i < local_value.revoke_reparations.length; i++)
+                    recipient_count[local_value.revoke_reparations[i]]++;
+
                   //Percentage calculation
                   total_percentage_affected += local_value.revoke_reparations.length/war_obj[friendly_side].length;
                   total_percentage++;
@@ -486,7 +524,11 @@ module.exports = {
                     var target_obj = local_value.seize_resources[y];
 
                     var local_clauses = Object.keys(target_obj);
+                    var local_recipient = main.users[target_obj.owner];
                     var local_target = main.users[target_obj.debtor];
+
+                    //Track recipient
+                    recipient_count[local_recipient.id]++;
 
                     //Percentage calculations are by user - actions, money, and inventory all equal 100%, each resource is 1/total_goods that
                     for (var z = 0; z < local_clauses.length; z++) {
@@ -511,6 +553,16 @@ module.exports = {
 
                   break;
                 case "steer_trade":
+                  var local_clauses = Object.keys(local_value.steer_trade);
+
+                  for (var y = 0; y < local_clauses.length; y++) {
+                    var local_clause = local_value.steer_trade[local_clauses[y]];
+                    var local_recipient = main.users[local_clause.overlord];
+
+                    //Track recipient
+                    recipient_count[local_recipient.id]++;
+                  }
+
                   //Percentage calculation
                   total_percentage_affected += Object.keys(local_value.steer_trade).length/war_obj[opposing_side].length;
                   total_percentage++;
@@ -521,6 +573,10 @@ module.exports = {
 
                   for (var y = 0; y < local_value.syphon_actions.length; y++) {
                     var target_obj = local_value.syphon_actions[y];
+                    var local_recipient = main.users[target_obj.owner];
+
+                    //Track recipient
+                    recipient_count[local_recipient.id]++;
 
                     total_percentage_amount += returnSafeNumber(target_obj.percentage_amount);
                   }
@@ -536,6 +592,11 @@ module.exports = {
                   for (var y = 0; y < local_value.war_reparations.length; y++) {
                     var target_obj = local_value.war_reparations[y];
 
+                    var local_recipient = main.users[target_obj.owner];
+
+                    //Track recipient
+                    recipient_count[local_recipient.id]++;
+
                     total_percentage_amount += returnSafeNumber(target_obj.percentage_amount);
                   }
 
@@ -547,9 +608,59 @@ module.exports = {
               }
           }
 
+          //Get primary beneficiary
+          var all_recipients = Object.keys(recipient_count);
+          var biggest_recipient = [peace_obj.id, 0];
+          var primary_beneficiary = peace_obj.id;
+
+          for (var x = 0; x < all_recipients.length; x++) {
+            var local_recipient_count = recipient_count[all_recipients[x]];
+
+            if (local_recipient_count > biggest_recipient[1])
+              biggest_recipient = [all_recipients[x], local_recipient_count];
+          }
+
+          primary_beneficiary = biggest_recipient[0];
+
           //Add infamy to primary beneficiary's infamy_map
+          var default_infamy_keys = ["infamy_per_percentage", "infamy_per_province", "maximum_infamy", "minimum_infamy"];
+
+          if (infamy_obj.minimum_infamy)
+            wargoal_infamy += infamy_obj.minimum_infamy;
+
+          //Percentage handler
+          var absolute_percentage = returnSafeNumber(total_percentage_affected/total_percentage);
+
+          if (infamy_obj.infamy_per_percentage)
+            wargoal_infamy += absolute_percentage*infamy_obj.infamy_per_percentage*100;
+
+          //Per province handler
+          if (infamy_obj.infamy_per_province)
+            wargoal_infamy += provinces_affected.length*infamy_obj.infamy_per_province;
+
+          //Per type handler
+          var all_infamy_keys = Object.keys(infamy_obj);
+
+          for (var x = 0; x < all_infamy_keys.length; x++)
+            if (!default_infamy_keys.includes(all_infamy_keys[x])) {
+              var local_infamy_key = all_infamy_keys[x].replace("infamy_per_", "");
+
+              if (type_count[local_infamy_key])
+                wargoal_infamy += returnSafeNumber(type_count[local_infamy_key]*infamy_obj[all_infamy_keys[x]]);
+            }
+
+          //Cap infamy
+          wargoal_infamy = Math.min(wargoal_infamy, returnSafeNumber(infamy_obj.maximum_infamy));
+
+          //Add infamy to primary beneficiary
+          infamy_map[primary_beneficiary] = (infamy_map[primary_beneficiary]) ?
+            infamy_map[primary_beneficiary] + wargoal_infamy :
+            wargoal_infamy;
         }
     }
+
+    //Return statement
+    return infamy_map;
   },
 
   parsePeaceTreaty: function (arg0_war_name, arg1_peace_treaty_object) { //[WIP] - Add infamy scaling
