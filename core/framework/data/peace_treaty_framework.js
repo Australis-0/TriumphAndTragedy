@@ -152,6 +152,9 @@ module.exports = {
     var usr = main.users[peace_obj.id];
     var war_obj = (typeof war_name != "object") ? JSON.parse(JSON.stringify(getWar(war_name))) : war_name;
 
+    var cb_obj = getCB(war_obj.cb);
+    var infamy_scaling = returnSafeNumber(cb_obj.infamy_scaling, 1);
+
     //Fetch friendly side
     if (war_obj.attackers.includes(peace_obj.id)) {
       friendly_side = "attackers";
@@ -658,6 +661,9 @@ module.exports = {
           //Cap infamy
           wargoal_infamy = Math.min(wargoal_infamy, returnSafeNumber(infamy_obj.maximum_infamy));
 
+          //Apply infamy_scaling
+          wargoal_infamy = wargoal_infamy*infamy_scaling;
+
           //Add infamy to primary beneficiary
           infamy_map[primary_beneficiary] = (infamy_map[primary_beneficiary]) ?
             infamy_map[primary_beneficiary] + wargoal_infamy :
@@ -697,6 +703,8 @@ module.exports = {
     var friendly_side = "";
     var opposing_side = "";
     var war_obj = JSON.parse(JSON.stringify(getWar(war_name)));
+
+    var infamy_map = module.exports.getPeaceTreatyInfamy(war_obj, peace_obj);
 
     //Fetch friendly side
     if (war_obj.attackers.includes(peace_obj.id)) {
@@ -1100,5 +1108,16 @@ module.exports = {
               break;
           }
       }
+
+    //Apply infamy
+    var all_infamy_keys = Object.keys(infamy_map);
+
+    for (var i = 0; i < all_infamy_keys.length; i++) {
+      var local_amount = infamy_map[all_infamy_keys[i]];
+      var local_user = main.users[all_infamy_keys[i]];
+
+      //Add to local_user.infamy
+      local_user.infamy += returnSafeNumber(local_amount);
+    }
   }
 };
