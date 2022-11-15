@@ -132,6 +132,10 @@ module.exports = {
 
             //Push wargoal name and (wargoals demanded/wargoals limit) to string
             peace_string.push(`• __${(wargoal_obj.name) ? wargoal_obj.name : wargoal_id} #${wargoal_number}__:`);
+
+            //Push infamy
+            peace_string.push(`\n- ${parseWargoalInfamyLocalisation(user_id, war_obj, peace_obj.wargoals[y]).join("\n- ")}`);
+
             peace_string.push("");
 
             for (var y = 0; y < all_effects.length; y++) {
@@ -368,7 +372,7 @@ module.exports = {
     var actual_id = main.global.user_map[user_id];
     var peace_treaty_simulation = createPeaceTreaty(user_id, war_obj, true);
     var usr = main.users[actual_id];
-    
+
     //Push current wargoal
     peace_treaty_simulation.wargoals.push(wargoal_obj);
 
@@ -377,6 +381,38 @@ module.exports = {
 
     //Return statement
     return (wargoal_localisation) ? wargoal_localisation : [];
+  },
+
+  parseWargoalInfamyLocalisation: function (arg0_user, arg1_war_obj, arg2_wargoal_obj) {
+    //Convert from parameters
+    var user_id = arg0_user;
+    var war_obj = arg1_war_obj;
+    var wargoal_obj = arg2_wargoal_obj;
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var peace_treaty_simulation = createPeaceTreaty(user_id, war_obj, true);
+    var usr = main.users[actual_id];
+
+    //Push current wargoal
+    peace_treaty_simulation.wargoals.push(wargoal_obj);
+
+    //Get current infamy
+    var infamy_obj = getPeaceTreatyInfamy(war_obj, peace_treaty_simulation);
+    var infamy_string = "";
+
+    var all_infamy_keys = Object.keys(infamy_obj);
+
+    //Format infamy_string
+    for (var i = 0; i < all_infamy_keys.length; i++) {
+      var local_amount = infamy_obj[all_infamy_keys[i]];
+      var local_user = main.users[all_infamy_keys[i]];
+
+      infamy_string.push(`${local_user.name} gains ${config.icons.infamy} **${parseNumber(local_amount, { display_float: true, display_prefix: true })}** Infamy.`);
+    }
+
+    //Return statement
+    return infamy_string;
   },
 
   /*
