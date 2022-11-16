@@ -88,8 +88,9 @@ config.wargoals = {
       limited_annexation: {
         can_take_capital: true,
         free_annexation: false, //Whether or not a user
-        minimum_provinces_allowed: 20,
-        maximum_percentage_allowed: 0.50
+        minimum_provinces_allowed: 10,
+        minimum_percentage_allowed: 0.20,
+        maximum_percentage_allowed: 0.20
       }
     }
   },
@@ -230,6 +231,28 @@ config.wargoals = {
     effect: {
       puppet: {
         minimum_turns_puppeted: 25
+      }
+    }
+  },
+
+  secure_buffer_state: {
+    name: "Secure Buffer State",
+    description: "Annexes a portion of another country to serve as a buffer.",
+
+    demand_limit: 1,
+    infamy: {
+      infamy_per_province: 0.03,
+
+      maximum_infamy: 3
+    },
+
+    effect: {
+      limited_annexation: {
+        can_take_capital: true,
+        free_annexation: false,
+        minimum_provinces_allowed: 20,
+        minimum_percentage_allowed: 0.20,
+        maximum_percentage_allowed: 0.20
       }
     }
   },

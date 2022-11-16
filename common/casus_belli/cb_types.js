@@ -170,6 +170,24 @@ config.casus_belli = {
     }
   },
 
+  acquire_buffer_state: {
+    name: "Acquire Buffer State",
+    description: "Attacker has an autocratic government in power.",
+    icon: "artillery_piece",
+    infamy: 4,
+
+    limit: function (usr, ot_user) {
+      //Return statement
+      if (["fascism", "communism", "absolute_monarchy".includes(usr.government)])
+        return true;
+    },
+
+    peace_demands: {
+      secure_buffer_state: 1,
+      puppet: 1
+    }
+  },
+
   //Is triggered only by event/diplomatic dialogue
   anschluss: {
     name: "Anschluss",
@@ -194,24 +212,6 @@ config.casus_belli = {
     }
   },
 
-  lebensraum: {
-    name: "Lebensraum",
-		description: "Attacker is communist, fascist, or absolute monarchy.",
-    icon: "land_vehicles",
-    infamy: 5,
-
-    limit: function (usr, ot_user) {
-      //Return statement
-      if (["fascism"].includes(usr.government))
-        return true;
-    },
-
-    peace_demands: {
-      annexation: 1,
-      puppet: 1
-    }
-  },
-
   acquire_state: {
     name: "Acquire State",
     description: "Attacker's provinces are adjacent to target provinces.",
@@ -233,8 +233,37 @@ config.casus_belli = {
     },
 
     peace_demands: {
+      limited_annexation: 1,
+      puppet: 1
+    }
+  },
+
+  lebensraum: {
+    name: "Lebensraum",
+		description: "An aggressive war of expansion available only to fascist countries.",
+    icon: "land_vehicles",
+    infamy: 5,
+
+    limit: function (usr, ot_user) {
+      //Return statement
+      if (["fascism"].includes(usr.government))
+        return true;
+    },
+
+    peace_demands: {
       annexation: 1,
       puppet: 1
+    }
+  },
+
+  //Dynamic CBs - cannot be justified by default
+  great_war: {
+    name: "Great War",
+    description: "A total war involving at least 20% of the world's provinces and 4 countries with at least a million active soldiers on both sides.",
+    icon: "globe",
+
+    dynamic_limit: function (war_obj) {
+      
     }
   }
 };
