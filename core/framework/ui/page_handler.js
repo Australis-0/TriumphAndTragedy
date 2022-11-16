@@ -1309,6 +1309,7 @@ module.exports = {
 
         //These go after war list
         if (game_obj.page.startsWith("view_war_")) {
+          var default_keys = ["back", "add wargoal", "call ally", "remove wargoal", "rename war", "send peace offer", "sign peace treaty", "view peace offer", "view peace treaty"];
           var war_name = game_obj.page.replace("view_war_", "");
           var war_obj = getWar(war_name);
 
@@ -1356,6 +1357,14 @@ module.exports = {
             (war_obj.peace_treaties[actual_id]) ?
               modifyPeaceTreaty(user_id, war_obj.peace_treaties[actual_id]) :
               printError(game_obj.id, `You don't currently have a peace treaty active for this conflict! Type **[Sign Peace Treaty]** first to create a new peace treaty.`);
+
+          //[(Wargoal Name)]
+          if (!default_keys.includes(input)) {
+            var wargoal_obj = getWargoal(input);
+
+            if (wargoal_obj)
+              printAlert(game_obj.id, parseWargoalLocalisation(wargoal_obj).join("\n"));
+          }
         }
 
         if (game_obj.page.startsWith("view_war_archives_", "")) {

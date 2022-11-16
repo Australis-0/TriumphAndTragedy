@@ -137,7 +137,7 @@ module.exports = {
           demand_limit*returnSafeNumber(war_obj.attackers_wargoals[attacker_wargoals[i]], 1)
         );
 
-        attackers_wargoal_string.push(`${(wargoal_obj.name) ? wargoal_obj.name : attacker_wargoals[i]} (__${parseNumber(demand_limit)}__)`);
+        attackers_wargoal_string.push(`[${(wargoal_obj.name) ? wargoal_obj.name : attacker_wargoals[i]}] (__${parseNumber(demand_limit)}__)`);
       }
 
       //Format attacker description
@@ -164,7 +164,7 @@ module.exports = {
           demand_limit*returnSafeNumber(war_obj.defenders_wargoals[defender_wargoals[i]], 1)
         );
 
-        defenders_wargoal_string.push(`${(wargoal_obj.name) ? wargoal_obj.name : defender_wargoals[i]} (__${parseNumber(demand_limit)}__)`);
+        defenders_wargoal_string.push(`[${(wargoal_obj.name) ? wargoal_obj.name : defender_wargoals[i]}] (__${parseNumber(demand_limit)}__)`);
       }
 
       //Format defender description

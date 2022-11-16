@@ -460,7 +460,7 @@ module.exports = {
 
     //Declare local instance variables
     var prefix = (!options.disable_prefix) ? "• " : "";
-    var wargoal_obj = config.wargoals[wargoal_type];
+    var wargoal_obj = (typeof wargoal_type != "object") ? config.wargoals[wargoal_type] : wargoal_type;
     var wargoal_string = [];
 
     if (wargoal_obj) {
@@ -790,6 +790,9 @@ module.exports = {
       } else {
         wargoal_string.push(`${prefix}White Peace`);
       }
+
+      //Return statement
+      return wargoal_string;
     }
   }
 };
