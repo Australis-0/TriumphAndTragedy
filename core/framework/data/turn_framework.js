@@ -275,15 +275,45 @@ module.exports = {
           }
       }
 
-      //Iterate over all wars to process warscore
+      //Iterate over all wars to process warscore; check CB's
       for (var i = 0; i < all_wars.length; i++) {
         var local_war = main.global.wars[all_wars[i]];
 
+        var all_cbs = Object.keys(config.casus_belli);
         var attacker_war_exhaustion = 0;
         var attacker_warscore = 0;
         var defender_war_exhaustion = 0;
         var defender_warscore = 0;
         var fully_sieged_defenders = 0;
+
+        //Dynamic CB handler
+        for (var x = 0; x < all_cbs.length; x++) {
+          var local_cb = config.casus_belli[all_cbs[x]];
+
+          if (local_cb.dynamic_limit) {
+            var cb_changes = local_cb.dynamic_limit(local_war);
+
+            if (cb_changes) {
+              //Check to see if wargoals need to change
+              if (local_cb.clear_wargoals) {
+                local_war.attackers_wargoals = {};
+                local_war.defenders_wargoals = {};
+              }
+
+              //Add new wargoals to war object
+              if (local_cb.peace_demands) {
+                var all_wargoals = Object.keys(local_cb.peace_demands);
+
+                for (var y = 0; y < all_wargoals.length; y++) {
+                  var local_amount = local_cb.peace_demands[all_wargoals[y]];
+
+                  local_war.attackers_wargoals[all_wargoals[y]] = local_amount;
+                  local_war.defenders_wargoals[all_wargoals[y]] = local_amount;
+                }
+              }
+            }
+          }
+        }
 
         //Initialise variables
         for (var x = 0; x < local_war.attackers.length; x++) {

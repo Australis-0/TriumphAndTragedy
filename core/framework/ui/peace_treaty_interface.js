@@ -1760,8 +1760,10 @@ module.exports = {
               //Push to peace_obj.wargoals
               peace_obj.wargoals.push({ id: wargoal_name, effect: effect_obj });
 
+              var wargoal_infamy_localisation = parseWargoalInfamyLocalisation(user_id, war_obj, peace_obj.wargoals[peace_obj.wargoals.length - 1]);
+
               //Print feedback message
-              printAlert(game_obj.id, `${config.icons.checkmark} You have successfully added the **${(wargoal_obj.name) ? wargoal_obj.name : wargoal_name}** wargoal to your current peace offer.\n\n- ${parseWargoalInfamyLocalisation(user_id, war_obj, peace_obj.wargoals[peace_obj.wargoals.length - 1]).join("\n- ")}`);
+              printAlert(game_obj.id, `${config.icons.checkmark} You have successfully added the **${(wargoal_obj.name) ? wargoal_obj.name : wargoal_name}** wargoal to your current peace offer.${(wargoal_infamy_localisation.length > 0) ? `\n\n- ${wargoal_infamy_localisation.join("\n- ")}` : ""}`);
 
               setTimeout(function(){
                 module.exports.modifyPeaceTreaty(user_id, peace_obj, true);

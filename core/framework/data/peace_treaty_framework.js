@@ -634,40 +634,42 @@ module.exports = {
           //Add infamy to primary beneficiary's infamy_map
           var default_infamy_keys = ["infamy_per_percentage", "infamy_per_province", "maximum_infamy", "minimum_infamy"];
 
-          if (infamy_obj.minimum_infamy)
-            wargoal_infamy += infamy_obj.minimum_infamy;
+          if (infamy_obj) {
+            if (infamy_obj.minimum_infamy)
+              wargoal_infamy += infamy_obj.minimum_infamy;
 
-          //Percentage handler
-          var absolute_percentage = returnSafeNumber(total_percentage_affected/total_percentage);
+            //Percentage handler
+            var absolute_percentage = returnSafeNumber(total_percentage_affected/total_percentage);
 
-          if (infamy_obj.infamy_per_percentage)
-            wargoal_infamy += absolute_percentage*infamy_obj.infamy_per_percentage*100;
+            if (infamy_obj.infamy_per_percentage)
+              wargoal_infamy += absolute_percentage*infamy_obj.infamy_per_percentage*100;
 
-          //Per province handler
-          if (infamy_obj.infamy_per_province)
-            wargoal_infamy += provinces_affected.length*infamy_obj.infamy_per_province;
+            //Per province handler
+            if (infamy_obj.infamy_per_province)
+              wargoal_infamy += provinces_affected.length*infamy_obj.infamy_per_province;
 
-          //Per type handler
-          var all_infamy_keys = Object.keys(infamy_obj);
+            //Per type handler
+            var all_infamy_keys = Object.keys(infamy_obj);
 
-          for (var x = 0; x < all_infamy_keys.length; x++)
-            if (!default_infamy_keys.includes(all_infamy_keys[x])) {
-              var local_infamy_key = all_infamy_keys[x].replace("infamy_per_", "");
+            for (var x = 0; x < all_infamy_keys.length; x++)
+              if (!default_infamy_keys.includes(all_infamy_keys[x])) {
+                var local_infamy_key = all_infamy_keys[x].replace("infamy_per_", "");
 
-              if (type_count[local_infamy_key])
-                wargoal_infamy += returnSafeNumber(type_count[local_infamy_key]*infamy_obj[all_infamy_keys[x]]);
-            }
+                if (type_count[local_infamy_key])
+                  wargoal_infamy += returnSafeNumber(type_count[local_infamy_key]*infamy_obj[all_infamy_keys[x]]);
+              }
 
-          //Cap infamy
-          wargoal_infamy = Math.min(wargoal_infamy, returnSafeNumber(infamy_obj.maximum_infamy));
+            //Cap infamy
+            wargoal_infamy = Math.min(wargoal_infamy, returnSafeNumber(infamy_obj.maximum_infamy));
 
-          //Apply infamy_scaling
-          wargoal_infamy = wargoal_infamy*infamy_scaling;
+            //Apply infamy_scaling
+            wargoal_infamy = wargoal_infamy*infamy_scaling;
 
-          //Add infamy to primary beneficiary
-          infamy_map[primary_beneficiary] = (infamy_map[primary_beneficiary]) ?
-            infamy_map[primary_beneficiary] + wargoal_infamy :
-            wargoal_infamy;
+            //Add infamy to primary beneficiary
+            infamy_map[primary_beneficiary] = (infamy_map[primary_beneficiary]) ?
+              infamy_map[primary_beneficiary] + wargoal_infamy :
+              wargoal_infamy;
+          }
         }
     }
 

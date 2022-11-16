@@ -284,8 +284,8 @@ module.exports = {
       starting_date: JSON.parse(JSON.stringify(main.date)),
       starting_round: JSON.parse(JSON.stringify(main.round_count)),
 
-      attackers_wargoals: [],
-      defenders_wargoals: [],
+      attackers_wargoals: {},
+      defenders_wargoals: {},
       cb: options.type,
 
       attackers_war_leader: attacker_id,
