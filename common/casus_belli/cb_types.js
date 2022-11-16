@@ -242,7 +242,7 @@ config.casus_belli = {
     name: "Lebensraum",
 		description: "An aggressive war of expansion available only to fascist countries.",
     icon: "land_vehicles",
-    infamy: 5,
+    infamy: 7,
 
     limit: function (usr, ot_user) {
       //Return statement
@@ -263,7 +263,7 @@ config.casus_belli = {
     icon: "globe",
 
     dynamic_limit: function (war_obj) {
-      
+
     }
   }
 };
