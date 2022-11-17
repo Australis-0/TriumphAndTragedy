@@ -453,7 +453,7 @@ module.exports = {
       disable_prefix: true/false - Whether or not to disable the bullet point in the prefix
     }
   */
-  parseWargoalLocalisation: function (arg0_wargoal_type) {
+  parseWargoalLocalisation: function (arg0_wargoal_type, arg1_options) {
     //Convert from parameters
     var wargoal_type = arg0_wargoal_type;
     var options = (arg1_options) ? arg1_options : {};
@@ -504,9 +504,12 @@ module.exports = {
         wargoal_string.push(`${config.icons.infamy} Infamy: **0**`);
       }
 
+      wargoal_string.push("");
+
       (wargoal_obj.demand_limit != -1) ?
         wargoal_string.push(`This wargoal can be demanded up to **${parseNumber(returnSafeNumber(wargoal_obj.demand_limit, 1))}** time(s).`) :
         wargoal_string.push(`This wargoal can be demanded as many times as we like.`);
+        
       wargoal_string.push("");
 
       //Wargoal effects

@@ -946,6 +946,8 @@ module.exports = {
       //Diplomacy page handler
       {
         if (game_obj.page == "cb_list") {
+          var default_keys = ["back", "jump to page"];
+
           //[Back]
           if (input == "back") {
             printDiplomacy(user_id);
@@ -967,6 +969,14 @@ module.exports = {
                 user: game_obj.user
               });
             });
+
+          //[(Wargoal Name)]
+          if (!default_keys.includes(input)) {
+            var wargoal_obj = getWargoal(input);
+
+            if (wargoal_obj)
+              printAlert(game_obj.id, parseWargoalLocalisation(wargoal_obj).join("\n"));
+          }
         }
 
         if (game_obj.page == "client_state_proposals") {

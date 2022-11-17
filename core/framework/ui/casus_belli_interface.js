@@ -44,7 +44,7 @@ module.exports = {
             var local_amount = local_cb.peace_demands[all_demands[x]];
             var local_wargoal = getWargoal(all_demands[x]);
 
-            peace_demands_array.push(`${(local_wargoal.name) ? local_wargoal.name : all_demands[x]} (__${parseNumber(local_amount)}__)`);
+            peace_demands_array.push(`[${(local_wargoal.name) ? local_wargoal.name : all_demands[x]}] (__${parseNumber(local_amount)}__)`);
           } catch (e) {
             log.error(`Error whilst parsing wargoal key '${all_demands[x]}': ${e}`);
           }
