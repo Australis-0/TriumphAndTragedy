@@ -110,7 +110,7 @@ module.exports = {
     var all_cooldowns = Object.keys(usr.cooldowns);
     var all_users = Object.keys(main.users);
     var trade_whitelist = (all_cooldowns.indexOf("steer_trade") != -1) ?
-      all_users : [];
+      [] : all_users;
 
     //Check if trade is being steered by someone
     for (var i = 0; i < all_cooldowns.length; i++)
