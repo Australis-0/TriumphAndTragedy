@@ -124,8 +124,6 @@ client.on("messageCreate", async (message) => {
               fixed_width: true
             });
 
-            console.log(`Finished splitting embed!`);
-
             //Remove functionality for previous debug logs
             var all_interfaces = Object.keys(interfaces);
 
