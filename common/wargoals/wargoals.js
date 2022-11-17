@@ -243,6 +243,7 @@ config.wargoals = {
     infamy: {
       infamy_per_province: 0.03,
 
+      minimum_infamy: 1,
       maximum_infamy: 3
     },
 
