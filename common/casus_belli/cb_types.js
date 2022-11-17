@@ -80,6 +80,26 @@ config.casus_belli = {
     }
   },
 
+  raid: {
+    name: "Raid",
+    description: "Attacker and target have less than 120 technologies researched.",
+    icon: "gold",
+    infamy: 1,
+
+    limit: function (usr, ot_user) {
+      //Return statement
+      if (
+        usr.researched_technologies.length < 120 &&
+        ot_user.researched_technologies.length < 120
+      )
+        return true;
+    },
+
+    peace_demands: {
+      raid: 1
+    }
+  },
+
   colonial_integration: {
     name: "Colonial Integration",
     description: "Attacker's total deployed AP are over 4x that of their target's deployed military. Target is at least 20 techs behind.",
@@ -170,6 +190,48 @@ config.casus_belli = {
     }
   },
 
+  mercantile_domination: {
+    name: "Mercantile Domination",
+    description: "Both attacker and target have less than 180 technologies researched. Attacker is either a constitutional monarchy or democracy.",
+    icon: "trade",
+    infamy: 2.5,
+
+    limit: function (usr, ot_user) {
+      //Return statement
+      if (
+        ["constitutional_monarchy", "democracy"].includes(usr.government) &&
+        usr.researched_technologies.length < 180 &&
+        ot_user.researched_technologies.length < 180
+      )
+        return true;
+    },
+
+    peace_demands: {
+      establish_trading_posts: 1,
+      steer_trade: 1,
+      syphon_actions: 1
+    }
+  },
+
+  feudal_conquest: {
+    name: "Feudal Conquest",
+    description: "Both attacker and target have less than 140 technologies researched.",
+    infamy: 3,
+
+    limit: function (usr, ot_user) {
+      //Return statement
+      if (
+        usr.researched_technologies.length < 140 &&
+        ot_user.researched_technologies.length < 140
+      )
+        return true;
+    },
+
+    peace_demands: {
+      feudal_conquest: 1
+    }
+  },
+
   acquire_buffer_state: {
     name: "Acquire Buffer State",
     description: "Attacker has an autocratic government in power.",
@@ -240,7 +302,7 @@ config.casus_belli = {
 
   lebensraum: {
     name: "Lebensraum",
-		description: "An aggressive war of expansion available only to fascist countries.",
+		description: "Attacker is fascist.",
     icon: "land_vehicles",
     infamy: 7,
 
@@ -259,11 +321,77 @@ config.casus_belli = {
   //Dynamic CBs - cannot be justified by default
   great_war: {
     name: "Great War",
-    description: "A total war involving at least 20% of the world's provinces and 4 countries with at least a million active soldiers on both sides.",
+    description: "A total war involving at least 20% of the world's provinces and 4 countries with at least a million active soldiers on both sides. Mass Politics must be researched by at least one country.",
     icon: "globe",
 
-    dynamic_limit: function (war_obj) {
+    infamy_modifier: 0.20,
 
+    clear_wargoals: true,
+    dynamic_limit: function (war_obj) {
+      //Declare local instance variables
+      var all_users = Object.keys(main.users);
+      var attacking_province_count = 0;
+      var attacking_soldier_count = 0;
+      var defending_province_count = 0;
+      var defending_soldier_count = 0;
+      var mass_politics_researched = false;
+
+      if (war_obj.attackers.length + war_obj.defenders.length >= 4) {
+        //Check if mass politics is researched
+        for (var i = 0; i < all_users.length; i++) {
+          var local_user = main.users[all_users[i]];
+
+          if (local_user.researched_technologies.includes("mass_politics"))
+            mass_politics_researched = true;
+        }
+
+        //Update tracker variables
+        if (mass_politics_researched) {
+          for (var i = 0; i < war_obj.attackers.length; i++) {
+            var local_user = main.users[war_obj.attackers[i]];
+
+            attacking_province_count += local_user.provinces;
+            attacking_soldier_count += getTotalActiveDuty(war_obj.attackers[i]);
+          }
+          for (var i = 0; i < war_obj.defenders.length; i++) {
+            var local_user = main.users[war_obj.defenders[i]];
+
+            defending_province_count += local_user.provinces;
+            defending_soldier_count += getTotalActiveDuty(war_obj.defenders[i]);
+          }
+
+          //Return statement
+          if (
+            attacking_soldier_count >= 1000000 &&
+            defending_soldier_count >= 1000000 &&
+            attacking_province_count + defending_province_count >= Math.ceil(config.defines.map.province_amount*0.2)
+          )
+            return true;
+        }
+      }
+    },
+
+    peace_demands: {
+      complete_annexation: 5,
+      cut_down_to_size: 7,
+      demilitarise_region: 3,
+      free_oppressed_people: 10,
+      free_people: 8,
+      install_government: 12,
+      lebensraum: 5,
+      liberation: 20,
+      limited_annexation: 20,
+      puppet: 12,
+      secure_buffer_state: 5,
+      seize_stockpiles: 20,
+      steer_trade: 8,
+      syphon_actions: 6,
+      release_client_state: 12,
+      retake_cores: 10,
+      revoke_war_reparations: 14,
+      take_treaty_port: 4,
+      war_indemnities: 10,
+      war_reparations: 20
     }
   }
 };

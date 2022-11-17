@@ -360,6 +360,20 @@ config.wargoals = {
     }
   },
 
+  retake_cores: {
+    name: "Retake Cores",
+    description: "Liberates a recipient's primary cultural territories from a target.",
+
+    demand_limit: 1,
+    infamy: {
+      minimum_infamy: 1.5
+    },
+
+    effect: {
+      retake_cores: true
+    }
+  },
+
   revoke_war_reparations: {
     name: "Revokes War Reparations",
     description: "Abrogates all tributary and debt agreements between a country of our election and its fiscal master.",
