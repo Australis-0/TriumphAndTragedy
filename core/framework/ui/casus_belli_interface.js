@@ -30,6 +30,7 @@ module.exports = {
       var local_cb_icon = (local_cb.icon) ? config.icons[local_cb.icon] + " " : "";
       var local_cb_infamy = returnSafeNumber(local_cb.infamy);
       var local_cb_name = (local_cb.name) ? local_cb.name : all_cbs[i];
+      var local_cb_string = [];
 
       //Format peace_demands_array
       var peace_demands_array = [];
@@ -49,28 +50,19 @@ module.exports = {
       }
 
       //Format CB
-      if (!local_cb.dynamic_limit && local_cb.limit) {
-        cb_list_string.push(`${local_cb_icon}**__${local_cb_name}__**:`);
-        cb_list_string.push(`---`);
-        cb_list_string.push(`- ${config.icons.old_scroll} Requirement: ${local_cb_description}`);
-        cb_list_string.push("");
+      local_cb_string.push(config.localisation.blank);
+      local_cb_string.push(`- ${config.icons.old_scroll} Requirement: ${local_cb_description}`);
 
-        if (peace_demands_array.length > 0)
-          cb_list_string.push(`- ${config.icons.diplomacy} Peace Demands: ${peace_demands_array.join(", ")}`);
+      if (peace_demands_array.length > 0)
+        local_cb_string.push(`- ${config.icons.diplomacy} Peace Demands:\n • ${peace_demands_array.join("\n• ")}\n`);
 
-        cb_list_string.push(`- ${config.icons.infamy} Infamy: ${parseNumber(local_cb_infamy)}`);
-        cb_list_string.push("");
-      } else {
-        dynamic_list_string.push(`${local_cb_icon}**__${local_cb_name}__**:`);
-        dynamic_list_string.push(`---`);
-        dynamic_list_string.push(`- ${config.icons.old_scroll} Requirement: ${local_cb_description}`);
-        dynamic_list_string.push("");
+      local_cb_string.push(`- ${config.icons.infamy} Infamy: ${parseNumber(local_cb_infamy)}`);
+      local_cb_string.push(config.localisation.blank);
 
-        if (peace_demands_array.length > 0)
-          dynamic_list_string.push(`- ${config.icons.diplomacy} Peace Demands: ${peace_demands_array.join(", ")}`);
-
-        dynamic_list_string.push("");
-      }
+      //Push to fields object
+      (!local_cb.dynamic_limit && local_cb.limit) ?
+        cb_list_fields.push({ name: `${local_cb_icon}**__${local_cb_name}__**:`, value: local_cb_string.join("\n"), inline: true }) :
+        dynamic_list_fields.push({ name: `${local_cb_icon}**__${local_cb_name}__**:`, value: local_cb_string.join("\n"), inline: true });
     }
 
     //Remove control panel
@@ -82,16 +74,22 @@ module.exports = {
 
     try {
       regular_cb_embeds = splitEmbed(cb_list_string, {
-       title: `List of Regular Casus Belli:`,
+       title: `[Back] | [Jump To Page] | List of Regular Casus Belli:`,
+       fields: cb_list_fields,
        title_pages: true,
-       fixed_width: true
+       fixed_width: true,
+       maximum_fields: 12,
+       table_width: 2
      });
     } catch {}
     try {
       dynamic_cb_embeds = splitEmbed(dynamic_list_string, {
-        title: `List of Dynamic Casus Belli:`,
+        title: `[Back] | [Jump To Page] | List of Dynamic Casus Belli:`,
+        fields: dynamic_list_fields,
         title_pages: true,
-        fixed_width: true
+        fixed_width: true,
+        maximum_fields: 12,
+        table_width: 2
       });
     } catch {}
 
