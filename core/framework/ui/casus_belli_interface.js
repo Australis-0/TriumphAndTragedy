@@ -1,5 +1,5 @@
 module.exports = {
-  printCBs: function (arg0_user) { //[WIP] - Reformat
+  printCBs: function (arg0_user) {
     //Convert from parameters
     var user_id = arg0_user;
 

@@ -456,7 +456,10 @@ module.exports = {
                   }
 
                   //Initialise game loop
-                  module.exports.initialiseGameLoop(local_interface);
+                  try {
+                    module.exports.initialiseGameLoop(local_interface);
+                  } catch {}
+                  
                   clearInterval(reinitialisation_loop);
 
                   for (var x = 0; x < all_messages.length; x++)
