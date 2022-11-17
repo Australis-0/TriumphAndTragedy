@@ -208,15 +208,14 @@ module.exports = {
 
               break;
             case "casus belli":
+            case "cb":
+            case "cbs":
             case "cb list":
-              //[View CB List]
-              if (input == "view cb list") {
-                createPageMenu(game_obj.middle_embed, {
-                  embed_pages: printCBs(user_id),
-                  user: game_obj.user
-                });
-                game_obj.page = "cb_list";
-              }
+              createPageMenu(game_obj.middle_embed, {
+                embed_pages: printCBs(user_id),
+                user: game_obj.user
+              });
+              game_obj.page = "cb_list";
 
               break;
             case "cities":

@@ -1,20 +1,27 @@
 module.exports = {
-  printCBs: function (arg0_user) {
+  printCBs: function (arg0_user) { //[WIP] - Reformat
     //Convert from parameters
     var user_id = arg0_user;
 
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
     var all_cbs = Object.keys(config.casus_belli);
+    var all_embeds = [];
     var game_obj = getGameObject(user_id);
     var usr = main.users[actual_id];
 
-    //Declare cb_list_string
+    //Declare cb_list_string, dynamic_cbs
+    var cb_list_fields = [];
     var cb_list_string = [];
+    var dynamic_list_fields = [];
+    var dynamic_list_string = [];
 
     //Format cb_list_string
-    cb_list_string.push(`**Notice:** 'Status Quo' includes war reparations.`);
+    cb_list_string.push(`**Notice:** 'White Peace' indicates a CB with no additional peace demands.`);
     cb_list_string.push("");
+
+    //Format dynamic_list_string
+    dynamic_list_string.push(`**Notice:** The following Casus Belli are dynamic CB's, meaning they are only triggered by event and cannot be justified normally.`);
 
     //Iterate over all CB's and print them out
     for (var i = 0; i < all_cbs.length; i++) {
@@ -27,30 +34,77 @@ module.exports = {
       //Format peace_demands_array
       var peace_demands_array = [];
 
-      try {
-        for (var x = 0; x < local_cb.peace_demands.length; x++)
-          //Check if localisation has anything
-          if (config.localisation[local_cb.peace_demands[x]])
-            peace_demands_array.push(config.localisation[local_cb.peace_demands[x]]);
-      } catch {}
+      if (local_cb.peace_demands) {
+        var all_demands = Object.keys(local_cb.peace_demands);
+
+        for (var x = 0; x < all_demands.length; x++)
+          try {
+            var local_amount = local_cb.peace_demands[all_demands[x]];
+            var local_wargoal = getWargoal(all_demands[x]);
+
+            peace_demands_array.push(`${(local_wargoal.name) ? local_wargoal.name : all_demands[x]} (__${parseNumber(local_amount)}__)`);
+          } catch (e) {
+            log.error(`Error whilst parsing wargoal key '${all_demands[x]}': ${e}`);
+          }
+      }
 
       //Format CB
-      cb_list_string.push(`${local_cb_icon}**__${local_cb_name}__**:`);
-      cb_list_string.push(`- ${config.icons.old_scroll} Requirement: ${local_cb_description}`);
-      cb_list_string.push(`- ${config.icons.diplomacy} Peace Demands: ${peace_demands_array.join(", ")}`);
-      cb_list_string.push(`- ${config.icons.infamy} Infamy: ${parseNumber(local_cb_infamy)}`);
-      cb_list_string.push("");
+      if (!local_cb.dynamic_limit && local_cb.limit) {
+        cb_list_string.push(`${local_cb_icon}**__${local_cb_name}__**:`);
+        cb_list_string.push(`---`);
+        cb_list_string.push(`- ${config.icons.old_scroll} Requirement: ${local_cb_description}`);
+        cb_list_string.push("");
+
+        if (peace_demands_array.length > 0)
+          cb_list_string.push(`- ${config.icons.diplomacy} Peace Demands: ${peace_demands_array.join(", ")}`);
+
+        cb_list_string.push(`- ${config.icons.infamy} Infamy: ${parseNumber(local_cb_infamy)}`);
+        cb_list_string.push("");
+      } else {
+        dynamic_list_string.push(`${local_cb_icon}**__${local_cb_name}__**:`);
+        dynamic_list_string.push(`---`);
+        dynamic_list_string.push(`- ${config.icons.old_scroll} Requirement: ${local_cb_description}`);
+        dynamic_list_string.push("");
+
+        if (peace_demands_array.length > 0)
+          dynamic_list_string.push(`- ${config.icons.diplomacy} Peace Demands: ${peace_demands_array.join(", ")}`);
+
+        dynamic_list_string.push("");
+      }
     }
 
     //Remove control panel
     removeControlPanel(game_obj.id);
 
-    //Return embed
-    return splitEmbed(cb_list_string, {
-      title: `List of Casus Belli:`,
-      title_pages: true,
-      fixed_width: true
-    });
+    //Return embeds
+    var regular_cb_embeds = [];
+    var dynamic_cb_embeds = [];
+
+    try {
+      regular_cb_embeds = splitEmbed(cb_list_string, {
+       title: `List of Regular Casus Belli:`,
+       title_pages: true,
+       fixed_width: true
+     });
+    } catch {}
+    try {
+      dynamic_cb_embeds = splitEmbed(dynamic_list_string, {
+        title: `List of Dynamic Casus Belli:`,
+        title_pages: true,
+        fixed_width: true
+      });
+    } catch {}
+
+    //Push both to all_embeds
+    if (regular_cb_embeds.length > 0)
+      for (var i = 0; i < regular_cb_embeds.length; i++)
+        all_embeds.push(regular_cb_embeds[i]);
+    if (dynamic_cb_embeds)
+      for (var i = 0; i < dynamic_cb_embeds.length; i++)
+        all_embeds.push(dynamic_cb_embeds[i]);
+
+    //Return statement
+    return all_embeds;
   },
 
   printCBList: function (arg0_user, arg1_user) {

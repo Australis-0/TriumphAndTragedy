@@ -1009,7 +1009,7 @@ config.technology.naval_technology = {
     name: "RC Autocannon",
     icon: "artillery_piece",
     description: "RC Autocannon are anti-aircraft chainguns controlled remotely that allow for improved defence against low-flying aircraft.",
-    prerequisite_techs: "modern_cruisers_and_frigates",
+    prerequisite_techs: ["modern_cruisers_and_frigates"],
     research_cost: 10500,
     year: 1976,
     unlocks: {

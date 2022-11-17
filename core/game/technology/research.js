@@ -136,14 +136,16 @@ module.exports = {
 
         //Increment technologies based on what techs the user has already researched
         if (all_technologies[i].prerequisite_techs) {
-          for (var x = 0; x < all_technologies[i].prerequisite_techs.length; x++)
-            if (usr.researched_technologies.includes(all_technologies[i].prerequisite_techs[x]))
+          var prerequisite_techs = getList(all_technologies[i].prerequisite_techs);
+
+          for (var x = 0; x < prerequisite_techs.length; x++)
+            if (usr.researched_technologies.includes(prerequisite_techs[x]))
               prerequisite_checks++;
 
           //Check if user has fulfilled all prerequisites, or if it is a starting tech
           tech_available = (
-            all_technologies[i].prerequisite_techs.length == prerequisite_checks ||
-            all_technologies[i].prerequisite_techs.length == 0
+            prerequisite_techs.length == prerequisite_checks ||
+            prerequisite_techs.length == 0
           );
         } else {
           tech_available = true;

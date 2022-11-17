@@ -62,6 +62,7 @@ module.exports = {
     FileManager.import("./framework/data/unit_framework");
     FileManager.import("./framework/data/user_framework");
     FileManager.import("./framework/data/war_framework");
+    FileManager.import("./framework/data/wargoal_framework");
 
     //Map viewer and renderer files
     FileManager.import("./framework/map/atlas_renderer");
