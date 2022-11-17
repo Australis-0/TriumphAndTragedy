@@ -18,10 +18,11 @@ module.exports = {
 
     //Format cb_list_string
     cb_list_string.push(`**Notice:** 'White Peace' indicates a CB with no additional peace demands.`);
-    cb_list_string.push("");
+    cb_list_string.push(config.localisation.blank);
 
     //Format dynamic_list_string
     dynamic_list_string.push(`**Notice:** The following Casus Belli are dynamic CB's, meaning they are only triggered by event and cannot be justified normally.`);
+    dynamic_list_string.push(config.localisation.blank);
 
     //Iterate over all CB's and print them out
     for (var i = 0; i < all_cbs.length; i++) {
