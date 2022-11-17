@@ -509,7 +509,7 @@ module.exports = {
       (wargoal_obj.demand_limit != -1) ?
         wargoal_string.push(`This wargoal can be demanded up to **${parseNumber(returnSafeNumber(wargoal_obj.demand_limit, 1))}** time(s).`) :
         wargoal_string.push(`This wargoal can be demanded as many times as we like.`);
-        
+
       wargoal_string.push("");
 
       //Wargoal effects
@@ -735,7 +735,7 @@ module.exports = {
               if (local_effect.seize_inventory_minimum)
                 wargoal_string.push(`${prefix}The recipient will seize at least **${printPercentage(local_effect.seize_inventory_minimum)}** of the target's goods.`);
               if (local_effect.seize_inventory_maximum)
-                wargoal_string.push(`${prefix}The recipient may seize up to **${printPercentage(local_effect.seize_inventory_minimum)}** of the target's goods.`);
+                wargoal_string.push(`${prefix}The recipient may seize up to **${printPercentage(local_effect.seize_inventory_maximum)}** of the target's goods.`);
 
               break;
             case "steer_trade":
@@ -793,6 +793,8 @@ module.exports = {
       } else {
         wargoal_string.push(`${prefix}White Peace`);
       }
+
+      wargoal_string.push("");
 
       //Return statement
       return wargoal_string;
