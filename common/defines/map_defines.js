@@ -1,5 +1,7 @@
 config.defines.map = {
   province_amount: 14101,
+
+  km_per_pixel: 13.49025185, //Not necessarily per pixel, but per SVG x-axis coordinate
   map_background: "background.png",
   map_definition: "provinces.svg",
   map_overlay: "province_ids.png",
