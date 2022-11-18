@@ -218,7 +218,7 @@ module.exports = {
       if (local_checks < provinces.length) {
         error_msg.push(`**Your colonists are baffled at your command!** The following errors were jotted down:`);
         if (colonised_provinces.length > 0)
-          error_msg.push(`- The province(s) of ${colonised_provinces.join(", ")} were already owned by the nations of ${parseList(foreign_countries.join(", "))}.`);
+          error_msg.push(`- The province(s) of ${colonised_provinces.join(", ")} were already owned by the nations of ${parseList(foreign_countries)}.`);
         if (has_duplicates)
           error_msg.push(`- The specified province(s) of ${findDuplicates(provinces).join(", ")} were duplicates of one another.`);
         if (missing_provinces.length > 0)

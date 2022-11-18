@@ -129,10 +129,10 @@ module.exports = {
 
     //Modify ending
     if (name_array.length > 2) {
-      name_array[name_array.length-1] = `and ${name_array[name_array.length-1]}`;
+      name_array[name_array.length - 1] = `and ${name_array[name_array.length-1]}`;
       name_string = name_array.join(", ");
     } else if (name_array.length == 2) {
-      name_array[name_array.length-1] = `and ${name_array[name_array.length-1]}`;
+      name_array[name_array.length - 1] = `and ${name_array[name_array.length-1]}`;
       name_string = name_array.join(" ");
     } else {
       name_string = name_array[0];
