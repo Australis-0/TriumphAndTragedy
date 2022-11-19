@@ -698,14 +698,14 @@ module.exports = {
 
   parsePeaceTreaty: function (arg0_war_name, arg1_peace_treaty_object) { //[WIP] - Add infamy scaling
     //Convert from parameters
-    var war_name = arg0_war_name.trim().toLowerCase();
+    var war_name = (typeof arg0_war_name != "object") ? arg0_war_name.trim().toLowerCase() : war_name;
     var peace_obj = arg1_peace_treaty_object;
 
     //Declare local instance variables
     var all_participants = [];
     var friendly_side = "";
     var opposing_side = "";
-    var war_obj = JSON.parse(JSON.stringify(getWar(war_name)));
+    var war_obj = (typeof war_name != "object") ? JSON.parse(JSON.stringify(getWar(war_name))) ? JSON.parse(JSON.stringify(war_name));
 
     var infamy_map = module.exports.getPeaceTreatyInfamy(war_obj, peace_obj);
 
