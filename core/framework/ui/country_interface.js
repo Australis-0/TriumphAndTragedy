@@ -39,7 +39,7 @@ module.exports = {
     global_commands_string.push(`- **[View Temporary Modifiers]** - View all your active **Temporary Modifiers**.`);
     global_commands_string.push(`- **[View Units]** - Opens a list of all units you can recruit.`);
     global_commands_string.push("");
-    global_commands_string.push(`- **[View (Army/City/Province)]** - Quick jump to viewing an army/city/province under your control.`);
+    global_commands_string.push(`- **[View (Army/City/Country/Province/War)]** - Quick jump to viewing a UI panel for something.`);
 
     //Remove control panel if one exists
     removeControlPanel(game_obj.id);
