@@ -660,7 +660,8 @@ module.exports = {
               }
 
             //Cap infamy
-            wargoal_infamy = Math.min(wargoal_infamy, returnSafeNumber(infamy_obj.maximum_infamy));
+            if (infamy_obj.maximum_infamy)
+              wargoal_infamy = Math.min(wargoal_infamy, returnSafeNumber(infamy_obj.maximum_infamy));
 
             //Apply infamy_scaling
             wargoal_infamy = wargoal_infamy*infamy_scaling;
@@ -670,7 +671,7 @@ module.exports = {
               infamy_map[primary_beneficiary] + wargoal_infamy :
               wargoal_infamy;
           }
-        }
+      }
     }
 
     //Return statement
