@@ -349,23 +349,24 @@ module.exports = {
             if (local_province.controller) {
               var local_user = main.users[local_province.controller];
 
-              if (local_province.controller == local_province.owner)
+              if (local_province.controller == local_province.owner) {
                 setProvinceColour(map_name, all_provinces[i], local_user.colour);
-              else
+              } else {
                 setProvinceColour(map_name, all_provinces[i], [
                   Math.min(local_user.colour[0] + 20, 255),
                   Math.min(local_user.colour[1] + 20, 255),
                   Math.min(local_user.colour[2] + 20, 255)
                 ]);
 
-              //Demilitarised shader
-              var outline_colour = [0, 0, 0];
+                //Demilitarised shader
+                var outline_colour = [0, 0, 0];
 
-              if (local_province.demilitarised)
-                outline_colour = [240, 60, 60];
+                if (local_province.demilitarised)
+                  outline_colour = [240, 60, 60];
 
-              if (local_province[`${map_name}_stroke`] != RGBToHex(outline_colour))
-                setProvinceOutline(map_name, all_provinces[i], outline_colour);
+                if (local_province[`${map_name}_stroke`] != RGBToHex(outline_colour))
+                  setProvinceOutline(map_name, all_provinces[i], outline_colour);
+              }
             }
           } catch {}
         }
