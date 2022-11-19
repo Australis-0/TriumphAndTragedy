@@ -1318,7 +1318,7 @@ module.exports = {
 
         //These go after war list
         if (game_obj.page.startsWith("view_war_")) {
-          var default_keys = ["back", "add wargoal", "call ally", "remove wargoal", "rename war", "send peace offer", "sign peace treaty", "view peace offer", "view peace treaty"];
+          var default_keys = ["back", "add wargoal", "call ally", "edit peace offer", "remove wargoal", "rename war", "send peace offer", "sign peace treaty", "view peace offer", "view peace treaty"];
           var war_name = game_obj.page.replace("view_war_", "");
           var war_obj = getWar(war_name);
 
@@ -1331,21 +1331,9 @@ module.exports = {
             game_obj.page = "war_list";
           }
 
-          //[Add Wargoal]
-          if (input == "add wargoal")
-            (war_obj.peace_treaties[actual_id]) ?
-              initialiseAddWargoal(user_id, war_obj.peace_treaties[actual_id]) :
-              printError(game_obj.id, `You don't currently have a peace treaty active for this conflict! Type **[Sign Peace Treaty]** first to create a new peace treaty.`);
-
           //[Call Ally]
           if (input == "call ally")
             initialiseCallAlly(user_id);
-
-          //[Remove Wargoal]
-          if (input == "remove wargoal")
-            (war_obj.peace_treaties[actual_id]) ?
-              initialiseRemoveWargoal(user_id, war_obj.peace_treaties[actual_id]) :
-              printError(game_obj.id, `You don't currently have a peace treaty active for this conflict! Type **[Sign Peace Treaty]** first to create a new peace treaty.`);
 
           //[Rename War]
           if (input == "rename war")
@@ -1362,7 +1350,7 @@ module.exports = {
             signPeaceTreaty(user_id, war_obj.name);
 
           //[View Peace Offer]
-          if (["view peace offer", "view peace treaty"].includes(input))
+          if (["edit peace offer", "view peace offer", "view peace treaty"].includes(input))
             (war_obj.peace_treaties[actual_id]) ?
               modifyPeaceTreaty(user_id, war_obj.peace_treaties[actual_id]) :
               printError(game_obj.id, `You don't currently have a peace treaty active for this conflict! Type **[Sign Peace Treaty]** first to create a new peace treaty.`);

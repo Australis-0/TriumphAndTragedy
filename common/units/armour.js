@@ -11,6 +11,7 @@ config.units.armour = {
     attack: 1200,
     defence: 2000,
     manoeuvre: 6,
+    movement: 72,
     initiative: 1,
 
     cost: {
@@ -37,6 +38,7 @@ config.units.armour = {
     attack: 1500,
     defence: 2000,
     manoeuvre: 5,
+    movement: 6.9,
     initiative: 2,
 
     cost: {
@@ -61,6 +63,7 @@ config.units.armour = {
     attack: 1000,
     defence: 1500,
     manoeuvre: 3,
+    movement: 52.5,
     initiative: 3,
 
     cost: {
@@ -85,6 +88,7 @@ config.units.armour = {
     attack: 500,
     defence: 1000,
     manoeuvre: 7,
+    movement: 48,
     initiative: 3,
 
     cost: {
@@ -110,6 +114,7 @@ config.units.armour = {
     attack: 2000,
     defence: 3500,
     manoeuvre: 7,
+    movement: 93,
     initiative: 3,
 
     cost: {
@@ -135,6 +140,7 @@ config.units.armour = {
     attack: 1500,
     defence: 4000,
     manoeuvre: 3,
+    movement: 67.6,
     initiative: 5,
 
     cost: {
@@ -160,6 +166,7 @@ config.units.armour = {
     attack: 1800,
     defence: 700,
     manoeuvre: 1,
+    movement: 8,
     initiative: 1,
 
     cost: {
@@ -186,6 +193,7 @@ config.units.armour = {
     attack: 1200,
     defence: 250,
     manoeuvre: 3,
+    movement: 7,
     initiative: 4,
 
     cost: {
@@ -211,6 +219,7 @@ config.units.armour = {
     attack: 1500,
     defence: 300,
     manoeuvre: 2,
+    movement: 40,
     initiative: 3,
 
     cost: {
@@ -237,6 +246,7 @@ config.units.armour = {
     attack: 1600,
     defence: 800,
     manoeuvre: 1,
+    movement: 42,
     initiative: 5,
 
     cost: {
@@ -263,6 +273,7 @@ config.units.armour = {
     attack: 2000,
     defence: 1000,
     manoeuvre: 0,
+    movement: 38,
     initiative: 1,
 
     cost: {
@@ -289,6 +300,7 @@ config.units.armour = {
     attack: 2500,
     defence: 300,
     manoeuvre: 5,
+    movement: 32,
     initiative: 2,
 
     cost: {
@@ -316,6 +328,7 @@ config.units.armour = {
     attack: 2500,
     defence: 1250,
     manoeuvre: 2,
+    movement: 55,
     initiative: 3,
 
     cost: {
@@ -342,6 +355,7 @@ config.units.armour = {
     attack: 3000,
     defence: 1000,
     manoeuvre: 1,
+    movement: 34.6,
     intiiative: 4,
 
     cost: {
@@ -369,6 +383,7 @@ config.units.armour = {
     attack: 3200,
     defence: 1500,
     manoeuvre: 2,
+    movement: 48,
     initiative: 5,
 
     cost: {
@@ -396,6 +411,7 @@ config.units.armour = {
     attack: 4000,
     defence: 2000,
     manoeuvre: 1,
+    movement: 66.79,
     initiative: 4,
 
     cost: {
@@ -423,6 +439,7 @@ config.units.armour = {
     attack: 5000,
     defence: 2000,
     manoeuvre: 3,
+    movement: 70,
     initiative: 4,
 
     cost: {

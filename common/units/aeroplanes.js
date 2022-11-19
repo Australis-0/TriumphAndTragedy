@@ -11,6 +11,7 @@ config.units.aeroplanes = {
     attack: 20,
     defence: 200,
     manoeuvre: 8,
+    movement: 14.48,
     initiative: 1,
 
     cost: {
@@ -32,6 +33,7 @@ config.units.aeroplanes = {
     attack: 60,
     defence: 250,
     manoeuvre: 6,
+    movement: 56.33,
     initiative: 2,
 
     cost: {
@@ -55,6 +57,7 @@ config.units.aeroplanes = {
     attack: 500,
     defence: 350,
     manoeuvre: 6,
+    movement: 32,
     initiative: 3,
 
     cost: {
@@ -80,6 +83,7 @@ config.units.aeroplanes = {
     attack: 500,
     defence: 900,
     manoeuvre: 6,
+    movement: 120.70,
     initiative: 3,
 
     cost: {
@@ -103,6 +107,7 @@ config.units.aeroplanes = {
     attack: 550,
     defence: 1100,
     manoeuvre: 3,
+    movement: 186.68,
     initiative: 3,
 
     cost: {
@@ -128,6 +133,7 @@ config.units.aeroplanes = {
     attack: 550,
     defence: 1100,
     manoeuvre: 4,
+    movement: 209.22,
     initiative: 3,
 
     cost: {
@@ -153,6 +159,7 @@ config.units.aeroplanes = {
     attack: 600,
     defence: 1500,
     manoeuvre: 5,
+    movement: 593.85,
     initiative: 3,
 
     cost: {
@@ -180,6 +187,7 @@ config.units.aeroplanes = {
     attack: 600,
     defence: 1800,
     manoeuvre: 5,
+    movement: 518.21,
     initiative: 3,
 
     cost: {
@@ -206,6 +214,7 @@ config.units.aeroplanes = {
 
     attack: 700,
     defence: 2000,
+    movement: 593.85,
     manoeuvre: 6,
     initiative: 2,
 
@@ -231,6 +240,7 @@ config.units.aeroplanes = {
 
     attack: 550,
     defence: 2200,
+    movement: 962.388,
     manoeuvre: 7,
     initiative: 1,
 
@@ -258,6 +268,7 @@ config.units.aeroplanes = {
     attack: 850,
     defence: 2500,
     manoeuvre: 6,
+    movement: 2414,
     initiative: 5,
 
     cost: {
@@ -285,6 +296,7 @@ config.units.aeroplanes = {
     attack: 1000,
     defence: 3000,
     manoeuvre: 6,
+    movement: 1482,
     initiative: 4,
 
     cost: {
@@ -311,6 +323,7 @@ config.units.aeroplanes = {
     attack: 1200,
     defence: 50,
     manoeuvre: 2,
+    movement: 482.80,
     initiative: 5,
 
     cost: {
@@ -336,6 +349,7 @@ config.units.aeroplanes = {
     attack: 1100,
     defnece: 3200,
     manoeuvre: 8,
+    movement: 1931.21,
     initiative: 3,
 
     cost: {
@@ -364,6 +378,7 @@ config.units.aeroplanes = {
     attack: 900,
     defence: 50,
     manoeuvre: 1,
+    movement: 173.81,
     initiative: 2,
 
     cost: {
@@ -390,6 +405,7 @@ config.units.aeroplanes = {
     attack: 1250,
     defence: 150,
     manoeuvre: 2,
+    movement: 260.71,
     initiative: 3,
 
     cost: {
@@ -417,6 +433,7 @@ config.units.aeroplanes = {
     attack: 1500,
     defence: 250,
     manoeuvre: 2,
+    movement: 437.74,
     initiative: 3,
 
     cost: {
@@ -443,6 +460,7 @@ config.units.aeroplanes = {
     attack: 1700,
     defence: 500,
     manoeuvre: 2,
+    movement: 960,
     initiative: 5,
 
     cost: {
@@ -470,6 +488,7 @@ config.units.aeroplanes = {
     attack: 2500,
     defence: 700,
     manoeuvre: 5,
+    movement: 1010.67,
     initiative: 4,
 
     cost: {
@@ -497,6 +516,7 @@ config.units.aeroplanes = {
     attack: 2800,
     defence: 1000,
     manoeuvre: 5,
+    movement: 999.40,
     initiative: 6,
 
     cost: {
@@ -526,6 +546,7 @@ config.units.aeroplanes = {
     attack: 200,
     defence: 50,
     manoeuvre: 50,
+    movement: 281.64,
     initiative: 1,
 
     cost: {
@@ -551,6 +572,7 @@ config.units.aeroplanes = {
     attack: 1400,
     defence: 150,
     manoeuvre: 5,
+    movement: 204,
     initiative: 3,
 
     cost: {
@@ -577,6 +599,7 @@ config.units.aeroplanes = {
     attack: 1800,
     defence: 300,
     manoeuvre: 6,
+    movement: 365.32,
     initiative: 3,
 
     cost: {
@@ -605,6 +628,7 @@ config.units.aeroplanes = {
     attack: 2700,
     defence: 500,
     manoeuvre: 4,
+    movement: 90,
     initiative: 5,
 
     cost: {
@@ -627,6 +651,7 @@ config.units.aeroplanes = {
     attack: 2000,
     defence: 550,
     manoeuvre: 7,
+    movement: 410.38,
     initiative: 3,
 
     cost: {

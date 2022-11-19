@@ -47,7 +47,7 @@ module.exports = {
       enemy_side = "attackers";
     }
 
-    var wargoals = war_obj[`${friendly_side}_wargoals`];
+    var valid_wargoals = war_obj[`${friendly_side}_wargoals`];
 
     //Add all enemy countries to display
     for (var i = 0; i < war_obj[enemy_side].length; i++)
@@ -58,16 +58,19 @@ module.exports = {
       friendly_countries.push(`**${main.users[war_obj[friendly_side][i]].name}**`);
 
     //Fetch a list of all available wargoals
-    for (var i = 0; i < wargoals.length; i++)
-      wargoal_array.push(`${(wargoals.length - 1 == i) ? "or ": ""}**${(config.localisation[wargoals[i]]) ? config.localisation[wargoals[i]] : wargoals[i]}**`);
-    for (var i = 0; i < wargoals.length; i++)
-      actual_wargoal_array.push(((config.localisation[wargoals[i]]) ? config.localisation[wargoals[i]] : wargoals[i]).toLowerCase());
+    var all_wargoals = Object.keys(valid_wargoals);
+
+    for (var i = 0; i < all_wargoals.length; i++) {
+      var local_wargoal = getWargoal(all_wargoals[i]);
+
+      wargoal_array.push(`${(all_wargoals.length - 1 == i && all_wargoals.length > 1) ? "or ": ""}**${(local_wargoal.name) ? local_wargoal.name : all_wargoals[i]}**`);
+    }
 
     //Initialise visual prompt
     visualPrompt(game_obj.alert_embed, user_id, {
       title: `Add Wargoal To Peace Treaty:`,
       prompts: [
-        [`Which wargoal would you like to add to this peace treaty?\n\nPlease type either ${wargoal_array.join(", ")}.\n\nTo go back to viewing this peace treaty, type **[Back]**.`, "string"]
+        [`Which wargoal would you like to add to this peace treaty?\n\nPlease type ${(all_wargoals.length > 1) ? "either " : ""}${wargoal_array.join(", ")}.\n\nTo go back to viewing this peace treaty, type **[Back]**.`, "string"]
       ],
       do_not_cancel: true
     },
@@ -88,7 +91,7 @@ module.exports = {
 
         //Get actual demand_limit from wargoals
         demand_limit = Math.ceil(
-          demand_limit*returnSafeNumber(wargoals[wargoal_name], 1)
+          demand_limit*returnSafeNumber(valid_wargoals[wargoal_name], 1)
         );
 
         for (var i = 0; i < peace_obj.wargoals.length; i++)
@@ -96,7 +99,7 @@ module.exports = {
             wargoal_demanded++;
 
         //Parse effects in order to create a visual prompt
-        if (wargoal_demanded >= demand_limit) {
+        if (wargoal_demanded < demand_limit) {
           var effect_obj = {};
 
           if (wargoal_obj.effect) {
@@ -1806,6 +1809,46 @@ module.exports = {
     });
   },
 
+  initialiseModifyPeaceTreaty: function (arg0_user, arg1_peace_treaty_object) {
+    //Convert from parameters
+    var user_id = arg0_user;
+    var peace_obj = arg1_peace_treaty_object;
+
+    //Declare local instance variables
+    var game_obj = getGameObject(user_id);
+
+    //Initialise visual prompt
+    visualPrompt(game_obj.alert_embed, user_id, {
+      title: `Modify Peace Treaty:`,
+      do_not_cancel: true,
+      do_not_display: true,
+
+      prompts: [
+        [`Which of the above actions would you like to take?`, "string"]
+      ]
+    },
+    function (arg) {
+      switch (arg[0]) {
+        case "add wargoal":
+          module.exports.initialiseAddWargoal(user_id, peace_obj);
+
+          break;
+        case "back":
+          module.exports.closePeaceTreaty(user_id, peace_obj);
+
+          break;
+        case "remove wargoal":
+          module.exports.initialiseRemoveWargoal(user_id, peace_obj);
+
+          break;
+        case "send peace offer":
+          sendPeaceTreaty(user_id, peace_obj);
+
+          break;
+      }
+    })
+  },
+
   initialisePeaceOfferScreen: function (arg0_user, arg1_peace_treaty_object) {
     //Convert from parameters
     var user_id = arg0_user;
@@ -1821,9 +1864,8 @@ module.exports = {
       embed_pages: splitEmbed(parsePeaceTreatyLocalisation(war_obj, peace_obj), {
         title: `[Back] | Editing Peace Offer For **${war_obj.name}**:`,
         description: [
-          `---`,
           "",
-          `**[Add Wargoal]**${(Object.keys(peace_obj.peace_demands).length > 0) ? ` | **[Remove Wargoal]**` : ""} | **[Send Peace Offer]**\n\n`
+          `**[Add Wargoal]**${(peace_obj.wargoals.length > 0) ? ` | **[Remove Wargoal]**` : ""} | **[Send Peace Offer]**\n\n`
         ],
         title_pages: true,
         fixed_width: true
@@ -1963,137 +2005,6 @@ module.exports = {
     if (!change_image)
       loadMap(`${map_file}.svg`, map_file);
 
-    //Process fill_cache and outline_cache
-    for (var i = 0; i < peace_obj.wargoals.length; i++)
-      if (peace_obj.wargoals[i].effect) {
-        var all_effects = Object.keys(peace_obj.wargoals[i].effect);
-
-        for (var x = 0; x < all_effects.length; x++) {
-          var local_effect = peace_obj.wargoals[i].effect[all_effects[x]];
-
-          //Annex all parser
-          if (all_effects[x] == "annex_all") {
-            var local_effects = Object.keys(local_effect);
-
-            for (var y = 0; y < local_effects.length; y++) {
-              var local_recipient = main.users[local_effect[local_effects[y]]];
-              var target_provinces = getProvinces(local_effects[y], { include_hostile_occupations: true });
-
-              for (var z = 0; z < target_provinces.length; z++)
-                fill_cache[target_provinces[z].id] = local_recipient.colour;
-            }
-          }
-
-          //Annexation parser
-          if (all_effects[x] == "annexation") {
-            var local_effects = Object.keys(local_effect);
-
-            for (var y = 0; y < local_effects.length; y++) {
-              var effect_obj = local_effect[local_effects[y]];
-              var local_recipient = main.users[local_effects[y]];
-
-              for (var z = 0; z < effect_obj.provinces.length; z++)
-                fill_cache[effect_obj.provinces[z]] = local_recipient.colour;
-            }
-          }
-
-          //Demilitarisation parser
-          if (all_effects[x] == "demilitarisation")
-            for (var y = 0; y < local_effect.demilitarised_provinces.length; y++)
-              outline_cache[local_effect.demilitarised_provinces[y]] = [240, 60, 60];
-
-          //Free oppressed people parser
-          if (all_effects[x] == "free_oppressed_people") {
-            var local_effects = Object.keys(local_effect);
-
-            for (var y = 0; y < local_effects.length; y++) {
-              var effect_obj = local_effect[local_effects[y]];
-              var local_target = main.users[local_effects[y]];
-
-              var culture_ids = Object.keys(effect_obj);
-
-              for (var z = 0; z < culture_ids.length; z++) {
-                var local_recipient = effect_obj[culture_ids[z]];
-
-                //Cache colour if not already cached
-                if (!peace_obj.cached_colours[culture_ids[z]])
-                  peace_obj.cached_colours[culture_ids[z]] = generateRandomColour();
-
-                for (var a = 0; a < local_recipient.provinces.length; a++)
-                  fill_cache[local_recipient.provinces[a]] = peace_obj.cached_colours[culture_ids[z]];
-              }
-            }
-          }
-
-          //Puppet parser
-          if (all_effects[x] == "puppet") {
-            var local_effects = Object.keys(local_effect);
-
-            for (var y = 0; y < local_effects.length; y++) {
-              var local_recipient = main.users[local_effect[local_effects[y]]];
-
-              var target_provinces = getProvinces(local_effects[y], { include_hostile_occupations: true });
-
-              for (var z = 0; z < target_provinces.length; z++)
-                if (!fill_cache[target_provinces[z].id])
-                  fill_cache[target_provinces[z].id] = [
-                    Math.min(local_recipient.colour[0] + 20, 255),
-                    Math.min(local_recipient.colour[1] + 20, 255),
-                    Math.min(local_recipient.colour[2] + 20, 255)
-                  ];
-            }
-          }
-
-          //Release client state parser
-          if (all_effects[x] == "release_client_state") {
-            var local_effects = Object.keys(local_effect);
-
-            for (var y = 0; y < local_effects.length; y++) {
-              var client_state_obj = local_effect[local_effects[y]];
-
-              peace_obj.cached_colours[local_effects[y]] = (client_state_obj.colour) ?
-                client_state_obj.colour :
-                generateRandomColour();
-
-              //Iterate over all provinces the client state holds
-              for (var z = 0; z < client_state_obj.provinces.length; z++)
-                fill_cache[client_state_obj.provinces[z]] = peace_obj.cached_colours[local_effects[y]];
-            }
-          }
-
-          //Retake cores parser
-          if (all_effects[x] == "retake_cores") {
-            var local_effects = Object.keys(local_effect);
-
-            for (var y = 0; y < local_effects.length; y++) {
-              var culture_ids = [];
-              var local_value = local_effect[local_effects[y]];
-              var target_provinces = getProvinces(local_effects[y], { include_hostile_occupations: true });
-
-              //Get primary cultures of local_value[z] and push them to culture_ids for liberation
-              for (var z = 0; z < local_value.length; z++) {
-                var local_primary_cultures = getPrimaryCultures(local_value[z]);
-
-                for (var a = 0; a < local_primary_cultures.length; a++)
-                  if (!culture_ids.includes(local_primary_cultures[a]))
-                    culture_ids.push([local_primary_cultures[a], local_value[z]]);
-              }
-
-              //Iterate over all provinces and test against culture_ids
-              for (var z = 0; z < target_provinces.length; z++)
-                try {
-                  for (var a = 0; a < culture_ids.length; a++)
-                    if (target_provinces[z].culture == culture_ids[a][0]) {
-                      var local_recipient = main.users[culture_ids[a][1]];
-
-                      fill_cache[target_provinces[z].id] = local_recipient.colour;
-                    }
-                } catch {}
-            }
-          }
-        }
-      }
-
     //Shade in the base provinces and treaty changes - but only for the belligerents currently involved in the war
     for (var i = 0; i < war_obj.attackers.length; i++)
       belligerents.push(war_obj.attackers[i]);
@@ -2119,18 +2030,152 @@ module.exports = {
 
         //Shade in province
         setProvinceColour(map_file, local_provinces[x].id, new_colour);
-        setProvinceOutline(map_file, local_provinces[x].id, new_outline);
+        //setProvinceOutline(map_file, local_provinces[x].id, new_outline);
       }
     }
 
+    //Process fill_cache and outline_cache
+    if (peace_obj.wargoals.length > 0)
+      for (var i = 0; i < peace_obj.wargoals.length; i++)
+        if (peace_obj.wargoals[i].effect) {
+          var all_effects = Object.keys(peace_obj.wargoals[i].effect);
+
+          for (var x = 0; x < all_effects.length; x++) {
+            var local_effect = peace_obj.wargoals[i].effect[all_effects[x]];
+
+            //Annex all parser
+            if (all_effects[x] == "annex_all") {
+              var local_effects = Object.keys(local_effect);
+
+              for (var y = 0; y < local_effects.length; y++) {
+                var local_recipient = main.users[local_effect[local_effects[y]]];
+                var target_provinces = getProvinces(local_effects[y], { include_hostile_occupations: true });
+
+                for (var z = 0; z < target_provinces.length; z++)
+                  fill_cache[target_provinces[z].id] = local_recipient.colour;
+              }
+            }
+
+            //Annexation parser
+            if (all_effects[x] == "annexation") {
+              var local_effects = Object.keys(local_effect);
+
+              for (var y = 0; y < local_effects.length; y++) {
+                var effect_obj = local_effect[local_effects[y]];
+                var local_recipient = main.users[local_effects[y]];
+
+                for (var z = 0; z < effect_obj.provinces.length; z++)
+                  fill_cache[effect_obj.provinces[z]] = local_recipient.colour;
+              }
+            }
+
+            //Demilitarisation parser
+            if (all_effects[x] == "demilitarisation")
+              for (var y = 0; y < local_effect.demilitarised_provinces.length; y++)
+                outline_cache[local_effect.demilitarised_provinces[y]] = [240, 60, 60];
+
+            //Free oppressed people parser
+            if (all_effects[x] == "free_oppressed_people") {
+              var local_effects = Object.keys(local_effect);
+
+              for (var y = 0; y < local_effects.length; y++) {
+                var effect_obj = local_effect[local_effects[y]];
+                var local_target = main.users[local_effects[y]];
+
+                var culture_ids = Object.keys(effect_obj);
+
+                for (var z = 0; z < culture_ids.length; z++) {
+                  var local_recipient = effect_obj[culture_ids[z]];
+
+                  //Cache colour if not already cached
+                  if (!peace_obj.cached_colours[culture_ids[z]])
+                    peace_obj.cached_colours[culture_ids[z]] = generateRandomColour();
+
+                  for (var a = 0; a < local_recipient.provinces.length; a++)
+                    fill_cache[local_recipient.provinces[a]] = peace_obj.cached_colours[culture_ids[z]];
+                }
+              }
+            }
+
+            //Puppet parser
+            if (all_effects[x] == "puppet") {
+              var local_effects = Object.keys(local_effect);
+
+              for (var y = 0; y < local_effects.length; y++) {
+                var local_recipient = main.users[local_effect[local_effects[y]]];
+
+                var target_provinces = getProvinces(local_effects[y], { include_hostile_occupations: true });
+
+                for (var z = 0; z < target_provinces.length; z++)
+                  if (!fill_cache[target_provinces[z].id])
+                    fill_cache[target_provinces[z].id] = [
+                      Math.min(local_recipient.colour[0] + 20, 255),
+                      Math.min(local_recipient.colour[1] + 20, 255),
+                      Math.min(local_recipient.colour[2] + 20, 255)
+                    ];
+              }
+            }
+
+            //Release client state parser
+            if (all_effects[x] == "release_client_state") {
+              var local_effects = Object.keys(local_effect);
+
+              for (var y = 0; y < local_effects.length; y++) {
+                var client_state_obj = local_effect[local_effects[y]];
+
+                peace_obj.cached_colours[local_effects[y]] = (client_state_obj.colour) ?
+                  client_state_obj.colour :
+                  generateRandomColour();
+
+                //Iterate over all provinces the client state holds
+                for (var z = 0; z < client_state_obj.provinces.length; z++)
+                  fill_cache[client_state_obj.provinces[z]] = peace_obj.cached_colours[local_effects[y]];
+              }
+            }
+
+            //Retake cores parser
+            if (all_effects[x] == "retake_cores") {
+              var local_effects = Object.keys(local_effect);
+
+              for (var y = 0; y < local_effects.length; y++) {
+                var culture_ids = [];
+                var local_value = local_effect[local_effects[y]];
+                var target_provinces = getProvinces(local_effects[y], { include_hostile_occupations: true });
+
+                //Get primary cultures of local_value[z] and push them to culture_ids for liberation
+                for (var z = 0; z < local_value.length; z++) {
+                  var local_primary_cultures = getPrimaryCultures(local_value[z]);
+
+                  for (var a = 0; a < local_primary_cultures.length; a++)
+                    if (!culture_ids.includes(local_primary_cultures[a]))
+                      culture_ids.push([local_primary_cultures[a], local_value[z]]);
+                }
+
+                //Iterate over all provinces and test against culture_ids
+                for (var z = 0; z < target_provinces.length; z++)
+                  try {
+                    for (var a = 0; a < culture_ids.length; a++)
+                      if (target_provinces[z].culture == culture_ids[a][0]) {
+                        var local_recipient = main.users[culture_ids[a][1]];
+
+                        fill_cache[target_provinces[z].id] = local_recipient.colour;
+                      }
+                  } catch {}
+              }
+            }
+          }
+        }
+
     //Initialise map viewer
-    cacheSVG(map_file);
+    setTimeout(function(){
+      cacheSVG(map_file);
+    }, 5000);
 
     setTimeout(function(){
       (!change_image) ?
         initialiseMapViewer(game_obj.id, map_file, true) :
         changeImage(game_obj.id, map_file);
-    }, 10000);
+    }, 15000);
 
     //Visual interface using visualPrompt() before creating a page menu
     module.exports.initialiseModifyPeaceTreaty(user_id, peace_obj);

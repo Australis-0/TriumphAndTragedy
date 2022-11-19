@@ -112,7 +112,7 @@ module.exports = {
         if (war_obj.attackers.includes(actual_id) || war_obj.defenders.includes(actual_id))
           (!war_obj.peace_treaties[actual_id]) ?
             war_string.push(`**[Sign Peace Treaty]**${(can_call_allies) ? "\n**[Call Ally]**" : ""}`) :
-            war_string.push(`**[Add Wargoal]** | **[Remove Wargoal]** | **[View Peace Offer]** | **[Send Peace Offer]**${(can_call_allies) ? "\n**[Call Ally]**" : ""}\n`);
+            war_string.push(`**[Edit Peace Offer]** | **[Send Peace Offer]**${(can_call_allies) ? "\n**[Call Ally]**" : ""}\n`);
 
       (is_archived_war) ?
         war_string.push(`**${getDate(war_obj.starting_date)}** - **${getDate(war_obj.end_date)}**\n`) :
@@ -148,8 +148,8 @@ module.exports = {
         var local_attacker = main.users[war_obj.attackers[i]];
 
         (!war_obj.attacker_names) ?
-          attackers_string.push(`**${(local_attacker) ? local_attacker.name : war_obj.attackers[i]}** | **${parseNumber(war_obj[war_obj.attackers[i] + "_casualties"])}**`) :
-          attackers_string.push(`**${war_obj.attacker_names[i]}** | **${parseNumber(war_obj[war_obj.attackers[i] + "_casualties"])}**`);;
+          attackers_string.push(`**${(local_attacker) ? local_attacker.name : war_obj.attackers[i]}** | **${parseNumber(returnSafeNumber(war_obj[war_obj.attackers[i] + "_casualties"]))}**`) :
+          attackers_string.push(`**${war_obj.attacker_names[i]}** | **${parseNumber(returnSafeNumber(war_obj[war_obj.attackers[i] + "_casualties"]))}**`);;
       }
 
       //Format defender wargoal string; this is put here for future flexibility
@@ -175,8 +175,8 @@ module.exports = {
         var local_defender = main.users[war_obj.defenders[i]];
 
         (!war_obj.defender_names) ?
-          defenders_string.push(`**${(local_defender) ? local_defender.name : war_obj.defenders[i]}** | **${parseNumber(war_obj[war_obj.defenders[i] + "_casualties"])}**`) :
-          defenders_string.push(`**${war_obj.defender_names[i]}** | **${parseNumber(war_obj[war_obj.defenders[i] + "_casualties"])}**`);
+          defenders_string.push(`**${(local_defender) ? local_defender.name : war_obj.defenders[i]}** | **${parseNumber(returnSafeNumber(war_obj[war_obj.defenders[i] + "_casualties"]))}**`) :
+          defenders_string.push(`**${war_obj.defender_names[i]}** | **${parseNumber(returnSafeNumber(war_obj[war_obj.defenders[i] + "_casualties"]))}**`);
       }
 
       //Bottom war string (Total Casualties)

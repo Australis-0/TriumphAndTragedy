@@ -484,7 +484,7 @@ module.exports = {
         wargoal_string.push(`${config.icons.infamy} Infamy: **${(infamy_obj.minimum_infamy) ? parseNumber(infamy_obj.minimum_infamy, { display_float: true }) : 0}**`);
 
         if (infamy_obj.infamy_per_percentage)
-          wargoal_string.push(`- **${parseNumber(infamy_obj.infamy_per_percentage, { display_float: true, display_prefix: true })}** per % demanded.`);
+          wargoal_string.push(`- **${parseNumber(infamy_obj.infamy_per_percentage, { display_float: true, display_prefix: true })}** per percent demanded.`);
         if (infamy_obj.infamy_per_province)
           wargoal_string.push(`- **${parseNumber(infamy_obj.infamy_per_province, { display_float: true, display_prefix: true })}** per province demanded.`);
 
@@ -784,9 +784,9 @@ module.exports = {
               if (local_effect.maximum_percentage_allowed)
                 wargoal_string.push(`${prefix}The recipient may collect up to **${printPercentage(local_effect.maximum_percentage_allowed)}** of the target's income.`);
               if (local_effect.minimum_turns_allowed)
-                wargoal_string.push(`${prefix}These terms are binding for at least **${printPercentage(local_effect.minimum_turns_allowed)}** turn(s).`);
+                wargoal_string.push(`${prefix}These terms are binding for at least **${parseNumber(local_effect.minimum_turns_allowed)}** turn(s).`);
               if (local_effect.maximum_turns_allowed)
-                wargoal_string.push(`${prefix}These terms may only apply for up to **${printPercentage(local_effect.maximum_turns_allowed)}** turn(s).`);
+                wargoal_string.push(`${prefix}These terms may only apply for up to **${parseNumber(local_effect.maximum_turns_allowed)}** turn(s).`);
 
               break;
           }

@@ -575,10 +575,8 @@ module.exports = {
     }, 10000);
 
     //Visual interface using visualPrompt() before creating a page menu
-    setTimeout(function(){
-      module.exports.initialiseModifyClientState(user_id, client_obj);
-      module.exports.initialiseClientStateScreen(user_id, client_obj);
-    }, 3000);
+    module.exports.initialiseModifyClientState(user_id, client_obj);
+    module.exports.initialiseClientStateScreen(user_id, client_obj);
   },
 
   printClientStateProposals: function (arg0_user) {
