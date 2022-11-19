@@ -38,7 +38,10 @@ module.exports = {
     //Check to make sure that colour is valid
     if (!usr.colour_locked) {
       if (!usr.options.customisation_locked || (usr.options.customisation_locked && is_vassal)) {
-        if (r >= 20 && g >= 20 && b >= 20) {
+        if (
+          r >= 20 && g >= 20 && b >= 20 &&
+          r <= 200 && g <= 200 && b <= 200
+        ) {
           if (!((r > 175 && r < 185) || (g > 175 && g < 185) || (b > 175 && b < 185))) {
             var colour_taken = [false, ""]; //[colour_taken, user_name]
 
