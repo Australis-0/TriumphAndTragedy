@@ -11,6 +11,7 @@ config.units.naval = {
     attack: 200,
     defence: 500,
     manoeuvre: 8,
+    movement: 7.41,
     initiative: 1,
 
     cost: {
@@ -32,6 +33,7 @@ config.units.naval = {
     attack: 500,
     defence: 250,
     manoeuvre: 2,
+    movement: 12.96,
     initiative: 3,
 
     cost: {
@@ -55,6 +57,7 @@ config.units.naval = {
     attack: 650,
     defence: 300,
     manoeuvre: 2,
+    movement: 15.74,
     initiative: 4,
 
     cost: {
@@ -79,6 +82,7 @@ config.units.naval = {
     attack: 600,
     defence: 400,
     manoeuvre: 3,
+    movement: 22.22,
     initiative: 4,
 
     cost: {
@@ -102,6 +106,7 @@ config.units.naval = {
     attack: 850,
     defence: 350,
     manoeuvre: 3,
+    movement: 26.70,
     initiative: 5,
 
     cost: {
@@ -125,6 +130,7 @@ config.units.naval = {
     attack: 500,
     defence: 350,
     maneouvre: 4,
+    movement: 25.93,
     initiative: 3,
 
     cost: {
@@ -148,6 +154,7 @@ config.units.naval = {
     attack: 350,
     defence: 600,
     manoeuvre: 6,
+    movement: 6.44,
     initiative: 1,
 
     cost: {
@@ -172,6 +179,7 @@ config.units.naval = {
     attack: 150,
     defence: 300,
     manoeuvre: 8,
+    movement: 30,
     initiative: 3,
 
     cost: {
@@ -194,6 +202,7 @@ config.units.naval = {
     attack: 600,
     defence: 250,
     manoeuvre: 4,
+    movement: 25.93,
     initiative: 4,
 
     cost: {
@@ -218,6 +227,7 @@ config.units.naval = {
     attack: 1200,
     defence: 1800,
     manoeuvre: 3,
+    movement: 26.50,
     initative: 1,
 
     cost: {
@@ -244,6 +254,7 @@ config.units.naval = {
     attack: 1500,
     defence: 2000,
     manoeuvre: 3,
+    movement: 11.11,
     initiative: 4,
 
     cost: {
@@ -270,6 +281,7 @@ config.units.naval = {
     attack: 800,
     defence: 1200,
     manoeuvre: 5,
+    movement: 65,
     initiative: 4,
 
     cost: {
@@ -296,6 +308,7 @@ config.units.naval = {
     attack: 2000,
     defence: 1500,
     manoeuvre: 4,
+    movement: 55.56,
     initiative: 5,
 
     cost: {
@@ -320,6 +333,7 @@ config.units.naval = {
     attack: 2000,
     defence: 3500,
     manoeuvre: 2,
+    movement: 37.04,
     initiative: 6,
 
     cost: {
@@ -344,6 +358,7 @@ config.units.naval = {
     attack: 3500,
     defence: 4000,
     manoeuvre: 1,
+    movement: 38.89,
     initiative: 5,
 
     cost: {
@@ -369,6 +384,7 @@ config.units.naval = {
     attack: 2000,
     defence: 50,
     manoeuvre: 6,
+    movement: 46.50,
     initiative: 5,
 
     cost: {
@@ -393,6 +409,7 @@ config.units.naval = {
     attack: 3500,
     defence: 2000,
     manoeuvre: 4,
+    movement: 49.30,
     initiative: 6,
 
     cost: {
@@ -421,6 +438,7 @@ config.units.naval = {
     attack: 17500,
     defence: 500,
     manoeuvre: 8,
+    movement: 56,
     initiative: 4,
 
     cost: {
@@ -449,6 +467,7 @@ config.units.naval = {
     carrier_capacity: 20,
     defence: 2000,
     manoeuvre: 2000,
+    movement: 28.71,
     initiative: 1,
 
     cost: {
@@ -474,6 +493,7 @@ config.units.naval = {
     attack: 5000,
     defence: 7500,
     manoeuvre: 3,
+    movement: 61.10,
     initiative: 5,
 
     cost: {
@@ -503,6 +523,7 @@ config.units.naval = {
     carrier_capacity: 35,
     defence: 2200,
     manoeuvre: 2,
+    movement: 61,
     initiative: 1,
 
     cost: {
@@ -532,6 +553,7 @@ config.units.naval = {
     attack: 22500,
     defence: 550,
     manoeuvre: 6,
+    movement: 82.80,
     initiative: 2,
 
     cost: {
@@ -560,6 +582,7 @@ config.units.naval = {
     carrier_capacity: 50,
     defence: 3500,
     manoeuvre: 1,
+    movement: 61,
     initiative: 1,
 
     cost: {
@@ -587,6 +610,7 @@ config.units.naval = {
     attack: 3500,
     defence: 3000,
     manoeuvre: 4,
+    movement: 55.56,
     initiative: 5,
 
     cost: {
@@ -615,6 +639,7 @@ config.units.naval = {
     attack: 2500,
     defence: 3500,
     manoeuvre: 5,
+    movement: 59.26,
     initiative: 4,
 
     cost: {
@@ -642,6 +667,7 @@ config.units.naval = {
     attack: 5500,
     defence: 2800,
     manoeuvre: 3,
+    movement: 60,
     initiative: 4,
 
     cost: {

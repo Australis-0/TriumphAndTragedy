@@ -10,6 +10,7 @@ config.units.mercenaries = {
     attack: 2,
     defence: 5,
     manoeuvre: 3,
+    movement: 5.50,
     initiative: 1,
 
     cost: {
@@ -27,6 +28,7 @@ config.units.mercenaries = {
     attack: 4,
     defence: 2,
     manoeuvre: 0,
+    movement: 5,
     initiative: 2,
 
     cost: {
@@ -43,6 +45,7 @@ config.units.mercenaries = {
     attack: 7,
     defence: 3,
     manoeuvre: 1,
+    movement: 5.35,
     initiative: 1,
 
     cost: {
@@ -60,6 +63,7 @@ config.units.mercenaries = {
     attack: 2,
     defence: 6,
     manoeuvre: 3,
+    movement: 6,
     initiative: 2,
 
     cost: {

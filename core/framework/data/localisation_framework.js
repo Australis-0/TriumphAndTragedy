@@ -191,7 +191,7 @@ module.exports = {
                       var local_target = main.users[all_local_effects[z]];
 
                       //Push formatted string
-                      peace_string.push(`- **${local_target.name}** will be completely annexed by **${local_recipient.name}**`);
+                      peace_string.push(`- **${local_target.name}** will be completely annexed by **${local_recipient.name}**.`);
                     }
 
                     break;

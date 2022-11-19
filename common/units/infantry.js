@@ -11,6 +11,7 @@ config.units.infantry = {
     attack: 1,
     defence: 3,
     manoeuvre: 2,
+    movement: 2.35,
     initiative: 1,
 
     cost: {
@@ -33,6 +34,7 @@ config.units.infantry = {
     attack: 2,
     defence: 1,
     manoeuvre: 1,
+    movement: 2,
     initiative: 2,
 
     cost: {
@@ -55,6 +57,7 @@ config.units.infantry = {
     attack: 3,
     defence: 2,
     manoeuvre: 0,
+    movement: 3,
     initiative: 3,
 
     cost: {
@@ -77,6 +80,7 @@ config.units.infantry = {
     attack: 5,
     defence: 1,
     manoeuvre: 2,
+    movement: 24.14,
     initative: 2,
 
     cost: {
@@ -98,6 +102,7 @@ config.units.infantry = {
     attack: 2,
     defence: 1,
     manoeuvre: 1,
+    movement: 5,
     initative: 3,
 
     cost: {
@@ -119,6 +124,7 @@ config.units.infantry = {
     attack: 3,
     defence: 1,
     manoeuvre: 1,
+    movement: 4.5,
     initiative: 2,
 
     cost: {
@@ -140,6 +146,7 @@ config.units.infantry = {
     attack: 1,
     defence: 3,
     manoeuvre: 1,
+    movement: 2.88,
     initiative: 2,
 
     cost: {
@@ -161,6 +168,7 @@ config.units.infantry = {
     attack: 6,
     defence: 4,
     manoeuvre: 1,
+    movement: 3,
     initiative: 2,
 
     cost: {
@@ -186,6 +194,7 @@ config.units.infantry = {
     attack: 4,
     defence: 1,
     manoeuvre: 2,
+    movement: 4.50,
     initative: 2,
 
     quantity: 10000,
@@ -209,6 +218,7 @@ config.units.infantry = {
     attack: 5,
     defence: 1,
     manoeuvre: 2,
+    movement: 4.45,
     initiative: 2,
 
     quantity: 10000,
@@ -232,6 +242,7 @@ config.units.infantry = {
     attack: 5,
     defence: 2,
     manoeuvre: 3,
+    movement: 4.45,
     initiative: 3,
 
     cost: {
@@ -255,6 +266,7 @@ config.units.infantry = {
     attack: 6,
     defence: 2,
     manoeuvre: 2,
+    movement: 4.83,
     initiative: 3,
 
     cost: {
@@ -278,6 +290,7 @@ config.units.infantry = {
     attack: 6,
     defence: 3,
     manoeuvre: 1,
+    movement: 4.83,
     initiative: 4,
 
     cost: {
@@ -301,6 +314,7 @@ config.units.infantry = {
     attack: 10,
     defence: 2,
     manoeuvre: 1,
+    movement: 4.83,
     initiative: 5,
 
     cost: {
@@ -324,6 +338,7 @@ config.units.infantry = {
     attack: 12,
     defence: 5,
     manoeuvre: 1,
+    movement: 4.75,
     initiative: 5,
 
     cost: {
@@ -347,6 +362,7 @@ config.units.infantry = {
     attack: 15,
     defence: 4,
     manoeuvre: 0,
+    movement: 4.70,
     initiative: 5,
 
     cost: {
@@ -371,6 +387,7 @@ config.units.infantry = {
     attack: 18,
     defence: 6,
     manoeuvre: 1,
+    movement: 3.50,
     initiative: 6,
 
     cost: {
@@ -395,6 +412,7 @@ config.units.infantry = {
     attack: 10,
     defence: 3,
     manoeuvre: 3,
+    movement: 5,
     initiative: 4,
 
     cost: {
@@ -419,6 +437,7 @@ config.units.infantry = {
     attack: 5,
     defence: 1,
     manoeuvre: 5,
+    movement: 6,
     initiative: 6,
 
     cost: {
@@ -443,6 +462,7 @@ config.units.infantry = {
     attack: 7,
     defence: 3,
     manoeuvre: 6,
+    movement: 6.50,
     initiative: 5,
 
     cost: {
@@ -465,6 +485,7 @@ config.units.infantry = {
     attack: 20,
     defence: 5,
     manoeuvre: 2,
+    movement: 4.50,
     initiative: 4,
 
     cost: {
@@ -488,6 +509,7 @@ config.units.infantry = {
     attack: 14,
     defence: 10,
     manoeuvre: 3,
+    movement: 40.23,
     initiative: 3,
 
     cost: {
@@ -512,6 +534,7 @@ config.units.infantry = {
     attack: 20,
     defence: 3,
     manoeuvre: 5,
+    movement: 27.78,
     initiative: 1,
 
     cost: {
@@ -535,6 +558,7 @@ config.units.infantry = {
     attack: 18,
     defence: 20,
     manoeuvre: 2,
+    movement: 40.23,
     initiative: 5,
 
     cost: {
@@ -561,6 +585,7 @@ config.units.infantry = {
     attack: 1,
     defence: 3,
     manoeuvre: 6,
+    movement: 10.50,
     initiative: 1,
 
     cost: {
@@ -577,6 +602,7 @@ config.units.infantry = {
     attack: 12,
     defence: 20,
     manoeuvre: 7,
+    movement: 48.28,
     initiative: 4,
 
     cost: {
@@ -600,6 +626,7 @@ config.units.infantry = {
     attack: 35,
     defence: 5,
     manoeuvre: 1,
+    movement: 40,
     initiative: 4,
 
     cost: {
@@ -623,6 +650,7 @@ config.units.infantry = {
     attack: 10,
     defence: 25,
     manoeuvre: 5,
+    movement: 72.42,
     initiative: 5,
 
     cost: {
@@ -645,6 +673,7 @@ config.units.infantry = {
     attack: 20,
     defence: 5,
     manoeuvre: 6,
+    movement: 80,
     initiative: 6,
 
     cost: {
@@ -671,6 +700,7 @@ config.units.infantry = {
     attack: 12,
     defence: 5,
     manoeuvre: 2,
+    movement: 72.42,
     initiative: 5,
 
     cost: {
@@ -695,6 +725,7 @@ config.units.infantry = {
     attack: 15,
     defence: 5,
     manoeuvre: 5,
+    movement: 72.42,
     initiative: 7,
 
     cost: {
@@ -717,6 +748,7 @@ config.units.infantry = {
     attack: 5,
     defence: 3,
     manoeuvre: 8,
+    movement: 160.93,
     initiative: 6,
 
     quantity: 10000,
@@ -741,6 +773,7 @@ config.units.infantry = {
     attack: 25,
     defence: 3,
     manoeuvre: 8,
+    movement: 160.93,
     initiative: 8,
 
     cost: {
@@ -765,6 +798,7 @@ config.units.infantry = {
     attack: 20,
     defence: 35,
     manoeuvre: 4,
+    movement: 200,
     initiative: 5,
 
     cost: {
@@ -788,6 +822,7 @@ config.units.infantry = {
     attack: 25,
     defence: 50,
     manoeuvre: 3,
+    movement: 241.40,
     initiative: 5,
 
     cost: {
@@ -813,6 +848,7 @@ config.units.infantry = {
     attack: 30,
     defence: 65,
     manoeuvre: 3,
+    movement: 900,
     initiative: 4,
 
     cost: {
@@ -837,6 +873,7 @@ config.units.infantry = {
     attack: 40,
     defence: 15,
     manoeuvre: 1,
+    movement: 900,
     initiative: 9,
 
     cost: {
