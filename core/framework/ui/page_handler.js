@@ -190,6 +190,10 @@ module.exports = {
           var view_obj = input.replace("view ", "").trim();
 
           switch (view_obj) {
+            case "archived war":
+              initialisePrintArchivedWar(user_id);
+
+              break;
             case "armies":
               createPageMenu(game_obj.middle_embed, {
                 embed_pages: printArmyList(user_id),
@@ -325,6 +329,7 @@ module.exports = {
               if (!["view army"].includes(input)) {
                 var army_obj = getArmy(actual_id, view_obj);
                 var city_obj = getCity(view_obj, { users: actual_id });
+                var ot_user_id = returnMention(view_obj);
                 var province_name = input.replace("view", "").trim()
                   .replace("province", "").trim();
 
@@ -388,6 +393,35 @@ module.exports = {
                         embed_pages: printProvince(game_obj.user, province_name),
                         user: game_obj.user
                       });
+
+                  //Process actual_ot_user_id
+                  var actual_ot_user_id;
+
+                  if (ot_user_id)
+                    if (main.global.user_map[ot_user_id])
+                      actual_ot_user_id = main.global.user_map[ot_user_id];
+
+                  //If none of the above, try war/nation
+                  if (!army_obj && !city_obj)
+                    if (main.users[actual_ot_user_id]) {
+                      viewDiplomacy(user_id, ot_user_id);
+                      game_obj.page = `diplomacy_view_${actual_ot_user_id}`;
+                    } else {
+                      //Keep wars as last in precedence
+                      var war_report = printWar(user_id, view_obj, false, true);
+
+                      if (war_report) {
+                        printWar(user_id, view_obj);
+                        game_obj.page = `view_war_${view_obj}`;
+                      } else {
+                        var archived_war_report = printWar(user_id, view_obj, true, true);
+
+                        if (archived_war_report) {
+                          printWar(user_id, view_obj, true);
+                          game_obj.page = `view_war_archives_${view_obj}`;
+                        }
+                      }
+                    }
                 }
               }
 
@@ -1284,36 +1318,6 @@ module.exports = {
                 user: game_obj.user
               });
             });
-
-          //[View Archived War]
-          if (input == "view archived war")
-            initialisePrintArchivedWar(user_id);
-
-          //[View (War Name)]
-          if (input.startsWith("view ")) {
-            var war_to_view = input.replace("view ", "");
-            var war_report = printWar(user_id, war_to_view, false, true);
-
-            if (war_report) {
-              printWar(user_id, war_to_view);
-              game_obj.page = `view_war_${war_to_view}`;
-            } else {
-              var archived_war_report = printWar(user_id, war_to_view, true, true);
-
-              if (archived_war_report) {
-                printWar(user_id, war_to_view, true);
-                game_obj.page = `view_war_archives_${war_to_view}`;
-              }
-            }
-          }
-
-          //[(War Name)]
-          var archived_war_report = printWar(user_id, input, true, true);
-
-          if (archived_war_report) {
-            printWar(user_id, input, true);
-            game_obj.page = `view_war_archives_${war_to_view}`;
-          }
         }
 
         //These go after war list

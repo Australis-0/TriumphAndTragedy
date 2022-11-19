@@ -108,10 +108,6 @@ module.exports = {
             if (!(war_obj.attackers.includes(all_allies[i]) || war_obj.defenders.includes(all_allies[i])))
               can_call_allies = true;
 
-      //Display CB
-      war_string.push(`**Casus Belli:** ${(cb_obj.icon) ? cb_obj.icon + " " : ""}${(cb_obj.name) ? cb_obj.name : war_obj.cb}`);
-      war_string.push("");
-
       //Peace treaty buttons
       if (!is_archived_war)
         if (war_obj.attackers.includes(actual_id) || war_obj.defenders.includes(actual_id))
@@ -125,6 +121,11 @@ module.exports = {
 
       war_string.push(`Attacker Warscore: **${printPercentage(war_obj.attacker_warscore)}** | Defender Warscore: **${printPercentage(war_obj.defender_warscore)}**`);
       war_string.push("");
+
+      //Display CB
+      war_string.push(`- Casus Belli: ${(cb_obj.icon) ? config.icons[cb_obj.icon] + " " : ""}**${(cb_obj.name) ? cb_obj.name : war_obj.cb}**`);
+      war_string.push("");
+
       try {
         war_string.push(`**${main.users[war_obj.attackers_war_leader].name}** is the war leader for the attacking faction, whilst **${main.users[war_obj.defenders_war_leader].name}** is the war leader for the defending faction.`);
       } catch {}
