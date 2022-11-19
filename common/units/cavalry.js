@@ -11,6 +11,7 @@ config.units.cavalry = {
     attack: 6,
     defence: 2,
     manoeuvre: 3,
+    movement: 12.87,
     initiative: 3,
 
     cost: {
@@ -33,6 +34,7 @@ config.units.cavalry = {
     attack: 5,
     defence: 3,
     manoeuvre: 1,
+    movement: 11.27,
     initiative: 4,
 
     cost: {
@@ -55,6 +57,7 @@ config.units.cavalry = {
     attack: 5,
     defence: 1,
     manoeuvre: 5,
+    movement: 16.09,
     initiative: 6,
 
     cost: {
@@ -77,6 +80,7 @@ config.units.cavalry = {
     attack: 5,
     defence: 2,
     manoeuvre: 2,
+    movement: 10.06,
     initiative: 5,
 
     cost: {
@@ -100,6 +104,7 @@ config.units.cavalry = {
     attack: 10,
     defence: 3,
     manoeuvre: 1,
+    movement: 12.87,
     initiative: 6,
 
     cost: {
@@ -123,6 +128,7 @@ config.units.cavalry = {
     attack: 8,
     defence: 4,
     manoeuvre: 5,
+    movement: 12.07,
     initiative: 5,
 
     cost: {
@@ -146,6 +152,7 @@ config.units.cavalry = {
     attack: 6,
     defence: 3,
     manoeuvre: 6,
+    movement: 19.31,
     initiative: 4,
 
     cost: {
@@ -169,6 +176,7 @@ config.units.cavalry = {
     attack: 10,
     defence: 5,
     manoeuvre: 5,
+    movement: 16.09,
     initiative: 2,
 
     cost: {
@@ -191,6 +199,7 @@ config.units.cavalry = {
     attack: 8,
     defence: 3,
     manoeuvre: 6,
+    movement: 82.23,
     initiative: 1,
 
     cost: {

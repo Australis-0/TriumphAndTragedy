@@ -8,6 +8,8 @@ config.units.colonists = {
     name: "Conquistadors",
     singular: "Conquistador",
 
+    movement: 7.41,
+
     cost: {
       wood: 1,
       lead: 2,
@@ -25,6 +27,8 @@ config.units.colonists = {
     name: "Settlers",
     singular: "Settler",
 
+    movement: 12.97,
+
     cost: {
       wood: 3,
       lead: 2,
@@ -41,6 +45,8 @@ config.units.colonists = {
   magistrates: {
     name: "Magistrates",
     singular: "Magistrate",
+
+    movement: 14,
 
     cost: {
       wood: 10,
@@ -60,6 +66,8 @@ config.units.colonists = {
     name: "Colonists",
     singular: "Colonist",
 
+    movement: 30,
+
     cost: {
       wood: 20,
       lead: 7,
@@ -77,6 +85,8 @@ config.units.colonists = {
   magnates: {
     name: "Magnates",
     singular: "Magnate",
+
+    movement: 20.37,
 
     cost: {
       wood: 25,
@@ -96,6 +106,8 @@ config.units.colonists = {
     name: "Administrators",
     singular: "Administrator",
 
+    movement: 42.60,
+
     cost: {
       wood: 10,
       lead: 20,
@@ -114,6 +126,8 @@ config.units.colonists = {
   bureaucrats: {
     name: "Bureaucrats",
     singular: "Bureaucrat",
+
+    movement: 900,
 
     cost: {
       wood: 30,

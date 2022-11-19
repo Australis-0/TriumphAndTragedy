@@ -84,7 +84,6 @@ module.exports = {
     var attackers_string = [];
     var attackers_wargoal_string = [];
     var can_call_allies = false;
-    var cb_obj = getCB(war_obj.cb);
     var bottom_war_string = [];
     var defenders_string = [];
     var defenders_wargoal_string = [];
@@ -92,6 +91,8 @@ module.exports = {
 
     //Check if war_obj exists
     if (war_obj) {
+      var cb_obj = getCB(war_obj.cb);
+
       //Recalculate attacker, defender casualties
       war_obj.attacker_total_casualties = 0;
       war_obj.defender_total_casualties = 0;

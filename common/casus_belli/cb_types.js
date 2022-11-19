@@ -116,7 +116,7 @@ config.casus_belli = {
     },
 
     peace_demands: {
-      annexation: 1,
+      complete_annexation: 1,
       puppet: 1,
       war_reparations: 1
     }
@@ -258,7 +258,7 @@ config.casus_belli = {
     infamy: 3,
 
     peace_demands: {
-      annexation: 1
+      complete_annexation: 1
     }
   },
 
@@ -313,7 +313,7 @@ config.casus_belli = {
     },
 
     peace_demands: {
-      annexation: 1,
+      complete_annexation: 1,
       puppet: 1
     }
   },

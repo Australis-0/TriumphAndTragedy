@@ -11,6 +11,7 @@ config.units.artillery = {
     attack: 750,
     defence: 50,
     manoeuvre: 0,
+    movement: 3,
     initiative: 1,
 
     cost: {
@@ -33,6 +34,7 @@ config.units.artillery = {
     attack: 350,
     defence: 100,
     manoeuvre: 3,
+    movement: 4.59,
     initiative: 3,
 
     cost: {
@@ -55,6 +57,7 @@ config.units.artillery = {
     attack: 1000,
     defence: 35,
     manoeuvre: 1,
+    movement: 4.83,
     initiative: 4,
 
     cost: {
@@ -78,6 +81,7 @@ config.units.artillery = {
     attack: 1200,
     defence: 400,
     manoeuvre: 1,
+    movement: 5.48,
     initiative: 5,
 
     cost: {
@@ -100,6 +104,7 @@ config.units.artillery = {
     attack: 1250,
     defence: 30,
     manoeuvre: 1,
+    movement: 6.48,
     initiative: 4,
 
     cost: {
@@ -122,6 +127,7 @@ config.units.artillery = {
     attack: 1500,
     defence: 50,
     manoeuvre: 2,
+    movement: 5.50,
     initiative: 5,
 
     cost: {
@@ -146,6 +152,7 @@ config.units.artillery = {
     attack: 1300,
     defence: 100,
     manoeuvre: 3,
+    movement: 8.05,
     initiative: 4,
 
     cost: {
@@ -170,6 +177,7 @@ config.units.artillery = {
     attack: 500,
     defence: 600,
     manoeuvre: 5,
+    movement: 8.05,
     initiative: 5,
 
     cost: {
@@ -194,6 +202,7 @@ config.units.artillery = {
     attack: 2000,
     defence: 10,
     manoeuvre: 0,
+    movement: 2,
     initiative: 2,
 
     cost: {
@@ -217,6 +226,7 @@ config.units.artillery = {
     attack: 450,
     defence: 20,
     manoeuvre: 8,
+    movement: 7.24,
     initiative: 2,
 
     cost: {
@@ -240,6 +250,7 @@ config.units.artillery = {
     attack: 500,
     defence: 200,
     manoeuvre: 2,
+    movement: 5.63,
     initiative: 5,
 
     cost: {
@@ -263,6 +274,7 @@ config.units.artillery = {
     attack: 600,
     defence: 20,
     manoeuvre: 8,
+    movement: 12.87,
     initiative: 3,
 
     cost: {
@@ -286,6 +298,7 @@ config.units.artillery = {
     attack: 1700,
     defence: 50,
     manoeuvre: 3,
+    movement: 4.83,
     initiative: 3,
 
     cost: {
@@ -309,6 +322,7 @@ config.units.artillery = {
     attack: 2000,
     defence: 75,
     manoeuvre: 2,
+    movement: 6.44,
     initiative: 4,
 
     cost: {
@@ -333,6 +347,7 @@ config.units.artillery = {
     attack: 5000,
     defence: 1000,
     manoeuvre: 2,
+    movement: 9.98,
     initiative: 3,
 
     cost: {
@@ -380,6 +395,7 @@ config.units.artillery = {
     attack: 3500,
     defence: 300,
     manoeuvre: 0,
+    movement: 32.19,
     initiative: 3,
 
     cost: {
@@ -402,6 +418,7 @@ config.units.artillery = {
     attack: 2000,
     defence: 50,
     manoeuvre: 5,
+    movement: 40.23,
     initiative: 4,
 
     cost: {
@@ -427,6 +444,7 @@ config.units.artillery = {
     attack: 5000,
     defence: 50,
     manoeuvre: 50,
+    movement: 10.8,
     initiative: 2,
 
     cost: {
@@ -451,6 +469,7 @@ config.units.artillery = {
     attack: 3500,
     defence: 500,
     manoeuvre: 1,
+    movement: 45.06,
     initiative: 4,
 
     cost: {
@@ -473,6 +492,7 @@ config.units.artillery = {
     attack: 2500,
     defence: 100,
     manoeuvre: 2,
+    movement: 54.7,
     initiative: 1,
 
     cost: {
@@ -496,6 +516,7 @@ config.units.artillery = {
     attack: 2700,
     defence: 500,
     manoeuvre: 4,
+    movement: 60,
     initiative: 2,
 
     cost: {
@@ -519,6 +540,7 @@ config.units.artillery = {
     attack: 2700,
     defence: 500,
     manoeuvre: 4,
+    movement: 45,
     initiative: 2,
 
     cost: {
@@ -543,6 +565,7 @@ config.units.artillery = {
     attack: 5500,
     defence: 500,
     manoeuvre: 2,
+    movement: 80,
     initiative: 5,
 
     cost: {

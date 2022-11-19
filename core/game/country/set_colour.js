@@ -10,9 +10,9 @@ module.exports = {
     visualPrompt(game_obj.alert_embed, user_id, {
       title: `Set National Colour:`,
       prompts: [
-        [`Please insert the R code of your colour.\n\nOnly RGB values between 20-175 and 185-255 are accepted.`, "number", { min: 20, max: 255 }],
-        [`Please insert the G code of your colour.\n\nOnly RGB values between 20-175 and 185-255 are accepted.`, "number", { min: 20, max: 255 }],
-        [`Please insert the B code of your colour.\n\nOnly RGB values between 20-175 and 185-255 are accepted.`, "number", { min: 20, max: 255 }]
+        [`Please insert the R code of your colour.\n\nOnly RGB values between 20-175 and 185-200 are accepted.`, "number", { min: 20, max: 200 }],
+        [`Please insert the G code of your colour.\n\nOnly RGB values between 20-175 and 185-200 are accepted.`, "number", { min: 20, max: 200 }],
+        [`Please insert the B code of your colour.\n\nOnly RGB values between 20-175 and 185-200 are accepted.`, "number", { min: 20, max: 200 }]
       ]
     },
     function (arg) {
