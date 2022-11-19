@@ -94,7 +94,7 @@ module.exports = {
       military_hq_description.push(`${config.icons.infamy} War Exhaustion: **${printPercentage(usr.modifiers.war_exhaustion)}** ${(!at_war && !isBlockaded(actual_id)) ? `(${printPercentage(Math.abs(war_exhaustion_rate), { display_prefix: true })} per turn)` : ""}`);
 
     if (returnSafeNumber(usr.blockaded.blockaded_war_exhaustion) > 0)
-      military_hq_description.push(`- ${printPercentage(usr.blockaded.blockaded_war_exhaustion, { display_prefix: true })} War Exhaustion from the ongoing blockade.`);
+      military_hq_description.push(`- **${printPercentage(usr.blockaded.blockaded_war_exhaustion, { display_prefix: true })}** War Exhaustion from the ongoing blockade.`);
 
     //Print infamy
     military_hq_description.push(`${config.icons.infamy} Infamy: **${parseNumber(usr.modifiers.infamy, { display_float: true })}** (${parseNumber(usr.modifiers.infamy_loss, { display_float: true, display_prefix: true })} per turn)`);
