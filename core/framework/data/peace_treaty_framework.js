@@ -705,7 +705,7 @@ module.exports = {
     var all_participants = [];
     var friendly_side = "";
     var opposing_side = "";
-    var war_obj = (typeof war_name != "object") ? JSON.parse(JSON.stringify(getWar(war_name))) ? JSON.parse(JSON.stringify(war_name));
+    var war_obj = (typeof war_name != "object") ? JSON.parse(JSON.stringify(getWar(war_name))) : JSON.parse(JSON.stringify(war_name));
 
     var infamy_map = module.exports.getPeaceTreatyInfamy(war_obj, peace_obj);
 

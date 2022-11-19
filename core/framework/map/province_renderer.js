@@ -63,7 +63,7 @@ module.exports = {
 
         var local_stroke = local_style.match(/stroke:#[0-9a-fA-F]+/gm);
 
-        local_el.setAttribute("style", `fill:${new_colour};${local_stroke[0]}${getDefaultProvinceStyling()}`);
+        local_el.setAttribute("style", `fill:${new_colour};${local_stroke[0]};${getDefaultProvinceStyling()}`);
 
         if (main.provinces[province_id])
           main.provinces[province_id][`${file}_colour`] = new_colour;
