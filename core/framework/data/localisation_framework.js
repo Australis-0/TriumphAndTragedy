@@ -385,7 +385,7 @@ module.exports = {
                     //Check for all war_reparations demands
                     for (var z = 0; z < local_value.length; z++)
                       //Push formatted string
-                      peace_string.push(`**${main.users[local_value[z].debtor].name}** will have to pay **${printPercentage(local_value[z].percentage_amount)}** of their income to **${main.users[local_value[z].owner].name}**${(local_value[z].turns) ? ` for the next **${parseNumber(local_value[z].turns)} turns.` : `.`}`);
+                      peace_string.push(`**${main.users[local_value[z].debtor].name}** will have to pay **${printPercentage(local_value[z].percentage_amount)}** of their income to **${main.users[local_value[z].owner].name}**${(local_value[z].turns) ? ` for the next **${parseNumber(local_value[z].turns)}** turns.` : `.`}`);
 
                     break;
                 }

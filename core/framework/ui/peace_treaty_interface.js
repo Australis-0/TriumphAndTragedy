@@ -1912,8 +1912,8 @@ module.exports = {
 
       //Set wargoal_counter
       wargoal_counter[wargoal_id] = (wargoal_counter[wargoal_id]) ?
-        wargoal_counter[wargoal_id] + 1 :
-        1;
+        wargoal_counter[wargoal_id] :
+        0;
 
       wargoal_map.push([`${(wargoal_obj.name) ? wargoal_obj.name : wargoal_id} #${wargoal_counter[wargoal_id]}`, i]);
 
@@ -1941,7 +1941,7 @@ module.exports = {
 
       //Hard match
       for (var i = 0; i < wargoal_map.length; i++)
-        if (wargoal_map[i][1].toLowerCase() == current_wargoal)
+        if (wargoal_map[i][0].toLowerCase() == current_wargoal)
           wargoal_exists = [true, wargoal_map[i][1]];
 
       if (wargoal_exists[0]) {
