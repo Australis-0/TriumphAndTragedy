@@ -233,10 +233,10 @@ module.exports = {
 
                     //Iterate over all province types
                     for (var z = 0; z < local_provinces.length; z++) {
-                      var local_province = main.provinces[local_provinces[z]];
+                      var local_province = local_provinces[z];
 
-                      if (!provinces_affected.includes(local_provinces[z]))
-                        provinces_affected.push(local_provinces[z]);
+                      if (!provinces_affected.includes(local_provinces[z].id))
+                        provinces_affected.push(local_provinces[z].id);
 
                       if (local_province.type)
                         type_count[local_province.type] = (type_count[local_province.type]) ?
