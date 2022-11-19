@@ -84,6 +84,7 @@ module.exports = {
     var attackers_string = [];
     var attackers_wargoal_string = [];
     var can_call_allies = false;
+    var cb_obj = getCB(war_obj.cb);
     var bottom_war_string = [];
     var defenders_string = [];
     var defenders_wargoal_string = [];
@@ -106,6 +107,10 @@ module.exports = {
           if (hasAlliance(actual_id, all_allies[i]))
             if (!(war_obj.attackers.includes(all_allies[i]) || war_obj.defenders.includes(all_allies[i])))
               can_call_allies = true;
+
+      //Display CB
+      war_string.push(`**Casus Belli:** ${(cb_obj.icon) ? cb_obj.icon + " " : ""}${(cb_obj.name) ? cb_obj.name : war_obj.cb}`);
+      war_string.push("");
 
       //Peace treaty buttons
       if (!is_archived_war)
