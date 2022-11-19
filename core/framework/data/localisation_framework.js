@@ -154,11 +154,11 @@ module.exports = {
 
               //Get actual demand_limit from war_obj.[friendly_side]_wargoals
               demand_limit = Math.ceil(
-                demand_limit*returnSafeNumber(war_obj[`${friendly_side}_wargoals`][wargoal_name], 1)
+                demand_limit*returnSafeNumber(war_obj[`${friendly_side}_wargoals`][wargoal_id], 1)
               );
 
               //Fetch wargoal_number
-              for (var y = 0; y < (x + 1); y++)
+              for (var y = 0; y < x; y++)
                 if (peace_obj.wargoals[y].id == sorted_wargoals[i])
                   wargoal_number++;
 
@@ -431,7 +431,7 @@ module.exports = {
 
     //Get current infamy
     var infamy_obj = getPeaceTreatyInfamy(war_obj, peace_treaty_simulation);
-    var infamy_string = "";
+    var infamy_string = [];
 
     var all_infamy_keys = Object.keys(infamy_obj);
 

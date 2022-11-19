@@ -123,7 +123,7 @@ module.exports = {
                       //Check to see if enemy country is valid
                       if (!main.global.user_map[actual_ot_user_id])
                         return [false, `The country you have specified for annexation did not exist!`];
-                      if (!war_obj.enemy_side.includes(actual_ot_user_id))
+                      if (!war_obj[enemy_side].includes(actual_ot_user_id))
                         return [false, `You can't annex a neutral/allied country!`];
                       if (actual_ot_user_id == arg[arg.length - 1])
                         return [false, `You can't have a country annex itself!`];
@@ -150,7 +150,7 @@ module.exports = {
                       //Check to see if enemy country is valid
                       if (!main.global.user_map[actual_ot_user_id])
                         return [false, `The country you have specified for annexation did not exist!`];
-                      if (!war_obj.enemy_side.includes(actual_ot_user_id))
+                      if (!war_obj[enemy_side].includes(actual_ot_user_id))
                         return [false, `You can't force a neutral/allied country to cut itself down to size!`];
                     }
                   }]);
@@ -188,8 +188,8 @@ module.exports = {
                   } else {
                     //General cut down on all army types
                     local_ui.prompts.push([`How much should the opposing nation's armed forces be cut down by? (in percent)`, "number", {
-                      min: returnSafeNumber(local_value.minimum_removal, 0),
-                      max: returnSafeNumber(local_value.maximum_removal, 1)
+                      min: returnSafeNumber(local_value.minimum_removal*100, 0),
+                      max: returnSafeNumber(local_value.maximum_removal*100, 100)
                     }]);
 
                     local_ui.cut_down_to_size_prompts.push(
@@ -234,17 +234,17 @@ module.exports = {
                           var local_province = main.provinces[provinces[i]];
 
                           //Check that it belongs to an enemy country or their own country
-                          if (!war_obj.enemy_side.includes(local_province.owner) && local_province.owner != actual_id)
+                          if (!war_obj[enemy_side].includes(local_province.owner) && local_province.owner != actual_id)
                             return [false, `You cannot demilitarise neutral/allied provinces!`];
 
                           //Check to make sure it doesn't include a capital city
                           if (!local_value.can_demilitarise_capital) {
-                            for (var x = 0; x < war_obj.enemy_side.length; x++)
+                            for (var x = 0; x < war_obj[enemy_side].length; x++)
                               try {
-                                var local_capital = getCapital(war_obj.enemy_side[x]);
+                                var local_capital = getCapital(war_obj[enemy_side][x]);
 
                                 if (local_capital.id == provinces[i])
-                                  return [false, `You cannot demilitarise Province **${provinces[i]}**, as it remains the capital of **${main.users[war_obj.enemy_side[x]].name}**!`];
+                                  return [false, `You cannot demilitarise Province **${provinces[i]}**, as it remains the capital of **${main.users[war_obj[enemy_side][x]].name}**!`];
                               } catch {}
 
                             //Check if capital demilitarised is their own
@@ -287,8 +287,8 @@ module.exports = {
                   for (var x = 0; x < all_cultures.length; x++) {
                     var local_culture = main.global.cultures[all_cultures[x]];
 
-                    for (var y = 0; y < war_obj.enemy_side.length; y++) {
-                      var local_user = main.users[war_obj.enemy_side[y]];
+                    for (var y = 0; y < war_obj[enemy_side].length; y++) {
+                      var local_user = main.users[war_obj[enemy_side][y]];
 
                       var accepted_cultures = getAcceptedCultures(local_user.id, { exclude_primary_culture: true });
                       var local_provinces = getProvinces(local_user.id, {
@@ -360,7 +360,7 @@ module.exports = {
                             //Make sure all motioned provinces belong to enemies
                             if (!local_province.owner)
                               return [false, `You cannot liberate an uncolonised province! Province **${provinces[i]}** was not owned by anyone.`];
-                            if (!war_obj.enemy_side.includes(provinces[i]))
+                            if (!war_obj[enemy_side].includes(provinces[i]))
                               return [false, `All motioned provinces, including Province **${provinces[i]}** must belong to the enemy!`];
 
                             if (local_province.pops)
@@ -391,14 +391,14 @@ module.exports = {
                         //Fetch a list of potential countries
                         var potential_countries = [];
 
-                        for (var i = 0; i < war_obj.enemy_side.length; i++) {
-                          var local_provinces = getProvinces(war_obj.enemy_side[i], { include_hostile_occupations: true });
+                        for (var i = 0; i < war_obj[enemy_side].length; i++) {
+                          var local_provinces = getProvinces(war_obj[enemy_side][i], { include_hostile_occupations: true });
 
                           for (var x = 0; x < local_provinces.length; x++)
                             if (local_provinces[x].culture)
                               if (local_provinces[x].culture == culture_obj.id)
-                                if (!potential_countries.includes(war_obj.enemy_side[i]))
-                                  potential_countries.push(war_obj.enemy_side[i]);
+                                if (!potential_countries.includes(war_obj[enemy_side][i]))
+                                  potential_countries.push(war_obj[enemy_side][i]);
                         }
 
                         //Check to see if current user is on the list of potential_countries
@@ -442,7 +442,7 @@ module.exports = {
                       var actual_ot_user_id = main.global.user_map[ot_user_id];
 
                       //Check to see if the nation specified is actually an enemy nation
-                      if (!war_obj.enemy_side.includes(actual_ot_user_id))
+                      if (!war_obj[enemy_side].includes(actual_ot_user_id))
                         return [false, `You must specify a user of the enemy faction!`];
                     }
                   }]);
@@ -473,8 +473,8 @@ module.exports = {
                   var potential_vassals = [];
 
                   //Which of the enemy's vassals should be liberated?
-                  for (var x = 0; x < war_obj.enemy_side.length; x++) {
-                    var local_country = main.users[war_obj.enemy_side[x]];
+                  for (var x = 0; x < war_obj[enemy_side].length; x++) {
+                    var local_country = main.users[war_obj[enemy_side][x]];
 
                     var all_vassals = Object.keys(usr.diplomacy.vassals);
 
@@ -533,14 +533,14 @@ module.exports = {
                           var local_province = main.provinces[provinces[i]];
 
                           //Make sure provinces belong to enemy nations
-                          if (!war_obj.enemy_side.includes(local_province.owner))
+                          if (!war_obj[enemy_side].includes(local_province.owner))
                             return [false, `Province **${provinces[i]}** wasn't owned by an enemy nation! You may only petition for annexation requests from enemy countries engaged in this war.`];
 
                           //Capital clause
                           if (!local_value.can_take_capital)
-                            for (var x = 0; x < war_obj.enemy_side.length; x++) {
-                              var capital_obj = getCapital(war_obj.enemy_side[x]);
-                              var local_user = main.users[war_obj.enemy_side[x]];
+                            for (var x = 0; x < war_obj[enemy_side].length; x++) {
+                              var capital_obj = getCapital(war_obj[enemy_side][x]);
+                              var local_user = main.users[war_obj[enemy_side][x]];
 
                               if (capital_obj)
                                 if (capital_obj.id == provinces[i])
@@ -643,7 +643,7 @@ module.exports = {
                         return [false, `The country you have specified, **${input}**, doesn't even exist!`];
 
                       //Check that target is an enemy
-                      if (!war_obj.enemy_side.includes(actual_ot_user_id))
+                      if (!war_obj[enemy_side].includes(actual_ot_user_id))
                         return [false, `You may only puppet enemy nations engaged in this conflict.`];
 
                       //Population clause
@@ -717,13 +717,13 @@ module.exports = {
                           return [false, `The city you have specified, **${input}**, proved entirely nonexistent! Please specify a valid Urban Province ID.`];
 
                         //Check to see that city_obj belongs to an enemy nation
-                        if (!war_obj.enemy_side.includes(city_obj.controller))
+                        if (!war_obj[enemy_side].includes(city_obj.controller))
                           return [false, `The capital city of your new client state must belong to an enemy nation involved in this conflict!`];
 
                         //Check if client state can_take_capital
                         if (!local_value.can_take_capital)
-                          for (var i = 0; i < war_obj.enemy_side.length; i++) {
-                            var capital_obj = getCapital(war_obj.enemy_side[i]);
+                          for (var i = 0; i < war_obj[enemy_side].length; i++) {
+                            var capital_obj = getCapital(war_obj[enemy_side][i]);
 
                             if (capital_obj)
                               if (capital_obj.id == city_obj.id)
@@ -747,8 +747,8 @@ module.exports = {
                       var provinces = input.trim().split(" ");
 
                       //Format capital_ids
-                      for (var i = 0; i < war_obj.enemy_side.length; i++) {
-                        var capital_obj = getCapital(war_obj.enemy_side[i]);
+                      for (var i = 0; i < war_obj[enemy_side].length; i++) {
+                        var capital_obj = getCapital(war_obj[enemy_side][i]);
 
                         if (capital_obj)
                           capital_ids.push(capital_obj.id);
@@ -762,7 +762,7 @@ module.exports = {
                           var local_province = main.provinces[provinces[i]];
 
                           //All provinces must belong to enemy nations
-                          if (!war_obj.enemy_side.includes(local_province.owner))
+                          if (!war_obj[enemy_side].includes(local_province.owner))
                             return [false, `You cannot annex neutral/allied provinces! Province **${provinces[i]}** did not belong to an enemy country involved in this war.`];
 
                           //Check if client state can_take_capital
@@ -785,8 +785,8 @@ module.exports = {
                         }
 
                       //Check to make sure all enemy countries fit within the release client state wargoal
-                      for (var i = 0; i < war_obj.enemy_side.length; i++) {
-                        var local_user = main.users[war_obj.enemy_side[i]];
+                      for (var i = 0; i < war_obj[enemy_side].length; i++) {
+                        var local_user = main.users[war_obj[enemy_side][i]];
                         var provinces_allowed = returnSafeNumber(local_value.minimum_provinces_allowed, 0);
 
                         //Order of precedence - minimum provinces allowed > minimum % allowed > maximum provinces allowed > maximum % allowed
@@ -838,7 +838,7 @@ module.exports = {
                         return [false, `The user you have specified, **${input}**, turned out to be entirely nonexistent! Please select from the above list.`];
 
                       //Check for involvement in the war
-                      if (!war_obj.enemy_side.includes(actual_ot_user_id) && !war_obj.friendly_side.includes(actual_ot_user_id))
+                      if (!war_obj[enemy_side].includes(actual_ot_user_id) && !war_obj.friendly_side.includes(actual_ot_user_id))
                         return [false, `The overlord you have specified for your new client state isn't even involved in this conflict! Please select a new overlord from the above list.`];
 
                       //Check to see if they're on the allied side
@@ -866,7 +866,7 @@ module.exports = {
                         return [false, `The user you have specified, **${input}**, turned out to be entirely nonexistent! Please select from the above list.`];
 
                       //Check for involvement in the war
-                      if (!war_obj.enemy_side.includes(actual_ot_user_id) && !war_obj.friendly_side.includes(actual_ot_user_id))
+                      if (!war_obj[enemy_side].includes(actual_ot_user_id) && !war_obj.friendly_side.includes(actual_ot_user_id))
                         return [false, `You cannot retake cores for a completely neutral state! Please select a valid allied country from the above list.`];
 
                       //Check to see if they're on the allied side
@@ -888,10 +888,10 @@ module.exports = {
                         return [false, `The user you have specified, **${input}**, turned out to be entirely nonexistent! Please select from the above list.`];
 
                       //Check for involvement in the war
-                      if (!war_obj.enemy_side.includes(actual_ot_user_id) && !war_obj.friendly_side.includes(actual_ot_user_id))
+                      if (!war_obj[enemy_side].includes(actual_ot_user_id) && !war_obj.friendly_side.includes(actual_ot_user_id))
                         return [false, `You cannot demand a completely neutral state to return their cores to this country! Please select a valid allied country from the above list.`];
 
-                      if (!war_obj.enemy_side.includes(actual_ot_user_id))
+                      if (!war_obj[enemy_side].includes(actual_ot_user_id))
                         return [false, `You must specify a valid enemy country for them to be able to return their cores! **${input}** was not recognised as a valid country.`];
                     }
                   }]);
@@ -917,7 +917,7 @@ module.exports = {
                           return [false, `The user you have specified, **${input}**, turned out to be entirely nonexistent! Please select from the above list.`];
 
                         //Check for involvement in the war
-                        if (!war_obj.enemy_side.includes(actual_ot_user_id) && !war_obj.friendly_side.includes(actual_ot_user_id))
+                        if (!war_obj[enemy_side].includes(actual_ot_user_id) && !war_obj.friendly_side.includes(actual_ot_user_id))
                           return [false, `You cannot free a completely neutral state from their war reparations! Please select a valid allied country from the above list.`];
 
                         //Check to see if they're on the friendly_side
@@ -950,11 +950,11 @@ module.exports = {
                         return [false, `The country you have specified, **${input}**, didn't even exist! Please select a country from the above list.`];
 
                       //Check to make sure that target is involved in the war
-                      if (!war_obj.enemy_side.includes(actual_ot_user_id) && !war_obj.friendly_side.includes(actual_ot_user_id))
+                      if (!war_obj[enemy_side].includes(actual_ot_user_id) && !war_obj.friendly_side.includes(actual_ot_user_id))
                         return [false, `**${ot_user.name}** isn't even involved in the current conflict! Please select a country from the above list.`];
 
                       //Check to make sure that target is on the enemy side
-                      if (!war_obj.enemy_side.includes(actual_ot_user_id))
+                      if (!war_obj[enemy_side].includes(actual_ot_user_id))
                         return [false, `You can't take stuff from an allied nation in a peace deal like that! Please select a country from the above list.`];
                     }
                   }]);
@@ -1043,7 +1043,7 @@ module.exports = {
                         return [false, `The country you have specified, **${input}**, turned out to be entirely nonexistent! Please select from the above list.`]
 
                       //Check to see if target is an enemy
-                      if (!war_obj.enemy_side.includes(actual_ot_user_id))
+                      if (!war_obj[enemy_side].includes(actual_ot_user_id))
                         return [false, `**${ot_user.name}** is not currently on the opposing side of this conflict! You can't force neutral/allied countries into trading with you.`];
                     }
                   }]);
@@ -1102,7 +1102,7 @@ module.exports = {
                         return [false, `The country you have specified, **${input}**, turned out to be entirely nonexistent! Please select from the above list.`]
 
                       //Check to see if target is an enemy
-                      if (!war_obj.enemy_side.includes(actual_ot_user_id))
+                      if (!war_obj[enemy_side].includes(actual_ot_user_id))
                         return [false, `**${ot_user.name}** is not currently on the opposing side of this conflict! You can't syphon actions from neutral/allied nations.`];
                     }
                   }]);
@@ -1148,8 +1148,8 @@ module.exports = {
                   //Amount prompt (percentage), overrides number
                   if (local_value.minimum_percentage_allowed || local_value.maximum_percentage_allowed) {
                     local_ui.prompts.push([`How many percent of this country's actions should be syphoned off per turn? Note that this overrides absolute amounts whenever higher during a given turn.`, "number", {
-                      min: returnSafeNumber(local_value.minimum_number_allowed, 0),
-                      max: returnSafeNumber(local_value.maximum_number_allowed, 100)
+                      min: returnSafeNumber(local_value.minimum_percentage_allowed*100, 0),
+                      max: returnSafeNumber(local_value.maximum_percentage_allowed*100, 100)
                     }]);
 
                     local_ui.syphon_actions_prompts.push(
@@ -1182,10 +1182,10 @@ module.exports = {
 
                       //Check to see if target exists
                       if (!ot_user)
-                        return [false, `The country you have specified, **${input}**, turned out to be entirely nonexistent! Please select from the above list.`]
+                        return [false, `The country you have specified, **${input}**, turned out to be entirely nonexistent! Please select from the above list.`];
 
                       //Check to see if target is an enemy
-                      if (!war_obj.enemy_side.includes(actual_ot_user_id))
+                      if (!war_obj[enemy_side].includes(actual_ot_user_id))
                         return [false, `**${ot_user.name}** is not currently on the opposing side of this conflict! You can't force neutral/allied countries to pay war reparations`];
                     }
                   }]);
@@ -1218,8 +1218,8 @@ module.exports = {
 
                   //Amount prompt
                   local_ui.prompts.push([`What percentage of income should be paid from the target to the recipient nation each turn?`, "number", {
-                    min: returnSafeNumber(local_value.minimum_percentage_allowed, 0),
-                    max: returnSafeNumber(local_value.maximum_percentage_allowed, 100)
+                    min: returnSafeNumber(local_value.minimum_percentage_allowed*100, 0),
+                    max: returnSafeNumber(local_value.maximum_percentage_allowed*100, 100)
                   }]);
 
                   local_ui.war_reparations_prompts.push(

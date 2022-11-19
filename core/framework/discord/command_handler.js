@@ -105,7 +105,7 @@ module.exports = {
                     log.error(`The argument type ${local_prompt.prompts[current_step][1]} specified with the visual prompt at User ID ${user_id} does not exist!`);
                   }
                 } catch (e) {
-                  log.error(e);
+                  console.log(e);
                 }
               }
             }
