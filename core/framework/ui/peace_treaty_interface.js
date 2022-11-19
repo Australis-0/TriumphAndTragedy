@@ -106,7 +106,7 @@ module.exports = {
             var all_effects = Object.keys(wargoal_obj.effect);
 
             for (var i = 0; i < all_effects.length; i++) {
-              var local_value = wargoal_obj.effects[all_effects[i]];
+              var local_value = wargoal_obj.effect[all_effects[i]];
 
               switch (all_effects[i]) {
                 case "annex_all":
@@ -630,7 +630,7 @@ module.exports = {
                   break;
                 case "puppet":
                   //Country to puppet prompt
-                  local_ui.prompts.push([`Which enemy nation would you like to puppet? You may choose from the following countries:\n- ${enemy_countries.join("\n- ")}`, "mention", {
+                  local_ui.prompts.push([`Which enemy nation would you like to puppet? You may choose from the following countries:\n\n- ${enemy_countries.join("\n- ")}\n`, "mention", {
                     limit: function (user_id, arg, input) {
                       //Declare local instance variables
                       var ot_user_id = returnMention(input);
@@ -1030,7 +1030,7 @@ module.exports = {
                   break;
                 case "steer_trade":
                   //Target prompt
-                  local_ui.prompts.push([`Which enemy country would you like to force into only being able to trade with you? You may choose one of the following countries:\n- ${enemy_countries.join("\n- ")}`, "mention", {
+                  local_ui.prompts.push([`Which enemy country would you like to force into only being able to trade with you? You may choose one of the following countries:\n\n- ${enemy_countries.join("\n- ")}`, "mention", {
                     limit: function (user_id, arg, input) {
                       //Declare local instance variables
                       var ot_user_id = returnMention(input);
@@ -1089,7 +1089,7 @@ module.exports = {
                   break;
                 case "syphon_actions":
                   //Target prompt
-                  local_ui.prompts.push([`Which enemy nation would you like to syphon actions from? You may choose one of the following countries:\n- ${enemy_countries.join("\n- ")}`, "mention", {
+                  local_ui.prompts.push([`Which enemy nation would you like to syphon actions from? You may choose one of the following countries:\n\n- ${enemy_countries.join("\n- ")}\n`, "mention", {
                     limit: function (user_id, arg, input) {
                       //Declare local instance variables
                       var ot_user_id = returnMention(input);
@@ -1172,7 +1172,7 @@ module.exports = {
                   break;
                 case "war_reparations":
                   //Target prompt
-                  local_ui.prompts.push([`Whom would you like to force war reparations upon? You may choose one of the following countries:\n- ${enemy_countries.join("\n- ")}`, "mention", {
+                  local_ui.prompts.push([`Whom would you like to force war reparations upon? You may choose one of the following countries:\n\n- ${enemy_countries.join("\n- ")}\n`, "mention", {
                     limit: function (user_id, arg, input) {
                       //Declare local instance variables
                       var ot_user_id = returnMention(input);
@@ -1247,14 +1247,6 @@ module.exports = {
               title: `[Back] | Adding Demand for ${(wargoal_obj.name) ? wargoal_obj.name : wargoal_name}`,
               prompts: local_ui.prompts,
               do_not_cancel: true
-            },
-            function (arg) {
-              switch (arg) {
-                case "back":
-                  module.exports.initialiseAddWargoal(user_id, peace_obj);
-
-                  break;
-              }
             },
             function (arg) {
               //3rd parser - parse from prompts to effects
@@ -1771,6 +1763,14 @@ module.exports = {
               setTimeout(function(){
                 module.exports.modifyPeaceTreaty(user_id, peace_obj, true);
               }, 3000);
+            },
+            function (arg) {
+              switch (arg) {
+                case "back":
+                  module.exports.initialiseAddWargoal(user_id, peace_obj);
+
+                  break;
+              }
             });
           } else {
             peace_obj.wargoals.push({ id: wargoal_name });
