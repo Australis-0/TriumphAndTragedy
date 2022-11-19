@@ -1844,6 +1844,10 @@ module.exports = {
         case "send peace offer":
           sendPeaceTreaty(user_id, peace_obj);
 
+          setTimeout(function(){
+            module.exports.modifyPeaceTreaty(user_id, peace_obj, true);
+          }, 3000);
+
           break;
       }
     })
@@ -2167,9 +2171,7 @@ module.exports = {
         }
 
     //Initialise map viewer
-    setTimeout(function(){
-      cacheSVG(map_file);
-    }, 5000);
+    cacheSVG(map_file);
 
     setTimeout(function(){
       (!change_image) ?

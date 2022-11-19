@@ -124,6 +124,13 @@ module.exports = {
       var wargoal_id = sorted_wargoals[i];
       var wargoal_obj = getWargoal(wargoal_id);
 
+      var demand_limit = returnSafeNumber(wargoal_obj.demand_limit, 1);
+
+      //Get actual demand_limit from war_obj.[friendly_side]_wargoals
+      demand_limit = Math.ceil(
+        demand_limit*returnSafeNumber(war_obj[`${friendly_side}_wargoals`][wargoal_id], 1)
+      );
+
       peace_string.push(`**${(wargoal_obj.name) ? wargoal_obj.name : wargoal_id}** - (**${parseNumber(returnSafeNumber(wargoals_demanded[wargoal_id]))}**/${parseNumber(demand_limit)} demanded)`);
     }
 
@@ -378,7 +385,7 @@ module.exports = {
                     //Check for all war_reparations demands
                     for (var z = 0; z < local_value.length; z++)
                       //Push formatted string
-                      peace_string.push(`**${main.users[local_value[z].debtor].name}** will have to pay **${printPercentage(local_value[z].percentage_amount)}** of their income to **${main.users[local_value[z].owner].name}${(local_value[z].turns) ? ` for the next **${parseNumber(local_value[z].turns)} turns.` : `.`}`);
+                      peace_string.push(`**${main.users[local_value[z].debtor].name}** will have to pay **${printPercentage(local_value[z].percentage_amount)}** of their income to **${main.users[local_value[z].owner].name}**${(local_value[z].turns) ? ` for the next **${parseNumber(local_value[z].turns)} turns.` : `.`}`);
 
                     break;
                 }
