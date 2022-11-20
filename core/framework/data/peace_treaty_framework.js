@@ -1120,7 +1120,8 @@ module.exports = {
       var local_user = main.users[all_infamy_keys[i]];
 
       //Add to local_user.infamy
-      local_user.infamy += returnSafeNumber(local_amount);
+      if (local_user)
+        local_user.infamy += returnSafeNumber(local_amount);
     }
   }
 };

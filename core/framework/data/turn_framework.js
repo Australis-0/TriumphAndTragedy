@@ -294,6 +294,8 @@ module.exports = {
             var cb_changes = local_cb.dynamic_limit(local_war);
 
             if (cb_changes) {
+              local_war.cb = all_cbs[x];
+
               //Check to see if wargoals need to change
               if (local_cb.clear_wargoals) {
                 local_war.attackers_wargoals = {};
