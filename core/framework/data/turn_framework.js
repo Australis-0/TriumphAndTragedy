@@ -284,6 +284,7 @@ module.exports = {
         var attacker_warscore = 0;
         var defender_war_exhaustion = 0;
         var defender_warscore = 0;
+        var fully_sieged_attackers = 0;
         var fully_sieged_defenders = 0;
 
         //Dynamic CB handler
@@ -321,6 +322,11 @@ module.exports = {
         for (var x = 0; x < local_war.attackers.length; x++) {
           var local_user = main.users[local_war.attackers[x]];
 
+          if (local_user.provinces == 0)
+            fully_sieged_attackers++;
+          if (returnSafeNumber(local_user.modifiers.war_exhaustion, 1) == 1)
+            fully_sieged_attackers++;
+
           attacker_war_exhaustion += returnSafeNumber(local_user.modifiers.war_exhaustion, 1);
         }
         for (var x = 0; x < local_war.defenders.length; x++) {
@@ -342,8 +348,12 @@ module.exports = {
             1
         , 1);
         local_war.defender_warscore = Math.min(
-          parseFloat((attacker_war_exhaustion/local_war.attackers.length).toFixed(2)),
-        1);
+          (fully_sieged_attackers != local_war.attackers.length) ?
+            parseFloat(
+              (attacker_war_exhaustion/local_war.attackers.length).toFixed(2)
+            ) :
+            1
+        , 1);
       }
     }
 
