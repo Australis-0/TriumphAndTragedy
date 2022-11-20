@@ -3,6 +3,8 @@ config.units.artillery = {
   icon: "artillery",
   type: "land",
 
+  branch_name: "Artillery",
+
   //Mediaeval to Early Modern Artillery
   bombard: {
     name: "Bombards",

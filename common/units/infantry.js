@@ -3,6 +3,8 @@ config.units.infantry = {
   icon: "active_personnel",
   type: "land",
 
+  branch_name: "Infantry",
+
   //Early Game Infantry Units
   skirmishers: {
     name: "Skirmishers",

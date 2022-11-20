@@ -3,6 +3,8 @@ config.units.colonists = {
   icon: "colonisation",
   type: "reserves",
 
+  branch_name: "Colonials",
+
   //Colonial Units
   conquistadors: {
     name: "Conquistadors",

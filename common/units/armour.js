@@ -3,6 +3,8 @@ config.units.armour = {
   icon: "land_vehicles",
   type: "land",
 
+  branch_name: "Armour", 
+
   //Other Armoured Vehicles
   armoured_cars: {
     name: "Armoured Cars",

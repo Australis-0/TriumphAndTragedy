@@ -3,6 +3,8 @@ config.units.naval = {
   icon: "naval_units",
   type: "naval",
 
+  branch_name: "Navy",
+
   //Naval Units
   caravels: {
     name: "Caravels",

@@ -3,6 +3,8 @@ config.units.cavalry = {
   icon: "manpower",
   type: "land",
 
+  branch_name: "Cavalry",
+
   //Cavalry Units
   lance_cavalry: {
     name: "Lance Cavalry",

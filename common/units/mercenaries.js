@@ -3,6 +3,8 @@ config.units.mercenaries = {
   icon: "active_personnel",
   type: "land",
 
+  branch_name: "Mercenaries",
+
   //Mercenaries
   condottieri: {
     name: "Condottieri",

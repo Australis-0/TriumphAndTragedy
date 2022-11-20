@@ -52,7 +52,7 @@ config.casus_belli = {
 
       //Return statement
       if (is_blockading)
-        if (areAtWar(usr.id, ot_user.id))
+        if (!areAtWar(usr.id, ot_user.id))
           return true;
     },
 
