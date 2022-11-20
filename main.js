@@ -226,7 +226,7 @@ setInterval(function(){
       else
         current_turn_time = 1;
 
-    //This is how much time has elapsed in years
+    //This is how much time has elapsed in years. The numerator 1000 represents milliseconds
     var time_elapsed = current_turn_time*(1000/(settings.turn_timer*1000));
     var processed_time = parseYears(time_elapsed);
 

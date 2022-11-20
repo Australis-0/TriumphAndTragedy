@@ -10,7 +10,10 @@ module.exports = {
     if (ui_obj)
       if (ui_obj.delete_after) {
         var delete_after_delay = (ui_obj.delete_after_delay) ? ui_obj.delete_after_delay : 0;
-        setTimeout(function(){ msg_obj.delete(); }, delete_after_delay);
+        setTimeout(function(){
+          if (msg_obj)
+            msg_obj.delete();
+        }, delete_after_delay);
       }
 
     //Clear up interface cache

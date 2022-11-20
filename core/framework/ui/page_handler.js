@@ -215,11 +215,13 @@ module.exports = {
             case "cb":
             case "cbs":
             case "cb list":
-              createPageMenu(game_obj.middle_embed, {
-                embed_pages: printCBs(user_id),
-                user: game_obj.user
-              });
-              game_obj.page = "cb_list";
+              if (!game_obj.page.startsWith("diplomacy_view_")) {
+                createPageMenu(game_obj.middle_embed, {
+                  embed_pages: printCBs(user_id),
+                  user: game_obj.user
+                });
+                game_obj.page = "cb_list";
+              }
 
               break;
             case "cities":

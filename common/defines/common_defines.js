@@ -13,6 +13,13 @@ config.defines.common = {
   starting_provinces: 1,
   starting_year: 1933, //Should start in 1500 by default
 
+  //Modifies how fast time elapses during a time period. (e.g. [0, 1750, 2] means that time elapses twice as fast between year(s) 0 and 1750)
+  time_modifier: [
+    [0, 1750, 2],
+    [1750, 1914, 1],
+    [1914, 9999, 0.25]
+  ],
+
   starting_kit: {
     set_government: "anarchy",
     set_party_popularity: {

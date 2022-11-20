@@ -67,8 +67,12 @@ module.exports = {
       if (game_obj)
         var delete_loop = setInterval(function(channel_id) {
           try {
-            if (game_obj.channel != settings.alert_channel)
-              returnChannel(channel_id).delete();
+            if (game_obj.channel != settings.alert_channel) {
+              var local_channel = returnChannel(channel_id);
+
+              if (local_channel)
+                local_channel.delete();
+            }
           } catch {
             clearInterval(delete_loop);
           }
@@ -102,8 +106,12 @@ module.exports = {
       if (local_game_obj.type == "game") {
         //Error trapping just in case channel doesn't exist
         try {
-          if (local_ui.channel != settings.alert_channel)
-            returnChannel(local_game_obj.channel).delete();
+          if (local_ui.channel != settings.alert_channel) {
+            var local_channel = returnChannel(local_game_obj.channel);
+
+            if (local_channel)
+              local_channel.delete();
+          }
         } catch (e) {
           log.warn(`Game channel for Game ID ${all_interfaces[i]} could not be found: ${e}.`);
         }
@@ -125,8 +133,12 @@ module.exports = {
       //Error trapping just in case
       try {
         if (local_ui.channel)
-          if (local_ui.channel != settings.alert_channel)
-            returnChannel(local_ui.channel).delete();
+          if (local_ui.channel != settings.alert_channel) {
+            var local_channel = returnChannel(local_ui.channel);
+
+            if (local_channel)
+              local_channel.delete();
+          }
       } catch {}
 
       main.interfaces = {};
@@ -459,7 +471,7 @@ module.exports = {
                   try {
                     module.exports.initialiseGameLoop(local_interface);
                   } catch {}
-                  
+
                   clearInterval(reinitialisation_loop);
 
                   for (var x = 0; x < all_messages.length; x++)
