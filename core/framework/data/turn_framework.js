@@ -326,6 +326,8 @@ module.exports = {
         for (var x = 0; x < local_war.defenders.length; x++) {
           var local_user = main.users[local_war.defenders[x]];
 
+          if (local_user.provinces == 0)
+            fully_sieged_defenders++;
           defender_war_exhaustion += returnSafeNumber(local_user.modifiers.war_exhaustion, 1);
           if (returnSafeNumber(local_user.modifiers.war_exhaustion, 1) == 1)
             fully_sieged_defenders++;
