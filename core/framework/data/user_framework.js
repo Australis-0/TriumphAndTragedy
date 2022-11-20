@@ -522,6 +522,28 @@ module.exports = {
     return pc_price;
   },
 
+  getDistance: function (arg0_province, arg1_province) {
+    //Convert from parameters
+    var current_province = arg0_province;
+    var destination_province = arg1_province;
+
+    //Declare local instance variables
+    var current_province_obj = module.exports.getProvince(current_province);
+    var destination_province_obj = module.exports.getProvince(destination_province);
+    var total_distance = 0;
+
+    if (current_province_obj && destination_province_obj)
+      if (current_province_obj.centre && destination_province_obj.centre) {
+        total_distance = Math.sqrt(
+          Math.pow(destination_province_obj.centre[0] - current_province_obj.centre[0], 2) +
+          Math.pow(destination_province_obj.centre[1] - current_province_obj.centre[1], 2)
+        );
+      }
+
+    //Return statement
+    return total_distance*returnSafeNumber(config.defines.map.km_per_pixel, 1);
+  },
+
   //Fetches user income before production costs
   getIncome: function (arg0_user, arg1_production) {
     //Convert from parameters

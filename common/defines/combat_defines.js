@@ -19,7 +19,6 @@ config.defines.combat = {
 	combat_order_stalemate_tech: "chemical_cannisters", //Which tech should switch the defender and attacker combat order?
 	combat_order_switch_tech: "war_of_movement", //What tech should switch the combat order back around?
 	cumulative_combat_modifiers: ["attack", "defence"], //Which combat modifiers are cumulative as opposed to per unit?
-	default_unit_speed: 4.59, //In kmh. Based off Roman marching speeds per hour
   infrastructure_range: 3, //What is the radius of provinces that should be affected by constructed infrastructure?
   interception_range: 5, //From how many provinces away should air wings be allowed to intercept other air wings?
   max_army_creation_limit: 100, //How many armies should users be able to create with a single command? Set to 0 to disable
@@ -39,8 +38,10 @@ config.defines.combat = {
   //Movement Speed
   army_speed: 2, //Base provinces per turn for armies
   colonisation_speed: 2, //Base provinces per turn for colonists
+	default_unit_speed: 4.59, //In kmh. Based off Roman marching speeds per hour
   max_colonisation_speed: 25, //Set to 0 to disable, in provinces per turn
   shipment_time: 10, //Transfer speed for shipping goods
+	
   base_transfer_time: 3, //Base turns for all shipments
 
   //Supply Limit

@@ -370,6 +370,53 @@ module.exports = {
     return all_armies;
   },
 
+  getArmySpeed: function (arg0_user, arg1_army_name) {
+    //Convert from parameters
+    var user_id = arg0_user;
+    var army_name = arg1_army_name;
+
+    //Declare local intsance variables
+    var actual_id = main.global.user_map[user_id];
+    var army_obj = (typeof army_name != "object") ? module.exports.getArmy(actual_id, army_name) : army_name;
+    var usr = main.users[actual_id];
+
+    if (usr)
+      if (army_obj) {
+        var all_army_units = Object.keys(army_obj.units);
+        var army_speed = 0;
+
+        for (var i = 0; i < all_army_units.length; i++) {
+          var local_amount = army_obj.units[all_army_units[i]];
+          var unit_obj = getUnit(all_army_units[i]);
+
+          if (unit_obj.manpower_cost) {
+            var all_manpower_costs = Object.keys(unit_obj.manpower_cost);
+            var total_manpower_cost = 0;
+
+            for (var x = 0; x < all_manpower_costs.length; x++)
+              total_manpower_cost += unit_obj.manpower_cost[all_manpower_costs[x]];
+
+            if (unit_obj.quantity)
+              total_manpower_cost = total_manpower_cost/unit_obj.quantity;
+
+            //Factor manpower_cost into local_amount
+            local_amount = local_amount*manpower_cost;
+          }
+
+          //Add to army speed
+          army_speed += (unit_obj.movement) ?
+            local_amount*unit_obj.movement :
+            local_amount*config.defines.combat.default_unit_speed;
+        }
+
+        //Average out army_speed
+        army_speed = army_speed/all_army_units.length;
+
+        //Return statement
+        return army_speed;
+      }
+  },
+
   //Gets an object of all units in a player's armies and reserves
   getUnits: function (arg0_user) {
     //Convert from parameters
