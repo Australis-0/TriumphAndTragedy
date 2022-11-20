@@ -218,13 +218,7 @@ setInterval(function(){
 
   //Date processing
   if (main.season_started) {
-    if (main.date.year < 1750)
-      current_turn_time = 2;
-    else
-      if (main.date.year >= 1914)
-        current_turn_time = 0.25;
-      else
-        current_turn_time = 1;
+    current_turn_time = getTimeModifier();
 
     //This is how much time has elapsed in years. The numerator 1000 represents milliseconds
     var time_elapsed = current_turn_time*(1000/(settings.turn_timer*1000));
