@@ -11,7 +11,9 @@ module.exports = {
       if (all_provinces[i].match(/^[0-9]+$/) && all_provinces[i].length > 0)
         //Add graph links with uniform weighting
         for (var x = 0; x < main.provinces[all_provinces[i]].adjacencies.length; x++)
-          graph.addLink(all_provinces[i], main.provinces[all_provinces[i]].adjacencies[x], { weight: 1 });
+          graph.addLink(all_provinces[i], main.provinces[all_provinces[i]].adjacencies[x], {
+            weight: main.provinces[all_provinces[i]].adjacency_distances[x]
+          });
   },
 
   loadBackupArray: function () {
@@ -134,7 +136,9 @@ module.exports = {
     loadMap("political_map.svg", "political");
     loadMap("supply_map.svg", "supply");
 
+    console.time(`Initialising graph ..`);
     setTimeout(module.exports.initialiseGraph, 500);
+    console.timeEnd(`Initialising graph ..`);
   },
 
   returnABRSDateString: function () {

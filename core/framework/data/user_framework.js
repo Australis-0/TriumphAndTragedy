@@ -88,7 +88,9 @@ module.exports = {
 
         if (valid_province)
           for (var x = 0; x < local_province.adjacencies.length; x++)
-            local_graph.addLink(all_provinces[i], local_province.adjacencies[x], { weight: 1 });
+            local_graph.addLink(all_provinces[i], local_province.adjacencies[x], {
+              weight: local_province.adjacency_distances[x]
+            });
       }
     }
 
@@ -604,6 +606,34 @@ module.exports = {
       }
   },
 
+  getProvinceDistances: function (arg0_provinces) {
+    //Convert from parameters
+    var provinces = arg0_provinces;
+
+    //Declare local instance variables
+    var distance_array = [];
+
+    //Fetch distance_array
+    for (var i = 0; i < provinces.length; i++)
+      if (provinces[i + 1]) {
+        var local_province = main.provinces[provinces[i]];
+
+        var local_distance = (local_province.adjacency_distances) ?
+          local_province.adjacency_distances[local_province.adjacencies.indexOf(provinces[i + 1])] :
+          module.exports.getDistance(provinces[i], provinces[i + 1]);
+
+        //Push actual distance
+        distance_array.push(
+          local_distance*getSupplyLimitMovementBonus(provinces[i], provinces[i + 1], local_distance)
+        );
+      } else {
+        distance_array.push(0);
+      }
+
+    //Return statement
+    return distance_array;
+  },
+
   /*
     getProvinces() - Returns an array of provinces for a certain user based on certain options.
     options: {
@@ -698,6 +728,34 @@ module.exports = {
 
     //Return statement
     return province_cache;
+  },
+
+  getSupplyLimitMovementBonus: function (arg0_province, arg1_province, arg2_distance) {
+    //Convert from parameters
+    var current_province = arg0_province;
+    var next_province = arg1_province;
+    var distance = arg2_distance;
+
+    //Declare local instance variables
+    var destination_province = main.provinces[next_province];
+    var starting_province = main.provinces[current_province];
+
+    if (starting_province && destination_province) {
+      //Get distance
+      if (!distance)
+        distance = module.exports.getDistance(current_province, next_province);
+
+      //Calculate bonus
+      var average_supply_limit = (
+        returnSafeNumber(destination_province, config.defines.combat.base_supply_limit) + returnSafeNumber(starting_province, config.defines.combat.base_supply_limit)
+      )/2;
+
+      //Return statement
+      return Math.min(
+        distance/average_supply_limit,
+        1
+      );
+    }
   },
 
   getTotalSoldiers: function (arg0_user) {

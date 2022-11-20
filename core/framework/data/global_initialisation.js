@@ -61,13 +61,23 @@ module.exports = {
     if (!main.last_queue_check) main.last_queue_check = new Date().getTime();
     if (!main.last_turn) main.last_turn = new Date().getTime();
 
-    //Fix province ID's
+    //Fix province adjacency_distances, ID's
     var all_provinces = Object.keys(main.provinces);
 
     for (var i = 0; i < all_provinces.length; i++) {
       var local_province = main.provinces[all_provinces[i]];
 
       local_province.id = all_provinces[i];
+
+      if (local_province.adjacencies)
+        if (!local_province.adjacency_distances) {
+          local_province.adjacency_distances = [];
+
+          for (var x = 0; x < local_province.adjacencies.length; x++)
+            local_province.adjacency_distances.push(
+              getDistance(all_provinces[i], local_province.adjacencies[x])
+            );
+        }
     }
   }
 };
