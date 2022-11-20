@@ -1251,7 +1251,7 @@ module.exports = {
             //Set units
             army_obj.units = new_units;
 
-            return [true, `**${parseNumber(army_obj.units[actual_unit_name])}** ${unit_obj.name} were moved to the **${ordinalise(new_index)}** combat row of the **${army_obj.name}**`];
+            return [true, `**${parseNumber(army_obj.units[actual_unit_name])}** ${unit_obj.name} were moved to the **${ordinalise(new_index + 1)}** combat row of the **${army_obj.name}**.`];
           } else {
             return [false, `The **${army_obj.name}** has no **${unit_obj.name}** in it.`];
           }
