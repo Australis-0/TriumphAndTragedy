@@ -197,8 +197,18 @@ module.exports = {
               has_combat_modifiers = true;
 
           if (has_combat_modifiers)
-            for (var y = 0; y < config.defines.combat.combat_modifiers.length; y++)
-              unit_stats_array.push(`${parseNumber(returnSafeNumber(local_unit[config.defines.combat.combat_modifiers[y]]))} ${parseString(config.defines.combat.combat_modifiers[y])}`);
+            for (var y = 0; y < config.defines.combat.combat_modifiers.length; y++) {
+              var local_combat_modifier = config.defines.combat.combat_modifiers[y];
+              var local_modifier_amount = local_unit[local_combat_modifier];
+
+              if (local_modifier_amount) {
+                //Process attack/defence bonuses
+                //Process movement bonuses
+                //Process range bonuses
+                
+                unit_stats_array.push(`${parseNumber(local_modifier_amount)} ${config.localisation[local_combat_modifier]}`);
+              }
+            }
 
           if (colonisation_string.length > 0)
             unit_stats_array.push(colonisation_string);

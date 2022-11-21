@@ -631,7 +631,7 @@ module.exports = {
   },
 
   //getReserveStrength() - Returns the current strength and army modifiers a user has in their reserves
-  getReserveStrength: function (arg0_user) { //[WIP] - Fix function to sum up stats for all user armies as well
+  getReserveStrength: function (arg0_user) {
     //Convert from parameters
     var user_id = arg0_user;
 
