@@ -176,6 +176,7 @@ module.exports = {
             status: "stationed",
             type: "empty", //Land (air_land, land), Air, Sea (air_sea, sea), Empty
             province: province_id,
+            distances: [],
             moving_to: [],
 
             in_battle: false,
@@ -553,6 +554,38 @@ module.exports = {
       }
   },
 
+  getArrivalTime: function (arg0_user, arg1_army_name) {
+    //Convert from parameters
+    var user_id = arg0_user;
+    var army_name = arg1_army_name;
+
+    //Declare local intsance variables
+    var actual_id = main.global.user_map[user_id];
+    var army_obj = (typeof army_name != "object") ? module.exports.getArmy(actual_id, army_name) : army_name;
+    var usr = main.users[actual_id];
+
+    if (usr)
+      if (army_obj) {
+        var time_to_arrival = 0;
+
+        //Guard clause
+        if (army_obj.moving_to.length == 0)
+          return time_to_arrival;
+
+        //Otherwise calculate based on army speed
+        var army_speed = module.exports.getArmySpeed(user_id, army_obj)*getTurnHours();
+        var current_index = army_obj.moving_to.indexOf(army_obj.province);
+        var distance_sum = 0;
+
+        //Fetch distance_sum
+        for (var i = current_index; i < army_obj.distances.length; i++)
+          if (army_obj.distances[i])
+            distance_sum += army_obj.distances[i];
+
+        return Math.ceil(distance_sum/army_speed);
+      }
+  },
+
   /*
     getMilitaryStrength() - Gets the overall strength of a nation's military
     options: {
@@ -737,7 +770,7 @@ module.exports = {
     if (usr)
       if (army_obj)
         if (!["empty", "navy"].includes(army_obj.type))
-          if (main.provinces[province_id]) {
+          if (main.provinces[province_id])
             if (province_id != army_obj.province) {
               //Check if target province is valid
               var local_province = main.provinces[province_id];
@@ -748,23 +781,25 @@ module.exports = {
 
               if (valid_province) {
                 var moving_to_array = smartMove(actual_id, army_obj.name, army_obj.province, province_id);
+                var distances_array = getProvinceDistances(moving_to_array);
 
                 if (moving_to_array) {
+                  army_obj.distances = distances_array;
                   army_obj.moving_to = moving_to_array;
                   army_obj.status = "moving";
 
-                  var time_to_arrival = Math.ceil(army_obj.moving_to.length/(config.defines.combat.army_speed*usr.modifiers.army_travel_speed));
+                  var time_to_arrival = module.exports.getArrivalTime(user_id, army_obj);
 
                   return [true, `The **${army_obj.name}** is now en route to Province **${province_id}**. It will arrive in approximately **${parseNumber(time_to_arrival)}** turn(s).`];
                 }
               }
             } else {
+              army_obj.distances = [];
               army_obj.moving_to = [];
               army_obj.status = "stationed";
 
               return [true, `You have ordered the **${army_obj.name}** to remain still.`];
             }
-          }
   },
 
   parseArmies: function (arg0_string) {

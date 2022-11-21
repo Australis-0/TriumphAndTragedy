@@ -9,6 +9,7 @@ module.exports = {
     var all_capitals = {};
     var all_enemies = {};
   	var current_date = new Date().getTime();
+    var turn_hours = getTurnHours();
 
     //Date processing for battle tick
     main.global.battle_tick = current_date;
@@ -92,20 +93,32 @@ module.exports = {
         //Army movement
         if (local_army.moving_to) {
           var current_element = local_army.moving_to.indexOf(local_army.province);
-          var current_speed = Math.ceil(config.defines.combat.army_speed*local_user.modifiers.army_travel_speed);
+          var current_speed = getArmySpeed(local_user.id, local_army)*turn_hours;
+          var provinces_moved = 0;
 
-          for (var x = 0; x < current_speed; x++)
-            if (local_army.moving_to[x + current_element]) {
-              var current_province = local_army.moving_to[x + current_element];
+          //Add to movement progress
+          if (!local_army.progress)
+            local_army.progress = 0;
 
-              speed_sample.push(current_province);
-              local_army.province = current_province;
-            }
+          local_army.progress += current_speed;
+
+          //Check distances_array
+          for (var x = current_element; x < local_army.distances.length; x++)
+            if (local_army.distances[x])
+              if (local_army.progress >= local_army.distances[x]) {
+                local_army.progress -= local_army.distances[x];
+                speed_sample.push(local_army.moving_to[x]);
+
+                local_army.province = local_army.moving_to[x];
+              }
 
           //Clear movement array if army has arrived
           if (local_army.province == local_army.moving_to[local_army.moving_to.length - 1]) {
+            local_army.distances = [];
             local_army.moving_to = [];
             local_army.status = "stationed";
+
+            delete local_army.progress;
           }
         }
       }

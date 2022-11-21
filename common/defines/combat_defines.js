@@ -36,12 +36,11 @@ config.defines.combat = {
   war_exhaustion_tickdown_rate: 0.10, //How fast should war exhaustion tick down if user is not at war?
 
   //Movement Speed
-  army_speed: 2, //Base provinces per turn for armies
   colonisation_speed: 2, //Base provinces per turn for colonists
 	default_unit_speed: 4.59, //In kmh. Based off Roman marching speeds per hour
   max_colonisation_speed: 25, //Set to 0 to disable, in provinces per turn
   shipment_time: 10, //Transfer speed for shipping goods
-	
+
   base_transfer_time: 3, //Base turns for all shipments
 
   //Supply Limit
