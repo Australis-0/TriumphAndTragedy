@@ -29,6 +29,7 @@ config.defines.diplomacy = {
   unconditional_peace_alert_id: "the_national_disaster", //What is the alert that should popup when a user must accept an unconditional peace?
   vassalisation_request_alert_id: "the_option_to_submit", //What alert should be sent to the target of a vassalisation request?
   vassal_maintenance_cost: 0.2, //What is the factor by which vassals should cost PC?
+  war_leader_bid_strength: 0.8, //What share of military strength compared to the current war leader is necessary for a country to take it over?
 
   //Diplomatic Actions
   improve_relations_cost: 50, //Amount of PC needed to improve relations
