@@ -3,7 +3,7 @@ config.units.armour = {
   icon: "land_vehicles",
   type: "land",
 
-  branch_name: "Armour", 
+  branch_name: "Armour",
 
   //Other Armoured Vehicles
   armoured_cars: {
@@ -26,6 +26,15 @@ config.units.armour = {
       money: 2000,
 
       ground_vehicles_cp: 5
+    },
+    maintenance: {
+      refined_petroil: 2,
+      steel: 2,
+      ammunition: 1,
+      machine_parts: 1,
+
+      ground_vehicles_cp: 2,
+      money: 800
     },
     manpower_cost: {
       soldiers: 35000
@@ -53,6 +62,15 @@ config.units.armour = {
 
       ground_vehicles_cp: 5
     },
+    maintenance: {
+      refined_petroil: 2,
+      steel: 1,
+      ammunition: 1,
+      machine_parts: 1,
+
+      ground_vehicles_cp: 2,
+      money: 700
+    },
     manpower_cost: {
       soldiers: 35000
     },
@@ -78,6 +96,15 @@ config.units.armour = {
 
       ground_vehicles_cp: 5,
     },
+    maintenance: {
+      ammunition: 2,
+      refined_petroil: 2,
+      steel: 1,
+      small_arms: 1,
+
+      ground_vehicles_cp: 3,
+      money: 1200
+    },
     manpower_cost: {
       soldiers: 35000
     },
@@ -95,7 +122,6 @@ config.units.armour = {
 
     cost: {
       steel: 10,
-      artillery: 1,
       small_arms: 3,
       ammunition: 5,
       refined_petroil: 5,
@@ -103,6 +129,14 @@ config.units.armour = {
       money: 5000,
 
       ground_vehicles_cp: 10
+    },
+    maintenance: {
+      machine_parts: 1,
+      ammunition: 1,
+      small_arms: 1,
+
+      ground_vehicles_cp: 2,
+      money: 900
     },
     manpower_cost: {
       soldiers: 35000
@@ -130,6 +164,16 @@ config.units.armour = {
 
       ground_vehicles_cp: 10
     },
+    maintenance: {
+      refined_petroil: 3,
+      steel: 2,
+      ammunition: 2,
+      machine_parts: 2,
+      small_arms: 1,
+
+      ground_vehicles_cp: 6,
+      money: 2000
+    },
     manpower_cost: {
       soldiers: 35000
     },
@@ -154,6 +198,16 @@ config.units.armour = {
       money: 2500,
 
       ground_vehicles_cp: 10
+    },
+    maintenance: {
+      ammunition: 3,
+      refined_petroil: 3,
+      machine_parts: 2,
+      small_arms: 2,
+      steel: 1,
+
+      ground_vehicles_cp: 6,
+      money: 1800
     },
     manpower_cost: {
       soldiers: 35000
@@ -183,6 +237,16 @@ config.units.armour = {
 
       ground_vehicles_cp: 20
     },
+    maintenance: {
+      refined_petroil: 6,
+      machine_parts: 4,
+      ammunition: 2,
+      steel: 2,
+      artillery: 1,
+
+      ground_vehicles_cp: 10,
+      money: 1000
+    },
     manpower_cost: {
       soldiers: 35000
     },
@@ -208,6 +272,15 @@ config.units.armour = {
       money: 2500,
 
       ground_vehicles_cp: 10,
+    },
+    maintenance: {
+      refined_petroil: 4,
+      machine_parts: 2,
+      ammunition: 2,
+      small_arms: 1,
+
+      ground_vehicles_cp: 8,
+      money: 900
     },
     manpower_cost: {
       soldiers: 35000
@@ -236,6 +309,16 @@ config.units.armour = {
 
       ground_vehicles_cp: 10
     },
+    maintenance: {
+      refined_petroil: 3,
+      ammunition: 2,
+      machine_parts: 2,
+      small_arms: 1,
+      steel: 1,
+
+      ground_vehicles_cp: 6,
+      money: 1200
+    },
     manpower_cost: {
       soldiers: 35000
     },
@@ -262,6 +345,17 @@ config.units.armour = {
       money: 5000,
 
       ground_vehicles_cp: 15
+    },
+    maintenance: {
+      refined_petroil: 4,
+      machine_parts: 2,
+      ammunition: 2,
+      artillery: 1,
+      small_arms: 1,
+      steel: 1,
+
+      ground_vehicles_cp: 8,
+      money: 1800
     },
     manpower_cost: {
       soldiers: 35000
@@ -290,6 +384,17 @@ config.units.armour = {
 
       ground_vehicles_cp: 20
     },
+    maintenance: {
+      refined_petroil: 8,
+      machine_parts: 4,
+      ammunition: 3,
+      artillery: 2,
+      small_arms: 2,
+      steel: 2,
+
+      ground_vehicles_cp: 15,
+      money: 2500
+    },
     manpower_cost: {
       soldiers: 35000
     },
@@ -315,6 +420,14 @@ config.units.armour = {
       money: 3000,
 
       ground_vehicles_cp: 10
+    },
+    maintenance: {
+      refined_petroil: 3,
+      artillery: 1,
+      ammunition: 1,
+
+      ground_vehicles_cp: 4,
+      money: 2000
     },
     manpower_cost: {
       soldiers: 35000
@@ -345,6 +458,16 @@ config.units.armour = {
 
       ground_vehicles_cp: 15
     },
+    maintenance: {
+      refined_petroil: 4,
+      machine_parts: 4,
+      steel: 3,
+      ammunition: 2,
+      small_arms: 1,
+
+      ground_vehicles_cp: 12,
+      money: 2200
+    },
     manpower_cost: {
       soldiers: 35000
     },
@@ -372,6 +495,17 @@ config.units.armour = {
       money: 10000,
 
       ground_vehicles_cp: 20
+    },
+    maintenance: {
+      refined_petroil: 6,
+      machine_parts: 4,
+      ammunition: 4,
+      small_arms: 2,
+      artillery: 1,
+      gold: 1,
+
+      ground_vehicles_cp: 20,
+      money: 5000
     },
     manpower_cost: {
       soldiers: 35000
@@ -401,6 +535,18 @@ config.units.armour = {
 
       ground_vehicles_cp: 20
     },
+    maintenance: {
+      refined_petroil: 6,
+      machine_parts: 5,
+      ammunition: 4,
+      small_arms: 2,
+      artillery: 1,
+      steel: 2,
+      gold: 1,
+
+      ground_vehicles_cp: 20,
+      money: 6500
+    },
     manpower_cost: {
       soldiers: 35000
     },
@@ -428,6 +574,17 @@ config.units.armour = {
       money: 10000,
 
       ground_vehicles_cp: 20
+    },
+    maintenance: {
+      refined_petroil: 6,
+      machine_parts: 6,
+      ammunition: 4,
+      gold: 2,
+      small_arms: 2,
+      artillery: 1,
+
+      ground_vehicles_cp: 22,
+      money: 7000
     },
     manpower_cost: {
       soldiers: 35000
@@ -459,6 +616,17 @@ config.units.armour = {
       money: 12000,
 
       ground_vehicles_cp: 40
+    },
+    maintenance: {
+      refined_petroil: 6,
+      machine_parts: 6,
+      ammunition: 5,
+      gold: 4,
+      small_arms: 2,
+      artillery: 2,
+
+      ground_vehicles_cp: 25,
+      money: 8000
     },
     manpower_cost: {
       soldiers: 35000
