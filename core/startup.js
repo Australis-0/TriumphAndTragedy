@@ -147,6 +147,7 @@ module.exports = {
       FileManager.import("./game/diplomacy/improve_relations");
       FileManager.import("./game/diplomacy/justify_war");
       FileManager.import("./game/diplomacy/liberate");
+      FileManager.import("./game/diplomacy/lead_war");
       FileManager.import("./game/diplomacy/lock_vassal_customisation");
       FileManager.import("./game/diplomacy/military_access");
       FileManager.import("./game/diplomacy/non_aggression_pact");

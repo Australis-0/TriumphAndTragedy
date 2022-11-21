@@ -969,7 +969,7 @@ module.exports = {
     var ending_province = arg1_province;
 
     try {
-      var pathfinder = bn_path.aStar(graph, {
+      var pathfinder = bn_path.nba(graph, {
         distance(fromNode, toNode, link) {
           return link.data.weight;
         }
@@ -1024,7 +1024,7 @@ module.exports = {
               try {
                 var local_graph = module.exports.createUserGraph(actual_id, { army_size: army_size });
 
-                var pathfinder = bn_path.aStar(local_graph, {
+                var pathfinder = bn_path.nba(local_graph, {
                   distance(fromNode, toNode, link) {
                     return link.data.weight;
                   }
@@ -1047,7 +1047,7 @@ module.exports = {
                 try {
                   var local_graph = module.exports.createUserGraph(actual_id, { army_size: army_size, avoid_attrition: false });
 
-                  var pathfinder = bn_path.aStar(local_graph, {
+                  var pathfinder = bn_path.nba(local_graph, {
                     distance(fromNode, toNode, link) {
                       return link.data.weight;
                     }

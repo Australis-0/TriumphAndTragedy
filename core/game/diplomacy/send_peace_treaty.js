@@ -22,8 +22,6 @@ module.exports = {
       friendly_side = "defenders";
     }
 
-    console.log(war_obj);
-
     //Send alert involving peace_obj
     if (war_obj[`${friendly_side.replace("s", "")}_warscore`] == 1) {
       //Send alert to opposing war leader
