@@ -24,6 +24,12 @@ config.units.aeroplanes = {
 
       aeroplanes_cp: 5
     },
+    maintenance: {
+      wood: 1,
+
+      aeroplanes_cp: 2,
+      money: 200
+    },
     manpower_cost: {
       soldiers: 25000
     },
@@ -47,6 +53,12 @@ config.units.aeroplanes = {
       money: 1000,
 
       aeroplanes_cp: 10
+    },
+    maintenance: {
+      coal: 1,
+
+      aeroplanes_cp: 4,
+      money: 500
     },
     manpower_cost: {
       soldiers: 25000
@@ -73,6 +85,15 @@ config.units.aeroplanes = {
       money: 2500,
 
       aeroplanes_cp: 20
+    },
+    maintenance: {
+      ammunition: 2,
+      coal: 1,
+      machine_parts: 1,
+      wood: 1,
+
+      aeroplanes_cp: 20,
+      money: 1000
     },
     manpower_cost: {
       soldiers: 25000
@@ -101,6 +122,13 @@ config.units.aeroplanes = {
 
       aeroplanes_cp: 20
     },
+    maintenance: {
+      ammunition: 1,
+      refined_petroil: 1,
+
+      aeroplanes_cp: 5,
+      money: 500
+    },
     manpower_cost: {
       soldiers: 25000
     },
@@ -127,6 +155,14 @@ config.units.aeroplanes = {
       money: 1250,
 
       aeroplanes_cp: 15
+    },
+    maintenance: {
+      ammunition: 1,
+      refined_petroil: 1,
+      steel: 1,
+
+      aeroplanes_cp: 6,
+      money: 600
     },
     manpower_cost: {
       soldiers: 25000
@@ -155,6 +191,15 @@ config.units.aeroplanes = {
 
       aeroplanes_cp: 15
     },
+    maintenance: {
+      ammunition: 2,
+      refined_petroil: 2,
+      small_arms: 1,
+      steel: 1,
+
+      aeroplanes_cp: 5,
+      money: 850
+    },
     manpower_cost: {
       soldiers: 25000
     },
@@ -180,7 +225,17 @@ config.units.aeroplanes = {
       refined_petroil: 3,
       money: 1500,
 
-      aeroplanes_cp: 20
+      aeroplanes_cp: 20,
+      money: 900
+    },
+    maintenance: {
+      ammunition: 2,
+      refined_petroil: 2,
+      machine_parts: 1,
+      small_arms: 1,
+      steel: 1,
+
+      aeroplanes_cp: 7
     },
     manpower_cost: {
       soldiers: 25000
@@ -213,6 +268,16 @@ config.units.aeroplanes = {
 
       aeroplanes_cp: 25
     },
+    maintenance: {
+      ammunition: 2,
+      refined_petroil: 2,
+      machine_parts: 2,
+      small_arms: 1,
+      steel: 1,
+
+      aeroplanes_cp: 7,
+      money: 1000
+    },
     manpower_cost: {
       soldiers: 25000
     },
@@ -239,6 +304,17 @@ config.units.aeroplanes = {
       money: 2500,
 
       aeroplanes_cp: 25
+    },
+    maintenance: {
+      refined_petroil: 3,
+      ammunition: 2,
+      small_arms: 2,
+      aluminium: 1,
+      machine_parts: 1,
+      steel: 1,
+      money: 1350,
+
+      aeroplanes_cp: 8
     },
     manpower_cost: {
       soldiers: 25000
@@ -267,6 +343,16 @@ config.units.aeroplanes = {
 
       aeroplanes_cp: 30
     },
+    maintenance: {
+      refined_petroil: 4,
+      machine_parts: 3,
+      ammunition: 3,
+      small_arms: 2,
+      aluminium: 1,
+
+      aeroplanes_cp: 10,
+      money: 2500
+    },
     manpower_cost: {
       soldiers: 25000
     },
@@ -294,7 +380,17 @@ config.units.aeroplanes = {
       iron: 5,
       money: 4000,
 
-      aeroplanes_ap: 20
+      aeroplanes_cp: 20
+    },
+    maintenance: {
+      refined_petroil: 5,
+      machine_parts: 4,
+      ammunition: 3,
+      small_arms: 2,
+      aluminium: 1,
+
+      aeroplanes_cp: 12,
+      money: 2000
     },
     manpower_cost: {
       soldiers: 25000
@@ -325,6 +421,17 @@ config.units.aeroplanes = {
 
       aeroplanes_cp: 20
     },
+    maintenance: {
+      refined_petroil: 6,
+      machine_parts: 5,
+      ammunition: 4,
+      small_arms: 3,
+      aluminium: 1,
+      gold: 1,
+
+      aeroplanes_cp: 15,
+      money: 4000
+    },
     manpower_cost: {
       soldiers: 25000
     },
@@ -350,6 +457,14 @@ config.units.aeroplanes = {
       money: 10000,
 
       aeroplanes_cp: 5
+    },
+    maintenance: {
+      machine_parts: 3,
+      small_arms: 1,
+      gold: 1,
+
+      aeroplanes_cp: 10,
+      money: 3000
     },
     manpower_cost: {
       soldiers: 25000
@@ -378,6 +493,17 @@ config.units.aeroplanes = {
       money: 8000,
 
       aeroplanes_cp: 30
+    },
+    maintenance: {
+      machine_parts: 6,
+      refined_petroil: 6,
+      ammunition: 5,
+      small_arms: 4,
+      gold: 2,
+      aluminium: 1,
+
+      aeroplanes_cp: 20,
+      money: 4500
     },
     manpower_cost: {
       soldiers: 25000
@@ -409,6 +535,15 @@ config.units.aeroplanes = {
 
       aeroplanes_cp: 20
     },
+    maintenance: {
+      ammunition: 2,
+      refined_petroil: 2,
+      machine_parts: 1,
+      steel: 1,
+
+      aeroplanes_cp: 4,
+      money: 800
+    },
     manpower_cost: {
       soldiers: 25000
     },
@@ -438,6 +573,15 @@ config.units.aeroplanes = {
 
       aeroplanes_cp: 25
     },
+    maintenance: {
+      ammunition: 2,
+      refined_petroil: 2,
+      machine_parts: 2,
+      steel: 1,
+
+      aeroplanes_cp: 6,
+      money: 1200
+    },
     manpower_cost: {
       soldiers: 25000
     },
@@ -465,6 +609,15 @@ config.units.aeroplanes = {
       money: 5000,
 
       aeroplanes_cp: 25
+    },
+    maintenance: {
+      ammunition: 4,
+      refined_petroil: 3,
+      machine_parts: 3,
+      steel: 1,
+
+      aeroplanes_cp: 8,
+      money: 1800
     },
     manpower_cost: {
       soldiers: 25000
@@ -495,6 +648,15 @@ config.units.aeroplanes = {
 
       aeroplanes_cp: 50
     },
+    maintenance: {
+      refined_petroil: 5,
+      ammunition: 4,
+      machine_parts: 4,
+      steel: 1,
+
+      aeroplanes_cp: 12,
+      money: 2500
+    },
     manpower_cost: {
       soldiers: 25000
     },
@@ -523,6 +685,16 @@ config.units.aeroplanes = {
       money: 12000,
 
       aeroplanes_cp: 50
+    },
+    maintenance: {
+      refined_petroil: 6,
+      machine_parts: 5,
+      ammunition: 4,
+      aluminium: 2,
+      gold: 2,
+
+      aeroplanes_cp: 20,
+      money: 4000
     },
     manpower_cost: {
       soldiers: 25000
@@ -553,6 +725,16 @@ config.units.aeroplanes = {
 
       aeroplanes_cp: 50
     },
+    maintenance: {
+      refined_petroil: 5,
+      machine_parts: 5,
+      ammunition: 4,
+      gold: 3,
+      small_arms: 2,
+
+      aeroplanes_cp: 15,
+      money: 8000
+    },
     manpower_cost: {
       soldiers: 25000
     },
@@ -582,6 +764,13 @@ config.units.aeroplanes = {
 
       aeroplanes_cp: 5
     },
+    maintenance: {
+      refined_petroil: 2,
+      machine_parts: 1,
+
+      aeroplanes_cp: 8,
+      money: 600
+    },
     manpower_cost: {
       soldiers: 25000
     },
@@ -609,6 +798,15 @@ config.units.aeroplanes = {
       money: 3000,
 
       aeroplanes_cp: 10
+    },
+    maintenance: {
+      refined_petroil: 4,
+      ammunition: 4,
+      small_arms: 2,
+      machine_parts: 2,
+
+      aeroplanes_cp: 10,
+      money: 1200
     },
     manpower_cost: {
       soldiers: 25000
@@ -639,6 +837,15 @@ config.units.aeroplanes = {
 
       aeroplanes_cp: 10
     },
+    maintenance: {
+      machine_parts: 5,
+      refined_petroil: 4,
+      ammunition: 4,
+      small_arms: 4,
+
+      aeroplanes_cp: 12,
+      money: 2000
+    },
     manpower_cost: {
       soldiers: 25000
     },
@@ -666,6 +873,13 @@ config.units.aeroplanes = {
 
       aeroplanes_cp: 10
     },
+    maintenance: {
+      machine_parts: 2,
+      ammunition: 2,
+
+      aeroplanes_cp: 8,
+      money: 750
+    },
     manpower_cost: {
       soldiers: 25000
     }
@@ -689,6 +903,14 @@ config.units.aeroplanes = {
       money: 1500,
 
       aeroplanes_cp: 10
+    },
+    maintenance: {
+      machine_parts: 3,
+      ammunition: 2,
+      small_arms: 1,
+
+      aeroplanes_cp: 10,
+      money: 900
     },
     manpower_cost: {
       soldiers: 25000
