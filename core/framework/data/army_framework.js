@@ -375,7 +375,11 @@ module.exports = {
         var unit_obj = getUnit(largest_unit[1]);
 
         if (unit_obj)
-          return returnSafeNumber(unit_obj.range, 1);
+          return returnSafeNumber(
+            Math.ceil(
+              unit_obj.range*returnSafeNumber(usr.modifiers.air_range, 1)
+            ),
+          1);
       }
   },
 

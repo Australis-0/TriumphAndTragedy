@@ -314,8 +314,8 @@ config.modifiers = {
     type: "percentage",
     default_value: 1
   },
-  air_interception_range: {
-    name: "Air Interception Range",
+  air_range: {
+    name: "Air Range",
     type: "percentage",
     default_value: 1
   },

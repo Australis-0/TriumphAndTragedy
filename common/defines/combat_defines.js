@@ -20,7 +20,6 @@ config.defines.combat = {
 	combat_order_switch_tech: "war_of_movement", //What tech should switch the combat order back around?
 	cumulative_combat_modifiers: ["attack", "defence"], //Which combat modifiers are cumulative as opposed to per unit?
   infrastructure_range: 3, //What is the radius of provinces that should be affected by constructed infrastructure?
-  interception_range: 5, //From how many provinces away should air wings be allowed to intercept other air wings?
   max_army_creation_limit: 100, //How many armies should users be able to create with a single command? Set to 0 to disable
   max_army_limit: 1000, //What is the maximum amount of armies that a user should be allowed to have? Set to 0 to disable
   mobilisation_cooldown: 3, //Amount of turns before a person can mobilise/demobilise again

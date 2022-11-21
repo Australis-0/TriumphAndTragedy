@@ -205,7 +205,7 @@ module.exports = {
 
       //Military; includes colonisation travel time
       if (!usr.modifiers.ack_ack_effectiveness) usr.modifiers.ack_ack_effectiveness = 1;
-      if (!usr.modifiers.air_interception_range) usr.modifiers.air_interception_range = 1;
+      if (!usr.modifiers.air_range) usr.modifiers.air_range = 1;
       if (!usr.modifiers.attrition_rate) usr.modifiers.attrition_rate = 1;
       if (!usr.modifiers.army_professionalism) usr.modifiers.army_professionalism = 1;
       if (!usr.modifiers.army_travel_speed) usr.modifiers.army_travel_speed = 1;

@@ -134,241 +134,275 @@ module.exports = {
     if (usr)
       if (city_obj)
         if (army_obj) {
-          var actual_ot_user_id = city_obj.owner;
-          var ot_user = main.users[actual_ot_user_id];
-          var total_buildings = city_obj.buildings.length;
+          var air_range = getAirRange(user_id, army_obj);
+          var distance = moveTo(army_obj.province, city_obj.id).length;
 
-          //Check for any potential interceptions
-          try {
-            var potential_interception_provinces = getProvincesInRange(
-              city_obj.id,
-              Math.ceil(
-                config.defines.combat.interception_range*returnSafeNumber(ot_user.modifiers.air_interception_range, 1
-                )
-              )
-            );
+          if (air_range >= distance) {
+            var actual_ot_user_id = city_obj.owner;
+            var ot_user = main.users[actual_ot_user_id];
+            var total_buildings = city_obj.buildings.length;
 
-            for (var i = 0; i < potential_interception_provinces.length; i++) {
-              var defender_armies_in_province = getArmiesInProvince(potential_interception_provinces[i]);
+            //Check for any potential interceptions
+            try {
+              var all_wars = Object.keys(main.global.wars);
+              var defender_list = [actual_ot_user_id];
 
-              for (var x = 0; x < defender_armies_in_province.length; x++)
-                if (defender_armies_in_province[x].owner == city_obj.controller && defender_armies_in_province[x].type == "air")
-                  module.exports.initialiseBattle(actual_ot_user_id, defender_armies_in_province[x], actual_id, army_obj);
-            }
-          } catch (e) {
-            console.log(e);
-          }
+              for (var i = 0; i < all_wars.length; i++) {
+                var friendly_side = "";
+                var local_war = main.global.wars[all_wars[i]];
+                var opposing_side = "";
 
-          //Calculate largest_wing
-          var all_units = Object.keys(army_obj.units);
-          var largest_wing = 0;
-          var main_unit_ap = 0;
-          var old_army_obj = JSON.parse(JSON.stringify(army_obj));
-          var old_city_obj = JSON.parse(JSON.stringify(city_obj));
+                if (local_war.attackers.includes(actual_ot_user_id)) {
+                  friendly_side = "attackers";
+                  opposing_side = "defenders";
+                }
+                if (local_war.defenders.includes(actual_ot_user_id)) {
+                  friendly_side = "defenders";
+                  opposing_side = "attackers";
+                }
 
-          for (var i = 0; i < all_units.length; i++)
-            if (army_obj.units[all_units[i]] > largest_wing) {
-              var unit_obj = getUnit(all_units[i]);
-
-              largest_wing = army_obj.units[all_units[i]];
-              main_unit_ap = returnSafeNumber(unit_obj.attack);
-            }
-
-          //Bombs away!
-          if (total_buildings > 0) {
-            var all_pops = Object.keys(config.pops);
-            var army_stats = calculateArmyStats(actual_id, army_obj, { mode: "air_raid" });
-            var city_buildings = [];
-            var destroyed_buildings = {};
-            var total_casualties = 0;
-
-            //Each ack-ack gun is worth 10x the main_unit_ap, revert to fixed AP damage if valid
-            main_unit_ap = (config.defines.combat.anti_aircraft_fixed_damage) ?
-              config.defines.combat.anti_aircraft_base_damage/10 :
-              main_unit_ap;
-
-            //Attacker rolls, each building has ((defender_ap/building_count)*100) + 500 HP
-            var attacker_roll = randomNumber(0, army_stats.attack);
-            var defender_attack = returnSafeNumber(getTotalBuildings(city_obj.name, config.defines.combat.anti_aircraft_building))*main_unit_ap*config.defines.combat.anti_aircraft_effectiveness*returnSafeNumber(ot_user.modifiers.ack_ack_effectiveness, 1);
-            var defender_defence = ((defender_attack/total_buildings)*100) + 500;
-
-            //Deduct buildings, floored
-            var deducted_buildings = Math.min(
-              Math.max(
-                Math.floor(attacker_roll/defender_defence), total_buildings - 1
-              ),
-              Math.ceil(total_buildings*0.2)
-            );
-
-            log.info(`Air raid over ${city_obj.name}! Deducted buildings: ${parseNumber(deducted_buildings)}/${parseNumber(city_obj.buildings.length)}.`);
-
-            //20% destruction cap, population killed = percentage of deducted buildings, soft cap at 120k
-            for (var i = 0; i < deducted_buildings; i++)
-              destroyBuilding(1, randomElement(city_obj.buildings).building_type, city_obj.id);
-
-            for (var i = 0; i < all_pops.length; i++)
-              total_casualties += city_obj.pops[all_pops[i]] - Math.ceil(city_obj.pops[all_pops[i]])*(deducted_buildings/total_buildings);
-
-            total_casualties = (total_casualties > 120000) ?
-              randomNumber(110000, 120000) :
-              total_casualties;
-
-            for (var i = 0; i < all_pops.length; i++) {
-              var local_value = city_obj.pops[all_pops[i]];
-              var local_percentage = local_value/city_obj.pops.population;
-
-              local_value -= Math.ceil(total_casualties*local_percentage);
-            }
-
-            var attacker_losses = module.exports.calculateCasualties(actual_id, army_obj, randomNumber(0, defender_attack));
-
-            //Process warscore
-            var all_wars = Object.keys(main.global.wars);
-            var attacker_war_exhaustion = 0;
-            var defender_war_exhaustion = 0;
-
-            for (var i = 0; i < all_wars.length; i++) {
-              var attacker_side = "neutral";
-              var defender_side = "neutral";
-              var local_war = main.global.wars[all_wars[i]];
-
-              if (local_war.attackers.includes(actual_id))
-                attacker_side = "attacker";
-              if (local_war.defenders.includes(actual_id))
-                defender_side = "defender";
-
-              if (local_war.attackers.includes(city_obj.controller))
-                attacker_side = "attacker";
-              if (local_war.defenders.includes(city_obj.controller))
-                defender_side = "defender";
-
-              //Add casualties
-              local_war[`${attacker_side}_total_casualties`] += Math.ceil(attacker_losses);
-              local_war[`${defender_side}_total_casualties`] += Math.ceil(total_casualties);
-            }
-
-            if (attacker_losses > 0)
-              attacker_war_exhaustion = parseFloat(
-                (attacker_losses/getTotalActiveDuty(actual_id)).toFixed(2)
-              );
-            if (total_casualties > 0)
-              defender_war_exhaustion = parseFloat(
-                (total_casualties/getTotalActiveDuty(city_obj.controller)).toFixed(2)
-              );
-
-            city_obj.bombed_this_turn = true;
-
-            //Format embed
-            {
-              var attacker_casualties = [];
-              var attacker_string = [];
-              var attacker_units = Object.keys(old_army_obj.units);
-              var defender_buildings = [];
-              var defender_casualties = [];
-              var defender_string = [];
-              var raid_gif = "";
-              var result_string = [];
-
-              //Process attacker casualties
-              for (var i = 0; i < attacker_units; i++) {
-                var local_category = getUnitCategoryFromUnit(attacker_units[i]);
-                var local_unit = getUnit(attacker_units[i]);
-
-                var local_icon = (local_unit.icon) ?
-                  config.icons[local_unit.icon] + " " :
-                    (local_category.icon) ?
-                      config.icons[local_category.icon] + " " :
-                      "";
-
-                if (returnSafeNumber(army_obj.units[attacker_units[i]]) < old_army_obj.units[attacker_casualties[i]])
-                  attacker_casualties.push(`- ${local_icon}${parseNumber(old_army_obj.units[attacker_casualties[i]] - returnSafeNumber(army_obj.units[attacker_casualties[i]]))} ${(local_unit.name) ? local_unit.name : attacker_units[i]}`);
+                //Check to see if attacker is involved in war if defender is
+                if (friendly_side != "")
+                  if (local_war[opposing_side].includes(actual_id))
+                    for (var x = 0; x < local_war[friendly_side].length; x++)
+                      if (!defender_list.includes(local_war[friendly_side][x]))
+                        defender_list.push(local_war[friendly_side][x]);
               }
 
-              //Process defender casualties
-              for (var i = 0; i < old_city_obj.buildings.length; i++)
-                if (!defender_buildings.includes(old_city_obj.buildings[i].building_type))
-                  defender_buildings.push(old_city_obj.buildings[i].building_type);
+              //Iterate over all defender_list users
+              for (var i = 0; i < defender_list.length; i++) {
+                var local_user = main.users[defender_list[i]];
 
-              for (var i = 0; i < defender_buildings.length; i++) {
-                var local_building = getBuilding(defender_buildings[i]);
-                var local_category = getBuildingCategoryFromBuilding(defender_buildings[i]);
-                var local_icon = (local_building.icon) ?
-                  config.icons[local_building.icon] + " " :
-                    (local_category.icon) ?
-                      config.icons[local_category.icon] + " " :
-                      "";
-                var old_building_count = getTotalBuildings(old_city_obj, defender_buildings[i]);
-                var new_building_count = getTotalBuildings(city_obj, defender_buildings[i]);
+                var local_armies = Object.keys(local_user.armies);
 
-                if (new_building_count < old_building_count)
-                  defender_casualties.push(`- ${parseNumber(old_building_count - new_building_count)} ${(local_building.name) ? local_building.name : defender_buildings[i]}`);
-              }
+                for (var x = 0; x < local_armies.length; x++) {
+                  var local_army = local_user.armies[local_armies[x]];
 
-              //Process raid GIF
-              if (main.date.year < 1936) {
-                raid_gif = config.air_raid.great_war;
-              } else if (main.date.year >= 1936 && main.date.year < 1950) {
-                raid_gif = config.air_raid.world_war_two;
-              } else if (main.date.year >= 1950 && main.date.year < 1989) {
-                raid_gif = config.air_raid.cold_war;
-              } else {
-                raid_gif = config.air_raid.modern;
-              }
+                  //Check to see if army is valid
+                  if (local_army.type == "air") {
+                    var local_range = getAirRange(local_army.owner, local_army);
+                    var provinces_in_range = getProvincesInRange(local_army.province, local_range);
 
-              //Format attacker_string
-              attacker_string.push(`**${usr.name}** (${army_obj.name}):`);
-              attacker_string.push("");
-              attacker_string.push(`**Losses:**`);
-
-              if (attacker_casualties.length > 0) {
-                attacker_string.push(attacker_casualties.join("\n"));
-                attacker_string.push("");
-              }
-
-              attacker_string.push(`${config.icons.death} Casualties: **${parseNumber(attacker_losses)}**`);
-
-              //Format defender_string
-              defender_string.push(`**${ot_user.name}** (${city_obj.name}):`);
-              defender_string.push("");
-              defender_string.push(`**Losses:**`);
-
-              if (defender_casualties.length > 0) {
-                defender_string.push(defender_casualties.join("\n"));
-                defender_string.push("");
-              }
-
-              defender_string.push(`${config.icons.death} Casualties: **${parseNumber(total_casualties)}**`);
-
-              //Results string
-              result_string.push(`${config.icons.death} Total Casualties: **${parseNumber(total_casualties + attacker_losses)}**`);
-              result_string.push("");
-              result_string.push(`**${usr.name}** gained ${config.icons.infamy} **${parseNumber(attacker_war_exhaustion*100, { display_float: true, display_prefix: true })}** war exhaustion.`);
-              result_string.push(`**${ot_user.name}** gained ${config.icons.infamy} **${parseNumber(defender_war_exhaustion*100, { display_float: true, display_prefix: true })}** war exhaustion.`);
-
-              //Format embed
-              const air_raid_embed = new Discord.MessageEmbed()
-                .setColor(settings.bot_colour)
-                .setTitle(`**Raid over ${city_obj.name}:**\n${config.localisation.divider}`)
-                .addFields(
-                  {
-                    name: `${config.icons.bombing_attacker} __**Attacker:**__\n━━--\n`,
-                    value: attacker_string.join("\n"),
-                    inline: true
-                  },
-                  {
-                    name: `${config.icons.bombing_defender} __**Defender:**__\n━━--\n`,
-                    value: defender_string.join("\n"),
-                    inline: true
-                  },
-                  {
-                    name: `${config.icons.results} __**Results:**__\n━━--\n`,
-                    value: result_string.join("\n"),
+                    if (provinces_in_range.includes(city_obj.id))
+                      module.exports.initialiseBattle(defender_list[i], local_army, actual_id, army_obj);
                   }
+                }
+              }
+            } catch (e) {
+              console.log(e);
+            }
+
+            //Calculate largest_wing
+            var all_units = Object.keys(army_obj.units);
+            var largest_wing = 0;
+            var main_unit_ap = 0;
+            var old_army_obj = JSON.parse(JSON.stringify(army_obj));
+            var old_city_obj = JSON.parse(JSON.stringify(city_obj));
+
+            for (var i = 0; i < all_units.length; i++)
+              if (army_obj.units[all_units[i]] > largest_wing) {
+                var unit_obj = getUnit(all_units[i]);
+
+                largest_wing = army_obj.units[all_units[i]];
+                main_unit_ap = returnSafeNumber(unit_obj.attack);
+              }
+
+            //Bombs away!
+            if (total_buildings > 0) {
+              var all_pops = Object.keys(config.pops);
+              var army_stats = calculateArmyStats(actual_id, army_obj, { mode: "air_raid" });
+              var city_buildings = [];
+              var destroyed_buildings = {};
+              var total_casualties = 0;
+
+              //Each ack-ack gun is worth 10x the main_unit_ap, revert to fixed AP damage if valid
+              main_unit_ap = (config.defines.combat.anti_aircraft_fixed_damage) ?
+                config.defines.combat.anti_aircraft_base_damage/10 :
+                main_unit_ap;
+
+              //Attacker rolls, each building has ((defender_ap/building_count)*100) + 500 HP
+              var attacker_roll = randomNumber(0, army_stats.attack);
+              var defender_attack = returnSafeNumber(getTotalBuildings(city_obj.name, config.defines.combat.anti_aircraft_building))*main_unit_ap*config.defines.combat.anti_aircraft_effectiveness*returnSafeNumber(ot_user.modifiers.ack_ack_effectiveness, 1);
+              var defender_defence = ((defender_attack/total_buildings)*100) + 500;
+
+              //Deduct buildings, floored
+              var deducted_buildings = Math.min(
+                Math.max(
+                  Math.floor(attacker_roll/defender_defence), total_buildings - 1
+                ),
+                Math.ceil(total_buildings*0.2)
+              );
+
+              log.info(`Air raid over ${city_obj.name}! Deducted buildings: ${parseNumber(deducted_buildings)}/${parseNumber(city_obj.buildings.length)}.`);
+
+              //20% destruction cap, population killed = percentage of deducted buildings, soft cap at 120k
+              for (var i = 0; i < deducted_buildings; i++)
+                destroyBuilding(1, randomElement(city_obj.buildings).building_type, city_obj.id);
+
+              for (var i = 0; i < all_pops.length; i++)
+                total_casualties += city_obj.pops[all_pops[i]] - Math.ceil(city_obj.pops[all_pops[i]])*(deducted_buildings/total_buildings);
+
+              total_casualties = (total_casualties > 120000) ?
+                randomNumber(110000, 120000) :
+                total_casualties;
+
+              for (var i = 0; i < all_pops.length; i++) {
+                var local_value = city_obj.pops[all_pops[i]];
+                var local_percentage = local_value/city_obj.pops.population;
+
+                local_value -= Math.ceil(total_casualties*local_percentage);
+              }
+
+              var attacker_losses = module.exports.calculateCasualties(actual_id, army_obj, randomNumber(0, defender_attack));
+
+              //Process warscore
+              var all_wars = Object.keys(main.global.wars);
+              var attacker_war_exhaustion = 0;
+              var defender_war_exhaustion = 0;
+
+              for (var i = 0; i < all_wars.length; i++) {
+                var attacker_side = "neutral";
+                var defender_side = "neutral";
+                var local_war = main.global.wars[all_wars[i]];
+
+                if (local_war.attackers.includes(actual_id))
+                  attacker_side = "attacker";
+                if (local_war.defenders.includes(actual_id))
+                  defender_side = "defender";
+
+                if (local_war.attackers.includes(city_obj.controller))
+                  attacker_side = "attacker";
+                if (local_war.defenders.includes(city_obj.controller))
+                  defender_side = "defender";
+
+                //Add casualties
+                local_war[`${attacker_side}_total_casualties`] += Math.ceil(attacker_losses);
+                local_war[`${defender_side}_total_casualties`] += Math.ceil(total_casualties);
+              }
+
+              if (attacker_losses > 0)
+                attacker_war_exhaustion = parseFloat(
+                  (attacker_losses/getTotalActiveDuty(actual_id)).toFixed(2)
+                );
+              if (total_casualties > 0)
+                defender_war_exhaustion = parseFloat(
+                  (total_casualties/getTotalActiveDuty(city_obj.controller)).toFixed(2)
                 );
 
-              //Send air_raid_embed to both users as an embed alert
-              sendEmbedAlert(actual_id, air_raid_embed);
-              sendEmbedAlert(city_obj.controller, air_raid_embed);
+              city_obj.bombed_this_turn = true;
+
+              //Format embed
+              {
+                var attacker_casualties = [];
+                var attacker_string = [];
+                var attacker_units = Object.keys(old_army_obj.units);
+                var defender_buildings = [];
+                var defender_casualties = [];
+                var defender_string = [];
+                var raid_gif = "";
+                var result_string = [];
+
+                //Process attacker casualties
+                for (var i = 0; i < attacker_units; i++) {
+                  var local_category = getUnitCategoryFromUnit(attacker_units[i]);
+                  var local_unit = getUnit(attacker_units[i]);
+
+                  var local_icon = (local_unit.icon) ?
+                    config.icons[local_unit.icon] + " " :
+                      (local_category.icon) ?
+                        config.icons[local_category.icon] + " " :
+                        "";
+
+                  if (returnSafeNumber(army_obj.units[attacker_units[i]]) < old_army_obj.units[attacker_casualties[i]])
+                    attacker_casualties.push(`- ${local_icon}${parseNumber(old_army_obj.units[attacker_casualties[i]] - returnSafeNumber(army_obj.units[attacker_casualties[i]]))} ${(local_unit.name) ? local_unit.name : attacker_units[i]}`);
+                }
+
+                //Process defender casualties
+                for (var i = 0; i < old_city_obj.buildings.length; i++)
+                  if (!defender_buildings.includes(old_city_obj.buildings[i].building_type))
+                    defender_buildings.push(old_city_obj.buildings[i].building_type);
+
+                for (var i = 0; i < defender_buildings.length; i++) {
+                  var local_building = getBuilding(defender_buildings[i]);
+                  var local_category = getBuildingCategoryFromBuilding(defender_buildings[i]);
+                  var local_icon = (local_building.icon) ?
+                    config.icons[local_building.icon] + " " :
+                      (local_category.icon) ?
+                        config.icons[local_category.icon] + " " :
+                        "";
+                  var old_building_count = getTotalBuildings(old_city_obj, defender_buildings[i]);
+                  var new_building_count = getTotalBuildings(city_obj, defender_buildings[i]);
+
+                  if (new_building_count < old_building_count)
+                    defender_casualties.push(`- ${parseNumber(old_building_count - new_building_count)} ${(local_building.name) ? local_building.name : defender_buildings[i]}`);
+                }
+
+                //Process raid GIF
+                if (main.date.year < 1936) {
+                  raid_gif = config.air_raid.great_war;
+                } else if (main.date.year >= 1936 && main.date.year < 1950) {
+                  raid_gif = config.air_raid.world_war_two;
+                } else if (main.date.year >= 1950 && main.date.year < 1989) {
+                  raid_gif = config.air_raid.cold_war;
+                } else {
+                  raid_gif = config.air_raid.modern;
+                }
+
+                //Format attacker_string
+                attacker_string.push(`**${usr.name}** (${army_obj.name}):`);
+                attacker_string.push("");
+                attacker_string.push(`**Losses:**`);
+
+                if (attacker_casualties.length > 0) {
+                  attacker_string.push(attacker_casualties.join("\n"));
+                  attacker_string.push("");
+                }
+
+                attacker_string.push(`${config.icons.death} Casualties: **${parseNumber(attacker_losses)}**`);
+
+                //Format defender_string
+                defender_string.push(`**${ot_user.name}** (${city_obj.name}):`);
+                defender_string.push("");
+                defender_string.push(`**Losses:**`);
+
+                if (defender_casualties.length > 0) {
+                  defender_string.push(defender_casualties.join("\n"));
+                  defender_string.push("");
+                }
+
+                defender_string.push(`${config.icons.death} Casualties: **${parseNumber(total_casualties)}**`);
+
+                //Results string
+                result_string.push(`${config.icons.death} Total Casualties: **${parseNumber(total_casualties + attacker_losses)}**`);
+                result_string.push("");
+                result_string.push(`**${usr.name}** gained ${config.icons.infamy} **${parseNumber(attacker_war_exhaustion*100, { display_float: true, display_prefix: true })}** war exhaustion.`);
+                result_string.push(`**${ot_user.name}** gained ${config.icons.infamy} **${parseNumber(defender_war_exhaustion*100, { display_float: true, display_prefix: true })}** war exhaustion.`);
+
+                //Format embed
+                const air_raid_embed = new Discord.MessageEmbed()
+                  .setColor(settings.bot_colour)
+                  .setTitle(`**Raid over ${city_obj.name}:**\n${config.localisation.divider}`)
+                  .addFields(
+                    {
+                      name: `${config.icons.bombing_attacker} __**Attacker:**__\n━━--\n`,
+                      value: attacker_string.join("\n"),
+                      inline: true
+                    },
+                    {
+                      name: `${config.icons.bombing_defender} __**Defender:**__\n━━--\n`,
+                      value: defender_string.join("\n"),
+                      inline: true
+                    },
+                    {
+                      name: `${config.icons.results} __**Results:**__\n━━--\n`,
+                      value: result_string.join("\n"),
+                    }
+                  );
+
+                //Send air_raid_embed to both users as an embed alert
+                sendEmbedAlert(actual_id, air_raid_embed);
+                sendEmbedAlert(city_obj.controller, air_raid_embed);
+              }
             }
           }
         }
