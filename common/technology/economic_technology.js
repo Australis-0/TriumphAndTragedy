@@ -1133,7 +1133,7 @@ config.technology.economic_technology = {
       unlock_building: "suburbs",
       railways: 3,
       rgo_throughput: 0.05,
-      army_travel_speed: 0.25
+      army_travel_speed: 0.025
     }
   },
   heavy_mining_machinery: {
@@ -1215,7 +1215,7 @@ config.technology.economic_technology = {
     unlocks: {
       unlock_building: "motorways",
       motorways: 1,
-      army_travel_speed: 0.35
+      army_travel_speed: 0.035
     }
   },
   offshore_drilling: {
@@ -1272,7 +1272,7 @@ config.technology.economic_technology = {
     year: 1952,
     unlocks: {
       motorways: 5,
-      army_travel_speed: 0.20
+      army_travel_speed: 0.02
     }
   },
   modern_inflation_theory: {
@@ -1366,7 +1366,7 @@ config.technology.economic_technology = {
     unlocks: {
       aeroports: 1,
       railways: 2,
-      army_travel_speed: 0.40
+      army_travel_speed: 0.04
     }
   },
   abandonment_of_the_gold_standard: {

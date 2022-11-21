@@ -103,14 +103,15 @@ module.exports = {
           local_army.progress += current_speed;
 
           //Check distances_array
-          for (var x = current_element; x < local_army.distances.length; x++)
-            if (local_army.distances[x])
-              if (local_army.progress >= local_army.distances[x]) {
-                local_army.progress -= local_army.distances[x];
-                speed_sample.push(local_army.moving_to[x]);
+          if (local_army.distances)
+            for (var x = current_element; x < local_army.distances.length; x++)
+              if (local_army.distances[x])
+                if (local_army.progress >= local_army.distances[x]) {
+                  local_army.progress -= local_army.distances[x];
+                  speed_sample.push(local_army.moving_to[x]);
 
-                local_army.province = local_army.moving_to[x];
-              }
+                  local_army.province = local_army.moving_to[x];
+                }
 
           //Clear movement array if army has arrived
           if (local_army.province == local_army.moving_to[local_army.moving_to.length - 1]) {

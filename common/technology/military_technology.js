@@ -902,7 +902,7 @@ config.technology.military_technology = {
     research_cost: 2000,
     year: 1871,
     unlocks: {
-      army_travel_speed: 0.50
+      army_travel_speed: 0.05
     }
   },
   riflemen: {
@@ -925,7 +925,7 @@ config.technology.military_technology = {
     research_cost: 2000,
     year: 1853,
     unlocks: {
-      army_travel_speed: 0.35,
+      army_travel_speed: 0.035,
       army_upkeep: -0.10
     }
   },
@@ -1008,7 +1008,7 @@ config.technology.military_technology = {
     research_cost: 3000,
     year: 1883,
     unlocks: {
-      army_travel_speed: -0.25,
+      army_travel_speed: -0.025,
       army_upkeep: -0.10
     }
   },
@@ -1021,7 +1021,7 @@ config.technology.military_technology = {
     year: 1905,
     unlocks: {
       unlock_unit: "modern_cavalry",
-      army_travel_speed: 0.20
+      army_travel_speed: 0.02
     }
   },
   colonial_mobilisation: {
@@ -1145,7 +1145,7 @@ config.technology.military_technology = {
     research_cost: 4000,
     year: 1866,
     unlocks: {
-      army_travel_speed: -0.15,
+      army_travel_speed: -0.015,
       army_upkeep: -0.10
     }
   },
@@ -1196,7 +1196,7 @@ config.technology.military_technology = {
     unlocks: {
       set_mobilisation_unit: "bolt_action_infantry",
       mobilisation_size: 0.50,
-      army_travel_speed: 0.65,
+      army_travel_speed: 0.065,
       mobilisation_speed: 0.05,
       mobilisation_impact: -0.05
     }
@@ -1302,7 +1302,7 @@ config.technology.military_technology = {
       infantry_dp: 0.05,
       artillery_dp: 0.05,
       army_upkeep: 0.10,
-      army_travel_speed: -0.40
+      army_travel_speed: -0.04
     }
   },
   landship: {
@@ -1365,7 +1365,7 @@ config.technology.military_technology = {
     year: 1919,
     unlocks: {
       artillery_ap: 0.05,
-      army_travel_speed: 0.35
+      army_travel_speed: 0.035
     }
   },
   great_war_infantry: {
@@ -1400,7 +1400,7 @@ config.technology.military_technology = {
     research_cost: 5500,
     year: 1918,
     unlocks: {
-      army_travel_speed: 0.50
+      army_travel_speed: 0.050
     }
   },
   light_tank: {
@@ -1568,7 +1568,7 @@ config.technology.military_technology = {
       infantry_dp: 0.05,
       infantry_ap: 0.05,
       artillery_ap: 0.05,
-      army_travel_speed: 1.00,
+      army_travel_speed: 0.10,
       army_upkeep: 0.05,
       training_cost: 0.05,
       air_bases: 1,
@@ -1717,7 +1717,7 @@ config.technology.military_technology = {
     year: 1943,
     unlocks: {
       military_buildings: 1,
-      army_travel_speed: 0.25,
+      army_travel_speed: 0.025,
       aeroplanes_ap: 0.05
     }
   },
@@ -1770,7 +1770,7 @@ config.technology.military_technology = {
     year: 1940,
     unlocks: {
       army_upkeep: -0.10,
-      army_travel_speed: 0.40,
+      army_travel_speed: 0.04,
       training_cost: 0.10
     }
   },
@@ -1842,7 +1842,7 @@ config.technology.military_technology = {
     year: 1940,
     unlocks: {
       unlock_unit: "troop_carriers",
-      army_travel_speed: 0.35
+      army_travel_speed: 0.035
     }
   },
   improved_medium_tank: {
@@ -1994,7 +1994,7 @@ config.technology.military_technology = {
     year: 1966,
     unlocks: {
       unlock_unit: "modern_apcs",
-      army_travel_speed: 0.60,
+      army_travel_speed: 0.06,
       army_upkeep: 0.05,
       obsolete_unit: ["armoured_personnel_carriers", "troop_carriers", "half_tracks"]
     }
@@ -2008,7 +2008,7 @@ config.technology.military_technology = {
     year: 1965,
     unlocks: {
       unlock_unit: "main_battle_tanks",
-      army_travel_speed: 0.30,
+      army_travel_speed: 0.03,
       army_upkeep: 0.10,
       unit_cost: 0.05
     }
@@ -2035,7 +2035,7 @@ config.technology.military_technology = {
     unlocks: {
       set_mobilisation_unit: "combined_arms_infantry",
       infantry_dp: 0.05,
-      army_travel_speed: 0.20
+      army_travel_speed: 0.02
     }
   },
   contemporary_infantry: {

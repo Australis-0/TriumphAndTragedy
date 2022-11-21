@@ -203,9 +203,19 @@ module.exports = {
 
               if (local_modifier_amount) {
                 //Process attack/defence bonuses
+                if (local_combat_modifier == "attack")
+                  local_modifier_amount = local_modifier_amount*usr.modifiers[`${all_unit_categories[i]}_attack`];
+                if (local_combat_modifier == "defence")
+                  local_modifier_amount = local_modifier_amount*usr.modifiers[`${all_unit_categories[i]}_defence`];
+
                 //Process movement bonuses
+                if (local_combat_modifier == "movement")
+                  local_modifier_amount = local_modifier_amount*usr.modifiers.army_travel_speed;
+
                 //Process range bonuses
-                
+                if (local_combat_modifier == "range")
+                  local_modifier_amount = Math.ceil(local_modifier_amount*usr.modifiers.air_range);
+
                 unit_stats_array.push(`${parseNumber(local_modifier_amount)} ${config.localisation[local_combat_modifier]}`);
               }
             }

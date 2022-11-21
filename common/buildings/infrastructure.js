@@ -87,7 +87,7 @@ config.buildings.infrastructure = {
       workers: 2000
     },
     modifiers: {
-      army_travel_speed: 0.10,
+      isolation: -0.10,
       shipment_capacity: 10
     },
     separate_building_slots: true,

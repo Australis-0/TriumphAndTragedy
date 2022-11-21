@@ -549,7 +549,7 @@ module.exports = {
         army_speed = army_speed/army_size;
 
         //Return statement
-        return army_speed;
+        return returnSafeNumber(army_speed);
       }
   },
 

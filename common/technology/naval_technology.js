@@ -93,7 +93,7 @@ config.technology.naval_technology = {
     year: 1519,
     unlocks: {
       colonist_travel_speed: 0.25,
-      army_travel_speed: 0.50,
+      army_travel_speed: 0.05,
       research_efficiency: 0.10,
       shipment_time: -0.05
     }
