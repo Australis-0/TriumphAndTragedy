@@ -375,6 +375,7 @@ config.units.artillery = {
     attack: 2500,
     defence: 250,
     manoeuvre: 1,
+    movement: 6,
     initiative: 2,
 
     cost: {

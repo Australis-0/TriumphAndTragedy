@@ -511,7 +511,7 @@ config.units.infantry = {
     attack: 14,
     defence: 10,
     manoeuvre: 3,
-    movement: 40.23,
+    movement: 4.50,
     initiative: 3,
 
     cost: {
@@ -536,7 +536,7 @@ config.units.infantry = {
     attack: 20,
     defence: 3,
     manoeuvre: 5,
-    movement: 27.78,
+    movement: 8.21,
     initiative: 1,
 
     cost: {
@@ -560,7 +560,7 @@ config.units.infantry = {
     attack: 18,
     defence: 20,
     manoeuvre: 2,
-    movement: 40.23,
+    movement: 8.05,
     initiative: 5,
 
     cost: {
@@ -604,7 +604,7 @@ config.units.infantry = {
     attack: 12,
     defence: 20,
     manoeuvre: 7,
-    movement: 48.28,
+    movement: 7.24,
     initiative: 4,
 
     cost: {
@@ -628,7 +628,7 @@ config.units.infantry = {
     attack: 35,
     defence: 5,
     manoeuvre: 1,
-    movement: 40,
+    movement: 6.44,
     initiative: 4,
 
     cost: {
@@ -652,7 +652,7 @@ config.units.infantry = {
     attack: 10,
     defence: 25,
     manoeuvre: 5,
-    movement: 72.42,
+    movement: 7.85,
     initiative: 5,
 
     cost: {
@@ -675,7 +675,7 @@ config.units.infantry = {
     attack: 20,
     defence: 5,
     manoeuvre: 6,
-    movement: 80,
+    movement: 11.27,
     initiative: 6,
 
     cost: {
@@ -702,7 +702,7 @@ config.units.infantry = {
     attack: 12,
     defence: 5,
     manoeuvre: 2,
-    movement: 72.42,
+    movement: 25.75,
     initiative: 5,
 
     cost: {
@@ -800,7 +800,7 @@ config.units.infantry = {
     attack: 20,
     defence: 35,
     manoeuvre: 4,
-    movement: 200,
+    movement: 8.85,
     initiative: 5,
 
     cost: {
@@ -822,7 +822,7 @@ config.units.infantry = {
     name: "Combined Arms Infantry",
 
     attack: 25,
-    defence: 50,
+    defence: 8.85,
     manoeuvre: 3,
     movement: 241.40,
     initiative: 5,
@@ -850,7 +850,7 @@ config.units.infantry = {
     attack: 30,
     defence: 65,
     manoeuvre: 3,
-    movement: 900,
+    movement: 9.01,
     initiative: 4,
 
     cost: {
@@ -875,7 +875,7 @@ config.units.infantry = {
     attack: 40,
     defence: 15,
     manoeuvre: 1,
-    movement: 900,
+    movement: 28.16,
     initiative: 9,
 
     cost: {
