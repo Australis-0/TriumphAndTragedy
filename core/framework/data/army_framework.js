@@ -349,6 +349,36 @@ module.exports = {
     }
   },
 
+  getAirRange: function (arg0_user, arg1_army_name) {
+    //Convert from parameters
+    var user_id = arg0_user;
+    var army_name = arg1_army_name;
+
+    //Declare local intsance variables
+    var actual_id = main.global.user_map[user_id];
+    var army_obj = (typeof army_name != "object") ? module.exports.getArmy(actual_id, army_name) : army_name;
+    var usr = main.users[actual_id];
+
+    if (usr)
+      if (army_obj) {
+        var all_army_units = Object.keys(army_obj.units);
+        var largest_unit = [0, ""];
+
+        for (var i = 0; i < all_army_units.length; i++) {
+          var local_amount = army_obj.units[all_army_units[i]];
+
+          if (local_amount > largest_unit[0])
+            largest_unit = [local_amount, all_army_units[i]];
+        }
+
+        //Return range, assuming it exists
+        var unit_obj = getUnit(largest_unit[1]);
+
+        if (unit_obj)
+          return returnSafeNumber(unit_obj.range, 1);
+      }
+  },
+
   //Gets an object array of every army in the world
   getAllArmies: function () {
     //Declare local instance variables
@@ -369,41 +399,6 @@ module.exports = {
 
     //Return statement
     return all_armies;
-  },
-
-  //Gets an object of all units in a player's armies and reserves
-  getUnits: function (arg0_user) {
-    //Convert from parameters
-    var user_id = arg0_user;
-
-    //Declare local instance variables
-    var actual_id = main.global.user_map[user_id];
-    var all_units = {};
-    var usr = main.users[actual_id];
-
-    var all_armies = Object.keys(usr.armies);
-
-    //Add units from all armies
-    for (var i = 0; i < all_armies.length; i++) {
-      var local_army = usr.armies[all_armies[i]];
-      var local_army_units = Object.keys(local_army.units);
-
-      for (var x = 0; x < local_army_units.length; x++)
-        all_units[local_army_units[x]] = (all_units[local_army_units[x]]) ?
-          all_units[local_army_units[x]] + returnSafeNumber(local_army.units[local_army_units[x]]) :
-          returnSafeNumber(local_army.units[local_army_units[x]]);
-    }
-
-    //Add reserves to total
-    var all_reserves = Object.keys(usr.reserves);
-
-    for (var i = 0; i < all_reserves.length; i++)
-      all_units[all_reserves[i]] = (all_units[all_reserves[i]]) ?
-        all_units[all_reserves[i]] + returnSafeNumber(usr.reserves[all_reserves[i]]) :
-        returnSafeNumber(usr.reserves[all_reserves[i]]);
-
-    //Return statement
-    return all_units;
   },
 
   //getArmiesInProvince() - Returns an object array of all armies in a province
@@ -678,6 +673,41 @@ module.exports = {
 
     //Return statement
     return total_troop_count;
+  },
+
+  //Gets an object of all units in a player's armies and reserves
+  getUnits: function (arg0_user) {
+    //Convert from parameters
+    var user_id = arg0_user;
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var all_units = {};
+    var usr = main.users[actual_id];
+
+    var all_armies = Object.keys(usr.armies);
+
+    //Add units from all armies
+    for (var i = 0; i < all_armies.length; i++) {
+      var local_army = usr.armies[all_armies[i]];
+      var local_army_units = Object.keys(local_army.units);
+
+      for (var x = 0; x < local_army_units.length; x++)
+        all_units[local_army_units[x]] = (all_units[local_army_units[x]]) ?
+          all_units[local_army_units[x]] + returnSafeNumber(local_army.units[local_army_units[x]]) :
+          returnSafeNumber(local_army.units[local_army_units[x]]);
+    }
+
+    //Add reserves to total
+    var all_reserves = Object.keys(usr.reserves);
+
+    for (var i = 0; i < all_reserves.length; i++)
+      all_units[all_reserves[i]] = (all_units[all_reserves[i]]) ?
+        all_units[all_reserves[i]] + returnSafeNumber(usr.reserves[all_reserves[i]]) :
+        returnSafeNumber(usr.reserves[all_reserves[i]]);
+
+    //Return statement
+    return all_units;
   },
 
   mergeArmy: function (arg0_user, arg1_army_name, arg2_army_name) {
