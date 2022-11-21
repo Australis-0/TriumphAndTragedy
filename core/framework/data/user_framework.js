@@ -107,6 +107,8 @@ module.exports = {
     var all_cultures = Object.keys(main.global.cultures);
     var all_mapped_users = Object.keys(main.global.user_map);
     var all_provinces = module.exports.getProvinces(actual_id, { include_occupations: true, include_hostile_occupations: true });
+    var all_users = Object.keys(main.users);
+    var all_wars = Object.keys(main.global.wars);
     var usr = main.users[actual_id];
 
     //Remove all occupations
@@ -138,6 +140,52 @@ module.exports = {
           if (!config.defines.common.default_keys.includes(all_subkeys[x]))
             delete all_provinces[i][all_subkeys[x]];
       }
+
+    //Remove all blockades
+    for (var i = 0; i < all_users.length; i++) {
+      var local_user = main.users[all_users[i]];
+
+      if (local_user.blockaded.is_blockaded)
+        for (var x = 0; x < local_user.blockaded.fleets.length; x++) {
+          var local_fleet = local_user.blockaded.fleets[x];
+
+          if (local_fleet.id == actual_id)
+            deleteArmy(actual_id, local_fleet.id);
+        }
+    }
+
+    //Switch war leaders or end wars
+    for (var i = 0; i < all_wars.length; i++) {
+      var end_war = false;
+      var local_war = main.global.wars[all_wars[i]];
+      var opposing_side = "";
+
+      if (local_war.attackers_war_leader == actual_id)
+        if (local_war.attackers.length > 1) {
+          for (var x = 0; x < local_war.attackers.length; x++)
+            if (local_war.attackers[x] != actual_id)
+              local_war.attackers_war_leader = local_war.attackers[x];
+        } else {
+          end_war = true;
+          opposing_side = "defenders";
+        }
+
+      if (local_war.defenders_war_leader == actual_id)
+        if (local_war.defenders.length > 1) {
+          for (var x = 0; x < local_war.defenders.length; x++)
+            if (local_war.defenders[x] != actual_id)
+              local_war.defenders_war_leader = local_war.defenders[x];
+        } else {
+          end_war = true;
+          opposing_side = "attackers";
+        }
+
+      if (end_war) {
+        var white_peace = createPeaceTreaty(local_war[`${opposing_side}_war_leader`], local_war, true);
+
+        parsePeaceTreaty(local_war, white_peace);
+      }
+    }
 
     //Remove all diplomatic relations and delete user object
     destroyAllDiplomaticRelations(actual_id);
@@ -869,7 +917,7 @@ module.exports = {
       if (all_provinces[i].controller == actual_id)
         transferProvince(actual_id, { target: actual_ot_user_id, province_id: all_provinces[i].id });
 
-    //Remove all diplomatic relations and delete user object
+    //KEEP AT BOTTOM! Remove all diplomatic relations and delete user object
     destroyAllDiplomaticRelations(actual_id);
     deleteCountry(actual_id);
 

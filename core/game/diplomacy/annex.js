@@ -17,18 +17,23 @@ module.exports = {
         if (getVassal(actual_ot_user_id).overlord == actual_id) {
           //Check if user has political capital
           if (usr.modifiers.political_capital >= config.defines.diplomacy.annex_cost) {
-            //Subtract political capital and send alert
-            usr.modifiers.political_capital -= config.defines.diplomacy.annex_cost;
+            //Check to see if actual_ot_user_id is at war
+            if (!atWar(actual_ot_user_id)) {
+              //Subtract political capital and send alert
+              usr.modifiers.political_capital -= config.defines.diplomacy.annex_cost;
 
-            sendAlert(actual_ot_user_id, config.defines.diplomacy.annex_alert_id, {
-              TO: actual_ot_user_id,
-              FROM: actual_id
-            });
+              sendAlert(actual_ot_user_id, config.defines.diplomacy.annex_alert_id, {
+                TO: actual_ot_user_id,
+                FROM: actual_id
+              });
 
-            usr.modifiers.infamy += config.defines.diplomacy.infamy_annex_cost;
+              usr.modifiers.infamy += config.defines.diplomacy.infamy_annex_cost;
 
-            //Print user feedback
-            printAlert(game_obj.id, `${config.icons.checkmark} We have sent **${ot_user.name}** an ultimatum for ${config.icons.political_capital} **${parseNumber(config.defines.diplomacy.annex_cost)}** Political Capital demanding their immediate incorporation into our empire, lest they be consumed by fire.`);
+              //Print user feedback
+              printAlert(game_obj.id, `${config.icons.checkmark} We have sent **${ot_user.name}** an ultimatum for ${config.icons.political_capital} **${parseNumber(config.defines.diplomacy.annex_cost)}** Political Capital demanding their immediate incorporation into our empire, lest they be consumed by fire.`);
+            } else {
+              printError(game_obj.id, `You cannot annex a vassal whilst they are at war! Wait for them to be at peace first before annexing them.`);
+            }
           } else {
             printError(game_obj.id, `You don't have enough Political Capital to annex **${ot_user.name}** yet! You need an additional ${config.icons.political_capital} **${parseNumber(config.defines.diplomacy.annex_cost - usr.modifiers.political_capital)}** Political Capital before being able to send an annexation request to this country.`);
           }

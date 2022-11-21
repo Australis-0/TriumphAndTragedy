@@ -696,7 +696,7 @@ module.exports = {
     return module.exports.getPeaceTreatyInfamy(war_obj, peace_treaty_simulation);
   },
 
-  parsePeaceTreaty: function (arg0_war_name, arg1_peace_treaty_object) { //[WIP] - Add infamy scaling
+  parsePeaceTreaty: function (arg0_war_name, arg1_peace_treaty_object) {
     //Convert from parameters
     var war_name = (typeof arg0_war_name != "object") ? arg0_war_name.trim().toLowerCase() : war_name;
     var peace_obj = arg1_peace_treaty_object;
@@ -740,14 +740,15 @@ module.exports = {
       var local_provinces = getProvinces(all_participants[i], { include_hostile_occupations: true });
       var local_user = main.users[all_participants[i]];
 
-      for (var x = 0; x < local_provinces.length; x++) {
-        if (local_provinces[x].controller != local_provinces[x].owner) {
-          //Check if controller is still at war with owner
-          if (!areAtWar(local_provinces[x].controller, local_provinces[x].owner))
-            //Revert control
-            local_provinces[x].controller = local_provinces[x].owner;
+      if (local_provinces.length > 0)
+        for (var x = 0; x < local_provinces.length; x++) {
+          if (local_provinces[x].controller != local_provinces[x].owner) {
+            //Check if controller is still at war with owner
+            if (!areAtWar(local_provinces[x].controller, local_provinces[x].owner))
+              //Revert control
+              local_provinces[x].controller = local_provinces[x].owner;
+          }
         }
-      }
     }
 
     //Parse peace treaty
