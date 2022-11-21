@@ -15,6 +15,7 @@ config.units.aeroplanes = {
     manoeuvre: 8,
     movement: 14.48,
     initiative: 1,
+    range: 6,
 
     cost: {
       lumber: 1,
@@ -37,6 +38,7 @@ config.units.aeroplanes = {
     manoeuvre: 6,
     movement: 56.33,
     initiative: 2,
+    range: 8,
 
     cost: {
       lumber: 3,
@@ -61,6 +63,7 @@ config.units.aeroplanes = {
     manoeuvre: 6,
     movement: 32,
     initiative: 3,
+    range: 60,
 
     cost: {
       steel: 5,
@@ -87,6 +90,7 @@ config.units.aeroplanes = {
     manoeuvre: 6,
     movement: 120.70,
     initiative: 3,
+    range: 12,
 
     cost: {
       steel: 5,
@@ -111,6 +115,7 @@ config.units.aeroplanes = {
     manoeuvre: 3,
     movement: 186.68,
     initiative: 3,
+    range: 16,
 
     cost: {
       steel: 5,
@@ -137,6 +142,7 @@ config.units.aeroplanes = {
     manoeuvre: 4,
     movement: 209.22,
     initiative: 3,
+    range: 18,
 
     cost: {
       steel: 7,
@@ -163,6 +169,7 @@ config.units.aeroplanes = {
     manoeuvre: 5,
     movement: 593.85,
     initiative: 3,
+    range: 20,
 
     cost: {
       steel: 5,
@@ -191,6 +198,7 @@ config.units.aeroplanes = {
     manoeuvre: 5,
     movement: 518.21,
     initiative: 3,
+    range: 25,
 
     cost: {
       aluminium: 5,
@@ -219,6 +227,7 @@ config.units.aeroplanes = {
     movement: 593.85,
     manoeuvre: 6,
     initiative: 2,
+    range: 25,
 
     cost: {
       aluminium: 10,
@@ -245,6 +254,7 @@ config.units.aeroplanes = {
     movement: 962.388,
     manoeuvre: 7,
     initiative: 1,
+    range: 10,
 
     cost: {
       aluminium: 6,
@@ -272,6 +282,7 @@ config.units.aeroplanes = {
     manoeuvre: 6,
     movement: 2414,
     initiative: 5,
+    range: 40,
 
     cost: {
       aluminium: 10,
@@ -300,6 +311,7 @@ config.units.aeroplanes = {
     manoeuvre: 6,
     movement: 1482,
     initiative: 4,
+    range: 50,
 
     cost: {
       aluminium: 12,
@@ -327,6 +339,7 @@ config.units.aeroplanes = {
     manoeuvre: 2,
     movement: 482.80,
     initiative: 5,
+    range: 50,
 
     cost: {
       aluminium: 5,
@@ -353,6 +366,7 @@ config.units.aeroplanes = {
     manoeuvre: 8,
     movement: 1931.21,
     initiative: 3,
+    range: 50,
 
     cost: {
       ammunition: 20,
@@ -382,6 +396,7 @@ config.units.aeroplanes = {
     manoeuvre: 1,
     movement: 173.81,
     initiative: 2,
+    range: 6,
 
     cost: {
       steel: 10,
@@ -409,6 +424,7 @@ config.units.aeroplanes = {
     manoeuvre: 2,
     movement: 260.71,
     initiative: 3,
+    range: 20,
 
     cost: {
       aluminium: 12,
@@ -437,6 +453,7 @@ config.units.aeroplanes = {
     manoeuvre: 2,
     movement: 437.74,
     initiative: 3,
+    range: 30,
 
     cost: {
       aluminium: 15,
@@ -464,6 +481,7 @@ config.units.aeroplanes = {
     manoeuvre: 2,
     movement: 960,
     initiative: 5,
+    range: 80,
 
     cost: {
       aluminium: 25,
@@ -492,6 +510,7 @@ config.units.aeroplanes = {
     manoeuvre: 5,
     movement: 1010.67,
     initiative: 4,
+    range: 100,
 
     cost: {
       aluminium: 25,
@@ -520,6 +539,7 @@ config.units.aeroplanes = {
     manoeuvre: 5,
     movement: 999.40,
     initiative: 6,
+    range: 120,
 
     cost: {
       aluminium: 20,
@@ -550,6 +570,7 @@ config.units.aeroplanes = {
     manoeuvre: 50,
     movement: 281.64,
     initiative: 1,
+    range: 3,
 
     cost: {
       aluminium: 3,
@@ -576,6 +597,7 @@ config.units.aeroplanes = {
     manoeuvre: 5,
     movement: 204,
     initiative: 3,
+    range: 10,
 
     cost: {
       aluminium: 5,
@@ -603,6 +625,7 @@ config.units.aeroplanes = {
     manoeuvre: 6,
     movement: 365.32,
     initiative: 3,
+    range: 20,
 
     cost: {
       aluminium: 7,
@@ -632,6 +655,7 @@ config.units.aeroplanes = {
     manoeuvre: 4,
     movement: 90,
     initiative: 5,
+    range: 5,
 
     cost: {
       aluminium: 5,
@@ -655,6 +679,7 @@ config.units.aeroplanes = {
     manoeuvre: 7,
     movement: 410.38,
     initiative: 3,
+    range: 8,
 
     cost: {
       aluminium: 6,

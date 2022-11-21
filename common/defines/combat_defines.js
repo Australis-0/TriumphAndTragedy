@@ -14,7 +14,7 @@ config.defines.combat = {
   base_supply_limit: 40, //How many thousands of soldiers can a colonised province support by default?
   blockade_challenge_limit: 5, //How many times can a fleet challenge a blockade on the same turn?
 	blockade_cooldown: 3, //How many turns should cooldowns in between blockades for the same user be?
-	combat_modifiers: ["attack", "defence", "manoeuvre", "initiative"], //What are the main modifiers/stats for combat units?
+	combat_modifiers: ["attack", "defence", "manoeuvre", "movement", "initiative", "range"], //What are the main modifiers/stats for combat units?
 	combat_order: ["attack", "defence"], //What should the combat order be by default?
 	combat_order_stalemate_tech: "chemical_cannisters", //Which tech should switch the defender and attacker combat order?
 	combat_order_switch_tech: "war_of_movement", //What tech should switch the combat order back around?
