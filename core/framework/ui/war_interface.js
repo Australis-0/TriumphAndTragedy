@@ -111,10 +111,27 @@ module.exports = {
 
       //Peace treaty buttons
       if (!is_archived_war)
-        if (war_obj.attackers.includes(actual_id) || war_obj.defenders.includes(actual_id))
-          (!war_obj.peace_treaties[actual_id]) ?
-            war_string.push(`**[Sign Peace Treaty]**${(can_call_allies) ? "\n- **[Call Ally]**" : ""}`) :
-            war_string.push(`**[Edit Peace Offer]** | **[Send Peace Offer]**${(can_call_allies) ? "\n- **[Call Ally]**" : ""}\n`);
+        if (war_obj.attackers.includes(actual_id) || war_obj.defenders.includes(actual_id)) {
+          var friendly_side = "";
+          var opposing_side = "";
+
+          if (war_obj.attackers.includes(actual_id)) {
+            friendly_side = "attackers";
+            opposing_side = "defenders";
+          }
+          if (war_obj.defenders.includes(actual_id)) {
+            friendly_side = "defenders";
+            opposing_side = "attackers";
+          }
+
+          war_string.push((!war_obj.peace_treaties[actual_id]) ?
+            `**[Sign Peace Treaty]**` :
+            `**[Edit Peace Offer]** | **[Send Peace Offer]**`
+          );
+
+          if (can_call_allies)
+            war_string.push(`- ${(can_call_allies) ? `**[Call Ally]**` : ""}${(war_obj[friendly_side].length > 1) ? ` | **[Change War Leader]** - ${config.icons.political_capital} ${parseNumber(getWarLeadershipCost(user_id, war_obj))} PC` : ""}`);
+        }
 
       (is_archived_war) ?
         war_string.push(`**${getDate(war_obj.starting_date)}** - **${getDate(war_obj.end_date)}**\n`) :

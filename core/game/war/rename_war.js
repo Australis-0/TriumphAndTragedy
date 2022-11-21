@@ -1,5 +1,6 @@
 module.exports = {
   initialiseRenameWar: function (arg0_user, arg1_war_name) {
+    //Convert from parameters
     var user_id = arg0_user;
     var war_name = arg1_war_name;
 

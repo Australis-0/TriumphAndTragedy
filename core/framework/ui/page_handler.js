@@ -1324,7 +1324,7 @@ module.exports = {
 
         //These go after war list
         if (game_obj.page.startsWith("view_war_")) {
-          var default_keys = ["back", "add wargoal", "call ally", "edit peace offer", "remove wargoal", "rename war", "send peace offer", "sign peace treaty", "view peace offer", "view peace treaty"];
+          var default_keys = ["back", "add wargoal", "call ally", "change war leader", "edit peace offer", "remove wargoal", "rename war", "send peace offer", "sign peace treaty", "view peace offer", "view peace treaty"];
           var war_name = game_obj.page.replace("view_war_", "");
           var war_obj = getWar(war_name);
 
@@ -1340,6 +1340,10 @@ module.exports = {
           //[Call Ally]
           if (input == "call ally")
             initialiseCallAlly(user_id);
+
+          //[Change War Leader]
+          if (input == "change war leader")
+            initialiseLeadWar(user_id, war_name);
 
           //[Rename War]
           if (input == "rename war")

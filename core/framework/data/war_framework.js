@@ -221,6 +221,45 @@ module.exports = {
     return (war_found[0]) ? war_found[1] : undefined;
   },
 
+  getWarLeadershipCost: function (arg0_user, arg0_war_name) {
+    //Convert from parameters
+    var user_id = arg0_user;
+    var war_name = arg1_war_name;
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var pc_cost = config.defines.diplomacy.war_leader_bid_cost;
+    var political_capital_penalty = 0;
+    var usr = main.users[actual_id];
+    var war_obj = (typeof war_name != "object") ?
+      (!main.global.wars[war_name]) ?
+        getWar(war_name.trim().toLowerCase()) :
+        main.global.wars[war_name] :
+      war_name;
+
+    if (usr)
+      if (war_obj)
+        if (war_obj.attackers.includes(actual_id) || war_obj.defenders.includes(actual_id)) {
+          //Get friendly_side, opposing_side
+          var friendly_side = "";
+          var opposing_side = "";
+
+          if (war_obj.attackers.includes(actual_id)) {
+            friendly_side = "attackers";
+            opposing_side = "defenders";
+          }
+          if (war_obj.defenders.includes(actual_id)) {
+            friendly_side = "defenders";
+            opposing_side = "attackers";
+          }
+
+          political_capital_penalty = returnSafeNumber(war_obj[`${friendly_side}_war_leader_bids`])*config.defines.diplomacy.war_leader_bid_penalty_cost;
+
+          //Return statement
+          return pc_cost + political_capital_penalty;
+        }
+  },
+
   /*
     getWars() - Fetches an object/key list of all wars a user is currently involved in.
     options: {
