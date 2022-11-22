@@ -19,6 +19,9 @@ config.units.colonists = {
       food: 5,
       money: 2500
     },
+    maintenance: {
+      money: 500
+    },
     manpower_cost: {
       soldiers: 1000
     },
@@ -37,6 +40,9 @@ config.units.colonists = {
       iron: 5,
       food: 10,
       money: 5000
+    },
+    maintenance: {
+      money: 1000
     },
     manpower_cost: {
       soldiers: 2500
@@ -58,6 +64,9 @@ config.units.colonists = {
       food: 20,
       money: 6500
     },
+    maintenance: {
+      money: 2000
+    },
     manpower_cost: {
       soldiers: 5000
     },
@@ -78,6 +87,9 @@ config.units.colonists = {
       food: 40,
       money: 7500
     },
+    maintenance: {
+      money: 2500
+    },
     manpower_cost: {
       soldiers: 4000
     },
@@ -97,6 +109,9 @@ config.units.colonists = {
       steel: 10,
       food: 50,
       money: 7500
+    },
+    maintenance: {
+      money: 5000
     },
     manpower_cost: {
       soldiers: 7000
@@ -119,6 +134,9 @@ config.units.colonists = {
       food: 100,
       money: 10000
     },
+    maintenance: {
+      money: 7500
+    },
     manpower_cost: {
       soldiers: 10000
     },
@@ -140,6 +158,9 @@ config.units.colonists = {
       petroil: 15,
       food: 150,
       money: 20000
+    },
+    maintenance: {
+      money: 10000
     },
     manpower_cost: {
       soldiers: 20000

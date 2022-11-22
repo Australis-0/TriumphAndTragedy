@@ -18,6 +18,9 @@ config.units.mercenaries = {
     cost: {
       money: 4000
     },
+    maintenance: {
+      money: 1000
+    },
     manpower_cost: {
       soldiers: 10000
     },
@@ -36,6 +39,9 @@ config.units.mercenaries = {
     cost: {
       money: 6500
     },
+    maintenance: {
+      money: 1500
+    },
     manpower_cost: {
       soldiers: 10000
     },
@@ -52,6 +58,9 @@ config.units.mercenaries = {
 
     cost: {
       money: 7000
+    },
+    maintenance: {
+      money: 3500
     },
     manpower_cost: {
       soldiers: 10000
@@ -70,6 +79,9 @@ config.units.mercenaries = {
 
     cost: {
       money: 7000,
+    },
+    maintenance: {
+      money: 4000
     },
     manpower_cost: {
       soldiers: 10000

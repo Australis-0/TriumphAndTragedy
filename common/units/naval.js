@@ -23,6 +23,14 @@ config.units.naval = {
       money: 500,
       naval_units_cp: 5
     },
+    maintenance: {
+      food: 2,
+      iron: 1,
+      lumber: 1,
+
+      money: 350,
+      naval_units_cp: 2
+    },
     manpower_cost: {
       soldiers: 50000
     },
@@ -46,6 +54,14 @@ config.units.naval = {
       money: 1000,
 
       naval_units_cp: 10
+    },
+    maintenance: {
+      food: 3,
+      lead: 2,
+      lumber: 2,
+
+      money: 800,
+      naval_units_cp: 7
     },
     manpower_cost: {
       soldiers: 50000
@@ -72,6 +88,15 @@ config.units.naval = {
 
       naval_units_cp: 15
     },
+    maintenance: {
+      food: 4,
+      lumber: 3,
+      iron: 2,
+      lead: 2,
+
+      money: 1200,
+      naval_units_cp: 7
+    },
     manpower_cost: {
       soldiers: 50000
     },
@@ -95,6 +120,16 @@ config.units.naval = {
       money: 2000,
 
       naval_units_cp: 15
+    },
+    maintenance: {
+      food: 5,
+      lumber: 4,
+      iron: 2,
+      lead: 2,
+      copper: 1,
+
+      money: 2500,
+      naval_units_cp: 8
     },
     manpower_cost: {
       soldiers: 50000
@@ -120,6 +155,16 @@ config.units.naval = {
 
       naval_units_cp: 20
     },
+    maintenance: {
+      food: 5,
+      lumber: 5,
+      lead: 3,
+      copper: 2,
+      iron: 2,
+
+      money: 3000,
+      naval_units_cp: 10
+    },
     manpower_cost: {
       soldiers: 50000
     },
@@ -143,6 +188,16 @@ config.units.naval = {
       money: 1500,
 
       naval_units_cp: 10
+    },
+    maintenance: {
+      food: 4,
+      lumber: 3,
+      lead: 2,
+      copper: 1,
+      iron: 1,
+
+      money: 2500,
+      naval_units_cp: 6
     },
     manpower_cost: {
       soldiers: 50000
@@ -169,6 +224,15 @@ config.units.naval = {
 
       naval_units_cp: 10
     },
+    maintenance: {
+      food: 2,
+      machine_parts: 1,
+      copper: 1,
+      lead: 1,
+
+      money: 3000,
+      naval_units_cp: 4
+    },
     manpower_cost: {
       soldiers: 50000
     },
@@ -191,6 +255,15 @@ config.units.naval = {
       money: 1500,
 
       naval_units_cp: 5
+    },
+    maintenance: {
+      lumber: 8,
+      food: 6,
+      lead: 2,
+      iron: 2,
+
+      money: 900,
+      naval_units_cp: 2
     },
     manpower_cost: {
       soldiers: 50000
@@ -217,6 +290,17 @@ config.units.naval = {
 
       naval_units_cp: 10
     },
+    maintenance: {
+      steel: 4,
+      ammunition: 2,
+      food: 2,
+      artillery: 1,
+      machine_parts: 1,
+      copper: 1,
+
+      money: 2000,
+      naval_units_cp: 5
+    },
     manpower_cost: {
       soldiers: 50000
     },
@@ -242,6 +326,17 @@ config.units.naval = {
       money: 5000,
 
       naval_units_cp: 20
+    },
+    maintenance: {
+      iron: 4,
+      ammunition: 2,
+      artillery: 2,
+      food: 2,
+      machine_parts: 1,
+      copper: 1,
+
+      money: 3500,
+      naval_units_cp: 8
     },
     manpower_cost: {
       soldiers: 800
@@ -270,6 +365,18 @@ config.units.naval = {
 
       naval_units_cp: 30
     },
+    maintenance: {
+      iron: 6,
+      ammunition: 4,
+      artillery: 2,
+      food: 2,
+      lead: 2,
+      machine_parts: 1,
+      copper: 1,
+
+      money: 4000,
+      naval_units_cp: 10
+    },
     manpower_cost: {
       soldiers: 50000
     },
@@ -297,6 +404,17 @@ config.units.naval = {
 
       naval_units_cp: 10
     },
+    maintenance: {
+      steel: 3,
+      ammunition: 2,
+      food: 2,
+      lead: 2,
+      artillery: 1,
+      machine_parts: 1,
+
+      money: 3500,
+      naval_units_cp: 8
+    },
     manpower_cost: {
       soldiers: 50000
     },
@@ -323,6 +441,17 @@ config.units.naval = {
 
       naval_units_cp: 15
     },
+    maintenance: {
+      steel: 4,
+      ammunition: 3,
+      artillery: 2,
+      food: 2,
+      lead: 2,
+      machine_parts: 1,
+
+      money: 5000,
+      naval_units_cp: 12
+    },
     manpower_cost: {
       soldiers: 50000
     },
@@ -347,6 +476,17 @@ config.units.naval = {
       money: 7000,
 
       naval_units_cp: 20
+    },
+    maintenance: {
+      steel: 5,
+      ammunition: 4,
+      artillery: 2,
+      food: 2,
+      lead: 2,
+      machine_parts: 2,
+
+      money: 6000,
+      naval_units_cp: 14
     },
     manpower_cost: {
       soldiers: 50000
@@ -374,6 +514,17 @@ config.units.naval = {
 
       naval_units_cp: 40
     },
+    maintenance: {
+      steel: 6,
+      ammunition: 4,
+      artillery: 4,
+      lead: 4,
+      food: 3,
+      machine_parts: 2,
+
+      money: 8000,
+      naval_units_cp: 20
+    },
     manpower_cost: {
       soldiers: 50000
     },
@@ -397,6 +548,15 @@ config.units.naval = {
       food: 5,
       money: 1500,
 
+      naval_units_cp: 5
+    },
+    maintenance: {
+      ammunition: 2,
+      machine_parts: 2,
+      food: 1,
+      lead: 1,
+
+      money: 3500,
       naval_units_cp: 5
     },
     manpower_cost: {
@@ -427,6 +587,17 @@ config.units.naval = {
 
       naval_units_cp: 20
     },
+    maintenance: {
+      ammunition: 4,
+      steel: 4,
+      lead: 4,
+      artillery: 3,
+      food: 3,
+      machine_parts: 2,
+
+      money: 6000,
+      naval_units_cp: 15
+    },
     manpower_cost: {
       soldiers: 50000
     },
@@ -454,6 +625,16 @@ config.units.naval = {
       money: 2000,
 
       naval_units_cp: 10
+    },
+    maintenance: {
+      machine_parts: 4,
+      steel: 4,
+      ammunition: 2,
+      food: 2,
+      artillery: 1,
+
+      money: 4000,
+      naval_units_cp: 6
     },
     manpower_cost: {
       soldiers: 50000
@@ -483,6 +664,17 @@ config.units.naval = {
 
       naval_units_cp: 40
     },
+    maintenance: {
+      machine_parts: 6,
+      steel: 4,
+      ammunition: 4,
+      food: 4,
+      artillery: 2,
+      lead: 2,
+
+      money: 8000,
+      naval_units_cp: 15
+    },
     manpower_cost: {
       soldiers: 50000
     },
@@ -510,6 +702,17 @@ config.units.naval = {
       money: 8000,
 
       naval_units_cp: 20
+    },
+    maintenance: {
+      ammunition: 8,
+      machine_parts: 6,
+      artillery: 4,
+      food: 4,
+      steel: 4,
+      lead: 2,
+
+      money: 8500,
+      naval_units_cp: 10
     },
     manpower_cost: {
       soldiers: 50000
@@ -542,6 +745,17 @@ config.units.naval = {
 
       naval_units_cp: 40
     },
+    maintenance: {
+      ammunition: 6,
+      food: 4,
+      lead: 4,
+      machine_parts: 4,
+      artillery: 2,
+      steel: 2,
+
+      money: 9000,
+      naval_units_cp: 20
+    },
     manpower_cost: {
       soldiers: 50000
     },
@@ -569,6 +783,18 @@ config.units.naval = {
       money: 5000,
 
       naval_units_cp: 30
+    },
+    maintenance: {
+      ammunition: 8,
+      machine_parts: 6,
+      lead: 4,
+      artillery: 2,
+      food: 2,
+      gold: 2,
+      steel: 2,
+
+      money: 9000,
+      naval_units_cp: 15
     },
     manpower_cost: {
       soldiers: 50000
@@ -599,6 +825,18 @@ config.units.naval = {
 
       naval_units_cp: 40
     },
+    maintenance: {
+      ammunition: 8,
+      machine_parts: 8,
+      food: 6,
+      lead: 4,
+      artillery: 2,
+      gold: 2,
+      steel: 2,
+
+      money: 10000,
+      naval_units_cp: 20
+    },
     manpower_cost: {
       soldiers: 50000
     },
@@ -628,6 +866,18 @@ config.units.naval = {
 
       naval_units_cp: 15
     },
+    maintenance: {
+      ammunition: 6,
+      machine_parts: 6,
+      artillery: 3,
+      food: 3,
+      lead: 2,
+      gold: 1,
+      steel: 1,
+
+      money: 8500,
+      naval_units_cp: 10
+    },
     manpower_cost: {
       soldiers: 50000
     },
@@ -655,6 +905,17 @@ config.units.naval = {
       money: 3500,
 
       naval_units_cp: 10
+    },
+    maintenance: {
+      ammunition: 4,
+      machine_parts: 4,
+      food: 3,
+      artillery: 2,
+      lead: 2,
+      steel: 1,
+
+      money: 7500,
+      naval_units_cp: 8
     },
     manpower_cost: {
       soldiers: 50000
@@ -684,6 +945,18 @@ config.units.naval = {
       money: 15000,
 
       naval_units_cp: 20
+    },
+    maintenance: {
+      machine_parts: 12,
+      ammunition: 8,
+      gold: 6,
+      artillery: 4,
+      food: 4,
+      steel: 4,
+      lead: 3,
+
+      money: 9000,
+      naval_units_cp: 14
     },
     manpower_cost: {
       soldiers: 50000

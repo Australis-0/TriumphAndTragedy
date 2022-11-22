@@ -24,6 +24,14 @@ config.units.cavalry = {
 
       ground_units_cp: 10
     },
+    maintenance: {
+      wood: 1,
+      food: 1,
+      iron: 1,
+
+      ground_units_cp: 4,
+      money: 600
+    },
     manpower_cost: {
       soldiers: 10000
     },
@@ -47,6 +55,14 @@ config.units.cavalry = {
 
       ground_units_cp: 20
     },
+    maintenance: {
+      lumber: 1,
+      food: 1,
+      iron: 1,
+
+      ground_units_cp: 6,
+      money: 800
+    },
     manpower_cost: {
       soldiers: 10000
     },
@@ -69,6 +85,14 @@ config.units.cavalry = {
       money: 250,
 
       ground_units_cp: 10
+    },
+    maintenance: {
+      wood: 2,
+      food: 1,
+      iron: 1,
+
+      ground_units_cp: 5,
+      money: 750
     },
     manpower_cost: {
       soldiers: 10000
@@ -94,6 +118,14 @@ config.units.cavalry = {
 
       ground_units_cp: 10
     },
+    maintenance: {
+      iron: 2,
+      food: 1,
+      lead: 1,
+
+      ground_units_cp: 6,
+      money: 1200
+    },
     manpower_cost: {
       soldiers: 10000
     },
@@ -117,6 +149,15 @@ config.units.cavalry = {
       money: 2000,
 
       ground_units_cp: 20
+    },
+    maintenance: {
+      lumber: 2,
+      food: 1,
+      lead: 1,
+      steel: 1,
+
+      ground_units_cp: 8,
+      money: 1500
     },
     manpower_cost: {
       soldiers: 10000
@@ -142,6 +183,16 @@ config.units.cavalry = {
 
       ground_units_cp: 15
     },
+    maintenance: {
+      lumber: 2,
+      iron: 2,
+      food: 1,
+      lead: 1,
+      steel: 1,
+
+      ground_units_cp: 6,
+      money: 1250
+    },
     manpower_cost: {
       soldiers: 10000
     },
@@ -165,6 +216,16 @@ config.units.cavalry = {
       money: 800,
 
       ground_units_cp: 5
+    },
+    maintenance: {
+      ammunition: 1,
+      iron: 1,
+      lumber: 1,
+      small_arms: 1,
+      food: 1,
+
+      ground_units_cp: 8,
+      money: 800
     },
     manpower_cost: {
       soldiers: 10000
@@ -190,6 +251,15 @@ config.units.cavalry = {
 
       ground_units_cp: 10
     },
+    maintenance: {
+      small_arms: 2,
+      ammunition: 1,
+      lumber: 1,
+      food: 1,
+
+      ground_units_cp: 10,
+      money: 1200
+    },
     manpower_cost: {
       soldiers: 10000
     },
@@ -213,6 +283,17 @@ config.units.cavalry = {
       money: 3000,
 
       ground_units_cp: 20
+    },
+    maintenance: {
+      machine_parts: 4,
+      refined_petroil: 4,
+      steel: 2,
+      small_arms: 2,
+      ammunition: 1,
+      food: 1,
+
+      ground_units_cp: 6,
+      money: 2500
     },
     manpower_cost: {
       soldiers: 10000

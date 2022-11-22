@@ -24,6 +24,13 @@ config.units.infantry = {
 
       ground_units_cp: 5
     },
+    maintenance: {
+      iron: 1,
+      food: 1,
+
+      money: 200,
+      ground_units_cp: 2
+    },
     manpower_cost: {
       soldiers: 10000
     },
@@ -46,6 +53,13 @@ config.units.infantry = {
       money: 700,
 
       ground_units_cp: 5
+    },
+    maintenance: {
+      iron: 2,
+      food: 1,
+
+      money: 350,
+      ground_units_cp: 3
     },
     manpower_cost: {
       soldiers: 10000
@@ -70,6 +84,13 @@ config.units.infantry = {
 
       ground_units_cp: 10
     },
+    maintenance: {
+      iron: 3,
+      food: 2,
+
+      money: 400,
+      ground_units_cp: 4
+    },
     manpower_cost: {
       soldiers: 10000
     },
@@ -91,6 +112,13 @@ config.units.infantry = {
       money: 2500,
 
       ground_units_cp: 20
+    },
+    maintenance: {
+      iron: 5,
+      food: 3,
+
+      money: 800,
+      ground_units_cp: 10
     },
     manpower_cost: {
       soldiers: 10000
@@ -114,6 +142,13 @@ config.units.infantry = {
 
       ground_units_cp: 10
     },
+    maintenance: {
+      wood: 2,
+      food: 1,
+
+      ground_units_cp: 4,
+      money: 800
+    },
     manpower_cost: {
       soldiers: 10000
     },
@@ -126,7 +161,7 @@ config.units.infantry = {
     attack: 3,
     defence: 1,
     manoeuvre: 1,
-    movement: 4.5,
+    movement: 4.50,
     initiative: 2,
 
     cost: {
@@ -135,6 +170,13 @@ config.units.infantry = {
       money: 2000,
 
       ground_units_cp: 20
+    },
+    maintenance: {
+      wood: 4,
+      food: 2,
+
+      ground_units_cp: 8,
+      money: 1500
     },
     manpower_cost: {
       soldiers: 10000
@@ -159,6 +201,14 @@ config.units.infantry = {
 
       ground_units_cp: 5
     },
+    maintenance: {
+      food: 1,
+      iron: 1,
+      wood: 1,
+
+      ground_units_cp: 6,
+      money: 1200
+    },
     manpower_cost: {
       soldiers: 10000
     },
@@ -181,6 +231,14 @@ config.units.infantry = {
       money: 2500,
 
       ground_units_cp: 5
+    },
+    maintenance: {
+      iron: 2,
+      food: 1,
+      wood: 1,
+
+      ground_units_cp: 8,
+      money: 1500
     },
     manpower_cost: {
       soldiers: 10000
@@ -209,6 +267,15 @@ config.units.infantry = {
 
       ground_units_cp: 10
     },
+    maintenance: {
+      wood: 2,
+      food: 1,
+      lead: 1,
+      lumber: 1,
+
+      ground_units_cp: 4,
+      money: 600
+    },
     manpower_cost: {
       soldiers: 10000
     },
@@ -233,6 +300,15 @@ config.units.infantry = {
 
       ground_units_cp: 10
     },
+    maintenance: {
+      sulphur: 2,
+      wood: 2,
+      food: 1,
+      lead: 1,
+
+      ground_units_cp: 5,
+      money: 800
+    },
     manpower_cost: {
       soldiers: 10000
     },
@@ -255,6 +331,15 @@ config.units.infantry = {
       money: 1500,
 
       ground_units_cp: 10
+    },
+    maintenance: {
+      sulphur: 2,
+      wood: 2,
+      lead: 2,
+      food: 1,
+
+      ground_units_cp: 6,
+      money: 900
     },
     manpower_cost: {
       soldiers: 10000
@@ -280,6 +365,16 @@ config.units.infantry = {
 
       ground_units_cp: 10
     },
+    maintenance: {
+      lumber: 2,
+      sulphur: 2,
+      food: 1,
+      lead: 1,
+      wood: 1,
+
+      ground_units_cp: 6,
+      money: 1000
+    },
     manpower_cost: {
       soldiers: 10000
     },
@@ -303,6 +398,16 @@ config.units.infantry = {
       money: 2000,
 
       ground_units_cp: 10
+    },
+    maintenance: {
+      lead: 2,
+      lumber: 2,
+      sulphur: 2,
+      food: 1,
+      wood: 1,
+
+      ground_units_cp: 6,
+      money: 1150
     },
     manpower_cost: {
       soldiers: 10000
@@ -328,6 +433,16 @@ config.units.infantry = {
 
       ground_units_cp: 10
     },
+    maintenance: {
+      lead: 2,
+      lumber: 2,
+      sulphur: 2,
+      food: 1,
+      wood: 1,
+
+      ground_units_cp: 6,
+      money: 1250
+    },
     manpower_cost: {
       soldiers: 10000
     },
@@ -351,6 +466,17 @@ config.units.infantry = {
       money: 1000,
 
       ground_units_cp: 10
+    },
+    maintenance: {
+      lead: 2,
+      lumber: 2,
+      sulphur: 2,
+      food: 1,
+      iron: 1,
+      wood: 1,
+
+      ground_units_cp: 8,
+      money: 1500
     },
     manpower_cost: {
       soldiers: 10000
@@ -377,6 +503,18 @@ config.units.infantry = {
 
       ground_units_cp: 10,
     },
+    maintenance: {
+      lumber: 2,
+      iron: 2,
+      lead: 2,
+      sulphur: 2,
+      food: 1,
+      ammunition: 1,
+      wood: 1,
+
+      ground_units_cp: 6,
+      money: 1500
+    },
     manpower_cost: {
       soldiers: 10000
     },
@@ -401,6 +539,16 @@ config.units.infantry = {
       money: 3500,
 
       ground_units_cp: 20
+    },
+    maintenance: {
+      lumber: 2,
+      ammunition: 1,
+      food: 1,
+      iron: 1,
+      lead: 1,
+
+      ground_units_cp: 8,
+      money: 2000
     },
     manpower_cost: {
       soldiers: 10000
@@ -427,6 +575,16 @@ config.units.infantry = {
 
       ground_units_cp: 5
     },
+    maintenance: {
+      lumber: 1,
+      ammunition: 1,
+      food: 1,
+      lead: 1,
+      steel: 1,
+
+      ground_units_cp: 4,
+      money: 1500
+    },
     manpower_cost: {
       soldiers: 10000
     },
@@ -452,6 +610,16 @@ config.units.infantry = {
 
       ground_units_cp: 5
     },
+    maintenance: {
+      lumber: 2,
+      steel: 2,
+      ammunition: 1,
+      food: 1,
+      lead: 1,
+
+      ground_units_cp: 8,
+      money: 1350
+    },
     manpower_cost: {
       soldiers: 10000
     },
@@ -474,6 +642,17 @@ config.units.infantry = {
       money: 1500,
 
       ground_units_cp: 10
+    },
+    maintenance: {
+      lumber: 2,
+      steel: 2,
+      ammunition: 1,
+      food: 1,
+      lead: 1,
+      sulphur: 1,
+
+      ground_units_cp: 10,
+      money: 1800
     },
     manpower_cost: {
       soldiers: 10000
@@ -498,6 +677,16 @@ config.units.infantry = {
       food: 5,
 
       ground_units_cp: 10
+    },
+    maintenance: {
+      steel: 2,
+      ammunition: 1,
+      food: 1,
+      lumber: 1,
+      small_arms: 1,
+
+      ground_units_cp: 8,
+      money: 2000
     },
     manpower_cost: {
       soldiers: 10000
@@ -524,6 +713,16 @@ config.units.infantry = {
 
       ground_units_cp: 10
     },
+    maintenance: {
+      ammunition: 1,
+      food: 1,
+      lumber: 1,
+      small_arms: 1,
+      steel: 1,
+
+      ground_units_cp: 8,
+      money: 1800
+    },
     manpower_cost: {
       soldiers: 10000
     },
@@ -549,6 +748,15 @@ config.units.infantry = {
 
       ground_units_cp: 15
     },
+    maintenance: {
+      ammunition: 3,
+      food: 2,
+      small_arms: 2,
+      steel: 1,
+
+      ground_units_cp: 10,
+      money: 2500
+    },
     manpower_cost: {
       soldiers: 10000
     },
@@ -573,6 +781,15 @@ config.units.infantry = {
 
       ground_units_cp: 10
     },
+    maintenance: {
+      ammunition: 2,
+      food: 1,
+      small_arms: 1,
+      steel: 1,
+
+      ground_units_cp: 8,
+      money: 2250
+    },
     manpower_cost: {
       soldiers: 10000
     },
@@ -591,6 +808,9 @@ config.units.infantry = {
     initiative: 1,
 
     cost: {
+      wood: 1
+    },
+    maintenance: {
       wood: 1
     },
     manpower_cost: {
@@ -616,6 +836,16 @@ config.units.infantry = {
 
       ground_units_cp: 10
     },
+    maintenance: {
+      ammunition: 2,
+      food: 2,
+      steel: 2,
+      small_arms: 1,
+      wood: 1,
+
+      ground_units_cp: 10,
+      money: 2500
+    },
     manpower_cost: {
       soldiers: 10000
     },
@@ -640,6 +870,16 @@ config.units.infantry = {
 
       ground_units_cp: 20,
     },
+    maintenance: {
+      ammunition: 4,
+      food: 2,
+      machine_parts: 1,
+      small_arms: 2,
+      lumber: 1,
+
+      ground_units_cp: 12,
+      money: 3000
+    },
     manpower_cost: {
       soldiers: 10000
     },
@@ -662,6 +902,16 @@ config.units.infantry = {
       money: 2000,
 
       ground_units_cp: 5
+    },
+    maintenance: {
+      steel: 2,
+      ammunition: 1,
+      food: 1,
+      lumber: 1,
+      small_arms: 1,
+
+      ground_units_cp: 8,
+      money: 2000
     },
     manpower_cost: {
       soldiers: 10000
@@ -687,6 +937,17 @@ config.units.infantry = {
       money: 5000,
 
       ground_units_cp: 20
+    },
+    maintenance: {
+      food: 2,
+      small_arms: 2,
+      steel: 2,
+      ammunition: 1,
+      lumber: 1,
+      machine_parts: 1,
+
+      ground_units_cp: 14,
+      money: 4000
     },
     manpower_cost: {
       soldiers: 10000
@@ -715,6 +976,12 @@ config.units.infantry = {
 
       ground_units_cp: 5
     },
+    maintenance: {
+      ammunition: 2,
+      refined_petroil: 1,
+
+      money: 8000
+    },
     manpower_cost: {
       soldiers: 10000
     },
@@ -738,6 +1005,17 @@ config.units.infantry = {
       money: 2500,
 
       ground_units_cp: 10
+    },
+    maintenance: {
+      refined_petroil: 2,
+      ammunition: 2,
+      food: 1,
+      machine_parts: 1,
+      small_arms: 1,
+      steel: 1,
+
+      ground_units_cp: 9,
+      money: 4500
     },
     manpower_cost: {
       soldiers: 10000
@@ -764,6 +1042,17 @@ config.units.infantry = {
 
       ground_units_cp: 20
     },
+    maintenance: {
+      small_arms: 6,
+      ammunition: 4,
+      refined_petroil: 4,
+      food: 2,
+      machine_parts: 2,
+      steel: 1,
+
+      ground_units_cp: 15,
+      money: 7000
+    },
     manpower_cost: {
       soldiers: 10000
     },
@@ -772,7 +1061,7 @@ config.units.infantry = {
   special_forces: {
     name: "Special Forces",
 
-    attack: 25,
+    attack: 40,
     defence: 3,
     manoeuvre: 8,
     movement: 160.93,
@@ -788,6 +1077,19 @@ config.units.infantry = {
       money: 20000,
 
       ground_units_cp: 40
+    },
+    maintenance: {
+      ammunition: 6,
+      refined_petroil: 6,
+      small_arms: 4,
+      machine_parts: 4,
+      food: 2,
+      steel: 2,
+      copper: 1,
+      lumber: 1,
+
+      ground_units_cp: 20,
+      money: 10000
     },
     manpower_cost: {
       soldiers: 10000
@@ -812,6 +1114,17 @@ config.units.infantry = {
       money: 3500,
 
       ground_units_cp: 5
+    },
+    maintenance: {
+      small_arms: 4,
+      ammunition: 2,
+      food: 1,
+      lumber: 1,
+      machine_parts: 1,
+      steel: 1,
+
+      ground_units_cp: 2,
+      money: 8000
     },
     manpower_cost: {
       soldiers: 10000
@@ -839,6 +1152,18 @@ config.units.infantry = {
 
       ground_units_cp: 10
     },
+    maintenance: {
+      ammunition: 4,
+      small_arms: 4,
+      food: 2,
+      refined_petroil: 2,
+      lumber: 1,
+      machine_parts: 1,
+      steel: 1,
+
+      ground_units_cp: 6,
+      money: 3500
+    },
     manpower_cost: {
       soldiers: 10000
     },
@@ -864,6 +1189,18 @@ config.units.infantry = {
 
       ground_units_cp: 20
     },
+    maintenance: {
+      ammunition: 5,
+      small_arms: 4,
+      food: 2,
+      refined_petroil: 2,
+      lumber: 1,
+      machine_parts: 1,
+      steel: 1,
+
+      ground_units_cp: 8,
+      money: 5000
+    },
     manpower_cost: {
       soldiers: 10000
     },
@@ -888,6 +1225,18 @@ config.units.infantry = {
       money: 7000,
 
       ground_units_cp: 40
+    },
+    maintenance: {
+      small_arms: 6,
+      ammunition: 4,
+      food: 2,
+      machine_parts: 2,
+      refined_petroil: 2,
+      lumber: 1,
+      steel: 1,
+
+      ground_units_cp: 6,
+      money: 5500
     },
     manpower_cost: {
       soldiers: 10000
