@@ -226,9 +226,11 @@ config.units.naval = {
     },
     maintenance: {
       food: 2,
-      machine_parts: 1,
+      coal: 1,
       copper: 1,
       lead: 1,
+      machine_parts: 1,
+      uniforms: 1,
 
       money: 3000,
       naval_units_cp: 4
@@ -293,10 +295,12 @@ config.units.naval = {
     maintenance: {
       steel: 4,
       ammunition: 2,
+      coal: 2,
       food: 2,
       artillery: 1,
-      machine_parts: 1,
       copper: 1,
+      machine_parts: 1,
+      uniforms: 1,
 
       money: 2000,
       naval_units_cp: 5
@@ -328,12 +332,14 @@ config.units.naval = {
       naval_units_cp: 20
     },
     maintenance: {
+      coal: 4,
       iron: 4,
       ammunition: 2,
       artillery: 2,
       food: 2,
-      machine_parts: 1,
       copper: 1,
+      machine_parts: 1,
+      uniforms: 2,
 
       money: 3500,
       naval_units_cp: 8
@@ -368,11 +374,13 @@ config.units.naval = {
     maintenance: {
       iron: 6,
       ammunition: 4,
+      coal: 4,
       artillery: 2,
       food: 2,
       lead: 2,
-      machine_parts: 1,
       copper: 1,
+      machine_parts: 1,
+      uniforms: 2,
 
       money: 4000,
       naval_units_cp: 10
@@ -405,12 +413,14 @@ config.units.naval = {
       naval_units_cp: 10
     },
     maintenance: {
+      coal: 3,
       steel: 3,
       ammunition: 2,
       food: 2,
       lead: 2,
       artillery: 1,
       machine_parts: 1,
+      uniforms: 1,
 
       money: 3500,
       naval_units_cp: 8
@@ -442,11 +452,13 @@ config.units.naval = {
       naval_units_cp: 15
     },
     maintenance: {
+      refined_petroil: 4,
       steel: 4,
       ammunition: 3,
       artillery: 2,
       food: 2,
       lead: 2,
+      uniforms: 2,
       machine_parts: 1,
 
       money: 5000,
@@ -478,12 +490,14 @@ config.units.naval = {
       naval_units_cp: 20
     },
     maintenance: {
+      refined_petroil: 6,
       steel: 5,
       ammunition: 4,
       artillery: 2,
       food: 2,
       lead: 2,
       machine_parts: 2,
+      uniforms: 2,
 
       money: 6000,
       naval_units_cp: 14
@@ -515,12 +529,14 @@ config.units.naval = {
       naval_units_cp: 40
     },
     maintenance: {
+      refined_petroil: 6,
       steel: 6,
       ammunition: 4,
       artillery: 4,
       lead: 4,
       food: 3,
       machine_parts: 2,
+      uniforms: 2,
 
       money: 8000,
       naval_units_cp: 20
@@ -555,6 +571,8 @@ config.units.naval = {
       machine_parts: 2,
       food: 1,
       lead: 1,
+      refined_petroil: 1,
+      uniforms: 1,
 
       money: 3500,
       naval_units_cp: 5
@@ -591,8 +609,10 @@ config.units.naval = {
       ammunition: 4,
       steel: 4,
       lead: 4,
+      refined_petroil: 4,
       artillery: 3,
       food: 3,
+      uniforms: 3,
       machine_parts: 2,
 
       money: 6000,
@@ -620,7 +640,7 @@ config.units.naval = {
       artillery: 1,
       small_arms: 2,
       ammunition: 5,
-      petroil: 3,
+      refined_petroil: 3,
       food: 8,
       money: 2000,
 
@@ -631,7 +651,9 @@ config.units.naval = {
       steel: 4,
       ammunition: 2,
       food: 2,
+      refined_petroil: 2,
       artillery: 1,
+      uniforms: 1,
 
       money: 4000,
       naval_units_cp: 6
@@ -669,8 +691,10 @@ config.units.naval = {
       steel: 4,
       ammunition: 4,
       food: 4,
+      refined_petroil: 4,
       artillery: 2,
       lead: 2,
+      uniforms: 2,
 
       money: 8000,
       naval_units_cp: 15
@@ -704,11 +728,13 @@ config.units.naval = {
       naval_units_cp: 20
     },
     maintenance: {
+      refined_petroil: 8,
       ammunition: 8,
       machine_parts: 6,
       artillery: 4,
       food: 4,
       steel: 4,
+      uniforms: 4,
       lead: 2,
 
       money: 8500,
@@ -746,10 +772,12 @@ config.units.naval = {
       naval_units_cp: 40
     },
     maintenance: {
+      refined_petroil: 10,
       ammunition: 6,
       food: 4,
       lead: 4,
       machine_parts: 4,
+      uniforms: 4,
       artillery: 2,
       steel: 2,
 
@@ -791,7 +819,9 @@ config.units.naval = {
       artillery: 2,
       food: 2,
       gold: 2,
+      refined_petroil: 2,
       steel: 2,
+      uniforms: 2,
 
       money: 9000,
       naval_units_cp: 15
@@ -826,9 +856,11 @@ config.units.naval = {
       naval_units_cp: 40
     },
     maintenance: {
+      refined_petroil: 12,
       ammunition: 8,
       machine_parts: 8,
       food: 6,
+      uniforms: 5,
       lead: 4,
       artillery: 2,
       gold: 2,
@@ -867,8 +899,10 @@ config.units.naval = {
       naval_units_cp: 15
     },
     maintenance: {
+      refined_petroil: 8,
       ammunition: 6,
       machine_parts: 6,
+      uniforms: 4,
       artillery: 3,
       food: 3,
       lead: 2,
@@ -907,11 +941,13 @@ config.units.naval = {
       naval_units_cp: 10
     },
     maintenance: {
+      refined_petroil: 6,
       ammunition: 4,
       machine_parts: 4,
       food: 3,
       artillery: 2,
       lead: 2,
+      uniforms: 2,
       steel: 1,
 
       money: 7500,
@@ -950,10 +986,12 @@ config.units.naval = {
       machine_parts: 12,
       ammunition: 8,
       gold: 6,
+      refined_petroil: 6,
       artillery: 4,
       food: 4,
       steel: 4,
       lead: 3,
+      uniforms: 3,
 
       money: 9000,
       naval_units_cp: 14

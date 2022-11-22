@@ -222,6 +222,7 @@ config.units.cavalry = {
       iron: 1,
       lumber: 1,
       small_arms: 1,
+      uniforms: 1,
       food: 1,
 
       ground_units_cp: 8,
@@ -253,6 +254,7 @@ config.units.cavalry = {
     },
     maintenance: {
       small_arms: 2,
+      uniforms: 2,
       ammunition: 1,
       lumber: 1,
       food: 1,
@@ -289,6 +291,7 @@ config.units.cavalry = {
       refined_petroil: 4,
       steel: 2,
       small_arms: 2,
+      uniforms: 1,
       ammunition: 1,
       food: 1,
 

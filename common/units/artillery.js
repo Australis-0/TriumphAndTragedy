@@ -423,6 +423,7 @@ config.units.artillery = {
       lead: 2,
       ammunition: 1,
       food: 1,
+      uniforms: 1,
 
       ground_artillery_cp: 8,
       money: 2500
@@ -458,6 +459,7 @@ config.units.artillery = {
       ammunition: 2,
       food: 2,
       steel: 1,
+      uniforms: 1,
 
       ground_artillery_cp: 12,
       money: 2800
@@ -494,6 +496,7 @@ config.units.artillery = {
       machine_parts: 2,
       steel: 2,
       sulphur: 1,
+      uniforms: 1,
 
       ground_artillery_cp: 20,
       money: 4000
@@ -526,6 +529,7 @@ config.units.artillery = {
       ammunition: 2,
       machine_parts: 1,
       sulphur: 1,
+      uniforms: 1,
 
       ground_artillery_cp: 8,
       money: 3500
@@ -559,6 +563,7 @@ config.units.artillery = {
       ammunition: 3,
       machine_parts: 2,
       copper: 1,
+      uniforms: 1,
 
       ground_artillery_cp: 8,
       money: 3000
@@ -592,6 +597,7 @@ config.units.artillery = {
       machine_parts: 4,
       ammunition: 4,
       refined_petroil: 2,
+      uniforms: 1,
 
       ground_artillery_cp: 12,
       money: 5000
@@ -628,6 +634,7 @@ config.units.artillery = {
       artillery: 1,
       gold: 1,
       refined_petroil: 1,
+      uniforms: 1,
 
       ground_artillery_cp: 12,
       money: 4000
@@ -661,6 +668,7 @@ config.units.artillery = {
       machine_parts: 2,
       artillery: 1,
       refined_petroil: 1,
+      uniforms: 1,
 
       ground_artillery_cp: 10,
       money: 4000
@@ -694,6 +702,7 @@ config.units.artillery = {
       machine_parts: 2,
       refined_petroil: 2,
       steel: 2,
+      uniforms: 1,
 
       ground_artillery_cp: 12,
       money: 4500
@@ -726,6 +735,7 @@ config.units.artillery = {
       machine_parts: 4,
       refined_petroil: 2,
       steel: 2,
+      uniforms: 1,
 
       ground_artillery_cp: 14,
       money: 6000
@@ -761,6 +771,7 @@ config.units.artillery = {
       refined_petroil: 4,
       steel: 4,
       copper: 2,
+      uniforms: 1,
 
       ground_artillery_cp: 20,
       money: 8000
@@ -798,6 +809,7 @@ config.units.artillery = {
       refined_petroil: 2,
       copper: 3,
       steel: 2,
+      uniforms: 1,
 
       ground_artillery_cp: 10,
       money: 10000

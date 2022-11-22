@@ -581,6 +581,7 @@ config.units.infantry = {
       food: 1,
       lead: 1,
       steel: 1,
+      uniforms: 1,
 
       ground_units_cp: 4,
       money: 1500
@@ -616,6 +617,7 @@ config.units.infantry = {
       ammunition: 1,
       food: 1,
       lead: 1,
+      uniforms: 1,
 
       ground_units_cp: 8,
       money: 1350
@@ -650,6 +652,7 @@ config.units.infantry = {
       food: 1,
       lead: 1,
       sulphur: 1,
+      uniforms: 1,
 
       ground_units_cp: 10,
       money: 1800
@@ -680,6 +683,7 @@ config.units.infantry = {
     },
     maintenance: {
       steel: 2,
+      uniforms: 2,
       ammunition: 1,
       food: 1,
       lumber: 1,
@@ -719,6 +723,7 @@ config.units.infantry = {
       lumber: 1,
       small_arms: 1,
       steel: 1,
+      uniforms: 1,
 
       ground_units_cp: 8,
       money: 1800
@@ -752,6 +757,7 @@ config.units.infantry = {
       ammunition: 3,
       food: 2,
       small_arms: 2,
+      uniforms: 2,
       steel: 1,
 
       ground_units_cp: 10,
@@ -786,6 +792,7 @@ config.units.infantry = {
       food: 1,
       small_arms: 1,
       steel: 1,
+      uniforms: 1,
 
       ground_units_cp: 8,
       money: 2250
@@ -840,6 +847,7 @@ config.units.infantry = {
       ammunition: 2,
       food: 2,
       steel: 2,
+      uniforms: 2,
       small_arms: 1,
       wood: 1,
 
@@ -875,6 +883,7 @@ config.units.infantry = {
       food: 2,
       machine_parts: 1,
       small_arms: 2,
+      uniforms: 1,
       lumber: 1,
 
       ground_units_cp: 12,
@@ -905,6 +914,7 @@ config.units.infantry = {
     },
     maintenance: {
       steel: 2,
+      uniforms: 2,
       ammunition: 1,
       food: 1,
       lumber: 1,
@@ -945,6 +955,7 @@ config.units.infantry = {
       ammunition: 1,
       lumber: 1,
       machine_parts: 1,
+      uniforms: 1,
 
       ground_units_cp: 14,
       money: 4000
@@ -1013,6 +1024,7 @@ config.units.infantry = {
       machine_parts: 1,
       small_arms: 1,
       steel: 1,
+      uniforms: 1,
 
       ground_units_cp: 9,
       money: 4500
@@ -1049,6 +1061,7 @@ config.units.infantry = {
       food: 2,
       machine_parts: 2,
       steel: 1,
+      uniforms: 1,
 
       ground_units_cp: 15,
       money: 7000
@@ -1085,6 +1098,7 @@ config.units.infantry = {
       machine_parts: 4,
       food: 2,
       steel: 2,
+      uniforms: 2,
       copper: 1,
       lumber: 1,
 
@@ -1118,6 +1132,7 @@ config.units.infantry = {
     maintenance: {
       small_arms: 4,
       ammunition: 2,
+      uniforms: 2,
       food: 1,
       lumber: 1,
       machine_parts: 1,
@@ -1157,6 +1172,7 @@ config.units.infantry = {
       small_arms: 4,
       food: 2,
       refined_petroil: 2,
+      uniforms: 2,
       lumber: 1,
       machine_parts: 1,
       steel: 1,
@@ -1194,6 +1210,7 @@ config.units.infantry = {
       small_arms: 4,
       food: 2,
       refined_petroil: 2,
+      uniforms: 2,
       lumber: 1,
       machine_parts: 1,
       steel: 1,
@@ -1232,6 +1249,7 @@ config.units.infantry = {
       food: 2,
       machine_parts: 2,
       refined_petroil: 2,
+      uniforms: 2,
       lumber: 1,
       steel: 1,
 
