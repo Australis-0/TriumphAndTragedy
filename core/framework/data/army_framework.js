@@ -480,6 +480,74 @@ module.exports = {
     return (army_exists[0]) ? army_exists[1] : undefined;
   },
 
+  getArmyMaintenance: function (arg0_user, arg1_army_name) {
+    //Convert from parameters
+    var user_id = arg0_user;
+    var army_name = arg1_army_name;
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var maintenance_obj = {};
+
+    if (!army_name) {
+      var units_obj = module.exports.getUnits(actual_id);
+
+      var all_units = Object.keys(units_obj);
+
+      for (var i = 0; i < all_units.length; i++) {
+        var local_amount = units_obj[all_units[i]];
+        var local_unit = getUnit(all_units[i]);
+
+        //Check for local maintenance
+        if (local_unit.maintenance) {
+          var all_maintenance_costs = Object.keys(local_unit.maintenance);
+
+          for (var x = 0; x < all_maintenance_costs.length; x++) {
+            var local_maintenance_cost = local_unit.maintenance[all_maintenance_costs[x]];
+            var local_quantity = returnSafeNumber(local_unit.quantity, 1);
+
+            local_maintenance_cost = Math.ceil((local_maintenance_cost/local_quantity)*local_amount);
+
+            maintenance_obj[all_maintenance_costs[x]] = (maintenance_obj[all_maintenance_costs[x]]) ?
+              maintenance_obj[all_maintenance_costs[x]] + local_maintenance_cost :
+              local_maintenance_cost;
+          }
+        }
+      }
+    } else {
+      //Get maintenance object for a single army
+      var army_obj = (typeof army_name != "object") ?
+        module.exports.getArmy(actual_id, army_name) :
+        army_name;
+      var all_units = Object.keys(army_obj.units);
+
+      if (all_units.length > 0)
+        for (var i = 0; i < all_units.length; i++) {
+          var local_amount = army_obj.units[all_units[i]];
+          var local_unit = getUnit(all_units[i]);
+
+          //Check for local maintenance
+          if (local_unit.maintenance) {
+            var all_maintenance_costs = Object.keys(local_unit.maintenance);
+
+            for (var x = 0; x < all_maintenance_costs.length; x++) {
+              var local_maintenance_cost = local_unit.maintenance[all_maintenance_costs[x]];
+              var local_quantity = returnSafeNumber(local_unit.quantity, 1);
+
+              local_maintenance_cost = Math.ceil((local_maintenance_cost/local_quantity)*local_amount);
+
+              maintenance_obj[all_maintenance_costs[x]] = (maintenance_obj[all_maintenance_costs[x]]) ?
+                maintenance_obj[all_maintenance_costs[x]] + local_maintenance_cost :
+                local_maintenance_cost;
+            }
+          }
+        }
+    }
+
+    //Return statement
+    return maintenance_obj;
+  },
+
   getArmySize: function (arg0_user, arg1_army_name) {
     //Convert from parameters
     var user_id = arg0_user;
@@ -546,7 +614,7 @@ module.exports = {
         }
 
         //Average out army_speed
-        army_speed = army_speed/army_size;
+        army_speed = (army_speed/army_size)*usr.modifiers.army_travel_speed;
 
         //Return statement
         return returnSafeNumber(army_speed);
@@ -709,6 +777,16 @@ module.exports = {
       all_units[all_reserves[i]] = (all_units[all_reserves[i]]) ?
         all_units[all_reserves[i]] + returnSafeNumber(usr.reserves[all_reserves[i]]) :
         returnSafeNumber(usr.reserves[all_reserves[i]]);
+
+    //Filter out all null and 0 values
+    var all_current_units = Object.keys(all_units);
+
+    for (var i = 0; i < all_current_units.length; i++) {
+      var local_value = all_units[all_current_units[i]];
+
+      if (returnSafeNumber(local_value) == 0)
+        delete all_units[all_current_units[i]];
+    }
 
     //Return statement
     return all_units;

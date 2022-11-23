@@ -226,13 +226,20 @@ module.exports = {
       if (!usr.modifiers.supply_consumption) usr.modifiers.supply_consumption = 1;
       if (!usr.modifiers.training_cost) usr.modifiers.training_cost = 1;
       if (!usr.modifiers.unit_cost) usr.modifiers.unit_cost = 1;
+      if (!usr.modifiers.unit_supply) usr.modifiers.unit_supply = {};
       if (!usr.modifiers.war_exhaustion) usr.modifiers.war_exhaustion = 0;
       if (!usr.modifiers.war_exhaustion_rate) usr.modifiers.war_exhaustion_rate = 0.01;
+
       var all_unit_categories = Object.keys(config.units);
+      var all_units = Object.keys(lookup.all_units);
+
       for (var i = 0; i < all_unit_categories.length; i++) {
         if (!usr.modifiers[`${all_unit_categories[i]}_attack`]) usr.modifiers[`${all_unit_categories[i]}_attack`] = 1;
         if (!usr.modifiers[`${all_unit_categories[i]}_cp`]) usr.modifiers[`${all_unit_categories[i]}_cp`] = 0;
         if (!usr.modifiers[`${all_unit_categories[i]}_defence`]) usr.modifiers[`${all_unit_categories[i]}_defence`] = 1;
+      }
+      for (var i = 0; i < all_units.length; i++) {
+        if (!usr.modifiers.unit_supply[all_units[i]]) usr.modifiers.unit_supply[all_units[i]] = 1;
       }
 
       //Political; includes diplomacy
