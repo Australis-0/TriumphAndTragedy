@@ -1349,16 +1349,18 @@ module.exports = {
 		return ordinal_array;
   },
 
-  processArmyMaintenance: function (arg0_user) { //[WIP] - Check for 'money' argument from getArmyMaintenance(), percent_undersupplied needs a common.defines.combat.fiscal_supply_amount argument, otherwise sum up all goods into one basket, divide from there
+  processArmyMaintenance: function (arg0_user) {
     //Convert from parameters
     var user_id = arg0_user;
 
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
-    var all_units = Object.keys(lookup.all_units);
     var deficit_goods = {};
     var maintenance_obj = module.exports.getArmyMaintenance(user_id);
+    var units_obj = module.exports.getUnits(user_id);
     var usr = main.users[actual_id];
+
+    var all_units = Object.keys(units_obj);
 
     //Subtract maintenance_obj from usr.inventory, check for any percent deficits (these get carried over into a weighted calculation for unit undersupply)
     var all_maintenance_costs = Object.keys(maintenance_obj);
@@ -1366,24 +1368,66 @@ module.exports = {
     for (var i = 0; i < all_maintenance_costs.length; i++) {
       var local_amount = maintenance_obj[all_maintenance_costs[i]];
 
-      if (usr.inventory[all_maintenance_costs[i]] >= local_amount) {
-        usr.inventory[all_maintenance_costs[i]] -= local_amount;
-      } else {
-        deficit_goods[all_maintenance_costs[i]] = (local_amount - usr.inventory[all_maintenance_costs[i]])/local_amount;
+      if (all_maintenance_costs[i] != "money") {
+        if (usr.inventory[all_maintenance_costs[i]] >= local_amount) {
+          usr.inventory[all_maintenance_costs[i]] -= local_amount;
+        } else {
+          deficit_goods[all_maintenance_costs[i]] = (local_amount - usr.inventory[all_maintenance_costs[i]])/local_amount;
 
-        usr.inventory[all_maintenance_costs[i]] = 0;
+          usr.inventory[all_maintenance_costs[i]] = 0;
+        }
+      } else {
+        if (usr[all_maintenance_costs[i]] >= local_amount) {
+          usr[all_maintenance_costs[i]] -= local_amount;
+        } else {
+          deficit_goods[all_maintenance_costs[i]] = (local_amount - usr[all_maintenance_costs[i]])/local_amount; //Results in % deficit
+
+          usr[all_maintenance_costs[i]] = 0;
+        }
       }
     }
 
-    //Iterate over all units, subtract their maintenance costs
+    //Iterate over all units, check for supply and adjust modifiers
     for (var i = 0; i < all_units.length; i++) {
       var unit_obj = lookup.all_units[all_units[i]];
+      var percent_money_undersupplied = 0;
       var percent_undersupplied = 0;
 
       if (unit_obj.maintenance) {
+        var fiscal_maintenance = 0;
+        var local_amount = returnSafeNumber(units_obj[all_units[i]]);
         var local_maintenance_costs = Object.keys(unit_obj.maintenance);
+        var total_goods = 0;
 
-        //for (var x = 0; x < all_maintenance_costs.length; x++)
+        //1st loop - Get total_goods and fiscal maintenance
+        for (var x = 0; x < all_maintenance_costs.length; x++) {
+          var local_maintenance_cost = unit_obj.maintenance[all_maintenance_costs[x]];
+
+          if (all_maintenance_costs[x] != "money") {
+            total_goods += local_maintenance_cost;
+          } else {
+            fiscal_maintenance += local_maintenance_cost;
+          }
+        }
+
+        //2nd loop - Calculate proportional supply deficits
+        for (var x = 0; x < all_maintenance_costs.length; x++) {
+          var local_maintenance_cost = unit_obj.maintenance[all_maintenance_costs[x]];
+
+          if (all_maintenance_costs[x] == "money") {
+            percent_money_undersupplied += returnSafeNumber(deficit_goods.money);
+          } else {
+            percent_undersupplied += returnSafeNumber(
+              (local_maintenance_cost/total_goods)*deficit_goods[all_maintenance_costs[x]]
+            );
+          }
+        }
+
+        //Finalise percent_undersupplied
+        percent_undersupplied = (percent_money_undersupplied*config.defines.combat.fiscal_supply_amount) + (percent_undersupplied*(1 - config.defines.combat.fiscal_supply_amount));
+
+        //Set usr.modifiers.unit_supply.<unit_type>
+        usr.modifiers.unit_supply[all_units[i]] = (1 - percent_undersupplied);
       }
     }
   },
