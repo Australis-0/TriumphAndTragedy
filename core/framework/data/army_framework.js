@@ -1349,6 +1349,45 @@ module.exports = {
 		return ordinal_array;
   },
 
+  processArmyMaintenance: function (arg0_user) { //[WIP] - Check for 'money' argument from getArmyMaintenance(), percent_undersupplied needs a common.defines.combat.fiscal_supply_amount argument, otherwise sum up all goods into one basket, divide from there
+    //Convert from parameters
+    var user_id = arg0_user;
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var all_units = Object.keys(lookup.all_units);
+    var deficit_goods = {};
+    var maintenance_obj = module.exports.getArmyMaintenance(user_id);
+    var usr = main.users[actual_id];
+
+    //Subtract maintenance_obj from usr.inventory, check for any percent deficits (these get carried over into a weighted calculation for unit undersupply)
+    var all_maintenance_costs = Object.keys(maintenance_obj);
+
+    for (var i = 0; i < all_maintenance_costs.length; i++) {
+      var local_amount = maintenance_obj[all_maintenance_costs[i]];
+
+      if (usr.inventory[all_maintenance_costs[i]] >= local_amount) {
+        usr.inventory[all_maintenance_costs[i]] -= local_amount;
+      } else {
+        deficit_goods[all_maintenance_costs[i]] = (local_amount - usr.inventory[all_maintenance_costs[i]])/local_amount;
+
+        usr.inventory[all_maintenance_costs[i]] = 0;
+      }
+    }
+
+    //Iterate over all units, subtract their maintenance costs
+    for (var i = 0; i < all_units.length; i++) {
+      var unit_obj = lookup.all_units[all_units[i]];
+      var percent_undersupplied = 0;
+
+      if (unit_obj.maintenance) {
+        var local_maintenance_costs = Object.keys(unit_obj.maintenance);
+
+        //for (var x = 0; x < all_maintenance_costs.length; x++)
+      }
+    }
+  },
+
   relieveUnits: function (arg0_user, arg1_amount, arg2_unit_name, arg3_army_name) {
     //Convert from parameters
     var user_id = arg0_user;
