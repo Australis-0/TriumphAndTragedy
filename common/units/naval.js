@@ -32,7 +32,7 @@ config.units.naval = {
       naval_units_cp: 2
     },
     manpower_cost: {
-      soldiers: 50000
+      soldiers: 200
     },
     quantity: 5
   },
@@ -40,8 +40,8 @@ config.units.naval = {
     name: "Galleons",
     singular: "Galleon",
 
-    attack: 500,
-    defence: 250,
+    attack: 2500,
+    defence: 1250,
     manoeuvre: 2,
     movement: 12.96,
     initiative: 3,
@@ -64,16 +64,16 @@ config.units.naval = {
       naval_units_cp: 7
     },
     manpower_cost: {
-      soldiers: 50000
+      soldiers: 500
     },
-    quantity: 5
+    quantity: 1
   },
   men_of_war: {
     name: "Men-of-War",
     singular: "Man-of-War",
 
-    attack: 650,
-    defence: 300,
+    attack: 3250,
+    defence: 1500,
     manoeuvre: 2,
     movement: 15.74,
     initiative: 4,
@@ -98,16 +98,16 @@ config.units.naval = {
       naval_units_cp: 7
     },
     manpower_cost: {
-      soldiers: 50000
+      soldiers: 600
     },
-    quantity: 5
+    quantity: 1
   },
   ships_of_the_line: {
     name: "Ships-of-the-Line",
     singular: "Ship-of-the-Line",
 
-    attack: 600,
-    defence: 400,
+    attack: 3000,
+    defence: 2000,
     manoeuvre: 3,
     movement: 22.22,
     initiative: 4,
@@ -132,16 +132,16 @@ config.units.naval = {
       naval_units_cp: 8
     },
     manpower_cost: {
-      soldiers: 50000
+      soldiers: 1100
     },
-    quantity: 5
+    quantity: 1
   },
   first_rates: {
     name: "First Rates",
     singular: "First Rate",
 
-    attack: 850,
-    defence: 350,
+    attack: 4250,
+    defence: 1750,
     manoeuvre: 3,
     movement: 26.70,
     initiative: 5,
@@ -166,16 +166,16 @@ config.units.naval = {
       naval_units_cp: 10
     },
     manpower_cost: {
-      soldiers: 50000
+      soldiers: 850
     },
-    quantity: 5
+    quantity: 1
   },
   frigates: {
     name: "Frigates",
     singular: "Frigate",
 
-    attack: 500,
-    defence: 350,
+    attack: 1250,
+    defence: 875,
     maneouvre: 4,
     movement: 25.93,
     initiative: 3,
@@ -200,9 +200,9 @@ config.units.naval = {
       naval_units_cp: 6
     },
     manpower_cost: {
-      soldiers: 50000
+      soldiers: 630
     },
-    quantity: 5
+    quantity: 2
   },
   steamboats: {
     name: "Steamboats",
@@ -236,7 +236,7 @@ config.units.naval = {
       naval_units_cp: 4
     },
     manpower_cost: {
-      soldiers: 50000
+      soldiers: 200
     },
     quantity: 5
   },
@@ -268,7 +268,7 @@ config.units.naval = {
       naval_units_cp: 2
     },
     manpower_cost: {
-      soldiers: 50000
+      soldiers: 4000
     },
     quantity: 5
   },
@@ -306,7 +306,7 @@ config.units.naval = {
       naval_units_cp: 5
     },
     manpower_cost: {
-      soldiers: 50000
+      soldiers: 200
     },
     quantity: 5
   },
@@ -314,8 +314,8 @@ config.units.naval = {
     name: "Ironclads",
     singular: "Ironclad",
 
-    attack: 1200,
-    defence: 1800,
+    attack: 6000,
+    defence: 9000,
     manoeuvre: 3,
     movement: 26.50,
     initative: 1,
@@ -345,7 +345,7 @@ config.units.naval = {
       naval_units_cp: 8
     },
     manpower_cost: {
-      soldiers: 800
+      soldiers: 320
     },
     quantity: 1
   },
@@ -354,8 +354,8 @@ config.units.naval = {
     singular: "Breastwork Monitor",
     type: ["cruiser"],
 
-    attack: 1500,
-    defence: 2000,
+    attack: 7500,
+    defence: 10000,
     manoeuvre: 3,
     movement: 11.11,
     initiative: 4,
@@ -386,9 +386,9 @@ config.units.naval = {
       naval_units_cp: 10
     },
     manpower_cost: {
-      soldiers: 50000
+      soldiers: 136
     },
-    quantity: 5
+    quantity: 1
   },
   destroyers: {
     name: "Destroyers",
@@ -426,7 +426,7 @@ config.units.naval = {
       naval_units_cp: 8
     },
     manpower_cost: {
-      soldiers: 50000
+      soldiers: 230
     },
     quantity: 5
   },
@@ -435,8 +435,8 @@ config.units.naval = {
     singular: "Cruiser",
     type: ["cruiser"],
 
-    attack: 2000,
-    defence: 1500,
+    attack: 5000,
+    defence: 3750,
     manoeuvre: 4,
     movement: 55.56,
     initiative: 5,
@@ -465,16 +465,16 @@ config.units.naval = {
       naval_units_cp: 12
     },
     manpower_cost: {
-      soldiers: 50000
+      soldiers: 1340
     },
-    quantity: 5
+    quantity: 2
   },
   pre_dreadnoughts: {
     name: "Pre-Dreadnoughts",
     singular: "Pre-Dreadnought",
 
-    attack: 2000,
-    defence: 3500,
+    attack: 10000,
+    defence: 17500,
     manoeuvre: 2,
     movement: 37.04,
     initiative: 6,
@@ -503,16 +503,16 @@ config.units.naval = {
       naval_units_cp: 14
     },
     manpower_cost: {
-      soldiers: 50000
+      soldiers: 392
     },
-    quantity: 5
+    quantity: 1
   },
   dreadnoughts: {
     name: "Dreadnoughts",
     singular: "Dreadnought",
 
-    attack: 3500,
-    defence: 4000,
+    attack: 17500,
+    defence: 20000,
     manoeuvre: 1,
     movement: 38.89,
     initiative: 5,
@@ -542,9 +542,9 @@ config.units.naval = {
       naval_units_cp: 20
     },
     manpower_cost: {
-      soldiers: 50000
+      soldiers: 810
     },
-    quantity: 5
+    quantity: 1
   },
   torpedo_boats: {
     name: "Torpedo Boats",
@@ -578,7 +578,7 @@ config.units.naval = {
       naval_units_cp: 5
     },
     manpower_cost: {
-      soldiers: 50000
+      soldiers: 150
     },
     quantity: 5
   },
@@ -586,8 +586,8 @@ config.units.naval = {
     name: "Battlecruisers",
     singular: "Battlecruiser",
 
-    attack: 3500,
-    defence: 2000,
+    attack: 17500,
+    defence: 10000,
     manoeuvre: 4,
     movement: 49.30,
     initiative: 6,
@@ -619,9 +619,9 @@ config.units.naval = {
       naval_units_cp: 15
     },
     manpower_cost: {
-      soldiers: 50000
+      soldiers: 1430
     },
-    quantity: 5
+    quantity: 1
   },
   submarines: {
     name: "Submarines",
@@ -659,7 +659,7 @@ config.units.naval = {
       naval_units_cp: 6
     },
     manpower_cost: {
-      soldiers: 50000
+      soldiers: 300
     },
     quantity: 5
   },
@@ -700,7 +700,7 @@ config.units.naval = {
       naval_units_cp: 15
     },
     manpower_cost: {
-      soldiers: 50000
+      soldiers: 470
     },
     quantity: 1
   },
@@ -708,8 +708,8 @@ config.units.naval = {
     name: "Battleships",
     singular: "Batlteship",
 
-    attack: 5000,
-    defence: 7500,
+    attack: 25000,
+    defence: 37500,
     manoeuvre: 3,
     movement: 61.10,
     initiative: 5,
@@ -741,9 +741,9 @@ config.units.naval = {
       naval_units_cp: 10
     },
     manpower_cost: {
-      soldiers: 50000
+      soldiers: 2065
     },
-    quantity: 5
+    quantity: 1
   },
   aircraft_carriers: {
     name: "Aircraft Carriers",
@@ -785,7 +785,7 @@ config.units.naval = {
       naval_units_cp: 20
     },
     manpower_cost: {
-      soldiers: 50000
+      soldiers: 2220
     },
     quantity: 1
   },
@@ -794,8 +794,8 @@ config.units.naval = {
     singular: "Nuclear Submarine",
     type: ["submarine"],
 
-    attack: 22500,
-    defence: 550,
+    attack: 112500,
+    defence: 2750,
     manoeuvre: 6,
     movement: 82.80,
     initiative: 2,
@@ -827,9 +827,9 @@ config.units.naval = {
       naval_units_cp: 15
     },
     manpower_cost: {
-      soldiers: 50000
+      soldiers: 130
     },
-    quantity: 5
+    quantity: 1
   },
   supercarriers: {
     name: "Supercarriers",
@@ -870,7 +870,7 @@ config.units.naval = {
       naval_units_cp: 20
     },
     manpower_cost: {
-      soldiers: 50000
+      soldiers: 3532
     },
     quantity: 1
   },
@@ -879,8 +879,8 @@ config.units.naval = {
     singular: "Modern Cruiser",
     type: ["cruiser"],
 
-    attack: 3500,
-    defence: 3000,
+    attack: 17500,
+    defence: 15000,
     manoeuvre: 4,
     movement: 55.56,
     initiative: 5,
@@ -913,17 +913,17 @@ config.units.naval = {
       naval_units_cp: 10
     },
     manpower_cost: {
-      soldiers: 50000
+      soldiers: 556
     },
-    quantity: 5
+    quantity: 1
   },
   modern_frigates: {
     name: "Modern Frigates",
     singular: "Modern Frigate",
     type: ["destroyer"],
 
-    attack: 2500,
-    defence: 3500,
+    attack: 6250,
+    defence: 8750,
     manoeuvre: 5,
     movement: 59.26,
     initiative: 4,
@@ -954,17 +954,17 @@ config.units.naval = {
       naval_units_cp: 8
     },
     manpower_cost: {
-      soldiers: 50000
+      soldiers: 420
     },
-    quantity: 5
+    quantity: 2
   },
   railgun_cruisers: {
     name: "Railgun Cruisers",
     singular: "Railgun Cruiser",
     type: ["cruiser"],
 
-    attack: 5500,
-    defence: 2800,
+    attack: 27500,
+    defence: 14000,
     manoeuvre: 3,
     movement: 60,
     initiative: 4,
@@ -997,8 +997,8 @@ config.units.naval = {
       naval_units_cp: 14
     },
     manpower_cost: {
-      soldiers: 50000
+      soldiers: 650
     },
-    quantity: 5
+    quantity: 1
   }
 };

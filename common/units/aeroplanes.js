@@ -31,7 +31,7 @@ config.units.aeroplanes = {
       money: 200
     },
     manpower_cost: {
-      soldiers: 25000
+      soldiers: 800
     },
     quantity: 20
   },
@@ -61,7 +61,7 @@ config.units.aeroplanes = {
       money: 500
     },
     manpower_cost: {
-      soldiers: 25000
+      soldiers: 500
     },
     quantity: 20
   },
@@ -70,8 +70,8 @@ config.units.aeroplanes = {
     singular: "Zeppelin",
     type: ["can_bomb"],
 
-    attack: 500,
-    defence: 350,
+    attack: 2000,
+    defence: 1400,
     manoeuvre: 6,
     movement: 32,
     initiative: 3,
@@ -96,9 +96,9 @@ config.units.aeroplanes = {
       money: 1000
     },
     manpower_cost: {
-      soldiers: 25000
+      soldiers: 720
     },
-    quantity: 20
+    quantity: 5
   },
 
   //Air Units - Early Fighters
@@ -130,7 +130,7 @@ config.units.aeroplanes = {
       money: 500
     },
     manpower_cost: {
-      soldiers: 25000
+      soldiers: 250
     },
     quantity: 20
   },
@@ -165,7 +165,7 @@ config.units.aeroplanes = {
       money: 600
     },
     manpower_cost: {
-      soldiers: 25000
+      soldiers: 500
     },
     quantity: 20
   },
@@ -201,7 +201,7 @@ config.units.aeroplanes = {
       money: 850
     },
     manpower_cost: {
-      soldiers: 25000
+      soldiers: 1340
     },
     quantity: 20
   },
@@ -238,7 +238,7 @@ config.units.aeroplanes = {
       aeroplanes_cp: 7
     },
     manpower_cost: {
-      soldiers: 25000
+      soldiers: 1340
     },
     quantity: 20
   },
@@ -279,7 +279,7 @@ config.units.aeroplanes = {
       money: 1000
     },
     manpower_cost: {
-      soldiers: 25000
+      soldiers: 2360
     },
     quantity: 20
   },
@@ -317,7 +317,7 @@ config.units.aeroplanes = {
       aeroplanes_cp: 8
     },
     manpower_cost: {
-      soldiers: 25000
+      soldiers: 2360
     },
     quantity: 20
   },
@@ -354,7 +354,7 @@ config.units.aeroplanes = {
       money: 2500
     },
     manpower_cost: {
-      soldiers: 25000
+      soldiers: 2500
     },
     quantity: 20
   },
@@ -393,7 +393,7 @@ config.units.aeroplanes = {
       money: 2000
     },
     manpower_cost: {
-      soldiers: 25000
+      soldiers: 1200
     },
     quantity: 20
   },
@@ -433,13 +433,14 @@ config.units.aeroplanes = {
       money: 4000
     },
     manpower_cost: {
-      soldiers: 25000
+      soldiers: 1360
     },
     quantity: 20
   },
   drones: {
     name: "Drones",
     singular: "Drone",
+    type: ["can_bomb"],
 
     attack: 1200,
     defence: 50,
@@ -454,7 +455,7 @@ config.units.aeroplanes = {
       ammunition: 10,
       gold: 4,
       refined_petroil: 2,
-      money: 10000,
+      money: 20000,
 
       aeroplanes_cp: 5
     },
@@ -467,7 +468,7 @@ config.units.aeroplanes = {
       money: 3000
     },
     manpower_cost: {
-      soldiers: 25000
+      soldiers: 100
     },
     quantity: 20
   },
@@ -506,7 +507,7 @@ config.units.aeroplanes = {
       money: 4500
     },
     manpower_cost: {
-      soldiers: 25000
+      soldiers: 1360
     },
     quantity: 20
   },
@@ -545,7 +546,7 @@ config.units.aeroplanes = {
       money: 800
     },
     manpower_cost: {
-      soldiers: 25000
+      soldiers: 320
     },
     quantity: 20
   },
@@ -583,7 +584,7 @@ config.units.aeroplanes = {
       money: 1200
     },
     manpower_cost: {
-      soldiers: 25000
+      soldiers: 400
     },
     quantity: 20
   },
@@ -620,7 +621,7 @@ config.units.aeroplanes = {
       money: 1800
     },
     manpower_cost: {
-      soldiers: 25000
+      soldiers: 840
     },
     quantity: 20
   },
@@ -658,7 +659,7 @@ config.units.aeroplanes = {
       money: 2500
     },
     manpower_cost: {
-      soldiers: 25000
+      soldiers: 840
     },
     quantity: 20
   },
@@ -697,7 +698,7 @@ config.units.aeroplanes = {
       money: 4000
     },
     manpower_cost: {
-      soldiers: 25000
+      soldiers: 1600
     },
     quantity: 20
   },
@@ -736,7 +737,7 @@ config.units.aeroplanes = {
       money: 8000
     },
     manpower_cost: {
-      soldiers: 25000
+      soldiers: 100
     },
     quantity: 20
   },
@@ -772,7 +773,7 @@ config.units.aeroplanes = {
       money: 600
     },
     manpower_cost: {
-      soldiers: 25000
+      soldiers: 160
     },
     quantity: 20
   },
@@ -809,7 +810,7 @@ config.units.aeroplanes = {
       money: 1200
     },
     manpower_cost: {
-      soldiers: 25000
+      soldiers: 680
     },
     quantity: 20
   },
@@ -847,7 +848,7 @@ config.units.aeroplanes = {
       money: 2000
     },
     manpower_cost: {
-      soldiers: 25000
+      soldiers: 600
     },
     quantity: 20
   },
@@ -881,7 +882,7 @@ config.units.aeroplanes = {
       money: 750
     },
     manpower_cost: {
-      soldiers: 25000
+      soldiers: 1000
     }
   },
   naval_bombers: {
@@ -913,7 +914,7 @@ config.units.aeroplanes = {
       money: 900
     },
     manpower_cost: {
-      soldiers: 25000
+      soldiers: 1000
     },
     quantity: 20
   }

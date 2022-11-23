@@ -10,8 +10,8 @@ config.units.armour = {
     name: "Armoured Cars",
     singular: "Armoured Car",
 
-    attack: 1200,
-    defence: 2000,
+    attack: 3000,
+    defence: 5000,
     manoeuvre: 6,
     movement: 72,
     initiative: 1,
@@ -37,17 +37,17 @@ config.units.armour = {
       money: 800
     },
     manpower_cost: {
-      soldiers: 35000
+      soldiers: 200
     },
-    quantity: 50
+    quantity: 20
   },
   armoured_personnel_carriers: {
     name: "Armoured Personnel Carriers",
     singular: "Armoured Personnel Carrier",
     aliases: ["apc", "apcs"],
 
-    attack: 1500,
-    defence: 2000,
+    attack: 15000,
+    defence: 20000,
     manoeuvre: 5,
     movement: 6.9,
     initiative: 2,
@@ -72,9 +72,9 @@ config.units.armour = {
       money: 700
     },
     manpower_cost: {
-      soldiers: 35000
+      soldiers: 250
     },
-    quantity: 50
+    quantity: 5
   },
   half_tracks: {
     name: "Half-Tracks",
@@ -106,7 +106,7 @@ config.units.armour = {
       money: 1200
     },
     manpower_cost: {
-      soldiers: 35000
+      soldiers: 1000
     },
     quantity: 50
   },
@@ -139,7 +139,7 @@ config.units.armour = {
       money: 900
     },
     manpower_cost: {
-      soldiers: 35000
+      soldiers: 450
     },
     quantity: 50
   },
@@ -175,7 +175,7 @@ config.units.armour = {
       money: 2000
     },
     manpower_cost: {
-      soldiers: 35000
+      soldiers: 300
     },
     quantity: 50
   },
@@ -210,7 +210,7 @@ config.units.armour = {
       money: 1800
     },
     manpower_cost: {
-      soldiers: 35000
+      soldiers: 600
     },
     quantity: 50
   },
@@ -248,7 +248,7 @@ config.units.armour = {
       money: 1000
     },
     manpower_cost: {
-      soldiers: 35000
+      soldiers: 1000
     },
     quantity: 50
   },
@@ -283,7 +283,7 @@ config.units.armour = {
       money: 900
     },
     manpower_cost: {
-      soldiers: 35000
+      soldiers: 400
     },
     quantity: 50
   },
@@ -320,7 +320,7 @@ config.units.armour = {
       money: 1200
     },
     manpower_cost: {
-      soldiers: 35000
+      soldiers: 800
     },
     quantity: 50
   },
@@ -358,7 +358,7 @@ config.units.armour = {
       money: 1800
     },
     manpower_cost: {
-      soldiers: 35000
+      soldiers: 600
     },
     quantity: 50
   },
@@ -366,8 +366,8 @@ config.units.armour = {
     name: "Heavy Tanks",
     singular: "Heavy Tank",
 
-    attack: 2000,
-    defence: 1000,
+    attack: 5000,
+    defence: 2500,
     manoeuvre: 0,
     movement: 38,
     initiative: 1,
@@ -396,16 +396,16 @@ config.units.armour = {
       money: 2500
     },
     manpower_cost: {
-      soldiers: 35000
+      soldiers: 360
     },
-    quantity: 50
+    quantity: 20
   },
   tank_destroyers: {
     name: "Tank Destroyers",
     singular: "Tank Destroyer",
 
-    attack: 2500,
-    defence: 300,
+    attack: 3125,
+    defence: 375,
     manoeuvre: 5,
     movement: 32,
     initiative: 2,
@@ -430,9 +430,9 @@ config.units.armour = {
       money: 2000
     },
     manpower_cost: {
-      soldiers: 35000
+      soldiers: 600
     },
-    quantity: 50
+    quantity: 40
   },
 
   //Ground Vehicles - Modern Tanks
@@ -469,7 +469,7 @@ config.units.armour = {
       money: 2200
     },
     manpower_cost: {
-      soldiers: 35000
+      soldiers: 750
     },
     quantity: 50
   },
@@ -477,8 +477,8 @@ config.units.armour = {
     name: "Modern Tanks",
     singular: "Modern Tank",
 
-    attack: 3000,
-    defence: 1000,
+    attack: 6000,
+    defence: 2000,
     manoeuvre: 1,
     movement: 34.6,
     intiiative: 4,
@@ -508,16 +508,16 @@ config.units.armour = {
       money: 5000
     },
     manpower_cost: {
-      soldiers: 35000
+      soldiers: 400
     },
-    quantity: 50
+    quantity: 25
   },
   main_battle_tanks: {
     name: "Main Battle Tanks",
     singular: "Main Battle Tank",
 
-    attack: 3200,
-    defence: 1500,
+    attack: 6400,
+    defence: 3000,
     manoeuvre: 2,
     movement: 48,
     initiative: 5,
@@ -548,16 +548,16 @@ config.units.armour = {
       money: 6500
     },
     manpower_cost: {
-      soldiers: 35000
+      soldiers: 300
     },
-    quantity: 50
+    quantity: 25
   },
   modern_mbts: {
     name: "Modern MBTs",
     singular: "Modern MBT",
 
-    attack: 4000,
-    defence: 2000,
+    attack: 8000,
+    defence: 4000,
     manoeuvre: 1,
     movement: 66.79,
     initiative: 4,
@@ -587,16 +587,16 @@ config.units.armour = {
       money: 7000
     },
     manpower_cost: {
-      soldiers: 35000
+      soldiers: 400
     },
-    quantity: 50
+    quantity: 25
   },
   multirole_mbts: {
     name: "Multirole MBTs",
     singular: "Multirole MBT",
 
-    attack: 5000,
-    defence: 2000,
+    attack: 12500,
+    defence: 5000,
     manoeuvre: 3,
     movement: 70,
     initiative: 4,
@@ -629,8 +629,8 @@ config.units.armour = {
       money: 8000
     },
     manpower_cost: {
-      soldiers: 35000
+      soldiers: 360
     },
-    quantity: 50
+    quantity: 20
   }
 };

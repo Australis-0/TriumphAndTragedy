@@ -10,8 +10,8 @@ config.units.cavalry = {
     name: "Lance Cavalry",
     singular: "Lancer",
 
-    attack: 6,
-    defence: 2,
+    attack: 75,
+    defence: 25,
     manoeuvre: 3,
     movement: 12.87,
     initiative: 3,
@@ -33,16 +33,16 @@ config.units.cavalry = {
       money: 600
     },
     manpower_cost: {
-      soldiers: 10000
+      soldiers: 1200
     },
-    quantity: 10000
+    quantity: 800
   },
   heavy_cavalry: {
     name: "Heavy Cavalry",
     singular: "Cataphract",
 
-    attack: 5,
-    defence: 3,
+    attack: 85,
+    defence: 50,
     manoeuvre: 1,
     movement: 11.27,
     initiative: 4,
@@ -64,16 +64,16 @@ config.units.cavalry = {
       money: 800
     },
     manpower_cost: {
-      soldiers: 10000
+      soldiers: 900
     },
-    quantity: 10000
+    quantity: 600
   },
   light_cavalry: {
     name: "Light Cavalry",
     singular: "Light Cavalryman",
 
-    attack: 5,
-    defence: 1,
+    attack: 65,
+    defence: 15,
     manoeuvre: 5,
     movement: 16.09,
     initiative: 6,
@@ -95,16 +95,16 @@ config.units.cavalry = {
       money: 750
     },
     manpower_cost: {
-      soldiers: 10000
+      soldiers: 1200
     },
-    quantity: 10000
+    quantity: 800
   },
   cuirassiers: {
     name: "Cuirassiers",
     singular: "Cuirassier",
 
-    attack: 5,
-    defence: 2,
+    attack: 125,
+    defence: 50,
     manoeuvre: 2,
     movement: 10.06,
     initiative: 5,
@@ -127,16 +127,16 @@ config.units.cavalry = {
       money: 1200
     },
     manpower_cost: {
-      soldiers: 10000
+      soldiers: 900
     },
-    quantity: 10000
+    quantity: 400
   },
   hussars: {
     name: "Hussars",
     singular: "Hussar",
 
-    attack: 10,
-    defence: 3,
+    attack: 250,
+    defence: 75,
     manoeuvre: 1,
     movement: 12.87,
     initiative: 6,
@@ -160,16 +160,16 @@ config.units.cavalry = {
       money: 1500
     },
     manpower_cost: {
-      soldiers: 10000
+      soldiers: 800
     },
-    quantity: 10000
+    quantity: 400
   },
   dragoons: {
     name: "Dragoons",
     singular: "Dragoon",
 
-    attack: 8,
-    defence: 4,
+    attack: 135,
+    defence: 65,
     manoeuvre: 5,
     movement: 12.07,
     initiative: 5,
@@ -194,16 +194,16 @@ config.units.cavalry = {
       money: 1250
     },
     manpower_cost: {
-      soldiers: 10000
+      soldiers: 950
     },
-    quantity: 10000
+    quantity: 600
   },
   uhlans: {
     name: "Uhlans",
     singular: "Uhlan",
 
-    attack: 6,
-    defence: 3,
+    attack: 50,
+    defence: 25,
     manoeuvre: 6,
     movement: 19.31,
     initiative: 4,
@@ -229,16 +229,16 @@ config.units.cavalry = {
       money: 800
     },
     manpower_cost: {
-      soldiers: 10000
+      soldiers: 1800
     },
-    quantity: 10000
+    quantity: 1200
   },
   mounted_rifles: {
     name: "Mounted Rifles",
     singular: "Mounted Rifle",
 
-    attack: 10,
-    defence: 5,
+    attack: 30,
+    defence: 15,
     manoeuvre: 5,
     movement: 16.09,
     initiative: 2,
@@ -263,15 +263,15 @@ config.units.cavalry = {
       money: 1200
     },
     manpower_cost: {
-      soldiers: 10000
+      soldiers: 6800
     },
-    quantity: 10000
+    quantity: 3400
   },
   modern_cavalry: {
     name: "Modern Cavalry",
 
-    attack: 8,
-    defence: 3,
+    attack: 670,
+    defence: 250,
     manoeuvre: 6,
     movement: 82.23,
     initiative: 1,
@@ -299,8 +299,8 @@ config.units.cavalry = {
       money: 2500
     },
     manpower_cost: {
-      soldiers: 10000
+      soldiers: 6500
     },
-    quantity: 10000
+    quantity: 120
   }
 };

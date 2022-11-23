@@ -10,8 +10,8 @@ config.units.artillery = {
     name: "Bombards",
     singular: "Bombard",
 
-    attack: 750,
-    defence: 50,
+    attack: 15000,
+    defence: 1000,
     manoeuvre: 0,
     movement: 3,
     initiative: 1,
@@ -33,16 +33,16 @@ config.units.artillery = {
       money: 1200
     },
     manpower_cost: {
-      soldiers: 20000
+      soldiers: 800
     },
-    quantity: 100
+    quantity: 5
   },
   hand_cannons: {
     name: "Hand Cannons",
     singular: "Hand Cannon",
 
-    attack: 350,
-    defence: 100,
+    attack: 35,
+    defence: 10,
     manoeuvre: 3,
     movement: 4.59,
     initiative: 3,
@@ -64,16 +64,16 @@ config.units.artillery = {
       money: 800
     },
     manpower_cost: {
-      soldiers: 20000
+      soldiers: 2000
     },
-    quantity: 100
+    quantity: 1000
   },
   long_cannons: {
     name: "Long Cannons",
     singular: "Long Cannon",
 
-    attack: 1000,
-    defence: 35,
+    attack: 5000,
+    defence: 175,
     manoeuvre: 1,
     movement: 4.83,
     initiative: 4,
@@ -96,16 +96,16 @@ config.units.artillery = {
       money: 1200
     },
     manpower_cost: {
-      soldiers: 20000
+      soldiers: 2000
     },
-    quantity: 100
+    quantity: 20
   },
   field_culverins: {
     name: "Field Culverins",
     singular: "Field Culverin",
 
-    attack: 1200,
-    defence: 400,
+    attack: 6000,
+    defence: 2000,
     manoeuvre: 1,
     movement: 5.48,
     initiative: 5,
@@ -129,15 +129,15 @@ config.units.artillery = {
       money: 1000
     },
     manpower_cost: {
-      soldiers: 20000
+      soldiers: 800
     },
-    quantity: 100
+    quantity: 20
   },
   demi_cannon: {
     name: "Demi Cannon",
 
-    attack: 1250,
-    defence: 30,
+    attack: 6250,
+    defence: 150,
     manoeuvre: 1,
     movement: 6.48,
     initiative: 4,
@@ -161,15 +161,15 @@ config.units.artillery = {
       money: 1200
     },
     manpower_cost: {
-      soldiers: 20000
+      soldiers: 800
     },
-    quantity: 100
+    quantity: 20
   },
   field_cannon: {
     name: "Field Cannon",
 
-    attack: 1500,
-    defence: 50,
+    attack: 7500,
+    defence: 250,
     manoeuvre: 2,
     movement: 5.50,
     initiative: 5,
@@ -194,16 +194,16 @@ config.units.artillery = {
       money: 1800
     },
     manpower_cost: {
-      soldiers: 20000
+      soldiers: 650
     },
-    quantity: 100
+    quantity: 20
   },
   demi_culverins: {
     name: "Demi-Culverins",
     singular: "Demi-Culverin",
 
-    attack: 1300,
-    defence: 100,
+    attack: 6500,
+    defence: 500,
     manoeuvre: 3,
     movement: 8.05,
     initiative: 4,
@@ -228,9 +228,9 @@ config.units.artillery = {
       money: 1500
     },
     manpower_cost: {
-      soldiers: 20000
+      soldiers: 600
     },
-    quantity: 100
+    quantity: 20
   },
   minions: {
     name: "Minions",
@@ -262,7 +262,7 @@ config.units.artillery = {
       money: 1200
     },
     manpower_cost: {
-      soldiers: 20000
+      soldiers: 100
     },
     quantity: 100
   },
@@ -270,8 +270,8 @@ config.units.artillery = {
     name: "Siege Artillery",
     singular: "Siege Cannon",
 
-    attack: 2000,
-    defence: 10,
+    attack: 40000,
+    defence: 200,
     manoeuvre: 0,
     movement: 2,
     initiative: 2,
@@ -296,9 +296,9 @@ config.units.artillery = {
       money: 2000
     },
     manpower_cost: {
-      soldiers: 20000
+      soldiers: 750
     },
-    quantity: 100
+    quantity: 5
   },
   mysorean_rockets: {
     name: "Mysorean Rockets",
@@ -320,8 +320,8 @@ config.units.artillery = {
       ground_artillery_cp: 20
     },
     maintenance: {
+      sulphur: 6,
       wood: 3,
-      sulphur: 2,
       copper: 1,
       food: 1,
 
@@ -329,7 +329,7 @@ config.units.artillery = {
       money: 1800
     },
     manpower_cost: {
-      soldiers: 20000
+      soldiers: 100
     },
     quantity: 100
   },
@@ -362,9 +362,9 @@ config.units.artillery = {
       money: 1800
     },
     manpower_cost: {
-      soldiers: 20000
+      soldiers: 80
     },
-    quantity: 100
+    quantity: 20
   },
   congreve_rockets: {
     name: "Congreve Rockets",
@@ -386,8 +386,8 @@ config.units.artillery = {
       ground_artillery_cp: 20
     },
     maintenance: {
+      sulphur: 12,
       wood: 3,
-      sulphur: 2,
       copper: 1,
       food: 1,
 
@@ -395,7 +395,7 @@ config.units.artillery = {
       money: 2200
     },
     manpower_cost: {
-      soldiers: 20000
+      soldiers: 400
     },
     quantity: 100
   },
@@ -437,8 +437,8 @@ config.units.artillery = {
     name: "Rifled Cannons",
     singular: "Rifled Cannon",
 
-    attack: 2000,
-    defence: 75,
+    attack: 10000,
+    defence: 375,
     manoeuvre: 2,
     movement: 6.44,
     initiative: 4,
@@ -465,16 +465,16 @@ config.units.artillery = {
       money: 2800
     },
     manpower_cost: {
-      soldiers: 20000
+      soldiers: 220
     },
-    quantity: 100
+    quantity: 20
   },
   railwayguns: {
     name: "Railwayguns",
     singular: "Railwaygun",
 
-    attack: 5000,
-    defence: 1000,
+    attack: 500000,
+    defence: 100000,
     manoeuvre: 2,
     movement: 9.98,
     initiative: 3,
@@ -502,9 +502,9 @@ config.units.artillery = {
       money: 4000
     },
     manpower_cost: {
-      soldiers: 20000
+      soldiers: 5460
     },
-    quantity: 100
+    quantity: 1
   },
   field_artillery: {
     name: "Field Artillery",
@@ -535,7 +535,7 @@ config.units.artillery = {
       money: 3500
     },
     manpower_cost: {
-      soldiers: 20000
+      soldiers: 800
     },
     quantity: 100
   },
@@ -569,7 +569,7 @@ config.units.artillery = {
       money: 3000
     },
     manpower_cost: {
-      soldiers: 20000
+      soldiers: 1100
     },
     quantity: 100
   },
@@ -603,7 +603,7 @@ config.units.artillery = {
       money: 5000
     },
     manpower_cost: {
-      soldiers: 20000
+      soldiers: 800
     },
     quantity: 100
   },
@@ -612,8 +612,8 @@ config.units.artillery = {
   long_range_artillery: {
     name: "Long Range Artillery",
 
-    attack: 5000,
-    defence: 50,
+    attack: 10000,
+    defence: 100,
     manoeuvre: 50,
     movement: 10.8,
     initiative: 2,
@@ -640,16 +640,16 @@ config.units.artillery = {
       money: 4000
     },
     manpower_cost: {
-      soldiers: 20000
+      soldiers: 1000
     },
-    quantity: 100
+    quantity: 50
   },
   modern_howitzers: {
     name: "Modern Howitzers",
     singular: "Modern Howitzer",
 
-    attack: 3500,
-    defence: 500,
+    attack: 7000,
+    defence: 1000,
     manoeuvre: 1,
     movement: 45.06,
     initiative: 4,
@@ -674,15 +674,15 @@ config.units.artillery = {
       money: 4000
     },
     manpower_cost: {
-      soldiers: 20000
+      soldiers: 800
     },
-    quantity: 100
+    quantity: 50
   },
   self_propelled_artillery: {
     name: "SP Artillery",
 
-    attack: 2500,
-    defence: 100,
+    attack: 50000,
+    defence: 2000,
     manoeuvre: 2,
     movement: 54.7,
     initiative: 1,
@@ -708,15 +708,15 @@ config.units.artillery = {
       money: 4500
     },
     manpower_cost: {
-      soldiers: 20000
+      soldiers: 250
     },
-    quantity: 100
+    quantity: 5
   },
   rocket_artillery: {
     name: "Rocket Artillery",
 
-    attack: 2700,
-    defence: 500,
+    attack: 54000,
+    defence: 10000,
     manoeuvre: 4,
     movement: 60,
     initiative: 2,
@@ -741,16 +741,16 @@ config.units.artillery = {
       money: 6000
     },
     manpower_cost: {
-      soldiers: 20000
+      soldiers: 60
     },
-    quantity: 100
+    quantity: 5
   },
   railguns: {
     name: "Railguns",
     singular: "Railgun",
 
-    attack: 2700,
-    defence: 500,
+    attack: 135000,
+    defence: 25000,
     manoeuvre: 4,
     movement: 45,
     initiative: 2,
@@ -777,16 +777,16 @@ config.units.artillery = {
       money: 8000
     },
     manpower_cost: {
-      soldiers: 20000
+      soldiers: 400
     },
-    quantity: 100
+    quantity: 2
   },
   directed_heat_weapons: {
     name: "Directed Heat Weapons",
     singular: "Directed Heat Weapon",
 
-    attack: 5500,
-    defence: 500,
+    attack: 27500,
+    defence: 10000,
     manoeuvre: 2,
     movement: 80,
     initiative: 5,
@@ -815,8 +815,8 @@ config.units.artillery = {
       money: 10000
     },
     manpower_cost: {
-      soldiers: 20000
+      soldiers: 80
     },
-    quantity: 100
+    quantity: 5
   }
 };
