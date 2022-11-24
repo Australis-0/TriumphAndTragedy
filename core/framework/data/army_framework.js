@@ -1414,21 +1414,11 @@ module.exports = {
       var local_amount = maintenance_obj[all_maintenance_costs[i]];
 
       if (all_maintenance_costs[i] != "money") {
-        if (usr.inventory[all_maintenance_costs[i]] >= local_amount) {
-          usr.inventory[all_maintenance_costs[i]] -= local_amount;
-        } else {
-          deficit_goods[all_maintenance_costs[i]] = (local_amount - usr.inventory[all_maintenance_costs[i]])/local_amount;
-
-          usr.inventory[all_maintenance_costs[i]] = 0;
-        }
+        if (usr.inventory[all_maintenance_costs[i]] <= 0)
+          deficit_goods[all_maintenance_costs[i]] = 1; //100% shortage of good
       } else {
-        if (usr[all_maintenance_costs[i]] >= local_amount) {
-          usr[all_maintenance_costs[i]] -= local_amount;
-        } else {
-          deficit_goods[all_maintenance_costs[i]] = (local_amount - usr[all_maintenance_costs[i]])/local_amount; //Results in % deficit
-
-          usr[all_maintenance_costs[i]] = 0;
-        }
+        if (usr[all_maintenance_costs[i]] <= 0)
+          deficit_goods[all_maintenance_costs[i]] = 1; //100% shortage of money
       }
     }
 
