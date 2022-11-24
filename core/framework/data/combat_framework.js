@@ -20,7 +20,7 @@ module.exports = {
         if (!isNaN(defending_army_obj.units[defender_units[i]])) {
           var local_unit = getUnit(defender_units[i]);
 
-          var local_defence = returnSafeNumber(local_unit.defence);
+          var local_defence = getDefence(user_id, defender_units[i]);
           var local_manoeuvre = returnSafeNumber(local_unit.manoeuvre);
           var local_manpower_costs = (local_unit.manpower_cost) ?
             Object.keys(local_unit.manpower_cost) :
@@ -201,10 +201,8 @@ module.exports = {
 
             for (var i = 0; i < all_units.length; i++)
               if (army_obj.units[all_units[i]] > largest_wing) {
-                var unit_obj = getUnit(all_units[i]);
-
                 largest_wing = army_obj.units[all_units[i]];
-                main_unit_ap = returnSafeNumber(unit_obj.attack);
+                main_unit_ap = getAttack(user_id, all_units[i]);
               }
 
             //Bombs away!

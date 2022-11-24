@@ -33,12 +33,8 @@ module.exports = {
         for (var i = 0; i < all_units.length; i++) {
           var unit_obj = getUnit(all_units[i]);
 
-          var default_attack = army_obj.units[all_units[i]]*
-            returnSafeNumber(unit_obj.attack)*
-            returnSafeNumber(usr.modifiers[`${getUnitCategoryFromUnit(all_units[i], { return_key: true })}_attack`], 1);
-          var default_defence = army_obj.units[all_units[i]]*
-            returnSafeNumber(unit_obj.defence)*
-            returnSafeNumber(usr.modifiers[`${getUnitCategoryFromUnit(all_units[i], { return_key: true })}_defence`], 1);
+          var default_attack = army_obj.units[all_units[i]]*getAttack(user_id, all_units[i]);
+          var default_defence = army_obj.units[all_units[i]]*getDefence(user_id, all_units[i]);
 
           //Check to see if unit_counts according to the current mode
           var unit_counts = false;
@@ -375,11 +371,7 @@ module.exports = {
         var unit_obj = getUnit(largest_unit[1]);
 
         if (unit_obj)
-          return returnSafeNumber(
-            Math.ceil(
-              unit_obj.range*returnSafeNumber(usr.modifiers.air_range, 1)
-            ),
-          1);
+          return getRange(user_id, unit_obj);
       }
   },
 
@@ -593,24 +585,12 @@ module.exports = {
           var local_amount = army_obj.units[all_army_units[i]];
           var unit_obj = getUnit(all_army_units[i]);
 
-          if (unit_obj.manpower_cost) {
-            var all_manpower_costs = Object.keys(unit_obj.manpower_cost);
-            var total_manpower_cost = 0;
-
-            for (var x = 0; x < all_manpower_costs.length; x++)
-              total_manpower_cost += unit_obj.manpower_cost[all_manpower_costs[x]];
-
-            if (unit_obj.quantity)
-              total_manpower_cost = total_manpower_cost/unit_obj.quantity;
-
-            //Factor manpower_cost into local_amount
-            local_amount = local_amount*total_manpower_cost;
-          }
+          //Factor manpower_cost into local_amount
+          if (unit_obj.manpower_cost)
+            local_amount = local_amount*getManpowerPerUnit(unit_obj);
 
           //Add to army speed
-          army_speed += (unit_obj.movement) ?
-            local_amount*unit_obj.movement :
-            local_amount*config.defines.combat.default_unit_speed;
+          army_speed += local_amount*getMovement(user_id, all_army_units[i]);
         }
 
         //Average out army_speed

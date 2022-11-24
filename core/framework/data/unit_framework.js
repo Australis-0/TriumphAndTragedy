@@ -226,6 +226,36 @@ module.exports = {
     }
   },
 
+  getAttack: function (arg0_user, arg1_name) {
+    //Convert from parameters
+    var user_id = arg0_user;
+    var unit_name = (typeof arg1_name != "object") ? arg1_name.toLowerCase().trim() : arg1_name;
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var unit_category = (typeof unit_name != "object") ? module.exports.getUnitCategoryFromUnit(unit_name, { return_key: true }) : module.exports.getUnitCategoryFromUnit(unit_name.name, { return_key: true });
+    var unit_obj = (typeof unit_name != "object") ? module.exports.getUnit(unit_name) : unit_name;
+    var usr = main.users[actual_id];
+
+    //Return statement
+    return returnSafeNumber(unit_obj.attack)*usr.modifiers[`${unit_category}_attack`];
+  },
+
+  getDefence: function (arg0_user, arg1_name) {
+    //Convert from parameters
+    var user_id = arg0_user;
+    var unit_name = (typeof arg1_name != "object") ? arg1_name.toLowerCase().trim() : arg1_name;
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var unit_category = (typeof unit_name != "object") ? module.exports.getUnitCategoryFromUnit(unit_name, { return_key: true }) : module.exports.getUnitCategoryFromUnit(unit_name.name, { return_key: true });
+    var unit_obj = (typeof unit_name != "object") ? module.exports.getUnit(unit_name) : unit_name;
+    var usr = main.users[actual_id];
+
+    //Return statement
+    return returnSafeNumber(unit_obj.defence)*usr.modifiers[`${unit_category}_defence`];
+  },
+
   getManpowerPerUnit: function (arg0_name) {
     //Convert from parameters
     var unit_name = (typeof arg0_name != "object") ? arg0_name.toLowerCase().trim() : arg0_name;
@@ -245,6 +275,40 @@ module.exports = {
 
     //Return statement
     return total_manpower_cost;
+  },
+
+  getMovement: function (arg0_user, arg1_name) {
+    //Convert from parameters
+    var user_id = arg0_user;
+    var unit_name = (typeof arg1_name != "object") ? arg1_name.toLowerCase().trim() : arg1_name;
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var unit_obj = (typeof unit_name != "object") ? module.exports.getUnit(unit_name) : unit_name;
+    var usr = main.users[actual_id];
+
+    //Return statement
+    return (unit_obj.movement) ?
+      returnSafeNumber(unit_obj.movement)*usr.modifiers.army_travel_speed :
+      config.defines.combat.default_unit_speed;
+  },
+
+  getRange: function (arg0_user, arg1_name) {
+    //Convert from parameters
+    var user_id = arg0_user;
+    var unit_name = (typeof arg1_name != "object") ? arg1_name.toLowerCase().trim() : arg1_name;
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var unit_obj = (typeof unit_name != "object") ? module.exports.getUnit(unit_name) : unit_name;
+    var usr = main.users[actual_id];
+
+    //Return statement
+    return returnSafeNumber(
+      Math.ceil(
+        returnSafeNumber(unit_obj.range)*returnSafeNumber(usr.modifiers.air_range, 1)
+      )
+    , 1);
   },
 
   /*
