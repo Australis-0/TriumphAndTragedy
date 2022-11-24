@@ -226,6 +226,27 @@ module.exports = {
     }
   },
 
+  getManpowerPerUnit: function (arg0_name) {
+    //Convert from parameters
+    var unit_name = (typeof arg0_name != "object") ? arg0_name.toLowerCase().trim() : arg0_name;
+
+    //Declare local instance variables
+    var total_manpower_cost = 0;
+    var unit_obj = (typeof unit_name != "object") ? module.exports.getUnit(unit_name) : unit_name;
+
+    var all_manpower_costs = Object.keys(unit_obj.manpower_cost);
+
+    //Sum total_manpower_cost
+    for (var x = 0; x < all_manpower_costs.length; x++)
+      total_manpower_cost += local_unit.manpower_cost[all_manpower_costs[x]];
+
+    //Divide by quantity
+    total_manpower_cost = total_manpower_cost/returnSafeNumber(local_unit.quantity, 1);
+
+    //Return statement
+    return total_manpower_cost;
+  },
+
   /*
     getUnit() - Returns the true object/key of a unit.
     options: {

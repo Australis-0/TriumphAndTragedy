@@ -653,6 +653,32 @@ module.exports = {
       }
   },
 
+  getCategoryUnits: function (arg0_user, arg1_category_name) {
+    //Convert from parameters
+    var user_id = arg0_user;
+    var category_name = arg1_category_name.trim().toLowerCase();
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var unit_category_obj = getUnitCategory(category_name);
+    var unit_obj = {};
+    var units_obj = module.exports.getUnits(user_id);
+    var usr = main.users[actual_id];
+
+    var all_units = Object.keys(units_obj);
+
+    //Iterate over all_units and check if it exists as a key in unit_category_obj
+    for (var i = 0; i < all_units.length; i++) {
+      var local_amount = units_obj[all_units[i]];
+
+      if (unit_category_obj[all_units[i]])
+        unit_obj[all_units[i]] = local_amount;
+    }
+
+    //Return statement
+    return unit_obj;
+  },
+
   /*
     getMilitaryStrength() - Gets the overall strength of a nation's military
     options: {
@@ -745,6 +771,45 @@ module.exports = {
 
     //Return statement
     return total_troop_count;
+  },
+
+  getUnitCategorySupplies: function (arg0_user, arg1_category_name) {
+    //Convert from parameters
+    var user_id = arg0_user;
+    var category_name = arg1_category_name.trim().toLowerCase();
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var percentage_supplied = 0;
+    var total_soldiers = 0;
+    var unit_names_in_category = getAllUnitsInCategory(category_name, { return_names: true });
+    var units_in_category = getAllUnitsInCategory(category_name);
+    var units_obj = module.exports.getUnits(user_id);
+    var usr = main.users[actual_id];
+
+    //Fetch total_soldiers
+    for (var i = 0; i < units_in_category.length; i++) {
+      var local_unit = units_in_category[i];
+      var local_unit_amount = units_obj[unit_names_in_category[i]];
+
+      //Add total_manpower_cost to total_soldiers
+      if (local_unit_amount)
+        total_soldiers += returnSafeNumber(getManpowerPerUnit(local_unit)*local_unit_amount);
+    }
+
+    //Iterate over units_in_category, check for their supply relative to units_obj
+    for (var i = 0; i < units_in_category.length; i++) {
+      var local_unit = units_in_category[i];
+      var local_unit_amount = units_obj[unit_names_in_category[i]];
+      var local_unit_manpower = getManpowerPerUnit(local_unit);
+
+      percentage_supplied += (
+        (local_unit_amount*local_unit_manpower)/total_soldiers
+      )*usr.modifiers.unit_supply[unit_names_in_category[i]];
+    }
+
+    //Return percentage_supplied
+    return percentage_supplied;
   },
 
   //Gets an object of all units in a player's armies and reserves
