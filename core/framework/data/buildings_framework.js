@@ -867,6 +867,9 @@ module.exports = {
     if (usr) {
       try {
         var all_buildings = lookup.all_buildings;
+        var army_maintenance_obj = getArmyMaintenance(user_id);
+
+        var all_army_maintenance_costs = Object.keys(army_maintenance_obj);
 
         for (var i = 0; i < cities.length; i++)
           //Iterate over all buildings in city
@@ -938,6 +941,14 @@ module.exports = {
             }
           }
 
+        //Subtract army maintenance
+        for (var i = 0; i < all_army_maintenance_costs.length; i++) {
+          var local_amount = army_maintenance_obj[all_army_maintenance_costs[i]];
+
+          changeProductionValue(`${all_army_maintenance_costs[i]}_upkeep`, "minimum", local_amount);
+          changeProductionValue(`${all_army_maintenance_costs[i]}_upkeep`, "maximum", local_amount);
+        }
+
         //Check for special_effect
         if (good_type == "all")
           for (var i = 0; i < all_goods.length; i++) {
@@ -959,6 +970,7 @@ module.exports = {
 
         //Sort goods_production so that each key is actually [min, max]
         var all_good_keys = Object.keys(goods_production);
+
         for (var i = 0; i < all_good_keys.length; i++)
           if (Array.isArray(all_good_keys[i]))
             goods_production[all_good_keys[i]].sort();
