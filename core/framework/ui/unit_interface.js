@@ -127,16 +127,22 @@ module.exports = {
 
           //Get unit costs and quantity
           var unit_costs = getUnitCost(actual_id, local_units[x]);
+          var unit_maintenance_costs = [];
           var unit_name = (local_unit.name) ? local_unit.name : local_units[x];
           var unit_quantity = (local_unit.quantity) ? local_unit.quantity : 1;
 
+          if (local_unit.maintenance)
+            unit_maintenance_costs = Object.keys(local_unit.maintenance);
+
           //Production indicator stuff
           var costs_array = [];
+          var maintenance_array = [];
           var manpower_array = [];
           var unit_stats_array = [];
 
           var colonisation_string = "";
           var costs_string = "";
+          var maintenance_string = "";
           var manpower_string = "";
           var quantity_string = "";
           var unit_stats_string = "";
@@ -148,7 +154,7 @@ module.exports = {
           //Run through all unit costs
           var all_unit_costs = Object.keys(unit_costs);
 
-          //Get costs string
+          //Get costs_string
           for (var y = 0; y < all_unit_costs.length; y++) {
             var local_unit_cost = unit_costs[all_unit_costs[y]];
             var resource_obj = getGood(all_unit_costs[y]);
@@ -174,11 +180,29 @@ module.exports = {
 
             //Set costs_string
             if (costs_array.length > 0)
-              costs_string = `Costs:\n- ${costs_array.join("\n- ")}`;
+              costs_string = `Costs:\n- ${costs_array.join("\n- ")}\n`;
 
             //Set manpower_string
             if (manpower_array.length > 0)
               manpower_string = `\n\nManpower Cost:\n- ${manpower_array.join("\n- ")}`;
+          }
+
+          //Get maintenance_string
+          if (local_unit.maintenance) {
+            for (var y = 0; y < unit_maintenance_costs.length; y++) {
+              var local_amount = local_unit.maintenance[unit_maintenance_costs[y]];
+              var resource_obj = getGood(unit_maintenance_costs[y]);
+
+              var resource_name = (resource_obj) ?
+                (resource_obj.name) ? resource_obj.name : unit_maintenance_costs[y] :
+                parseString(unit_maintenance_costs[y]);
+
+              (unit_maintenance_costs[y] != "money") ?
+                maintenance_array.push(`${parseNumber(Math.ceil(local_amount))} ${resource_name}`) :
+                maintenance_array.push(`£${parseNumber(Math.ceil(local_amount))}`);
+            }
+
+            maintenance_string = `Maintenance:\n- ${maintenance_array.join("\n- ")}`;
           }
 
           //Get colonisation_string
@@ -230,7 +254,7 @@ module.exports = {
           //Push item to array, followed by unit_stats
           local_fields.push({
             name: `${unit_icon}__**${unit_name}** (${quantity_string}):__`,
-            value: `\`\`\`yaml\n${costs_string} ${manpower_string} ${unit_stats_string}\`\`\``,
+            value: `\`\`\`yaml\n${costs_string}${maintenance_string}${manpower_string} ${unit_stats_string}\`\`\``,
             inline: true
           });
         }
@@ -248,7 +272,7 @@ module.exports = {
           local_embed_fields.push(local_fields[x]);
 
           if (x != 0 || local_fields.length == 1)
-            if (x % 12 == 0 || x == local_fields.length - 1) {
+            if (x % 9 == 0 || x == local_fields.length - 1) {
               var unit_category_embed = new Discord.MessageEmbed()
                 .setColor(settings.bot_colour)
                 .setDescription(local_unit_category_string.join("\n"));

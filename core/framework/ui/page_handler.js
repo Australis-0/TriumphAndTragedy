@@ -1299,6 +1299,14 @@ module.exports = {
         }
 
         if (game_obj.page == "war_list") {
+          //[(Archived War Name)]
+          var archived_war_report = printWar(user_id, input, true, true);
+
+          if (archived_war_report) {
+            printWar(user_id, input, true);
+            game_obj.page = `view_war_archives_${input}`;
+          }
+
           //[Back]
           if (input == "back") {
             printDiplomacy(user_id);
@@ -1320,6 +1328,7 @@ module.exports = {
                 user: game_obj.user
               });
             });
+
         }
 
         //These go after war list

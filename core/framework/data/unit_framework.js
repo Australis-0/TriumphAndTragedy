@@ -235,10 +235,13 @@ module.exports = {
     var actual_id = main.global.user_map[user_id];
     var unit_category = (typeof unit_name != "object") ? module.exports.getUnitCategoryFromUnit(unit_name, { return_key: true }) : module.exports.getUnitCategoryFromUnit(unit_name.name, { return_key: true });
     var unit_obj = (typeof unit_name != "object") ? module.exports.getUnit(unit_name) : unit_name;
+    var unit_key = (typeof unit_name != "object") ? module.exports.getUnit(unit_name, { return_key: true }) : module.exports.getUnit(unit_obj.name, { return_key: true });
     var usr = main.users[actual_id];
 
     //Return statement
-    return returnSafeNumber(unit_obj.attack)*usr.modifiers[`${unit_category}_attack`];
+    return returnSafeNumber(unit_obj.attack)
+      *usr.modifiers[`${unit_category}_attack`]
+      *returnSafeNumber(usr.modifiers.unit_supply[unit_key], 1);
   },
 
   getDefence: function (arg0_user, arg1_name) {
@@ -250,10 +253,13 @@ module.exports = {
     var actual_id = main.global.user_map[user_id];
     var unit_category = (typeof unit_name != "object") ? module.exports.getUnitCategoryFromUnit(unit_name, { return_key: true }) : module.exports.getUnitCategoryFromUnit(unit_name.name, { return_key: true });
     var unit_obj = (typeof unit_name != "object") ? module.exports.getUnit(unit_name) : unit_name;
+    var unit_key = (typeof unit_name != "object") ? module.exports.getUnit(unit_name, { return_key: true }) : module.exports.getUnit(unit_obj.name, { return_key: true });
     var usr = main.users[actual_id];
 
     //Return statement
-    return returnSafeNumber(unit_obj.defence)*usr.modifiers[`${unit_category}_defence`];
+    return returnSafeNumber(unit_obj.defence)
+      *usr.modifiers[`${unit_category}_defence`]
+      *returnSafeNumber(usr.modifiers.unit_supply[unit_key], 1);
   },
 
   getManpowerPerUnit: function (arg0_name) {
@@ -268,10 +274,10 @@ module.exports = {
 
     //Sum total_manpower_cost
     for (var x = 0; x < all_manpower_costs.length; x++)
-      total_manpower_cost += local_unit.manpower_cost[all_manpower_costs[x]];
+      total_manpower_cost += unit_obj.manpower_cost[all_manpower_costs[x]];
 
     //Divide by quantity
-    total_manpower_cost = total_manpower_cost/returnSafeNumber(local_unit.quantity, 1);
+    total_manpower_cost = total_manpower_cost/returnSafeNumber(unit_obj.quantity, 1);
 
     //Return statement
     return total_manpower_cost;

@@ -778,6 +778,61 @@ module.exports = {
     return province_cache;
   },
 
+  getRevenue: function (arg0_user, arg1_production) {
+    //Convert from parameters
+    var user_id = arg0_user;
+    var raw_production = arg1_production;
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var calculated_income = 0;
+    var usr = main.users[actual_id];
+
+    //Declare local tracker variables
+    var civilian_actions = Math.ceil(usr.actions*usr.modifiers.civilian_actions);
+
+    try {
+      var total_production = (!raw_production) ? getProduction(user_id) : raw_production;
+
+      var total_maintenance = [
+        (total_production.money_upkeep) ? total_production.money_upkeep[0] : 0,
+        (total_production.money_upkeep) ? total_production.money_upkeep[1] : 0
+      ].sort(function (a, b) { return a - b });
+
+      calculated_income = Math.ceil(
+          (usr.actions - civilian_actions)
+        *config.defines.economy.money_per_action
+        *usr.tax_rate
+        *usr.modifiers.tax_efficiency
+      );
+
+      //War reparations
+      var war_reparations = module.exports.getWarReparations(user_id, [
+        calculated_income - total_maintenance[0],
+        calculated_income - total_maintenance[1]
+      ]);
+
+      var all_war_reparations = Object.keys(war_reparations);
+
+      for (var i = 0; i < war_reparations.length; i++) {
+        var local_amount = war_reparations[all_war_reparations[i]];
+        var local_recipient = main.users[all_war_reparations[i]];
+
+        total_maintenance[0] += local_amount;
+        total_maintenance[1] += local_amount;
+      }
+
+      //Return statement
+      return [
+        calculated_income - total_maintenance[0],
+        calculated_income - total_maintenance[1]
+      ];
+    } catch (e) {
+      log.error(`getIncome() ran into an error whilst processing User ID: ${user_id}: ${e}.`);
+      console.log(e);
+    }
+  },
+
   getSupplyLimitMovementBonus: function (arg0_province, arg1_province, arg2_distance) {
     //Convert from parameters
     var current_province = arg0_province;
@@ -837,11 +892,43 @@ module.exports = {
     var actual_id = main.global.user_map[user_id];
     var usr = main.users[actual_id];
 
+    //Get army maintenance
+    var army_maintenance_obj = getArmyMaintenance(user_id);
+
     //Return statement
-    return (
-      Math.ceil(module.exports.getTotalSoldiers(actual_id)/100)*
-        config.defines.combat.unit_upkeep*usr.modifiers.army_upkeep
-    );
+    return returnSafeNumber(army_maintenance_obj.money);
+  },
+
+  getWarReparations: function (arg0_user, arg1_income) {
+    //Convert from parameters
+    var user_id = arg0_user;
+    var income = (arg1_income) ? arg1_income : undefined;
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var usr = main.users[actual_id];
+    var war_reparations_obj = {};
+
+    var all_cooldowns = Object.keys(usr.cooldowns);
+
+    //Define income
+    if (!income)
+      var income = getIncome(user_id);
+
+    //Iterate through all cooldowns, check for war reparations, minimum case
+    for (var i = 0; i < all_cooldowns.length; i++) {
+      var local_cooldown = usr.cooldowns[all_cooldowns[i]];
+      var money_taken = [
+        Math.ceil(income[0]*local_cooldown.percentage_amount),
+        Math.ceil(income[1]*local_cooldown.percentage_amount)
+      ];
+
+      //Set war_reparations_obj
+      war_reparations_obj[local_cooldown.owner] = money_taken;
+    }
+
+    //Return statement
+    return war_reparations_obj;
   },
 
   //getWars() - Returns array of all war objects user is in

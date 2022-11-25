@@ -10,9 +10,13 @@ module.exports = {
     var usr = main.users[actual_id];
 
     //Initialise budget_string
+    var all_cooldowns = Object.keys(usr.cooldowns);
     var budget_string = [];
-    var total_production = getProduction(actual_id);
-    var user_income = getIncome(actual_id);
+    var expenditures_string = [];
+    var has_syphoned_actions = false;
+    var total_production = getProduction(user_id);
+    var user_income = getIncome(user_id, total_production);
+    var war_reparations = getWarReparations(user_id, user_income);
 
     var total_actions_gained_per_turn = [
       config.defines.economy.starting_actions + ((total_production.actions) ? total_production.actions[0] : 0),
@@ -23,6 +27,10 @@ module.exports = {
       (total_production.money_upkeep) ? total_production.money_upkeep[1] : 0
     ].sort(function (a, b) { return a - b });
     var unit_upkeep = getUnitUpkeep(actual_id);
+
+    //Edit total_maintenance now that it includes unit maintenance
+    total_maintenance[0] -= unit_upkeep;
+    total_maintenance[1] -= unit_upkeep;
 
     //Push to budget_string
     budget_string.push(`__**Economic Statistics:**__`);
@@ -44,6 +52,23 @@ module.exports = {
     (total_actions_gained_per_turn[0] == total_actions_gained_per_turn[1]) ?
       budget_string.push(`${config.icons.actions} Actions (**${parseNumber(total_actions_gained_per_turn[0], { display_prefix: true })}** per turn)`) :
       budget_string.push(`${config.icons.actions} Actions (**${parseNumber(total_actions_gained_per_turn[0], { display_prefix: true })}**-**${parseNumber(total_actions_gained_per_turn[1])}** per turn)`);
+
+    //Check for has_syphoned_actions
+    for (var i = 0; i < all_cooldowns.length; i++)
+      if (all_cooldowns[i].includes("syphon_actions"))
+        has_syphoned_actions = true;
+
+    if (has_syphoned_actions) {
+      var syphoned_actions = [
+        getSyphonedActions(user_id, total_actions_gained_per_turn[0]),
+        getSyphonedActions(user_id, total_actions_gained_per_turn[1])
+      ];
+
+      (syphoned_actions[0] != syphoned_actions[1]) ?
+        budget_string.push(`- **${parseNumber(syphoned_actions[0])}** - **${parseNumber(syphoned_actions[1])}** Actions will be diverted to pay off reparations next turn.`) :
+        budget_string.push(`- **${parseNumber(syphoned_actions[0])}** Actions will be diverted to pay off reparations next turn.`);
+    }
+
     budget_string.push(`- **${printPercentage(usr.modifiers.civilian_actions)}** of your actions will be used up as ${config.icons.trade} **Civilian Goods** next turn.`);
 
     budget_string.push("");
@@ -51,18 +76,40 @@ module.exports = {
     budget_string.push("");
 
     budget_string.push("");
-    budget_string.push(`__**Expenditures:**__`);
+
+    expenditures_string.push(`__**Expenditures:**__`);
+    expenditures_string.push("");
+
     if (unit_upkeep > 0)
-      budget_string.push(`- ${(unit_upkeep > 0) ? "-" : "+"}**£${parseNumber(unit_upkeep)}** from unit maintenance.`);
+      expenditures_string.push(`- ${(unit_upkeep > 0) ? "-" : "+"}**£${parseNumber(unit_upkeep)}** from unit maintenance.`);
     if (total_maintenance[0] + total_maintenance[1] > 0)
       if (total_maintenance[0] == total_maintenance[1])
-        budget_string.push(`- ${(total_maintenance[0] > 0) ? "-" : "+"}**£${parseNumber(total_maintenance[0])}** from building maintenance.`);
+        expenditures_string.push(`- ${(total_maintenance[0] > 0) ? "-" : "+"}**£${parseNumber(total_maintenance[0])}** from building maintenance.`);
       else
-        budget_string.push(`- ${(total_maintenance[0] > 0) ? "-" : "+"}**£${parseNumber(total_maintenance[0])}** - ${(total_maintenance[1] < 0) ? "-" : "+"}**£${parseNumber(total_maintenance[1])}** from building maintenance.`);
+        expenditures_string.push(`- ${(total_maintenance[0] > 0) ? "-" : "+"}**£${parseNumber(total_maintenance[0])}** - ${(total_maintenance[1] < 0) ? "-" : "+"}**£${parseNumber(total_maintenance[1])}** from building maintenance.`);
+
+    //War reparations
+    if (Object.keys(war_reparations).length > 0) {
+      var all_war_reparations = Object.keys(war_reparations);
+
+      for (var i = 0; i < all_war_reparations.length; i++) {
+        var local_amount = war_reparations[all_war_reparations[i]];
+        var local_recipient = main.users[all_war_reparations[i]];
+
+        (local_amount[0] != local_amount[1]) ?
+          expenditures_string.push(`- -**£${parseNumber(local_amount[0])}** - -**£${parseNumber(local_amount[1])}** will be paid to **${local_recipient.name}** as war reparations.`) :
+          expenditures_string.push(`- -**£${parseNumber(local_amount[0])}** will be paid to **${local_recipient.name}** as war reparations.`);
+      }
+    }
 
     var money_string = (user_income[0] != user_income[1]) ?
       `${parseNumber(user_income[0])} - ${parseNumber(user_income[1])}` :
       parseNumber(user_income[0]);
+
+    if (expenditures_string.length > 0) {
+      budget_string.push(expenditures_string.join("\n"));
+      budget_string.push("");
+    }
 
     budget_string.push(`Your economic advisor estimates that you will gain ${config.icons.money} **${money_string}** in total income next turn.`);
     budget_string.push("");

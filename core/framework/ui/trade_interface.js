@@ -26,14 +26,15 @@ module.exports = {
     if (all_auto_trades.length > 0) {
       for (var i = 0; i < all_auto_trades.length; i++) {
         var local_auto_trade = usr.auto_trades[all_auto_trades[i]];
+        var local_good = getGood(local_auto_trade.good_type);
         var local_good_icon = (local_auto_trade.good_type == "money") ?
           config.icons.money + " " :
-          (getGood(local_auto_trade.good_type)) ?
-            config.icons[getGood(local_auto_trade.good_type).icon] + " " :
+          (local_good) ?
+            config.icons[local_good.icon] + " " :
             "";
-        var local_good_name = (getGood(local_auto_trade.good_type)) ?
-          (getGood(local_auto_trade.good_type)) ?
-            getGood(local_auto_trade.good_type).name :
+        var local_good_name = (local_good) ?
+          (local_good) ?
+            local_good.name :
             local_auto_trade.good_type :
           local_auto_trade.good_type;
 
@@ -68,13 +69,14 @@ module.exports = {
 
     for (var i = 0; i < all_exports.length; i++) {
       var local_export = usr.trades[all_exports[i]];
+      var local_good = getGood(local_export.good_type);
       var local_good_icon = (local_export == "money") ?
         config.icons.money + " " :
-        (getGood(local_export.good_type)) ?
-          config.icons[getGood(local_export).icon] + " " :
+        (local_good) ?
+          config.icons[local_good.icon] + " " :
           "";
-      var local_good_name = (getGood(local_export)) ?
-        (getGood(local_export.good_type)) ?
+      var local_good_name = (local_good) ?
+        (local_good) ?
           getGood(local_export).name :
           local_export :
         local_export;
@@ -145,11 +147,15 @@ module.exports = {
     var game_obj = getGameObject(user_id);
     var usr = main.users[actual_id];
 
+    var all_cooldowns = Object.keys(usr.cooldowns);
+    var has_trade_restrictions = false;
+
     //Initialise trade_string, import_string, export_string and market_string, with the latter being separate fields of the embed.
     var export_string = [];
     var import_string = [];
     var market_string = [];
     var trade_string = [];
+    var restrictions_string = [];
 
     //Format trade_string
     var all_exports = Object.keys(usr.trades);
@@ -161,9 +167,38 @@ module.exports = {
     trade_string.push(`**Travel Modifiers:**`);
     trade_string.push("");
 
+    //Format restrictions_string
     if (isBlockaded(actual_id)) {
-      trade_string.push(`${config.icons.blockade} **You are currently blockaded!**`);
-      trade_string.push(`Being blockaded means you won't be able to ship or receive goods anymore. You can challenge this blockade by building up a naval fleet.`);
+      restrictions_string.push(`${config.icons.blockade} **You are currently blockaded!**`);
+      restrictions_string.push(`Being blockaded means you won't be able to ship or receive goods anymore. You can challenge this blockade by building up a naval fleet.`);
+    }
+
+    //Check for has_trade_restrictions
+    for (var i = 0; i < all_cooldowns.length; i++)
+      if (all_cooldowns[i].includes("steer_trade"))
+        has_trade_restrictions = true;
+
+    if (has_trade_restrictions) {
+      var current_duration = 0;
+      var display_trade_whitelist = [];
+      var trade_whitelist = getTradeWhitelist(user_id);
+
+      for (var i = 0; i < all_cooldowns.length; i++)
+        if (all_cooldowns[i].includes("steer_trade")) {
+          var local_cooldown = usr.cooldowns[all_cooldowns[i]];
+
+          current_duration = Math.max(current_duration, local_cooldown.duration);
+        }
+
+      for (var i = 0; i < trade_whitelist.length; i++)
+        display_trade_whitelist.push(`**${main.users[trade_whitelist[i]].name}**`);
+
+      restrictions_string.push(`${config.icons.cb} We may only trade with ${parseList(display_trade_whitelist)}! These trade restrictions will last another **${parseNumber(current_duration)}** turn(s).`);
+    }
+
+    //Push restrictions_string to trade_string
+    if (restrictions_string.length > 0) {
+      trade_string.push(restrictions_string.join("\n"));
       trade_string.push("");
     }
 

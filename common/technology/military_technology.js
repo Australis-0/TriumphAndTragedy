@@ -913,6 +913,7 @@ config.technology.military_technology = {
     research_cost: 2000,
     year: 1840,
     unlocks: {
+      obsolete_unit: ["grenadiers", "line_infantry", "mysorean_rocket"],
       unlock_unit: "riflemen",
       army_upkeep: 0.05
     }

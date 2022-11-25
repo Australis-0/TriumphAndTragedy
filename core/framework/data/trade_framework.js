@@ -51,7 +51,8 @@ module.exports = {
     var user_id = arg0_user;
 
     //Declare local instance variables
-    var usr = main.users[user_id];
+    var actual_id = main.global.user_map[user_id];
+    var usr = main.users[actual_id];
 
     var all_users = Object.keys(main.users);
     var import_list = [];
@@ -78,7 +79,8 @@ module.exports = {
     var user_id = arg0_user;
 
     //Declare local instance variables
-    var usr = main.users[user_id];
+    var actual_id = main.global.user_map[user_id];
+    var usr = main.users[actual_id];
 
     //Return statement
     return Math.ceil(
@@ -92,10 +94,46 @@ module.exports = {
     var user_id = arg0_user;
 
     //Declare local instance variables
-    var usr = main.users[user_id];
+    var actual_id = main.global.user_map[user_id];
+    var usr = main.users[actual_id];
 
     //Return statement
     return usr.modifiers.shipment_capacity - module.exports.getUsedCapacity(user_id);
+  },
+
+  getSyphonedActions: function (arg0_user, arg1_actions) {
+    //Convert from parameters
+    var user_id = arg0_user;
+    var actions = (arg1_actions) ? JSON.parse(JSON.stringify(arg1_actions)) : undefined;
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var syphoned_actions = 0;
+    var usr = main.users[actual_id];
+
+    var all_cooldowns = Object.keys(usr.cooldowns);
+
+    //Define actions
+    if (!actions)
+      actions = JSON.parse(JSON.stringify(usr.actions));
+
+    //Iterate over all cooldowns
+
+    for (var i = 0; i < all_cooldowns.length; i++)
+      if (all_cooldowns[i].includes("syphon_actions")) {
+        var local_cooldown = usr.cooldowns[all_cooldowns[i]];
+
+        var actions_taken = Math.ceil(Math.max(
+          actions*local_cooldown.percentage_amount,
+          Math.min(actions, local_cooldown.amount)
+        ));
+
+        actions -= actions_taken;
+        syphoned_actions += actions_taken;
+      }
+
+    //Return statement
+    return syphoned_actions;
   },
 
   getTradeWhitelist: function (arg0_user) {
@@ -126,7 +164,8 @@ module.exports = {
     var user_id = arg0_user;
 
     //Declare local instance variables
-    var usr = main.users[user_id];
+    var actual_id = main.global.user_map[user_id];
+    var usr = main.users[actual_id];
 
     var all_exports = Object.keys(usr.trades);
     var total_used_capacity = 0;

@@ -22,7 +22,7 @@ module.exports = {
       switch (arg) {
         case "government list":
           createPageMenu(game_obj.middle_embed, {
-            embed_pages: printGovernmentList(actual_id),
+            embed_pages: printGovernmentList(user_id),
             user: game_obj.user
           });
           return true;

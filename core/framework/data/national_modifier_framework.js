@@ -97,6 +97,9 @@ module.exports = {
     var national_modifiers = lookup.all_national_modifiers;
     var usr = main.users[actual_id];
 
+    //Get demographics
+    usr.demographics = getDemographics(user_id);
+
     //Iterate over all national modifiers and check triggers
     for (var i = 0; i < national_modifiers.length; i++)
       if (national_modifiers[i].trigger)

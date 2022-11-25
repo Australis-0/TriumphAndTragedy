@@ -752,7 +752,9 @@ module.exports = {
     try {
       //Add money based on calculated user income
       var user_income = getIncome(actual_id, all_production);
-      usr.money += randomNumber(user_income[0], user_income[1]);
+
+      var total_income = randomNumber(user_income[0], user_income[1]);
+      usr.money += total_income;
 
       //Check cooldowns for war_reparations
       for (var i = 0; i < all_cooldowns.length; i++) {
@@ -760,7 +762,7 @@ module.exports = {
 
         if (all_cooldowns[i].includes("war_reparations")) {
           var local_recipient = main.users[local_cooldown.owner];
-          var money_taken = Math.ceil(usr.money*local_cooldown.percentage_amount);
+          var money_taken = Math.ceil(total_income*local_cooldown.percentage_amount);
 
           usr.money -= money_taken;
           local_recipient.money += money_taken;

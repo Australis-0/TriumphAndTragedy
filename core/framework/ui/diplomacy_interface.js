@@ -115,7 +115,9 @@ module.exports = {
     var allow_cede_names = [];
 
     for (var i = 0; i < usr.options.allow_ceding.length; i++)
-      allow_cede_names.push(`**${main.users[usr.options.allow_ceding[i]].name}**`);
+      try {
+        allow_cede_names.push(`**${main.users[usr.options.allow_ceding[i]].name}**`);
+      } catch {}
 
     (usr.options.allow_ceding.length > 0) ?
       diplomacy_string.push(`You currently allow ${allow_cede_names.join(", ")} to cede their provinces to you.`) :
@@ -195,6 +197,7 @@ module.exports = {
       description: [
         `**[View Relations]**`,
         config.localisation.divider,
+        "",
       ],
       title_pages: true,
       fixed_width: true
