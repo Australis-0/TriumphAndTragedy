@@ -97,8 +97,8 @@ module.exports = {
         var local_recipient = main.users[all_war_reparations[i]];
 
         (local_amount[0] != local_amount[1]) ?
-          expenditures_string.push(`- -**£${parseNumber(local_amount[0])}** - -**£${parseNumber(local_amount[1])}** will be paid to **${local_recipient.name}** as war reparations.`) :
-          expenditures_string.push(`- -**£${parseNumber(local_amount[0])}** will be paid to **${local_recipient.name}** as war reparations.`);
+          expenditures_string.push(`- -**£${parseNumber(local_amount[0])}** - -**£${parseNumber(local_amount[1])}** will be paid to **${local_recipient.name}** as war reparations for the next **${parseNumber(local_amount[2])}** turn(s).`) :
+          expenditures_string.push(`- -**£${parseNumber(local_amount[0])}** will be paid to **${local_recipient.name}** as war reparations for the next **${parseNumber(local_amount[2])}** turn(s).`);
       }
     }
 

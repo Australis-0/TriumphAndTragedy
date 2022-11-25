@@ -923,7 +923,8 @@ module.exports = {
       var local_cooldown = usr.cooldowns[all_cooldowns[i]];
       var money_taken = [
         Math.ceil(income[0]*local_cooldown.percentage_amount),
-        Math.ceil(income[1]*local_cooldown.percentage_amount)
+        Math.ceil(income[1]*local_cooldown.percentage_amount),
+        local_cooldown.duration
       ];
 
       //Set war_reparations_obj
