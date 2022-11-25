@@ -83,10 +83,11 @@ module.exports = {
     if (unit_upkeep > 0)
       expenditures_string.push(`- ${(unit_upkeep > 0) ? "-" : "+"}**£${parseNumber(unit_upkeep)}** from unit maintenance.`);
     if (total_maintenance[0] + total_maintenance[1] > 0)
-      if (total_maintenance[0] == total_maintenance[1])
+      if (total_maintenance[0] == total_maintenance[1]) {
         expenditures_string.push(`- ${(total_maintenance[0] > 0) ? "-" : "+"}**£${parseNumber(total_maintenance[0])}** from building maintenance.`);
-      else
+      } else {
         expenditures_string.push(`- ${(total_maintenance[0] > 0) ? "-" : "+"}**£${parseNumber(total_maintenance[0])}** - ${(total_maintenance[1] < 0) ? "-" : "+"}**£${parseNumber(total_maintenance[1])}** from building maintenance.`);
+      }
 
     //War reparations
     if (Object.keys(war_reparations).length > 0) {
