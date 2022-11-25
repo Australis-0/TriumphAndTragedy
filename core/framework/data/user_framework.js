@@ -624,7 +624,26 @@ module.exports = {
         *usr.modifiers.tax_efficiency
       ) - module.exports.getUnitUpkeep(user_id);
 
-      return [calculated_income - total_maintenance[0], calculated_income - total_maintenance[1]];
+      //War reparations
+      var war_reparations = module.exports.getWarReparations(user_id, [
+        calculated_income - total_maintenance[0],
+        calculated_income - total_maintenance[1]
+      ]);
+
+      var all_war_reparations = Object.keys(war_reparations);
+
+      for (var i = 0; i < war_reparations.length; i++) {
+        var local_amount = war_reparations[all_war_reparations[i]];
+        var local_recipient = main.users[all_war_reparations[i]];
+
+        total_maintenance[0] += local_amount;
+        total_maintenance[1] += local_amount;
+      }
+
+      return [
+        calculated_income - total_maintenance[0],
+        calculated_income - total_maintenance[1]
+      ];
     } catch (e) {
       log.error(`getIncome() ran into an error whilst processing User ID: ${user_id}: ${e}.`);
       console.log(e);
@@ -805,22 +824,6 @@ module.exports = {
         *usr.tax_rate
         *usr.modifiers.tax_efficiency
       );
-
-      //War reparations
-      var war_reparations = module.exports.getWarReparations(user_id, [
-        calculated_income - total_maintenance[0],
-        calculated_income - total_maintenance[1]
-      ]);
-
-      var all_war_reparations = Object.keys(war_reparations);
-
-      for (var i = 0; i < war_reparations.length; i++) {
-        var local_amount = war_reparations[all_war_reparations[i]];
-        var local_recipient = main.users[all_war_reparations[i]];
-
-        total_maintenance[0] += local_amount;
-        total_maintenance[1] += local_amount;
-      }
 
       //Return statement
       return [
