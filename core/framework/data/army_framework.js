@@ -472,7 +472,7 @@ module.exports = {
     return (army_exists[0]) ? army_exists[1] : undefined;
   },
 
-  getArmyDeficitGoods: function (arg0_user, arg1_army_name) { //[WIP], return money as well
+  getArmyDeficitGoods: function (arg0_user, arg1_army_name) {
     //Convert from parameters
     var user_id = arg0_user;
     var army_name = arg1_army_name;
@@ -481,58 +481,22 @@ module.exports = {
     var actual_id = main.global.user_map[user_id];
     var deficit_goods = {};
     var maintenance_obj = module.exports.getArmyMaintenance(user_id, army_name);
-    var user_production = getProduction(user_id);
+    var user_production = parseProduction(user_id);
     var usr = main.users[actual_id];
-    var virtual_inventory = {};
-    var virtual_usr = JSON.stringify(JSON.parse(usr));
 
     var all_maintenance_costs = Object.keys(maintenance_obj);
 
-    //Process production - REFACTOR TO USE CURRENT DEFICITS, NOT INVENTORY DEFICITS - Production should be parsed in parseProduction()
-    var all_produced_goods = Object.keys(all_production);
-
-    for (var i = 0; i < lookup.all_good_names.length; i++)
-      virtual_inventory[lookup.all_good_names[i]] = [
-        virtual_usr.inventory[lookup.all_good_names[i]],
-        virtual_usr.inventory[lookup.all_good_names[i]]
-      ];
-
-    for (var i = 0; i < all_produced_goods.length; i++) {
-      var local_value = all_production[all_produced_goods[i]];
-
-      //Process upkeep
-      if (all_produced_goods[i].includes("_upkeep")) {
-        if (!all_produced_goods[i].includes("money")) {
-          var upkeep_to_process = all_produced_goods[i].replace("_upkeep", "");
-
-          if (usr.inventory[upkeep_to_process]) {
-            virtual_inventory[0] -= local_value[1];
-            virtual_inventory[1] -= local_value[0];
-          }
-        }
-      } else if (all_produced_goods[i].includes("_special_effect")) {
-        var special_effect_to_process = all_produced_goods[i].replace("_special_effect", "");
-
-        var building_obj = getBuilding(special_effect_to_process);
-
-        if (building_obj.special_effect)
-          building_obj.special_effect(virtual_usr);
-      } else {
-        //Process goods
-        if (usr.inventory[all_produced_goods[i]]) {
-          virtual_inventory[0] += local_value[0];
-          virtual_inventory[1] += local_value[1];
-        }
-      }
-    }
-
-    //Iterate over all_maintenance_costs, push to deficit_goods if negative
+    //Iterate over all_maintenance_costs, check to see if user_production is negative
     for (var i = 0; i < all_maintenance_costs.length; i++) {
-      var local_amount = virtual_inventory[all_maintenance_costs[i]];
+      var local_production = user_production[all_maintenance_costs[i]];
 
-      if (local_amount[0] <= 0 || local_amount[1] <= 0)
-        deficit_goods[all_maintenance_costs[i]] = local_amount;
+      if (local_production)
+        if (local_production[0] < 0 || local_production[1] < 0)
+          deficit_goods[all_maintenance_costs[i]] = local_production;
     }
+
+    //Return statement
+    return deficit_goods;
   },
 
   getArmyMaintenance: function (arg0_user, arg1_army_name) {
@@ -843,7 +807,7 @@ module.exports = {
     //Iterate over units_in_category, check for their supply relative to units_obj
     for (var i = 0; i < units_in_category.length; i++) {
       var local_unit = units_in_category[i];
-      var local_unit_amount = units_obj[unit_names_in_category[i]];
+      var local_unit_amount = returnSafeNumber(units_obj[unit_names_in_category[i]]);
       var local_unit_manpower = getManpowerPerUnit(local_unit);
 
       percentage_supplied += (
@@ -1498,10 +1462,10 @@ module.exports = {
         var total_goods = 0;
 
         //1st loop - Get total_goods and fiscal maintenance
-        for (var x = 0; x < all_maintenance_costs.length; x++) {
-          var local_maintenance_cost = unit_obj.maintenance[all_maintenance_costs[x]];
+        for (var x = 0; x < local_maintenance_costs.length; x++) {
+          var local_maintenance_cost = unit_obj.maintenance[local_maintenance_costs[x]];
 
-          if (all_maintenance_costs[x] != "money") {
+          if (local_maintenance_costs[x] != "money") {
             total_goods += local_maintenance_cost;
           } else {
             fiscal_maintenance += local_maintenance_cost;
@@ -1509,14 +1473,15 @@ module.exports = {
         }
 
         //2nd loop - Calculate proportional supply deficits
-        for (var x = 0; x < all_maintenance_costs.length; x++) {
-          var local_maintenance_cost = unit_obj.maintenance[all_maintenance_costs[x]];
+        for (var x = 0; x < local_maintenance_costs.length; x++) {
+          var local_maintenance_cost = unit_obj.maintenance[local_maintenance_costs[x]];
 
-          if (all_maintenance_costs[x] == "money") {
+          if (local_maintenance_costs[x] == "money") {
             percent_money_undersupplied += returnSafeNumber(deficit_goods.money);
           } else {
             percent_undersupplied += returnSafeNumber(
-              (local_maintenance_cost/total_goods)*deficit_goods[all_maintenance_costs[x]]
+              returnSafeNumber(local_maintenance_cost/total_goods)*
+                returnSafeNumber(deficit_goods[local_maintenance_costs[x]])
             );
           }
         }

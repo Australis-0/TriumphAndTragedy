@@ -1087,6 +1087,9 @@ module.exports = {
     console.time(`Military processing!`);
     //Military processing
     try {
+      //Process upkeep first
+      processArmyMaintenance(user_id);
+
       //Mobilisation processing
       {
         if (usr.mobilisation.is_mobilised) {
