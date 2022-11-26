@@ -1008,5 +1008,98 @@ module.exports = {
 
     //Return statement
     return total;
+  },
+
+  parseProduction: function (arg0_user) {
+    //Convert from parameters
+    var user_id = arg0_user;
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var production_obj = module.exports.getProduction(user_id);
+    var usr = main.users[actual_id];
+    var virtual_inventory = {};
+    var virtual_user = JSON.parse(JSON.stringify(usr));
+
+    var all_produced_goods = Object.keys(production_obj);
+
+    //Iterate over all goods; transform into min, max arrays
+    for (var i = 0; i < lookup.all_good_names.length; i++)
+      virtual_inventory[lookup.all_good_names[i]] = [
+        virtual_user.inventory[lookup.all_good_names[i]],
+        virtual_user.inventory[lookup.all_good_names[i]]
+      ];
+    virtual_inventory.money = [0, 0];
+
+    //Iterate over all_produced_goods
+    for (var i = 0; i < all_produced_goods.length; i++) {
+      var local_value = production_obj[all_produced_goods[i]];
+
+      //Process upkeep
+      if (all_produced_goods[i].includes("_upkeep")) {
+        var upkeep_to_process = all_produced_goods[i].replace("_upkeep", "");
+
+        virtual_inventory[upkeep_to_process] = (virtual_inventory[upkeep_to_process]) ?
+          [
+            virtual_inventory[upkeep_to_process][0] - local_value[1],
+            virtual_inventory[upkeep_to_process][1] - local_value[0]
+          ] :
+          [
+            local_value[1]*-1,
+            local_value[0]*-1
+          ];
+      } else if (all_produced_goods[i].includes("_special_effect")) {
+        //Process special effects
+        var special_effect_to_process = all_produced_goods[i].replace("_special_effect", "");
+
+        var building_obj = getBuilding(special_effect_to_process);
+
+        if (building_obj.special_effect)
+          building_obj.special_effect(virtual_user);
+      } else {
+        if (virtual_inventory[all_produced_goods[i]])
+          virtual_inventory[all_produced_goods[i]] = (virtual_inventory[all_produced_goods[i]]) ?
+            [
+              virtual_inventory[all_produced_goods[i]][0] + local_value[0],
+              virtual_inventory[all_produced_goods[i]][1] + local_value[1]
+            ] :
+            [
+              local_value[0],
+              local_value[1]
+            ];
+      }
+    }
+
+    //Check for any inventory changes
+    var all_inventory_goods = Object.keys(virtual_user.inventory);
+
+    for (var i = 0; i < all_inventory_goods.length; i++) {
+      var local_simulation_value = returnSafeNumber(virtual_user.inventory[all_inventory_goods[i]]);
+      var local_true_value = returnSafeNumber(usr.inventory[all_inventory_goods[i]]);
+
+      if (local_simulation_value != local_true_value) {
+        var local_change = local_simulation_value - local_true_value;
+
+        //Add to virtual_inventory
+        virtual_inventory[all_inventory_goods[i]] = (virtual_inventory[all_inventory_goods[i]]) ?
+          [
+            virtual_inventory[all_inventory_goods[i]][0] + local_change,
+            virtual_inventory[all_inventory_goods[i]][1] + local_change
+          ] :
+          [
+            local_change,
+            local_change
+          ];
+      }
+    }
+
+    //Add income
+    var user_income = getIncome(virtual_user, production_obj);
+
+    virtual_inventory.money[0] += user_income[0];
+    virtual_inventory.money[1] += user_income[1];
+
+    //Return statement
+    return virtual_inventory;
   }
 };

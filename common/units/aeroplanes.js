@@ -3,7 +3,7 @@ config.units.aeroplanes = {
   icon: "aeroplanes",
   type: "air",
 
-  branch_name: "Air",
+  branch_name: "Air Force",
 
   //Air Units - Pre-WW1
   reconaissance_balloons: {

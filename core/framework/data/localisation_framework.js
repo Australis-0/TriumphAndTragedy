@@ -1,4 +1,31 @@
 module.exports = {
+  getSupplyLocalisation: function (arg0_user) {
+    //Convert from parameters
+    var user_id = arg0_user;
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var all_unit_categories = Object.keys(user_id);
+    var local_obj = {};
+    var supply_localisation = [];
+    var usr = main.users[actual_id];
+
+    //Iterate over all categories
+    for (var i = 0; i < all_unit_categories.length; i++) {
+      var local_category = config.units[all_unit_categories[i]];
+      var local_category_supply = getUnitCategorySupplies(user_id, all_unit_categories[i]);
+      var supply_level_localisation = config.localisation.supply_modifiers;
+
+      if (local_category_supply)
+        supply_localisation.push(`- Our **${local_category.branch_name}** is currently ${supply_level_localisation[Math.floor(local_category_supply*10) - 1]}, with an average combat strength of **${printPercentage(local_category_supply)}**.`);
+    }
+
+    local_obj.supply_localisation = supply_localisation.join("\n");
+
+    //Return statement
+    return local_obj.supply_localisation;
+  },
+
   /*
     parseLocalisation() - Returns the processed string of a bit of localisation.
     options: {

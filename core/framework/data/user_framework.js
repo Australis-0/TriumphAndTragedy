@@ -595,15 +595,20 @@ module.exports = {
   },
 
   //Fetches user income before production costs
-  getIncome: function (arg0_user, arg1_production) {
+  getIncome: function (arg0_user, arg1_production, arg2_exclude_war_reparations) {
     //Convert from parameters
     var user_id = arg0_user;
     var raw_production = arg1_production;
+    var exclude_war_reparations = arg2_exclude_war_reparations;
 
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
     var calculated_income = 0;
-    var usr = main.users[actual_id];
+    var usr = (typeof user_id != "object") ? main.users[actual_id] : user_id;
+
+    //Safeguard virtual_user arguments
+    if (typeof user_id == "object")
+      user_id = usr.id;
 
     //Declare local tracker variables
     var civilian_actions = Math.ceil(usr.actions*usr.modifiers.civilian_actions);
@@ -628,12 +633,14 @@ module.exports = {
       ];
 
       //War reparations
-      var war_reparations = module.exports.getWarReparations(user_id, [
-        calculated_income - total_maintenance[0],
-        calculated_income - total_maintenance[1]
-      ]);
+      if (!exclude_war_reparations) {
+        var war_reparations = module.exports.getWarReparations(user_id, [
+          calculated_income - total_maintenance[0],
+          calculated_income - total_maintenance[1]
+        ]);
 
-      var all_war_reparations = Object.keys(war_reparations);
+        var all_war_reparations = Object.keys(war_reparations);
+      }
 
       for (var i = 0; i < all_war_reparations.length; i++) {
         var local_amount = war_reparations[all_war_reparations[i]];
@@ -808,7 +815,11 @@ module.exports = {
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
     var calculated_revenues = [0, 0];
-    var usr = main.users[actual_id];
+    var usr = (typeof user_id != "object") ? main.users[actual_id] : user_id;
+
+    //Safeguard virtual_user arguments
+    if (typeof user_id == "object")
+      user_id = usr.id;
 
     //Declare local tracker variables
     var civilian_actions = Math.ceil(usr.actions*usr.modifiers.civilian_actions);
@@ -916,7 +927,7 @@ module.exports = {
 
     //Define income
     if (!income)
-      var income = getIncome(user_id);
+      var income = module.exports.getIncome(user_id, undefined, true);
 
     //Iterate through all cooldowns, check for war reparations, minimum case
     for (var i = 0; i < all_cooldowns.length; i++) {

@@ -472,6 +472,69 @@ module.exports = {
     return (army_exists[0]) ? army_exists[1] : undefined;
   },
 
+  getArmyDeficitGoods: function (arg0_user, arg1_army_name) { //[WIP], return money as well
+    //Convert from parameters
+    var user_id = arg0_user;
+    var army_name = arg1_army_name;
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var deficit_goods = {};
+    var maintenance_obj = module.exports.getArmyMaintenance(user_id, army_name);
+    var user_production = getProduction(user_id);
+    var usr = main.users[actual_id];
+    var virtual_inventory = {};
+    var virtual_usr = JSON.stringify(JSON.parse(usr));
+
+    var all_maintenance_costs = Object.keys(maintenance_obj);
+
+    //Process production - REFACTOR TO USE CURRENT DEFICITS, NOT INVENTORY DEFICITS - Production should be parsed in parseProduction()
+    var all_produced_goods = Object.keys(all_production);
+
+    for (var i = 0; i < lookup.all_good_names.length; i++)
+      virtual_inventory[lookup.all_good_names[i]] = [
+        virtual_usr.inventory[lookup.all_good_names[i]],
+        virtual_usr.inventory[lookup.all_good_names[i]]
+      ];
+
+    for (var i = 0; i < all_produced_goods.length; i++) {
+      var local_value = all_production[all_produced_goods[i]];
+
+      //Process upkeep
+      if (all_produced_goods[i].includes("_upkeep")) {
+        if (!all_produced_goods[i].includes("money")) {
+          var upkeep_to_process = all_produced_goods[i].replace("_upkeep", "");
+
+          if (usr.inventory[upkeep_to_process]) {
+            virtual_inventory[0] -= local_value[1];
+            virtual_inventory[1] -= local_value[0];
+          }
+        }
+      } else if (all_produced_goods[i].includes("_special_effect")) {
+        var special_effect_to_process = all_produced_goods[i].replace("_special_effect", "");
+
+        var building_obj = getBuilding(special_effect_to_process);
+
+        if (building_obj.special_effect)
+          building_obj.special_effect(virtual_usr);
+      } else {
+        //Process goods
+        if (usr.inventory[all_produced_goods[i]]) {
+          virtual_inventory[0] += local_value[0];
+          virtual_inventory[1] += local_value[1];
+        }
+      }
+    }
+
+    //Iterate over all_maintenance_costs, push to deficit_goods if negative
+    for (var i = 0; i < all_maintenance_costs.length; i++) {
+      var local_amount = virtual_inventory[all_maintenance_costs[i]];
+
+      if (local_amount[0] <= 0 || local_amount[1] <= 0)
+        deficit_goods[all_maintenance_costs[i]] = local_amount;
+    }
+  },
+
   getArmyMaintenance: function (arg0_user, arg1_army_name) {
     //Convert from parameters
     var user_id = arg0_user;
@@ -488,7 +551,7 @@ module.exports = {
 
       for (var i = 0; i < all_units.length; i++) {
         var local_amount = units_obj[all_units[i]];
-        var local_unit = getUnit(all_units[i]);
+        var local_unit = lookup.all_units[all_units[i]];
 
         //Check for local maintenance
         if (local_unit.maintenance) {
@@ -789,7 +852,7 @@ module.exports = {
     }
 
     //Return percentage_supplied
-    return percentage_supplied;
+    return (total_soldiers > 0) ? percentage_supplied : undefined;
   },
 
   //Gets an object of all units in a player's armies and reserves
