@@ -167,12 +167,11 @@ module.exports = {
 			roman = "",
 			i;
 
-		for (i in lookup) {
+		for (i in lookup)
 			while (num >= lookup[i]) {
 				roman += i;
 				num -= lookup[i];
 			}
-		}
 
 		//Return statement
 		return roman;

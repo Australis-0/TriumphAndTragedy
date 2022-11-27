@@ -574,7 +574,7 @@ module.exports = {
 
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
-    var army_obj = (typeof army_name != "object") ?
+    var army_obj = (typeof army_name != "object" && army_name) ?
       module.exports.getArmy(actual_id, army_name) :
       army_name;
     var army_size = 0;
@@ -585,7 +585,9 @@ module.exports = {
       var all_units = Object.keys(army_obj.units);
 
       for (var i = 0; i < all_units.length; i++)
-        army_size += army_obj.units[all_units[i]]*getUnitSize(all_units[i]);
+        army_size += army_obj.units[all_units[i]]*getManpowerPerUnit(all_units[i]);
+    } else {
+      army_size = getTotalActiveDuty(user_id);
     }
 
     //Return statement
@@ -744,14 +746,47 @@ module.exports = {
     var usr = main.users[actual_id];
 
     if (!army_name) {
-      
+      var units_obj = module.exports.getUnits(user_id);
+      var all_units = Object.keys(units_obj);
+
+      total_soldiers = module.exports.getArmySize(user_id);
+
+      //Iterate over all_units
+      for (var i = 0; i < all_units.length; i++) {
+        var local_unit = lookup.all_units[all_units[i]];
+        var local_unit_amount = units_obj[all_units[i]];
+
+        //Calculate quantity
+        var local_soldiers = returnSafeNumber(getManpowerPerUnit(local_unit)*local_unit_amount);
+        var local_supply = usr.modifiers.unit_supply[all_units[i]];
+
+        supply_obj[all_units[i]] = local_soldiers*local_supply;
+      }
     } else {
       //Get maintenance object for a single army
       var army_obj = (typeof army_name != "object") ?
         module.exports.getArmy(actual_id, army_name) :
         army_name;
       var all_units = Object.keys(army_obj.units);
+      var local_unit = lookup.all_units[all_units[i]];
+
+      total_soldiers = module.exports.getArmySize(user_id, army_obj);
+
+      //Iterate over all_units
+      var local_soldiers = returnSafeNumber(getManpowerPerUnit(local_unit)*local_unit_amount);
+      var local_supply = usr.modifiers.unit_supply[all_units[i]];
+
+      supply_obj[all_units[i]] = local_soldiers*local_supply;
     }
+
+    //Calculate average_supply
+    var all_unit_keys = Object.keys(supply_obj);
+
+    for (var i = 0; i < all_unit_keys.length; i++)
+      average_supply += supply_obj[all_unit_keys[i]];
+
+    //Return statement
+    return average_supply/total_soldiers;
   },
 
   //getReserveStrength() - Returns the current strength and army modifiers a user has in their reserves

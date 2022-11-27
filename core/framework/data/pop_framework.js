@@ -144,11 +144,12 @@ module.exports = {
   getFaminePenalty: function (arg0_user) {
     //Convert from parameters
     var user_id = arg0_user;
-    var usr = main.users[user_id];
 
     //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
     var government_obj = config.governments[usr.government];
     var famine_penalty = (government_obj.effect.famine_penalty) ? government_obj.effect.famine_penalty : 0.1;
+    var usr = main.users[actual_id];
 
     //Return statement
     return Math.ceil(usr.population*famine_penalty);
@@ -170,14 +171,15 @@ module.exports = {
   getPopModifier: function (arg0_user, arg1_type, arg2_modifier) {
     //Convert from parameters
     var user_id = arg0_user;
-    var usr = main.users[user_id];
     var pop_type = arg1_type;
     var raw_modifier = arg2_modifier;
 
     //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
     var pop_obj = config.pops[pop_type];
     var total_modifier = 0;
     var total_pop_type = module.exports.getTotalPopManpower(user_id, pop_type);
+    var usr = main.users[actual_id];
 
     //Regular error trapping just in case the specified modifier does not exist
     try {
@@ -200,10 +202,11 @@ module.exports = {
   getPopulation: function (arg0_user) {
     //Convert from parameters
     var user_id = arg0_user;
-    var usr = main.users[user_id];
 
     //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
     var pop_obj = module.exports.getDemographics(user_id);
+    var usr = main.users[actual_id];
 
     //Return statement
     return pop_obj.population;
@@ -212,11 +215,12 @@ module.exports = {
   getTotalActiveDuty: function (arg0_user) {
     //Convert from parameters
     var user_id = arg0_user;
-    var usr = main.users[user_id];
 
     //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
     var all_pops = Object.keys(config.pops);
     var total_active_duty = 0;
+    var usr = main.users[actual_id];
 
     //Fetch total active duty
     for (var i = 0; i < all_pops.length; i++)
@@ -227,18 +231,19 @@ module.exports = {
     return total_active_duty;
   },
 
-  getTotalPopManpower: function (arg0_user, arg1_type, arg2_raw_modifier) { //WIP
+  getTotalPopManpower: function (arg0_user, arg1_type, arg2_raw_modifier) {
     //Convert from parameters
     var user_id = arg0_user;
-    var usr = main.users[user_id];
     var pop_type = arg1_type;
     var raw_modifier = arg2_raw_modifier;
 
     //Declare local instance variables
-    var pop_obj = config.pops[pop_type];
+    var actual_id = main.global.user_map[user_id];
     var availability_modifier = (pop_obj.military_pop) ?
       usr.modifiers.maximum_manpower*usr.modifiers.national_manpower
       : 1;
+    var pop_obj = config.pops[pop_type];
+    var usr = main.users[user_id];
 
     //Return statement
     return (!raw_modifier) ? Math.ceil(usr.pops[pop_type]*availability_modifier) : availability_modifier;
@@ -304,13 +309,14 @@ module.exports = {
   removePops: function (arg0_user, arg1_amount, arg2_type) {
     //Convert from parameters
     var user_id = arg0_user;
-    var usr = main.users[user_id];
     var amount = arg1_amount;
     var remaining_population = returnSafeNumber(amount);
     var pop_type = arg2_type;
 
     //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
     var shuffled_provinces = shuffleArray(getProvinces(user_id));
+    var usr = main.users[actual_id];
 
     //Begin subtracting
     for (var i = 0; i < shuffled_provinces.length; i++)
