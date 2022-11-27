@@ -187,16 +187,7 @@ module.exports = {
     return [...module.exports.splitNumberParts(number, parts)];
   },
 
-  splitNumberParts: function (arg0_number, arg1_parts) {
-    //Convert from parameters
-    var number = arg0_number;
-    var parts = arg1_parts;
-
-    //Return statement
-    return [...module.exports.splitNumberPartsBase(number, parts)];
-  },
-
-  splitNumberPartsBase: function* (arg0_number, arg1_parts) {
+  splitNumberParts: function* (arg0_number, arg1_parts) {
     //Convert from parameters
     var number = arg0_number;
     var parts = arg1_parts;

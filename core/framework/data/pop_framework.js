@@ -268,7 +268,7 @@ module.exports = {
     pop_types = (pop_types.includes("all")) ? Object.keys(config.pops) : pop_types;
 
     //Assign decimation_array to decimation_obj
-    var decimation_array = splitNumberParts(1, pop_types.length);
+    var decimation_array = splitNumber(1, pop_types.length);
 
     for (var i = 0; i < pop_types.length; i++)
       decimation_obj[pop_types[i]] = decimation_array[i];
