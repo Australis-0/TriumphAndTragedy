@@ -1,5 +1,5 @@
 module.exports = {
-  addResearchQueue: function (arg0_user, arg1_technology_name) { //[WIP] - Remember to update queue UI when a new technology is appended to the queue
+  addResearchQueue: function (arg0_user, arg1_technology_name) {
     //Convert from parameters
     var user_id = arg0_user;
     var raw_technology_name = arg1_technology_name.toLowerCase();
@@ -125,7 +125,7 @@ module.exports = {
     });
   },
 
-  removeResearchQueue: function (arg0_user, arg1_slot) { //[WIP] - Remember to update queue UI when a new technology is appended to the queue
+  removeResearchQueue: function (arg0_user, arg1_slot) {
     //Convert from parameters
     var user_id = arg0_user;
     var slot_number = parseInt(arg1_slot) - 1;

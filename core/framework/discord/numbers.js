@@ -187,7 +187,16 @@ module.exports = {
     return [...module.exports.splitNumberParts(number, parts)];
   },
 
-  splitNumberParts: function* (arg0_number, arg1_parts) {
+  splitNumberParts: function (arg0_number, arg1_parts) {
+    //Convert from parameters
+    var number = arg0_number;
+    var parts = arg1_parts;
+
+    //Return statement
+    return [...module.exports.splitNumberPartsBase(number, parts)];
+  },
+
+  splitNumberPartsBase: function* (arg0_number, arg1_parts) {
     //Convert from parameters
     var number = arg0_number;
     var parts = arg1_parts;
@@ -196,11 +205,12 @@ module.exports = {
     var sum_parts = 0;
 
     //Split number randomly
-    for (var i = 0; i < parts-1; i++) {
-      var part_number = Math.random()*(number-sum_parts);
+    for (var i = 0; i < parts - 1; i++) {
+      var part_number = Math.random()*(number - sum_parts);
       yield part_number;
       sum_parts += part_number;
-      yield number - sum_parts;
     }
+
+    yield number - sum_parts;
   }
 };

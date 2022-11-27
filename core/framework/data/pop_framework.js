@@ -324,6 +324,7 @@ module.exports = {
         }
 
     //Update tracker variables
+    usr.pops[pop_type] -= returnSafeNumber(amount);
     usr.population -= returnSafeNumber(amount);
 
     //Append to either recent_civilian_casualties or recent_military_casualties depending on pop type

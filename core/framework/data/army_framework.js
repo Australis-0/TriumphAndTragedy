@@ -731,6 +731,29 @@ module.exports = {
     return military_stats;
   },
 
+  getOverallSupply: function (arg0_user, arg1_army_name) {
+    //Convert from parameters
+    var user_id = arg0_user;
+    var army_name = arg1_army_name;
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var average_supply = 0;
+    var supply_obj = {}; //Weighted supply_obj used for calculating average_supply from
+    var total_soldiers = 0;
+    var usr = main.users[actual_id];
+
+    if (!army_name) {
+      
+    } else {
+      //Get maintenance object for a single army
+      var army_obj = (typeof army_name != "object") ?
+        module.exports.getArmy(actual_id, army_name) :
+        army_name;
+      var all_units = Object.keys(army_obj.units);
+    }
+  },
+
   //getReserveStrength() - Returns the current strength and army modifiers a user has in their reserves
   getReserveStrength: function (arg0_user) {
     //Convert from parameters
