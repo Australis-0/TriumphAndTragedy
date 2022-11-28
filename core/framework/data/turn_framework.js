@@ -232,6 +232,13 @@ module.exports = {
                 delete main.global.cooldowns[all_cooldowns[i]];
             }
       }
+
+      //Update trackers
+      {
+        //Military
+        usr.trackers.overall_supply = getOverallSupply(user_id);
+        usr.trackers.total_active_duty = getTotalActiveDuty(user_id);
+      }
     }
 
     //Optimisation processing

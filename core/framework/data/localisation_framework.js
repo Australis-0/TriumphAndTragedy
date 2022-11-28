@@ -49,7 +49,9 @@ module.exports = {
         deficit_localisation.push(`${(local_good.name) ? local_good.name : all_deficit_goods[i]} (${(local_value[0] == local_value[1]) ? `**${parseNumber(local_value[0])}**` : `${parseNumber(Math.min(local_value[0], local_value[1]))}`})`);
     }
 
-    local_obj.deficit_localisation = deficit_localisation.join(", ");
+    local_obj.deficit_localisation = (deficit_localisation.length == 0) ?
+      `We are currently lacking the following goods necessary to keep our army supplied!\n\n- ${deficit_localisation.join(", ")}` :
+      `_We currently have no deficit goods._`;
 
     //Return statement
     return local_obj;

@@ -323,6 +323,7 @@ module.exports = {
     if (!usr.researching) usr.researching = [];
     if (!usr.reserves) usr.reserves = {};
     if (!usr.temporary_modifiers) usr.temporary_modifiers = {};
+    if (!usr.trackers) usr.trackers = {};
     if (!usr.trades) usr.trades = {};
 
     //Post-object processing (Goods):
