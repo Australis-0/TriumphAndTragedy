@@ -22,7 +22,7 @@ module.exports = {
       var supply_level_localisation = config.localisation.supply_modifiers;
 
       if (local_category_supply)
-        supply_localisation.push(`- Our **${local_category.branch_name}** is currently ${supply_level_localisation[Math.floor(local_category_supply*10) - 1]}, with an average combat strength of **${printPercentage(local_category_supply)}**.`);
+        supply_localisation.push(`- Our **${local_category.branch_name}** are currently ${supply_level_localisation[Math.floor(local_category_supply*10) - 1]}, with an average combat strength of **${printPercentage(local_category_supply)}**.`);
     }
 
     local_obj.supply_localisation = supply_localisation.join("\n");
@@ -52,6 +52,9 @@ module.exports = {
     local_obj.deficit_localisation = (deficit_localisation.length == 0) ?
       `We are currently lacking the following goods necessary to keep our army supplied!\n\n- ${deficit_localisation.join(", ")}` :
       `_We currently have no deficit goods._`;
+
+    //Other trackers
+    local_obj.overall_supply = printPercentage(usr.trackers.overall_supply);
 
     //Return statement
     return local_obj;

@@ -124,9 +124,9 @@ module.exports = {
             name: national_modifiers[i].name,
             image: national_modifiers[i].image,
             icon: national_modifiers[i].icon,
-            description: (national_modifiers[i].custom_localisation) ?
-              parseLocalisation(national_modifiers[i].description, { FROM: actual_id, TO: actual_id }) :
-              parseLocalisation(national_modifiers[i].description, { FROM: actual_id, LOCAL: national_modifiers[i].custom_localisation, TO: actual_id }),
+            description: (!national_modifiers[i].custom_localisation) ?
+              parseLocalisation(national_modifiers[i].description, { scopes: { FROM: actual_id, TO: actual_id } }) :
+              parseLocalisation(national_modifiers[i].description, { scopes: { FROM: actual_id, LOCAL: national_modifiers[i].custom_localisation(usr), TO: actual_id } }),
 
             modifiers: modifiers
           });
