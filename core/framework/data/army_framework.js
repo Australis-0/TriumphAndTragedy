@@ -567,6 +567,30 @@ module.exports = {
     return maintenance_obj;
   },
 
+  getArmyOrders: function (arg0_user) {
+    //Convert from parameters
+    var user_id = arg0_user;
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var army_orders = {};
+    var usr = main.users[actual_id];
+
+    var all_armies = Object.keys(usr.armies);
+
+    //Iterate over all_armies
+    for (var i = 0; i < all_armies.length; i++) {
+      var local_army = usr.armies[all_armies[i]];
+
+      if (!army_orders[local_army.status])
+        army_orders[local_army.status] = [];
+      army_orders[local_army.status].push(local_army);
+    }
+
+    //Return statement
+    return army_orders;
+  },
+
   getArmySize: function (arg0_user, arg1_army_name) {
     //Convert from parameters
     var user_id = arg0_user;

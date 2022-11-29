@@ -333,7 +333,8 @@ module.exports = {
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
     var all_embeds = [];
-    var army_orders = {};
+    var all_users = Object.keys(main.users);
+    var army_orders = getArmyOrders(user_id);
     var game_obj = getGameObject(user_id);
     var usr = main.users[actual_id];
 
@@ -395,9 +396,6 @@ module.exports = {
       for (var i = 0; i < all_armies.length; i++) {
         var local_army = usr.armies[all_armies[i]];
 
-        army_orders[local_army.status] = (army_orders[local_army.status]) ?
-          army_orders[local_army.status] + 1 :
-          1;
         army_types[local_army.type]++;
       }
 
@@ -610,8 +608,46 @@ module.exports = {
       army_management_string.push(`- **[Move Armies]** - Moves several armies to a single province.`);
     }
 
-    //Format Page 4 - UI - Battle Plans (+ Separate UI Window)
-    //Format Page 4 - UI - Order of Battle (+ Separate UI Window)
+    //Format Page 4 - Variable processing
+    {
+    }
+
+    //Format Page 4 - UI
+    {
+      //Format Page 4 - UI - Battle Plans (+ Separate UI Window) [WIP]
+
+      //Format Page 4 - UI - Order of Battle (+ Separate UI Window)
+       var all_army_orders = Object.keys(army_orders);
+       var sorted_army_orders = [];
+
+       for (var i = 0; i < all_army_orders.length; i++)
+        sorted_army_orders.push([army_orders[all_army_orders[i]].length, all_army_orders[i]]);
+
+      //Sort array
+      sorted_army_orders.sort((a, b) => b[0] - a[0]);
+
+      //Format oob_string
+      for (var i = 0; i < sorted_army_orders.length; i++)
+        if (sorted_army_orders[i][1] == "blockading") {
+          var display_blockaded_users = [];
+
+          for (var x = 0; x < all_users.length; x++) {
+            var local_user = main.users[all_users[x]];
+
+            if (local_user.blockaded)
+              if (local_user.blockaded.is_blockaded)
+                for (var y = 0; y < local_user.blockaded.fleets.length; y++)
+                  if (local_user.blockaded.fleets[y].id == actual_id)
+                    display_blockaded_users.push(`**${local_user.name}**`);
+          }
+
+          oob_string.push(`- **${parseNumber(sorted_army_orders[i][0])}** fleets are currently blockading ${display_blockaded_users.join(", ")}`);
+        } else {
+          (i != sorted_army_orders.length - 1 || sorted_army_orders.length == 1) ?
+            oob_string.push(`- **${parseNumber(sorted_army_orders[i][0])}** are ${sorted_army_orders[i][1]},`) :
+            oob_string.push(`- and **${parseNumber(sorted_army_orders[i][0])}** are ${sorted_army_orders[i][1]}.`);
+        }
+    }
 
     //Format Page 5+ - UI - Summary
     //Format Page 5+ - UI - Supply by Military Branch
