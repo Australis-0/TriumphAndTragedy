@@ -326,7 +326,7 @@ module.exports = {
         logistics_string.push(supply_localisation.supply_localisation);
 
         logistics_string.push("");
-        logistics_string.push(`**Total Maintenance:**`);
+        logistics_string.push(`**Total Maintenance/Deficit:**`);
         logistics_string.push("");
 
         //Format Page 5+ - UI - Overall Supply Needs - (Deficit/Surplus)
