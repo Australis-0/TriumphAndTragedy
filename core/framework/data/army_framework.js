@@ -611,7 +611,16 @@ module.exports = {
       for (var i = 0; i < all_units.length; i++)
         army_size += army_obj.units[all_units[i]]*getManpowerPerUnit(all_units[i]);
     } else {
-      army_size = getTotalActiveDuty(user_id);
+      var units_obj = module.exports.getUnits(user_id);
+
+      var all_units = Object.keys(units_obj);
+
+      for (var i = 0; i < all_units.length; i++) {
+        var local_amount = units_obj[all_units[i]];
+        var local_soldiers = returnSafeNumber(getManpowerPerUnit(all_units[i])*local_amount);
+
+        army_size += local_soldiers;
+      }
     }
 
     //Return statement
@@ -808,6 +817,8 @@ module.exports = {
 
     for (var i = 0; i < all_unit_keys.length; i++)
       average_supply += supply_obj[all_unit_keys[i]];
+
+    console.log(average_supply);
 
     //Return statement
     return average_supply/total_soldiers;
