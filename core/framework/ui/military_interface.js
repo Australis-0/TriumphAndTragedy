@@ -370,7 +370,7 @@ module.exports = {
 
                   if (local_maintenance_costs[y] == "money") {
                     maintenance_array.push(`**£${parseNumber(local_maintenance_cost)}**`)
-                  } else if (!usr.inventory[local_maintenance_costs[y]]) {
+                  } else if (usr.inventory[local_maintenance_costs[y]]) {
                     var local_good = getGood(local_maintenance_costs[y]);
 
                     maintenance_array.push(`**${parseNumber(local_maintenance_cost)}** ${(local_good.name) ? local_good.name : local_maintenance_costs[y]}`);
