@@ -317,7 +317,8 @@ module.exports = {
       logistics_string.push("");
       logistics_string.push(`Combat efficacy determines the full percentage of Attack and Defence a unit can sustain with the amount of missing supplies correlating to the amount of reduced combat efficacy.`);
       logistics_string.push("");
-      logistics_string.push(`Fiscal expenditures account for **${printPercentage(config.defines.combat.fiscal_supply_amount)}** of all total supply.`);
+      logistics_string.push(`- Fiscal expenditures account for **${printPercentage(config.defines.combat.fiscal_supply_amount)}** of all total supply.`);
+      logistics_string.push(`- Our military's overall supply situation is estimated at **${supply_localisation.overall_supply}**.`);
 
       //Supply/logistics should only display if the user has maintenance issues to care for
       if (all_unit_maintenance_costs.length > 0) {
