@@ -352,8 +352,20 @@ module.exports = {
 
         //Format Page 5+ - UI - Supply Needs by Unit
         for (var i = 0; i < all_unit_types.length; i++) {
-          var branch_units_with_maintenance = 0;
+          var current_index = 0;
+          var valid_units = 0;
 
+          //Fetch valid_units
+          for (var x = 0; x < all_units.length; x++) {
+            var local_category = getUnitCategoryFromUnit(all_units[x]);
+            var local_unit = lookup.all_units[all_units[x]];
+
+            if (local_category.type == all_unit_types[i])
+              if (local_unit.maintenance)
+                valid_units++;
+          }
+
+          //Format units
           for (var x = 0; x < all_units.length; x++) {
             var local_amount = units_obj[all_units[x]];
             var local_category = getUnitCategoryFromUnit(all_units[x]);
@@ -364,12 +376,16 @@ module.exports = {
             if (local_category.type == all_unit_types[i])
               //Go through maintenance, multiply by amount
               if (local_unit.maintenance) {
+                //Increment current_index
+                current_index++;
+
+                //Parse actual maintenance to string
                 var local_maintenance_costs = Object.keys(local_unit.maintenance);
 
                 //Iterate over local_maintenance_costs
                 for (var y = 0; y < local_maintenance_costs.length; y++) {
                   var local_good = getGood(local_maintenance_costs[y]);
-                  var local_maintenance_cost = local_unit.maintenance[local_maintenance_costs[y]];
+                  var local_maintenance_cost = Math.ceil(local_unit.maintenance[local_maintenance_costs[y]]*local_amount);
 
                   if (local_maintenance_costs[y] == "money") {
                     maintenance_array.push(`**£${parseNumber(local_maintenance_cost)}**`)
@@ -380,14 +396,15 @@ module.exports = {
                   }
                 }
 
-                branch_units_with_maintenance++;
-
                 //Add to logistics_string
-                logistics_string.push(`- Our **${parseNumber(local_amount)}** ${(local_unit.name) ? local_unit.name : all_units[x]} (**${printPercentage(usr.modifiers.unit_supply[all_units[x]])}** Supply). Per turn maintenance: ${maintenance_array.join(", ")}`);
+                logistics_string.push(`- Our **${parseNumber(local_amount)}** ${(local_unit.name) ? local_unit.name : all_units[x]} have (**${printPercentage(usr.modifiers.unit_supply[all_units[x]])}** Supply).\n • Per turn maintenance: ${maintenance_array.join(", ")}`);
+
+                if (current_index != valid_units)
+                  logistics_string.push(`---`);
               }
           }
 
-          if (branch_units_with_maintenance > 0)
+          if (valid_units > 0)
             logistics_string.push("");
         }
       } else {
