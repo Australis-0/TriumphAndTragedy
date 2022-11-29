@@ -316,6 +316,8 @@ module.exports = {
       logistics_string.push(`Maintaining an army is an expensive affair. Each turn, we must have enough goods in our **[Inventory]** to pay for the upkeep of a unit, otherwise the unit's **combat efficacy** will begin to drop.`);
       logistics_string.push("");
       logistics_string.push(`Combat efficacy determines the full percentage of Attack and Defence a unit can sustain with the amount of missing supplies correlating to the amount of reduced combat efficacy.`);
+      logistics_string.push("");
+      logistics_string.push(`Fiscal expenditures account for **${printPercentage(config.defines.combat.fiscal_supply_amount)}** of all total supply.`);
 
       //Supply/logistics should only display if the user has maintenance issues to care for
       if (all_unit_maintenance_costs.length > 0) {
