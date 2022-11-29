@@ -3,6 +3,11 @@ config.defines.combat = {
 	anti_aircraft_building: "ack_ack_guns", //What is the name of the anti-aircraft building?
 	anti_aircraft_effectiveness: 1, //How effective should ack-ack be by default? This modifies total AP damage outputted by ack-ack gun buildings
 	anti_aircraft_fixed_damage: true, //Should ack-ack damage be fixed or scale with the bomber force?
+	army_type_map: {
+		air: "air",
+		land: "army",
+		naval: "navy"
+	}, //What formal army types should unit category types map to?
   base_attrition_rate: 0.10, //What should the base attrition rate be? (percentage)
   base_mobilisation_impact: {
     production_efficiency: -0.30,

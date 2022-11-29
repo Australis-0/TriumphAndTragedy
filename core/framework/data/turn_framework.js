@@ -114,7 +114,10 @@ module.exports = {
                 }
 
           //Clear movement array if army has arrived
-          if (local_army.province == local_army.moving_to[local_army.moving_to.length - 1]) {
+          if (
+            local_army.province == local_army.moving_to[local_army.moving_to.length - 1] ||
+            local_army.moving_to.length == 0
+          ) {
             local_army.distances = [];
             local_army.moving_to = [];
             local_army.status = "stationed";

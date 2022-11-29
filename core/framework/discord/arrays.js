@@ -110,6 +110,25 @@ module.exports = {
     return shuffled_array;
   },
 
+  truncateArray: function (arg0_array, arg1_limit) {
+    //Convert from parameters
+    var array = arg0_array;
+    var limit = (arg1_limit) ? parseInt(arg1_limit) : 20;
+
+    //Declare local instance variables
+    var local_display_array = [];
+
+    for (var i = 0; i < array.length; i++)
+      if (i < limit) {
+        local_display_array.push(array[i]);
+      } else if (i == limit) {
+        local_display_array.push(`(+${parseNumber(array.length - limit)} more)`);
+      }
+
+    //Return statement
+    return local_display_array;
+  },
+
   unique: function (arg0_array) {
     //Convert from parameters
     var a = arg0_array;

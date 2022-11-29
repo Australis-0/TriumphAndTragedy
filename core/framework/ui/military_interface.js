@@ -617,10 +617,10 @@ module.exports = {
       //Format Page 4 - UI - Battle Plans (+ Separate UI Window) [WIP]
 
       //Format Page 4 - UI - Order of Battle (+ Separate UI Window)
-       var all_army_orders = Object.keys(army_orders);
-       var sorted_army_orders = [];
+      var all_army_orders = Object.keys(army_orders);
+      var sorted_army_orders = [];
 
-       for (var i = 0; i < all_army_orders.length; i++)
+      for (var i = 0; i < all_army_orders.length; i++)
         sorted_army_orders.push([army_orders[all_army_orders[i]].length, all_army_orders[i]]);
 
       //Sort array
@@ -657,5 +657,126 @@ module.exports = {
     //Push to all_embeds
 
     //Select menu
+  },
+
+  printOOB: function (arg0_user, arg1_return_string) {
+    //Convert from parameters
+    var user_id = arg0_user;
+    var return_string = arg1_return_string;
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var all_branches = getUnitTypes();
+    var all_embeds = [];
+    var all_users = Object.keys(main.users);
+    var army_orders = getArmyOrders(user_id);
+    var game_obj = getGameObject(user_id);
+    var oob_string = [];
+    var usr = main.users[actual_id];
+
+    //Dynamically initialise variables
+    var all_army_orders = Object.keys(army_orders);
+    var orders = {};
+
+    for (var i = 0; i < all_branches.length; i++) {
+      orders[`sorted_${all_branches[i]}`] = [];
+      orders[`${all_branches[i]}_string`] = [];
+    }
+
+    //Fetch orders and sort them by type
+    for (var i = 0; i < all_army_orders.length; i++) {
+      var branches_assigned_to_order = {};
+      var local_order = army_orders[all_army_orders[i]];
+
+      //Iterate through local_order and increment by army type
+      for (var x = 0; x < local_order.length; x++)
+        if (local_order[x].type != "empty") {
+          if (!branches_assigned_to_order[local_order[x].type])
+            branches_assigned_to_order[local_order[x].type] = [];
+          branches_assigned_to_order[local_order[x].type].push(local_order[x]);
+        }
+
+      //Push branches_assigned_to_order to sorted branch array
+      all_branch_orders = Object.keys(branches_assigned_to_order);
+
+      for (var x = 0; x < all_branch_orders.length; x++)
+        orders[`sorted_${all_branch_orders[x]}`].push([branches_assigned_to_order[all_branch_orders[x]], all_army_orders[i]]);
+    }
+
+    //Sort all branch orders; begin working on local strings
+    console.log(orders);
+
+    for (var i = 0; i < all_branches.length; i++)
+      if (orders[`sorted_${all_branches[i]}`].length > 0) {
+        var branch_icon = config.icons[config.branch_icons[all_branches[i]]];
+        var local_string = orders[`${all_branches[i]}_string`];
+        var sorted_orders = orders[`sorted_${all_branches[i]}`];
+
+        sorted_orders.sort((a, b) => b[0] - a[0]);
+
+        //Iterate through sorted_orders and push their exact orders as well as any relevant details
+        for (var x = 0; x < sorted_orders.length; x++) {
+          var local_order = army_orders[sorted_orders[x][1]];
+          var local_order_armies = []; //Which armies of this type are taking part in the current order?
+
+          for (var y = 0; y < local_order.length; y++)
+            if (local_order[y].type == all_branches[i])
+              local_order_armies.push(`**${local_order[y].name}**`);
+
+          if (sorted_orders[x][1] == "blockading") {
+            var blockaded_users = {};
+
+            //Fetch blockaded users on this branch
+            for (var y = 0; y < all_users.length; y++) {
+              var local_user = main.users[all_users[y]];
+
+              if (local_user.blockaded)
+                if (local_user.blockaded.is_blockaded)
+                  for (var z = 0; z < local_user.blockaded.fleets.length; z++)
+                    if (local_user.blockaded.fleets[z].id == actual_id) {
+                      var local_army = usr.armies[local_user.blockaded.fleets[z].fleet_id];
+
+                      if (local_army.type == all_branches[i]) {
+                        if (!blockaded_users[all_users[y]])
+                          blockaded_users[all_users[y]] = [];
+                        blockaded_users[all_users[y]].push(`**${local_army.name}**`);
+                      }
+                    }
+            }
+
+            //Iterate over all_blockaded_users and push grouped fleet orders to local_string
+            var all_blockaded_users = Object.keys(blockaded_users);
+
+            for (var y = 0; y < all_blockaded_users.length; y++) {
+              var local_user = main.users[all_blockaded_users[y]];
+              var local_value = blockaded_users[all_blockaded_users[y]];
+
+              local_string.push(`- **${parseNumber(local_value.length)}** fleets are currently blockading **${local_user.name}** - (${truncateArray(local_display_value, 20).join(", ")})`);
+            }
+          } else {
+            local_string.push(`- **${parseNumber(local_order_armies.length)}** are ${sorted_orders[x][1]} - (${truncateArray(local_order_armies, 20).join(", ")})`);
+          }
+        }
+
+        //Each branch should have its own embed_array
+        var local_embed_array = splitEmbed(local_string, {
+          title: `[Back] | ${(branch_icon) ? branch_icon + " " : ""}List of ${parseString(all_branches[i])} Combat Formations:`,
+          title_pages: true,
+          fixed_width: true
+        });
+
+        //Push local_embed_array to all_embeds
+        for (var x = 0; x < local_embed_array.length; x++)
+          all_embeds.push(local_embed_array[x]);
+
+        //Push to oob_string
+        oob_string.push(`${(branch_icon) ? branch_icon + " " : ""}**List of ${parseString(all_branches[i])} Combat Formations:**`);
+        oob_string.push(config.localisation.divider);
+        oob_string.push("");
+        oob_string.push(local_string.join("\n"));
+      }
+
+    //Return statement
+    return (!return_string) ? all_embeds : oob_string;
   }
 };
