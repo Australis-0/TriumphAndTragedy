@@ -366,13 +366,12 @@ module.exports = {
 
                 //Iterate over local_maintenance_costs
                 for (var y = 0; y < local_maintenance_costs.length; y++) {
+                  var local_good = getGood(local_maintenance_costs[y]);
                   var local_maintenance_cost = local_unit.maintenance[local_maintenance_costs[y]];
 
                   if (local_maintenance_costs[y] == "money") {
                     maintenance_array.push(`**£${parseNumber(local_maintenance_cost)}**`)
-                  } else if (usr.inventory[local_maintenance_costs[y]]) {
-                    var local_good = getGood(local_maintenance_costs[y]);
-
+                  } else if (local_good) {
                     maintenance_array.push(`**${parseNumber(local_maintenance_cost)}** ${(local_good.name) ? local_good.name : local_maintenance_costs[y]}`);
                   } else {
                     maintenance_array.push(`**${parseNumber(local_maintenance_cost)}** ${parseString(local_maintenance_costs[y])}`);
