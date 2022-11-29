@@ -386,7 +386,9 @@ module.exports = {
                 //Iterate over local_maintenance_costs
                 for (var y = 0; y < local_maintenance_costs.length; y++) {
                   var local_good = getGood(local_maintenance_costs[y]);
-                  var local_maintenance_cost = Math.ceil(local_unit.maintenance[local_maintenance_costs[y]]*local_amount);
+                  var local_maintenance_cost = Math.ceil(
+                    local_unit.maintenance[local_maintenance_costs[y]]
+                  *(local_amount/local_unit.quantity));
 
                   if (local_maintenance_costs[y] == "money") {
                     maintenance_array.push(`**£${parseNumber(local_maintenance_cost)}**`)
