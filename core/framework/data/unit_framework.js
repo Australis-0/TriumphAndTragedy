@@ -568,7 +568,7 @@ module.exports = {
     return (options.type != "money") ? costs_obj : returnSafeNumber(costs_obj.money, 0);
   },
 
-  getUnitTypes: function () {
+  getUnitBranches: function () {
     //Declare local instance variables
     var all_unit_categories = Object.keys(config.units);
     var branches = [];
@@ -587,4 +587,21 @@ module.exports = {
     //Return statement
     return branches;
   },
+
+  getUnitTypes: function () {
+    //Declare local instance variables
+    var all_unit_categories = Object.keys(config.units);
+    var types = [];
+
+    //Iterate over all_unit_categories
+    for (var i = 0; i < all_unit_categories.length; i++) {
+      var local_unit_category = config.units[all_unit_categories[i]];
+
+      if (!types.includes(local_unit_category.type))
+        types.push(local_unit_category.type);
+    }
+
+    //Return statement
+    return types;
+  }
 };

@@ -245,7 +245,7 @@ module.exports = {
         addSelectMenu(game_obj.header, {
           id: `select_building_category`,
           options: select_menu_options,
-          placeholder: `⭭ Select Building Category ..`,
+          placeholder: `⭭ Select Building Category ..`
         });
       }
     } else {

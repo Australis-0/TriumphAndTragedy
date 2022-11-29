@@ -91,7 +91,7 @@ module.exports = {
           }
 
           //Remove any remaining user reactions
-          const user_reactions = msg_obj.reactions.cache.filter(reaction => reaction.users.cache.has(user_id));
+          const user_reactions = msg_obj.reactions.cache.filter(reaction => reaction.users.cache.has(user.id));
           try {
             for (const reaction of user_reactions.values()) await reaction.users.remove(user.id);
           } catch {

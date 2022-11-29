@@ -155,7 +155,9 @@ module.exports = {
     var default_number = (arg1_default) ? arg1_default : 0;
 
     //Return statement
-    return (!isNaN(operation) && isFinite(operation)) ? operation : default_number;
+    return (!isNaN(operation) && isFinite(operation) && operation) ? 
+      operation :
+      default_number;
   },
 
   romanise: function (arg0_number) {
@@ -176,6 +178,17 @@ module.exports = {
 		//Return statement
 		return roman;
 	},
+
+  sortObject: function (arg0_object, arg1_mode) {
+    //Convert from parameters
+    var object = arg0_object;
+    var mode = (arg1_mode) ? arg1_mode : "descending";
+
+    //Return statement
+    return Object.fromEntries(
+      Object.entries(object).sort(([, a], [, b]) => (mode == "descending") ? b - a : a - b)
+    );
+  },
 
   splitNumber: function (arg0_number, arg1_parts) {
     //Convert from parameters

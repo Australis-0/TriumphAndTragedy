@@ -496,7 +496,7 @@ module.exports = {
     }
 
     //Return statement
-    return deficit_goods;
+    return sortObject(deficit_goods);
   },
 
   getArmyMaintenance: function (arg0_user, arg1_army_name) {
@@ -563,8 +563,8 @@ module.exports = {
         }
     }
 
-    //Return statement
-    return maintenance_obj;
+    //Return statement (automatically sorted)
+    return sortObject(maintenance_obj);
   },
 
   getArmyOrders: function (arg0_user) {
@@ -943,7 +943,7 @@ module.exports = {
     }
 
     //Return statement
-    return all_units;
+    return sortObject(all_units);
   },
 
   mergeArmy: function (arg0_user, arg1_army_name, arg2_army_name) {
