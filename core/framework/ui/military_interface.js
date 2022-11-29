@@ -339,7 +339,7 @@ module.exports = {
             (local_good.name) ? local_good.name : all_unit_maintenance_costs[i] :
             parseString(all_unit_maintenance_costs[i]);
 
-          logistics_string.push(`- **${parseNumber(local_maintenance_cost)}** ${good_name}`);
+          logistics_string.push(`- ${parseNumber(local_maintenance_cost)}${(local_deficit) ? ` (**${parseNumber(local_deficit)}**)` : ""} ${good_name}`);
         }
 
         logistics_string.push("");
@@ -457,7 +457,7 @@ module.exports = {
       options: [
         {
           label: "Military Statistics and Mobilisation",
-          emoji: "716817688453709905", //infamy
+          emoji: "716828676855169107", //cb
           value: "page_one",
 
           options: {

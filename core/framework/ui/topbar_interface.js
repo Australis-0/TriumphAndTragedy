@@ -335,8 +335,11 @@ module.exports = {
         if (game_obj.page != "military") {
           game_obj.page = "military";
           module.exports.initialiseTopbar(user_id);
+
+          setTimeout(function(){
+            printMilitary(user_id);
+          }, 1500);
         }
-        printMilitary(user_id);
 
         break;
       case "politics_btn":
