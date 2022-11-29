@@ -13,7 +13,6 @@ module.exports = {
     var usr = main.users[actual_id];
 
     var all_deficit_goods = Object.keys(deficit_goods);
-    var sorted_deficit_goods = [];
 
     //Iterate over all categories
     for (var i = 0; i < all_unit_categories.length; i++) {
@@ -27,19 +26,6 @@ module.exports = {
 
     local_obj.supply_localisation = supply_localisation.join("\n");
 
-    //Sort all_deficit_goods
-    for (var i = 0; i < all_deficit_goods.length; i++) {
-      var local_value = deficit_goods[all_deficit_goods[i]];
-
-      sorted_deficit_goods.push([Math.min(local_value[0], local_value[1]), all_deficit_goods[i]]);
-    }
-
-    sorted_deficit_goods.sort((a, b) => a[0] - b[0]);
-    all_deficit_goods = [];
-
-    for (var i = 0; i < sorted_deficit_goods.length; i++)
-      all_deficit_goods.push(sorted_deficit_goods[i][1]);
-
     //Add deficit_localisation, truncate at 20 elements
     for (var i = 0; i < all_deficit_goods.length; i++) {
       var local_good = lookup.all_goods[all_deficit_goods[i]];
@@ -49,7 +35,7 @@ module.exports = {
         deficit_localisation.push(`${(local_good.name) ? local_good.name : all_deficit_goods[i]} (${(local_value[0] == local_value[1]) ? `**${parseNumber(local_value[0])}**` : `${parseNumber(Math.min(local_value[0], local_value[1]))}`})`);
     }
 
-    local_obj.deficit_localisation = (deficit_localisation.length == 0) ?
+    local_obj.deficit_localisation = (deficit_localisation.length > 0) ?
       `We are currently lacking the following goods necessary to keep our army supplied!\n\n- ${deficit_localisation.join(", ")}` :
       `_We currently have no deficit goods._`;
 
