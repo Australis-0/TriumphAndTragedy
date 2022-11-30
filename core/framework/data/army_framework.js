@@ -1714,7 +1714,7 @@ module.exports = {
     var all_armies = Object.keys(usr.armies);
     var biggest_number = 0;
 
-    //Iterate over all_armies to append to army_array
+    //Iterate over all_armies to append to sorted_army_array
     for (var i = 0; i < all_armies.length; i++) {
       //Tracker variables
       var local_army = usr.armies[all_armies[i]];
@@ -1919,14 +1919,127 @@ module.exports = {
       ]);
     }
 
-    if (mode == "numerical") {
+    if (mode == "attrition") {
+      sorted_army_array.sort(function(a, b) {
+        return b[1].attrition - a[1].attrition;
+      });
+    } else if (mode == "alphabetical") {
+      sorted_army_array.sort(function(a, b) {
+        return a.alphabetical.localeCompare(b.alphabetical);
+      });
+    } else if (mode == "chronological") {
+      sorted_army_array.sort(function(a, b) {
+        return a[1].chronological - b[1].chronological;
+      });
+    } else if (mode == "numerical" || mode == "roman_numerical") {
+      var arabic_sorted_array = [];
+      var remainder_array = [];
+      var roman_sorted_array = [];
+
       //Dump arabic first
+      for (var i = 0; i < sorted_army_array.length; i++)
+        if (sorted_army_array[i][1].numerical)
+          arabic_sorted_array.push(sorted_army_array[i]);
 
       //Dump roman second
+      for (var i = 0; i < sorted_army_array.length; i++)
+        if (sorted_army_array[i][1].roman_numerical)
+          roman_sorted_array.push(sorted_army_array[i]);
 
       //Dump everything else third
+      for (var i = 0; i < sorted_army_array.length; i++)
+        if (!(sorted_army_array[i][1].numerical || sorted_army_array[i][1].roman_numerical))
+          remainder_array.push(sorted_army_array[i]);
+
+      //Sort arabic, roman, remainder (alphabetical)
+      arabic_sorted_array.sort(function(a, b) {
+        return a[1].numerical - b[1].numerical;
+      });
+      roman_sorted_array.sort(function(a, b) {
+        return a[1].numerical - b[1].numerical;
+      });
+      remainder_array.sort((a, b) => a.alphabetical.localeCompare(b.alphabetical));
+
+      //Clear sorted_army_array and push everything back in
+      sorted_army_array = [];
+
+      if (mode == "numerical") {
+        for (var i = 0; i < arabic_sorted_array.length; i++)
+          sorted_army_array.push(arabic_sorted_array[i]);
+        for (var i = 0; i < roman_sorted_array.length; i++)
+          sorted_army_array.push(roman_sorted_array[i]);
+      } else if (mode == "roman_numerical") {
+        for (var i = 0; i < roman_sorted_array.length; i++)
+          sorted_army_array.push(roman_sorted_array[i]);
+        for (var i = 0; i < arabic_sorted_array.length; i++)
+          sorted_army_array.push(arabic_sorted_array[i]);
+      }
+
+      for (var i = 0; i < remainder_array.length; i++)
+        sorted_army_array.push(remainder_array[i]);
+    } else if (mode == "type") {
+      var unique_types = [];
+
+      for (var i = 0; i < sorted_army_array.length; i++)
+        if (!unique_types.includes(sorted_army_array[i][1].type))
+          unique_types.push(sorted_army_array[i][1].type);
+
+      unique_types.sort();
+
+      //Iterate over unique_types, compile local numeric army list
+      for (var i = 0; i < unique_types.length; i++) {
+        var local_arabic_array = [];
+        var local_remainder_array = [];
+        var local_roman_array = [];
+
+        //Push to local_array
+        for (var x = 0; x < sorted_army_array.length; x++)
+          if (sorted_army_array[x][1].type == unique_types[i])
+            if (sorted_army_array[x][1].numerical) {
+              local_arabic_array.push(sorted_army_array[x]);
+            } else if (sorted_army_array[x][1].roman_numerical) {
+              local_roman_array.push(sorted_army_array[x]);
+            } else {
+              local_remainder_array.push(sorted_army_array[x]);
+            }
+
+        //Sort arabic, roman, remainder (alphabetical)
+        local_arabic_array.sort(function(a, b) {
+          return a[1].numerical - b[1].numerical;
+        });
+        local_roman_array.sort(function(a, b) {
+          return a[1].numerical - b[1].numerical;
+        });
+        local_remainder_array.sort((a, b) => a.alphabetical.localeCompare(b.alphabetical));
+
+        //Clear sorted_army_array and push everything back in
+        sorted_army_array = [];
+
+        for (var i = 0; i < local_arabic_array.length; i++)
+          sorted_army_array.push(local_arabic_array[i]);
+        for (var i = 0; i < local_roman_array.length; i++)
+          sorted_army_array.push(local_roman_array[i]);
+        for (var i = 0; i < local_remainder_array.length; i++)
+          sorted_army_array.push(local_remainder_array[i]);
+      }
+    } else if (mode == "size") {
+      sorted_army_array.sort(function(a, b) {
+        return returnSafeNumber(b[1].size) - returnSafeNumber(a[1].size);
+      });
+    } else if (mode == "speed") {
+      sorted_army_array.sort(function(a, b) {
+        return returnSafeNumber(b[1].speed) - returnSafeNumber(a[1].speed);
+      });
+    } else if (mode == "strength") {
+      sorted_army_array.sort(function(a, b) {
+        return returnSafeNumber(b[1].strength) - returnSafeNumber(a[1].strength);
+      });
     }
 
-    return sorted_army_array;
+    //Reduce sorted_army_array to ID map (army_array)
+    for (var i = 0; i < sorted_army_array.length; i++)
+      army_array.push(sorted_army_array[i][0]);
+
+    return army_array;
   }
 };
