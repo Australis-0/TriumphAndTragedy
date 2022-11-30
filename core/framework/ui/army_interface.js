@@ -58,8 +58,8 @@ module.exports = {
       var all_embeds = [];
       var all_units = Object.keys(army_obj.units);
       var army_icon = "";
-      var army_power = calculateArmyStats(user_id, army_obj.name);
-      var army_stats = calculateArmyType(user_id, army_obj.name);
+      var army_power = calculateArmyStats(user_id, army_obj);
+      var army_stats = calculateArmyType(user_id, army_obj);
       var army_string = [];
       var army_supply = returnSafeNumber(getOverallSupply(user_id, army_obj), 1);
       var bonus_movement_speed = 1;
@@ -229,7 +229,10 @@ module.exports = {
       //Format Page 3 - logistics_string
       if (all_units.length > 0) {
         //Print logistics - Total Maintenance
+        logistics_string.push("");
         logistics_string.push(`**Total Maintenance:**`);
+        logistics_string.push("");
+        logistics_string.push(`Our army is currently **${printPercentage(army_supply)}** supplied.`);
         logistics_string.push("");
 
         if (all_maintenance_costs.length > 0) {

@@ -227,6 +227,15 @@ module.exports = {
 		return current_string;
 	},
 
+  split: function (arg0_string, arg1_index) {
+    //Convert from parameters
+    var string = arg0_string;
+    var index = (arg1_index) ? parseInt(arg1_index) : 0;
+
+    //Return statement
+    return [string.slice(0, index), string.slice(index)];
+  },
+
   splitString: function (arg0_string, arg1_length) {
     //Convert from parameters
     var string = arg0_string;

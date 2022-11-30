@@ -796,7 +796,7 @@ module.exports = {
     } else {
       //Get maintenance object for a single army
       var army_obj = (typeof army_name != "object") ?
-        module.exports.getArmy(actual_id, army_name) :
+        module.exports.getArmy(user_id, army_name) :
         army_name;
       var all_units = Object.keys(army_obj.units);
 
@@ -804,6 +804,7 @@ module.exports = {
 
       for (var i = 0; i < all_units.length; i++) {
         var local_unit = lookup.all_units[all_units[i]];
+        var local_unit_amount = army_obj.units[all_units[i]];
 
         //Iterate over all_units
         var local_soldiers = returnSafeNumber(getManpowerPerUnit(local_unit)*local_unit_amount);
@@ -1694,5 +1695,238 @@ module.exports = {
       } else {
         return [false, `The **${army_name}** could not be found as a combat force.`];
       }
+  },
+
+  //sortArmies() - Returns an army array sorted by either "alphabetical", "attrition", "chronological", "numerical", "type", "size", "speed", "strength"
+  sortArmies: function (arg0_user, arg1_mode) {
+    //Convert from parameters
+    var user_id = arg0_user;
+    var mode = (arg1_mode) ? arg1_mode : "chronological";
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var arabic_characters = "0123456789".split("");
+    var army_array = [];
+    var roman_characters = "MDCLXVImdclxvi".split("");
+    var sorted_army_array = []; //Array of objects: ["<army_id>", { .. }];
+    var usr = main.users[actual_id];
+
+    var all_armies = Object.keys(usr.armies);
+    var biggest_number = 0;
+
+    //Iterate over all_armies to append to army_array
+    for (var i = 0; i < all_armies.length; i++) {
+      //Tracker variables
+      var local_army = usr.armies[all_armies[i]];
+
+      var army_number;
+      var army_roman_number;
+      var army_power = calculateArmyStats(user_id, local_army);
+      var army_size = getArmySize(user_id, local_army);
+      var army_stats = calculateArmyType(user_id, local_army);
+      var army_speed = getArmySpeed(user_id, local_army);
+
+      //Fetch army_number and army_roman_number
+      {
+        //NLP Variables
+        var army_arabic_left_number = "";
+        var army_arabic_right_number = "";
+        var army_roman_left_number = "";
+        var army_roman_right_number = "";
+
+        //Fetch army_number
+        var army_arabic_left_began = false;
+        var army_arabic_left_ended = false;
+        var army_arabic_right_began = false;
+        var army_arabic_right_ended = false;
+
+        var army_roman_left_began = false;
+        var army_roman_left_ended = false;
+        var army_roman_right_began = false;
+        var army_roman_right_ended = false;
+
+        var left_word_roman_length = 0;
+        var left_word_roman_percentage = 0;
+        var right_word_roman_length = 0;
+        var right_word_roman_percentage = 0;
+
+        var roman_left_index = 0;
+        var roman_left_word_ended = false;
+        var roman_right_index = 0;
+        var roman_right_word_ended = false;
+
+        //Left-hand side handler
+        for (var x = 0; x < local_army.name.length; x++) {
+          //Arabic handler
+          if (arabic_characters.includes(local_army.name[x]) && !army_arabic_left_ended) {
+            if (!army_arabic_left_began)
+              army_arabic_left_began = true;
+
+            army_arabic_left_number += local_army.name[x];
+          } else {
+            if (army_arabic_left_began)
+              army_arabic_left_ended = true;
+          }
+
+          //Roman handler
+          if (roman_characters.includes(local_army.name[x]) && !army_roman_left_ended) {
+            if (!army_roman_left_began) {
+              army_roman_left_began = true;
+              roman_left_index = x;
+            }
+
+            left_word_roman_length++;
+            army_roman_left_number += local_army.name[x];
+          }
+        }
+
+        //Right-hand side handler
+        for (var x = local_army.name.length - 1; x >= 0; x--) {
+          //Arabic handler
+          if (arabic_characters.includes(local_army.name[x]) && !army_arabic_right_ended) {
+            if (!army_arabic_right_began)
+              army_arabic_right_began = true;
+
+            army_arabic_right_number = local_army.name[x] + army_arabic_right_number;
+          } else {
+            if (army_arabic_right_began)
+              army_arabic_right_ended = true;
+          }
+
+          //Roman handler
+          if (roman_characters.includes(local_army.name[x]) && !army_roman_right_ended) {
+            if (!army_roman_right_began)
+              army_roman_right_began = true;
+
+            right_word_roman_length++;
+            army_roman_right_number = local_army.name[x] + army_roman_right_number;
+          } else {
+            if (army_roman_right_began) {
+              army_roman_right_ended = true;
+              roman_right_index = x;
+            }
+          }
+        }
+
+        if (
+          (army_roman_left_began || army_roman_right_began) &&
+          (army_arabic_left_number.length + army_arabic_right_number.length == 0)
+        ) {
+          //Replacement increment/decrement both roman numerals to check if they return an army
+          var left_roman_army;
+          var right_roman_army;
+
+          //Decrement - Left
+          if (army_roman_left_number != "") {
+            var current_string = split(local_army.name, roman_left_word_ended);
+            var new_roman_numeral = romanise(arabicise(army_roman_left_number) - 1);
+
+            current_string[1] = current_string[1].replace(army_roman_left_number, new_roman_numeral);
+
+            //Fetch test_army
+            var test_army = getArmy(user_id, current_string.join(""));
+
+            if (test_army)
+              left_roman_army = test_army;
+          }
+
+          //Increment - Left
+          if (army_roman_left_number != "") {
+            var current_string = split(local_army.name, roman_left_word_ended);
+            var new_roman_numeral = romanise(arabicise(army_roman_left_number) + 1);
+
+            current_string[1] = current_string[1].replace(army_roman_left_number, new_roman_numeral);
+
+            //Fetch test_army
+            var test_army = getArmy(user_id, current_string.join(""));
+
+            if (test_army)
+              left_roman_army = test_army;
+          }
+
+          //Decrement - Right
+          if (army_roman_right_number != "") {
+            var current_string = split(local_army.name, roman_right_word_ended);
+            var new_roman_numeral = romanise(arabicise(army_roman_right_number) - 1);
+
+            current_string[1] = current_string[1].replace(army_roman_right_number, new_roman_numeral);
+
+            //Fetch test_army
+            var test_army = getArmy(user_id, current_string.join(""));
+
+            if (test_army)
+              right_roman_army = test_army;
+          }
+
+          //Increment - Right
+          if (army_roman_right_number != "") {
+            var current_string = split(local_army.name, roman_right_word_ended);
+            var new_roman_numeral = romanise(arabicise(army_roman_right_number) + 1);
+
+            current_string[1] = current_string[1].replace(army_roman_right_number, new_roman_numeral);
+
+            //Fetch test_army
+            var test_army = getArmy(user_id, current_string.join(""));
+
+            if (test_army)
+              right_roman_army = test_army;
+          }
+
+          //If no armies are returned, and roman numerals are found, check to see whether the word they're in is majority roman numeral. Use highest roman numeral percentage
+          if (!left_roman_army && !right_roman_army) {
+            var dominant_roman_side = "left";
+
+            //Roman word-handler first
+            left_word_roman_percentage = army_roman_left_number/left_word_roman_length;
+            right_word_roman_percentage = army_roman_right_number/right_word_roman_length;
+
+            //Roman check
+            if (returnSafeNumber(right_word_roman_percentage) > returnSafeNumber(left_word_roman_percentage))
+              dominant_roman_side = "right";
+
+            //Return roman number
+            army_roman_number = (dominant_roman_side == "left") ?
+              returnSafeNumber(arabicise(army_roman_left_number)) :
+              returnSafeNumber(arabicise(army_roman_right_number));
+          } else {
+            //Return smallest roman number
+            army_roman_number = Math.min(
+              returnSafeNumber(arabicise(army_roman_left_number)),
+              returnSafeNumber(arabicise(army_roman_right_number))
+            );
+          }
+        } else {
+          //Return highest arabic number
+          army_number = Math.max(
+            returnSafeNumber(parseInt(army_arabic_left_number)),
+            returnSafeNumber(parseInt(army_arabic_right_number))
+          );
+        }
+      }
+
+      sorted_army_array.push([
+        local_army.id, {
+          attrition: (local_army.taking_attrition) ? 1 : 0,
+          alphabetical: local_army.name,
+          chronological: i,
+          numerical: army_number,
+          roman_numerical: army_roman_number,
+          type: local_army.type,
+          size: army_size,
+          speed: army_speed,
+          strength: army_power.attack + army_power.defence
+        }
+      ]);
+    }
+
+    if (mode == "numerical") {
+      //Dump arabic first
+
+      //Dump roman second
+
+      //Dump everything else third
+    }
+
+    return sorted_army_array;
   }
 };
