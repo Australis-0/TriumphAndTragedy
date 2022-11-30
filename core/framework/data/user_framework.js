@@ -864,7 +864,7 @@ module.exports = {
 
       //Calculate bonus
       var average_supply_limit = (
-        returnSafeNumber(destination_province, config.defines.combat.base_supply_limit) + returnSafeNumber(starting_province, config.defines.combat.base_supply_limit)
+        returnSafeNumber(destination_province.supply_limit, config.defines.combat.base_supply_limit) + returnSafeNumber(starting_province.supply_limit, config.defines.combat.base_supply_limit)
       )/2;
 
       //Return statement

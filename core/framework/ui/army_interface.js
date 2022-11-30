@@ -60,102 +60,132 @@ module.exports = {
       var army_power = calculateArmyStats(actual_id, army_obj.name);
       var army_stats = calculateArmyType(actual_id, army_obj.name);
       var army_string = [];
+      var bonus_movement_speed = 1;
       var carrier_capacity_string = "";
       var current_status = "";
+      var logistics_string = [];
+      var oob_string = [];
       var pure_airplanes = true;
       var pure_submarines = true;
       var province_obj = main.provinces[army_obj.province];
 
       //Calculate tracker variables
-      for (var i = 0; i < all_units.length; i++) {
-        var local_unit = getUnit(all_units[i]);
-        var local_unit_category = getUnitCategoryFromUnit(all_units[i]);
-        if (army_icon == "")
-          army_icon = config.icons[local_unit_category.icon] + " ";
+      {
+        //Bonus movement speed
+        if (army_obj.moving_to?.length > 0)
+          bonus_movement_speed = getSupplyLimitMovementBonus(army_obj.province, army_obj.moving_to[0]);
 
-        //Check for unit types
-        if (!local_unit.type)
-          pure_submarines = false;
+        //Unit types
+        for (var i = 0; i < all_units.length; i++) {
+          var local_unit = getUnit(all_units[i]);
+          var local_unit_category = getUnitCategoryFromUnit(all_units[i]);
+          if (army_icon == "")
+            army_icon = config.icons[local_unit_category.icon] + " ";
 
-        if (local_unit.type)
-          if (!local_unit.type.includes("submarine"))
+          //Check for unit types
+          if (!local_unit.type)
             pure_submarines = false;
 
-        //Check for aeroplanes
-        if (local_unit_category.type == "air")
-          aeroplane_count += army_obj.units[all_units[i]];
-        else
-          pure_airplanes = false;
-      }
+          if (local_unit.type)
+            if (!local_unit.type.includes("submarine"))
+              pure_submarines = false;
 
-      //Format current_status
-      if (army_stats.carrier_capacity > 0)
-        carrier_capacity_string = `(Carrier Capacity: **${parseNumber(aeroplane_count)}**/**${parseNumber(army_stats.carrier_capacity)}**) `;
-
-      //Army status
-      if (army_obj.moving_to.length > 0) {
-        current_status = `Currently moving to Province **${army_obj.moving_to[army_obj.moving_to.length - 1]}**.`;
-      } else {
-        if (army_obj.type != "navy") {
-          current_status = `Currently stationed in Province **${army_obj.province}**.`;
-        } else {
-          if (returnSafeNumber(army_obj.challenged_this_turn) == 0) {
-            current_status = `Currently docked in harbour.`;
-          } else {
-            current_status = (army_obj.challenged_this_turn <= config.defines.combat.blockade_challenge_limit) ?
-              `Fighting an enemy blockade! We can engage the enemy **${parseNumber((config.defines.combat.blockade_challenge_limit - army_obj.challenged_this_turn) + 1)}** more time(s) this turn.` :
-              `Busy repairing in harbour after fighting off enemy blockades.`;
-          }
+          //Check for aeroplanes
+          if (local_unit_category.type == "air")
+            aeroplane_count += army_obj.units[all_units[i]];
+          else
+            pure_airplanes = false;
         }
       }
 
+      //Format Page 1 - army_string
+      {
+        if (army_stats.carrier_capacity > 0)
+          carrier_capacity_string = `(Carrier Capacity: **${parseNumber(aeroplane_count)}**/**${parseNumber(army_stats.carrier_capacity)}**) `;
 
-      //Attrition for current_status
-      if (army_obj.taking_attrition)
-        current_status += ` Taking attrition at a rate of ${config.icons.death} **${printPercentage(usr.modifiers.attrition_rate*config.defines.combat.base_attrition_rate)}**!`;
+        //Army status
+        if (army_obj.moving_to?.length > 0) {
+          current_status = `Currently moving to Province **${army_obj.moving_to[army_obj.moving_to.length - 1]}**. (Arrives in **${parseNumber(getArrivalTime(user_id, army_obj))}** turn(s)).`;
+        } else {
+          if (army_obj.type != "navy") {
+            current_status = `Currently stationed in Province **${army_obj.province}**.`;
+          } else {
+            if (returnSafeNumber(army_obj.challenged_this_turn) == 0) {
+              current_status = `Currently docked in harbour.`;
+            } else {
+              current_status = (army_obj.challenged_this_turn <= config.defines.combat.blockade_challenge_limit) ?
+                `Fighting an enemy blockade! We can engage the enemy **${parseNumber((config.defines.combat.blockade_challenge_limit - army_obj.challenged_this_turn) + 1)}** more time(s) this turn.` :
+                `Busy repairing in harbour after fighting off enemy blockades.`;
+            }
+          }
+        }
 
-      //Blockade cooldowns
-      if (returnSafeNumber(army_obj.blockade_recovery_turns) > 0)
-        current_status += ` Currently recovering from a blockade, will be combat ready in **${parseNumber(army_obj.blockade_recovery_turns)}** turn(s).`;
+        //Attrition for current_status
+        if (army_obj.taking_attrition)
+          current_status += ` Taking attrition at a rate of ${config.icons.death} **${printPercentage(usr.modifiers.attrition_rate*config.defines.combat.base_attrition_rate)}**!`;
 
-      //Submarine cooldowns
-      if (returnSafeNumber(army_obj.submarine_cooldown) > 0)
-        current_status += ` - Currently on cooldown, will be combat ready in **${parseNumber(army_obj.submarine_cooldown)}** turn(s).`;
+        //Blockade cooldowns
+        if (returnSafeNumber(army_obj.blockade_recovery_turns) > 0)
+          current_status += ` Currently recovering from a blockade, will be combat ready in **${parseNumber(army_obj.blockade_recovery_turns)}** turn(s).`;
 
-      //Format army_string
-      army_string.push(`${carrier_capacity_string}${current_status}`);
+        //Submarine cooldowns
+        if (returnSafeNumber(army_obj.submarine_cooldown) > 0)
+          current_status += ` - Currently on cooldown, will be combat ready in **${parseNumber(army_obj.submarine_cooldown)}** turn(s).`;
 
-      //Display modifiers
-      if (army_obj.carrier_capacity > 0)
-        army_string.push(`${config.icons.aeroplanes} **Aeroplanes** receive a **${printPercentage(config.defines.combat.seaplane_bonus, { base_zero: true, display_prefix: true })}** attack bonus whilst at sea.`);
+        //Format army_string
+        army_string.push(`${carrier_capacity_string}${current_status}`);
+        army_string.push("");
 
-      //Push buttons
-      army_string.push(`**[Rename Army]** | **[Deploy Units]** | ${(all_units.length > 0) ? "**[Relieve Units]** | **[Reorder Units]** | **[Transfer Units]** |" : ""} **[Delete Army]**`);
+        //Display modifiers
+        if (army_obj.carrier_capacity > 0)
+          army_string.push(`${config.icons.aeroplanes} **Aeroplanes** receive a **${printPercentage(config.defines.combat.seaplane_bonus, { base_zero: true, display_prefix: true })}** attack bonus whilst at sea.`);
 
-      if (army_obj.type == "army") {
-        army_string.push(`**[Merge Army]** | **[Move]**`);
-      } else if (army_obj.type == "navy") { //[WIP] - Work on blockades first, then come back later
-        var submarine_string = (army_power.pure_submarines) ?
-          ` | **[Convoy Raid]** | **[Harbour Raid]** | **[Torpedo Fleet]**` :
-          "";
-        (!army_obj.is_blockading) ?
-          army_string.push(`**[Blockade]** | **[Challenge Blockade]** ${submarine_string}`) :
-          army_string.push(`**[Lift Blockade]** ${submarine_string}`)
-      } else if (army_obj.type == "air") {
-        army_string.push(`**[Merge Army]** | **[Move]** | **[Air Raid]**`);
+        //Push buttons
+        army_string.push(`**[Rename Army]** | **[Deploy Units]** | ${(all_units.length > 0) ? "**[Relieve Units]** | **[Reorder Units]** | **[Transfer Units]** |" : ""} **[Delete Army]**`);
+
+        if (army_obj.type == "army") {
+          army_string.push(`- **[Merge Army]** | **[Move]**`);
+        } else if (army_obj.type == "navy") {
+          var submarine_string = (army_power.pure_submarines) ?
+            ` | **[Convoy Raid]** | **[Harbour Raid]** | **[Torpedo Fleet]**` :
+            "";
+          (!army_obj.is_blockading) ?
+            army_string.push(`- **[Blockade]** | **[Challenge Blockade]** ${submarine_string}`) :
+            army_string.push(`- **[Lift Blockade]** ${submarine_string}`)
+        } else if (army_obj.type == "air") {
+          army_string.push(`- **[Merge Army]** | **[Move]** | **[Air Raid]**`);
+        }
+
+        army_string.push("");
+
+        //Display army statistics
+        army_string.push(`${config.icons.manpower} Army Size: ${parseNumber(Math.ceil((getArmySize(actual_id, army_obj.name)/1000)*100)/100)}`);
+        army_string.push(`${config.icons.provinces} Current Province: **${army_obj.province}** (${config.icons.railways} Supply Limit: **${parseNumber(Math.ceil(getTroopsInProvince(army_obj.province)/1000))}/${parseNumber(returnSafeNumber(province_obj.supply_limit, config.defines.combat.base_supply_limit))}**)`);
+
+        if (bonus_movement_speed != 1)
+          army_string.push(`- **${printPercentage(1/bonus_movement_speed, { display_prefix: true })}** Bonus Movement from local infrastructure.`);
+
+        army_string.push("");
+
+        army_string.push(`**Army Statistics:**`);
+        army_string.push("");
+        army_string.push(`- ${config.icons.attacker} Attack: ${parseNumber(army_power.attack)}`);
+        army_string.push(`- ${config.icons.defender} Defence: ${parseNumber(army_power.defence)}`);
+
+        if (all_units.length > 0) {
+          var air_range = getAirRange(user_id, army_obj);
+          var army_speed = getArmySpeed(user_id, army_obj);
+
+          army_string.push(`- ${config.icons.time} Movement: ${parseNumber(army_speed)}km/h ${(bonus_movement_speed != 1) ? `(${parseNumber(army_speed*(1/bonus_movement_speed))}km/h on current province).` : ""}`);
+
+          //Range only if army is of type air
+          if (army_obj.type == "air")
+            army_string.push(`- ${config.icons.aeroplanes} Range: ${parseNumber(air_range)} Provinces`);
+        }
+
+        army_string.push("");
+        army_string.push(config.localisation.divider);
       }
-
-      //Display additional statistics
-      army_string.push(`${config.icons.manpower} Army Size: ${parseNumber(Math.ceil((getArmySize(actual_id, army_obj.name)/1000)*100)/100)}`);
-      army_string.push(`${config.icons.provinces} Current Province: **${army_obj.province}** (${config.icons.railways} Supply Limit: **${parseNumber(Math.ceil(getTroopsInProvince(army_obj.province)/1000))}/${parseNumber(returnSafeNumber(province_obj.supply_limit, config.defines.combat.base_supply_limit))}**)`);
-      army_string.push("");
-
-      army_string.push(`**Army Strength:**`);
-      army_string.push("");
-      army_string.push(`- ${config.icons.attacker} Attack: ${parseNumber(army_power.attack)}`);
-      army_string.push(`- ${config.icons.defender} Defence: ${parseNumber(army_power.defence)}`);
-      army_string.push("");
-      army_string.push(config.localisation.divider);
 
       //Print units
       army_string.push("");

@@ -656,7 +656,7 @@ module.exports = {
         }
 
         //Average out army_speed
-        army_speed = (army_speed/army_size)*usr.modifiers.army_travel_speed;
+        army_speed = army_speed/army_size;
 
         //Return statement
         return returnSafeNumber(army_speed);
@@ -817,8 +817,6 @@ module.exports = {
 
     for (var i = 0; i < all_unit_keys.length; i++)
       average_supply += supply_obj[all_unit_keys[i]];
-
-    console.log(average_supply);
 
     //Return statement
     return average_supply/total_soldiers;
