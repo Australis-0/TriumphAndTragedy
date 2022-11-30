@@ -64,6 +64,7 @@ module.exports = {
       var army_supply = returnSafeNumber(getOverallSupply(user_id, army_obj), 1);
       var bonus_movement_speed = 1;
       var carrier_capacity_string = "";
+      var command_string = [];
       var current_status = "";
       var logistics_string = [];
       var maintenance_obj = getArmyMaintenance(user_id, army_obj);
@@ -147,21 +148,24 @@ module.exports = {
           army_string.push(`${config.icons.aeroplanes} **Aeroplanes** receive a **${printPercentage(config.defines.combat.seaplane_bonus, { base_zero: true, display_prefix: true })}** attack bonus whilst at sea.`);
 
         //Push buttons
-        army_string.push(`**[Rename Army]** | **[Deploy Units]** | ${(all_units.length > 0) ? "**[Relieve Units]** | **[Reorder Units]** | **[Transfer Units]** |" : ""} **[Delete Army]**`);
+        command_string.push(`**[Rename Army]** | **[Deploy Units]** | ${(all_units.length > 0) ? "**[Relieve Units]** | **[Reorder Units]** | **[Transfer Units]** |" : ""} **[Delete Army]**`);
 
         if (army_obj.type == "army") {
-          army_string.push(`- **[Merge Army]** | **[Move]**`);
+          command_string.push(`- **[Merge Army]** | **[Move]**`);
         } else if (army_obj.type == "navy") {
           var submarine_string = (army_power.pure_submarines) ?
             ` | **[Convoy Raid]** | **[Harbour Raid]** | **[Torpedo Fleet]**` :
             "";
           (!army_obj.is_blockading) ?
-            army_string.push(`- **[Blockade]** | **[Challenge Blockade]** ${submarine_string}`) :
-            army_string.push(`- **[Lift Blockade]** ${submarine_string}`)
+            command_string.push(`- **[Blockade]** | **[Challenge Blockade]** ${submarine_string}`) :
+            command_string.push(`- **[Lift Blockade]** ${submarine_string}`)
         } else if (army_obj.type == "air") {
-          army_string.push(`- **[Merge Army]** | **[Move]** | **[Air Raid]**`);
+          command_string.push(`- **[Merge Army]** | **[Move]** | **[Air Raid]**`);
         }
 
+        army_string.push(command_string.join("\n"));
+        army_string.push("");
+        army_string.push(config.localisation.divider);
         army_string.push("");
 
         //Display army statistics
@@ -192,6 +196,12 @@ module.exports = {
 
       //Format Page 2 - oob_string
       {
+        //Print commands
+        oob_string.push(command_string.join("\n"));
+        oob_string.push("");
+        oob_string.push(config.localisation.divider);
+        oob_string.push("");
+
         //Print units
         oob_string.push(`**Order of Battle:**`);
         oob_string.push("");
@@ -300,6 +310,10 @@ module.exports = {
           if (i < all_units.length - 1)
             logistics_string.push(`---`);
         }
+      } else {
+        logistics_string.push(`_We currently have no units that require any maintenance!_`);
+        logistics_string.push("");
+        logistics_string.push(`Type **[Deploy Units]** to transfer units from your reserves into this army.`)
       }
 
       //Tracking embeds
