@@ -113,7 +113,7 @@ module.exports = {
 
         ui_obj.channel = msg.channel.id;
         ui_obj.type = "page_menu";
-        
+
         ui_obj.debug = (options.debug);
         ui_obj.embed_array = options.embed_pages;
         ui_obj.page = starting_page;
@@ -344,10 +344,12 @@ module.exports = {
     var options = arg1_options;
 
     //Declare local instance variables
+    var added_pages = returnSafeNumber(options.added_pages);
     var all_embeds = [];
     var is_fixed_width = (options.fixed_width);
     var local_array_string = [];
     var maximum_characters_per_embed = (options.maximum_characters) ? options.maximum_characters : 3500;
+    var page_index = returnSafeNumber(options.page_index);
     var total_page_count = 0;
 
     //Maximum fields reduction
@@ -381,7 +383,7 @@ module.exports = {
                       .setDescription(array_string.join("\n"));
 
                     //Declare local options variables
-                    var page_ending = (options.title && options.title_pages) ? `(Page ${all_embeds.length + 1} of ${parseNumber(total_page_count)}):` : "";
+                    var page_ending = (options.title && options.title_pages) ? `(Page ${all_embeds.length + 1 + page_index} of ${parseNumber(total_page_count + added_pages)}):` : "";
 
                     formatEmbed(local_embed, all_embeds, page_ending, options);
 

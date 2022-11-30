@@ -1025,10 +1025,7 @@ module.exports = {
 
     //Iterate over all goods; transform into min, max arrays
     for (var i = 0; i < lookup.all_good_names.length; i++)
-      virtual_inventory[lookup.all_good_names[i]] = [
-        virtual_user.inventory[lookup.all_good_names[i]],
-        virtual_user.inventory[lookup.all_good_names[i]]
-      ];
+      virtual_inventory[lookup.all_good_names[i]] = [0, 0];
     virtual_inventory.money = [0, 0];
 
     //Iterate over all_produced_goods

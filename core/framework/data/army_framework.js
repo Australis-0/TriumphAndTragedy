@@ -801,15 +801,18 @@ module.exports = {
         module.exports.getArmy(actual_id, army_name) :
         army_name;
       var all_units = Object.keys(army_obj.units);
-      var local_unit = lookup.all_units[all_units[i]];
 
       total_soldiers = module.exports.getArmySize(user_id, army_obj);
 
-      //Iterate over all_units
-      var local_soldiers = returnSafeNumber(getManpowerPerUnit(local_unit)*local_unit_amount);
-      var local_supply = usr.modifiers.unit_supply[all_units[i]];
+      for (var i = 0; i < all_units.length; i++) {
+        var local_unit = lookup.all_units[all_units[i]];
 
-      supply_obj[all_units[i]] = local_soldiers*local_supply;
+        //Iterate over all_units
+        var local_soldiers = returnSafeNumber(getManpowerPerUnit(local_unit)*local_unit_amount);
+        var local_supply = usr.modifiers.unit_supply[all_units[i]];
+
+        supply_obj[all_units[i]] = local_soldiers*local_supply;
+      }
     }
 
     //Calculate average_supply

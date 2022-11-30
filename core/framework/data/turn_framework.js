@@ -91,7 +91,7 @@ module.exports = {
             }
 
         //Army movement
-        if (local_army.moving_to) {
+        if (local_army.moving_to?.length > 0) {
           var current_element = local_army.moving_to.indexOf(local_army.province);
           var current_speed = getArmySpeed(local_user.id, local_army)*turn_hours;
           var provinces_moved = 0;
@@ -721,6 +721,15 @@ module.exports = {
     console.time(`Building processing!`);
     //Building processing
     try {
+      //Check goods that don't stack first
+      for (var i = 0; i < all_good_names.length; i++) {
+        var local_good = lookup.all_goods[all_good_names[i]];
+
+        //Reset local_good if it doesn't stack
+        if (local_good.doesnt_stack)
+          usr.inventory[all_good_names[i]] = 0;
+      }
+
       var all_produced_goods = Object.keys(all_production);
 
       for (var i = 0; i < all_produced_goods.length; i++) {

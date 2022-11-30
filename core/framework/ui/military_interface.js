@@ -8,14 +8,13 @@ module.exports = {
     var all_embeds = [];
     var all_users = Object.keys(main.users);
     var army_orders = getArmyOrders(user_id);
-    var deficit_goods = getArmyDeficitGoods(user_id);
     var game_obj = getGameObject(user_id);
     var maintenance_obj = getArmyMaintenance(user_id);
+    var production_obj = parseProduction(user_id);
     var units_obj = getUnits(user_id);
     var usr = main.users[actual_id];
 
     var all_armies = Object.keys(usr.armies);
-    var all_deficit_goods = Object.keys(deficit_goods);
     var all_unit_maintenance_costs = Object.keys(maintenance_obj);
     var all_unit_types = getUnitTypes(user_id);
     var all_units = Object.keys(units_obj);
@@ -334,7 +333,8 @@ module.exports = {
 
         //Format Page 5+ - UI - Overall Supply Needs - (Deficit/Surplus)
         for (var i = 0; i < all_unit_maintenance_costs.length; i++) {
-          var local_deficit = deficit_goods[all_unit_maintenance_costs[i]];
+          var local_balance = production_obj[all_unit_maintenance_costs[i]];
+          var local_balance_string = "";
           var local_good = getGood(all_unit_maintenance_costs[i]);
           var local_maintenance_cost = maintenance_obj[all_unit_maintenance_costs[i]];
 
@@ -342,7 +342,19 @@ module.exports = {
             (local_good.name) ? local_good.name : all_unit_maintenance_costs[i] :
             parseString(all_unit_maintenance_costs[i]);
 
-          logistics_string.push(`- ${parseNumber(local_maintenance_cost)}${(local_deficit) ? ` (**${parseNumber(local_deficit)}**)` : ""} ${good_name}`);
+          //Format local_balance_string
+          var actual_balance = Math.min(local_balance[0], local_balance[1]);
+
+          if (actual_balance == 0)
+            actual_balance = Math.max(local_balance[0], local_balance[1]);
+
+          if (local_balance[0] && local_balance[1] < 0) {
+            local_balance_string = `(**${parseNumber(actual_balance, { display_prefix: true })}**)`
+          } else if (actual_balance != 0) {
+            local_balance_string = `(${parseNumber(actual_balance, { display_prefix: true })})`;
+          }
+
+          logistics_string.push(`- ${parseNumber(local_maintenance_cost)} ${good_name} ${local_balance_string}`);
         }
 
         logistics_string.push("");
@@ -388,7 +400,7 @@ module.exports = {
                   var local_good = getGood(local_maintenance_costs[y]);
                   var local_maintenance_cost = Math.ceil(
                     local_unit.maintenance[local_maintenance_costs[y]]
-                  *(local_amount/local_unit.quantity));
+                  *(local_amount/returnSafeNumber(local_unit.quantity, 1)));
 
                   if (local_maintenance_costs[y] == "money") {
                     maintenance_array.push(`**£${parseNumber(local_maintenance_cost)}**`)

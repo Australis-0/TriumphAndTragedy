@@ -48,26 +48,32 @@ module.exports = {
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
     var all_unit_names = getAllUnits({ return_names: true });
-    var army_obj = getArmy(actual_id, army_name);
+    var army_obj = getArmy(user_id, army_name);
     var game_obj = getGameObject(user_id);
     var usr = main.users[actual_id];
 
     //Check if army_obj could be found
     if (army_obj) {
       var aeroplane_count = 0;
+      var all_embeds = [];
       var all_units = Object.keys(army_obj.units);
       var army_icon = "";
-      var army_power = calculateArmyStats(actual_id, army_obj.name);
-      var army_stats = calculateArmyType(actual_id, army_obj.name);
+      var army_power = calculateArmyStats(user_id, army_obj.name);
+      var army_stats = calculateArmyType(user_id, army_obj.name);
       var army_string = [];
+      var army_supply = returnSafeNumber(getOverallSupply(user_id, army_obj), 1);
       var bonus_movement_speed = 1;
       var carrier_capacity_string = "";
       var current_status = "";
       var logistics_string = [];
+      var maintenance_obj = getArmyMaintenance(user_id, army_obj);
       var oob_string = [];
       var pure_airplanes = true;
       var pure_submarines = true;
+      var production_obj = parseProduction(user_id);
       var province_obj = main.provinces[army_obj.province];
+
+      var all_maintenance_costs = Object.keys(maintenance_obj);
 
       //Calculate tracker variables
       {
@@ -159,7 +165,7 @@ module.exports = {
         army_string.push("");
 
         //Display army statistics
-        army_string.push(`${config.icons.manpower} Army Size: ${parseNumber(Math.ceil((getArmySize(actual_id, army_obj.name)/1000)*100)/100)}`);
+        army_string.push(`${config.icons.manpower} Army Size: ${parseNumber(Math.ceil((getArmySize(actual_id, army_obj.name)/1000)*100)/100)} ${(all_units.length > 0) ? `(**${printPercentage(army_supply)}** Supply)` : ""}`);
         army_string.push(`${config.icons.provinces} Current Province: **${army_obj.province}** (${config.icons.railways} Supply Limit: **${parseNumber(Math.ceil(getTroopsInProvince(army_obj.province)/1000))}/${parseNumber(returnSafeNumber(province_obj.supply_limit, config.defines.combat.base_supply_limit))}**)`);
 
         if (bonus_movement_speed != 1)
@@ -182,39 +188,163 @@ module.exports = {
           if (army_obj.type == "air")
             army_string.push(`- ${config.icons.aeroplanes} Range: ${parseNumber(air_range)} Provinces`);
         }
-
-        army_string.push("");
-        army_string.push(config.localisation.divider);
       }
 
-      //Print units
-      army_string.push("");
-      army_string.push(`**Order of Battle:**`);
-      army_string.push("");
+      //Format Page 2 - oob_string
+      {
+        //Print units
+        oob_string.push(`**Order of Battle:**`);
+        oob_string.push("");
 
-      for (var i = 0; i < all_units.length; i++) {
-        var cache_icon = getUnitCategoryFromUnit(all_units[i]).icon;
+        for (var i = 0; i < all_units.length; i++) {
+          var cache_icon = getUnitCategoryFromUnit(all_units[i]).icon;
+          var local_icon = (config.icons[cache_icon]) ?
+            config.icons[cache_icon] + " " :
+            "";
+          var unit_obj = getUnit(all_units[i]);
 
-        var local_icon = (config.icons[cache_icon]) ?
-          config.icons[cache_icon] + " " :
-          ""
-        var unit_obj = getUnit(all_units[i]);
+          if (unit_obj.icon)
+            local_icon = config.icons[unit_obj.icon];
 
-        army_string.push(`${local_icon}${(unit_obj.name) ? unit_obj.name : all_units[i]}: ${parseNumber(army_obj.units[all_units[i]])}`);
+          oob_string.push(`${local_icon}${(unit_obj.name) ? unit_obj.name : all_units[i]}: ${parseNumber(army_obj.units[all_units[i]])}`);
+        }
+
+        if (all_units.length == 0) {
+          oob_string.push(`_No units found._`);
+          oob_string.push("");
+          oob_string.push(`Type **[Deploy Units]** to transfer some over from your reserves.`);
+        }
       }
 
-      if (all_units.length == 0) {
-        army_string.push(`_No units found._`);
-        army_string.push("");
-        army_string.push(`Type **[Deploy Units]** to transfer some over from your reserves.`);
+      //Format Page 3 - logistics_string
+      if (all_units.length > 0) {
+        //Print logistics - Total Maintenance
+        logistics_string.push(`**Total Maintenance:**`);
+        logistics_string.push("");
+
+        if (all_maintenance_costs.length > 0) {
+          for (var i = 0; i < all_maintenance_costs.length; i++) {
+            var local_balance = production_obj[all_maintenance_costs[i]];
+            var local_balance_string = "";
+            var local_good = getGood(all_maintenance_costs[i]);
+            var local_maintenance_cost = maintenance_obj[all_maintenance_costs[i]];
+
+            var good_name = (local_good) ?
+              (local_good.name) ? local_good.name : all_maintenance_costs[i] :
+              parseString(all_maintenance_costs[i]);
+
+            //Format local_balance_string
+            var actual_balance = Math.min(local_balance[0], local_balance[1]);
+
+            if (actual_balance == 0)
+              actual_balance = Math.max(local_balance[0], local_balance[1]);
+
+            if (local_balance[0] && local_balance[1] < 0) {
+              local_balance_string = `(**${parseNumber(actual_balance, { display_prefix: true })}**)`
+            } else if (actual_balance != 0) {
+              local_balance_string = `(${parseNumber(actual_balance, { display_prefix: true })})`;
+            }
+
+            logistics_string.push(`- ${parseNumber(local_maintenance_cost)} ${good_name} ${local_balance_string}`);
+          }
+        } else {
+          logistics_string.push(`_This army requires no upkeep._`);
+        }
+
+        logistics_string.push("");
+        logistics_string.push(config.localisation.divider);
+        logistics_string.push("");
+        logistics_string.push(`**Unit Logistics:**`);
+        logistics_string.push("");
+
+        //Print logistics - Per Unit - 1st Line - Attack/Defence - (Supply); 2nd Line - Maintenance Costs
+        for (var i = 0; i < all_units.length; i++) {
+          var local_amount = army_obj.units[all_units[i]];
+          var local_category = getUnitCategoryFromUnit(all_units[i]);
+          var local_icon = (config.icons[local_category.icon]) ?
+            config.icons[local_category.icon] + " " :
+            "";
+          var local_unit = lookup.all_units[all_units[i]];
+          var maintenance_array = [];
+
+          var local_attack = returnSafeNumber(getAttack(user_id, local_unit)*local_amount);
+          var local_defence = returnSafeNumber(getDefence(user_id, local_unit)*local_amount);
+
+          if (local_unit.icon)
+            local_icon = config.icons[local_unit.icon];
+
+          logistics_string.push(`- ${local_icon}${(local_unit.name) ? local_unit.name : all_units[i]}: ${parseNumber(local_amount)} - ${parseNumber(local_attack)} Attack | ${parseNumber(local_defence)} Defence - (**${printPercentage(usr.modifiers.unit_supply[all_units[i]])}** Supply)`);
+
+          if (local_unit.maintenance) {
+            var local_maintenance_costs = Object.keys(local_unit.maintenance);
+
+            //Iterate over local_maintenance_costs
+            for (var x = 0; x < local_maintenance_costs.length; x++) {
+              var local_good = lookup.all_goods[local_maintenance_costs[x]];
+              var local_maintenance_cost = Math.ceil(
+                local_unit.maintenance[local_maintenance_costs[x]]
+              *(local_amount/returnSafeNumber(local_unit.quantity, 1)));
+
+              if (local_maintenance_costs[x] == "money") {
+                maintenance_array.push(`**£${parseNumber(local_maintenance_cost)}**`)
+              } else if (local_good) {
+                maintenance_array.push(`**${parseNumber(local_maintenance_cost)}** ${(local_good.name) ? local_good.name : local_maintenance_costs[x]}`);
+              } else {
+                maintenance_array.push(`**${parseNumber(local_maintenance_cost)}** ${parseString(local_maintenance_costs[x])}`);
+              }
+            }
+          }
+
+          logistics_string.push(`• Per turn maintenance: ${maintenance_array.join(", ")}`);
+
+          if (i < all_units.length - 1)
+            logistics_string.push(`---`);
+        }
       }
 
-      //Return statement
-      return splitEmbed(army_string, {
+      //Tracking embeds
+      {
+        var page_two_embeds = splitEmbed(oob_string, { fixed_width: true });
+        var page_three_embeds = splitEmbed(logistics_string, { fixed_width: true });
+      }
+
+      //Page 1 embed
+      const embed_army_page_one = new Discord.MessageEmbed()
+        .setColor(settings.bot_colour)
+        .setTitle(`[Back] | [Jump To Page] | ${army_icon} ${army_obj.name}, ${usr.name}: (Page 1 of ${1 + page_two_embeds.length + page_three_embeds.length}):`)
+        .setDescription(army_string.join("\n"))
+        .setImage("https://cdn.discordapp.com/attachments/722997700391338046/736141424315203634/margin.png");
+
+      //Page 2 embeds
+      var page_two_final_embeds = splitEmbed(oob_string, {
         title: `[Back] | [Jump To Page] | ${army_icon} ${army_obj.name}, ${usr.name}:`,
         title_pages: true,
-        fixed_width: true
+        fixed_width: true,
+
+        added_pages: 1 + page_three_embeds.length,
+        page_index: 1
       });
+
+      //Page 3 embeds
+      var page_three_final_embeds = splitEmbed(logistics_string, {
+        title: `[Back] | [Jump To Page] | ${army_icon} ${army_obj.name}, ${usr.name}:`,
+        title_pages: true,
+        fixed_width: true,
+
+        added_pages: 1 + page_two_embeds.length,
+        page_index: 1 + page_two_embeds.length
+      });
+
+      //Push to all_embeds
+      all_embeds = [embed_army_page_one];
+
+      for (var i = 0; i < page_two_final_embeds.length; i++)
+        all_embeds.push(page_two_final_embeds[i]);
+      for (var i = 0; i < page_three_final_embeds.length; i++)
+        all_embeds.length(page_three_final_embeds[i]);
+
+      //Return statement
+      return all_embeds;
     } else {
       printError(game_obj.id, `No army by the name of **${army_name}** could be found! Check your **[Army List]** for a full list of valid field armies, air wings, and fleets.`);
     }
