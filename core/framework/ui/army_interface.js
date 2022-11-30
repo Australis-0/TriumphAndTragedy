@@ -341,7 +341,7 @@ module.exports = {
       for (var i = 0; i < page_two_final_embeds.length; i++)
         all_embeds.push(page_two_final_embeds[i]);
       for (var i = 0; i < page_three_final_embeds.length; i++)
-        all_embeds.length(page_three_final_embeds[i]);
+        all_embeds.push(page_three_final_embeds[i]);
 
       //Return statement
       return all_embeds;
