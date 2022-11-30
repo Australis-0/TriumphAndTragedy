@@ -446,7 +446,7 @@ module.exports = {
                   );
 
                 //Declare local options variables
-                var page_ending = (options.title && options.title_pages) ? `(Page ${all_embeds.length+1} of ${total_page_count}):` : "";
+                var page_ending = (options.title && options.title_pages) ? `(Page ${all_embeds.length + 1 + page_index} of ${total_page_count + added_pages}):` : "";
 
                 formatEmbed(local_embed, all_embeds, page_ending, options);
                 current_character_count = 0;
@@ -466,7 +466,7 @@ module.exports = {
                   .setDescription(local_array_string.join("\n"));
 
                 //Declare local options variables
-                var page_ending = (options.title && options.title_pages) ? `(Page ${all_embeds.length+1} of ${total_page_count}):` : "";
+                var page_ending = (options.title && options.title_pages) ? `(Page ${all_embeds.length + 1 + page_index} of ${total_page_count + added_pages}):` : "";
 
                 formatEmbed(local_embed, all_embeds, page_ending, options);
                 local_array_string = [];

@@ -311,7 +311,7 @@ module.exports = {
       //Page 1 embed
       const embed_army_page_one = new Discord.MessageEmbed()
         .setColor(settings.bot_colour)
-        .setTitle(`[Back] | [Jump To Page] | ${army_icon} ${army_obj.name}, ${usr.name}: (Page 1 of ${1 + page_two_embeds.length + page_three_embeds.length}):`)
+        .setTitle(`**[Back] | [Jump To Page] | ${army_icon} ${army_obj.name}, ${usr.name}: (Page 1 of ${1 + page_two_embeds.length + page_three_embeds.length}):**`)
         .setDescription(army_string.join("\n"))
         .setImage("https://cdn.discordapp.com/attachments/722997700391338046/736141424315203634/margin.png");
 
