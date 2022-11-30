@@ -478,6 +478,10 @@ module.exports = {
     var all_unit_categories = Object.keys(config.units);
     var unit_category_exists = [false, ""]; //[unit_category_exists, category_name]
 
+    if (!lookup.all_units[unit_name])
+      unit_name = getUnit(unit_name, { return_key: true });
+
+    //Check all_unit_categories for unit_name
     for (var i = 0; i < all_unit_categories.length; i++)
       if (Object.keys(config.units[all_unit_categories[i]]).includes(unit_name))
         unit_category_exists = [true, (!options.return_key) ? config.units[all_unit_categories[i]] : all_unit_categories[i]];
