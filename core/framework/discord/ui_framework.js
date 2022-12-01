@@ -442,7 +442,10 @@ module.exports = {
                     ((options.description) ?
                       "\n" + options.description.join("\n") :
                       "") +
-                    local_array_string.join("\n")
+                    local_array_string.join("\n") +
+                    ((options.footer_description) ?
+                      "\n" + options.footer_description.join("\n") :
+                      "")
                   );
 
                 //Declare local options variables

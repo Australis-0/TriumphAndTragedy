@@ -1925,7 +1925,9 @@ module.exports = {
       });
     } else if (mode == "alphabetical") {
       sorted_army_array.sort(function(a, b) {
-        return a.alphabetical.localeCompare(b.alphabetical);
+        if (a.alphabetical < b.alphabetical) return -1;
+        if (a.alphabetical > b.alphabetical) return 1;
+        return 0;
       });
     } else if (mode == "chronological") {
       sorted_army_array.sort(function(a, b) {
@@ -1958,7 +1960,11 @@ module.exports = {
       roman_sorted_array.sort(function(a, b) {
         return a[1].numerical - b[1].numerical;
       });
-      remainder_array.sort((a, b) => a.alphabetical.localeCompare(b.alphabetical));
+      remainder_array.sort(function(a, b) {
+        if (a.alphabetical < b.alphabetical) return -1;
+        if (a.alphabetical > b.alphabetical) return 1;
+        return 0;
+      });
 
       //Clear sorted_army_array and push everything back in
       sorted_army_array = [];
@@ -1977,6 +1983,18 @@ module.exports = {
 
       for (var i = 0; i < remainder_array.length; i++)
         sorted_army_array.push(remainder_array[i]);
+    } else if (mode == "size") {
+      sorted_army_array.sort(function(a, b) {
+        return returnSafeNumber(b[1].size) - returnSafeNumber(a[1].size);
+      });
+    } else if (mode == "speed") {
+      sorted_army_array.sort(function(a, b) {
+        return returnSafeNumber(b[1].speed) - returnSafeNumber(a[1].speed);
+      });
+    } else if (mode == "strength") {
+      sorted_army_array.sort(function(a, b) {
+        return returnSafeNumber(b[1].strength) - returnSafeNumber(a[1].strength);
+      });
     } else if (mode == "type") {
       var unique_types = [];
 
@@ -2010,7 +2028,11 @@ module.exports = {
         local_roman_array.sort(function(a, b) {
           return a[1].numerical - b[1].numerical;
         });
-        local_remainder_array.sort((a, b) => a.alphabetical.localeCompare(b.alphabetical));
+        local_remainder_array.sort(function(a, b) {
+          if (a.alphabetical < b.alphabetical) return -1;
+          if (a.alphabetical > b.alphabetical) return 1;
+          return 0;
+        });
 
         //Clear sorted_army_array and push everything back in
         sorted_army_array = [];
@@ -2022,18 +2044,6 @@ module.exports = {
         for (var i = 0; i < local_remainder_array.length; i++)
           sorted_army_array.push(local_remainder_array[i]);
       }
-    } else if (mode == "size") {
-      sorted_army_array.sort(function(a, b) {
-        return returnSafeNumber(b[1].size) - returnSafeNumber(a[1].size);
-      });
-    } else if (mode == "speed") {
-      sorted_army_array.sort(function(a, b) {
-        return returnSafeNumber(b[1].speed) - returnSafeNumber(a[1].speed);
-      });
-    } else if (mode == "strength") {
-      sorted_army_array.sort(function(a, b) {
-        return returnSafeNumber(b[1].strength) - returnSafeNumber(a[1].strength);
-      });
     }
 
     //Reduce sorted_army_array to ID map (army_array)

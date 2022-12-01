@@ -1690,10 +1690,37 @@ module.exports = {
       //Military page handler
       {
         if (game_obj.page == "army_list") {
+          //[Attrition]
+          if (["attrition", "sort by attrition"].includes(input)) {
+            game_obj.armies_sorting_mode = "attrition";
+            createPageMenu(game_obj.middle_embed, {
+              embed_pages: printArmyList(game_obj.user),
+              user: game_obj.user
+            });
+          }
+
+          //[Alphabetical]
+          if (["alphabetical", "sort by alphabetical"].includes(input)) {
+            game_obj.armies_sorting_mode = "alphabetical";
+            createPageMenu(game_obj.middle_embed, {
+              embed_pages: printArmyList(game_obj.user),
+              user: game_obj.user
+            });
+          }
+
           //[Back]
           if (input == "back") {
             printMilitary(user_id);
             game_obj.page = "military";
+          }
+
+          //[Chronological]
+          if (["chronological", "sort by chronological"].includes(input)) {
+            game_obj.armies_sorting_mode = "chronological";
+            createPageMenu(game_obj.middle_embed, {
+              embed_pages: printArmyList(game_obj.user),
+              user: game_obj.user
+            });
           }
 
           //[Jump To Page]
@@ -1711,6 +1738,60 @@ module.exports = {
                 user: game_obj.user
               });
             });
+
+          //[Numerical]
+          if (["number", "numeric", "numerical", "sort by number", "sort by numeric", "sort by numerical"].includes(input)) {
+            game_obj.armies_sorting_mode = "numerical";
+            createPageMenu(game_obj.middle_embed, {
+              embed_pages: printArmyList(game_obj.user),
+              user: game_obj.user
+            });
+          }
+
+          //[Roman]
+          if (["roman", "sort by roman"].includes(input)) {
+            game_obj.armies_sorting_mode = "roman_numerical";
+            createPageMenu(game_obj.middle_embed, {
+              embed_pages: printArmyList(game_obj.user),
+              user: game_obj.user
+            });
+          }
+
+          //[Size]
+          if (["size", "sort by size"].includes(input)) {
+            game_obj.armies_sorting_mode = "size";
+            createPageMenu(game_obj.middle_embed, {
+              embed_pages: printArmyList(game_obj.user),
+              user: game_obj.user
+            });
+          }
+
+          //[Speed]
+          if (["speed", "sort by speed"].includes(input)) {
+            game_obj.armies_sorting_mode = "speed";
+            createPageMenu(game_obj.middle_embed, {
+              embed_pages: printArmyList(game_obj.user),
+              user: game_obj.user
+            });
+          }
+
+          //[Strength]
+          if (["strength", "sort by strength"].includes(input)) {
+            game_obj.armies_sorting_mode = "strength";
+            createPageMenu(game_obj.middle_embed, {
+              embed_pages: printArmyList(game_obj.user),
+              user: game_obj.user
+            });
+          }
+
+          //[Type]
+          if (["type", "sort by type"].includes(input)) {
+            game_obj.armies_sorting_mode = "type";
+            createPageMenu(game_obj.middle_embed, {
+              embed_pages: printArmyList(game_obj.user),
+              user: game_obj.user
+            });
+          }
         }
 
         if (game_obj.page == "army_list" || game_obj.page.startsWith("army_viewer_")) {

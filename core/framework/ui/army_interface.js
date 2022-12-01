@@ -377,15 +377,7 @@ module.exports = {
     var usr = main.users[actual_id];
 
     //Sort user armies
-    var all_armies = Object.keys(
-      Object.fromEntries(
-        Object.entries(usr.armies).sort(function (a, b) {
-            return (a[1].name.toLowerCase() <  b[1].name.toLowerCase()) ? -1 :
-              (a[1].name.toLowerCase() > b[1].name.toLowerCase()) ? 1 : 0;
-            }
-          )
-        )
-      );
+    var all_armies = sortArmies(user_id, game_obj.armies_sorting_mode);
     var armies_string = [];
 
     //Format armies_string
@@ -430,6 +422,9 @@ module.exports = {
         `**[Create Army]** | **[Delete Army]** | **[Merge Army]** | **[Rename Army]** | **[View Army]**`,
         `- **[Deploy Units]** | **[Transfer Units]** | **[Relieve Units]** | **[Reorder Units]**`,
         ``,
+        `- Sort by: **[Attrition]** | **[Alphabetical]** | **[Chronological]** | **[Numerical]** | **[Roman]** | **[Size]** | **[Speed]** | **[Strength]** | **[Type]**`,
+        ``,
+        config.localisation.divider,
         ``,
       ]
     });
