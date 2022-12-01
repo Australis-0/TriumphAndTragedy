@@ -79,8 +79,13 @@ module.exports = {
       //Calculate tracker variables
       {
         //Bonus movement speed
-        if (army_obj.moving_to?.length > 0)
-          bonus_movement_speed = getSupplyLimitMovementBonus(army_obj.province, army_obj.moving_to[0]);
+        if (army_obj.moving_to?.length > 0) {
+          var current_index = army_obj.moving_to.indexOf(army_obj.province);
+          bonus_movement_speed = army_obj.distances[0];
+
+          if (army_obj.moving_to[current_index + 1] != 0)
+            bonus_movement_speed = bonus_movement_speed/getDistance(army_obj.province, army_obj.moving_to[current_index + 1]);
+        }
 
         //Unit types
         for (var i = 0; i < all_units.length; i++) {
