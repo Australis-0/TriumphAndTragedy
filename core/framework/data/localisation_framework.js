@@ -113,8 +113,29 @@ module.exports = {
 
     for (var i = 0; i < provinces.length; i++) {
       var local_province = main.provinces[provinces[i]];
+      var path_string_length = 0;
 
-      path_string.push(`${(local_province.name) ? `(#${provinces[i]}) **${local_province.name}**` : provinces[i]}${(distances) ? ` (${parseNumber(distances[i])})` : ""}`);
+      for (var x = 0; x < path_string.length; x++)
+        path_string_length += path_string[x].length;
+
+      if (path_string_length < 1000 || (provinces.length - path_string.length <= 1)) {
+        path_string.push(`${(local_province.name) ? `(#${provinces[i]}) **${local_province.name}**` : provinces[i]}${(distances) ? ` (${parseNumber(distances[i])})` : ""}`);
+      } else {
+        var remainder_distance = 0;
+        var remainder_provinces = provinces.length - path_string.length - 1;
+
+        if (distances)
+          for (var x = i; x < distances.length - 1; x++)
+            remainder_distance += parseInt(distances[x]);
+
+        //Push truncated string
+        path_string.push(`+${parseNumber(remainder_provinces)} more ${(distances) ?  `(${parseNumber(remainder_distance)})` : ""}`);
+
+        //Push final province
+        path_string.push(`${(local_province.name) ? `(#${provinces[provinces.length - 1]}) **${local_province.name}**` : provinces[provinces.length - 1]}${(distances) ? ` (${parseNumber(distances[provinces.length - 1])})` : ""}`);
+
+        break;
+      }
     }
 
     //Join array
