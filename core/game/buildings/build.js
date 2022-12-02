@@ -10,7 +10,7 @@ module.exports = {
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
     var building_obj = getBuilding(building_name);
-    var city_obj = getCity(city_name, { users: actual_id });
+    var city_obj = getCity(city_name, { users: user_id });
     var game_obj = getGameObject(user_id);
     var raw_building_name = getBuilding(building_name, { return_key: true });
     var usr = main.users[actual_id];
@@ -30,13 +30,13 @@ module.exports = {
 
                 //Check if building slots are available for the building
                 var building_slots = (building_obj.separate_building_slots || building_category.disable_slots) ?
-                  getBuildingSlots(actual_id, city_name, raw_building_name) :
-                  getBuildingSlots(actual_id, city_name, raw_category_name);
+                  getBuildingSlots(user_id, city_name, raw_building_name) :
+                  getBuildingSlots(user_id, city_name, raw_category_name);
 
                 if (building_slots.available_slots > 0 || building_slots.total_slots == -1) {
                   if (building_slots.available_slots >= building_amount || building_slots.total_slots == -1) {
                     //Check if user has enough resources to construct the specified buildings
-                    var building_costs = getBuildingCost(actual_id, raw_building_name, { amount: building_amount });
+                    var building_costs = getBuildingCost(user_id, raw_building_name, { amount: building_amount });
                     var resource_shortages = {};
 
                     //Iterate over all keys in building_costs and check for prospective shortages

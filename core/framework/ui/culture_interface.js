@@ -9,13 +9,13 @@ module.exports = {
     var usr = main.users[actual_id];
 
     //Declare tracker variables
-    var accepted_culture_provinces = getAcceptedCultureProvinces(actual_id);
-    var accepted_cultures = getAcceptedCultures(actual_id, { exclude_primary_culture: true });
-    var all_accepted_cultures = getAcceptedCultures(actual_id);
-    var all_primary_cultures = getPrimaryCultures(actual_id);
-    var total_accepted_culture_population = calculateAcceptedCultureTotal(actual_id);
-    var sorted_culture_array = getSortedCultures(actual_id);
-    var total_unaccepted_population = calculateUnacceptedCultureTotal(actual_id);
+    var accepted_culture_provinces = getAcceptedCultureProvinces(user_id);
+    var accepted_cultures = getAcceptedCultures(user_id, { exclude_primary_culture: true });
+    var all_accepted_cultures = getAcceptedCultures(user_id);
+    var all_primary_cultures = getPrimaryCultures(user_id);
+    var total_accepted_culture_population = calculateAcceptedCultureTotal(user_id);
+    var sorted_culture_array = getSortedCultures(user_id);
+    var total_unaccepted_population = calculateUnacceptedCultureTotal(user_id);
 
     //Initialise culture_string
     var culture_string = [];
@@ -50,7 +50,7 @@ module.exports = {
           `an accepted culture. | **[Remove Accepted Culture]**` :
           `an unaccepted culture. Either assimilate their provinces in **[View Population]**, or add them as an accepted culture for **${parseNumber(config.defines.politics.accepted_culture_cost)}** ${config.icons.political_capital} Political Capital.`;
 
-      culture_string.push(`**${printPercentage(calculateCulturalPercentage(actual_id, sorted_culture_array[i].id))}** of our population, or **${parseNumber(getCultureProvinces(actual_id, sorted_culture_array[i].id).length)}** of our provinces identify as **${getCulture(sorted_culture_array[i].id).name}**/**${getCulture(sorted_culture_array[i].id).adjective}**, ${culture_description}`);
+      culture_string.push(`**${printPercentage(calculateCulturalPercentage(user_id, sorted_culture_array[i].id))}** of our population, or **${parseNumber(getCultureProvinces(user_id, sorted_culture_array[i].id).length)}** of our provinces identify as **${getCulture(sorted_culture_array[i].id).name}**/**${getCulture(sorted_culture_array[i].id).adjective}**, ${culture_description}`);
     }
 
     culture_string.push("");

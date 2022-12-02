@@ -108,7 +108,7 @@ module.exports = {
     var import_string = [];
 
     //Format import_string
-    var all_imports = getImports(actual_id);
+    var all_imports = getImports(user_id);
 
     for (var i = 0; i < all_imports.length; i++) {
       var good_type = all_imports[i].good_type;
@@ -160,15 +160,15 @@ module.exports = {
     //Format trade_string
     var all_exports = Object.keys(usr.trades);
     var all_market_goods = Object.keys(main.market);
-    var local_imports = getImports(actual_id);
+    var local_imports = getImports(user_id);
     var number_of_autotrades = Object.keys(usr.auto_trades).length;
-    var capacity_used = getUsedCapacity(actual_id);
+    var capacity_used = getUsedCapacity(user_id);
 
     trade_string.push(`**Travel Modifiers:**`);
     trade_string.push("");
 
     //Format restrictions_string
-    if (isBlockaded(actual_id)) {
+    if (isBlockaded(user_id)) {
       restrictions_string.push(`${config.icons.blockade} **You are currently blockaded!**`);
       restrictions_string.push(`Being blockaded means you won't be able to ship or receive goods anymore. You can challenge this blockade by building up a naval fleet.`);
     }

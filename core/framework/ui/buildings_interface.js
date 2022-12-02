@@ -19,7 +19,7 @@ module.exports = {
     //Iterate over all valid buildings
     var all_building_categories = getBuildingCategories();
 
-    if (getCapital(actual_id)) {
+    if (getCapital(user_id)) {
       for (var i = 0; i < all_building_categories.length; i++) {
         var local_building_category = getBuildingCategory(all_building_categories[i]);
         var local_building_category_icon = (local_building_category.icon) ? config.icons[local_building_category.icon] + " " : "";
@@ -33,9 +33,9 @@ module.exports = {
           //Only push building to category if user has the building unlocked
           if (usr.available_buildings.includes(local_buildings[x])) {
             //Get building costs, consumption and production
-            var building_costs = getBuildingCost(actual_id, local_buildings[x]);
-            var building_maintenance = getBuildingConsumption(actual_id, local_buildings[x]);
-            var building_production = getBuildingProduction(actual_id, local_buildings[x], getCapital(actual_id).name);
+            var building_costs = getBuildingCost(user_id, local_buildings[x]);
+            var building_maintenance = getBuildingConsumption(user_id, local_buildings[x]);
+            var building_production = getBuildingProduction(user_id, local_buildings[x], getCapital(user_id).name);
             var local_building = getBuilding(local_buildings[x]);
 
             //Production indicator stuff

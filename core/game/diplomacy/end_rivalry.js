@@ -14,9 +14,9 @@ module.exports = {
     //Check if other user exists and is rival
     if (ot_user) {
       //Check if country is rival
-      if (hasRivalry(actual_id, actual_ot_user_id)) {
+      if (hasRivalry(user_id, ot_user_id)) {
         //Fire remove rivalry event
-        sendAlert(actual_ot_user_id, config.defines.diplomacy.rival_cancellation_alert_id, {
+        sendAlert(ot_user_id, config.defines.diplomacy.rival_cancellation_alert_id, {
           FROM: actual_id,
           TO: actual_ot_user_id
         });

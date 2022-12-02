@@ -234,7 +234,7 @@ module.exports = {
               break;
             case "constructions":
               createPageMenu(game_obj.middle_embed, {
-                embed_pages: printConstructions(actual_id),
+                embed_pages: printConstructions(user_id),
                 user: game_obj.user
               });
               game_obj.page = "view_constructions";
@@ -261,7 +261,7 @@ module.exports = {
             case "government":
             case "governments":
               createPageMenu(game_obj.middle_embed, {
-                embed_pages: printGovernmentList(actual_id),
+                embed_pages: printGovernmentList(user_id),
                 user: game_obj.user
               });
               game_obj.page = "view_governments";
@@ -329,8 +329,8 @@ module.exports = {
               break;
             default:
               if (!["view army"].includes(input)) {
-                var army_obj = getArmy(actual_id, view_obj);
-                var city_obj = getCity(view_obj, { users: actual_id });
+                var army_obj = getArmy(user_id, view_obj);
+                var city_obj = getCity(view_obj, { users: user_id });
                 var ot_user_id = returnMention(view_obj);
                 var province_name = input.replace("view", "").trim()
                   .replace("province", "").trim();
@@ -407,7 +407,7 @@ module.exports = {
                   if (!army_obj && !city_obj)
                     if (main.users[actual_ot_user_id]) {
                       viewDiplomacy(user_id, ot_user_id);
-                      game_obj.page = `diplomacy_view_${actual_ot_user_id}`;
+                      game_obj.page = `diplomacy_view_${ot_user_id}`;
                     } else {
                       //Keep wars as last in precedence
                       var war_report = printWar(user_id, view_obj, false, true);
@@ -544,7 +544,7 @@ module.exports = {
             if (arg.length > 1) {
               //Process city_name by removing initial argument and print city
               var city_name = input.replace("view", "").trim();
-              var city_obj = getCity(city_name, { users: actual_id });
+              var city_obj = getCity(city_name, { users: user_id });
 
               if (city_obj) {
                 createPageMenu(game_obj.middle_embed, {
@@ -729,9 +729,9 @@ module.exports = {
 
             //[Settle Starting Provinces]
             if (["settle starting province", "settle starting provinces"].includes(input)) {
-              var has_no_provinces = (getProvinces(actual_id, { include_hostile_occupations: true, include_occupations: true }).length == 0);
+              var has_no_provinces = (getProvinces(user_id, { include_hostile_occupations: true, include_occupations: true }).length == 0);
 
-              if (has_no_provinces && !atWar(actual_id))
+              if (has_no_provinces && !atWar(user_id))
                 initialiseSettleStartingProvinces(user_id);
             }
 
@@ -810,7 +810,7 @@ module.exports = {
                 switch (arg) {
                   case "government list":
                     createPageMenu(game_obj.middle_embed, {
-                      embed_pages: printGovernmentList(actual_id),
+                      embed_pages: printGovernmentList(user_id),
                       user: game_obj.user
                     });
                     return true;
@@ -833,7 +833,7 @@ module.exports = {
               break;
             case "government list":
               createPageMenu(game_obj.middle_embed, {
-                embed_pages: printGovernmentList(actual_id),
+                embed_pages: printGovernmentList(user_id),
                 user: game_obj.user
               });
               game_obj.page = "view_governments";
@@ -853,9 +853,9 @@ module.exports = {
               break;
             case "settle starting province":
             case "settle starting provinces":
-              var has_no_provinces = (getProvinces(actual_id, { include_hostile_occupations: true, include_occupations: true }).length == 0);
+              var has_no_provinces = (getProvinces(user_id, { include_hostile_occupations: true, include_occupations: true }).length == 0);
 
-              if (has_no_provinces && !atWar(actual_id))
+              if (has_no_provinces && !atWar(user_id))
                 initialiseSettleStartingProvinces(user_id);
 
               break;
@@ -870,21 +870,21 @@ module.exports = {
           if (input.startsWith("chop ")) {
             var amount_to_chop = parseInt(input.replace("chop ", "").trim());
 
-            mine(actual_id, amount_to_chop, "chop");
+            mine(user_id, amount_to_chop, "chop");
           }
 
           //[Mine (#)]
           if (input.startsWith("mine ")) {
             var amount_to_mine = parseInt(input.replace("mine ", "").trim());
 
-            mine(actual_id, amount_to_mine, "mine");
+            mine(user_id, amount_to_mine, "mine");
           }
 
           //[Quarry (#)]
           if (input.startsWith("quarry ")) {
             var amount_to_quarry = parseInt(input.replace("quarry ", "").trim());
 
-            mine(actual_id, amount_to_quarry, "quarry");
+            mine(user_id, amount_to_quarry, "quarry");
           }
         }
 
@@ -1097,7 +1097,7 @@ module.exports = {
         }
 
         if (game_obj.page.startsWith("diplomacy_view_")) {
-          var actual_ot_user_id = game_obj.page.replace("diplomacy_view_", "");
+          var ot_user_id = game_obj.page.replace("diplomacy_view_", "");
 
           //Button Handler
           //[Back]
@@ -1108,7 +1108,7 @@ module.exports = {
 
           //[Break Alliance]
           if (input == "break alliance")
-            breakAlliance(user_id, actual_ot_user_id);
+            breakAlliance(user_id, ot_user_id);
 
           //[Cancel Justification]
           if (input == "cancel justification")
@@ -1116,11 +1116,11 @@ module.exports = {
 
           //[Cancel Military Access]
           if (input == "cancel military access")
-            cancelMilitaryAccess(user_id, actual_ot_user_id);
+            cancelMilitaryAccess(user_id, ot_user_id);
 
           //[Call Ally]
           if (input == "call ally")
-            initialiseCallAlly(user_id, actual_ot_user_id);
+            initialiseCallAlly(user_id, ot_user_id);
 
           //[Cancel Wargoal]
           if (input == "cancel wargoal")
@@ -1128,7 +1128,7 @@ module.exports = {
 
           //[Declare Rivalry]
           if (input == "declare rivalry")
-            rival(user_id, actual_ot_user_id);
+            rival(user_id, ot_user_id);
 
           //[Declare War]
           if (input == "declare war")
@@ -1136,31 +1136,31 @@ module.exports = {
 
           //[Decrease Relations]
           if (input == "decrease relations")
-            decreaseRelations(user_id, actual_ot_user_id);
+            decreaseRelations(user_id, ot_user_id);
 
           //[Demand Annexation]
           if (input == "demand annexation")
-            annex(user_id, actual_ot_user_id);
+            annex(user_id, ot_user_id);
 
           //[Demand Vassalisation]
           if (input == "demand vassalisation")
-            vassalise(user_id, actual_ot_user_id);
+            vassalise(user_id, ot_user_id);
 
           //[End Rivalry]
           if (input == "end rivalry")
-            endRivalry(user_id, actual_ot_user_id);
+            endRivalry(user_id, ot_user_id);
 
           //[Guarantee Independence]
           if (input == "guarantee independence")
-            proclaimGuarantee(user_id, actual_ot_user_id);
+            proclaimGuarantee(user_id, ot_user_id);
 
           //[Liberate]
           if (input == "liberate")
-            liberate(user_id, actual_ot_user_id);
+            liberate(user_id, ot_user_id);
 
           //[Improve Relations]
           if (input == "improve relations")
-            improveRelations(user_id, actual_ot_user_id);
+            improveRelations(user_id, ot_user_id);
 
           //[Justify Wargoal]
           if (input == "justify wargoal")
@@ -1168,38 +1168,38 @@ module.exports = {
 
           //[Request Alliance]
           if (input == "request alliance")
-            ally(user_id, actual_ot_user_id);
+            ally(user_id, ot_user_id);
 
           //[Request Military Access]
           if (input == "request military access")
-            militaryAccess(user_id, actual_ot_user_id);
+            militaryAccess(user_id, ot_user_id);
 
           //[Revoke Guarantee]
           if (input == "revoke guarantee")
-            revokeGuarantee(user_id, actual_ot_user_id);
+            revokeGuarantee(user_id, ot_user_id);
 
           //[Revoke Military Access]
           if (input == "revoke military access")
-            revokeMilitaryAccess(user_id, actual_ot_user_id);
+            revokeMilitaryAccess(user_id, ot_user_id);
 
           //[Sign Non-Aggression Pact]
           if (["sign non-aggression pact", "sign non aggression pact", "non-aggression pact", "non aggression pact"].includes(input))
-            nonAggressionPact(user_id, actual_ot_user_id);
+            nonAggressionPact(user_id, ot_user_id);
 
           //[View CBs]
           if (input == "view cbs") {
-            game_obj.page = `view_cb_${actual_ot_user_id}`;
+            game_obj.page = `view_cb_${ot_user_id}`;
             createPageMenu(game_obj.middle_embed, {
-              embed_pages: printCBList(user_id, actual_ot_user_id),
+              embed_pages: printCBList(user_id, ot_user_id),
               user: game_obj.user
             });
           }
 
           //[View Wargoals]
           if (input == "view wargoals") {
-            game_obj.page = `view_wargoals_${actual_ot_user_id}`;
+            game_obj.page = `view_wargoals_${ot_user_id}`;
             createPageMenu(game_obj.middle_embed, {
-              embed_pages: printWargoals(user_id, actual_ot_user_id),
+              embed_pages: printWargoals(user_id, ot_user_id),
               user: game_obj.user
             });
           }
@@ -1231,13 +1231,13 @@ module.exports = {
         }
 
         if (game_obj.page.startsWith("view_cb_")) {
-          var actual_ot_user_id = game_obj.page.replace("view_cb_", "");
+          var ot_user_id = game_obj.page.replace("view_cb_", "");
 
           //Button Handler
           //[Back]
           if (input == "back") {
-            viewDiplomacy(user_id, actual_ot_user_id);
-            game_obj.page = `diplomacy_view_${actual_ot_user_id}`;
+            viewDiplomacy(user_id, ot_user_id);
+            game_obj.page = `diplomacy_view_${ot_user_id}`;
           }
 
           //[Jump To Page]
@@ -1245,12 +1245,12 @@ module.exports = {
             visualPrompt(game_obj.alert_embed, user_id, {
               title: `Jump To Page:`,
               prompts: [
-                [`Which page would you like jump to?`, "number", { min: 1, max: printCBs(game_obj.user, actual_ot_user_id).length }]
+                [`Which page would you like jump to?`, "number", { min: 1, max: printCBs(game_obj.user, ot_user_id).length }]
               ]
             },
             function (arg) {
               createPageMenu(game_obj.middle_embed, {
-                embed_pages: printCBs(game_obj.user, actual_ot_user_id),
+                embed_pages: printCBs(game_obj.user, ot_user_id),
                 page: arg[0] - 1,
                 user: game_obj.user
               });
@@ -1261,17 +1261,17 @@ module.exports = {
             initialiseJustifyWar();
 
           //Tooltip handler
-          printCBTooltip(user_id, actual_ot_user_id, input);
+          printCBTooltip(user_id, ot_user_id, input);
         }
 
         if (game_obj.page.startsWith("view_wargoal_")) {
-          var actual_ot_user_id = game_obj.page.replace("view_cb_", "");
+          var ot_user_id = game_obj.page.replace("view_cb_", "");
 
           //Button Handler
           //[Back]
           if (input == "back") {
             viewDiplomacy(user_id, actual_ot_user_id);
-            game_obj.page = `diplomacy_view_${actual_ot_user_id}`;
+            game_obj.page = `diplomacy_view_${ot_user_id}`;
           }
 
           //[Jump To Page]
@@ -1279,12 +1279,12 @@ module.exports = {
             visualPrompt(game_obj.alert_embed, user_id, {
               title: `Jump To Page:`,
               prompts: [
-                [`Which page would you like jump to?`, "number", { min: 1, max: printWargoals(game_obj.user, actual_ot_user_id).length }]
+                [`Which page would you like jump to?`, "number", { min: 1, max: printWargoals(game_obj.user, ot_user_id).length }]
               ]
             },
             function (arg) {
               createPageMenu(game_obj.middle_embed, {
-                embed_pages: printWargoals(game_obj.user, actual_ot_user_id),
+                embed_pages: printWargoals(game_obj.user, ot_user_id),
                 page: arg[0] - 1,
                 user: game_obj.user
               });
@@ -1295,7 +1295,7 @@ module.exports = {
             initialiseDeclareWar(user_id);
 
           //Tooltip handler
-          printCBTooltip(user_id, actual_ot_user_id, input);
+          printCBTooltip(user_id, ot_user_id, input);
         }
 
         if (game_obj.page == "war_list") {
@@ -1445,7 +1445,7 @@ module.exports = {
               break;
             case "constructions":
               createPageMenu(game_obj.middle_embed, {
-                embed_pages: printConstructions(actual_id),
+                embed_pages: printConstructions(user_id),
                 user: game_obj.user
               });
               game_obj.page = "view_constructions";

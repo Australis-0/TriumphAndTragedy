@@ -105,12 +105,12 @@ module.exports = {
     var usr = main.users[actual_id];
 
     //Declare local tracker variables
-    var accepted_cultures = getAcceptedCultures(actual_id);
-    var cities = getCities(actual_id, {
+    var accepted_cultures = getAcceptedCultures(user_id);
+    var cities = getCities(user_id, {
       include_hostile_occupations: true,
       include_occupations: true
     });
-    var provinces = getProvinces(actual_id, {
+    var provinces = getProvinces(user_id, {
       exclude_cities: true,
       include_hostile_occupations: true,
       include_occupations: true

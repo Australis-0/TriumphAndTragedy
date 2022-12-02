@@ -311,14 +311,14 @@ module.exports = {
     },
     function (arg) {
       //Create new country object with that name
-      var client_state_obj = createClientState(actual_id, arg[0]);
+      var client_state_obj = createClientState(user_id, arg[0]);
 
       //Check to make sure name was valid
       if (client_state_obj) {
         var client_state_id = client_state_obj[0].id;
 
         //Set it as a vassal
-        createVassal(actual_id, {
+        createVassal(user_id, {
           target: client_state_id
         });
 
@@ -543,7 +543,7 @@ module.exports = {
       loadMap(`${map_file}.svg`, map_file);
 
     //Shade in any provinces belonging to usr that aren't listed as being ceded to client_obj
-    var user_provinces = getProvinces(actual_id, { include_hostile_occupations: true });
+    var user_provinces = getProvinces(user_id, { include_hostile_occupations: true });
 
     for (var i = 0; i < user_provinces.length; i++)
       if (client_obj.provinces.includes(user_provinces[i].id)) {
@@ -639,13 +639,13 @@ module.exports = {
     var usr = main.users[actual_id];
 
     //Check if usr is currently being justified on or is at war
-    if (!atWar(actual_id)) {
-      if (!isBeingJustifiedOn(actual_id)) {
+    if (!atWar(user_id)) {
+      if (!isBeingJustifiedOn(user_id)) {
         //Check if client state has a capital
         if (client_obj.capital_id) {
           //Make sure user has a capital in the first place
-          if (getCapital(actual_id)) {
-            if (client_obj.capital_id != getCapital(actual_id)) {
+          if (getCapital(user_id)) {
+            if (client_obj.capital_id != getCapital(user_id)) {
               if (usr.provinces > 1) {
                 var capital_obj = main.provinces[client_obj.capital_id];
                 var culture_obj = main.global.cultures[capital_obj.culture];
@@ -667,7 +667,7 @@ module.exports = {
 
                       if (local_province.owner == actual_id && local_province.controller == actual_id) {
                         //Transfer province
-                        transferProvince(actual_id, {
+                        transferProvince(user_id, {
                           province_id: client_obj.provinces[i],
                           target: client_obj.id
                         });
@@ -749,7 +749,7 @@ module.exports = {
       ]
     },
     function (arg) {
-      var city_obj = getCity(arg[0], { users: actual_id });
+      var city_obj = getCity(arg[0], { users: user_id });
 
       if (city_obj) {
         if (client_obj.provinces.includes(city_obj.id)) {

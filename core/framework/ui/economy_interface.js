@@ -12,7 +12,7 @@ module.exports = {
     var usr = main.users[actual_id];
 
     //Declare local tracker variables
-    var all_cities = getCities(actual_id);
+    var all_cities = getCities(user_id);
     var local_resource_modifiers = {};
 
     //Initialise economy_string and other formatting variables
@@ -36,7 +36,7 @@ module.exports = {
         economy_string.push(`${pop_icon}Available ${pop_name}: **${parseNumber(usr.pops[all_pops[i]] - usr.pops["used_" + all_pops[i]])}**`);
       }
     economy_string.push(`- ${config.icons.population} Population Growth Rate: **${printPercentage(usr.modifiers.pop_growth_modifier-1)}**`);
-    economy_string.push(`You have **${parseNumber(getCities(actual_id, { include_hostile_occupations: true, include_occupations: true }).length)}** cities in total throughout your country.`);
+    economy_string.push(`You have **${parseNumber(getCities(user_id, { include_hostile_occupations: true, include_occupations: true }).length)}** cities in total throughout your country.`);
     economy_string.push("");
     economy_string.push(`- **[View Cities]**${(usr.city_cap-usr.city_count > 0) ? " | **[Found City]** (" + parseNumber(usr.city_cap-usr.city_count) + ")" : ""}`);
     economy_string.push("");
@@ -85,7 +85,7 @@ module.exports = {
     resource_production_string.push(`- **[Building List]** | **[Build]**`);
 
     //Dynamically push resource production to resource_production_string
-    var all_production = getProduction(actual_id);
+    var all_production = getProduction(user_id);
     var all_unprocessed_goods = Object.keys(all_production);
     var sorted_goods_cache = [];
 

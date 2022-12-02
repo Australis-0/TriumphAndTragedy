@@ -8,13 +8,13 @@ module.exports = {
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
     var actual_ot_user_id = main.global.user_map[ot_user_id];
-    var army_obj = (typeof army_name != "object") ? getArmy(actual_id, army_name.trim().toLowerCase()) : army_name;
+    var army_obj = (typeof army_name != "object") ? getArmy(user_id, army_name.trim().toLowerCase()) : army_name;
     var game_obj = getGameObject(user_id);
     var ot_user = main.users[actual_ot_user_id];
     var usr = main.users[actual_id];
 
     //Check to see if the user is currently blockaded
-    if (isBlockaded(actual_ot_user_id)) {
+    if (isBlockaded(ot_user_id)) {
       //Check if user is currently being blockaded by actual_id
       var blockade_obj = ot_user.blockaded;
       var friendly_forces = [];
@@ -36,7 +36,7 @@ module.exports = {
               var random_navy = randomElement(blockade_obj.fleets);
 
               //Initialise battle
-              initialiseBattle(actual_id, army_obj, random_navy.id, main.users[random_navy.id].armies[random_navy.fleet_id]);
+              initialiseBattle(user_id, army_obj, random_navy.id, main.users[random_navy.id].armies[random_navy.fleet_id]);
 
               //Print user feedback
               printAlert(game_obj.id, `You have decided to challenge the blockade imposed on **${ot_user.name}** ..`);

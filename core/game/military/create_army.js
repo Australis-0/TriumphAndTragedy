@@ -22,10 +22,10 @@ module.exports = {
 
     if (!duplicate_army) {
       if (all_armies.length + 1 <= config.defines.combat.max_army_limit || config.defines.combat.max_army_limit == 0) {
-        var capital_obj = getCapital(actual_id);
+        var capital_obj = getCapital(user_id);
 
         if (capital_obj.id) {
-          createArmy(actual_id, army_name, capital_obj.id);
+          createArmy(user_id, army_name, capital_obj.id);
 
           //Update army_list if user is currently viewing it
           if (game_obj.page == "army_list")

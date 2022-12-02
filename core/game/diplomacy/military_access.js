@@ -18,11 +18,11 @@ module.exports = {
         //Check if user has enough political capital
         if (usr.modifiers.political_capital >= config.defines.diplomacy.request_military_access_cost) {
           //Check if user already has military access
-          if (!hasMilitaryAccess(actual_id, actual_ot_user_id)) {
+          if (!hasMilitaryAccess(user_id, ot_user_id)) {
             //Deduct Political Capital and send request
             usr.modifiers.political_capital -= config.defines.diplomacy.decrease_relations_cost;
 
-            sendAlert(actual_ot_user_id, config.defines.diplomacy.military_access_request_alert_id, {
+            sendAlert(ot_user_id, config.defines.diplomacy.military_access_request_alert_id, {
               FROM: actual_id,
               TO: actual_ot_user_id
             });

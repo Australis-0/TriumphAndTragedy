@@ -51,7 +51,7 @@ module.exports = {
     var actual_id = main.global.user_map[user_id];
     var all_pops = Object.keys(config.pops);
     var all_units = getAllUnits({ return_names: true });
-    var capital_obj = getCapital(actual_id);
+    var capital_obj = getCapital(user_id);
     var game_obj = getGameObject(user_id);
     var unit_type = "";
     var usr = main.users[actual_id];
@@ -112,7 +112,7 @@ module.exports = {
           printError(game_obj.id, error_msg.join("\n"));
         } else {
           //Get unit_costs so that we can subtract the needed manpower from the used pile
-          var unit_costs = getUnitCost(actual_id, unit_type);
+          var unit_costs = getUnitCost(user_id, unit_type);
 
           var all_unit_costs = Object.keys(unit_costs);
 
@@ -142,12 +142,12 @@ module.exports = {
               prov_colonisation_turns = Math.min(config.defines.combat.max_colonisation_speed, prov_colonisation_turns);
 
             //Generate new colonisation ID
-            var local_colonisation_id = generateColonisationID(actual_id);
+            var local_colonisation_id = generateColonisationID(user_id);
 
             //Push to expeditions
             usr.expeditions[local_colonisation_id] = {
               id: local_colonisation_id,
-              colour: generateColonisationColour(actual_id),
+              colour: generateColonisationColour(user_id),
 
               provinces: provinces,
               duration: prov_colonisation_turns + config.defines.colonisation.base_colonisation_turns,
@@ -231,8 +231,8 @@ module.exports = {
 
         //No errors were ran into, begin instantly settling provinces
         for (var i = 0; i < provinces.length; i++) {
-          settleProvince(provinces[i], actual_id);
-          setAllProvinceColours(actual_id, provinces[i]);
+          settleProvince(user_id, provinces[i]);
+          setAllProvinceColours(user_id, provinces[i]);
           display_provinces.push(`**${provinces[i]}**`);
         }
 

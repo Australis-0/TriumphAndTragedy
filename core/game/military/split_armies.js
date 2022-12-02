@@ -39,7 +39,7 @@ module.exports = {
 
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
-    var army_obj = getArmy(actual_id, original_army_name);
+    var army_obj = getArmy(user_id, original_army_name);
     var game_obj = getGameObject(user_id);
     var successful_army_creations = 0;
     var usr = main.users[actual_id];
@@ -58,7 +58,7 @@ module.exports = {
           if (new_armies.length <= config.defines.combat.max_army_creation_limit || config.defines.combat.max_army_creation_limit == 0) {
             //Begin splitting off armies until hitting the maximum army limit
             for (var i = 0; i < new_armies.length; i++)
-              successful_army_creations = (createArmy(actual_id, new_armies[i], army_obj.province)) ? successful_army_creations + 1 : successful_army_creations;
+              successful_army_creations = (createArmy(user_id, new_armies[i], army_obj.province)) ? successful_army_creations + 1 : successful_army_creations;
 
             //Error/success return message
             (successful_army_creations != 0) ?

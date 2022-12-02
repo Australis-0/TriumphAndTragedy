@@ -8,7 +8,7 @@ module.exports = {
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
     var actual_ot_user_id = main.global.user_map[ot_user_id];
-    var at_war = (getWars(actual_id).length > 0);
+    var at_war = (getWars(user_id).length > 0);
     var game_obj = getGameObject(user_id);
     var ot_user = main.users[actual_ot_user_id];
     var tried_to_cede_capital_city = false;
@@ -32,7 +32,7 @@ module.exports = {
           } else try {
             if (city_obj.owner != actual_id || city_obj.controller != actual_id)
               provinces_to_remove.push(provinces[i]);
-            if (city_obj.id == getCapital(actual_id).id) {
+            if (city_obj.id == getCapital(user_id).id) {
               provinces_to_remove.push(provinces[i]);
               tried_to_cede_capital_city = true;
             }
@@ -49,7 +49,7 @@ module.exports = {
     //Check if the other user even exists in the first place
     if (provinces.length > 0) {
       if (ot_user) {
-        if (!isBeingJustifiedOn(actual_id)) {
+        if (!isBeingJustifiedOn(user_id)) {
           if (!at_war) {
             if (ot_user.options.allow_ceding.includes(actual_id)) {
               if (usr.total_ceded_this_turn + provinces.length <= config.defines.diplomacy.cede_province_limit) {
@@ -67,7 +67,7 @@ module.exports = {
                 if (usr.total_cities_ceded_this_turn + number_of_cities <= config.defines.diplomacy.cede_city_limit) {
                   //Use framework function to transfer
                   for (var i = 0; i < provinces.length; i++)
-                    transferProvince(actual_id, {
+                    transferProvince(user_id, {
                       province_id: provinces[i],
                       target: actual_ot_user_id
                     });
@@ -76,7 +76,7 @@ module.exports = {
                   usr.total_ceded_this_turn += provinces.length;
 
                   if (tried_to_cede_capital_city)
-                    printError(game_obj.id, `You can't cede your capital city! **${getCapital(actual_id).name}** was removed from the list of ceded provinces.`);
+                    printError(game_obj.id, `You can't cede your capital city! **${getCapital(user_id).name}** was removed from the list of ceded provinces.`);
 
                   //Print alert
                   printAlert(game_obj.id, `${config.icons.provinces} You have successfully transferred **${parseNumber(number_of_cities)}** urban province(s) and **${parseNumber(provinces.length - number_of_cities)}** rural province(s) to **${ot_user.name}** for a total of **${parseNumber(provinces.length)}** province(s).`);

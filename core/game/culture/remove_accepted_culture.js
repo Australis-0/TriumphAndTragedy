@@ -46,7 +46,7 @@ module.exports = {
     //Check to see if culture exists
     if (culture_obj) {
       if (culture_obj.accepted_culture.includes(actual_id)) {
-        if (getPrimaryCultures(actual_id)[0] != getCulture(culture_name, { return_key: true })) {
+        if (getPrimaryCultures(user_id)[0] != getCulture(culture_name, { return_key: true })) {
           //Remove actual_id from list of accepted cultures
           removeElement(culture_obj.accepted_culture, actual_id);
 

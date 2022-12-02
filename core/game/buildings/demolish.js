@@ -9,13 +9,13 @@ module.exports = {
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
     var building_obj = getBuilding(building_name);
-    var city_obj = getCity(city_name, { users: [actual_id] });
+    var city_obj = getCity(city_name, { users: [user_id] });
     var game_obj = getGameObject(user_id);
     var usr = main.users[actual_id];
 
     //Check for any errors
-    if (!isBeingJustifiedOn(actual_id)) {
-      if (!atWar(actual_id)) {
+    if (!isBeingJustifiedOn(user_id)) {
+      if (!atWar(user_id)) {
         if (building_obj) {
           if (city_obj) {
             if (city_obj.controller == actual_id) {

@@ -26,7 +26,7 @@ module.exports = {
       (total_production.money_upkeep) ? total_production.money_upkeep[0] : 0,
       (total_production.money_upkeep) ? total_production.money_upkeep[1] : 0
     ].sort(function (a, b) { return a - b });
-    var unit_upkeep = getUnitUpkeep(actual_id);
+    var unit_upkeep = getUnitUpkeep(user_id);
 
     //Edit total_maintenance now that it includes unit maintenance
     total_maintenance[0] -= unit_upkeep;
@@ -44,7 +44,7 @@ module.exports = {
 
       if (local_pop.per_100k)
         if (local_pop.per_100k.tax_efficiency)
-          budget_string.push(`- ${(local_pop.icon) ? local_pop.icon + " " : ""}${(local_pop.formal_name) ? local_pop.formal_name : all_pops[i]} Modifier: **${printPercentage(getPopModifier(actual_id, all_pops[i], "tax_efficiency"), { display_prefix: true })}**`);
+          budget_string.push(`- ${(local_pop.icon) ? local_pop.icon + " " : ""}${(local_pop.formal_name) ? local_pop.formal_name : all_pops[i]} Modifier: **${printPercentage(getPopModifier(user_id, all_pops[i], "tax_efficiency"), { display_prefix: true })}**`);
     }
 
     //Display actions
@@ -118,11 +118,11 @@ module.exports = {
     budget_string.push("");
     budget_string.push(`__**Economic Policy:**__`);
     budget_string.push("");
-    budget_string.push(`Current tax: (**${printPercentage(usr.tax_rate)}**/**${printPercentage(usr.modifiers.max_tax)}**) ${(getIncome(actual_id)[0] < 0) ? "- Consider adjusting your tax rate to gain additional income." : ""}`);
+    budget_string.push(`Current tax: (**${printPercentage(usr.tax_rate)}**/**${printPercentage(usr.modifiers.max_tax)}**) ${(getIncome(user_id)[0] < 0) ? "- Consider adjusting your tax rate to gain additional income." : ""}`);
     budget_string.push("");
     budget_string.push(`- **[Set Tax]**`);
     budget_string.push("");
-    budget_string.push(`${config.icons.blockade} Blockade status: ${(isBlockaded(actual_id)) ? "you are currently blockaded!" : "you are currently not blockaded."}`);
+    budget_string.push(`${config.icons.blockade} Blockade status: ${(isBlockaded(user_id)) ? "you are currently blockaded!" : "you are currently not blockaded."}`);
 
     //Remove control panel if one exists
     if (game_obj)

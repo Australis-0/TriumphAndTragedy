@@ -56,7 +56,7 @@ module.exports = {
       usr.politics[government_name].popularity += options.amount;
 
       //Even everything out to 100%
-      module.exports.balanceParties(actual_id);
+      module.exports.balanceParties(user_id);
     }
   },
 
@@ -162,7 +162,7 @@ module.exports = {
     var usr = main.users[actual_id];
 
     //Declare local instance variables
-    var government_stability_modifier = getGovernmentStabilityModifier(actual_id);
+    var government_stability_modifier = getGovernmentStabilityModifier(user_id);
     var popularity_stability_modifier = usr.politics[usr.government].popularity*0.75;
 
     //Calculate stability

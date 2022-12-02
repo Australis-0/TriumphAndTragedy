@@ -7,7 +7,7 @@ module.exports = {
 
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
-    var army_obj = getArmy(actual_id, army_name);
+    var army_obj = getArmy(user_id, army_name);
     var city_obj = getCity(city_name);
     var game_obj = getGameObject(user_id);
     var usr = main.users[actual_id];
@@ -17,7 +17,7 @@ module.exports = {
       if (city_obj) {
         //Check if city_obj is at war with actual_id
         if (city_obj.controller != actual_id) {
-          if (areAtWar(actual_id, city_obj.controller)) {
+          if (areAtWar(user_id, city_obj.controller)) {
             //Check to make sure force is of type 'air'
             if (army_obj.type == "air") {
               //Check to see if this city has been attacked this turn
@@ -25,7 +25,7 @@ module.exports = {
                 //Check to see if the city has any buildings to bomb
                 if (city_obj.buildings.length > 0) {
                   //Initialise air raid
-                  initialiseAirRaid(actual_id, city_obj, army_obj);
+                  initialiseAirRaid(user_id, city_obj, army_obj);
 
                   //Print user feedback
                   printAlert(game_obj.id, `We have sent the **${army_obj.name}** to go bomb the **${getPrimaryCultures(city_obj.controller, { return_objects: true })[0].adjective}** city of **${city_obj.name}**.`);

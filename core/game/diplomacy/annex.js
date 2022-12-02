@@ -13,16 +13,16 @@ module.exports = {
 
     //Check if the other user exists and is a vassal
     if (ot_user) {
-      if (getVassal(actual_ot_user_id)) {
-        if (getVassal(actual_ot_user_id).overlord == actual_id) {
+      if (getVassal(ot_user_id)) {
+        if (getVassal(ot_user_id).overlord == actual_id) {
           //Check if user has political capital
           if (usr.modifiers.political_capital >= config.defines.diplomacy.annex_cost) {
             //Check to see if actual_ot_user_id is at war
-            if (!atWar(actual_ot_user_id)) {
+            if (!atWar(ot_user_id)) {
               //Subtract political capital and send alert
               usr.modifiers.political_capital -= config.defines.diplomacy.annex_cost;
 
-              sendAlert(actual_ot_user_id, config.defines.diplomacy.annex_alert_id, {
+              sendAlert(ot_user_id, config.defines.diplomacy.annex_alert_id, {
                 TO: actual_ot_user_id,
                 FROM: actual_id
               });

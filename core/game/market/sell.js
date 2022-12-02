@@ -99,7 +99,7 @@ module.exports = {
           var total_cost = 0;
 
           //Make sure that user has enough market capacity remaining to process the sale
-          if (getMarketCapacity(actual_id) >= good_amount) {
+          if (getMarketCapacity(user_id) >= good_amount) {
             //Update user_transactions
             usr.transactions_this_turn += good_amount;
 
@@ -135,7 +135,7 @@ module.exports = {
             //Print out feedback
             printAlert(game_obj.id, `You sold **${parseNumber(good_amount)}** ${(good_obj.icon) ? config.icons[good_obj.icon] + " " : ""}${(good_obj.name) ? good_obj.name : good_name} for **£${parseNumber(total_cost)}**.`);
           } else {
-            printError(game_obj.id, `You do not have enough Market Capacity remaining to sell this much **${(good_obj.name) ? good_obj.name : good_name}**! You need at least **${parseNumber(good_amount - getMarketCapacity(actual_id))}** remaining Market Capacity in order to fulfil this purchase request.`);
+            printError(game_obj.id, `You do not have enough Market Capacity remaining to sell this much **${(good_obj.name) ? good_obj.name : good_name}**! You need at least **${parseNumber(good_amount - getMarketCapacity(user_id))}** remaining Market Capacity in order to fulfil this purchase request.`);
           }
         } else {
           printError(game_obj.id, `You don't have enough **${(good_obj.name) ? good_obj.name : good_name}** to do that! You're **${parseNumber(good_amount - usr.inventory[good_name])}** ${(good_obj.name) ? good_obj.name : good_name} short.`);

@@ -55,7 +55,7 @@ module.exports = {
         //Check if government type is valid
         if (government_name) {
           if (usr.available_governments.includes(government_name)) {
-            setGovernment(actual_id, raw_government_type, { set_party_popularity: 1 });
+            setGovernment(user_id, raw_government_type, { set_party_popularity: 1 });
 
             //Update stats page if user is currently on it
             if (game_obj.page == "country_interface")

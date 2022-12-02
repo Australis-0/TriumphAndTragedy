@@ -40,7 +40,7 @@ module.exports = {
     var game_obj = getGameObject(user_id);
     var ot_user = main.users[actual_ot_user_id];
     var usr = main.users[actual_id];
-    var vassal_obj = getVassal(actual_ot_user_id);
+    var vassal_obj = getVassal(ot_user_id);
 
     //Check to see if user is actually a vassal
     if (actual_id != actual_ot_user_id) {

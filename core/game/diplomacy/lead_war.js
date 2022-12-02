@@ -89,7 +89,7 @@ module.exports = {
 
               if (usr.modifiers.political_capital >= pc_cost) {
                 //Check current war leader strength, user strength
-                var candidate_strength = getMilitaryStrength(actual_ot_user_id);
+                var candidate_strength = getMilitaryStrength(ot_user_id);
                 var war_leader_strength = getMilitaryStrength(war_obj[`${friendly_side}_war_leader`]);
 
                 if (

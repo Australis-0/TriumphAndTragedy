@@ -40,7 +40,7 @@ module.exports = {
     var game_obj = getGameObject(user_id);
     var ot_user = main.users[actual_ot_user_id];
     var usr = main.users[actual_id];
-    var vassal_obj = getVassal(actual_ot_user_id);
+    var vassal_obj = getVassal(ot_user_id);
 
     //Check to see if user is actually a vassal
     if (actual_id != actual_ot_user_id) {
@@ -49,7 +49,7 @@ module.exports = {
           if (vassal_obj.overlord == actual_id) {
             //Check to make sure that the new name is under 100 characters
             var all_users = Object.keys(main.users);
-            var change_flag = setFlag(actual_ot_user_id, flag_url, true, true);
+            var change_flag = setFlag(ot_user_id, flag_url, true, true);
 
             //Print user feedback
             (change_flag[0]) ?

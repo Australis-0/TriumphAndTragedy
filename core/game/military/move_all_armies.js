@@ -40,7 +40,7 @@ module.exports = {
 
         //Move armies
         for (var i = all_armies.length - 1; i >= 0; i--)
-          successful_moves = (moveArmy(actual_id, usr.armies[all_armies[i]], provinces)) ? successful_moves + 1 : successful_moves;
+          successful_moves = (moveArmy(user_id, usr.armies[all_armies[i]], provinces)) ? successful_moves + 1 : successful_moves;
 
         //Update army_list if user is currently viewing it
         if (game_obj.page == "army_list")

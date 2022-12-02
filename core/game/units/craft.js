@@ -21,11 +21,11 @@ module.exports = {
           if (usr.available_units.includes(raw_unit_name)) {
             //Make sure unit_amount is valid
             if (unit_amount >= 1) {
-              if (canRecruit(actual_id)) {
+              if (canRecruit(user_id)) {
                 //Check if user has enough resources to actually conduct training
                 var raw_category_name = getUnitCategoryFromUnit(raw_unit_name, { return_key: true });
                 var resource_shortages = {};
-                var unit_costs = getUnitCost(actual_id, raw_unit_name, { amount: unit_amount });
+                var unit_costs = getUnitCost(user_id, raw_unit_name, { amount: unit_amount });
 
                 log.info(`craft() invoked, Unit Cost Dump:`);
                 console.log(unit_costs);

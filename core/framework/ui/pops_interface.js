@@ -11,8 +11,8 @@ module.exports = {
     //Declare local tracker variables
     var all_modifiers = getAllModifiers();
     var all_pops = Object.keys(config.pops);
-    var all_provinces = getProvinces(actual_id);
-    var pop_obj = getDemographics(actual_id);
+    var all_provinces = getProvinces(user_id);
+    var pop_obj = getDemographics(user_id);
 
     //Initialise pops_string and other formatting variables
     var pops_string = [];
@@ -84,8 +84,8 @@ module.exports = {
         for (var x = 0; x < local_modifiers.length; x++) {
           //Increment by modifier
           (dynamic_modifiers[local_modifiers[x]]) ?
-            dynamic_modifiers[local_modifiers[x]] + getPopModifier(actual_id, all_pops[i], local_modifiers[x]) :
-            getPopModifier(actual_id, all_pops[i], local_modifiers[x]);
+            dynamic_modifiers[local_modifiers[x]] + getPopModifier(user_id, all_pops[i], local_modifiers[x]) :
+            getPopModifier(user_id, all_pops[i], local_modifiers[x]);
         }
       }
     }

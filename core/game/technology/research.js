@@ -122,7 +122,7 @@ module.exports = {
     var can_research = false;
     var is_being_researched = false;
     var is_in_queue = false;
-    var knowledge_gain = getKnowledgeGain(actual_id, knowledge_production);
+    var knowledge_gain = getKnowledgeGain(user_id, knowledge_production);
     var tech_array_dump = [];
     var tech_name = getTechnology(raw_technology_name, { return_key: true });
     var tech_obj = getTechnology(raw_technology_name);
@@ -225,7 +225,7 @@ module.exports = {
 
                 if (game_obj.page == "research_list")
                   createPageMenu(game_obj.middle_embed, {
-                    embed_pages: printResearchList(actual_id),
+                    embed_pages: printResearchList(user_id),
                     user: game_obj.user,
                     page: interfaces[game_obj.middle_embed.id].page
                   });

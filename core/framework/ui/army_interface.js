@@ -174,7 +174,7 @@ module.exports = {
         army_string.push("");
 
         //Display army statistics
-        army_string.push(`${config.icons.manpower} Army Size: ${parseNumber(Math.ceil((getArmySize(actual_id, army_obj.name)/1000)*100)/100)} ${(all_units.length > 0) ? `(**${printPercentage(army_supply)}** Supply)` : ""}`);
+        army_string.push(`${config.icons.manpower} Army Size: ${parseNumber(Math.ceil((getArmySize(user_id, army_obj.name)/1000)*100)/100)} ${(all_units.length > 0) ? `(**${printPercentage(army_supply)}** Supply)` : ""}`);
         army_string.push(`${config.icons.provinces} Current Province: **${army_obj.province}** (${config.icons.railways} Supply Limit: **${parseNumber(Math.ceil(getTroopsInProvince(army_obj.province)/1000))}/${parseNumber(returnSafeNumber(province_obj.supply_limit, config.defines.combat.base_supply_limit))}**)`);
 
         if (bonus_movement_speed != 1)
@@ -442,7 +442,7 @@ module.exports = {
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
     var game_obj = getGameObject(user_id);
-    var player_units = getUnits(actual_id);
+    var player_units = getUnits(user_id);
     var usr = main.users[actual_id];
 
     var all_units = Object.keys(player_units);

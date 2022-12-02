@@ -16,7 +16,7 @@ module.exports = {
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
     var army_obj = (typeof army_name != "object") ?
-      module.exports.getArmy(actual_id, army_name) :
+      module.exports.getArmy(user_id, army_name) :
       army_name;
     var army_stats = {
       attack: 0,
@@ -100,7 +100,7 @@ module.exports = {
 
     //Declare local intsance variables
     var actual_id = main.global.user_map[user_id];
-    var army_obj = (typeof army_name != "object") ? module.exports.getArmy(actual_id, army_name) : army_name;
+    var army_obj = (typeof army_name != "object") ? module.exports.getArmy(user_id, army_name) : army_name;
     var usr = main.users[actual_id];
 
     //Check to make sure that both usr and army_obj are actually extant
@@ -165,7 +165,7 @@ module.exports = {
       if (all_armies.length + 1 <= config.defines.combat.max_army_limit)
         if (province_obj) {
           var army_obj = {
-            id: generateArmyID(actual_id),
+            id: generateArmyID(user_id),
             owner: actual_id,
 
             name: army_name,
@@ -200,7 +200,7 @@ module.exports = {
 
     var army_id = (usr.armies[army_name]) ?
       usr.armies[army_name].id :
-      module.exports.getArmy(actual_id, army_name, { return_key: true });
+      module.exports.getArmy(user_id, army_name, { return_key: true });
     var army_obj = usr.armies[army_id];
 
     //Return all units to reserves
@@ -254,7 +254,7 @@ module.exports = {
 
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
-    var army_obj = (typeof army_name != "object") ? module.exports.getArmy(actual_id, army_name) : army_name;
+    var army_obj = (typeof army_name != "object") ? module.exports.getArmy(user_id, army_name) : army_name;
     var raw_unit_name = getUnit(unit_name, { return_key: true });
     var unit_obj = getUnit(unit_name);
     var usr = main.users[actual_id];
@@ -267,12 +267,12 @@ module.exports = {
             if (unit_obj) {
               //Declare secondary local instance variables
               var all_units = Object.keys(army_obj.units);
-              var at_peace = (!atWar(actual_id));
-              var capital_obj = getCapital(actual_id);
+              var at_peace = (!atWar(user_id));
+              var capital_obj = getCapital(user_id);
               var category_obj = getUnitCategoryFromUnit(raw_unit_name);
               var province_obj = getProvince(army_obj.province);
               var receiving_unit_type = category_obj.type;
-              var unit_types = module.exports.calculateArmyType(actual_id, army_obj);
+              var unit_types = module.exports.calculateArmyType(user_id, army_obj);
 
               var culture_obj = getCulture(province_obj.culture);
 
@@ -315,7 +315,7 @@ module.exports = {
                 delete usr.reserves[raw_unit_name];
 
               //Recalculate army type
-              module.exports.calculateArmyType(actual_id, army_obj);
+              module.exports.calculateArmyType(user_id, army_obj);
 
               return [true, `**${parseNumber(amount)}** ${(unit_obj.name) ? unit_obj.name : raw_unit_name} were ${(!options.spawn_units) ? "transferred to" : "deployed in"} the **${army_obj.name}**.`];
             }
@@ -350,7 +350,7 @@ module.exports = {
 
     //Declare local intsance variables
     var actual_id = main.global.user_map[user_id];
-    var army_obj = (typeof army_name != "object") ? module.exports.getArmy(actual_id, army_name) : army_name;
+    var army_obj = (typeof army_name != "object") ? module.exports.getArmy(user_id, army_name) : army_name;
     var usr = main.users[actual_id];
 
     if (usr)
@@ -507,7 +507,7 @@ module.exports = {
     var maintenance_obj = {};
 
     if (!army_name) {
-      var units_obj = module.exports.getUnits(actual_id);
+      var units_obj = module.exports.getUnits(user_id);
 
       var all_units = Object.keys(units_obj);
 
@@ -534,7 +534,7 @@ module.exports = {
     } else {
       //Get maintenance object for a single army
       var army_obj = (typeof army_name != "object") ?
-        module.exports.getArmy(actual_id, army_name) :
+        module.exports.getArmy(user_id, army_name) :
         army_name;
       var all_units = Object.keys(army_obj.units);
 
@@ -597,7 +597,7 @@ module.exports = {
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
     var army_obj = (typeof army_name != "object" && army_name) ?
-      module.exports.getArmy(actual_id, army_name) :
+      module.exports.getArmy(user_id, army_name) :
       army_name;
     var army_size = 0;
     var usr = main.users[actual_id];
@@ -632,7 +632,7 @@ module.exports = {
 
     //Declare local intsance variables
     var actual_id = main.global.user_map[user_id];
-    var army_obj = (typeof army_name != "object") ? module.exports.getArmy(actual_id, army_name) : army_name;
+    var army_obj = (typeof army_name != "object") ? module.exports.getArmy(user_id, army_name) : army_name;
     var usr = main.users[actual_id];
 
     if (usr)
@@ -668,7 +668,7 @@ module.exports = {
 
     //Declare local intsance variables
     var actual_id = main.global.user_map[user_id];
-    var army_obj = (typeof army_name != "object") ? module.exports.getArmy(actual_id, army_name) : army_name;
+    var army_obj = (typeof army_name != "object") ? module.exports.getArmy(user_id, army_name) : army_name;
     var usr = main.users[actual_id];
 
     if (usr)
@@ -743,7 +743,7 @@ module.exports = {
     //Iterate over all armies
     for (var i = 0; i < all_armies.length; i++) {
       var local_army = usr.armies[all_armies[i]];
-      var local_army_stats = module.exports.calculateArmyStats(actual_id, local_army);
+      var local_army_stats = module.exports.calculateArmyStats(user_id, local_army);
 
       var all_army_stats = Object.keys(local_army_stats);
 
@@ -754,7 +754,7 @@ module.exports = {
     }
 
     if (options.include_reserves) {
-      var reserves_strength = getReserveStrength(actual_id);
+      var reserves_strength = getReserveStrength(user_id);
 
       military_stats.attack += reserves_strength.attack;
       military_stats.defence += reserves_strength.defence;
@@ -987,8 +987,8 @@ module.exports = {
             return [false, `Your ships are not capable of going on land!`];
 
           //Fetch stats of both armies
-          var army_obj_stats = module.exports.calculateArmyType(actual_id, army_obj);
-          var merged_army_obj_stats = module.exports.calculateArmyType(actual_id, merged_army_obj);
+          var army_obj_stats = module.exports.calculateArmyType(user_id, army_obj);
+          var merged_army_obj_stats = module.exports.calculateArmyType(user_id, merged_army_obj);
 
           var total_carrier_capacity = army_obj_stats.carrier_capacity + merged_army_obj_stats.carrier_capacity;
 
@@ -1023,7 +1023,7 @@ module.exports = {
           //Delete merged_army_obj now that troops have been transferred
           var merged_army_name = JSON.parse(JSON.stringify(merged_army_obj.name));
 
-          module.exports.deleteArmy(actual_id, merged_army_obj.name);
+          module.exports.deleteArmy(user_id, merged_army_obj.name);
 
           //Return statement
           return [true, `The **${merged_army_obj.name}** was merged into the **${army_obj.name}**.`];
@@ -1039,7 +1039,7 @@ module.exports = {
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
     var army_obj = (typeof army_name != "object") ?
-      module.exports.getArmy(actual_id, army_name.trim().toLowerCase()) :
+      module.exports.getArmy(user_id, army_name.trim().toLowerCase()) :
       army_name;
     var distances_array = [];
     var error_msg = [];
@@ -1642,7 +1642,7 @@ module.exports = {
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
     var army_obj = (typeof army_name != "object") ?
-      module.exports.getArmy(actual_id, army_name.trim().toLowerCase()) :
+      module.exports.getArmy(user_id, army_name.trim().toLowerCase()) :
       army_name;
     var raw_unit_name = getUnit(unit_name, { return_key: true });
     var unit_obj = getUnit(unit_name);
@@ -1669,7 +1669,7 @@ module.exports = {
             delete army_obj.units[raw_unit_name];
 
           //Recalculate army type
-          module.exports.calculateArmyType(actual_id, army_obj);
+          module.exports.calculateArmyType(user_id, army_obj);
 
           //Print out return statement
           return [true, `You placed **${parseNumber(amount)}** ${(unit_obj.name) ? unit_obj.name : raw_unit_name} from the **${army_obj.name}** back into reserve.`];
@@ -1693,7 +1693,7 @@ module.exports = {
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
     var army_obj = (typeof army_name != "object") ?
-      module.exports.getArmy(actual_id, army_name.trim().toLowerCase()) :
+      module.exports.getArmy(user_id, army_name.trim().toLowerCase()) :
       army_name;
     var unit_obj = (typeof unit_name != "object") ?
       getUnit(unit_name.trim().toLowerCase()) :

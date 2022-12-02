@@ -106,11 +106,11 @@ module.exports = {
         }
       }
 
-      total_troop_count_status.push(`${config.icons.soldiers} ${parseNumber(getTotalActiveDuty(actual_id))} soldiers${(mobilised_string.length > 0) ? `, ${parseList(mobilised_string)}` : ""}.`);
+      total_troop_count_status.push(`${config.icons.soldiers} ${parseNumber(getTotalActiveDuty(user_id))} soldiers${(mobilised_string.length > 0) ? `, ${parseList(mobilised_string)}` : ""}.`);
 
       //War Exhaustion
       var war_exhaustion_rate = config.defines.combat.war_exhaustion_tickdown_rate;
-      if (!at_war && !isBlockaded(actual_id))
+      if (!at_war && !isBlockaded(user_id))
         if (usr.mobilisation.is_mobilised)
           war_exhaustion_rate -= config.defines.combat.war_exhaustion_mobilisation_rate;
     }
@@ -127,7 +127,7 @@ module.exports = {
       //Format Page 1 - UI - War Exhaustion/Infamy
       (usr.modifiers.war_exhaustion == 100 && at_war) ?
         war_description_string.push(`${config.icons.retreat} We have hit **100%** War Exhaustion, and our enemies may now force us to come to an unconditional surrender!`) :
-        war_description_string.push(`${config.icons.infamy} War Exhaustion: **${printPercentage(usr.modifiers.war_exhaustion)}** ${(!at_war && !isBlockaded(actual_id)) ? `(${printPercentage(Math.abs(war_exhaustion_rate), { display_prefix: true })} per turn)` : ""}`);
+        war_description_string.push(`${config.icons.infamy} War Exhaustion: **${printPercentage(usr.modifiers.war_exhaustion)}** ${(!at_war && !isBlockaded(user_id)) ? `(${printPercentage(Math.abs(war_exhaustion_rate), { display_prefix: true })} per turn)` : ""}`);
 
       if (returnSafeNumber(usr.blockaded.blockaded_war_exhaustion) > 0)
         war_description_string.push(`- **${printPercentage(usr.blockaded.blockaded_war_exhaustion, { display_prefix: true })}** War Exhaustion from the ongoing blockade.`);

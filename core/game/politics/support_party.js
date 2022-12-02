@@ -50,7 +50,7 @@ module.exports = {
       if (usr.available_governments.includes(raw_party_name)) {
         if (usr.modifiers.political_capital >= config.defines.politics.support_cost) {
           //Support party
-          addPartyPopularity(actual_id, {
+          addPartyPopularity(user_id, {
             ideology: raw_party_name,
             amount: config.defines.politics.support_boost
           });

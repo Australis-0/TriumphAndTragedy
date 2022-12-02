@@ -59,7 +59,7 @@ module.exports = {
 
           for (var i = 0; i < armies.length; i++)
             if (new_names[i]) {
-              var rename_army = renameArmy(actual_id, armies[i], new_names[i], true);
+              var rename_army = renameArmy(user_id, armies[i], new_names[i], true);
 
               if (!rename_army[0]) {
                 if (rename_army[1] == "duplicate_name")

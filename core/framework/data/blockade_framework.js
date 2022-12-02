@@ -8,7 +8,7 @@ module.exports = {
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
     var actual_ot_user_id = main.global.user_map[ot_user_id];
-    var army_obj = getArmy(actual_ot_user_id, fleet_name);
+    var army_obj = getArmy(ot_user_id, fleet_name);
     var game_obj = getGameObject(user_id);
     var ot_user = main.users[actual_ot_user_id];
     var usr = main.users[actual_id];
@@ -24,7 +24,7 @@ module.exports = {
               if (returnSafeNumber(usr.blockaded.blockade_cooldown) == 0) {
                 if (usr.modifiers.enable_blockades) {
                   //Check if user is at war or not
-                  var at_war = areAtWar(actual_id, actual_ot_user_id);
+                  var at_war = areAtWar(user_id, ot_user_id);
 
                   usr.blockaded = {
                     id: usr.id,
@@ -83,7 +83,7 @@ module.exports = {
 
     //Check if user is actually blockaded
     if (actual_id)
-      if (isBlockaded(actual_id)) {
+      if (isBlockaded(user_id)) {
         //Go through all fleets that are still blockading
         for (var i = 0; i < usr.blockaded.fleets.length; i++)
           try {

@@ -16,15 +16,15 @@ module.exports = {
       //Check if user are themselves
       if (actual_id != actual_ot_user_id) {
         //Check if user is underneath their overlordship
-        if (getVassal(actual_ot_user_id).overlord == actual_id) {
+        if (getVassal(ot_user_id).overlord == actual_id) {
           //Dissolve vassal
-          dissolveVassal(actual_ot_user_id);
+          dissolveVassal(ot_user_id);
 
           //Remove used diplomatic slot
           usr.diplomacy.used_diplomatic_slots--;
 
           //Send alert
-          sendAlert(actual_ot_user_id, config.defines.diplomacy.liberation_alert_id, {
+          sendAlert(ot_user_id, config.defines.diplomacy.liberation_alert_id, {
             FROM: actual_id,
             TO: actual_ot_user_id
           });

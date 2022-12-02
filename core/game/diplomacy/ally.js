@@ -15,8 +15,8 @@ module.exports = {
     if (ot_user) {
       if (usr.modifiers.political_capital >= config.defines.diplomacy.form_alliance_cost) {
         //Check if ally is yourself, already an ally, or a rival
-        if (!hasAlliance(actual_id, actual_ot_user_id)) {
-          if (!hasRivalry(actual_id, actual_ot_user_id)) {
+        if (!hasAlliance(user_id, ot_user_id)) {
+          if (!hasRivalry(user_id, ot_user_id)) {
             if (actual_id != actual_ot_user_id) {
               //Check if an alliance is already pending
               var alliance_is_pending = false;
@@ -35,16 +35,16 @@ module.exports = {
               if (!alliance_is_pending) {
                 if (!ot_user_has_alliance_pending) {
                   //Check if relations are high enough
-                  if (getRelations(actual_id, actual_ot_user_id)[0] >= config.defines.diplomacy.alliance_relation_threshold) {
+                  if (getRelations(user_id, ot_user_id)[0] >= config.defines.diplomacy.alliance_relation_threshold) {
                     if (usr.diplomacy.used_diplomatic_slots < usr.modifiers.diplomatic_slots) {
-                      if (!getVassal(actual_id)) {
-                        if (!getVassal(actual_ot_user_id)) {
+                      if (!getVassal(user_id)) {
+                        if (!getVassal(ot_user_id)) {
                           //Pending alliances take 1 diplomatic slot and cost PC
                           usr.diplomacy.used_diplomatic_slots++;
                           usr.modifiers.political_capital -= config.defines.diplomacy.form_alliance_cost;
 
                           //Send diplomatic alert to other user
-                          sendAlert(actual_ot_user_id, config.defines.diplomacy.alliance_alert_id, {
+                          sendAlert(ot_user_id, config.defines.diplomacy.alliance_alert_id, {
                             FROM: actual_id,
                             TO: actual_ot_user_id
                           });

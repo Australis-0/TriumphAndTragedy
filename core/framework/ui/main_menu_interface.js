@@ -246,7 +246,7 @@ module.exports = {
     coop_menu_string.push("");
 
     //Push the owner
-    coop_menu_string.push(`<@${usr.owner}> - ${(!getVassal(actual_id)) ? "_Owner_" : "_Overlord_"}`);
+    coop_menu_string.push(`<@${usr.owner}> - ${(!getVassal(user_id)) ? "_Owner_" : "_Overlord_"}`);
 
     if (current_players.length > 0)
       coop_menu_string.push("");

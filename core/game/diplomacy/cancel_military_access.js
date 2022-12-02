@@ -14,15 +14,15 @@ module.exports = {
     //Check if user has military access in the first place
     if (ot_user) {
       if (actual_id != actual_ot_user_id) {
-        if (hasMilitaryAccess(actual_id, actual_ot_user_id)) {
+        if (hasMilitaryAccess(user_id, ot_user_id)) {
           usr.diplomacy.used_diplomatic_slots--;
-          dissolveMilitaryAccess(actual_id, actual_ot_user_id);
+          dissolveMilitaryAccess(user_id, ot_user_id);
 
           //Status updater
           if (game_obj.page.startsWith("diplomacy_view_")) {
             var current_ot_user_id = game_obj.page.replace("diplomacy_view_", "");
 
-            if (current_ot_user_id == actual_ot_user_id)
+            if (current_ot_user_id == ot_user_id)
               viewDiplomacy(user_id, current_ot_user_id);
           }
 

@@ -105,7 +105,7 @@ module.exports = {
       //Check if war is active and whether allies can be called in
       if (!is_archived_war)
         for (var i = 0; i < all_allies.length; i++)
-          if (hasAlliance(actual_id, all_allies[i]))
+          if (hasAlliance(user_id, all_allies[i]))
             if (!(war_obj.attackers.includes(all_allies[i]) || war_obj.defenders.includes(all_allies[i])))
               can_call_allies = true;
 

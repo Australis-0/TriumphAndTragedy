@@ -6,7 +6,7 @@ module.exports = {
 
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
-    var capital_obj = getCapital(actual_id);
+    var capital_obj = getCapital(user_id);
     var game_obj = getGameObject(user_id);
     var new_army_array = parseArmies(army_creation_string);
     var usr = main.users[actual_id];
@@ -20,7 +20,7 @@ module.exports = {
           if (capital_obj.id) {
             if (capital_obj.controller == actual_id) {
               for (var i = 0; i < new_army_array.length; i++)
-                createArmy(actual_id, new_army_array[i], capital_obj.id);
+                createArmy(user_id, new_army_array[i], capital_obj.id);
 
               //Update army_list if user is currently viewing it
               if (game_obj.page == "army_list")

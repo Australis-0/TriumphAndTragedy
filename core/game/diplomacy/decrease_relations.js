@@ -17,7 +17,7 @@ module.exports = {
       if (actual_id != actual_ot_user_id) {
         if (usr.modifiers.political_capital >= config.defines.diplomacy.decrease_relations_cost) {
           //Check if relations are already at a minimum
-          var current_relations = getRelations(actual_ot_user_id, actual_id);
+          var current_relations = getRelations(ot_user_id, user_id);
 
           if (current_relations[0] > -100) {
             //Check if user is already decreasing relations
@@ -25,8 +25,8 @@ module.exports = {
               //Begin decreasing relations
               usr.modifiers.political_capital -= config.defines.diplomacy.decrease_relations_cost;
 
-              modifyRelations(actual_id, {
-                target: actual_ot_user_id,
+              modifyRelations(user_id, {
+                target: ot_user_id,
                 value: -50,
                 duration: 5
               });

@@ -54,7 +54,7 @@ module.exports = {
 
               if (!colour_taken[0]) {
                 var all_expeditions = Object.keys(usr.expeditions);
-                var all_provinces = getProvinces(actual_id, { include_occupations: true });
+                var all_provinces = getProvinces(user_id, { include_occupations: true });
 
                 //Set colour
                 usr.colour = [r, g, b];
@@ -66,7 +66,7 @@ module.exports = {
 
                 //Change colonisation colours
                 for (var i = 0; i < all_expeditions.length; i++)
-                  usr.expeditions[all_expeditions[i]].colour = generateColonisationColour(actual_id);
+                  usr.expeditions[all_expeditions[i]].colour = generateColonisationColour(user_id);
                 for (var i = 0; i < all_expeditions.length; i++) {
                   var local_expedition = usr.expeditions[all_expeditions[i]];
 
@@ -77,7 +77,7 @@ module.exports = {
                 //Change political colours
                 for (var i = 0; i < all_provinces.length; i++)
                   if (all_provinces[i].owner == all_provinces[i].controller) {
-                    setAllProvinceColours(actual_id, all_provinces[i].id);
+                    setAllProvinceColours(user_id, all_provinces[i].id);
                   } else {
                     setAllProvinceColours(all_provinces[i].controller, all_provinces[i].id, true);
                   }

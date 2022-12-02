@@ -249,7 +249,7 @@ module.exports = {
 
                             //Check if capital demilitarised is their own
                             try {
-                              var local_capital = getCapital(actual_id);
+                              var local_capital = getCapital(user_id);
 
                               if (local_capital.id == provinces[i])
                                 return [false, `You can't demilitarise Province **${provinces[i]}**, as it remains your own capital!`];
@@ -1505,7 +1505,7 @@ module.exports = {
 
                       //Create temporary client state ID; target object
                       var local_capital;
-                      var local_client_state_id = generateClientStateID(actual_id);
+                      var local_client_state_id = generateClientStateID(user_id);
                       var local_name;
                       var local_overlord;
                       var local_provinces;

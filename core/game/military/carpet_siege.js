@@ -14,14 +14,14 @@ module.exports = {
     var usr = main.users[actual_id];
 
     //Make sure user is actually at war before carpet sieging
-    if (areAtWar(actual_id, actual_ot_user_id)) {
+    if (areAtWar(user_id, ot_user_id)) {
       //Declare local instance variables, 2nd layer
       var all_armies = Object.keys(usr.armies);
       var failed_moves = 0;
       var missing_armies = 0;
       var nonexistent_armies = 0;
       var occupation_target_list = [];
-      var ot_user_provinces = getProvinces(actual_ot_user_id, { include_occupations: true });
+      var ot_user_provinces = getProvinces(ot_user_id, { include_occupations: true });
       var successful_moves = 0;
       var targets_to_remove = [];
 
@@ -54,10 +54,10 @@ module.exports = {
       //Begin moving armies
       for (var i = 0; i < occupation_target_list.length; i++)
         try {
-          var local_army = getArmy(actual_id, acceptable_armies[i]);
+          var local_army = getArmy(user_id, acceptable_armies[i]);
 
           if (local_army) {
-            var army_status = moveArmy(actual_id, local_army, occupation_target_list[i]);
+            var army_status = moveArmy(user_id, local_army, occupation_target_list[i]);
 
             if (army_status)
               successful_moves++;

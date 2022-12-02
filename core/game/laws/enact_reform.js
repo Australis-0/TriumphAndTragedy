@@ -154,7 +154,7 @@ module.exports = {
                           inverted_old_reform_modifiers[all_effects[i]] = old_reform_obj.effects[all_effects[i]]*-1;
                         } catch {}
                     }
-                    applyModifiers(actual_id, inverted_old_reform_modifiers);
+                    applyModifiers(user_id, inverted_old_reform_modifiers);
 
                     //Add new reform modifiers
                     if (reform_obj.political_appeasement)
@@ -169,7 +169,7 @@ module.exports = {
 
                     //Add new reform effects
                     if (reform_obj.effects)
-                      applyModifiers(actual_id, reform_obj.effects);
+                      applyModifiers(user_id, reform_obj.effects);
                   }
                 } else {
                   parliament_string.push(`The reform unfortunately failed to pass Parliament.`);

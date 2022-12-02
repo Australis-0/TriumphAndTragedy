@@ -7,7 +7,7 @@ module.exports = {
 
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
-    var army_obj = getArmy(actual_id, army_name);
+    var army_obj = getArmy(user_id, army_name);
     var game_obj = getGameObject(user_id);
     var usr = main.users[actual_id];
     var valid_province = true;
@@ -19,7 +19,7 @@ module.exports = {
         for (var i = 0; i < provinces.length; i++)
           provinces[i] = provinces[i].trim();
 
-        var move_command = moveArmy(actual_id, army_obj, provinces);
+        var move_command = moveArmy(user_id, army_obj, provinces);
 
         //Print user feedback
         (move_command[0]) ?

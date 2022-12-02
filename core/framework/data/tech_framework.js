@@ -50,7 +50,7 @@ module.exports = {
 
       if (local_pop.per_100k)
         if (local_pop.per_100k.knowledge)
-          pop_knowledge_gain += (getTotalPopManpower(actual_id, all_pops[i])/100000)*local_pop.per_100k.knowledge;
+          pop_knowledge_gain += (getTotalPopManpower(user_id, all_pops[i])/100000)*local_pop.per_100k.knowledge;
     }
 
     //Make sure you can't just gain unlimited knowledge from faculty (hard cap)
@@ -254,7 +254,7 @@ module.exports = {
 
     //Parse technology for user!
     if (tech_obj.unlocks)
-      applyModifiers(actual_id, tech_obj.unlocks);
+      applyModifiers(user_id, tech_obj.unlocks);
   },
 
   researchUpTo: function (arg0_user, arg1_technology_cost) {
@@ -270,6 +270,6 @@ module.exports = {
 
     for (var i = 0; i < all_technologies.length; i++)
       if (returnSafeNumber(all_technologies[i].research_cost) <= technology_cost)
-        module.exports.instantResearch(actual_id, all_technology_names[i]);
+        module.exports.instantResearch(user_id, all_technology_names[i]);
   }
 };

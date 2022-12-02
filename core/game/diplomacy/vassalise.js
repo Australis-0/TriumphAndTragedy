@@ -24,7 +24,7 @@ module.exports = {
               usr.modifiers.political_capital -= config.defines.diplomacy.vassalise_cost;
 
               //Send vassalisation request alert
-              sendAlert(actual_ot_user_id, config.defines.diplomacy.vassalisation_request_alert_id, {
+              sendAlert(ot_user_id, config.defines.diplomacy.vassalisation_request_alert_id, {
                 FROM: actual_id,
                 TO: actual_ot_user_id
               });

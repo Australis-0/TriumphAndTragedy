@@ -17,7 +17,7 @@ module.exports = {
     var usr = main.users[actual_id];
 
     //Push temporary modifier to object
-    var modifier_id = module.exports.generateTemporaryModifierID(actual_id);
+    var modifier_id = module.exports.generateTemporaryModifierID(user_id);
 
     usr.temporary_modifiers[modifier_id] = {
       type: options.type,
@@ -26,7 +26,7 @@ module.exports = {
     };
 
     //Immediately apply the current modifiers to user
-    module.exports.applyModifiers(actual_id, {
+    module.exports.applyModifiers(user_id, {
       [options.type]: options.value
     });
   },
@@ -603,7 +603,7 @@ module.exports = {
     var stability_string = [];
 
     //Same variable calculation from turn_framework.js
-    var government_stability_modifier = module.exports.getGovernmentStabilityModifier(actual_id);
+    var government_stability_modifier = module.exports.getGovernmentStabilityModifier(user_id);
     var popularity_stability_modifier = usr.politics[usr.government].popularity*0.75;
     var temporary_stability_modifier = 0;
 

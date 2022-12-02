@@ -18,15 +18,15 @@ module.exports = {
         //Check if user has enough political capital
         if (usr.modifiers.political_capital >= config.defines.diplomacy.request_military_access_cost) {
           //Check if user already has a non-aggression pact with the target user
-          if (!hasNonAggressionPact(actual_id, actual_ot_user_id)) {
+          if (!hasNonAggressionPact(user_id, ot_user_id)) {
             //Check if user has enough diplomatic slots
             if (usr.diplomacy.used_diplomatic_slots < usr.modifiers.diplomatic_slots) {
-              if (!getVassal(actual_id)) {
-                if (!getVassal(actual_ot_user_id)) {
+              if (!getVassal(user_id)) {
+                if (!getVassal(ot_user_id)) {
                   //Deduct Political Capital and send request
                   usr.modifiers.political_capital -= config.defines.diplomacy.sign_non_aggression_pact_cost;
 
-                  sendAlert(actual_ot_user_id, config.defines.diplomacy.non_aggression_pact_request_alert_id, {
+                  sendAlert(ot_user_id, config.defines.diplomacy.non_aggression_pact_request_alert_id, {
                     FROM: actual_id,
                     TO: actual_ot_user_id
                   });

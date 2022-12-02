@@ -16,12 +16,12 @@ module.exports = {
       //Check if user is trying to rival themselves
       if (actual_id != actual_ot_user_id) {
         //Check if user has already been rivalled
-        if (!hasRivalry(actual_id, actual_ot_user_id)) {
-          if (!hasAlliance(actual_id, actual_ot_user_id)) {
+        if (!hasRivalry(user_id, ot_user_id)) {
+          if (!hasAlliance(user_id, ot_user_id)) {
             //Check if user is currently being protected
-            if (!hasGuarantee(actual_id, actual_ot_user_id)) {
+            if (!hasGuarantee(user_id, ot_user_id)) {
               //Check if relations are too high
-              var current_relations = getRelations(actual_id, actual_ot_user_id);
+              var current_relations = getRelations(user_id, ot_user_id);
 
               if (current_relations[0] < config.defines.diplomacy.rival_relations_threshold) {
                 //Check if user has enough Political Capital
@@ -29,12 +29,12 @@ module.exports = {
                   //Check for rival slots
                   if (Object.keys(usr.diplomacy.rivals).length < usr.modifiers.rival_slots) {
                     //Add as rivals for both countries
-                    createRivalry(actual_id, actual_ot_user_id);
+                    createRivalry(user_id, ot_user_id);
 
                     //Remove political_capital, send alert, create rivalry
                     usr.modifiers.political_capital -= config.defines.diplomacy.rival_relations_threshold;
 
-                    sendAlert(actual_ot_user_id, config.defines.diplomacy.revoke_guarantee_alert_id, {
+                    sendAlert(ot_user_id, config.defines.diplomacy.revoke_guarantee_alert_id, {
                       FROM: actual_id,
                       TO: actual_ot_user_id
                     });

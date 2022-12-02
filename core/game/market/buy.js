@@ -16,7 +16,7 @@ module.exports = {
     //Check to make sure that resource exists in the first place
     if (main.market[good_name]) {
       //Make sure that the user isn't blockaded
-      if (!isBlockaded(actual_id)) {
+      if (!isBlockaded(user_id)) {
         if (!isNaN(good_amount)) {
           var temp_market = JSON.parse(JSON.stringify(main.market));
           var total_cost = 0;
@@ -40,7 +40,7 @@ module.exports = {
             if (good_amount < main.market[good_name].stock) {
               if (good_amount <= 1000) {
                 //Check if user has enough market capacity remaining
-                if (getMarketCapacity(actual_id) - good_amount >= 0) {
+                if (getMarketCapacity(user_id) - good_amount >= 0) {
                   //Check with stock limitations
                   if (
                     (main.market[good_name].stock < 50) ||
@@ -87,7 +87,7 @@ module.exports = {
                     printError(game_obj.id, `You can only buy up to **20%** of the goods in a large market at once! This equates to about **${parseNumber(Math.floor(main.market[good_name].stock*0.2))}** ${(good_obj.name) ? good_obj.name : good_name}.`);
                   }
                 } else {
-                  printError(game_obj.id, `You do not have enough Market Capacity remaining to make this purchase! You need at least **${parseNumber(good_amount - getMarketCapacity(actual_id))}** remaining Market Capacity in order to fulfil this purchase request.`);
+                  printError(game_obj.id, `You do not have enough Market Capacity remaining to make this purchase! You need at least **${parseNumber(good_amount - getMarketCapacity(user_id))}** remaining Market Capacity in order to fulfil this purchase request.`);
                 }
               } else {
                 printError(game_obj.id, `You may not make purchases larger than **1.000** on the Global Market!`);

@@ -120,7 +120,7 @@ module.exports = {
           }
 
           //Set national modifier
-          module.exports.setNationalModifier(actual_id, national_modifier_names[i], {
+          module.exports.setNationalModifier(user_id, national_modifier_names[i], {
             name: national_modifiers[i].name,
             image: national_modifiers[i].image,
             icon: national_modifiers[i].icon,
@@ -131,7 +131,7 @@ module.exports = {
             modifiers: modifiers
           });
         } else {
-          module.exports.removeNationalModifier(actual_id, national_modifier_names[i]);
+          module.exports.removeNationalModifier(user_id, national_modifier_names[i]);
         }
   },
 
@@ -157,7 +157,7 @@ module.exports = {
           reversed_modifiers[all_local_modifiers[i]] = local_modifier.modifiers[all_local_modifiers[i]]*-1;
 
         //Apply reversed modifiers
-        applyModifiers(actual_id, reversed_modifiers);
+        applyModifiers(user_id, reversed_modifiers);
       }
 
       //Delete national modifier object
@@ -178,13 +178,13 @@ module.exports = {
 
     //Remove any previous modifier occupying the same slot
     if (usr.national_modifiers[modifier_id])
-      module.exports.removeNationalModifier(actual_id, modifier_id);
+      module.exports.removeNationalModifier(user_id, modifier_id);
 
     //Parse options field
     if (options.icon)
       local_icon = config.icons[local_icon];
     if (options.modifiers)
-      applyModifiers(actual_id, options.modifiers);
+      applyModifiers(user_id, options.modifiers);
 
     usr.national_modifiers[modifier_id] = {
       name: (options.name) ? options.name : modifier_id,

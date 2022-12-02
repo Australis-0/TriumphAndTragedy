@@ -183,11 +183,11 @@ module.exports = {
       //Declare local tracker variables
       var cb_is_valid = false;
       var has_wargoal = false;
-      var justification_obj = getJustification(actual_id, {
+      var justification_obj = getJustification(user_id, {
         target: actual_ot_user_id,
         type: raw_cb_name
       });
-      var justification_time = (hasRivalry(actual_id, actual_ot_user_id)) ?
+      var justification_time = (hasRivalry(user_id, ot_user_id)) ?
         Math.round(config.defines.diplomacy.justify_wargoal_time/2) :
         config.defines.diplomacy.justify_wargoal_time;
       var peace_demands_array = [];

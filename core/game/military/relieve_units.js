@@ -8,7 +8,7 @@ module.exports = {
 
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
-    var army_obj = getArmy(actual_id, army_name);
+    var army_obj = getArmy(user_id, army_name);
     var game_obj = getGameObject(user_id);
     var raw_unit_name = getUnit(unit_name, { return_key: true });
     var unit_obj = getUnit(unit_name);
@@ -17,7 +17,7 @@ module.exports = {
     if (army_obj) {
       if (unit_obj) {
         if (amount > 0) {
-          var relieved_units = relieveUnits(actual_id, amount, raw_unit_name, army_obj.name);
+          var relieved_units = relieveUnits(user_id, amount, raw_unit_name, army_obj.name);
 
           //Update army page
           if (game_obj.page.includes("army_viewer_")) {

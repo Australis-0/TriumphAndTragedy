@@ -178,25 +178,25 @@ module.exports = {
         if (local_user.diplomacy.allies[actual_id]) {
           local_user.diplomacy.used_diplomatic_slots--;
 
-          module.exports.dissolveAlliance(all_users[i], actual_id);
+          module.exports.dissolveAlliance(all_users[i], user_id);
         }
 
         //Guarantees
-        if (module.exports.hasGuarantee(all_users[i], actual_id)) {
+        if (module.exports.hasGuarantee(all_users[i], user_id)) {
           local_user.diplomacy.used_diplomatic_slots--;
 
-          module.exports.dissolveGuarantee(all_users[i], actual_id);
+          module.exports.dissolveGuarantee(all_users[i], user_id);
         }
 
         //Military Accesses
-        if (module.exports.hasMilitaryAccess(all_users[i], actual_id))
-          module.exports.dissolveMilitaryAccess(all_users[i], actual_id);
+        if (module.exports.hasMilitaryAccess(all_users[i], user_id))
+          module.exports.dissolveMilitaryAccess(all_users[i], user_id);
 
         //Non-Aggression Pacts
-        if (module.exports.hasNonAggressionPact(all_users[i], actual_id)) {
+        if (module.exports.hasNonAggressionPact(all_users[i], user_id)) {
           local_user.diplomacy.used_diplomatic_slots--;
 
-          module.exports.dissolveNonAggressionPact(all_users[i], actual_id);
+          module.exports.dissolveNonAggressionPact(all_users[i], user_id);
         }
 
         //Relations
@@ -204,14 +204,14 @@ module.exports = {
           delete local_user.diplomacy.relations[actual_id];
 
         //Rivals
-        if (module.exports.hasRivalry(all_users[i], actual_id))
-          module.exports.dissolveRivalry(all_users[i], actual_id);
+        if (module.exports.hasRivalry(all_users[i], user_id))
+          module.exports.dissolveRivalry(all_users[i], user_id);
 
         //Vassals
         if (local_user.diplomacy.vassals[actual_id]) {
           local_user.diplomacy.used_diplomatic_slots--;
 
-          module.exports.dissolveVassal(actual_id);
+          module.exports.dissolveVassal(user_id);
         }
 
         //Wars
@@ -447,7 +447,7 @@ module.exports = {
       Math.max( //Technology
         (usr.researched_technologies.length - getAverageTechCount())*5, 0
       ) +
-      getTotalActiveDuty(actual_id)/50000 + //Military
+      getTotalActiveDuty(user_id)/50000 + //Military
       usr.provinces //Provinces
     );
   },
@@ -496,16 +496,16 @@ module.exports = {
 
     //Check all diplomatic relations
     for (var i = 0; i < all_allies.length; i++)
-      if (hasAlliance(actual_id, all_allies[i]))
+      if (hasAlliance(user_id, all_allies[i]))
         used_diplomatic_slots++;
     for (var i = 0; i < all_guarantees.length; i++)
-      if (hasGuarantee(actual_id, all_guarantees[i]))
+      if (hasGuarantee(user_id, all_guarantees[i]))
         used_diplomatic_slots++;
     for (var i = 0; i < all_military_accesses.length; i++)
-      if (hasMilitaryAccess(actual_id, all_military_accesses[i]))
+      if (hasMilitaryAccess(user_id, all_military_accesses[i]))
         used_diplomatic_slots++;
     for (var i = 0; i < all_non_aggression_pacts.length; i++)
-      if (hasNonAggressionPact(actual_id, all_non_aggression_pacts[i]))
+      if (hasNonAggressionPact(user_id, all_non_aggression_pacts[i]))
         used_diplomatic_slots++;
     for (var i = 0; i < all_vassals.length; i++)
       if (usr.diplomacy.vassals[all_vassals[i]].overlord == actual_id)
@@ -548,7 +548,7 @@ module.exports = {
     var usr = main.users[actual_id];
 
     //Check if user_id has a gaurantee on ot_user_id
-    var all_guarantees = module.exports.getGuarantees(actual_ot_user_id);
+    var all_guarantees = module.exports.getGuarantees(ot_user_id);
 
     for (var i = 0; i < all_guarantees.length; i++)
       if (all_guarantees[i].guarantor == actual_id)
@@ -668,7 +668,7 @@ module.exports = {
     } else {
       //Improve/decrease gradually over time if not instant
       //Check for improving_type
-      var current_relations = module.exports.getRelations(actual_id, actual_ot_user_id)[0];
+      var current_relations = module.exports.getRelations(user_id, ot_user_id)[0];
       var improving_type = "stagnant";
 
       if (relations_value < 0) {

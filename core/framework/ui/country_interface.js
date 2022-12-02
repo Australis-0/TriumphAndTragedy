@@ -65,14 +65,14 @@ module.exports = {
     var usr = main.users[actual_id];
 
     //Declare local tracker variables
-    var actions_amount = getProduction(actual_id, "actions");
+    var actions_amount = getProduction(user_id, "actions");
       actions_amount[0] += config.defines.economy.starting_actions;
       actions_amount[1] += config.defines.economy.starting_actions;
     var all_cities = [];
     var all_national_modifiers = Object.keys(usr.national_modifiers);
     var all_pops = Object.keys(config.pops);
-    var has_no_provinces = (getProvinces(actual_id, { include_hostile_occupations: true, include_occupations: true }).length == 0);
-    var user_income = getIncome(actual_id);
+    var has_no_provinces = (getProvinces(user_id, { include_hostile_occupations: true, include_occupations: true }).length == 0);
+    var user_income = getIncome(user_id);
 
     //Fix negative pops
     {
@@ -91,8 +91,8 @@ module.exports = {
     var ending_string = "";
     var name_array = [];
     var name_string = "";
-    var owned_provinces = getProvinces(actual_id, { include_hostile_occupations: true });
-    var usr_provinces = getProvinces(actual_id);
+    var owned_provinces = getProvinces(user_id, { include_hostile_occupations: true });
+    var usr_provinces = getProvinces(user_id);
 
     usr.provinces = owned_provinces.length;
 
@@ -137,12 +137,12 @@ module.exports = {
     stats_string.push(`${config.icons.globe} Country: **${usr.name}**`);
     stats_string.push(`<@${user_id}> | _${(usr.motto) ? usr.motto : "No motto set."}_`);
 
-    if (has_no_provinces && !atWar(actual_id))
+    if (has_no_provinces && !atWar(user_id))
       stats_string.push(`\n- Your country doesn't have any provinces currently! Consider typing **[Settle Starting Provinces]** to settle down your peoples.`);
 
-    if (getVassal(actual_id)) {
+    if (getVassal(user_id)) {
       stats_string.push("");
-      stats_string.push(`We are a vassal of **${main.users[getVassal(actual_id).overlord].name}**.`);
+      stats_string.push(`We are a vassal of **${main.users[getVassal(user_id).overlord].name}**.`);
     }
 
     stats_string.push("");
@@ -166,7 +166,7 @@ module.exports = {
     stats_string.push(`__**Population:**__`);
     stats_string.push(config.localisation.divider);
     stats_string.push("");
-    stats_string.push(`${config.icons.development} Cities: (**${parseInt(getCities(actual_id).length)}**/**${parseInt(getCitiesCap(actual_id))}**): ${name_string}${ending_string}`);
+    stats_string.push(`${config.icons.development} Cities: (**${parseInt(getCities(user_id).length)}**/**${parseInt(getCitiesCap(user_id))}**): ${name_string}${ending_string}`);
     stats_string.push(`${config.icons.population} Population: **${parseNumber(getPopulation(usr.id))}** (Requires ${config.icons.food} **${Math.ceil((usr.population/1000000)*config.defines.economy.food_required_per_million)}** food per turn)`);
 
     //Push all pops to stats menu if set to visible
@@ -174,7 +174,7 @@ module.exports = {
       var local_pop = config.pops[all_pops[i]];
 
       if (local_pop.stats_display)
-        stats_string.push(`${(local_pop.icon) ? local_pop.icon + " " : ""} ${(local_pop.name) ? local_pop.name : all_pops[i]}: (**${parseNumber(usr.pops["used_" + all_pops[i]])}**/**${parseNumber(getTotalPopManpower(actual_id, all_pops[i]))}**)${(local_pop.military_pop) ? " | (**" + printPercentage(getTotalPopManpower(actual_id, all_pops[i], true)) + "** Recruitable Population)" : ""}`);
+        stats_string.push(`${(local_pop.icon) ? local_pop.icon + " " : ""} ${(local_pop.name) ? local_pop.name : all_pops[i]}: (**${parseNumber(usr.pops["used_" + all_pops[i]])}**/**${parseNumber(getTotalPopManpower(user_id, all_pops[i]))}**)${(local_pop.military_pop) ? " | (**" + printPercentage(getTotalPopManpower(user_id, all_pops[i], true)) + "** Recruitable Population)" : ""}`);
     }
 
     stats_string.push("");

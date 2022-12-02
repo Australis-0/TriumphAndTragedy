@@ -60,7 +60,7 @@ module.exports = {
             var old_unit_count = JSON.parse(JSON.stringify(returnSafeNumber(usr.reserves[raw_unit_name])));
 
             for (var i = 0; i < relieve_from_armies.length; i++)
-              relieveUnits(actual_id, unit_amount, raw_unit_name, relieve_from_armies[i]);
+              relieveUnits(user_id, unit_amount, raw_unit_name, relieve_from_armies[i]);
 
             var new_unit_count = returnSafeNumber(usr.reserves[raw_unit_name]);
             var successfully_withdrawn = new_unit_count - old_unit_count;

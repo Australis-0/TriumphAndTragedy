@@ -2,7 +2,7 @@ module.exports = {
   createAutoTrade: function (arg0_user, arg1_receiving_user, arg2_amount, arg3_good_type) {
     //Convert from parameters
     var user_id = arg0_user;
-    var other_user = arg1_receiving_user;
+    var ot_user_id = arg1_receiving_user;
     var raw_amount = parseInt(Math.ceil(arg2_amount));
     var raw_good_name = arg3_good_type.toLowerCase();
     var good_name = getGood(arg3_good_type, { return_key: true });
@@ -11,8 +11,8 @@ module.exports = {
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
     var game_obj = getGameObject(user_id);
-    var ot_actual_id = main.global.user_map[other_user];
-    var ot_user = main.users[ot_actual_id];
+    var ot_user_actual_id = main.global.user_map[ot_user_id];
+    var ot_user = main.users[ot_user_actual_id];
     var trade_display_whitelist = [];
     var trade_whitelist = getTradeWhitelist(user_id);
     var usr = main.users[actual_id];
@@ -23,15 +23,15 @@ module.exports = {
 
     //Make sure that the other user exists to begin with
     if (ot_user) {
-      if (ot_actual_id != actual_id) {
+      if (ot_user_actual_id != actual_id) {
         if (good_obj || raw_good_name == "money") {
           if (!good_obj.research_good) {
             if (!good_obj.doesnt_stack) {
               if (!isNaN(raw_amount)) {
                 if (raw_amount > 0) {
-                  if (!isBlockaded(actual_id)) {
-                    if (!isBlockaded(ot_actual_id)) {
-                      if (trade_whitelist.includes(ot_actual_id)) {
+                  if (!isBlockaded(user_id)) {
+                    if (!isBlockaded(ot_user_actual_id)) {
+                      if (trade_whitelist.includes(ot_user_actual_id)) {
                         //This is referred to twice to make sure we can get the name of the key later on
                         var auto_trade_id = generateAutoTradeID(user_id);
 
@@ -39,7 +39,7 @@ module.exports = {
                           id: auto_trade_id,
 
                           exporter: actual_id,
-                          target: ot_actual_id,
+                          target: ot_user_actual_id,
 
                           amount: raw_amount,
                           good_type: (raw_good_name == "money") ?

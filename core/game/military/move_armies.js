@@ -58,10 +58,10 @@ module.exports = {
           var successfully_moved_armies = 0;
 
           for (var i = 0; i < moving_armies.length; i++) {
-            var local_army = getArmy(actual_id, moving_armies[i]);
+            var local_army = getArmy(user_id, moving_armies[i]);
 
             try {
-              successfully_moved_armies = (moveArmy(actual_id, local_army, provinces)) ? successfully_moved_armies + 1 : successfully_moved_armies;
+              successfully_moved_armies = (moveArmy(user_id, local_army, provinces)) ? successfully_moved_armies + 1 : successfully_moved_armies;
             } catch {}
           }
 

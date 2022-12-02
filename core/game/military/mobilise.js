@@ -14,7 +14,7 @@ module.exports = {
       var local_pop = config.pops[all_pops[i]];
       var mobilisation_value = Math.max(Math.ceil(
         (
-          getTotalPopManpower(actual_id, all_pops[i]) - usr.pops[`used_${all_pops[i]}`]
+          getTotalPopManpower(user_id, all_pops[i]) - usr.pops[`used_${all_pops[i]}`]
         )
           *config.defines.combat.base_mobilisation_size*usr.modifiers.mobilisation_size
       ), 0);
@@ -47,7 +47,7 @@ module.exports = {
           var mobilisation_speed = Math.ceil(
             usr.modifiers.mobilisation_speed*config.defines.combat.base_mobilisation_time
           );
-          var mobilised_pops = module.exports.getMobilisationPops(actual_id);
+          var mobilised_pops = module.exports.getMobilisationPops(user_id);
           var unit_obj = getUnit(usr.mobilisation.unit_type);
           var unit_type = JSON.parse(JSON.stringify(usr.mobilisation.unit_type)); //Deep copied in-case unit changes with new tech research
 
@@ -68,7 +68,7 @@ module.exports = {
           }
 
           //Apply national modifiers
-          processNationalModifiers(actual_id);
+          processNationalModifiers(user_id);
 
           //Create mobilisation object
           usr.mobilisation = {

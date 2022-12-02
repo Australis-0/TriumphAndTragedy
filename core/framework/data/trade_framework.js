@@ -24,19 +24,19 @@ module.exports = {
   generateTradeID: function (arg0_user, arg1_receiving_user) {
     //Convert from parameters
     var user_id = arg0_user;
-    var other_user = arg1_receiving_user;
+    var ot_user_id = arg1_receiving_user;
 
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
-    var ot_actual_id = main.global.user_map[other_user];
-    var ot_user = main.users[ot_actual_id];
+    var ot_user_actual_id = main.global.user_map[ot_user_id];
+    var ot_user = main.users[ot_user_actual_id];
     var usr = main.users[actual_id];
 
     //While loop to find ID, just in-case of conflicting random ID's:
     while (true) {
       var local_id_suffix = generateRandomID();
 
-      var full_id = `${actual_id}-${ot_actual_id}-${local_id_suffix}`;
+      var full_id = `${actual_id}-${ot_user_actual_id}-${local_id_suffix}`;
 
       //Return and break once a true ID is found
       if (!usr.trades[full_id]) {

@@ -6,7 +6,7 @@ module.exports = {
 
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
-    var army_obj = getArmy(actual_id, army_name);
+    var army_obj = getArmy(user_id, army_name);
     var game_obj = getGameObject(user_id);
     var usr = main.users[actual_id];
 
@@ -15,7 +15,7 @@ module.exports = {
       if (!army_obj.is_blockading) {
         var old_name = JSON.parse(JSON.stringify(army_obj.name));
 
-        deleteArmy(actual_id, army_name);
+        deleteArmy(user_id, army_name);
 
         //Update army_list if user is currently viewing it
         if (game_obj.page == "army_list")

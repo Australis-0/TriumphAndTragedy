@@ -10,7 +10,7 @@ module.exports = {
     var actual_id = main.global.user_map[user_id];
     var building_category = getBuildingCategory(raw_building_category, { return_key: true });
     var building_category_obj = getBuildingCategory((building_category) ? building_category : raw_building_name);
-    var city_obj = getCity(city_name, { users: actual_id });
+    var city_obj = getCity(city_name, { users: user_id });
     var game_obj = getGameObject(user_id);
     var usr = main.users[actual_id];
 
@@ -18,7 +18,7 @@ module.exports = {
     if (building_category_obj) {
       if (city_obj) {
         //Calculate development_cost
-        var development_cost = getDevelopmentCost(actual_id, city_name, amount);
+        var development_cost = getDevelopmentCost(user_id, city_name, amount);
 
         if (usr.country_age != 0) {
           if (usr.modifiers.political_capital >= development_cost) {
@@ -79,7 +79,7 @@ module.exports = {
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
     var all_building_categories = Object.keys(config.buildings);
-    var all_provinces = getProvinces(actual_id);
+    var all_provinces = getProvinces(user_id);
     var game_obj = getGameObject(user_id);
     var usr = main.users[actual_id];
 
@@ -103,7 +103,7 @@ module.exports = {
     }
 
     var all_resource_shortages = Object.keys(resource_shortages);
-    if (getCitiesCap(actual_id) - getCities(actual_id).length >= 0) {
+    if (getCitiesCap(user_id) - getCities(user_id).length >= 0) {
       if (all_resource_shortages.length == 0) {
         var local_province = getProvince(province_id);
 
@@ -115,8 +115,8 @@ module.exports = {
                 //Initialise city object, determine capital status first
                 //If user has no other cities, set it to their capital
 
-                local_province.city_type = (getCities(actual_id).length == 0) ? "capital" : "city";
-                local_province.culture = getPrimaryCultures(actual_id)[0];
+                local_province.city_type = (getCities(user_id).length == 0) ? "capital" : "city";
+                local_province.culture = getPrimaryCultures(user_id)[0];
                 local_province.name = city_name;
                 local_province.type = "urban";
 
@@ -284,19 +284,19 @@ module.exports = {
     var game_obj = getGameObject(user_id);
     var usr = main.users[actual_id];
 
-    var city_obj = getCity(city_name, { users: actual_id });
+    var city_obj = getCity(city_name, { users: user_id });
 
     if (city_obj) {
       if (usr.modifiers.political_capital >= config.defines.politics.move_capital_cost || force_move) {
         var culture_obj = main.global.cultures[city_obj.culture];
-        
+
         if (
           culture_obj.primary_culture.includes(actual_id) ||
           culture_obj.accepted_cultures.includes(actual_id) ||
           force_move
         ) {
           //Get rid of old capital
-          var all_cities = getCities(actual_id, {
+          var all_cities = getCities(user_id, {
             include_hostile_occupations: true
           });
 
@@ -418,7 +418,7 @@ module.exports = {
         printError(game_obj.id, `Your city names have been locked in place due to moderation action. Ouch.`);
       }
     } else {
-      var vassal_obj = getVassal(actual_id);
+      var vassal_obj = getVassal(user_id);
 
       printError(game_obj.id, `Your overlord, **${main.users[vassal_obj.overlord].name}**, has issued a decree stating that vassals are not allowed to change their city names without prior consent! Petition your overlord first before attempting to change your city name again.`)
     }

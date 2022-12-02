@@ -39,11 +39,11 @@ module.exports = {
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
     var actual_ot_user_id = main.global.user_map[user_id];
-    var city_obj = getCity(old_city_name, { users: [actual_ot_user_id] });
+    var city_obj = getCity(old_city_name, { users: [ot_user_id] });
     var game_obj = getGameObject(user_id);
     var ot_user = main.users[actual_ot_user_id];
     var usr = main.users[actual_id];
-    var vassal_obj = getVassal(actual_ot_user_id);
+    var vassal_obj = getVassal(ot_user_id);
 
     //Check to see if user is actually a vassal
     if (actual_id != actual_ot_user_id) {

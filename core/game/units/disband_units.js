@@ -17,7 +17,7 @@ module.exports = {
       if (!isNaN(amount)) {
         if (amount > 0) {
           if (usr.reserves[raw_unit_name] >= amount) {
-            disbandUnits(actual_id, amount, raw_unit_name);
+            disbandUnits(user_id, amount, raw_unit_name);
 
             //Update military; reserves UI if user is currently on it
             if (game_obj.page == "military")

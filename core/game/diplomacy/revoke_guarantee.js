@@ -16,12 +16,12 @@ module.exports = {
       //See if other user are themselves
       if (actual_id != actual_ot_user_id) {
         //Check if target user is currently being guaranteed by invokee
-        if (hasGuarantee(actual_id, actual_ot_user_id)) {
+        if (hasGuarantee(user_id, ot_user_id)) {
           //Remove a used diplomatic slot and print user feedback
-          dissolveGuarantee(actual_id, actual_ot_user_id);
+          dissolveGuarantee(user_id, ot_user_id);
           usr.diplomacy.used_diplomatic_slots--;
 
-          sendAlert(actual_ot_user_id, config.defines.diplomacy.revoke_guarantee_alert_id, {
+          sendAlert(ot_user_id, config.defines.diplomacy.revoke_guarantee_alert_id, {
             FROM: actual_id,
             TO: actual_ot_user_id
           });

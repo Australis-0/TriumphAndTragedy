@@ -97,7 +97,7 @@ module.exports = {
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
     var all_pops = Object.keys(config.pops);
-    var all_provinces = getProvinces(actual_id);
+    var all_provinces = getProvinces(user_id);
     var pop_obj = {};
     var usr = main.users[actual_id];
 

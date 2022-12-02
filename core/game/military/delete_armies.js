@@ -18,7 +18,7 @@ module.exports = {
       if (army_array.length > 0) {
         //Remove the actual armies by running the delete army command
         for (var i = 0; i < army_array.length; i++)
-          deleteArmy(actual_id, army_array[i]);
+          deleteArmy(user_id, army_array[i]);
 
         var current_armies = Object.keys(usr.armies).length;
 

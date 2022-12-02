@@ -18,14 +18,14 @@ module.exports = {
     if (ot_user) {
       if (cb_obj) {
         //Declare local tracker variables
-        var has_justifcation = getJustification(actual_id, {
+        var has_justifcation = getJustification(user_id, {
           target: actual_ot_user_id,
           type: raw_cb_name
         });
 
         //Check if user has an ongoing justification
         if (has_justifcation) {
-          var justification_index = getJustification(actual_id, {
+          var justification_index = getJustification(user_id, {
             target: actual_ot_user_id,
             type: raw_cb_name,
 

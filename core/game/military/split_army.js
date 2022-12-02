@@ -7,7 +7,7 @@ module.exports = {
 
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
-    var army_obj = getArmy(actual_id, army_name);
+    var army_obj = getArmy(user_id, army_name);
     var game_obj = getGameObject(user_id);
     var usr = main.users[actual_id];
 
@@ -16,7 +16,7 @@ module.exports = {
       if (army_obj) {
         if (army_obj.type != "navy") {
           if (Object.keys(army_obj.units).length != 0) {
-            createArmy(actual_id, new_army_name, army_obj.province);
+            createArmy(user_id, new_army_name, army_obj.province);
 
             //Print user feedback
             printAlert(game_obj.id, `You have created a new field army named the **${new_army_name}** alongside the previously existing **${army_obj.name}**. To deploy units into this new army, type **[Transfer Units]**`);

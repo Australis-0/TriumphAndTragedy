@@ -402,7 +402,7 @@ module.exports = {
       var has_non_aggression_pact = false;
 
       for (var i = 0; i < war_obj[opposite_side].length; i++) {
-        if (hasNonAggressionPact(war_obj[opposite_side][i], actual_id))
+        if (hasNonAggressionPact(war_obj[opposite_side][i], user_id))
           has_non_aggression_pact = true;
       }
 
@@ -411,8 +411,8 @@ module.exports = {
         for (var i = 0; i < war_obj[opposite_side].length; i++) {
           var local_user = main.users[war_obj[opposite_side][i]];
 
-          if (hasAlliance(war_obj[opposite_side][i], actual_id)) {
-            dissolveAlliance(war_obj[opposite_side][i], actual_id);
+          if (hasAlliance(war_obj[opposite_side][i], user_id)) {
+            dissolveAlliance(war_obj[opposite_side][i], user_id);
 
             usr.diplomacy.used_diplomatic_slots--;
             local_user.diplomacy.used_diplomatic_slots--;

@@ -18,23 +18,23 @@ module.exports = {
         //Check if user has enough political capital
         if (usr.modifiers.political_capital >= config.defines.diplomacy.request_military_access_cost) {
           //Check if target user is already guaranteed
-          if (!hasGuarantee(actual_id, actual_ot_user_id)) {
+          if (!hasGuarantee(user_id, ot_user_id)) {
             //Check if user is rival
-            if (!hasRivalry(actual_id, actual_ot_user_id)) {
+            if (!hasRivalry(user_id, ot_user_id)) {
               //Check if user has enough diplomatic slots
               if (usr.diplomacy.used_diplomatic_slots < usr.modifiers.diplomatic_slots) {
-                if (!getVassal(actual_id)) {
-                  if (!getVassal(actual_ot_user_id)) {
+                if (!getVassal(user_id)) {
+                  if (!getVassal(ot_user_id)) {
                     //Deduct Political Capital and send alert
                     usr.modifiers.political_capital -= config.defines.diplomacy.guarantee_independence_cost;
                     usr.diplomacy.used_diplomatic_slots++;
 
-                    sendAlert(actual_ot_user_id, config.defines.diplomacy.proclaim_guarantee_alert_id, {
+                    sendAlert(ot_user_id, config.defines.diplomacy.proclaim_guarantee_alert_id, {
                       FROM: actual_id,
                       TO: actual_ot_user_id
                     });
 
-                    createGuarantee(actual_id, actual_ot_user_id);
+                    createGuarantee(user_id, ot_user_id);
 
                     //Status updater
                     if (game_obj.page.startsWith("diplomacy_view_")) {

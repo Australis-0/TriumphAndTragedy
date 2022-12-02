@@ -10,7 +10,7 @@ module.exports = {
 
     //Go over all accepted cultures and add to percentage
     for (var i = 0; i < all_accepted_cultures.length; i++)
-      all_accepted_population_percentage += module.exports.calculateCulturalPercentage(actual_id, all_accepted_cultures[i]);
+      all_accepted_population_percentage += module.exports.calculateCulturalPercentage(user_id, all_accepted_cultures[i]);
 
     //Return statement
     return all_accepted_population_percentage;
@@ -27,7 +27,7 @@ module.exports = {
 
     //Go over all accepted cultures and add to percentage
     for (var i = 0; i < all_accepted_cultures.length; i++)
-      all_accepted_population_percentage += module.exports.calculateCulturalTotal(actual_id, all_accepted_cultures[i]);
+      all_accepted_population_percentage += module.exports.calculateCulturalTotal(user_id, all_accepted_cultures[i]);
 
     //Return statement
     return all_accepted_population_percentage;
@@ -96,7 +96,7 @@ module.exports = {
     var usr = main.users[actual_id];
 
     //Return statement
-    return (usr.population - module.exports.calculateAcceptedCultureTotal(actual_id))/usr.population;
+    return (usr.population - module.exports.calculateAcceptedCultureTotal(user_id))/usr.population;
   },
 
   calculateUnacceptedCultureTotal: function (arg0_user) {
@@ -108,7 +108,7 @@ module.exports = {
     var usr = main.users[actual_id];
 
     //Return statement
-    return (usr.population - module.exports.calculateAcceptedCultureTotal(actual_id));
+    return (usr.population - module.exports.calculateAcceptedCultureTotal(user_id));
   },
 
   generateCultureID: function () {
@@ -379,14 +379,14 @@ module.exports = {
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
     var culture_list = []; //[culture_id, population]
-    var user_cultures = module.exports.getCultures(actual_id);
+    var user_cultures = module.exports.getCultures(user_id);
 
     //Initialise culture_list array
     for (var i = 0; i < user_cultures.length; i++)
       culture_list.push({
         id: user_cultures[i],
-        percentage_population: calculateCulturalPercentage(actual_id, user_cultures[i]),
-        total_population: calculateCulturalTotal(actual_id, user_cultures[i])
+        percentage_population: calculateCulturalPercentage(user_id, user_cultures[i]),
+        total_population: calculateCulturalTotal(user_id, user_cultures[i])
       });
 
     //Sort culture_list array

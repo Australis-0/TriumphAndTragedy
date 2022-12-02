@@ -1,19 +1,20 @@
 module.exports = {
   //Generates a new rural province based on province ID and parsed owner tag
-  settleProvince: function (arg0_province, arg1_owner) {
+  settleProvince: function (arg0_user_id, arg1_province) {
     //Convert from parameters
-    var province_id = arg0_province;
-    var owner_id = arg1_owner;
+    var user_id = arg0_user_id;
+    var province_id = arg1_province;
 
     //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
     var province_obj = main.provinces[province_id];
-    var usr = main.users[arg1_owner];
+    var usr = main.users[actual_id];
 
     try {
       if (!province_obj.type) {
         //Set province type and culture
-        province_obj.owner = owner_id;
-        province_obj.controller = owner_id; //Used for occupations and other shenanigans
+        province_obj.owner = user_id;
+        province_obj.controller = user_id; //Used for occupations and other shenanigans
 
         province_obj.type = "rural";
         province_obj.culture = usr.culture;
@@ -63,12 +64,12 @@ module.exports = {
 
         //Set culture and other modifiers/trackers
         province_obj.pops.population = total_population;
-        province_obj.culture = getPrimaryCultures(owner_id)[0];
+        province_obj.culture = getPrimaryCultures(user_id)[0];
         usr.population += total_population;
         usr.provinces++;
 
         //Change province colour
-        setAllProvinceColours(owner_id, province_id);
+        setAllProvinceColours(user_id, province_id);
       } else {
         log.warn(`settleProvince() - ran into an error whilst generating Province ID ${province_id}: Province already had a province type.`);
         console.log(e);

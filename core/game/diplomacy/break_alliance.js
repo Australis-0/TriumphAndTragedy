@@ -13,16 +13,16 @@ module.exports = {
 
     //Check if other user exists and is allied
     if (ot_user) {
-      if (hasAlliance(actual_id, actual_ot_user_id)) {
+      if (hasAlliance(user_id, ot_user_id)) {
         //Check if user has enough Political Capital
         if (usr.modifiers.political_capital >= config.defines.diplomacy.break_alliance_cost) {
           //Remove allied status
-          dissolveAlliance(actual_id, actual_ot_user_id);
+          dissolveAlliance(user_id, ot_user_id);
 
           usr.diplomacy.used_diplomatic_slots--;
           ot_user.diplomacy.used_diplomatic_slots--;
 
-          sendAlert(actual_ot_user_id, config.defines.diplomacy.alliance_break_alert_id, {
+          sendAlert(ot_user_id, config.defines.diplomacy.alliance_break_alert_id, {
             FROM: actual_id,
             TO: actual_ot_user_id
           });

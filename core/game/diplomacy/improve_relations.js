@@ -16,7 +16,7 @@ module.exports = {
       if (actual_id != actual_ot_user_id) {
         if (usr.modifiers.political_capital >= config.defines.diplomacy.improve_relations_cost) {
           //Check if user already has maximum relations with target country
-          var current_relations = getRelations(actual_id, actual_ot_user_id);
+          var current_relations = getRelations(user_id, ot_user_id);
 
           if (current_relations[0] < 100) {
             //Check if user is already improving their opinion of the target country
@@ -24,8 +24,8 @@ module.exports = {
               //Subtract political capital and begin improving relations
               usr.modifiers.political_capital -= config.defines.diplomacy.decrease_relations_cost;
 
-              modifyRelations(actual_id, {
-                target: actual_ot_user_id,
+              modifyRelations(user_id, {
+                target: ot_user_id,
                 value: 50,
                 duration: 5
               });

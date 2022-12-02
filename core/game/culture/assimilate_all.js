@@ -9,7 +9,7 @@ module.exports = {
 
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
-    var assimilating_culture = getUserCulture(actual_id, assimilating_culture_name, { return_objects: true });
+    var assimilating_culture = getUserCulture(user_id, assimilating_culture_name, { return_objects: true });
     var assimilated_provinces = 0;
     var core_culture = getCulture(core_culture_name);
     var game_obj = getGameObject(user_id);

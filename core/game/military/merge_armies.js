@@ -39,7 +39,7 @@ module.exports = {
 
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
-    var army_obj = getArmy(actual_id, merged_army_string);
+    var army_obj = getArmy(user_id, merged_army_string);
     var game_obj = getGameObject(user_id);
     var usr = main.users[actual_id];
 
@@ -52,7 +52,7 @@ module.exports = {
 
         //Begin attempting to merge armies
         for (var i = 0; i < merging_armies_array.length; i++)
-          mergeArmy(actual_id, merging_armies_array[i], merged_army_string);
+          mergeArmy(user_id, merging_armies_array[i], merged_army_string);
 
         //How many armies were successfully merged?
         var current_armies = Object.keys(usr.armies).length;

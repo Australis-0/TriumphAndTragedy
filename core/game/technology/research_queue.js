@@ -32,7 +32,7 @@ module.exports = {
             //UI updater
             if (game_obj.page == "research_queue")
               createPageMenu(game_obj.middle_embed, {
-                embed_pages: printResearchList(actual_id),
+                embed_pages: printResearchList(user_id),
                 page: interfaces[game_obj.middle_embed.id].page,
                 user: game_obj.user
               });
@@ -79,7 +79,7 @@ module.exports = {
       switch (input) {
         case "research list":
           createPageMenu(game_obj.middle_embed, {
-            embed_pages: printResearchList(actual_id),
+            embed_pages: printResearchList(user_id),
             user: game_obj.user
           });
           is_command = true;
@@ -143,7 +143,7 @@ module.exports = {
         //UI updater
         if (game_obj.page == "research_queue")
           createPageMenu(game_obj.middle_embed, {
-            embed_pages: printResearchList(actual_id),
+            embed_pages: printResearchList(user_id),
             page: interfaces[game_obj.middle_embed.id].page,
             user: game_obj.user
           });

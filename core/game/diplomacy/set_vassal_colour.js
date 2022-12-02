@@ -41,11 +41,11 @@ module.exports = {
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
     var actual_ot_user_id = main.global.user_map[ot_user_id];
-    var culture_obj = getPrimaryCultures(actual_ot_user_id, { return_objects: true })[0];
+    var culture_obj = getPrimaryCultures(ot_user_id, { return_objects: true })[0];
     var game_obj = getGameObject(user_id);
     var ot_user = main.users[actual_ot_user_id];
     var usr = main.users[actual_id];
-    var vassal_obj = getVassal(actual_ot_user_id);
+    var vassal_obj = getVassal(ot_user_id);
 
     //Check to see if user is actually a vassal
     if (actual_id != actual_ot_user_id) {
@@ -53,7 +53,7 @@ module.exports = {
         if (vassal_obj) {
           if (vassal_obj.overlord == actual_id) {
             //Set vassal colour
-            var change_vassal_colour = setColour(actual_ot_user_id, r, g, b, true, true);
+            var change_vassal_colour = setColour(ot_user_id, r, g, b, true, true);
 
             //Print user feedback
             (change_vassal_colour[0]) ?

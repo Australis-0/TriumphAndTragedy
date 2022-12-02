@@ -8,7 +8,7 @@ module.exports = {
   give: function (arg0_user, arg1_receiving_user, arg2_amount, arg3_good_type, arg4_options) { //[WIP] - Update exports menu if user is currently in it
     //Convert from parameters
     var user_id = arg0_user;
-    var other_user = arg1_receiving_user;
+    var ot_user_id = arg1_receiving_user;
     var raw_amount = parseInt(Math.ceil(arg2_amount));
     var raw_good_name = arg3_good_type.toLowerCase();
     var good_name = getGood(arg3_good_type, { return_key: true });
@@ -18,8 +18,8 @@ module.exports = {
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
     var game_obj = getGameObject(user_id);
-    var ot_actual_id = main.global.user_map[other_user];
-    var ot_user = main.users[ot_actual_id];
+    var ot_user_actual_id = main.global.user_map[ot_user_id];
+    var ot_user = main.users[ot_user_actual_id];
     var trade_display_whitelist = [];
     var trade_whitelist = getTradeWhitelist(user_id);
     var usr = main.users[actual_id];
@@ -33,31 +33,31 @@ module.exports = {
 
     //Check to make sure that user isn't giving goods to themselves
     if (ot_user) {
-      if (actual_id != ot_actual_id) {
+      if (actual_id != ot_user_actual_id) {
         if (!isNaN(raw_amount)) {
           if (raw_amount >= 0) {
             if (raw_amount > 0) {
               if (!good_obj.research_good) {
                 if (!good_obj.doesnt_stack) {
-                  if (!isBlockaded(actual_id)) {
-                    if (!isBlockaded(ot_actual_id)) {
+                  if (!isBlockaded(user_id)) {
+                    if (!isBlockaded(ot_user_actual_id)) {
                       //Check if user has enough shipment capacity
-                      if (getShipmentCapacity(actual_id) >= raw_amount || raw_good_name == "money") {
+                      if (getShipmentCapacity(user_id) >= raw_amount || raw_good_name == "money") {
                         //Check if user has enough items to actually carry this out
                         if (
                           (raw_good_name == "money" && usr.money >= raw_amount) ||
                           (good_obj && usr.inventory[good_name] >= raw_amount)
                         ) {
-                          if (trade_whitelist.includes(ot_actual_id)) {
+                          if (trade_whitelist.includes(ot_user_actual_id)) {
                             try {
                               //Fetch user variables
-                              var distance = moveTo(getCapital(actual_id).id, getCapital(ot_actual_id).id).length;
+                              var distance = moveTo(getCapital(user_id).id, getCapital(ot_user_actual_id).id).length;
                               var amount_of_turns = Math.ceil(
                                 config.defines.combat.base_transfer_time + (
                                   distance/config.defines.combat.shipment_time
                                 )*usr.modifiers.shipment_time
                               );
-                              var trade_id = generateTradeID(actual_id, ot_actual_id);
+                              var trade_id = generateTradeID(user_id, ot_user_actual_id);
 
                               if (good_obj || raw_good_name == "money") {
                                 //Deduct goods from inventory first
@@ -68,7 +68,7 @@ module.exports = {
 
                                 //Append to trade object
                                 usr.trades[trade_id] = {
-                                  target: other_user,
+                                  target: ot_user_id,
                                   exporter: actual_id,
 
                                   amount: raw_amount,
@@ -113,7 +113,7 @@ module.exports = {
                         }
                       } else {
                         if (!options.hide_display)
-                          printError(game_obj.id, `You don't have enough Shipment Capacity to transport this many items! You currently have **${parseNumber(getShipmentCapacity(actual_id))}** remaining Shipment Capacity out of **${parseNumber(usr.modifiers.shipment_capacity)}** total, allowing you to only ship up to that many items.`);
+                          printError(game_obj.id, `You don't have enough Shipment Capacity to transport this many items! You currently have **${parseNumber(getShipmentCapacity(user_id))}** remaining Shipment Capacity out of **${parseNumber(usr.modifiers.shipment_capacity)}** total, allowing you to only ship up to that many items.`);
                       }
                     } else {
                       if (!options.hide_display)

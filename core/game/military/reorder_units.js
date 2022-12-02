@@ -8,12 +8,12 @@ module.exports = {
 
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
-    var army_obj = getArmy(actual_id, army_name);
+    var army_obj = getArmy(user_id, army_name);
     var game_obj = getGameObject(user_id);
     var usr = main.users[actual_id];
 
     //Attempt reordering units
-    var reorder_units = reorderUnits(actual_id, army_obj, unit_name, options);
+    var reorder_units = reorderUnits(user_id, army_obj, unit_name, options);
 
     printAlert(game_obj.id, reorder_units[1]);
 

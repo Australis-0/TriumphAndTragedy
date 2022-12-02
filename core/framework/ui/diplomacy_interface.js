@@ -45,7 +45,7 @@ module.exports = {
     var usr = main.users[actual_id];
 
     //Declare local tracker variables
-    var accepted_cultures = getAcceptedCultures(actual_id, { exclude_primary_culture: true });
+    var accepted_cultures = getAcceptedCultures(user_id, { exclude_primary_culture: true });
     var all_vassals = Object.keys(usr.diplomacy.vassals);
     var defensive_wars = 0;
     var enemies = [];
@@ -84,7 +84,7 @@ module.exports = {
 
     //Check if user has any vassals or accepted cultures dragging down their gain per turn
     if (all_vassals.length > 0) {
-      diplomacy_string.push(`Our **${parseNumber(all_vassals.length)}** vassal(s) are costing us **${parseNumber(getVassalMaintenance(actual_id))}** Political Capital per turn.`);
+      diplomacy_string.push(`Our **${parseNumber(all_vassals.length)}** vassal(s) are costing us **${parseNumber(getVassalMaintenance(user_id))}** Political Capital per turn.`);
 
       for (var i = 0; i < all_vassals.length; i++)
         diplomacy_string.push(`- **${main.users[vassal_obj[all_vassals[i]].id].name}**`);
@@ -235,19 +235,19 @@ module.exports = {
     var all_pops = Object.keys(config.pops);
     var all_user_keys = Object.keys(main.global.user_map);
     var all_wars = Object.keys(main.global.wars);
-    var capital_obj = getCapital(actual_ot_user_id);
-    var current_ot_user_relations = getRelations(actual_ot_user_id, actual_id);
-    var current_user_relations = getRelations(actual_id, actual_ot_user_id);
+    var capital_obj = getCapital(ot_user_id);
+    var current_ot_user_relations = getRelations(ot_user_id, user_id);
+    var current_user_relations = getRelations(user_id, ot_user_id);
     var government_obj = config.governments[ot_user.government];
     var user_keys = [];
-    var user_provinces = getProvinces(actual_ot_user_id, { include_occupations: true });
+    var user_provinces = getProvinces(ot_user_id, { include_occupations: true });
 
     //Diplomatic Actions page
     {
       //Diplomatic relation variables
       var allies_array = [];
       var can_call_ally = [];
-      var have_military_access_array = getMilitaryAccesses(actual_ot_user_id);
+      var have_military_access_array = getMilitaryAccesses(ot_user_id);
       var guaranteed_array = [];
       var guarantors_array = [];
       var justifying_wargoals = [];
@@ -255,12 +255,12 @@ module.exports = {
       var non_aggression_pact_array = [];
       var rivals_array = [];
       var vassal_array = [];
-      var vassal_obj = getVassal(actual_ot_user_id);
+      var vassal_obj = getVassal(ot_user_id);
 
       //Initialise diplomatic relation variables
       var all_allies = Object.keys(ot_user.diplomacy.allies);
       var all_guarantees = Object.keys(ot_user.diplomacy.guarantees);
-      var all_guarantors = getGuarantees(actual_ot_user_id);
+      var all_guarantors = getGuarantees(ot_user_id);
       var all_military_accesses = Object.keys(ot_user.diplomacy.military_access);
       var all_non_aggression_pacts = Object.keys(ot_user.diplomacy.non_aggression_pacts);
       var all_rivals = Object.keys(ot_user.diplomacy.rivals);
@@ -268,22 +268,22 @@ module.exports = {
 
       //Alliances
       for (var i = 0; i < all_allies.length; i++)
-        if (hasAlliance(actual_ot_user_id, all_allies[i]))
+        if (hasAlliance(ot_user_id, all_allies[i]))
           allies_array.push(main.users[all_allies[i]].name);
 
       //Call Ally
-      if (hasAlliance(actual_id, actual_ot_user_id))
+      if (hasAlliance(user_id, ot_user_id))
         for (var i = 0; i < all_wars.length; i++) {
           var local_war = main.global.wars[all_wars[i]];
 
           if (local_war.attackers.includes(actual_id) || local_war.defenders.includes(actual_id))
-            if (!(local_war.attackers.includes(actual_ot_user_id) || local_war.defenders.includes(actual_ot_user_id)))
+            if (!(local_war.attackers.includes(ot_user_id) || local_war.defenders.includes(ot_user_id)))
               can_call_ally.push(`**${local_war.name}**`);
         }
 
       //Guarantees
       for (var i = 0; i < all_guarantees.length; i++)
-        if (hasGuarantee(actual_ot_user_id, all_guarantees[i]))
+        if (hasGuarantee(ot_user_id, all_guarantees[i]))
           guaranteed_array.push(main.users[all_guarantees[i]].name);
 
       //Guarantors
@@ -292,17 +292,17 @@ module.exports = {
 
       //Military Accesses
       for (var i = 0; i < all_military_accesses.length; i++)
-        if (hasMilitaryAccess(actual_ot_user_id, all_military_accesses[i]))
+        if (hasMilitaryAccess(ot_user_id, all_military_accesses[i]))
           military_access_array.push(main.users[all_military_accesses[i]].name);
 
       //Non-aggression Pacts
       for (var i = 0; i < all_non_aggression_pacts.length; i++)
-        if (hasNonAggressionPact(actual_ot_user_id, all_non_aggression_pacts[i]))
+        if (hasNonAggressionPact(ot_user_id, all_non_aggression_pacts[i]))
           non_aggression_pact_array.push(main.users[all_non_aggression_pacts[i]].name);
 
       //Rivalries
       for (var i = 0; i < all_rivals.length; i++)
-        if (hasRivalry(actual_ot_user_id, all_rivals[i]))
+        if (hasRivalry(ot_user_id, all_rivals[i]))
           rivals_array.push(main.users[all_rivals[i]].name);
 
       //Vassals
@@ -312,7 +312,7 @@ module.exports = {
 
       //User variables
       for (var i = 0; i < all_user_keys.length; i++)
-        if (main.global.user_map[all_user_keys[i]] == actual_ot_user_id)
+        if (main.global.user_map[all_user_keys[i]] == ot_user_id)
           if (!all_user_keys[i].includes("-"))
             user_keys.push(`<@${all_user_keys[i]}>`);
 
@@ -381,7 +381,7 @@ module.exports = {
 
       if (non_aggression_pact_array.length > 0)
         diplomacy_view_string.push(`The following nations have a non-aggression pact with **${ot_user.name}**: ${parseList(non_aggression_pact_array)}.`);
-      if (hasNonAggressionPact(actual_id, actual_ot_user_id))
+      if (hasNonAggressionPact(user_id, ot_user_id))
         diplomacy_view_string.push(`- You currently have a non-aggression pact with this country for the next **${parseNumber(usr.diplomacy.non_aggression_pacts[actual_ot_user_id].duration)}** turn(s).`);
 
       if (vassal_obj)
@@ -394,8 +394,8 @@ module.exports = {
       diplomacy_view_string.push("");
 
       if (actual_id != actual_ot_user_id) {
-        if (!isJustifying(actual_id, actual_ot_user_id)) {
-          if (!hasWargoal(actual_id, actual_ot_user_id)) {
+        if (!isJustifying(user_id, ot_user_id)) {
+          if (!hasWargoal(user_id, ot_user_id)) {
             diplomacy_view_string.push(`> **[Justify Wargoal]** - ${config.icons.political_capital} ${parseNumber(config.defines.diplomacy.justify_wargoal_cost)} PC`);
             diplomacy_view_string.push(`> - **[View CBs]**`);
           } else {
@@ -416,28 +416,28 @@ module.exports = {
         diplomacy_view_string.push(`> **[Decrease Relations]** - ${config.icons.political_capital} ${parseNumber(config.defines.diplomacy.decrease_relations_cost)} PC`);
         diplomacy_view_string.push("> ");
 
-        (hasAlliance(actual_id, actual_ot_user_id)) ?
+        (hasAlliance(user_id, ot_user_id)) ?
           diplomacy_view_string.push(`> **[Break Alliance]** - ${config.icons.political_capital} ${parseNumber(config.defines.diplomacy.break_alliance_cost)} PC`) :
           diplomacy_view_string.push(`> **[Request Alliance]** - ${config.icons.political_capital} ${parseNumber(config.defines.diplomacy.form_alliance_cost)} PC`);
 
-        (hasRivalry(actual_id, actual_ot_user_id)) ?
+        (hasRivalry(user_id, ot_user_id)) ?
           diplomacy_view_string.push(`> **[End Rivalry]**`) :
           diplomacy_view_string.push(`> **[Declare Rivalry]** - ${config.icons.political_capital} ${parseNumber(config.defines.diplomacy.declare_rival_cost)} PC`);
 
-        (hasGuarantee(actual_id, actual_ot_user_id)) ?
+        (hasGuarantee(user_id, ot_user_id)) ?
           diplomacy_view_string.push(`> **[Revoke Guarantee]**`) :
           diplomacy_view_string.push(`> **[Guarantee Independence]** - ${config.icons.political_capital} ${parseNumber(config.defines.diplomacy.guarantee_independence_cost)} PC`);
 
-        if (hasMilitaryAccess(actual_ot_user_id, actual_id))
+        if (hasMilitaryAccess(ot_user_id, user_id))
           diplomacy_view_string.push(`> **[Revoke Military Access]**`);
 
-        if (hasMilitaryAccess(actual_id, actual_ot_user_id))
+        if (hasMilitaryAccess(user_id, ot_user_id))
           diplomacy_view_string.push(`> **[Cancel Military Access]**`);
 
-        if (!hasMilitaryAccess(actual_id, actual_ot_user_id))
+        if (!hasMilitaryAccess(user_id, ot_user_id))
           diplomacy_view_string.push(`> **[Request Military Access]** - ${config.icons.political_capital} ${parseNumber(config.defines.diplomacy.request_military_access_cost)} PC`);
 
-        if (!hasNonAggressionPact(actual_id, actual_ot_user_id))
+        if (!hasNonAggressionPact(user_id, ot_user_id))
           diplomacy_view_string.push(`> **[Sign Non-Aggression Pact]** - ${config.icons.political_capital} ${parseNumber(config.defines.diplomacy.sign_non_aggression_pact_cost)} PC`);
 
         if (vassal_obj) {
@@ -449,7 +449,7 @@ module.exports = {
             diplomacy_view_string.push("> ");
             diplomacy_view_string.push(`> **[Liberate]**`);
 
-            if (!atWar(actual_ot_user_id))
+            if (!atWar(ot_user_id))
               diplomacy_view_string.push(`> **[Demand Annexation]** - ${config.icons.political_capital} ${parseNumber(config.defines.diplomacy.annex_cost)} PC`);
           }
         } else {
@@ -467,7 +467,7 @@ module.exports = {
       var ending_string = "";
       var name_array = [];
       var name_string = "";
-      var usr_provinces = getProvinces(actual_ot_user_id);
+      var usr_provinces = getProvinces(ot_user_id);
 
       //Append cities to list
       for (var i = 0; i < usr_provinces.length; i++)
@@ -520,14 +520,14 @@ module.exports = {
       stats_string.push(`**Economic Statistsics:**`);
       stats_string.push("");
 
-      stats_string.push(`${config.icons.development} Cities: (**${parseNumber(cities.length)}**/**${parseNumber(getCitiesCap(actual_ot_user_id))}**): ${name_string}`);
+      stats_string.push(`${config.icons.development} Cities: (**${parseNumber(cities.length)}**/**${parseNumber(getCitiesCap(ot_user_id))}**): ${name_string}`);
 
       //Civilian pops display
       for (var i = 0; i < all_pops.length; i++) {
         var local_pop = config.pops[all_pops[i]];
 
         if (local_pop.stats_display && !local_pop.military_pop)
-          stats_string.push(`${(local_pop.icon) ? local_pop.icon + " " : ""}${(local_pop.name) ? local_pop.name : all_pops[i]}: (**${parseNumber(ot_user.pops["used_" + all_pops[i]])}**/**${parseNumber(getTotalPopManpower(actual_ot_user_id, all_pops[i]))}**)`);
+          stats_string.push(`${(local_pop.icon) ? local_pop.icon + " " : ""}${(local_pop.name) ? local_pop.name : all_pops[i]}: (**${parseNumber(ot_user.pops["used_" + all_pops[i]])}**/**${parseNumber(getTotalPopManpower(ot_user_id, all_pops[i]))}**)`);
       }
 
       stats_string.push("");
@@ -547,7 +547,7 @@ module.exports = {
         var local_pop = config.pops[all_pops[i]];
 
         if (local_pop.stats_display && local_pop.military_pop)
-          stats_string.push(`${(local_pop.icon) ? local_pop.icon + " " : ""}${(local_pop.name) ? local_pop.name : all_pops[i]}: (**${parseNumber(ot_user.pops["used_" + all_pops[i]])}**/**${parseNumber(getTotalPopManpower(actual_ot_user_id, all_pops[i]))}**) | (**${printPercentage(getTotalPopManpower(actual_ot_user_id, all_pops[i], true))}** Recruitable Population)`);
+          stats_string.push(`${(local_pop.icon) ? local_pop.icon + " " : ""}${(local_pop.name) ? local_pop.name : all_pops[i]}: (**${parseNumber(ot_user.pops["used_" + all_pops[i]])}**/**${parseNumber(getTotalPopManpower(ot_user_id, all_pops[i]))}**) | (**${printPercentage(getTotalPopManpower(ot_user_id, all_pops[i], true))}** Recruitable Population)`);
       }
     }
 

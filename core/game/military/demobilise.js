@@ -19,9 +19,9 @@ module.exports = {
           //Begin standing down troops
           var all_mobilisation_modifiers = Object.keys(config.defines.combat.base_mobilisation_impact);
           var all_mobilised_pops = Object.keys(usr.mobilisation.mobilised_pops);
-          
+
           //Apply national modifiers
-          processNationalModifiers(actual_id);
+          processNationalModifiers(user_id);
 
           //Restore all remaining mobilised pops to the fore
           for (var i = 0; i < all_mobilised_pops.length; i++) {

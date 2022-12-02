@@ -62,12 +62,12 @@ module.exports = {
     reserves_string.push(`${config.icons.money} **Upkeep:**`);
     reserves_string.push("");
 
-    reserves_string.push(`**£${parseNumber(getUnitUpkeep(actual_id))}** will be spent on the military each turn.`);
+    reserves_string.push(`**£${parseNumber(getUnitUpkeep(user_id))}** will be spent on the military each turn.`);
     reserves_string.push("");
 
     //Print total attack; total defence
     var army_display_stats = [];
-    var army_stats = getMilitaryStrength(actual_id);
+    var army_stats = getMilitaryStrength(user_id);
 
     for (var i = 0; i < config.defines.combat.cumulative_combat_modifiers.length; i++) {
       var local_combat_modifier = config.defines.combat.cumulative_combat_modifiers[i];
@@ -126,7 +126,7 @@ module.exports = {
           var local_unit = getUnit(local_units[x]);
 
           //Get unit costs and quantity
-          var unit_costs = getUnitCost(actual_id, local_units[x]);
+          var unit_costs = getUnitCost(user_id, local_units[x]);
           var unit_maintenance_costs = [];
           var unit_name = (local_unit.name) ? local_unit.name : local_units[x];
           var unit_quantity = (local_unit.quantity) ? local_unit.quantity : 1;

@@ -16,7 +16,7 @@ module.exports = {
     var war_obj = getWar(war_name);
 
     //Check if users are even allied
-    if (hasAlliance(actual_id, actual_ot_user_id)) {
+    if (hasAlliance(user_id, ot_user_id)) {
       if (war_obj) {
         //Check for enemy_side, friendly_side
         if (war_obj.attackers.includes(actual_id)) {
@@ -31,7 +31,7 @@ module.exports = {
         if (enemy_side != "") {
           if (ot_user) {
             if (!war_obj.attackers.includes(actual_ot_user_id) && !war_obj.defenders.includes(actual_ot_user_id)) {
-              sendAlert(actual_ot_user_id, config.defines.diplomacy.call_to_arms_alert_id, {
+              sendAlert(ot_user_id, config.defines.diplomacy.call_to_arms_alert_id, {
                 FROM: actual_id,
                 LOCAL: {
                   war_name: war_obj.name,
@@ -73,7 +73,7 @@ module.exports = {
     var usr = main.users[actual_id];
 
     var all_allies = Object.keys(usr.diplomacy.allies);
-    var all_wars = getWars(actual_id);
+    var all_wars = getWars(user_id);
 
     for (var i = 0; i < all_wars.length; i++)
       display_war_list.push(`${(display_war_list.length == 0) ? "\n- " : ""}**${all_wars[i].name}**`);
@@ -107,7 +107,7 @@ module.exports = {
               function (arg) {
                 module.exports.callAlly(user_id, arg[0], war_obj.name);
               }) :
-              module.exports.callAlly(user_id, actual_ot_user_id, war_obj.name);
+              module.exports.callAlly(user_id, ot_user_id, war_obj.name);
           else
             printError(game_obj.id, `You don't have any remaining allies to call into this war!`);
         } else {

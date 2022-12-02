@@ -24,7 +24,7 @@ module.exports = {
 
           //Reorder units
           for (var i = 0; i < army_array.length; i++) {
-            var reordered_army = reorderUnits(actual_id, army_array[i], unit_name, options);
+            var reordered_army = reorderUnits(user_id, army_array[i], unit_name, options);
 
             if (reordered_army)
               if (reordered_army[0])

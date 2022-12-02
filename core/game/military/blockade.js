@@ -8,7 +8,7 @@ module.exports = {
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
     var actual_ot_user_id = main.global.user_map[ot_user_id];
-    var army_obj = getArmy(actual_id, fleet_name);
+    var army_obj = getArmy(user_id, fleet_name);
     var game_obj = getGameObject(user_id);
     var ot_user = main.users[actual_ot_user_id];
     var usr = main.users[actual_id];
@@ -38,7 +38,7 @@ module.exports = {
                   printError(game_obj.id, `The **${army_obj.name}** is still in recovery from a previous blockade! Wait **${parseNumber(army_obj.blockade_recovery_turns)}** more turn(s) before trying to implement a blockade with this army.`)
                 }
               } else {
-                var blockade_creation = createBlockade(actual_ot_user_id, actual_id, army_obj.name);
+                var blockade_creation = createBlockade(ot_user_id, user_id, army_obj.name);
 
                 //Print user feedback
                 (blockade_creation[0]) ?

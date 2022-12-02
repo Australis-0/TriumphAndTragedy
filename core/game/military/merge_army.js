@@ -7,15 +7,15 @@ module.exports = {
 
     //Declare local inbstance variables
     var actual_id = main.global.user_map[user_id];
-    var army_obj = getArmy(actual_id, army_name);
+    var army_obj = getArmy(user_id, army_name);
     var game_obj = getGameObject(user_id);
-    var merged_army_obj = getArmy(actual_id, merged_army);
+    var merged_army_obj = getArmy(user_id, merged_army);
     var usr = main.users[actual_id];
 
     //Check for the usual
     if (army_obj) {
       if (merged_army_obj) {
-        var merged_army = mergeArmy(actual_id, merged_army, army_name);
+        var merged_army = mergeArmy(user_id, merged_army, army_name);
 
         //Print out user feedback
         (merged_army[0]) ?

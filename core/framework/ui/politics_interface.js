@@ -13,7 +13,7 @@ module.exports = {
     var politics_string = [];
     var reforms_string = [];
     var ruling_government_obj = config.governments[usr.government];
-    var simulation = nextTurn(actual_id, { is_simulation: true });
+    var simulation = nextTurn(user_id, { is_simulation: true });
     var stability_string = [];
     var total_reform_desire_gain = usr.modifiers.reform_desire_gain;
 
@@ -69,7 +69,7 @@ module.exports = {
     stability_string.push(`- **[Set Tax]**`);
     stability_string.push("");
 
-    stability_string.push(parseStabilityModifier(actual_id));
+    stability_string.push(parseStabilityModifier(user_id));
 
     //Print calculated stability
     stability_string.push("");

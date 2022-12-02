@@ -16,7 +16,7 @@ module.exports = {
     var market_string = [];
 
     //Print out remaining Market Capacity
-    market_string.push(`You have **${parseNumber(getMarketCapacity(actual_id))}** Market Capacity remaining for this turn.`);
+    market_string.push(`You have **${parseNumber(getMarketCapacity(user_id))}** Market Capacity remaining for this turn.`);
     market_string.push("");
 
     //Print out all market goods

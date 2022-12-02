@@ -17,7 +17,7 @@ module.exports = {
       if (war_obj.attackers.includes(actual_id) || war_obj.defenders.includes(actual_id)) {
         if (war_obj.attackers_war_leader == actual_id || war_obj.defenders_war_leader == actual_id) {
           //Create a new peace treaty
-          createPeaceTreaty(actual_id, war_obj.name);
+          createPeaceTreaty(user_id, war_obj.name);
 
           //Refresh UI
           if (game_obj.page.startsWith("view_war_")) {

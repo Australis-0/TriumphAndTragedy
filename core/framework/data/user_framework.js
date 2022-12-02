@@ -49,7 +49,7 @@ module.exports = {
     var actual_id = main.global.user_map[user_id];
     var all_provinces = Object.keys(main.provinces);
     var army_size = returnSafeNumber(options.army_size);
-    var at_war = atWar(actual_id);
+    var at_war = atWar(user_id);
     var local_graph = global.bn_graph();
 
     for (var i = 0; i < all_provinces.length; i++) {
@@ -65,8 +65,8 @@ module.exports = {
         if (usr.options.avoid_territorial_violation != "never") {
           var vassal_obj = getVassal(local_province.controller);
 
-          valid_province = (hasAlliance(actual_id, local_province.controller)) ? true : valid_province;
-          valid_province = (hasMilitaryAccess(actual_id, local_province.controller)) ? true : valid_province;
+          valid_province = (hasAlliance(user_id, local_province.controller)) ? true : valid_province;
+          valid_province = (hasMilitaryAccess(user_id, local_province.controller)) ? true : valid_province;
           valid_province = (at_war.includes(local_province.controller)) ? true : valid_province;
 
           if (vassal_obj)
@@ -106,7 +106,7 @@ module.exports = {
     var actual_id = main.global.user_map[user_id];
     var all_cultures = Object.keys(main.global.cultures);
     var all_mapped_users = Object.keys(main.global.user_map);
-    var all_provinces = module.exports.getProvinces(actual_id, { include_occupations: true, include_hostile_occupations: true });
+    var all_provinces = module.exports.getProvinces(user_id, { include_occupations: true, include_hostile_occupations: true });
     var all_users = Object.keys(main.users);
     var all_wars = Object.keys(main.global.wars);
     var usr = main.users[actual_id];
@@ -117,7 +117,7 @@ module.exports = {
         all_provinces[i].controller = all_provinces[i].owner;
 
     //Clear all blockades
-    deleteBlockade(actual_id);
+    deleteBlockade(user_id);
 
     //Cultural handler
     for (var i = 0; i < all_cultures.length; i++) {
@@ -150,7 +150,7 @@ module.exports = {
           var local_fleet = local_user.blockaded.fleets[x];
 
           if (local_fleet.id == actual_id)
-            deleteArmy(actual_id, local_fleet.id);
+            deleteArmy(user_id, local_fleet.id);
         }
     }
 
@@ -188,7 +188,7 @@ module.exports = {
     }
 
     //Remove all diplomatic relations and delete user object
-    destroyAllDiplomaticRelations(actual_id);
+    destroyAllDiplomaticRelations(user_id);
 
     //Remove all connections in user map
     for (var i = 0; i < all_mapped_users.length; i++)
@@ -260,7 +260,7 @@ module.exports = {
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
 
-    var all_cities = module.exports.getCities(actual_id, {
+    var all_cities = module.exports.getCities(user_id, {
       include_hostile_occupations: true
     });
 
@@ -1000,7 +1000,7 @@ module.exports = {
     var all_mapped_users = Object.keys(main.global.user_map);
 
     //Annex all provinces
-    var all_provinces = module.exports.getProvinces(actual_id, { include_occupations: true, include_hostile_occupations: true });
+    var all_provinces = module.exports.getProvinces(user_id, { include_occupations: true, include_hostile_occupations: true });
 
     //Cultural handler
     for (var i = 0; i < all_cultures.length; i++) {
@@ -1017,11 +1017,11 @@ module.exports = {
 
     for (var i = 0; i < all_provinces.length; i++)
       if (all_provinces[i].controller == actual_id)
-        transferProvince(actual_id, { target: actual_ot_user_id, province_id: all_provinces[i].id });
+        transferProvince(user_id, { target: ot_user_id, province_id: all_provinces[i].id });
 
     //KEEP AT BOTTOM! Remove all diplomatic relations and delete user object
-    destroyAllDiplomaticRelations(actual_id);
-    deleteCountry(actual_id);
+    destroyAllDiplomaticRelations(user_id);
+    deleteCountry(user_id);
 
     //Remove all connections in user map
     for (var i = 0; i < all_mapped_users.length; i++)
@@ -1156,15 +1156,15 @@ module.exports = {
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
     var all_provinces = Object.keys(main.provinces);
-    var army_obj = (typeof army_name != "object") ? getArmy(actual_id, army_name) : army_name;
-    var at_war = getEnemies(actual_id);
+    var army_obj = (typeof army_name != "object") ? getArmy(user_id, army_name) : army_name;
+    var at_war = getEnemies(user_id);
     var usr = main.users[actual_id];
 
     //Make sure both the starting and ending province actually exist
     if (army_obj)
       if (main.provinces[starting_province])
         if (main.provinces[ending_province]) {
-          var army_size = getArmySize(actual_id, army_obj.name);
+          var army_size = getArmySize(user_id, army_obj.name);
           var connections = [];
 
           if (usr.options.avoid_attrition == "never" && usr.options.avoid_territorial_violation == "never") {
@@ -1172,7 +1172,7 @@ module.exports = {
           } else {
             if (usr.options.avoid_attrition != "never") {
               try {
-                var local_graph = module.exports.createUserGraph(actual_id, { army_size: army_size });
+                var local_graph = module.exports.createUserGraph(user_id, { army_size: army_size });
 
                 var pathfinder = bn_path.nba(local_graph, {
                   distance(fromNode, toNode, link) {
@@ -1195,7 +1195,7 @@ module.exports = {
             if (connections.length == 0)
               if (usr.options.avoid_attrition != "always") {
                 try {
-                  var local_graph = module.exports.createUserGraph(actual_id, { army_size: army_size, avoid_attrition: false });
+                  var local_graph = module.exports.createUserGraph(user_id, { army_size: army_size, avoid_attrition: false });
 
                   var pathfinder = bn_path.nba(local_graph, {
                     distance(fromNode, toNode, link) {
@@ -1274,7 +1274,7 @@ module.exports = {
       ot_user.provinces++;
 
       //Change province colour
-      setAllProvinceColours(actual_ot_user_id, options.province_id);
+      setAllProvinceColours(ot_user_id, options.province_id);
     }
   }
 };

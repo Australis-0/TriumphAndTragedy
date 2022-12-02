@@ -6,7 +6,7 @@ module.exports = {
 
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
-    var all_provinces = getProvinces(actual_id, { include_occupations: true });
+    var all_provinces = getProvinces(user_id, { include_occupations: true });
     var failed_moves = 0;
     var game_obj = getGameObject(user_id);
     var missing_armies = 0;
@@ -23,10 +23,10 @@ module.exports = {
           target_province_index = (i % x == 0) ? x : target_province_index;
 
         try {
-          var local_army = getArmy(actual_id, army_list[i]);
+          var local_army = getArmy(user_id, army_list[i]);
 
           if (local_army) {
-            var army_status = moveArmy(actual_id, local_army, all_provinces[target_province_index].id);
+            var army_status = moveArmy(user_id, local_army, all_provinces[target_province_index].id);
 
             if (army_status[0])
               successful_moves++;

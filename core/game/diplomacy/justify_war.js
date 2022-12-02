@@ -18,17 +18,17 @@ module.exports = {
         //Check if user has enough political capital
         if (usr.modifiers.political_capital >= config.defines.diplomacy.justify_wargoal_cost) {
           //Check if user has a non-aggression pact, is guaranteeing the target nation's independence, or has an alliance/vassalage
-          if (!hasNonAggressionPact(actual_id, actual_ot_user_id)) {
-            if (!hasGuarantee(actual_id, actual_ot_user_id)) {
-              if (!hasAlliance(actual_id, actual_ot_user_id)) {
+          if (!hasNonAggressionPact(user_id, ot_user_id)) {
+            if (!hasGuarantee(user_id, ot_user_id)) {
+              if (!hasAlliance(user_id, ot_user_id)) {
                 var is_vassal_of_user = false;
 
-                if (getVassal(actual_id))
-                  if (getVassal(actual_id).overlord == actual_id)
+                if (getVassal(user_id))
+                  if (getVassal(user_id).overlord == actual_id)
                     is_vassal_of_user = true;
 
                 if (!is_vassal_of_user) {
-                  if (!getVassal(actual_id)) {
+                  if (!getVassal(user_id)) {
                     //Check if user has a valid CB
                     var has_valid_cb = [false, -1]; //[has_valid_cb, cb_index]
                     var raw_cb_name = getCB(cb_name, { return_key: true });
@@ -46,10 +46,10 @@ module.exports = {
                       var cb_obj = getCB(cb_name);
 
                       //Fetch actual_justification_time
-                      var actual_justification_time = (hasRivalry(actual_id, actual_ot_user_id)) ?
+                      var actual_justification_time = (hasRivalry(user_id, actual_ot_user_id)) ?
                         Math.round(config.defines.diplomacy.justify_wargoal_time/2) :
                         config.defines.diplomacy.justify_wargoal_time;
-                      
+
                       usr.modifiers.infamy += returnSafeNumber(cb_obj.infamy);
 
                       usr.diplomacy.justifications.push({

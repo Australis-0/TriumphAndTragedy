@@ -73,9 +73,10 @@ module.exports = {
 
     //Check if user has justification
     for (var i = 0; i < usr.diplomacy.justifications.length; i++) {
+      var actual_target = main.global.user_map[options.target];
       var local_justification = usr.diplomacy.justifications[i];
 
-      if (local_justification.type == raw_cb_name && local_justification.target == options.target)
+      if (local_justification.type == raw_cb_name && local_justification.target == actual_target)
         has_justification = [true, (!options.get_index) ? local_justification : i];
     }
 

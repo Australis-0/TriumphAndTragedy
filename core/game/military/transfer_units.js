@@ -9,9 +9,9 @@ module.exports = {
 
     //Convert from parameters
     var actual_id = main.global.user_map[user_id];
-    var army_obj = getArmy(actual_id, army_name);
+    var army_obj = getArmy(user_id, army_name);
     var game_obj = getGameObject(user_id);
-    var ot_army_obj = getArmy(actual_id, new_army_name);
+    var ot_army_obj = getArmy(user_id, new_army_name);
     var raw_unit_name = getUnit(unit_name, { return_key: true });
     var unit_obj = getUnit(unit_name);
     var usr = main.users[actual_id];
@@ -27,7 +27,7 @@ module.exports = {
               //Check if the original army really has this many units of this type
               if (army_obj.units[raw_unit_name] >= amount) {
                 if (army_obj != ot_army_obj) {
-                  var deployment = deployUnits(actual_id, amount, raw_unit_name, army_obj.name, { spawn_units: true });
+                  var deployment = deployUnits(user_id, amount, raw_unit_name, army_obj.name, { spawn_units: true });
 
                   if (deployment[0]) {
                     army_obj.units[raw_unit_name] -= amount;
