@@ -117,7 +117,7 @@ module.exports = {
 
         //Army status
         if (army_obj.moving_to?.length > 0) {
-          current_status = `Currently moving to Province **${army_obj.moving_to[army_obj.moving_to.length - 1]}**. (Arrives in **${parseNumber(getArrivalTime(user_id, army_obj))}** turn(s)).`;
+          current_status = `Currently moving to Province **${army_obj.moving_to[army_obj.moving_to.length - 1]}**. (Arrives in **${parseNumber(getArrivalTime(user_id, army_obj))}** turn(s)).\n\n- Path: ${(game_obj.expanded_army_pathing) ? `${parsePath(army_obj.moving_to, army_obj.distances)} | **[Close]**` : `**${army_obj.moving_to.length}** Province(s) | Total Distance: **${parseNumber(getSum(army_obj.distances))}** infrastructure-adjusted kilometres. | **[Expand]**`}`;
         } else {
           if (army_obj.type != "navy") {
             current_status = `Currently stationed in Province **${army_obj.province}**.`;

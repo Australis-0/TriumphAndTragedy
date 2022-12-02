@@ -103,6 +103,34 @@ module.exports = {
     return localisation_string;
   },
 
+  parsePath: function (arg0_provinces, arg1_distances) {
+    //Convert from parameters
+    var provinces = getList(arg0_provinces);
+    var distances = (arg1_distances) ? getList(arg1_distances) : undefined;
+
+    //Declare local instance variables
+    var path_string = [];
+
+    for (var i = 0; i < provinces.length; i++) {
+      var local_province = main.provinces[provinces[i]];
+
+      path_string.push(`${(local_province.name) ? `(#${provinces[i]}) **${local_province.name}**` : provinces[i]}${(distances) ? ` (${parseNumber(distances[i])})` : ""}`);
+    }
+
+    //Join array
+    path_string = path_string.join(" ➛ ");
+
+    //Total distance if applicable
+    if (distances) {
+      var total_distance = getSum(distances);
+
+      path_string += ` | Total Distance: **${parseNumber(total_distance)}** infrastructure-adjusted kilometres.`;
+    }
+
+    //Return string
+    return path_string;
+  },
+
   parsePeaceTreatyInfamyLocalisation: function (arg0_war_obj, arg1_peace_treaty_object) {
     //Convert from parameters
     var war_obj = arg0_war_obj;

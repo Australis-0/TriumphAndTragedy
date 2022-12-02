@@ -1695,6 +1695,7 @@ module.exports = {
             game_obj.armies_sorting_mode = "attrition";
             createPageMenu(game_obj.middle_embed, {
               embed_pages: printArmyList(game_obj.user),
+              page: main.interfaces[game_obj.middle_embed.id].page,
               user: game_obj.user
             });
           }
@@ -1704,6 +1705,7 @@ module.exports = {
             game_obj.armies_sorting_mode = "alphabetical";
             createPageMenu(game_obj.middle_embed, {
               embed_pages: printArmyList(game_obj.user),
+              page: main.interfaces[game_obj.middle_embed.id].page,
               user: game_obj.user
             });
           }
@@ -1719,6 +1721,7 @@ module.exports = {
             game_obj.armies_sorting_mode = "chronological";
             createPageMenu(game_obj.middle_embed, {
               embed_pages: printArmyList(game_obj.user),
+              page: main.interfaces[game_obj.middle_embed.id].page,
               user: game_obj.user
             });
           }
@@ -1734,6 +1737,8 @@ module.exports = {
             function (arg) {
               createPageMenu(game_obj.middle_embed, {
                 embed_pages: printArmyList(game_obj.user),
+
+                page: main.interfaces[game_obj.middle_embed.id].page,
                 page: arg[0] - 1,
                 user: game_obj.user
               });
@@ -1744,6 +1749,7 @@ module.exports = {
             game_obj.armies_sorting_mode = "numerical";
             createPageMenu(game_obj.middle_embed, {
               embed_pages: printArmyList(game_obj.user),
+              page: main.interfaces[game_obj.middle_embed.id].page,
               user: game_obj.user
             });
           }
@@ -1753,6 +1759,7 @@ module.exports = {
             game_obj.armies_sorting_mode = "roman_numerical";
             createPageMenu(game_obj.middle_embed, {
               embed_pages: printArmyList(game_obj.user),
+              page: main.interfaces[game_obj.middle_embed.id].page,
               user: game_obj.user
             });
           }
@@ -1762,6 +1769,7 @@ module.exports = {
             game_obj.armies_sorting_mode = "size";
             createPageMenu(game_obj.middle_embed, {
               embed_pages: printArmyList(game_obj.user),
+              page: main.interfaces[game_obj.middle_embed.id].page,
               user: game_obj.user
             });
           }
@@ -1771,6 +1779,7 @@ module.exports = {
             game_obj.armies_sorting_mode = "speed";
             createPageMenu(game_obj.middle_embed, {
               embed_pages: printArmyList(game_obj.user),
+              page: main.interfaces[game_obj.middle_embed.id].page,
               user: game_obj.user
             });
           }
@@ -1780,6 +1789,7 @@ module.exports = {
             game_obj.armies_sorting_mode = "strength";
             createPageMenu(game_obj.middle_embed, {
               embed_pages: printArmyList(game_obj.user),
+              page: main.interfaces[game_obj.middle_embed.id].page,
               user: game_obj.user
             });
           }
@@ -1789,6 +1799,7 @@ module.exports = {
             game_obj.armies_sorting_mode = "type";
             createPageMenu(game_obj.middle_embed, {
               embed_pages: printArmyList(game_obj.user),
+              page: main.interfaces[game_obj.middle_embed.id].page,
               user: game_obj.user
             });
           }
@@ -1887,6 +1898,16 @@ module.exports = {
           if (input == "challenge blockade")
             initialiseChallengeBlockade(user_id, viewed_army);
 
+          //[Close] - Closes pathing info
+          if (input == "close") {
+            game_obj.minimised_army_pathing = true;
+            createPageMenu(game_obj.middle_embed, {
+              embed_pages: printArmy(game_obj.user, viewed_army),
+              page: main.interfaces[game_obj.middle_embed.id].page,
+              user: game_obj.user
+            });
+          }
+
           //[Convoy Raid]
           if (input == "convoy raid")
             initialiseConvoyRaid(user_id, viewed_army);
@@ -1898,6 +1919,16 @@ module.exports = {
           //[Deploy Units]
           if (input == "deploy units")
             initialiseDeployUnits(user_id, viewed_army);
+
+          //[Expand] - Expands pathing info
+          if (input == "expand") {
+            delete game_obj.minimised_army_pathing;
+            createPageMenu(game_obj.middle_embed, {
+              embed_pages: printArmy(game_obj.user, viewed_army),
+              page: main.interfaces[game_obj.middle_embed.id].page,
+              user: game_obj.user
+            });
+          }
 
           //[Harbour Raid]
           if (input == "harbour raid")

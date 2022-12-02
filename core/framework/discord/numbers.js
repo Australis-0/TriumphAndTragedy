@@ -100,7 +100,7 @@ module.exports = {
     var total_sum = 0;
 
     for (var i = 0; i < numbers.length; i++)
-      total_sum += numbers[i];
+      total_sum += parseInt(numbers[i]);
 
     //Return statement
     return total_sum;
@@ -155,7 +155,7 @@ module.exports = {
     var default_number = (arg1_default) ? arg1_default : 0;
 
     //Return statement
-    return (!isNaN(operation) && isFinite(operation) && operation) ? 
+    return (!isNaN(operation) && isFinite(operation) && operation) ?
       operation :
       default_number;
   },
