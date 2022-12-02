@@ -103,10 +103,11 @@ module.exports = {
     return localisation_string;
   },
 
-  parsePath: function (arg0_provinces, arg1_distances) {
+  parsePath: function (arg0_provinces, arg1_distances, arg2_limit) {
     //Convert from parameters
     var provinces = getList(arg0_provinces);
     var distances = (arg1_distances) ? getList(arg1_distances) : undefined;
+    var limit = (arg2_limit) ? parseInt(arg2_limit) : 1000;
 
     //Declare local instance variables
     var path_string = [];
@@ -118,7 +119,7 @@ module.exports = {
       for (var x = 0; x < path_string.length; x++)
         path_string_length += path_string[x].length;
 
-      if (path_string_length < 1000 || (provinces.length - path_string.length <= 1)) {
+      if (path_string_length < limit || (provinces.length - path_string.length <= 1)) {
         path_string.push(`${(local_province.name) ? `(#${provinces[i]}) **${local_province.name}**` : provinces[i]}${(distances) ? ` (${parseNumber(distances[i])})` : ""}`);
       } else {
         var remainder_distance = 0;
