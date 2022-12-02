@@ -1900,7 +1900,7 @@ module.exports = {
 
           //[Close] - Closes pathing info
           if (input == "close") {
-            game_obj.minimised_army_pathing = true;
+            delete game_obj.expanded_army_pathing;
             createPageMenu(game_obj.middle_embed, {
               embed_pages: printArmy(game_obj.user, viewed_army),
               page: main.interfaces[game_obj.middle_embed.id].page,
@@ -1922,7 +1922,7 @@ module.exports = {
 
           //[Expand] - Expands pathing info
           if (input == "expand") {
-            delete game_obj.minimised_army_pathing;
+            game_obj.expanded_army_pathing = true;
             createPageMenu(game_obj.middle_embed, {
               embed_pages: printArmy(game_obj.user, viewed_army),
               page: main.interfaces[game_obj.middle_embed.id].page,
