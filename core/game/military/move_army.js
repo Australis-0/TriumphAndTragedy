@@ -61,7 +61,7 @@ module.exports = {
         ]
       },
       function (arg) {
-        module.exports.moveArmyCommand(user_id, arg[0], arg[1]);
+        module.exports.moveArmyCommand(user_id, arg[0], arg[1].split(" "));
       },
       function (arg) {
         switch (arg) {
@@ -82,7 +82,7 @@ module.exports = {
         ]
       },
       function (arg) {
-        module.exports.moveArmyCommand(user_id, army_name, arg[0]);
+        module.exports.moveArmyCommand(user_id, army_name, arg[0].split(" "));
       });
   }
 };

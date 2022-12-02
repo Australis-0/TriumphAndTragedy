@@ -1050,8 +1050,12 @@ module.exports = {
     if (usr)
       if (army_obj)
         if (!["empty", "navy"].includes(army_obj.type)) {
+          console.log(provinces);
+
           //Push army_obj.province to provinces beginning
           provinces.unshift(army_obj.province);
+
+          console.log(provinces);
 
           //Check to see if army was ordered to stand still
           var same_provinces = 0;
@@ -1064,7 +1068,7 @@ module.exports = {
             //Otherwise iterate over all waypoints to map on valid provinces
             for (var i = 0; i < provinces.length - 1; i++) {
               //Check if province is valid
-              var local_province = main.provinces[province_id];
+              var local_province = main.provinces[provinces[i]];
               var valid_province = true;
 
               if (local_province) {
@@ -1078,20 +1082,21 @@ module.exports = {
                       provinces[i],
                       provinces[i + 1]
                     );
+
                     var local_distances_array = getProvinceDistances(local_moving_array);
 
                     if (local_moving_array) {
-                      for (var i = 0; i < local_distances_array.length; i++)
-                        distances_array.push(local_distances_array[i]);
-                      for (var i = 0; i < local_moving_array.length; i++)
-                        move_to_array.push(local_moving_array[i]);
+                      for (var x = 0; x < local_distances_array.length; x++)
+                        distances_array.push(local_distances_array[x]);
+                      for (var x = 0; x < local_moving_array.length; x++)
+                        move_to_array.push(local_moving_array[x]);
                     }
                   }
                 } else {
                   error_msg.push(`- Province **${provinces[i]}** is currently demilitarised! You cannot pass through a demilitarised province unless you are at war.`);
                 }
               } else {
-                error_msg.push(`- Province **${province_id}** could not be found anywhere on the map! Please insert a valid ${(provinces.length > 1) ? "waypoint" : "Province ID"} to move to.`);
+                error_msg.push(`- Province **${provinces[i]}** could not be found anywhere on the map! Please insert a valid ${(provinces.length > 1) ? "waypoint" : "Province ID"} to move to.`);
               }
             }
 

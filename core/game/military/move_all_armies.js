@@ -14,7 +14,7 @@ module.exports = {
       ]
     },
     function (arg) {
-      module.exports.moveAllArmies(user_id, arg[0]);
+      module.exports.moveAllArmies(user_id, arg[0].split(" "));
     });
   },
 

@@ -15,7 +15,7 @@ module.exports = {
       ]
     },
     function (arg) {
-      module.exports.moveArmies(user_id, arg[0], arg[1]);
+      module.exports.moveArmies(user_id, arg[0], arg[1].split(" "));
     },
     function (arg) {
       switch (arg) {
