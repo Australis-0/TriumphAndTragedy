@@ -117,7 +117,7 @@ module.exports = {
 
         //Army status
         if (army_obj.moving_to?.length > 0) {
-          current_status = `Currently moving to Province **${army_obj.moving_to[army_obj.moving_to.length - 1]}**. (Arrives in **${parseNumber(getArrivalTime(user_id, army_obj))}** turn(s)).\n\n- Path: ${(game_obj.expanded_army_pathing) ? `${parsePath(army_obj.moving_to, army_obj.distances)} | **[Close]**` : `**${army_obj.moving_to.length}** Province(s) | Total Distance: **${parseNumber(getSum(army_obj.distances))}** infrastructure-adjusted kilometres. | **[Expand]**`}`;
+          current_status = `Currently moving to Province **${army_obj.moving_to[army_obj.moving_to.length - 1]}**. (Arrives in **${parseNumber(getArrivalTime(user_id, army_obj))}** turn(s)).\n- Path: ${(game_obj.expanded_army_pathing) ? `${parsePath(army_obj.moving_to, army_obj.distances)} | **[Close]**` : `**${army_obj.moving_to.length}** Province(s) | Total Distance: **${parseNumber(getSum(army_obj.distances))}** infrastructure-adjusted kilometres. | **[Expand]**`}`;
         } else {
           if (army_obj.type != "navy") {
             current_status = `Currently stationed in Province **${army_obj.province}**.`;
@@ -134,15 +134,15 @@ module.exports = {
 
         //Attrition for current_status
         if (army_obj.taking_attrition)
-          current_status += ` Taking attrition at a rate of ${config.icons.death} **${printPercentage(usr.modifiers.attrition_rate*config.defines.combat.base_attrition_rate)}**!`;
+          current_status += `${(current_status.length > 0) ? `\n- ` : ""}Taking attrition at a rate of ${config.icons.death} **${printPercentage(usr.modifiers.attrition_rate*config.defines.combat.base_attrition_rate)}**!`;
 
         //Blockade cooldowns
         if (returnSafeNumber(army_obj.blockade_recovery_turns) > 0)
-          current_status += ` Currently recovering from a blockade, will be combat ready in **${parseNumber(army_obj.blockade_recovery_turns)}** turn(s).`;
+          current_status += `${(current_status.length > 0) ? `\n- ` : ""}Currently recovering from a blockade, will be combat ready in **${parseNumber(army_obj.blockade_recovery_turns)}** turn(s).`;
 
         //Submarine cooldowns
         if (returnSafeNumber(army_obj.submarine_cooldown) > 0)
-          current_status += ` - Currently on cooldown, will be combat ready in **${parseNumber(army_obj.submarine_cooldown)}** turn(s).`;
+          current_status += `${(current_status.length > 0) ? `\n- ` : ""}Currently on cooldown, will be combat ready in **${parseNumber(army_obj.submarine_cooldown)}** turn(s).`;
 
         //Format army_string
         army_string.push(`${carrier_capacity_string}${current_status}`);
