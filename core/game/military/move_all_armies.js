@@ -18,15 +18,14 @@ module.exports = {
     });
   },
 
-  moveAllArmies: function (arg0_user, arg1_province_id) {
+  moveAllArmies: function (arg0_user, arg1_provinces) {
     //Convert from parameters
     var user_id = arg0_user;
-    var province_id = arg1_province_id.trim();
+    var provinces = getList(arg1_provinces);
 
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
     var game_obj = getGameObject(user_id);
-    var province_obj = main.provinces[province_id];
     var successful_moves = 0;
     var usr = main.users[actual_id];
 
@@ -35,8 +34,13 @@ module.exports = {
     //Check to see if the province even exists
     if (province_obj) {
       if (all_armies.length > 0) {
+        //Trim provinces first
+        for (var i = 0; i < provinces.length; i++)
+          provinces[i] = provinces[i].trim();
+
+        //Move armies
         for (var i = all_armies.length - 1; i >= 0; i--)
-          successful_moves = (moveArmy(actual_id, usr.armies[all_armies[i]], province_id)) ? successful_moves + 1 : successful_moves;
+          successful_moves = (moveArmy(actual_id, usr.armies[all_armies[i]], provinces)) ? successful_moves + 1 : successful_moves;
 
         //Update army_list if user is currently viewing it
         if (game_obj.page == "army_list")
@@ -46,7 +50,7 @@ module.exports = {
             user: game_obj.user
           });
 
-        printAlert(game_obj.id, `You have begun moving **${parseNumber(successful_moves)}**/**${parseNumber(all_armies.length)}** total armies to Province #${province_id}, wherever possible.`);
+        printAlert(game_obj.id, `You have begun moving **${parseNumber(successful_moves)}**/**${parseNumber(all_armies.length)}** total armies to Province #${provinces[provinces.length - 1]}, wherever possible.`);
       } else {
         printError(game_obj.id, `You can't move around fictitious armies! Consider creating armies and putting soldiers in them first before ordering to coalesce somewhere.`);
       }

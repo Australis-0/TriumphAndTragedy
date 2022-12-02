@@ -1034,49 +1034,88 @@ module.exports = {
     //Convert from parameters
     var user_id = arg0_user;
     var army_name = arg1_army_name;
-    var province_id = arg2_province_id;
+    var provinces = getList(arg2_province_id);
 
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
     var army_obj = (typeof army_name != "object") ?
       module.exports.getArmy(actual_id, army_name.trim().toLowerCase()) :
       army_name;
+    var distances_array = [];
+    var error_msg = [];
+    var move_to_array = [];
     var usr = main.users[actual_id];
 
     //Try moving the army if possible
     if (usr)
       if (army_obj)
-        if (!["empty", "navy"].includes(army_obj.type))
-          if (main.provinces[province_id])
-            if (province_id != army_obj.province) {
-              //Check if target province is valid
+        if (!["empty", "navy"].includes(army_obj.type)) {
+          //Push army_obj.province to provinces beginning
+          provinces.unshift(army_obj.province);
+
+          //Check to see if army was ordered to stand still
+          var same_provinces = 0;
+
+          for (var i = 0; i < provinces.length; i++)
+            if (provinces[i] == army_obj.province)
+              same_provinces++;
+
+          if (same_provinces < provinces.length) {
+            //Otherwise iterate over all waypoints to map on valid provinces
+            for (var i = 0; i < provinces.length - 1; i++) {
+              //Check if province is valid
               var local_province = main.provinces[province_id];
               var valid_province = true;
 
-              if (local_province.demilitarised)
-                valid_province = (atWar(actual_id));
+              if (local_province) {
+                //Check if province is currently demilitarised
+                if (local_province.demilitarised)
+                  valid_province = (atWar(user_id));
 
-              if (valid_province) {
-                var moving_to_array = smartMove(actual_id, army_obj.name, army_obj.province, province_id);
-                var distances_array = getProvinceDistances(moving_to_array);
+                if (valid_province) {
+                  if (provinces[i] != provinces[i + 1]) {
+                    var local_moving_array = smartMove(user_id, army_obj,
+                      provinces[i],
+                      provinces[i + 1]
+                    );
+                    var local_distances_array = getProvinceDistances(local_moving_array);
 
-                if (moving_to_array) {
-                  army_obj.distances = distances_array;
-                  army_obj.moving_to = moving_to_array;
-                  army_obj.status = "moving";
-
-                  var time_to_arrival = module.exports.getArrivalTime(user_id, army_obj);
-
-                  return [true, `The **${army_obj.name}** is now en route to Province **${province_id}**. It will arrive in approximately **${parseNumber(time_to_arrival)}** turn(s).`];
+                    if (local_moving_array) {
+                      for (var i = 0; i < local_distances_array.length; i++)
+                        distances_array.push(local_distances_array[i]);
+                      for (var i = 0; i < local_moving_array.length; i++)
+                        move_to_array.push(local_moving_array[i]);
+                    }
+                  }
+                } else {
+                  error_msg.push(`- Province **${provinces[i]}** is currently demilitarised! You cannot pass through a demilitarised province unless you are at war.`);
                 }
+              } else {
+                error_msg.push(`- Province **${province_id}** could not be found anywhere on the map! Please insert a valid ${(provinces.length > 1) ? "waypoint" : "Province ID"} to move to.`);
               }
-            } else {
-              army_obj.distances = [];
-              army_obj.moving_to = [];
-              army_obj.status = "stationed";
-
-              return [true, `You have ordered the **${army_obj.name}** to remain still.`];
             }
+
+            if (error_msg.length == 0) {
+              //Set army_obj.moving_to and so on
+              army_obj.distances = distances_array;
+              army_obj.moving_to = move_to_array;
+              army_obj.status = "moving";
+
+              var time_to_arrival = module.exports.getArrivalTime(user_id, army_obj);
+
+              return [true, `The **${army_obj.name}** is now en route to Province **${provinces[provinces.length - 1]}**. It will arrive in approximately **${parseNumber(time_to_arrival)}** turn(s).`];
+            } else {
+              return [false, error_msg.join("\n")];
+            }
+          } else {
+            army_obj.distances = [];
+            army_obj.moving_to = [];
+            army_obj.progress = 0;
+            army_obj.status = "stationed";
+
+            return [true, `You have ordered the **${army_obj.name}** to remain still.`];
+          }
+        }
   },
 
   parseArmies: function (arg0_string) {
