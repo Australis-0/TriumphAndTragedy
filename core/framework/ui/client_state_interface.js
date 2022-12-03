@@ -13,6 +13,11 @@ module.exports = {
     printDiplomacy(user_id);
     game_obj.page = "diplomacy";
 
+    delete game_obj.freeze_alerts;
+
+    //Fix alert_embed
+    printAlert(game_obj.id, `${config.icons.checkmark} You have successfully finished editing your client state proposal for **${client_obj.name}**.`);
+
     //Delete map file
     try {
       fs.unlinkSync(`./map/${client_obj.id}_client_state`);
@@ -101,13 +106,10 @@ module.exports = {
         //Go back to the client state menu
         setTimeout(function(){
           module.exports.modifyClientState(user_id, client_obj, true);
-
-          module.exports.initialiseModifyClientState(user_id, client_obj);
-          module.exports.initialiseClientStateScreen(user_id, client_obj);
         }, 3000);
       } else {
         //Print error
-        printError(game_obj.id, `Your petition to add provinces on the behalf of your client state of **${local_user.name}** failed for the following reasons:${(neutral_provinces.length > 0) ? `\n- The following provinces don't even belong to you! ${neutral_provinces.join(", ")}` : ``}${(nonexistent_provinces.length > 0) ? `\n- Your cartographers are currently puzzling over your maps, as the following provinces don't even exist! ${nonexistent_provinces.join(", ")}` : ``}${(occupied_provinces.length > 0) ? `\n- You can't request occupied provinces to join your client state! The following provinces are currently occupied by the enemy: ${occupied_provinces.join(", ")}` : ``}${(redundant_provinces.length > 0) ? `\n- The following provinces are already being given to **${client_obj.name}**! ${redundant_provinces.join(", ")}` : ``}`);
+        printError(game_obj.id, `Your petition to add provinces on the behalf of your client state of **${client_obj.name}** failed for the following reasons:${(neutral_provinces.length > 0) ? `\n- The following provinces don't even belong to you! ${neutral_provinces.join(", ")}` : ``}${(nonexistent_provinces.length > 0) ? `\n- Your cartographers are currently puzzling over your maps, as the following provinces don't even exist! ${nonexistent_provinces.join(", ")}` : ``}${(occupied_provinces.length > 0) ? `\n- You can't request occupied provinces to join your client state! The following provinces are currently occupied by the enemy: ${occupied_provinces.join(", ")}` : ``}${(redundant_provinces.length > 0) ? `\n- The following provinces are already being given to **${client_obj.name}**! ${redundant_provinces.join(", ")}` : ``}`);
 
         //Wait 3 seconds before reinitialising prompt
         setTimeout(function(){
@@ -173,9 +175,6 @@ module.exports = {
         //Go back to the client state menu
         setTimeout(function(){
           module.exports.modifyClientState(user_id, client_obj, true);
-
-          module.exports.initialiseModifyClientState(user_id, client_obj);
-          module.exports.initialiseClientStateScreen(user_id, client_obj);
         }, 3000);
       } else {
         printError(game_obj.id, `All of the provinces you have specified were either invalid or simply didn't exist!`);
@@ -257,7 +256,7 @@ module.exports = {
             local_cede_string.push(`**${cede_provinces[i*5 + x]}**`)
 
         //Push to province_list_string
-        province_list_string.push(`- ${cede_provinces.join(", ")}`);
+        province_list_string.push(`- ${local_cede_string.join(", ")}`);
       }
     } else {
       province_list_string.push(`_We are not currently ceding any provinces to this nation._`);
@@ -291,6 +290,8 @@ module.exports = {
       fixed_width: true,
       user: user_id
     });
+
+    game_obj.freeze_alerts = true;
   },
 
   initialiseCreateClientState: function (arg0_user) {

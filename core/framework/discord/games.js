@@ -340,7 +340,8 @@ module.exports = {
                 .setDescription("No new alerts.")
                 .setImage("https://cdn.discordapp.com/attachments/722997700391338046/736141424315203634/margin.png");
 
-              game_obj.alert_embed.edit({ embeds: [new_alert_embed] });
+              if (!game_obj.freeze_alerts)
+                game_obj.alert_embed.edit({ embeds: [new_alert_embed] });
             } else {
               const new_alert_embed = new Discord.MessageEmbed()
                 .setColor(settings.bot_colour)
