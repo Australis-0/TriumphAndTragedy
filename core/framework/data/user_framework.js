@@ -344,10 +344,10 @@ module.exports = {
 
       if (next_bound)
         if (usr.provinces >= city_caps[i] && usr.provinces < next_bound)
-          calculated_cap = i+1;
+          calculated_cap = i + 1;
       if (!next_bound)
         if (usr.provinces >= city_caps[i])
-          calculated_cap = i+1;
+          calculated_cap = i + 1;
     }
 
     //Return statement
@@ -735,14 +735,14 @@ module.exports = {
         if (
           (
             //Complex boolean to parse options field; core provinces
-            (main.provinces[all_provinces[i]].owner == user_id &&
+            (main.provinces[all_provinces[i]].owner == actual_id &&
                 (
-                  main.provinces[all_provinces[i]].controller == user_id || options.include_hostile_occupations
+                  main.provinces[all_provinces[i]].controller == actual_id || options.include_hostile_occupations
                 )
             ) ||
 
             //Complex boolean to parse options field; provinces occupied by user
-            (main.provinces[all_provinces[i]].controller == user_id && options.include_occupations)
+            (main.provinces[all_provinces[i]].controller == actual_id && options.include_occupations)
           ) &&
 
           //Exclude cities if exclude_cities is set to true
@@ -763,7 +763,7 @@ module.exports = {
       //Return statement
       return all_owned_provinces;
     } catch (e) {
-      log.error(`getProvinces() - ran into an error with User ID ${user_id}: ${e}.`)
+      log.error(`getProvinces() - ran into an error with User ID ${actual_id}: ${e}.`)
     }
   },
 
