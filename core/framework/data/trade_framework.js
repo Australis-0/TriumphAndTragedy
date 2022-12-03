@@ -65,7 +65,7 @@ module.exports = {
       for (var x = 0; x < local_trades.length; x++) {
         var local_trade = local_user.trades[local_trades[x]];
 
-        if (local_trade.target == user_id)
+        if (local_trade.target == actual_id)
           import_list.push(local_trade);
       }
     }

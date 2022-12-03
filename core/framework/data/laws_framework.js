@@ -242,9 +242,10 @@ module.exports = {
     var reform_category = arg1_reform_category_name.trim().toLowerCase();
 
     //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
     var reform_category_name = getReformCategory(reform_category, { return_key: true });
     var reform_category_obj = getReformCategory(reform_category);
-    var usr = main.users[user_id];
+    var usr = main.users[actual_id];
 
     //Current reform is decided based on ruling party
     try {

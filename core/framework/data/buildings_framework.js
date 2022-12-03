@@ -353,9 +353,10 @@ module.exports = {
     var building_name = arg1_building;
 
     //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
     var building_obj = module.exports.getBuilding(building_name);
     var maintenance_obj = {};
-    var usr = main.users[user_id];
+    var usr = main.users[actual_id];
 
     //Only start appending if the .maintenance object exists at all
     if (building_obj.maintenance) {
@@ -413,9 +414,10 @@ module.exports = {
       if (!options.amount) options.amount = 1;
 
     //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
     var building_obj = module.exports.getBuilding(building_name);
     var costs_obj = {};
-    var usr = main.users[user_id];
+    var usr = main.users[actual_id];
 
     //Only start appending if the .cost object exists at all
     if (building_obj.cost) {
@@ -477,6 +479,7 @@ module.exports = {
     var city_name = arg2_city_name;
 
     //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
     var building_obj = (typeof building_name != "object") ?
       module.exports.getBuilding(building_name) :
       building_name;
@@ -486,7 +489,7 @@ module.exports = {
         { name: "No city provided." } :
       city_name;
     var production_obj = {};
-    var usr = main.users[user_id];
+    var usr = main.users[actual_id];
 
     //Declare changeProductionValue() local function for altering production_obj keys
     function changeProductionValue (arg0_key, arg1_min_max_argument, arg2_value) {
@@ -658,6 +661,7 @@ module.exports = {
     };
 
     //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
     var available_building_slots = [false, {
       available_slots: 0,
       total_buildings: 0,
@@ -671,7 +675,7 @@ module.exports = {
       city_name;
     var raw_building_category_name = module.exports.getBuildingCategory(building_category_name, { return_key: true });
     var raw_building_name = module.exports.getBuilding(building_category_name, { return_key: true });
-    var usr = main.users[user_id];
+    var usr = main.users[actual_id];
 
     //Check to see whether building_category_name is of type building or building_category
     try {

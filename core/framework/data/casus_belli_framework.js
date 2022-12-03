@@ -69,7 +69,7 @@ module.exports = {
     var cb_name = options.type.trim().toLowerCase();
     var has_justification = [false, ""]; //[justification_exists, justification_obj/index]
     var raw_cb_name = module.exports.getCB(cb_name, { return_key: true });
-    var usr = main.users[user_id];
+    var usr = main.users[actual_id];
 
     //Check if user has justification
     for (var i = 0; i < usr.diplomacy.justifications.length; i++) {

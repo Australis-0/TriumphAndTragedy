@@ -10,10 +10,11 @@ module.exports = {
     var total_losses = 0;
 
     try {
+      var actual_id = main.global.user_map[user_id];
       var defender_units = (!is_reserves) ?
           Object.keys(defending_army_obj.units) :
           Object.keys(defending_army_obj);
-      var usr = main.users[user_id];
+      var usr = main.users[actual_id];
 
       //Go through all units to deal damage
       for (var i = 0; i < defender_units.length; i++) {

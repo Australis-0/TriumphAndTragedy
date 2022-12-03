@@ -240,7 +240,7 @@ module.exports = {
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
     var pop_obj = config.pops[pop_type];
-    var usr = main.users[user_id];
+    var usr = main.users[actual_id];
 
     var availability_modifier = (pop_obj.military_pop) ?
       usr.modifiers.maximum_manpower*usr.modifiers.national_manpower

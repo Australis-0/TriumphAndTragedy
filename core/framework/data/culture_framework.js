@@ -39,16 +39,17 @@ module.exports = {
     var culture_name = arg1_culture;
 
     //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
     var all_provinces = Object.keys(main.provinces);
     var culture_obj = module.exports.getCulture(culture_name);
     var raw_culture_name = module.exports.getCulture(culture_name, { return_key: true });
     var total_culture_population = 0;
     var total_population = 0;
-    var usr = main.users[user_id];
+    var usr = main.users[actual_id];
 
-    //Iterate over all provincs controlled by the target user
+    //Iterate over all provinces controlled by the target user
     for (var i = 0; i < all_provinces.length; i++)
-      if (main.provinces[all_provinces[i]].controller == user_id) {
+      if (main.provinces[all_provinces[i]].controller == actual_id) {
         var local_province = main.provinces[all_provinces[i]];
 
         if (local_province.culture == raw_culture_name)
@@ -68,15 +69,16 @@ module.exports = {
     var culture_name = arg1_culture;
 
     //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
     var all_provinces = Object.keys(main.provinces);
     var culture_obj = module.exports.getCulture(culture_name);
     var raw_culture_name = module.exports.getCulture(culture_name, { return_key: true });
     var total_culture_population = 0;
-    var usr = main.users[user_id];
+    var usr = main.users[actual_id];
 
     //Iterate over all provincs controlled by the target user
     for (var i = 0; i < all_provinces.length; i++)
-      if (main.provinces[all_provinces[i]].controller == user_id) {
+      if (main.provinces[all_provinces[i]].controller == actual_id) {
         var local_province = main.provinces[all_provinces[i]];
 
         if (local_province.culture == raw_culture_name)
@@ -139,12 +141,13 @@ module.exports = {
     var options = (arg1_options) ? arg1_options: {};
 
     //Declare local instance variables
+    var actual_id = main.global.user_map[actual_id];
     var accepted_culture_provinces = [];
     var all_provinces = Object.keys(main.provinces);
-    var usr = main.users[user_id];
+    var usr = main.users[actual_id];
 
     for (var i = 0; i < all_provinces.length; i++)
-      if (main.provinces[all_provinces[i]].controller == user_id) {
+      if (main.provinces[all_provinces[i]].controller == actual_id) {
         var local_province = main.provinces[all_provinces[i]];
         var local_culture = getCulture(local_province.culture);
 
@@ -326,12 +329,13 @@ module.exports = {
     var user_id = arg0_user;
 
     //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
     var all_provinces = Object.keys(main.provinces);
     var primary_culture_provinces = [];
-    var usr = main.users[user_id];
+    var usr = main.users[actual_id];
 
     for (var i = 0; i < all_provinces.length; i++)
-      if (main.provinces[all_provinces[i]].controller == user_id) {
+      if (main.provinces[all_provinces[i]].controller == actual_id) {
         var local_province = main.provinces[all_provinces[i]];
         var local_culture = getCulture(local_province.culture);
 

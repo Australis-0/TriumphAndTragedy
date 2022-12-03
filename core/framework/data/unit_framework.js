@@ -508,9 +508,10 @@ module.exports = {
       if (!options.amount) options.amount = 1;
 
     //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
     var costs_obj = {};
     var unit_obj = module.exports.getUnit(unit_name);
-    var usr = main.users[user_id];
+    var usr = main.users[actual_id];
 
     //Only start appending if the .costs object exists at all
     if (unit_obj.cost) {
