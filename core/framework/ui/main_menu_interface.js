@@ -288,9 +288,7 @@ module.exports = {
 
     //Format main_menu_string
     var main_menu_string = [];
-
-    main_menu_string.push("");
-    main_menu_string.push(config.localisation.divider);
+    
     main_menu_string.push("");
     main_menu_string.push(`**[Resume Game]**`);
     main_menu_string.push("");
