@@ -288,13 +288,17 @@ module.exports = {
 
     //Format main_menu_string
     var main_menu_string = [];
-    
+
     main_menu_string.push("");
     main_menu_string.push(`**[Resume Game]**`);
     main_menu_string.push("");
     main_menu_string.push(`**[Manage Co-Op]**`);
     main_menu_string.push(`**[Resign]**`);
     main_menu_string.push(`**[Exit Game]**`);
+
+    //Clear current visual prompt if one exists
+    delete interfaces[user_id];
+    delete main.interfaces[user_id];
 
     //Create embed and post new message
     const main_menu_embed = new Discord.MessageEmbed()

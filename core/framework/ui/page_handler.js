@@ -17,7 +17,72 @@ module.exports = {
     if (in_visual_prompt)
       in_visual_prompt = (in_visual_prompt.type == "visual_prompt");
 
-    if (!in_founding_map && !in_visual_prompt && main.season_started) {
+
+    //Main Menu handler
+    {
+      if (game_obj.main_menu_embed) {
+        //[Resume Game]
+        if (input == "resume game")
+          closeMainMenu(user_id);
+
+        //[Manage Co-Op]
+        if (input == "manage co-op") {
+          game_obj.old_page = JSON.parse(JSON.stringify(game_obj.page));
+          game_obj.page = "coop_menu";
+
+          printCoopMenu(user_id);
+        }
+
+        //[Resign]
+        if (input == "resign")
+          initialiseResign(user_id);
+
+        //[Exit Game]
+        if (input == "exit game")
+          clearGame(game_obj.id);
+
+        if (game_obj.page == "coop_menu") {
+          //[Back]
+          if (input == "back") {
+            game_obj.page = JSON.parse(JSON.stringify(game_obj.old_page));
+            delete game_obj.old_page;
+
+            printMainMenu(user_id);
+          }
+
+          //[Invite Player]
+          if (input == "invite player")
+            initialiseInvitePlayer(user_id);
+
+          //[Kick Player]
+          if (input == "kick player")
+            initialiseKickPlayer(user_id);
+
+          //[Kick (Player ID)]
+          if (input.startsWith("kick ")) {
+            var player_id = input.replace("kick ", "").trim();
+
+            kickPlayer(user_id, parseMention(player_id));
+          }
+
+          //[Promote (Player ID)]
+          if (input.startsWith("promote ")) {
+            var player_id = input.replace("kick ", "").trim();
+
+            promotePlayer(user_id, parseMention(player_id));
+          }
+
+          //[Transfer Leadership]
+          if (input == "transfer leadership")
+            initialiseTransferLeadership(user_id);
+        }
+      }
+    }
+
+    if (
+      !in_founding_map && !in_visual_prompt && !game_obj.main_menu_embed &&
+      main.season_started
+    ) {
       //Global commands
       {
         //[Build]
@@ -1622,67 +1687,6 @@ module.exports = {
               });
 
               break;
-          }
-        }
-      }
-
-      //Main Menu handler
-      {
-        if (game_obj.main_menu_embed) {
-          //[Resume Game]
-          if (input == "resume game")
-            closeMainMenu(user_id);
-
-          //[Manage Co-Op]
-          if (input == "manage co-op") {
-            game_obj.old_page = JSON.parse(JSON.stringify(game_obj.page));
-            game_obj.page = "coop_menu";
-
-            printCoopMenu(user_id);
-          }
-
-          //[Resign]
-          if (input == "resign")
-            initialiseResign(user_id);
-
-          //[Exit Game]
-          if (input == "exit game")
-            clearGame(game_obj.id);
-
-          if (game_obj.page == "coop_menu") {
-            //[Back]
-            if (input == "back") {
-              game_obj.page = JSON.parse(JSON.stringify(game_obj.old_page));
-              delete game_obj.old_page;
-
-              printMainMenu(user_id);
-            }
-
-            //[Invite Player]
-            if (input == "invite player")
-              initialiseInvitePlayer(user_id);
-
-            //[Kick Player]
-            if (input == "kick player")
-              initialiseKickPlayer(user_id);
-
-            //[Kick (Player ID)]
-            if (input.startsWith("kick ")) {
-              var player_id = input.replace("kick ", "").trim();
-
-              kickPlayer(user_id, parseMention(player_id));
-            }
-
-            //[Promote (Player ID)]
-            if (input.startsWith("promote ")) {
-              var player_id = input.replace("kick ", "").trim();
-
-              promotePlayer(user_id, parseMention(player_id));
-            }
-
-            //[Transfer Leadership]
-            if (input == "transfer leadership")
-              initialiseTransferLeadership(user_id);
           }
         }
       }
