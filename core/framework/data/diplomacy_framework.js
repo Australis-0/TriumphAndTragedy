@@ -424,12 +424,13 @@ module.exports = {
 
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
+    var all_vassals = excludeClientStates(Object.keys(usr.diplomacy.vassals));
     var usr = main.users[actual_id];
 
     //Return statement
     return (
       usr.modifiers.political_capital_gain*
-        ((Object.keys(usr.diplomacy.vassals).length)*config.defines.diplomacy.vassal_maintenance_cost)
+        all_vassals.length*config.defines.diplomacy.vassal_maintenance_cost
     );
   },
 

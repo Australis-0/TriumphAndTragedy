@@ -166,7 +166,7 @@ module.exports = {
     var user_id = arg0_user;
 
     //Declare local instance variables
-    var all_users = Object.keys(main.users);
+    var all_users = excludeClientStates(Object.keys(main.users));
     var mention_id = user_id;
     var nation_found = [false, ""];
     var user_exists = false;

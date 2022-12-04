@@ -45,6 +45,19 @@ module.exports = {
     }
   },
 
+  excludeClientStates: function (arg0_array) {
+    //Convert from parameters
+    var array = getList(arg0_array);
+
+    //Iterate over array and check
+    for (var i = array.length - 1; i >= 0; i--)
+      if (module.exports.isClientState(array[i]))
+        array.splice(i, 1);
+
+    //Return statement
+    return array;
+  },
+
   generateClientStateID: function (arg0_user) {
     //Convert from parameters
     var user_id = arg0_user;
@@ -107,5 +120,26 @@ module.exports = {
 
     //Return statement
     return (client_state_exists[0]) ? client_state_exists[1] : undefined;
+  },
+
+  isClientState: function (arg0_user) {
+    //Convert from parameters
+    var user_id = arg0_user;
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var all_users = Object.keys(main.users);
+    var is_client_state = false;
+
+    //Iterate over all_users and check client_states object for actual_id key
+    for (var i = 0; i < all_users.length; i++) {
+      var local_user = main.users[all_users[i]];
+
+      if (local_user.client_states[actual_id])
+        is_client_state = true;
+    }
+
+    //Return statement
+    return is_client_state;
   }
 };

@@ -46,7 +46,8 @@ module.exports = {
 
     //Declare local tracker variables
     var accepted_cultures = getAcceptedCultures(user_id, { exclude_primary_culture: true });
-    var all_vassals = Object.keys(usr.diplomacy.vassals);
+    var all_client_states = Object.keys(usr.client_states);
+    var all_vassals = excludeClientStates(Object.keys(usr.diplomacy.vassals));
     var defensive_wars = 0;
     var enemies = [];
     var offensive_wars = 0;
@@ -99,7 +100,7 @@ module.exports = {
     diplomacy_string.push("");
     diplomacy_string.push(config.localisation.divider);
     diplomacy_string.push("");
-    diplomacy_string.push(`- **[View Client State Proposals]**`);
+    diplomacy_string.push(`- **[View Client State Proposals]** ${(all_client_states.length > 0) ? `(__${parseNumber(all_client_states.length)}__)` : ""}`);
     diplomacy_string.push(`- **[View Ledger]** | **[View Relations]**`);
     diplomacy_string.push("");
     diplomacy_string.push(`- **[Cede Province]** | **[Allow Ceding]** | **[Deny Ceding]**`);
