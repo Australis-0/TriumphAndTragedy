@@ -332,27 +332,9 @@ module.exports = {
         }
 
         //Only edit the message if the message is not a prompt.
-        if (!message_is_prompt) {
-          if (game_obj.alert_change) {
-            if (game_obj.alert_array.length == 0) {
-              const new_alert_embed = new Discord.MessageEmbed()
-                .setColor(settings.bot_colour)
-                .setDescription("No new alerts.")
-                .setImage("https://cdn.discordapp.com/attachments/722997700391338046/736141424315203634/margin.png");
-
-              if (!game_obj.freeze_alerts)
-                game_obj.alert_embed.edit({ embeds: [new_alert_embed] });
-            } else {
-              const new_alert_embed = new Discord.MessageEmbed()
-                .setColor(settings.bot_colour)
-                .setDescription(game_obj.alert_array.join("\n"))
-                .setImage("https://cdn.discordapp.com/attachments/722997700391338046/736141424315203634/margin.png");
-
-              game_obj.alert_embed.edit({ embeds: [new_alert_embed] });
-            }
-            game_obj.alert_change = false;
-          }
-        }
+        if (!message_is_prompt)
+          if (game_obj.alert_change)
+            updateAlert(game_obj.user, { freeze_alerts: true });
       } catch {}
     }, 100);
 

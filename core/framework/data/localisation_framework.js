@@ -519,6 +519,46 @@ module.exports = {
     return (wargoal_localisation) ? wargoal_localisation : [];
   },
 
+  parseProvinces: function (arg0_provinces, arg1_options) {
+    //Convert from parameters
+    var provinces = getList(arg0_provinces);
+    var options = (arg1_options) ? arg1_options : {
+      display_cities: true,
+      display_prefix: true,
+      limit: 100
+    };
+
+    //Declare local instance variables
+    var current_province_count = 0;
+    var local_province_string = [];
+    var provinces_string = [];
+
+    //Split provinces based on limit n of provinces
+    for (var i = 0; i < provinces.length; i++) {
+      var local_province = main.provinces[provinces[i]];
+
+      if (local_province) {
+        local_province_string.push(`${(local_province.name && options.display_cities) ? `(#${provinces[i]}) **${local_province.name}**` : provinces[i]}`);
+
+        current_province_count++;
+      }
+
+      //Check to see if new array should be pushed to provinces_string
+      if (
+        (current_province_count >= options.limit || i == provinces.length - 1)
+        && local_province_string.length > 0
+      ) {
+        provinces_string.push(`${(options.display_prefix) ? `- ` : ""}${local_province_string.join(", ")}`);
+
+        current_province_count = 0;
+        local_province_string = [];
+      }
+    }
+
+    //Return statement
+    return provinces_string;
+  },
+
   parseWargoalInfamyLocalisation: function (arg0_user, arg1_war_obj, arg2_wargoal_obj) {
     //Convert from parameters
     var user_id = arg0_user;

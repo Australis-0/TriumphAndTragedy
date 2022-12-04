@@ -248,16 +248,14 @@ module.exports = {
       province_list_string.push(config.localisation.divider);
       province_list_string.push("");
 
-      for (var i = 0; i - 5 < cede_provinces.length; i += 5) {
-        var local_cede_string = [];
+      var provinces_string = parseProvinces(client_obj.provinces, {
+        display_cities: true,
+        display_prefix: true,
+        limit: 5
+      });
 
-        for (var x = 0; x < 5; x++)
-          if (cede_provinces[i*5 + x])
-            local_cede_string.push(`**${cede_provinces[i*5 + x]}**`)
-
-        //Push to province_list_string
-        province_list_string.push(`- ${local_cede_string.join(", ")}`);
-      }
+      for (var i = 0; i < provinces_string.length; i++)
+        province_list_string.push(provinces_string[i]);
     } else {
       province_list_string.push(`_We are not currently ceding any provinces to this nation._`);
       province_list_string.push("");
@@ -739,6 +737,7 @@ module.exports = {
 
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
+    var game_obj = getGameObject(user_id);
     var client_state_id = arg1_client_state;
     var usr = main.users[actual_id];
 
@@ -794,6 +793,7 @@ module.exports = {
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
     var client_state_id = arg1_client_state;
+    var game_obj = getGameObject(user_id);
     var usr = main.users[actual_id];
 
     //Initialise visual prompt
@@ -834,6 +834,7 @@ module.exports = {
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
     var client_state_id = arg1_client_state;
+    var game_obj = getGameObject(user_id);
     var usr = main.users[actual_id];
 
     //Initialise visual prompt
@@ -870,6 +871,7 @@ module.exports = {
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
     var client_state_id = arg1_client_state;
+    var game_obj = getGameObject(user_id);
     var usr = main.users[actual_id];
 
     //Initialise visual prompt

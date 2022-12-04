@@ -484,5 +484,34 @@ module.exports = {
       log.error(`Ran into an error whilst parsing embed at splitEmbed(): ${e}`);
       console.log(e);
     }
+  },
+
+  updateAlert: function (arg0_user, arg1_options) {
+    //Convert from parameters
+    var user_id = arg0_user;
+    var options = (arg1_options) ? arg1_options : {};
+
+    //Declare local instance variables
+    var game_obj = getGameObject(user_id);
+
+    if (game_obj) {
+      if (game_obj.alert_array.length == 0) {
+        const new_alert_embed = new Discord.MessageEmbed()
+          .setColor(settings.bot_colour)
+          .setDescription("No new alerts.")
+          .setImage("https://cdn.discordapp.com/attachments/722997700391338046/736141424315203634/margin.png");
+
+        if (!options.freeze_alerts && !game_obj.freeze_alerts)
+          game_obj.alert_embed.edit({ embeds: [new_alert_embed] });
+      } else {
+        const new_alert_embed = new Discord.MessageEmbed()
+          .setColor(settings.bot_colour)
+          .setDescription(game_obj.alert_array.join("\n"))
+          .setImage("https://cdn.discordapp.com/attachments/722997700391338046/736141424315203634/margin.png");
+
+        game_obj.alert_embed.edit({ embeds: [new_alert_embed] });
+      }
+      game_obj.alert_change = false;
+    }
   }
 };
