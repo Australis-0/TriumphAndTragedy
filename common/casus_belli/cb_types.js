@@ -158,8 +158,13 @@ config.casus_belli = {
           return true;
     },
 
-    peace_demands: {
+    attacker_peace_demands: {
       liberation: 1,
+      war_reparations: 1
+    },
+    defender_peace_demands: {
+      complete_annexation: 1,
+      puppet: 1,
       war_reparations: 1
     }
   },

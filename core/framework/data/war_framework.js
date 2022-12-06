@@ -343,10 +343,19 @@ module.exports = {
       peace_treaties: {}
     };
 
-    //Automatically call in all vassals on both sides
+    //Vassal processing
     var all_attacker_vassals = Object.keys(attacker_obj.diplomacy.vassals);
     var all_defender_vassals = Object.keys(defender_obj.diplomacy.vassals);
 
+    //Liberate any vassals that are on the opposing side of their overlord
+    for (var i = 0; i < all_attacker_vassals.length; i++)
+      if (war_obj.defenders.includes(all_attacker_vassals[i]))
+        module.exports.dissolveVassal(all_attacker_vassals[i]);
+    for (var i = 0; i < all_defender_vassals.length; i++)
+      if (war_obj.attackers.includes(all_defender_vassals[i]))
+        module.exports.dissolveVassal(all_defender_vassals[i]);
+
+    //Automatically call in all remaining vassals on both sides
     for (var i = 0; i < all_attacker_vassals.length; i++) {
       var local_vassal = attacker_obj.diplomacy.vassals[all_attacker_vassals[i]];
 
@@ -364,9 +373,41 @@ module.exports = {
     }
 
     //Add wargoals
+    if (cb_obj.attacker_peace_demands) {
+      var all_attacker_peace_demands = Object.keys(cb_obj.attacker_peace_demands);
+
+      for (var i = 0; i < all_attacker_peace_demands.length; i++) {
+        var local_value = cb_obj.peace_demands[all_attacker_peace_demands[i]];
+
+        if (!war_obj.attackers_wargoals[all_attacker_peace_demands[i]])
+          war_obj.attackers_wargoals[all_attacker_peace_demands[i]] = 0;
+        war_obj.attackers_wargoals[all_attacker_peace_demands[i]] += local_value;
+      }
+    }
+    if (cb_obj.defender_peace_demands) {
+      var all_defender_peace_demands = Object.keys(cb_obj.defender_peace_demands);
+
+      for (var i = 0; i < all_defender_peace_demands.length; i++) {
+        var local_value = cb_obj.peace_demands[all_defender_peace_demands[i]];
+
+        if (!war_obj.defenders_wargoals[all_defender_peace_demands[i]])
+          war_obj.defenders_wargoals[all_defender_peace_demands[i]] = 0;
+        war_obj.defenders_wargoals[all_defender_peace_demands[i]] += local_value;
+      }
+    }
     if (cb_obj.peace_demands) {
-      war_obj.attackers_wargoals = JSON.parse(JSON.stringify(cb_obj.peace_demands));
-      war_obj.defenders_wargoals = JSON.parse(JSON.stringify(cb_obj.peace_demands));
+      var all_general_peace_demands = Object.keys(cb_obj.peace_demands);
+
+      for (var i = 0; i < all_general_peace_demands.length; i++) {
+        var local_value = cb_obj.peace_demands[all_general_peace_demands[i]];
+
+        if (!war_obj.attackers_wargoals[all_general_peace_demands[i]])
+          war_obj.attackers_wargoals[all_general_peace_demands[i]] = 0;
+        war_obj.attackers_wargoals[all_general_peace_demands[i]] += local_value;
+        if (!war_obj.defenders_wargoals[all_general_peace_demands[i]])
+          war_obj.defenders_wargoals[all_general_peace_demands[i]] = 0;
+        war_obj.defenders_wargoals[all_general_peace_demands[i]] += local_value;
+      }
     }
 
     //Set war_obj

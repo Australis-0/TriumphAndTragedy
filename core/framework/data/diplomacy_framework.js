@@ -312,6 +312,7 @@ module.exports = {
 
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
+    var all_mapped_users = Object.keys(main.global.user_map);
     var overlord_id = module.exports.getVassal(user_id, true);
     var usr = main.users[actual_id];
 
@@ -319,6 +320,14 @@ module.exports = {
     delete usr.options.customisation_locked; //Customisation can't be locked by their overlords anymore
     delete main.users[overlord_id].diplomacy.vassals[actual_id];
 
+    //Transfer ownership if possible
+    delete usr.owner;
+
+    for (var i = 0; i < all_mapped_users.length; i++)
+      if (main.global.user_map[all_mapped_users[i]] == actual_id && !usr.owner)
+        usr.owner = all_mapped_users[i];
+
+    //Reset trackers
     usr.vassal_years = 0;
   },
 

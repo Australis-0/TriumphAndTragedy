@@ -4,7 +4,7 @@ config.defines.diplomacy = {
   justify_wargoal_time: 3, //Base number of turns needed to justify a wargoal
 
   //Common Diplomatic Defines
-  absolute_infamy_limit: 15, //What is the highest infamy can go?
+  absolute_infamy_limit: 100, //What is the highest infamy can go?
   alliance_alert_id: "alliance_proposal", //What alert should popup when an alliance is proposed?
   alliance_break_alert_id: "alliance_broken", //What alert should popup when an alliance is broken?
   alliance_relation_threshold: 75, //How high should relations need to be before one can propose an alliance?
@@ -12,8 +12,12 @@ config.defines.diplomacy = {
   call_to_arms_alert_id: "call_to_arms", //Which alert should be triggered when a call to arms is made?
   guarantee_alert_id: "the_promise_we_made", //Which alert should popup to call in guarantors when a war breaks out?
   infamy_annex_cost: 3, //How much infamy should an annexation request cost?
-  infamy_limit: 8, //Total infamy before containment CB kicks in, and bad effects
+  infamy_liberation: -5, //How much infamy should overlords lose from liberating a vassal state?
+  infamy_limit: 20, //Total infamy before containment CB kicks in, and bad effects
   infamy_loss: -0.05, //Per turn
+  infamy_vassal_invite_player: -2, //Infamy loss for inviting the first player onto a vassal country (assuming they accept)
+  infamy_vassal_kick_player: 2.5, //Infamy for kicking a player off a client state
+  infamy_vassal_province_transfer: 0.50, //Infamy scaling for transferring provinces to vassals
   liberation_alert_id: "we_are_free", //What alert should popup when a vassal is voluntarily liberated by its overlord?
   military_access_cancellation_alert_id: "access_cancelled", //Which alert should popup when military access to another country is cancelled?
   military_access_request_alert_id: "other_armies_our_soil", //Which alert should popup for the target user when military access is being requested of them?

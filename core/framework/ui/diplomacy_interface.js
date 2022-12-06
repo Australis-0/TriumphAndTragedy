@@ -39,6 +39,7 @@ module.exports = {
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
     var all_good_names = getGoods({ return_names: true });
+    var all_mapped_users = Object.keys(main.global.user_map);
     var all_pops = Object.keys(config.pops);
     var all_wars = Object.keys(main.global.wars);
     var game_obj = getGameObject(user_id);
@@ -87,8 +88,18 @@ module.exports = {
     if (all_vassals.length > 0) {
       diplomacy_string.push(`Our **${parseNumber(all_vassals.length)}** vassal(s) are costing us **${parseNumber(getVassalMaintenance(user_id))}** Political Capital per turn.`);
 
-      for (var i = 0; i < all_vassals.length; i++)
-        diplomacy_string.push(`- **${main.users[vassal_obj[all_vassals[i]].id].name}**`);
+      for (var i = 0; i < all_vassals.length; i++) {
+        var local_vassal = main.users[all_vassals[i]];
+        var local_vassal_display_players = [];
+
+        //Iterate over all_mapped_users, push users to local_vassal_display_players
+        for (var i = 0; i < all_mapped_users.length; i++)
+          if (main.global.user_map[all_mapped_users[i]] == actual_ot_user_id)
+            if (client.users.cache.find(user => user.id == all_mapped_users[i]))
+              local_vassal_display_players.push(`<@${all_mapped_users[i]}>`);
+
+        diplomacy_string.push(`- **${local_vassal.name}** - ${(local_vassal_display_players.length > 0) ? parseList(local_vassal_display_players) : `_No Player_`}`);
+      }
     }
     if (accepted_cultures.length > 0)
       diplomacy_string.push(`Our **${parseNumber(accepted_cultures.length)}** accepted culture(s) are costing us **${parseNumber(accepted_cultures.length*config.defines.politics.accepted_culture_maintenance_cost)}** Political Capital per turn.`);

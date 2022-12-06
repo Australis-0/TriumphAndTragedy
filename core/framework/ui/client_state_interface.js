@@ -209,6 +209,7 @@ module.exports = {
 
     //Format client_string
     var client_string = [];
+    var infamy_reduction = getClientStateInfamyReduction(user_id, client_obj.id);
 
     //Push name
     client_string.push(`${config.icons.globe} Country: **${client_obj.name}**`);
@@ -216,6 +217,12 @@ module.exports = {
     client_string.push(`${config.icons.political_capital} Capital City: ${(client_obj.capital_id) ? main.provinces[client_obj.capital_id].name : "None"}`);
     client_string.push(`${config.icons.old_scroll} Colour: **${client_obj.colour.join(", ")}**`);
     client_string.push(`${config.icons.provinces} Provinces: **${parseNumber(client_obj.provinces.length)}**`);
+
+    if (returnSafeNumber(infamy_reduction) > 0) {
+      client_string.push("");
+      client_string.push(`- Releasing this client state will reduce our infamy by **${parseNumber(infamy_reduction*-1, { display_float: true })}** for **${parseNumber(getInfamyLossPerProvince, { display_float: true })} per province.`);
+    }
+
     client_string.push("");
     client_string.push(config.localisation.divider);
     client_string.push("");
@@ -601,9 +608,10 @@ module.exports = {
 
       //Iterate through all client states and push to proposals_string
       for (var i = 0; i < all_client_states.length; i++) {
+        var infamy_reduction = getClientStateInfamyReduction(user_id, all_client_states[i]);
         var local_client_state = usr.client_states[all_client_states[i]];
 
-        proposals_string.push(`**${local_client_state.name}** - ${(local_client_state.capital_id) ? main.provinces[local_client_state.capital_id].name : "_None_"} | ${parseNumber(local_client_state.provinces.length)}`);
+        proposals_string.push(`**${local_client_state.name}** - ${(local_client_state.capital_id) ? main.provinces[local_client_state.capital_id].name : "_None_"} | ${parseNumber(local_client_state.provinces.length)}${(infamy_reduction > 0) ? ` (${config.icons.infamy} **${parseNumber(infamy_reduction*-1)}**)` : ""}`);
         proposals_string.push(`- **[Edit ${local_client_state.name}]**`);
       }
     } else {
@@ -624,6 +632,85 @@ module.exports = {
     });
   },
 
+  printVassalCoopMenu: function (arg0_user, arg1_user) {
+    //Convert from parameters
+    var user_id = arg0_user;
+    var ot_user_id = arg1_user;
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var actual_ot_user_id = main.global.user_map[ot_user_id];
+    var all_mapped_users = Object.keys(main.global.user_map);
+    var game_obj = getGameObject(user_id);
+    var ot_user = main.users[actual_ot_user_id];
+    var usr = main.users[actual_id];
+
+    //Declare local tracker variables
+    var coop_menu_string = [];
+    var current_overlord_players = [];
+    var current_players = [];
+    var vassal_obj = getVassal(ot_user_id);
+
+    if (ot_user) {
+      if (vassal_obj) {
+        if (vassal_obj.overlord == actual_id) {
+          //Get current_overlord_players
+          for (var i = 0; i < all_mapped_users.length; i++)
+            if (main.global.user_map[all_mapped_users[i]] == actual_id)
+              if (client.users.cache.find(user => user.id == all_mapped_users[i]))
+                current_overlord_players.push(all_mapped_users[i]);
+
+          //Get current_players
+          for (var i = 0; i < all_mapped_users.length; i++)
+            if (main.global.user_map[all_mapped_users[i]] == actual_ot_user_id)
+              if (client.users.cache.find(user => user.id == all_mapped_users[i]))
+                current_players.push(all_mapped_users[i]);
+
+          //Format coop_string
+          coop_menu_string.push(`**Current Players**:`);
+          coop_menu_string.push("");
+
+          //Push the owner/overlord
+          coop_menu_string.push(`**${usr.name}** - _Overlord_`);
+
+          if (current_players.length > 0)
+            coop_menu_string.push("");
+
+          for (var i = 0; i < current_players.length; i++) {
+            var user_obj = client.users.cache.find(user => user.id == current_players[i]);
+
+            //Exclude user if it is not an actual User ID
+            if (user_obj) {
+              coop_menu_string.push(`<@${current_players[i]}> - Player`);
+              coop_menu_string.push(`- **[Kick ${user_obj.username}]**`);
+            }
+          }
+
+          coop_menu_string.push("");
+          coop_menu_string.push(config.localisation.divider);
+          coop_menu_string.push("");
+          coop_menu_string.push(`- **[Invite Player]** | **[Kick Player]** | **[Liberate]**`);
+
+          //Create embed
+          createPageMenu(game_obj.middle_embed, {
+            embed_pages: splitEmbed(coop_menu_string, {
+              title: `[Back] | Managing Players for ${ot_user.name}:`,
+              title_pages: true,
+              fixed_width: true
+            }),
+            user: game_obj.user
+          });
+        } else {
+          printError(game_obj.id, `**${ot_user.name}** is a vassal of a foreign nation! We can only manage players on vassals we control.`);
+        }
+      } else {
+        printError(game_obj.id, `**${ot_user.name}** is a free and independent country! Did you mean to demand their vassalisation instead?`);
+      }
+    } else {
+      printError(game_obj.id, `The country you have specified doesn't even exist! Try selecting a valid vassal from the **Diplomacy** tab.`);
+    }
+  },
+
   releaseClientState: function (arg0_user, arg1_client_state, arg2_force_release) {
     //Convert from parameters
     var user_id = arg0_user;
@@ -633,6 +720,7 @@ module.exports = {
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
     var game_obj = getGameObject(user_id);
+    var infamy_reduction = getClientStateInfamyReduction(user_id, client_obj.id);
     var ot_user = main.users[client_obj.id];
     var reload_interface = false;
     var usr = main.users[actual_id];
@@ -684,6 +772,9 @@ module.exports = {
 
                   ot_user.pops.accepted_culture = [culture_obj.id];
                   ot_user.pops.primary_culture = culture_obj.id;
+
+                  //Remove infamy_reduction from usr.modifiers.infamy
+                  usr.modifiers.infamy -= returnSafeNumber(infamy_reduction);
 
                   //Close client state if open
                   if (!force_release)

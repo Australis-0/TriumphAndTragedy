@@ -202,7 +202,7 @@ config.wargoals = {
 
     demand_limit: 1,
     infamy: {
-      infamy_per_province: 0.03,
+      infamy_per_province: 0.04,
 
       minimum_infamy: 1,
       maximum_infamy: 5

@@ -1,4 +1,46 @@
 module.exports = {
+  getPeaceDemandsLocalisation: function (arg0_cb_name) {
+    //Convert from parameters
+    var cb_name = (typeof arg0_cb_name != "object") ? arg0_cb_name.trim().toLowerCase() : arg0_cb_name;
+
+    //Declare local instance variables
+    var attacker_peace_demands_string = [];
+    var cb_obj = (typeof cb_name != "object") ? getCB(cb_name) : cb_name;
+    var defender_peace_demands_string = [];
+    var peace_demands = getPeaceDemands(cb_obj);
+
+    //Parse peace_demands
+    if (peace_demands) {
+      var all_attacker_peace_demands = Object.keys(peace_demands.attackers);
+      var all_defender_peace_demands = Object.keys(peace_demands.defenders);
+
+      for (var i = 0; i < all_attacker_peace_demands.length; i++) {
+        var local_value = peace_demands.attackers[all_attacker_peace_demands[i]];
+        var local_wargoal = getWargoal(all_attacker_peace_demands[i]);
+
+        attacker_peace_demands_string.push(`[${(local_wargoal.name) ? local_wargoal.name : all_attacker_peace_demands[i]}] (__${parseNumber(local_value)}__)`);
+      }
+      for (var i = 0; i < all_defender_peace_demands.length; i++) {
+        var local_value = peace_demands.defenders[all_defender_peace_demands[i]];
+        var local_wargoal = getWargoal(all_defender_peace_demands[i]);
+
+        defender_peace_demands_string.push(`[${(local_wargoal.name) ? local_wargoal.name : all_defender_peace_demands[i]}] (__${parseNumber(local_value)}__)`);
+      }
+
+      //Set to _None_ for both fields if no valid peace demands could be found
+      if (attacker_peace_demands_string.length == 0)
+        attacker_peace_demands_string.push(`_None_`);
+      if (defender_peace_demands_string.length == 0)
+        defender_peace_demands_string.push(`_None_`);
+    }
+
+    //Return statement
+    return {
+      attacker_peace_demands_string: attacker_peace_demands_string,
+      defender_peace_demands_string: defender_peace_demands_string
+    };
+  },
+
   getSupplyLocalisation: function (arg0_user) {
     //Convert from parameters
     var user_id = arg0_user;

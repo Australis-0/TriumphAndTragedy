@@ -155,34 +155,40 @@ module.exports = {
     var game_obj = getGameObject(user_id);
     var ot_user = main.users[actual_ot_user_id];
     var usr = main.users[actual_id];
+    var vassal_obj = getVassal(user_id);
 
-    //Check if player is valid
-    returnChannel(settings.alert_channel).send(`<@${ot_user_id}>`).then((msg) => {
-      confirmDialogue(msg, {
-        text: `**Join ${usr.name}**\n\nWould you like to accept <@${user_id}>'s invitation to help run their country?\n\n**Note:** You must quit your current country before accepting this invite.`,
-        user: ot_user_id,
-        delete_after: true
-      }, function () {
-        //Make sure user isn't currently playing a country
-        if (!main.global.user_map[ot_user_id]) {
-          //Set user map
-          main.global.user_map[ot_user_id] = actual_id;
+    //Check if player is a vassal
+    if (!vassal_obj) {
+      //Check if player is valid
+      returnChannel(settings.alert_channel).send(`<@${ot_user_id}>`).then((msg) => {
+        confirmDialogue(msg, {
+          text: `**Join ${usr.name}**\n\nWould you like to accept <@${user_id}>'s invitation to help run their country?\n\n**Note:** You must quit your current country before accepting this invite.`,
+          user: ot_user_id,
+          delete_after: true
+        }, function () {
+          //Make sure user isn't currently playing a country
+          if (!main.global.user_map[ot_user_id]) {
+            //Set user map
+            main.global.user_map[ot_user_id] = actual_id;
 
-          //Reload UI
-          if (game_obj.page == "coop_menu")
-            createPageMenu(game_obj.middle_embed, {
-              embed_pages: module.exports.printCoopMenu(user_id),
-              page: main.interfaces[game_obj.middle_embed.id].page,
-              user: game_obj.user
-            });
+            //Reload UI
+            if (game_obj.page == "coop_menu")
+              createPageMenu(game_obj.middle_embed, {
+                embed_pages: module.exports.printCoopMenu(user_id),
+                page: main.interfaces[game_obj.middle_embed.id].page,
+                user: game_obj.user
+              });
 
-          //Print user feedback
-          sendPlainEmbed(msg, `You have switched to playing **${usr.name}**.`);
-        } else {
-          sendPlainEmbed(msg, `:warning: You are currently playing as **${main.users[main.global.user_map[ot_user_id]].name}**! Quit playing your country first before accepting an invite.`);
-        }
-      })
-    });
+            //Print user feedback
+            sendPlainEmbed(msg, `You have switched to playing **${usr.name}**.`);
+          } else {
+            sendPlainEmbed(msg, `:warning: You are currently playing as **${main.users[main.global.user_map[ot_user_id]].name}**! Quit playing your country first before accepting an invite.`);
+          }
+        });
+      });
+    } else {
+      printError(game_obj.id, `We can't invite players into our country without the permission of our overlord, **${main.users[vassal_obj.overlord].name}**!`);
+    }
   },
 
   kickPlayer: function (arg0_user, arg1_user) {
@@ -196,29 +202,34 @@ module.exports = {
     var game_obj = getGameObject(user_id);
     var ot_user = main.users[actual_ot_user_id];
     var usr = main.users[actual_id];
+    var vassal_obj = getVassal(user_id);
 
     //Check if user is even playing that country
-    if (main.global.user_map[ot_user_id] == actual_id) {
-      if (client.users.cache.find(user => user.id == ot_user_id)) {
-        //Kick from party
-        delete main.global.user_map[ot_user_id];
+    if (!vassal_obj) {
+      if (main.global.user_map[ot_user_id] == actual_id) {
+        if (client.users.cache.find(user => user.id == ot_user_id)) {
+          //Kick from party
+          delete main.global.user_map[ot_user_id];
 
-        //Reload UI
-        if (game_obj.page == "coop_menu")
-          createPageMenu(game_obj.middle_embed, {
-            embed_pages: module.exports.printCoopMenu(user_id),
-            page: main.interfaces[game_obj.middle_embed.id].page,
-            user: game_obj.user
-          });
+          //Reload UI
+          if (game_obj.page == "coop_menu")
+            createPageMenu(game_obj.middle_embed, {
+              embed_pages: module.exports.printCoopMenu(user_id),
+              page: main.interfaces[game_obj.middle_embed.id].page,
+              user: game_obj.user
+            });
 
-        //Print user feedback
-        returnChannel(settings.alert_channel).send(`<@${ot_user_id}> was kicked from the country of **${usr.name}**.`);
-        printAlert(game_obj.id, `You have kicked <@${ot_user_id}> from being able to play on your country.`);
+          //Print user feedback
+          returnChannel(settings.alert_channel).send(`<@${ot_user_id}> was kicked from the country of **${usr.name}**.`);
+          printAlert(game_obj.id, `You have kicked <@${ot_user_id}> from being able to play on your country.`);
+        } else {
+          printError(game_obj.id, `You must specify a real user to kick from your country! This player has either left all servers the bot is in, or was not a real user.`);
+        }
       } else {
-        printError(game_obj.id, `You must specify a real user to kick from your country! This player has either left all servers the bot is in, or was not a real user.`);
+        printError(game_obj.id, `<@${ot_user_id}> could not be found playing your country!`);
       }
     } else {
-      printError(game_obj.id, `<@${ot_user_id}> could not be found playing your country!`);
+      printError(game_obj.id, `We can't kick players from our country as we are a vassal of **${main.users[vassal_obj.overlord].name}**!`);
     }
   },
 
@@ -232,6 +243,7 @@ module.exports = {
     var current_players = [];
     var game_obj = getGameObject(user_id);
     var usr = main.users[actual_id];
+    var vassal_obj = getVassal(user_id);
 
     //Get current players
     for (var i = 0; i < all_mapped_users.length; i++)
@@ -246,7 +258,7 @@ module.exports = {
     coop_menu_string.push("");
 
     //Push the owner
-    coop_menu_string.push(`<@${usr.owner}> - ${(!getVassal(user_id)) ? "_Owner_" : "_Overlord_"}`);
+    coop_menu_string.push(`<@${usr.owner}> - ${(!vassal_obj) ? "_Owner_" : "_Overlord_"}`);
 
     if (current_players.length > 0)
       coop_menu_string.push("");
@@ -257,14 +269,19 @@ module.exports = {
       //Exclude user if it is not an actual User ID
       if (user_obj) {
         coop_menu_string.push(`<@${current_players[i]}> - Player`);
-        coop_menu_string.push(`- **[Kick ${user_obj.username}]** | **[Promote ${user_obj.username}]**`);
+
+        if (!vassal_obj)
+          coop_menu_string.push(`- **[Kick ${user_obj.username}]** | **[Promote ${user_obj.username}]**`);
       }
     }
 
     coop_menu_string.push("");
     coop_menu_string.push(config.localisation.divider);
     coop_menu_string.push("");
-    coop_menu_string.push(`- **[Invite Player]** | **[Kick Player]** | **[Transfer Leadership]**`);
+
+    (!vassal_obj) ?
+      coop_menu_string.push(`- **[Invite Player]** | **[Kick Player]** | **[Transfer Leadership]**`) :
+      coop_menu_string.push(`- As a vassal, we are currently not eligible to control our own players without the consent of **${main.users[vassal_obj.overlord].name}**.`);
 
     //Create embed and edit current main menu if it exists, if not edit game_obj.main_embed
     createPageMenu((game_obj.main_menu_embed) ? game_obj.main_menu_embed : game_obj.middle_embed, {
@@ -326,26 +343,31 @@ module.exports = {
     var game_obj = getGameObject(user_id);
     var ot_user = main.users[actual_ot_user_id];
     var usr = main.users[actual_id];
+    var vassal_obj = getVassal(user_id);
 
     //Make sure player is playing that country to begin with
     if (main.global.user_map[ot_user_id] == actual_id) {
-      if (client.users.cache.find(user => user.id == ot_user_id)) {
-        //Set as owner
-        usr.owner = ot_user_id;
+      if (!vassal_obj) {
+        if (client.users.cache.find(user => user.id == ot_user_id)) {
+          //Set as owner
+          usr.owner = ot_user_id;
 
-        //Reload UI
-        if (game_obj.page == "coop_menu")
-          createPageMenu(game_obj.middle_embed, {
-            embed_pages: module.exports.printCoopMenu(user_id),
-            page: main.interfaces[game_obj.middle_embed.id].page,
-            user: game_obj.user
-          });
+          //Reload UI
+          if (game_obj.page == "coop_menu")
+            createPageMenu(game_obj.middle_embed, {
+              embed_pages: module.exports.printCoopMenu(user_id),
+              page: main.interfaces[game_obj.middle_embed.id].page,
+              user: game_obj.user
+            });
 
-        //Print user feedback
-        returnChannel(settings.alert_channel).send(`<@${ot_user_id}> was granted ownership of the country of **${usr.name}**.`);
-        printAlert(game_obj.id, `You have transferred ownership of your country to <@${ot_user_id}>. You remain playing this country until you **[Resign]**.`);
+          //Print user feedback
+          returnChannel(settings.alert_channel).send(`<@${ot_user_id}> was granted ownership of the country of **${usr.name}**.`);
+          printAlert(game_obj.id, `You have transferred ownership of your country to <@${ot_user_id}>. You remain playing this country until you **[Resign]**.`);
+        } else {
+          printError(game_obj.id, `You must specify a real user to transfer ownership of your country to! This player has either left all servers the bot is in, or was not a real user.`);
+        }
       } else {
-        printError(game_obj.id, `You must specify a real user to transfer ownership of your country to! This player has either left all servers the bot is in, or was not a real user.`);
+        printError(game_obj.id, `You can't transfer leadership of **${usr.name}** as a vassal of **${main.users[vassal_obj.overlord].name}**! Have them either liberate you of their own volition, or justify a war of independence against them.`);
       }
     } else {
       printError(game_obj.id, `<@${ot_user_id}> could not be found playing your country!`);

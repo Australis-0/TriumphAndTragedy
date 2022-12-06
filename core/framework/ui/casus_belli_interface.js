@@ -34,6 +34,7 @@ module.exports = {
       var local_cb_string = [];
 
       //Format peace_demands_array
+      var peace_demands_localisation = getPeaceDemandsLocalisation(local_cb);
       var peace_demands_array = [];
 
       if (local_cb.peace_demands) {
@@ -54,8 +55,13 @@ module.exports = {
       local_cb_string.push(config.localisation.blank);
       local_cb_string.push(`- ${config.icons.old_scroll} Requirement: ${local_cb_description}`);
 
-      if (peace_demands_array.length > 0)
+      if (peace_demands_array.length > 0 && !local_cb.attacker_peace_demands && !local_cb.defender_peace_demands)
         local_cb_string.push(`- ${config.icons.diplomacy} Peace Demands:\n • ${peace_demands_array.join("\n• ")}\n`);
+
+      if (local_cb.attacker_peace_demands || local_cb.defender_peace_demands) {
+        local_cb_string.push(`- ${config.icons.diplomacy} Attacker Peace Demands:\n • ${peace_demands_localisation.attacker_peace_demands_string.join("\n• ")}\n`);
+        local_cb_string.push(`- ${config.icons.diplomacy} Defender Peace Demands:\n • ${peace_demands_localisation.defender_peace_demands_string.join("\n• ")}\n`);
+      }
 
       local_cb_string.push(`- ${config.icons.infamy} Infamy: ${parseNumber(local_cb_infamy)}`);
       local_cb_string.push(config.localisation.blank);
@@ -176,12 +182,15 @@ module.exports = {
     var cb_obj = getCB(casus_belli_name);
     var game_obj = getGameObject(user_id);
     var ot_user = main.users[actual_ot_user_id];
+    var peace_demands_localisation = getPeaceDemandsLocalisation(cb_obj);
     var raw_cb_name = getCB(casus_belli_name, { return_key: true });
     var usr = main.users[actual_id];
 
     if (cb_obj) {
       //Declare local tracker variables
+      var attacker_peace_demands_string = [];
       var cb_is_valid = false;
+      var defender_peace_demands_string = [];
       var has_wargoal = false;
       var justification_obj = getJustification(user_id, {
         target: actual_ot_user_id,
@@ -190,13 +199,7 @@ module.exports = {
       var justification_time = (hasRivalry(user_id, ot_user_id)) ?
         Math.round(config.defines.diplomacy.justify_wargoal_time/2) :
         config.defines.diplomacy.justify_wargoal_time;
-      var peace_demands_array = [];
       var tooltip_string = [];
-
-      //Parse peace_demands
-      if (cb_obj.peace_demands)
-        for (var i = 0; i < cb_obj.peace_demands.length; i++)
-          peace_demands_array.push((config.localisation[cb_obj.peace_demands[i]]) ? config.localisation[cb_obj.peace_demands[i]] : cb_obj.peace_demands[i]);
 
       //Check if cb_is_valid and if user already has wargoal
       for (var i = 0; i < usr.diplomacy.casus_belli.length; i++)
@@ -221,7 +224,9 @@ module.exports = {
       if (cb_obj.description)
         tooltip_string.push(`- Requirement: ${cb_obj.description}`);
 
-      tooltip_string.push(`- Peace Demands: ${peace_demands_array.join(", ")}`);
+      tooltip_string.push(`- Attacker Peace Demands: ${peace_demands_localisation.attacker_peace_demands_string.join(", ")}`);
+      tooltip_string.push(`- Defender Peace Demands: ${peace_demands_localisation.defender_peace_demands_string.join(", ")}`);
+
       tooltip_string.push(`- Infamy: ${parseNumber(returnSafeNumber(cb_obj.infamy))}`);
       tooltip_string.push("");
 

@@ -122,6 +122,36 @@ module.exports = {
     return (client_state_exists[0]) ? client_state_exists[1] : undefined;
   },
 
+  getClientStateInfamyReduction: function (arg0_user, arg1_client_state_id) {
+    //Convert from parameters
+    var user_id = arg0_user;
+    var client_state_id = arg1_client_state_id;
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var usr = main.users[actual_id];
+
+    var all_client_states = Object.keys(usr.client_states);
+    var client_state_obj = usr.client_states[client_state_id];
+    var infamy_reduction = 0;
+
+    //Return statement
+    if (client_state_obj)
+      return client_state_obj.provinces.length*module.exports.getInfamyLossPerProvince(user_id);
+  },
+
+  getInfamyLossPerProvince: function (arg0_user) {
+    //Convert from parameters
+    var user_id = arg0_user;
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var usr = main.users[actual_id];
+
+    //Return statement
+    return (1/usr.provinces)*config.defines.diplomacy.infamy_vassal_province_transfer;
+  },
+
   isClientState: function (arg0_user) {
     //Convert from parameters
     var user_id = arg0_user;

@@ -20,7 +20,8 @@ module.exports = {
           //Dissolve vassal
           dissolveVassal(ot_user_id);
 
-          //Remove used diplomatic slot
+          //Remove infamy; used diplomatic slot
+          usr.modifiers.infamy += returnSafeNumber(config.defines.diplomacy.infamy_liberation);
           usr.diplomacy.used_diplomatic_slots--;
 
           //Send alert
@@ -38,7 +39,7 @@ module.exports = {
           }
 
           //Print user feedback
-          printAlert(game_obj.id, `${config.icons.checkmark} We have let our vassal, **${ot_user.name}** go free.`);
+          printAlert(game_obj.id, `${config.icons.checkmark} We have let our vassal, **${ot_user.name}** go free.${(returnSafeNumber(config.defines.diplomacy.infamy_liberation) != 0) ? `\n\nWe lost ${config.icons.infamy} **${parseNumber(Math.abs(config.defines.diplomacy.infamy_liberation))}** Infamy from this action.` : ""}`);
         } else {
           printError(game_obj.id, `**${ot_user.name}** is not a vassal underneath your control!`);
         }
@@ -64,7 +65,7 @@ module.exports = {
       ]
     },
     function (arg) {
-      module.exports.libreate(user_id, arg[0]);
+      module.exports.liberate(user_id, arg[0]);
     },
     function (arg) {
       switch (arg) {
