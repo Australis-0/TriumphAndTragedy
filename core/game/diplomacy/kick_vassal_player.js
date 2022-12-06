@@ -52,7 +52,7 @@ module.exports = {
       });
   },
 
-  kickVassalPlayer: function (arg0_user, arg1_user, arg2_user_id) { //[WIP] - Reload UI
+  kickVassalPlayer: function (arg0_user, arg1_user, arg2_user_id) {
     //Convert from parameters
     var user_id = arg0_user;
     var ot_user_id = arg1_user;
@@ -105,12 +105,23 @@ module.exports = {
                     //Kick from party
                     delete main.global.user_map[kicked_player];
 
+                    //Add infamy penalty
+                    usr.infamy += returnSafeNumber(config.defines.infamy_vassal_kick_player);
+
                     //Print user feedback
                     try {
                       user.send(`You were kicked from the country of **${ot_user.name}**.`);
                     } catch {}
                     returnChannel(settings.alert_channel).send(`<@${kicked_player}> was kicked from the country of **${ot_user.name}**.`);
-                    printAlert(game_obj.id, `You have kicked <@${kicked_player}> from being able to play for **${ot_user.name}**.`);
+                    printAlert(game_obj.id, `You have kicked <@${kicked_player}> from being able to play for **${ot_user.name}**.${(returnSafeNumber(config.defines.infamy_vassal_kick_player) != 0) ? ` We have incurred ${config.icons.infamy} **${parseNumber(config.defines.infamy_vassal_kick_player)}** Infamy for this action.` : ""}`);
+
+                    //Update UI
+                    if (game_obj.page.startsWith("view_coop_")) {
+                      var local_player = game_obj.page.replace("view_coop_", "");
+
+                      if (main.global.user_map[local_player] == actual_ot_user_id)
+                        printVassalCoopMenu(user_id, ot_user_id);
+                    }
                   } else {
                     printError(game_obj.id, `You can't kick players off a nation that's at war with you!`);
                   }

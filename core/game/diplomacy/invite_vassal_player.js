@@ -40,7 +40,7 @@ module.exports = {
       });
   },
 
-  inviteVassalPlayer: function (arg0_user, arg1_user, arg2_user_id) { //[WIP] - Reload UI
+  inviteVassalPlayer: function (arg0_user, arg1_user, arg2_user_id) {
     //Convert from parameters
     var user_id = arg0_user;
     var ot_user_id = arg1_user;
@@ -97,21 +97,41 @@ module.exports = {
                     user.send(`<@${invited_player}>`).then((msg) => {
                       confirmDialogue(msg, {
                         text: `**Join ${ot_user.name}**\n\nWould you like to accept <@${user_id}>'s (**${usr.name}**)'s invitation to help run their vassal state?\n\n**Note:** You must quit your current country before accepting this invite.`,
+                        text_no: `You have refused the current invite.`,
+                        text_yes: `You have joined the country of **${ot_user.name}**.`,
+
                         user: invited_player,
                         delete_after: true
                       }, function () {
                         //Make sure user isn't currently playing a country
                         if (!main.global.user_map[invited_player]) {
+                          var current_game_obj = getGameObject(user_id);
+
                           //Set user map
                           main.global.user_map[invited_player] = actual_id;
+                          usr.modifiers.infamy += returnSafeNumber(config.defines.diplomacy.infamy_vassal_invite_player);
 
                           //Print user feedback
                           sendPlainEmbed(msg, `You have switched to playing **${ot_user.name}** at the behest of **${usr.name}**.`);
+
+                          if (current_game_obj) {
+                            printAlert(game_obj.id, `<@${invited_player}> has accepted your request to run your vassal state of **${ot_user.name}**.${(config.defines.diplomacy.infamy_vassal_invite_player != 0) ? `You have lost ${config.icons.infamy} **${parseNumber(config.defines.diplomacy.infamy_vassal_invite_player*-1)}** Infamy.` : ""}`);
+
+                            //Update UI
+                            if (game_obj.page.startsWith("view_coop_")) {
+                              var local_player = game_obj.page.replace("view_coop_", "");
+
+                              if (main.global.user_map[local_player] == actual_ot_user_id)
+                                printVassalCoopMenu(user_id, ot_user_id);
+                            }
+                          }
                         } else {
                           sendPlainEmbed(msg, `:warning: You are currently playing as **${main.users[main.global.user_map[invited_player]].name}**! Quit playing your country first before accepting an invite.`);
                         }
                       });
                     });
+
+                    could_reach_pms = true;
                   } catch (e) {
                     console.log(e);
                   }
@@ -121,16 +141,34 @@ module.exports = {
                     returnChannel(settings.alert_channel).send(`<@${invited_player}>`).then((msg) => {
                       confirmDialogue(msg, {
                         text: `**Join ${ot_user.name}**\n\nWould you like to accept <@${user_id}>'s (**${usr.name}**)'s invitation to help run their vassal state?\n\n**Note:** You must quit your current country before accepting this invite.\n:warning: **Your DM's couldn't be reached!** Please enable DM's from this server to receive confidential player information and avoid unintended consequences.`,
+                        text_no: `You have refused the current invite.`,
+                        text_yes: `You have joined the country of **${ot_user.name}**.`,
+
                         user: invited_player,
                         delete_after: true
                       }, function () {
                         //Make sure user isn't currently playing a country
                         if (!main.global.user_map[invited_player]) {
-                          //Set user map
+                          var current_game_obj = getGameObject(user_id);
+
+                          //Set user map; remove infamy
                           main.global.user_map[invited_player] = actual_id;
+                          usr.modifiers.infamy += returnSafeNumber(config.defines.diplomacy.infamy_vassal_invite_player);
 
                           //Print user feedback
                           sendPlainEmbed(msg, `You have switched to playing **${ot_user.name}** at the behest of **${usr.name}**.`);
+
+                          if (current_game_obj) {
+                            printAlert(game_obj.id, `<@${invited_player}> has accepted your request to run your vassal state of **${ot_user.name}**.${(config.defines.diplomacy.infamy_vassal_invite_player != 0) ? `You have lost ${config.icons.infamy} **${parseNumber(config.defines.diplomacy.infamy_vassal_invite_player*-1)}** Infamy.` : ""}`);
+
+                            //Update UI
+                            if (game_obj.page.startsWith("view_coop_")) {
+                              var local_player = game_obj.page.replace("view_coop_", "");
+
+                              if (main.global.user_map[local_player] == actual_ot_user_id)
+                                printVassalCoopMenu(user_id, ot_user_id);
+                            }
+                          }
                         } else {
                           sendPlainEmbed(msg, `:warning: You are currently playing as **${main.users[main.global.user_map[invited_player]].name}**! Quit playing your country first before accepting an invite.`);
                         }

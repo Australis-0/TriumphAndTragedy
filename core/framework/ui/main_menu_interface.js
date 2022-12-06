@@ -154,38 +154,82 @@ module.exports = {
     var actual_ot_user_id = main.global.user_map[ot_user_id];
     var game_obj = getGameObject(user_id);
     var ot_user = main.users[actual_ot_user_id];
+    var user = client.users.cache.find(user => user.id.toString() == ot_user_id);
     var usr = main.users[actual_id];
     var vassal_obj = getVassal(user_id);
 
     //Check if player is a vassal
     if (!vassal_obj) {
-      //Check if player is valid
-      returnChannel(settings.alert_channel).send(`<@${ot_user_id}>`).then((msg) => {
-        confirmDialogue(msg, {
-          text: `**Join ${usr.name}**\n\nWould you like to accept <@${user_id}>'s invitation to help run their country?\n\n**Note:** You must quit your current country before accepting this invite.`,
-          user: ot_user_id,
-          delete_after: true
-        }, function () {
-          //Make sure user isn't currently playing a country
-          if (!main.global.user_map[ot_user_id]) {
-            //Set user map
-            main.global.user_map[ot_user_id] = actual_id;
+      var could_reach_pms = false;
 
-            //Reload UI
-            if (game_obj.page == "coop_menu")
-              createPageMenu(game_obj.middle_embed, {
-                embed_pages: module.exports.printCoopMenu(user_id),
-                page: main.interfaces[game_obj.middle_embed.id].page,
-                user: game_obj.user
-              });
+      try {
+        user.send(`<@${ot_user_id}>`).then((msg) => {
+          confirmDialogue(msg, {
+            text: `**Join ${usr.name}**\n\nWould you like to accept <@${user_id}>'s invitation to help run their country?\n\n**Note:** You must quit your current country before accepting this invite.`,
+            text_no: `You have refused the current invite.`,
+            text_yes: `You have joined the country of **${usr.name}**.`,
 
-            //Print user feedback
-            sendPlainEmbed(msg, `You have switched to playing **${usr.name}**.`);
-          } else {
-            sendPlainEmbed(msg, `:warning: You are currently playing as **${main.users[main.global.user_map[ot_user_id]].name}**! Quit playing your country first before accepting an invite.`);
-          }
+            user: ot_user_id,
+            delete_after: true
+          }, function () {
+            //Make sure user isn't currently playing a country
+            if (!main.global.user_map[ot_user_id]) {
+              //Set user map
+              main.global.user_map[ot_user_id] = actual_id;
+
+              //Reload UI
+              if (game_obj.page == "coop_menu")
+                createPageMenu(game_obj.middle_embed, {
+                  embed_pages: module.exports.printCoopMenu(user_id),
+                  page: main.interfaces[game_obj.middle_embed.id].page,
+                  user: game_obj.user
+                });
+
+              //Print user feedback
+              sendPlainEmbed(msg, `You have switched to playing **${usr.name}**.`);
+            } else {
+              sendPlainEmbed(msg, `:warning: You are currently playing as **${main.users[main.global.user_map[ot_user_id]].name}**! Quit playing your country first before accepting an invite.`);
+            }
+          });
         });
-      });
+
+        could_reach_pms = true;
+      } catch (e) {
+        console.log(e);
+      }
+
+      //Check if player is valid
+      if (!could_reach_pms)
+        returnChannel(settings.alert_channel).send(`<@${ot_user_id}>`).then((msg) => {
+          confirmDialogue(msg, {
+            text: `**Join ${usr.name}**\n\nWould you like to accept <@${user_id}>'s invitation to help run their country?\n\n**Note:** You must quit your current country before accepting this invite.\n:warning: **Your DM's couldn't be reached!** Please enable DM's from this server to receive confidential player information and avoid unintended consequences.`,
+            text_no: `You have refused the current invite.`,
+            text_yes: `You have joined the country of **${usr.name}**.`,
+
+            user: ot_user_id,
+            delete_after: true
+          }, function () {
+            //Make sure user isn't currently playing a country
+            if (!main.global.user_map[ot_user_id]) {
+              //Set user map
+              main.global.user_map[ot_user_id] = actual_id;
+
+              //Reload UI
+              if (game_obj.page == "coop_menu")
+                createPageMenu(game_obj.middle_embed, {
+                  embed_pages: module.exports.printCoopMenu(user_id),
+                  page: main.interfaces[game_obj.middle_embed.id].page,
+                  user: game_obj.user
+                });
+
+              //Print user feedback
+              sendPlainEmbed(msg, `You have switched to playing **${usr.name}**.`);
+            } else {
+              sendPlainEmbed(msg, `:warning: You are currently playing as **${main.users[main.global.user_map[ot_user_id]].name}**! Quit playing your country first before accepting an invite.`);
+            }
+          });
+        });
+
     } else {
       printError(game_obj.id, `We can't invite players into our country without the permission of our overlord, **${main.users[vassal_obj.overlord].name}**!`);
     }

@@ -700,6 +700,7 @@ module.exports = {
             }),
             user: game_obj.user
           });
+          game_obj.page = `view_coop_${ot_user_id}`;
         } else {
           printError(game_obj.id, `**${ot_user.name}** is a vassal of a foreign nation! We can only manage players on vassals we control.`);
         }

@@ -460,6 +460,7 @@ module.exports = {
             diplomacy_view_string.push(`> **Subject Actions:**`);
             diplomacy_view_string.push("> ");
             diplomacy_view_string.push(`> **[Liberate]**`);
+            diplomacy_view_string.push(`> **[Manage Players]**`);
 
             if (!atWar(ot_user_id))
               diplomacy_view_string.push(`> **[Demand Annexation]** - ${config.icons.political_capital} ${parseNumber(config.defines.diplomacy.annex_cost)} PC`);

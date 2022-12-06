@@ -1227,6 +1227,10 @@ module.exports = {
           if (input == "improve relations")
             improveRelations(user_id, ot_user_id);
 
+          //[Manage Players]
+          if (input == "manage players")
+            printVassalCoopMenu(user_id, ot_user_id);
+
           //[Justify Wargoal]
           if (input == "justify wargoal")
             initialiseJustifyWar(user_id);
@@ -1327,6 +1331,43 @@ module.exports = {
 
           //Tooltip handler
           printCBTooltip(user_id, ot_user_id, input);
+        }
+
+        if (game_obj.page.startsWith("view_coop_")) {
+          var ot_user_id = game_obj.page.replace("view_coop_", "");
+
+          //Button Handler
+          //[Back]
+          if (input == "back") {
+            viewDiplomacy(user_id, ot_user_id);
+            game_obj.page = `diplomacy_view_${ot_user_id}`;
+          }
+
+          //[Invite Player]
+          if (input == "invite player")
+            initialiseInviteVassalPlayer(user_id, ot_user_id);
+
+          //[Invite (Username)]
+          if (input.startsWith("invite ")) {
+            var invited_player = parseMention(input.replace("invite ", "").trim());
+
+            inviteVassalPlayer(user_id, ot_user_id, invited_player);
+          }
+
+          //[Liberate]
+          if (input == "liberate")
+            liberate(user_id, ot_user_id);
+
+          //[Kick Player]
+          if (input == "kick player")
+            initialiseKickVassalPlayer(user_id, ot_user_id);
+
+          //[Kick (Username)]
+          if (input.startsWith("kick ")) {
+            var kicked_player = parseMention(input.replace("kick ", "").trim());
+
+            inviteVassalPlayer(user_id, ot_user_id, kicked_player);
+          }
         }
 
         if (game_obj.page.startsWith("view_wargoal_")) {
