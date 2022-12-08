@@ -39,6 +39,16 @@ module.exports = {
 
       //Per turn updates
       if (is_new_turn) {
+        //Append local_enemies for volunteer armies
+        if (local_army.volunteering) {
+          var local_war = main.global.wars[local_army.volunteering[1]];
+          var opposite_side = (local_war[`${local_army.owner}_sent_volunteers`] == "attackers") ? "defenders" : "attackers";
+
+          for (var x = 0; x < local_war[opposite_side].length; x++)
+            if (!local_enemies.includes(local_war[opposite_side][x]))
+              local_enemies.push(local_war[opposite_side][x]);
+        }
+
         //Army cooldowns - KEEP AT TOP!
         delete local_army.challenged_this_turn;
         delete local_army.taking_attrition;

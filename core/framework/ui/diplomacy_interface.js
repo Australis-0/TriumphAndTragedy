@@ -88,7 +88,7 @@ module.exports = {
     //Check if user has any vassals or accepted cultures dragging down their gain per turn
     if (pc_string.length > 0) {
       diplomacy_string.push("");
-      
+
       for (var i = 0; i < pc_string.length; i++)
         diplomacy_string.push(pc_string[i]);
     }
@@ -102,12 +102,14 @@ module.exports = {
     diplomacy_string.push(`- **[View Ledger]** | **[View Relations]**`);
     diplomacy_string.push("");
     diplomacy_string.push(`- **[Cede Province]** | **[Allow Ceding]** | **[Deny Ceding]**`);
-    if (Object.keys(usr.diplomacy.vassals).length > 0) {
+
+    if (all_vassals.length > 0) {
       diplomacy_string.push("");
       (!usr.options.vassal_customisation_locked) ?
         diplomacy_string.push(`- **[Lock Vassal Customisation]** | **[Vassal Customisation]**`) :
         diplomacy_string.push(`- **[Unlock Vassal Customisation]** | **[Vassal Customisation]**`);
     }
+
     diplomacy_string.push("");
 
     //Cede list

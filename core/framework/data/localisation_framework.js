@@ -53,6 +53,8 @@ module.exports = {
     var usr = main.users[actual_id];
 
     var all_vassals = excludeClientStates(Object.keys(usr.diplomacy.vassals));
+    var total_volunteers = getTotalVolunteers(user_id);
+    var volunteer_wars = getVolunteerWars(user_id);
 
     //Format pc_string
     if (all_vassals.length > 0) {
@@ -68,12 +70,32 @@ module.exports = {
             if (client.users.cache.find(user => user.id == all_mapped_users[i]))
               local_vassal_display_players.push(`<@${all_mapped_users[i]}>`);
 
-        pc_string.push(`- **${local_vassal.name}** - ${(local_vassal_display_players.length > 0) ? parseList(local_vassal_display_players) : `_No Player_`}`);
+        pc_string.push(`• **${local_vassal.name}** - ${(local_vassal_display_players.length > 0) ? parseList(local_vassal_display_players) : `_No Player_`}`);
       }
     }
 
+    if (volunteer_wars.length > 0) {
+      //Format war_display_list
+      var war_display_list = [];
+
+      for (var i = 0; i < volunteer_wars.length; i++) {
+        var local_war = main.global.wars[volunteer_wars[i]];
+
+        war_display_list.push(`• **${local_war.name}** on the **${local_war[`${actual_id}_sent_volunteers`]}**' side.`);
+      }
+
+      //Push to pc_string
+      pc_string.push(`- We have **${parseNumber(total_volunteers)}** volunteers serving in **${parseNumber(volunteer_wars.length)}** war(s), including the following:`);
+      pc_string.push("");
+
+      for (var i = 0; i < war_display_list.length; i++)
+        pc_string.push(war_display_list[i]);
+
+      pc_string.push(`- Our interventions currently cost us **${parseNumber(getVolunteerMaintenance(user_id))}** Political Capital per turn.`);
+    }
+
     if (accepted_cultures.length > 0)
-      pc_string.push(`Our **${parseNumber(accepted_cultures.length)}** accepted culture(s) are costing us **${parseNumber(accepted_cultures.length*config.defines.politics.accepted_culture_maintenance_cost)}** Political Capital per turn.`);
+      pc_string.push(`- Our **${parseNumber(accepted_cultures.length)}** accepted culture(s) are costing us **${parseNumber(accepted_cultures.length*config.defines.politics.accepted_culture_maintenance_cost)}** Political Capital per turn.`);
 
     //Return statement
     return pc_string;

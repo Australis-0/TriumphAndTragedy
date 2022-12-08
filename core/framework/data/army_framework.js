@@ -1050,6 +1050,40 @@ module.exports = {
     return total_volunteers;
   },
 
+  getVolunteerUnits: function (arg0_user, arg1_war_name) {
+    //Convert from parameters
+    var user_id = arg0_user;
+    var war_name = (typeof arg1_war_name != "object") ? arg1_war_name.trim().toLowerCase() : war_name;
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var usr = main.users[actual_id];
+    var volunteer_units = {};
+    var war_obj = (typeof war_name != "object") ? getWar(war_name) : war_name;
+
+    var all_armies = Object.keys(usr.armies);
+
+    //Iterate through all_armies
+    for (var i = 0; i < all_armies.length; i++) {
+      var local_army = usr.armies[all_armies[i]];
+
+      if (local_army?.volunteering[1] == war_obj.id) {
+        var all_units = Object.keys(local_army.units);
+
+        for (var x = 0; x < all_units.length; x++) {
+          var local_amount = local_army.units[all_units[x]];
+
+          if (!volunteer_units[all_units[x]])
+            volunteer_units[all_units[x]] = 0;
+          volunteer_units[all_units[x]] += returnSafeNumber(local_amount);
+        }
+      }
+    }
+
+    //Return statement
+    return sortObject(volunteer_units);
+  },
+
   getVolunteerWars: function (arg0_user) {
     //Convert from parameters
     var user_id = arg0_user;
