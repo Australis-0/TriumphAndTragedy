@@ -912,6 +912,58 @@ module.exports = {
     return (total_soldiers > 0) ? percentage_supplied : undefined;
   },
 
+  getVolunteerArmies: function (arg0_user, arg1_war_name) {
+    //Convert from parameters
+    var user_id = arg0_user;
+    var war_name = (typeof arg1_war_name != "object") ? arg1_war_name.trim().toLowerCase() : arg1_war_name;
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var usr = main.users[actual_id];
+    var volunteer_armies = [];
+    var war_obj = (typeof war_name != "object") ? getWar(war_name) : war_name;
+
+    var all_armies = Object.keys(usr.armies);
+
+    //Iterate over all_armies and get their sizes
+    for (var i = 0; i < all_armies.length; i++) {
+      var local_army = usr.armies[all_armies[i]];
+
+      //Check if local_army is involved in the war
+      if (local_army.volunteering[1] == war_obj.id)
+        volunteer_armies.push(local_army);
+    }
+
+    //Return statement
+    return volunteer_armies;
+  },
+
+  getVolunteerArmiesSize: function (arg0_user, arg1_war_name) {
+    //Convert from parameters
+    var user_id = arg0_user;
+    var war_name = (typeof arg1_war_name != "object") ? arg1_war_name.trim().toLowerCase() : arg1_war_name;
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var total_volunteers = 0;
+    var usr = main.users[actual_id];
+    var war_obj = (typeof war_name != "object") ? getWar(war_name) : war_name;
+
+    var all_armies = Object.keys(usr.armies);
+
+    //Iterate over all_armies and get their sizes
+    for (var i = 0; i < all_armies.length; i++) {
+      var local_army = usr.armies[all_armies[i]];
+
+      //Check if local_army is involved in the war
+      if (local_army.volunteering[1] == war_obj.id)
+        total_volunteers += getArmySize(user_id, local_army);
+    }
+
+    //Return statement
+    return total_volunteers;
+  },
+
   //Gets an object of all units in a player's armies and reserves
   getUnits: function (arg0_user) {
     //Convert from parameters

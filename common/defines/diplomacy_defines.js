@@ -21,6 +21,7 @@ config.defines.diplomacy = {
   liberation_alert_id: "we_are_free", //What alert should popup when a vassal is voluntarily liberated by its overlord?
   military_access_cancellation_alert_id: "access_cancelled", //Which alert should popup when military access to another country is cancelled?
   military_access_request_alert_id: "other_armies_our_soil", //Which alert should popup for the target user when military access is being requested of them?
+  minimum_intervene_in_war_duration: 5, //How many turns must a war have gone on for before other players are allowed to intervene?
   non_aggression_pact_request_alert_id: "a_guaranteed_peace", //Which alert should popup when a user is requesting a non-aggression pact?
   peace_offer_alert_id: "an_offer_to_lay_down_arms", //Which alert should popup when a user is asked to accept peace terms?
   peacetime_blockade_penalty: 5, //How much infamy should a nation-state get if they blockade another country during peacetime?
@@ -30,6 +31,8 @@ config.defines.diplomacy = {
   rival_cancellation_alert_id: "the_coming_thaw", //Determines which alert should be triggered when rivals seek mutual reconciliation
   rival_declaration_alert_id: "rival_declared", //Determines which alert should be triggered for the target nation when a rivalry begins
   rival_relations_threshold: 50, //How high is too high in terms of relations for countries to be rivals?
+  send_volunteer_armies_maintenance_cost: 10, //PC cost for maintaining volunteer armies in a conflict
+  send_volunteer_army_limit: 0.05, //What is the percentage of volunteers relative to a user's army that can be sent?
   unconditional_peace_alert_id: "the_national_disaster", //What is the alert that should popup when a user must accept an unconditional peace?
   vassalisation_request_alert_id: "the_option_to_submit", //What alert should be sent to the target of a vassalisation request?
   vassal_maintenance_cost: 0.2, //What is the factor by which vassals should cost PC?
@@ -44,7 +47,10 @@ config.defines.diplomacy = {
   declare_rival_cost: 50, //PC cost for declaring a rival
   form_alliance_cost: 50, //PC cost for forming an alliance
   guarantee_independence_cost: 30, //PC cost for guaranteeing independence
+  intervene_in_war_cost: 300, //PC cost for intervening in war
+  merge_war_cost: 100, //PC cost for merging a war as the war leader
   request_military_access_cost: 25, //PC cost for requesting military access
+  send_volunteer_armies_cost: 100, //PC cost for sending volunteers to aid a side in a conflict
   sign_non_aggression_pact_cost: 25, //PC cost for signing non-aggression pact
   vassalise_cost: 75, //Amount of PC needed to attempt vassalisation
   war_leader_bid_cost: 50, //Amount of PC needed to attempt to become the war leader

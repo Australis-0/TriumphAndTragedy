@@ -435,17 +435,19 @@ module.exports = {
     var actual_id = main.global.user_map[user_id];
     var opposite_side = (friendly_side == "defenders") ? "attackers" : "defenders";
     var usr = main.users[actual_id];
-    var war_obj = module.exports.getWar(war_name);
+    var war_obj = (typeof war_name != "object") ? module.exports.getWar(war_name) : war_name;
+
+    var all_armies = Object.keys(usr.armies);
+    var all_vassals = Object.keys(usr.diplomacy.vassals);
 
     //Check if joining against yourself
     if (!war_obj[opposite_side].includes(actual_id)) {
       //Check if user has any non-aggression pacts with the opposing side
       var has_non_aggression_pact = false;
 
-      for (var i = 0; i < war_obj[opposite_side].length; i++) {
+      for (var i = 0; i < war_obj[opposite_side].length; i++)
         if (hasNonAggressionPact(war_obj[opposite_side][i], user_id))
           has_non_aggression_pact = true;
-      }
 
       if (!has_non_aggression_pact) {
         //Break off any alliances on the opposing side
@@ -460,6 +462,16 @@ module.exports = {
           }
         }
 
+        //Delete and repatriate volunteers if they're there
+        delete war_obj[`${actual_id}_sent_volunteers`];
+
+        for (var i = 0; i < all_armies.length; i++) {
+          var local_army = usr.armies[all_armies[i]];
+
+          if (local_army?.volunteering[1] == war_obj.id)
+            delete local_army.volunteering;
+        }
+
         //Push user into conflict if not already included
         if (!war_obj[friendly_side].includes(actual_id))
           war_obj[friendly_side].push(actual_id);
@@ -467,6 +479,11 @@ module.exports = {
         //Declare casualties tracker
         war_obj[`${actual_id}_casualties`] = 0;
       }
+
+      //Call in all user vassals not already involved in the war
+      for (var i = 0; i < all_vassals.length; i++)
+        if (!war_obj.attackers.includes(all_vassals[i]) && !war_obj.defenders.includes(all_vassals[i]))
+          module.exports.joinWar(all_vassals[i], friendly_side, war_obj);
     }
   }
 }

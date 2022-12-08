@@ -707,6 +707,7 @@ module.exports = {
     var opposing_side = "";
     var war_obj = (typeof war_name != "object") ? JSON.parse(JSON.stringify(getWar(war_name))) : JSON.parse(JSON.stringify(war_name));
 
+    var all_war_keys = Object.keys(war_obj);
     var infamy_map = module.exports.getPeaceTreatyInfamy(war_obj, peace_obj);
 
     //Fetch friendly side
@@ -750,6 +751,24 @@ module.exports = {
           }
         }
     }
+
+    //End war first; repatriate all volunteer armies
+    for (var i = 0; i < all_war_keys.length; i++)
+      if (all_war_keys[i].includes("_sent_volunteers")) {
+        var local_id = all_war_keys[i].replace("_sent_volunteers", "");
+        var local_user = main.users[local_id];
+
+        if (local_user) {
+          var local_armies = Object.keys(local_user.armies);
+
+          for (var i = 0; i < local_armies.length; i++) {
+            var local_army = usr.armies[local_armies[i]];
+
+            if (local_army?.volunteering[1] == war_obj.id)
+              delete local_army.volunteering;
+          }
+        }
+      }
 
     //Parse peace treaty
     for (var i = 0; i < peace_obj.wargoals.length; i++)
