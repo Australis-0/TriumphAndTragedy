@@ -395,6 +395,29 @@ module.exports = {
     return all_armies;
   },
 
+  getAllVolunteerArmies: function (arg0_user) {
+    //Convert from parameters
+    var user_id = arg0_user;
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var all_volunteer_armies = [];
+    var usr = main.users[actual_id];
+
+    var all_armies = Object.keys(usr.armies);
+
+    //Iterate over all_armies
+    for (var i = 0; i < all_armies.length; i++) {
+      var local_army = usr.armies[all_armies[i]];
+
+      if (local_army.volunteering)
+        all_volunteer_armies.push(local_army);
+    }
+
+    //Return statement
+    return all_volunteer_armies;
+  },
+
   //getArmiesInProvince() - Returns an object array of all armies in a province
   getArmiesInProvince: function (arg0_province_id) {
     //Convert from parameters

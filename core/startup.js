@@ -145,7 +145,7 @@ module.exports = {
       FileManager.import("./game/diplomacy/deny_cede");
       FileManager.import("./game/diplomacy/end_rivalry");
       FileManager.import("./game/diplomacy/improve_relations");
-      FileManager.import("./game/diplomacy/intevene_in_war");
+      FileManager.import("./game/diplomacy/intervene_in_war");
       FileManager.import("./game/diplomacy/invite_vassal_player");
       FileManager.import("./game/diplomacy/justify_war");
       FileManager.import("./game/diplomacy/kick_vassal_player");

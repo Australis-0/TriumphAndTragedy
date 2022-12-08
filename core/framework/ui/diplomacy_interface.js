@@ -52,6 +52,7 @@ module.exports = {
     var defensive_wars = 0;
     var enemies = [];
     var offensive_wars = 0;
+    var pc_string = getPoliticalCapitalLocalisation(user_id);
     var vassal_obj = usr.diplomacy.vassals;
 
     //Initialise war trackers
@@ -85,26 +86,12 @@ module.exports = {
     diplomacy_string.push(`${config.icons.political_capital} Political Capital: **${parseNumber(usr.modifiers.political_capital)}** (${parseNumber(usr.modifiers.political_capital_gain, { display_prefix: true })} per turn)`);
 
     //Check if user has any vassals or accepted cultures dragging down their gain per turn
-    if (all_vassals.length > 0) {
-      diplomacy_string.push(`Our **${parseNumber(all_vassals.length)}** vassal(s) are costing us **${parseNumber(getVassalMaintenance(user_id))}** Political Capital per turn.`);
-
-      for (var i = 0; i < all_vassals.length; i++) {
-        var local_vassal = main.users[all_vassals[i]];
-        var local_vassal_display_players = [];
-
-        //Iterate over all_mapped_users, push users to local_vassal_display_players
-        for (var i = 0; i < all_mapped_users.length; i++)
-          if (main.global.user_map[all_mapped_users[i]] == actual_ot_user_id)
-            if (client.users.cache.find(user => user.id == all_mapped_users[i]))
-              local_vassal_display_players.push(`<@${all_mapped_users[i]}>`);
-
-        diplomacy_string.push(`- **${local_vassal.name}** - ${(local_vassal_display_players.length > 0) ? parseList(local_vassal_display_players) : `_No Player_`}`);
-      }
+    if (pc_string.length > 0) {
+      diplomacy_string.push("");
+      
+      for (var i = 0; i < pc_string.length; i++)
+        diplomacy_string.push(pc_string[i]);
     }
-    if (accepted_cultures.length > 0)
-      diplomacy_string.push(`Our **${parseNumber(accepted_cultures.length)}** accepted culture(s) are costing us **${parseNumber(accepted_cultures.length*config.defines.politics.accepted_culture_maintenance_cost)}** Political Capital per turn.`);
-
-    diplomacy_string.push(`${config.icons.infamy} Infamy: **${parseNumber(usr.modifiers.infamy, { display_float: true })}** (${parseNumber(usr.modifiers.infamy_loss, { display_float: true, display_prefix: true })} per turn)`);
 
     diplomacy_string.push("");
     diplomacy_string.push(`- **[View CB List]** | **[War List]**`);

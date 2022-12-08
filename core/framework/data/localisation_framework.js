@@ -41,6 +41,44 @@ module.exports = {
     };
   },
 
+  getPoliticalCapitalLocalisation: function (arg0_user) {
+    //Convert from parameters
+    var user_id = arg0_user;
+
+    //Declare local instance variables
+    var accepted_cultures = getAcceptedCultures(user_id, { exclude_primary_culture: true });
+    var actual_id = main.global.user_map[user_id];
+    var all_mapped_users = Object.keys(main.global.user_map);
+    var pc_string = [];
+    var usr = main.users[actual_id];
+
+    var all_vassals = excludeClientStates(Object.keys(usr.diplomacy.vassals));
+
+    //Format pc_string
+    if (all_vassals.length > 0) {
+      pc_string.push(`- Our **${parseNumber(all_vassals.length)}** vassal(s) are costing us **${parseNumber(getVassalMaintenance(user_id))}** Political Capital per turn.`);
+
+      for (var i = 0; i < all_vassals.length; i++) {
+        var local_vassal = main.users[all_vassals[i]];
+        var local_vassal_display_players = [];
+
+        //Iterate over all_mapped_users, push users to local_vassal_display_players
+        for (var i = 0; i < all_mapped_users.length; i++)
+          if (main.global.user_map[all_mapped_users[i]] == all_vassals[i])
+            if (client.users.cache.find(user => user.id == all_mapped_users[i]))
+              local_vassal_display_players.push(`<@${all_mapped_users[i]}>`);
+
+        pc_string.push(`- **${local_vassal.name}** - ${(local_vassal_display_players.length > 0) ? parseList(local_vassal_display_players) : `_No Player_`}`);
+      }
+    }
+
+    if (accepted_cultures.length > 0)
+      pc_string.push(`Our **${parseNumber(accepted_cultures.length)}** accepted culture(s) are costing us **${parseNumber(accepted_cultures.length*config.defines.politics.accepted_culture_maintenance_cost)}** Political Capital per turn.`);
+
+    //Return statement
+    return pc_string;
+  },
+
   getSupplyLocalisation: function (arg0_user) {
     //Convert from parameters
     var user_id = arg0_user;

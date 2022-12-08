@@ -48,6 +48,7 @@ module.exports = {
     //Format Page 1 - Variable processing
     {
       var all_enemies = getEnemies(user_id);
+      var all_volunteer_armies = getAllVolunteerArmies(user_id);
       var all_wars = Object.keys(main.global.wars);
       var attacking_wars = 0;
       var at_war = atWar(user_id);
@@ -141,6 +142,12 @@ module.exports = {
         military_statistics_string.push(`- **${parseNumber(army_types.army)}** are land armies,`);
         military_statistics_string.push(`- **${parseNumber(army_types.navy)}** are navies,`);
         military_statistics_string.push(`- and **${parseNumber(army_types.air)}** are air wings.`);
+
+        if (all_volunteer_armies.length > 0) {
+          var volunteer_wars = getVolunteerWars(user_id);
+
+          military_statistics_string.push(`- **${parseNumber(all_volunteer_armies.length)}** are acting as volunteers in **${parseNumber(volunteer_wars.length)}** war(s).`);
+        }
 
         if (army_types.empty > 0)
           military_statistics_string.push(`\nThe rest, some **${parseNumber(army_types.empty)}** armies, are currently sitting empty.`);

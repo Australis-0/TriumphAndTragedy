@@ -115,7 +115,7 @@ module.exports = {
               if (getWar(viewed_war).id == merged_war_obj.id) {
                 createPageMenu(game_obj.middle_embed, {
                   embed_pages: printWars(game_obj.user),
-                  user: game_obj.user;
+                  user: game_obj.user
                 });
                 game_obj.page = "war_list";
               } else {
