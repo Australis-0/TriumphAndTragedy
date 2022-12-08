@@ -594,10 +594,17 @@ module.exports = {
     var all_branches = getUnitBranches();
     var all_embeds = [];
     var all_users = Object.keys(main.users);
+    var all_wars = Object.keys(main.global.wars);
     var army_orders = getArmyOrders(user_id);
     var game_obj = getGameObject(user_id);
     var oob_string = [];
     var usr = main.users[actual_id];
+    var volunteer_string = [];
+
+    //Declare local tracker variables
+    var has_volunteers = hasVolunteers(user_id);
+    var total_volunteers = getVolunteerSize(user_id);
+    var volunteer_wars = getVolunteerWars(user_id);
 
     //Dynamically initialise variables
     var all_army_orders = Object.keys(army_orders);
@@ -626,6 +633,71 @@ module.exports = {
 
       for (var x = 0; x < all_branch_orders.length; x++)
         orders[`sorted_${all_branch_orders[x]}`].push([branches_assigned_to_order[all_branch_orders[x]], all_army_orders[i]]);
+    }
+
+    //Format volunteer_string
+    if (has_volunteers) {
+      var volunteer_maintenance = getVolunteerMaintenance(user_id);
+
+      //Print volunteer war status
+      volunteer_string.push(`We are currently sending volunteer armies to fight in **${parseNumber(volunteer_wars)}** war(s), for a total of ${config.icons.soldiers} **${parseNumber(total_volunteers)}** volunteer personnel.`);
+
+      if (volunteer_maintenance > 0) {
+        volunteer_string.push("");
+        volunteer_string.push(`Our expeditionary forces currently cost us a total of ${config.icons.political_capital} **${parseNumber(volunteer_maintenance)}** Political Capital per turn.`);
+      }
+
+      volunteer_string.push("");
+
+      for (var i = 0; i < all_wars.length; i++) {
+        var local_war = main.global.wars[all_wars[i]];
+
+        if (local_war[`${actual_id}_sent_volunteers`]) {
+          var friendly_side = local_war[`${actual_id}_sent_volunteers`];
+          var local_volunteer_armies = getVolunteerArmies(user_id, local_war);
+
+          if (local_volunteer_armies.length > 0) {
+            var local_orders = {};
+            var local_order_display = [];
+            var local_personnel = getVolunteerArmiesSize(user_id, local_war);
+
+            for (var x = 0; x < local_volunteer_armies.length; x++) {
+              if (!local_orders[local_volunteer_armies[x].status])
+                local_orders[local_volunteer_armies[x].status] = 0;
+              local_orders[local_volunteer_armies[x].status]++;
+            }
+
+            //Sort object; append to local_order_display
+            local_orders = sortObject(local_orders);
+
+            var all_local_orders = Object.keys(local_orders);
+
+            for (var x = 0; x < all_local_orders.length; x++) {
+              var local_value = local_orders[all_local_orders[x]];
+
+              local_order_display.push(`${parseNumber(local_value)} ${(local_value == 1) ? "is" : "are"} ${all_local_orders[x]}`);
+            }
+
+            //Print overall status
+            volunteer_string.push(`- **${parseNumber(local_volunteer_armies.length)}** volunteer armies are intervening on the side of the **${friendly_side}** in the **${war_obj.name}**. Of these:`);
+            volunteer_string.push(`• ${parseList(local_order_display)}`);
+          }
+        }
+      }
+
+      //Push to oob_string or as an embed
+      var local_embed_array = splitEmbed(volunteer_string, {
+        title: `[Back] | ${config.icons.old_scroll} List of Volunteer Combat Formations:`,
+        title_pages: true,
+        fixed_width: true
+      });
+
+      for (var i = 0; i < local_embed_array.length; i++)
+        all_embeds.push(local_embed_array[i]);
+
+      //Push to oob_string
+      for (var i = 0; i < volunteer_string.length; i++)
+        oob_string.push(volunteer_string[i]);
     }
 
     //Sort all branch orders; begin working on local strings
@@ -691,6 +763,9 @@ module.exports = {
         //Push local_embed_array to all_embeds
         for (var x = 0; x < local_embed_array.length; x++)
           all_embeds.push(local_embed_array[x]);
+
+        if (i > 0)
+          oob_string.push("");
 
         //Push to oob_string
         oob_string.push(`${(branch_icon) ? branch_icon + " " : ""}**List of ${parseString(all_branches[i])} Combat Formations:**`);

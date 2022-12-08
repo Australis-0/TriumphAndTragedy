@@ -1009,6 +1009,73 @@ module.exports = {
     return sortObject(all_units);
   },
 
+  getVolunteerSize: function (arg0_user) {
+    //Convert from parameters
+    var user_id = arg0_user;
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var total_volunteers = 0;
+    var usr = main.users[actual_id];
+    var volunteered_wars = module.exports.getVolunteerWars(user_id);
+
+    //Iterate over volunteered_wars
+    for (var i = 0; i < volunteered_wars.length; i++)
+      total_volunteers += returnSafeNumber(module.exports.getVolunteerArmiesSize(user_id, main.global.wars[volunteered_wars[i]]));
+
+    //Return statement
+    return total_volunteers;
+  },
+
+  getVolunteerWars: function (arg0_user) {
+    //Convert from parameters
+    var user_id = arg0_user;
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var usr = main.users[actual_id];
+    var volunteered_wars = [];
+
+    var all_armies = Object.keys(main.users);
+
+    //Iterate over all_armies
+    for (var i = 0; i < all_armies.length; i++) {
+      var local_army = main.users[all_armies[i]];
+
+      if (local_army?.volunteering[1])
+        if (!volunteered_wars.includes(local_army.volunteering[1]))
+          volunteered_wars.push(local_army.volunteering[1]);
+    }
+
+    //Return statement
+    return volunteered_wars;
+  },
+
+  hasVolunteers: function (arg0_user) {
+    //Convert from parameters
+    var user_id = arg0_user;
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var has_volunteers = false;
+    var usr = main.users[actual_id];
+
+    var all_armies = Object.keys(main.users);
+
+    //Iterate over all_armies
+    for (var i = 0; i < all_armies.length; i++) {
+      var local_army = main.users[all_armies[i]];
+
+      if (local_army?.volunteering) {
+        has_volunteers = true;
+        break;
+      }
+    }
+
+    //Return statement
+    return has_volunteers;
+  },
+
   mergeArmy: function (arg0_user, arg1_army_name, arg2_army_name) {
     //Convert from parameters
     var user_id = arg0_user;
