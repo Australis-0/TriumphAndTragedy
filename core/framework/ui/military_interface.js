@@ -603,7 +603,7 @@ module.exports = {
 
     //Declare local tracker variables
     var has_volunteers = hasVolunteers(user_id);
-    var total_volunteers = getVolunteerSize(user_id);
+    var total_volunteers = getTotalVolunteers(user_id);
     var volunteer_wars = getVolunteerWars(user_id);
 
     //Dynamically initialise variables
