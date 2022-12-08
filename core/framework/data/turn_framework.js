@@ -979,6 +979,11 @@ module.exports = {
             usr.vassal_years++;
         }
 
+        //Volunteer Armies
+        {
+          usr.modifiers.political_capital -= getVolunteerMaintenance(user_id);
+        }
+
         //Wargoal justification
         {
           var justifications_to_remove = [];
