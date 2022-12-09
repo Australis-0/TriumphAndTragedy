@@ -164,8 +164,13 @@ module.exports = {
         //Push buttons
         command_string.push(`**[Rename Army]** | **[Deploy Units]** | ${(all_units.length > 0) ? "**[Relieve Units]** | **[Reorder Units]** | **[Transfer Units]** |" : ""} **[Delete Army]**`);
 
+        var volunteer_string = "";
+
+        if (isVolunteering(user_id))
+          volunteer_string = ` | ${(army_obj.volunteering) ? `**[Recall Volunteers]**` : ` **[Send As Volunteers]**`}`;
+
         if (army_obj.type == "army") {
-          command_string.push(`- **[Merge Army]** | **[Move]**`);
+          command_string.push(`- **[Merge Army]** | **[Move]**${volunteer_string}`);
         } else if (army_obj.type == "navy") {
           var submarine_string = (army_power.pure_submarines) ?
             ` | **[Convoy Raid]** | **[Harbour Raid]** | **[Torpedo Fleet]**` :
@@ -174,7 +179,7 @@ module.exports = {
             command_string.push(`- **[Blockade]** | **[Challenge Blockade]** ${submarine_string}`) :
             command_string.push(`- **[Lift Blockade]** ${submarine_string}`)
         } else if (army_obj.type == "air") {
-          command_string.push(`- **[Merge Army]** | **[Move]** | **[Air Raid]**`);
+          command_string.push(`- **[Merge Army]** | **[Move]** | **[Air Raid]**${volunteer_string}`);
         }
 
         army_string.push(command_string.join("\n"));
@@ -434,6 +439,17 @@ module.exports = {
       armies_string.push(`Type **[Create Army]** to start building a military! Make sure you have troops in your reserves, though.`);
     }
 
+    //Button formatting
+    var volunteer_string = "";
+
+    if (isVolunteering(user_id)) {
+      var has_volunteers = hasVolunteers(user_id);
+
+      volunteer_string = `${(has_volunteers) ? ` | **[Recall Volunteers]** ` : ""} | **[Repatriate Volunteers]** | **[Send Volunteer Armies]**`;
+    }
+
+    volunteer_string += ` | **[Send Volunteers]**`;
+
     //Return statement
     return splitEmbed(armies_string, {
       title: "[Back] | [Jump To Page] | Army List:",
@@ -442,7 +458,7 @@ module.exports = {
 
       description: [
         `**[Create Army]** | **[Delete Army]** | **[Merge Army]** | **[Rename Army]** | **[View Army]**`,
-        `- **[Deploy Units]** | **[Transfer Units]** | **[Relieve Units]** | **[Reorder Units]**`,
+        `- **[Deploy Units]** | **[Transfer Units]** | **[Relieve Units]** | **[Reorder Units]**${volunteer_string}`,
         ``,
         `- Sort by: **[Attrition]** | **[Alphabetical]** | **[Chronological]** | **[Numerical]** | **[Roman]** | **[Size]** | **[Speed]** | **[Strength]** | **[Type]**`,
         ``,

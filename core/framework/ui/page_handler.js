@@ -1460,15 +1460,34 @@ module.exports = {
           if (input == "change war leader")
             initialiseLeadWar(user_id, war_name);
 
+          //[Intervene In War]
+          if (input == "intervene in war")
+            initialiseInterveneInWar(user_id, war_obj);
+
+          //[Recall Volunteers]
+          if (input == "recall volunteers")
+            initialiseRecallVolunteers(user_id, war_obj);
+
           //[Rename War]
           if (input == "rename war")
             initialiseRenameWar(user_id, war_name);
+
+          if (input == "repatriate volunteers")
+            initialiseRepatriateVolunteers(user_id, war_obj);
 
           //[Send Peace Offer]
           if (input == "send peace offer")
             (war_obj.peace_treaties[actual_id]) ?
               sendPeaceTreaty(user_id, war_obj.peace_treaties[actual_id]) :
               printError(game_obj.id, `You don't currently have a peace treaty active for this conflict! Type **[Sign Peace Treaty]** first to create a new peace treaty.`);
+
+          //[Send Volunteer Armies]
+          if (input == "send volunteer armies")
+            initialiseSendVolunteerArmies(user_id, war_obj);
+
+          //[Send Volunteers]
+          if (input == "send volunteers")
+            initialiseSendVolunteers(user_id, war_obj);
 
           //[Sign Peace Treaty]
           if (input == "sign peace treaty")
@@ -2007,6 +2026,10 @@ module.exports = {
           if (input == "move")
             initialiseMoveArmy(user_id, viewed_army);
 
+          //[Recall Volunteers]
+          if (input == "recall volunteers")
+            initialiseRecallVolunteers(user_id, undefined, viewed_army);
+
           //[Relieve Units]
           if (input == "relieve units")
             initialiseRelieveUnits(user_id, viewed_army);
@@ -2018,6 +2041,10 @@ module.exports = {
           //[Reorder Units]
           if (input == "reorder units")
             initialiseReorderUnits(user_id, viewed_army);
+
+          //[Send Volunteers]
+          if (input == "send as volunteers")
+            initialiseSendVolunteerArmies(user_id, undefined, viewed_army);
 
           //[Split Army]
           if (input == "split army")
@@ -2115,20 +2142,38 @@ module.exports = {
           if (input == "move armies")
             initialiseMoveArmies(user_id);
 
+          //[Recall Volunteers]
+          if (!game_obj.page.startsWith("army_viewer_"))
+            if (input == "recall volunteers")
+              initialiseRecallVolunteers(user_id);
+
           //[Relieve Units]
           if (input == "relieve units")
             initialiseRelieveUnits(user_id);
 
+          //[Rename Armies]
           if (input == "rename armies")
             initialiseRenameArmies(user_id);
+
+          //[Rename Army]
+          if (input == "rename army")
+            initialiseRenameArmy(user_id);
 
           //[Reorder Units]
           if (input == "reorder_units")
             initialiseReorderUnits(user_id);
 
-          //[Rename Army]
-          if (input == "rename army")
-            initialiseRenameArmy(user_id);
+          //[Repatriate Volunteers]
+          if (input == "repatriate volunteers")
+            initialiseRepatriateVolunteers(user_id);
+
+          //[Send Volunteer Armies]
+          if (input == "send volunteer armies")
+            initialiseSendVolunteerArmies(user_id);
+
+          //[Send Volunteers]
+          if (input == "send volunteers")
+            initialiseSendVolunteers(user_id);
 
           //[Split Army]
           if (input == "split army")

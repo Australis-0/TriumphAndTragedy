@@ -299,7 +299,7 @@ module.exports = {
       defender: "ot_user_id"
     }
   */
-  initialiseWar: function (arg0_options) { //[WIP] - Format war object properly
+  initialiseWar: function (arg0_options) {
     //Convert from parameters
     var options = (arg0_options) ? arg0_options : {};
 
@@ -423,6 +423,27 @@ module.exports = {
     if (defender_vassal_obj)
       if (attacker_id != vassal_obj.overlord)
         module.exports.joinWar(vassal_obj.overlord, "defenders", war_obj.name);
+  },
+
+  isVolunteering: function (arg0_user) {
+    //Convert from parameters
+    var user_id = arg0_user;
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var all_wars = Object.keys(main.global.wars);
+    var is_volunteering = false;
+
+    //Iterate over all_wars
+    for (var i = 0; i < all_wars.length; i++) {
+      var local_war = main.global.wars[all_wars[i]];
+
+      if (local_war[`${actual_id}_sent_volunteers`])
+        is_volunteering = true;
+    }
+
+    //Return statement
+    return is_volunteering;
   },
 
   joinWar: function (arg0_user, arg1_side, arg2_war_name) {

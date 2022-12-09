@@ -1,4 +1,37 @@
 module.exports = {
+  initialiseInterveneInWar: function (arg0_user, arg1_war_obj) {
+    //Convert from parameters
+    var user_id = arg0_user;
+    var war_obj = (typeof arg1_war_obj != "object") ? arg1_war_obj.trim().toLowerCase() : arg1_war_obj;
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var game_obj = getGameObject(user_id);
+    var usr = main.users[actual_id];
+
+    //Initialise visual prompt
+    (war_obj) ?
+      visualPrompt(game_obj.alert_embed, user_id, {
+        title: `Intervene in the ${war_obj.name}:`,
+        prompts: [
+          [`Which side would you like to intervene on? Please type either 'attacking' or 'defending'.`, "string"]
+        ]
+      },
+      function (arg) {
+        module.exports.interveneInWar(user_id, war_obj, arg[0]);
+      }) :
+      visualPrompt(game_obj.alert_embed, user_id, {
+        title: `Intervene in War:`,
+        prompts: [
+          [`Which war would you like to intervene in?\n\nType **[View Wars]** to view a list of all valid ongoing wars. You cannot already be in the target war.`, "string"],
+          [`Which side would you like to intervene on? Please type either 'attacking' or 'defending'.`, "string"]
+        ]
+      },
+      function (arg) {
+        module.exports.interveneInWar(user_id, arg[0], arg[1]);
+      });
+  },
+
   interveneInWar: function (arg0_user, arg1_war_name, arg2_side) {
     //Convert from parameters
     var user_id = arg0_user;

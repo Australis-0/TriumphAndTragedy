@@ -94,6 +94,7 @@ module.exports = {
     //Check if war_obj exists
     if (war_obj) {
       var all_war_keys = Object.keys(war_obj);
+      var can_send_volunteers = (!war_obj[`${actual_id}_sent_volunteers`]);
       var cb_obj = getCB(war_obj.cb);
 
       //Recalculate attacker, defender casualties
@@ -113,7 +114,7 @@ module.exports = {
               can_call_allies = true;
 
       //Peace treaty buttons
-      if (!is_archived_war)
+      if (!is_archived_war) {
         if (war_obj.attackers.includes(actual_id) || war_obj.defenders.includes(actual_id)) {
           var friendly_side = "";
           var opposing_side = "";
@@ -135,6 +136,10 @@ module.exports = {
           if (can_call_allies)
             war_string.push(`- ${(can_call_allies) ? `**[Call Ally]**` : ""}${(war_obj[friendly_side].length > 1) ? ` | **[Change War Leader]** - ${config.icons.political_capital} ${parseNumber(getWarLeadershipCost(user_id, war_obj))} PC` : ""}`);
         }
+
+        //Intervene in war, volunteer buttons
+        war_string.push(`- **[Intervene In War]** - ${config.icons.political_capital} ${parseNumber(config.defines.diplomacy.intervene_in_war_cost)} PC | ${(can_send_volunteers) ? `**[Send Volunteers]** - ${config.icons.political_capital} ${parseNumber(config.defines.diplomacy.send_volunteer_armies_cost)} PC` : `**[Recall Volunteers]** | **[Repatriate Volunteers]** | **[Send Volunteer Armies]**`}`);
+      }
 
       (is_archived_war) ?
         war_string.push(`**${getDate(war_obj.starting_date)}** - **${getDate(war_obj.end_date)}**\n`) :

@@ -1,7 +1,8 @@
 module.exports = {
-  printMilitary: function (arg0_user) {
+  printMilitary: function (arg0_user, arg1_page) {
     //Convert from parameters
     var user_id = arg0_user;
+    var starting_page = parseInt(arg1_page);
 
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
@@ -278,6 +279,17 @@ module.exports = {
       global_orders_string.push(`- **[Garrison Provinces]** - Guard all the provinces within your country.`);
       global_orders_string.push(`- **[Delete All Armies]** - Delete all your armies and return all troops and materiel to your reserves.`);
       global_orders_string.push(`- **[Move All]** - Moves all your armies into a single province.`);
+
+      if (hasVolunteers(user_id))
+        global_orders_string.push(`- **[Recall Volunteers]** - Recalls combat formations from an armed intervention.`);
+
+      if (isVolunteering(user_id))
+        global_orders_string.push(`- **[Repatriate Volunteers]** - Ends an armed intervention.`);
+
+      global_orders_string.push(`- **[Send Volunteers]** - Declares your intention to send volunteers to a war.`);
+
+      if (isVolunteering(user_id))
+        global_orders_string.push(`- **[Send Volunteer Armies]** - Sends volunteer armies to a conflict.`);
 
       //Format Page 3 - UI - Army Creation
       army_creation_string.push(`- **[Create Armies]** - Create multiple armies.`);
@@ -587,6 +599,7 @@ module.exports = {
     //Return statement
     createPageMenu(game_obj.middle_embed, {
       embed_pages: all_embeds,
+      page: starting_page,
       user: game_obj.user
     });
   },

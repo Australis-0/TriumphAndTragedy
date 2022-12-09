@@ -1,5 +1,26 @@
 module.exports = {
-  repatriateVolunteers: function (arg0_user, arg1_war_name) { //[WIP] - Update UI
+  initialiseRepatriateVolunteers: function (arg0_user) {
+    //Convert from parameters
+    var user_id = arg0_user;
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var game_obj = getGameObject(user_id);
+    var usr = main.users[actual_id];
+
+    //Initialise visual prompt
+    visualPrompt(game_obj.alert_embed, user_id, {
+      title: `Repatriate Volunteer Forces From War:`,
+      prompts: [
+        [`Which armed conflict would you like to withdraw your volunteer forces from?\n\nType **[Diplomacy]** for a full list of current military interventions.`, "string"]
+      ]
+    },
+    function (arg) {
+      module.exports.repatriateVolunteers(user_id, arg[0]);
+    });
+  },
+
+  repatriateVolunteers: function (arg0_user, arg1_war_name) {
     //Convert from parameters
     var user_id = arg0_user;
     var war_name = (typeof arg1_war_name != "object") ? arg1_war_name.trim().toLowerCase() : arg1_war_name;
@@ -34,7 +55,22 @@ module.exports = {
         //Print user feedback
         printAlert(game_obj.id, `We have withdrawn **${parseNumber(repatriated_armies)}** volunteer armies from the ${friendly_side}' side of **${war_obj.name}**, and they will no longer participate in combat actions.${(config.defines.diplomacy.send_volunteer_armies_maintenance_cost) ? `\n\n${config.icons.political_capital} **${parseNumber(config.defines.diplomacy.send_volunteer_armies_maintenance_cost)}** Political Capital will be freed up each turn.` : ""}`);
 
-        //Update UI
+        //Update UI's
+        if (game_obj.page == "diplomacy")
+          printDiplomacy(user_id);
+
+        if (game_obj.page == "military")
+          printMilitary(user_id, interfaces[game_obj.middle_embed.id].page);
+
+        if (game_obj.page == "politics")
+          printPolitics(user_id);
+
+        if (game_obj.page.startsWith("view_war_")) {
+          var war_name = game_obj.page.replace("view_war_", "");
+
+          printWar(user_id, war_name);
+        }
+
       } else {
         printError(game_obj.id, `You must have committed volunteers to the **${war_obj.name}** in the first place in order to repatriate them!`);
       }
