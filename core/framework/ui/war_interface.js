@@ -134,12 +134,14 @@ module.exports = {
           );
 
           if (can_call_allies)
-            war_string.push(`- ${(can_call_allies) ? `**[Call Ally]**` : ""}${(war_obj[friendly_side].length > 1) ? ` | **[Change War Leader]** - ${config.icons.political_capital} ${parseNumber(getWarLeadershipCost(user_id, war_obj))} PC` : ""}`);
+            war_string.push(`${(can_call_allies) ? `**[Call Ally]**` : ""}${(war_obj[friendly_side].length > 1) ? ` | **[Change War Leader]** - ${config.icons.political_capital} ${parseNumber(getWarLeadershipCost(user_id, war_obj))} PC` : ""}`);
         }
 
         //Intervene in war, volunteer buttons
-        war_string.push(`- **[Intervene In War]** - ${config.icons.political_capital} ${parseNumber(config.defines.diplomacy.intervene_in_war_cost)} PC | ${(can_send_volunteers) ? `**[Send Volunteers]** - ${config.icons.political_capital} ${parseNumber(config.defines.diplomacy.send_volunteer_armies_cost)} PC` : `**[Recall Volunteers]** | **[Repatriate Volunteers]** | **[Send Volunteer Armies]**`}`);
+        war_string.push(`**[Intervene In War]** - ${config.icons.political_capital} ${parseNumber(config.defines.diplomacy.intervene_in_war_cost)} PC | ${(can_send_volunteers) ? `**[Send Volunteers]** - ${config.icons.political_capital} ${parseNumber(config.defines.diplomacy.send_volunteer_armies_cost)} PC` : `**[Recall Volunteers]** | **[Repatriate Volunteers]** | **[Send Volunteer Armies]**`}`);
       }
+
+      war_string.push("");
 
       (is_archived_war) ?
         war_string.push(`**${getDate(war_obj.starting_date)}** - **${getDate(war_obj.end_date)}**\n`) :
