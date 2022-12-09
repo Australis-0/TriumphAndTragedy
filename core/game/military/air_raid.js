@@ -17,7 +17,9 @@ module.exports = {
       if (city_obj) {
         //Check if city_obj is at war with actual_id
         if (city_obj.controller != actual_id) {
-          if (areAtWar(user_id, city_obj.controller)) {
+          var army_enemies = getArmyEnemies(user_id, army_obj);
+
+          if (army_enemies.includes(city_obj.controller)) {
             //Check to make sure force is of type 'air'
             if (army_obj.type == "air") {
               //Check to see if this city has been attacked this turn
@@ -39,7 +41,7 @@ module.exports = {
               printError(game_obj.id, `You may only send air forces to bomb your opponents' cities!`);
             }
           } else {
-            printError(game_obj.id, `You are not currently at war with the controller of **${city_obj.name}**, **${main.users[city_obj.controller].name}**!`);
+            printError(game_obj.id, `You are not currently at war with the controller of **${city_obj.name}**, **${main.users[city_obj.controller].name}**, nor is the **${army_obj.name}** volunteering in a war against them!`);
           }
         } else {
           printError(game_obj.id, `You can't bomb yourself!`);

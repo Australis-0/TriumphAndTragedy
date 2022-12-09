@@ -144,6 +144,15 @@ module.exports = {
         if (returnSafeNumber(army_obj.submarine_cooldown) > 0)
           current_status += `${(current_status.length > 0) ? `\n- ` : ""}Currently on cooldown, will be combat ready in **${parseNumber(army_obj.submarine_cooldown)}** turn(s).`;
 
+        //Voluntering status
+        if (local_army.volunteering) {
+          var local_war = main.global.wars[local_army.volunteering[1]];
+
+          var friendly_side = (local_war[`${actual_id}_sent_volunteers`] == "attackers") ? "attacking" : "defending";
+
+          armies_string.push(`${(current_status.length  > 0) ? `\n- ` : ""}Volunteering in the **${local_war.name}** on the ${friendly_side} side!`);
+        }
+
         //Format army_string
         army_string.push(`${carrier_capacity_string}${current_status}`);
         army_string.push("");
@@ -407,6 +416,14 @@ module.exports = {
       }
 
       armies_string.push(`- ${local_icon}**${local_army.name}** (${local_army.status}, Province #**${local_army.province}**). **[View ${local_army.name}]**`);
+
+      if (local_army.volunteering) {
+        var local_war = main.global.wars[local_army.volunteering[1]];
+
+        var friendly_side = (local_war[`${actual_id}_sent_volunteers`] == "attackers") ? "attacking" : "defending";
+
+        armies_string.push(`• Volunteering in the **${local_war.name}** on the ${friendly_side} side!`);
+      }
     }
 
     //Default message if no armies can be found

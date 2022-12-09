@@ -468,8 +468,9 @@ module.exports = {
         for (var i = 0; i < all_armies.length; i++) {
           var local_army = usr.armies[all_armies[i]];
 
-          if (local_army?.volunteering[1] == war_obj.id)
-            delete local_army.volunteering;
+          if (local_army.volunteering)
+            if (local_army.volunteering[1] == war_obj.id)
+              delete local_army.volunteering;
         }
 
         //Push user into conflict if not already included

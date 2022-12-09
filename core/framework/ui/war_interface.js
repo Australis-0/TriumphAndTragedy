@@ -82,15 +82,18 @@ module.exports = {
     //Declare local tracker variables
     var all_allies = Object.keys(usr.diplomacy.allies);
     var attackers_string = [];
+    var attacker_volunteers = [];
     var attackers_wargoal_string = [];
     var can_call_allies = false;
     var bottom_war_string = [];
     var defenders_string = [];
+    var defender_volunteers = [];
     var defenders_wargoal_string = [];
     var war_string = [];
 
     //Check if war_obj exists
     if (war_obj) {
+      var all_war_keys = Object.keys(war_obj);
       var cb_obj = getCB(war_obj.cb);
 
       //Recalculate attacker, defender casualties
@@ -177,6 +180,23 @@ module.exports = {
           attackers_string.push(`**${war_obj.attacker_names[i]}** | **${printPercentage(local_attacker.modifiers.war_exhaustion)}** | ${parseNumber(returnSafeNumber(war_obj[war_obj.attackers[i] + "_casualties"]))}`);;
       }
 
+      //Format attacker_volunteers
+      for (var i = 0; i < all_war_keys.length; i++)
+        if (all_war_keys[i].includes("_sent_volunteers")) {
+          var local_id = all_war_keys[i].replace("_sent_volunteers", "");
+          var local_value = war_obj[all_war_keys[i]];
+
+          if (local_value == "attackers")
+            attacker_volunteers.push(`- _${main.users[local_id].name}_`);
+        }
+
+      if (attacker_volunteers.length > 0) {
+        attackers_string.push("");
+        attackers_string.push(`Volunteers:`);
+        attackers_string.push("");
+        attackers_string.push(defender_volunteers.join("\n"));
+      }
+
       //Format defender wargoal string; this is put here for future flexibility
       var defender_wargoals = Object.keys(war_obj.defenders_wargoals);
 
@@ -203,6 +223,23 @@ module.exports = {
         (!war_obj.defender_names) ?
           defenders_string.push(`**${(local_defender) ? local_defender.name : war_obj.defenders[i]}** | **${printPercentage(local_defender.modifiers.war_exhaustion)}** | ${parseNumber(returnSafeNumber(war_obj[war_obj.defenders[i] + "_casualties"]))}`) :
           defenders_string.push(`${war_obj.defender_names[i]}** | **${printPercentage(local_defender.modifiers.war_exhaustion)}** | **${parseNumber(returnSafeNumber(war_obj[war_obj.defenders[i] + "_casualties"]))}`);
+      }
+
+      //Format defender_volunteers
+      for (var i = 0; i < all_war_keys.length; i++)
+        if (all_war_keys[i].includes("_sent_volunteers")) {
+          var local_id = all_war_keys[i].replace("_sent_volunteers", "");
+          var local_value = war_obj[all_war_keys[i]];
+
+          if (local_value == "defenders")
+            defender_volunteers.push(`- _${main.users[local_id].name}_`);
+        }
+
+      if (defender_volunteers.length > 0) {
+        defenders_string.push("");
+        defenders_string.push(`Volunteers:`);
+        defenders_string.push("");
+        defenders_string.push(defender_volunteers.join("\n"));
       }
 
       //Bottom war string (Total Casualties)

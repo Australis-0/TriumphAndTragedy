@@ -764,8 +764,9 @@ module.exports = {
           for (var i = 0; i < local_armies.length; i++) {
             var local_army = usr.armies[local_armies[i]];
 
-            if (local_army?.volunteering[1] == war_obj.id)
-              delete local_army.volunteering;
+            if (local_army.volunteering)
+              if (local_army.volunteering[1] == war_obj.id)
+                delete local_army.volunteering;
           }
         }
       }

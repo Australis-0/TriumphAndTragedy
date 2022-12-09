@@ -21,6 +21,7 @@ module.exports = {
 
         //Check to see what armies exist
         var empty_armies = 0;
+        var navies = 0;
         var nonexistent_armies = 0;
         var sent_armies = 0;
         var total_sent = 0;
@@ -31,13 +32,17 @@ module.exports = {
           if (local_army) {
             var all_units = Object.keys(local_army.units);
 
-            if (all_units.length > 0) {
-              var local_army_size = getArmySize(user_id, local_army);
+            if (local_army.type != "navy") {
+              if (all_units.length > 0) {
+                var local_army_size = getArmySize(user_id, local_army);
 
-              sent_armies++;
-              total_sent += returnSafeNumber(local_army_size);
+                sent_armies++;
+                total_sent += returnSafeNumber(local_army_size);
+              } else {
+                empty_armies++;
+              }
             } else {
-              empty_armies++;
+              navies++;
             }
           } else {
             nonexistent_armies++;
@@ -53,7 +58,8 @@ module.exports = {
             if (local_army) {
               var all_units = Object.keys(local_army.units);
 
-              local_army.volunteering = [true, war_obj.id];
+              if (all_units.length > 0 && local_army.type != "navy")
+                local_army.volunteering = [true, war_obj.id];
             }
           }
 
@@ -61,10 +67,10 @@ module.exports = {
           if (sent_armies != 0) {
             (sent_armies == armies.length) ?
               printAlert(game_obj.id, `${config.icons.checkmark} You have successfully sent **${parseNumber(armies.length)}** armies to serve as volunteers in the **${war_obj.name}** for the **${friendly_side}** name.`) :
-              printAlert(game_obj.id, `${config.icons.checkmark} You have sent **${parseNumber(sent_armies)}**/${parseNumber(armies.length)} armies to serve as volunteers in the **${war_obj.name}** for the **${friendly_side}**.\n\nOf the missing armies, **${parseNumber(nonexistent_armies)}** proved to be nonexistent, and **${parseNumber(empty_armies)}** were completely empty.`);
+              printAlert(game_obj.id, `${config.icons.checkmark} You have sent **${parseNumber(sent_armies)}**/${parseNumber(armies.length)} armies to serve as volunteers in the **${war_obj.name}** for the **${friendly_side}**.\n\nOf the missing armies, **${parseNumber(nonexistent_armies)}** proved to be nonexistent, and **${parseNumber(empty_armies)}** were completely empty.${(navies > 0) ? ` You also attempted sending **${parseNumber(navies)}** naval flotillas as volunteers. Send them under your own flag!` : ""}`);
 
             //Update UI's
-            
+
           } else {
             printError(game_obj.id, `None of the armies you have specified had any troops in them!`);
           }

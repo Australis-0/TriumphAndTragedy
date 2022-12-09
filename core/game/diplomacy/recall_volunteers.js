@@ -21,8 +21,9 @@ module.exports = {
         for (var i = 0; i < all_armies.length; i++) {
           var local_army = usr.armies[all_armies[i]];
 
-          if (local_army?.volunteering[1] == war_obj.id)
-            has_participant_army = true;
+          if (local_army.volunteering)
+            if (local_army.volunteering[1] == war_obj.id)
+              has_participant_army = true;
         }
 
         if (has_participant_army) {

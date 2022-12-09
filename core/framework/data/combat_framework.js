@@ -164,10 +164,24 @@ module.exports = {
 
                 //Check to see if attacker is involved in war if defender is
                 if (friendly_side != "")
-                  if (local_war[opposing_side].includes(actual_id))
+                  if (local_war[opposing_side].includes(actual_id)) {
+                    var all_war_keys = Object.keys(local_war);
+
                     for (var x = 0; x < local_war[friendly_side].length; x++)
                       if (!defender_list.includes(local_war[friendly_side][x]))
                         defender_list.push(local_war[friendly_side][x]);
+
+                    //Volunteers
+                    for (var x = 0; x < all_war_keys.length; x++)
+                      if (all_war_keys[x].includes("_sent_volunteers")) {
+                        var local_id = all_war_keys[x].replace("_sent_volunteers", "");
+                        var local_value = local_war[all_war_keys[x]];
+
+                        if (local_value == friendly_side)
+                          if (!defender_list.includes(local_id))
+                            defender_list.push(local_id);
+                      }
+                  }
               }
 
               //Iterate over all defender_list users
@@ -181,11 +195,16 @@ module.exports = {
 
                   //Check to see if army is valid
                   if (local_army.type == "air") {
-                    var local_range = getAirRange(local_army.owner, local_army);
-                    var provinces_in_range = getProvincesInRange(local_army.province, local_range);
+                    var local_enemies = getArmyEnemies(user_id, local_army);
 
-                    if (provinces_in_range.includes(city_obj.id))
-                      module.exports.initialiseBattle(defender_list[i], local_army, user_id, army_obj);
+                    //Check local_enemies for volunteer air defence squadrons
+                    if (local_enemies.includes(actual_id)) {
+                      var local_range = getAirRange(local_army.owner, local_army);
+                      var provinces_in_range = getProvincesInRange(local_army.province, local_range);
+
+                      if (provinces_in_range.includes(city_obj.id))
+                        module.exports.initialiseBattle(defender_list[i], local_army, user_id, army_obj);
+                    }
                   }
                 }
               }

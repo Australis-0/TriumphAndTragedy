@@ -334,7 +334,7 @@ module.exports = {
         //Only edit the message if the message is not a prompt.
         if (!message_is_prompt)
           if (game_obj.alert_change)
-            updateAlert(game_obj.user, { freeze_alerts: true });
+            updateAlert(game_obj.user, { freeze_alerts: game_obj.freeze_alerts });
       } catch {}
     }, 100);
 

@@ -520,6 +520,32 @@ module.exports = {
     return sortObject(deficit_goods);
   },
 
+  getArmyEnemies: function (arg0_user, arg1_army_name) {
+    //Convert from parameters
+    var user_id = arg0_user;
+    var army_name = (typeof arg1_army_name != "object") ? arg1_army_name.trim().toLowerCase() : army_name;
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var all_enemies = getEnemies(user_id);
+    var army_obj = (typeof army_name != "object") ? module.exports.getArmy(user_id, army_name) : army_name;
+    var usr = main.users[actual_id];
+
+    //Push volunteer enemies
+    if (army_obj)
+      if (army_obj.volunteering) {
+        var local_war = main.global.wars[local_army.volunteering[1]];
+        var opposite_side = (local_war[`${local_army.owner}_sent_volunteers`] == "attackers") ? "defenders" : "attackers";
+
+        for (var i = 0; i < local_war[opposite_side].length; x++)
+          if (!all_enemies.includes(local_war[opposite_side][x]))
+            all_enemies.push(local_war[opposite_side][x]);
+      }
+
+    //Return statement
+    return all_enemies;
+  },
+
   getArmyMaintenance: function (arg0_user, arg1_army_name) {
     //Convert from parameters
     var user_id = arg0_user;
@@ -1067,17 +1093,18 @@ module.exports = {
     for (var i = 0; i < all_armies.length; i++) {
       var local_army = usr.armies[all_armies[i]];
 
-      if (local_army?.volunteering[1] == war_obj.id) {
-        var all_units = Object.keys(local_army.units);
+      if (local_army.volunteering)
+        if (local_army.volunteering[1] == war_obj.id) {
+          var all_units = Object.keys(local_army.units);
 
-        for (var x = 0; x < all_units.length; x++) {
-          var local_amount = local_army.units[all_units[x]];
+          for (var x = 0; x < all_units.length; x++) {
+            var local_amount = local_army.units[all_units[x]];
 
-          if (!volunteer_units[all_units[x]])
-            volunteer_units[all_units[x]] = 0;
-          volunteer_units[all_units[x]] += returnSafeNumber(local_amount);
+            if (!volunteer_units[all_units[x]])
+              volunteer_units[all_units[x]] = 0;
+            volunteer_units[all_units[x]] += returnSafeNumber(local_amount);
+          }
         }
-      }
     }
 
     //Return statement
@@ -1099,9 +1126,10 @@ module.exports = {
     for (var i = 0; i < all_armies.length; i++) {
       var local_army = main.users[all_armies[i]];
 
-      if (local_army?.volunteering[1])
-        if (!volunteered_wars.includes(local_army.volunteering[1]))
-          volunteered_wars.push(local_army.volunteering[1]);
+      if (local_army.volunteering)
+        if (local_army.volunteering[1])
+          if (!volunteered_wars.includes(local_army.volunteering[1]))
+            volunteered_wars.push(local_army.volunteering[1]);
     }
 
     //Return statement
@@ -1123,8 +1151,9 @@ module.exports = {
     for (var i = 0; i < all_armies.length; i++) {
       var local_army = main.users[all_armies[i]];
 
-      if (local_army?.volunteering) {
+      if (local_army.volunteering) {
         has_volunteers = true;
+        
         break;
       }
     }
