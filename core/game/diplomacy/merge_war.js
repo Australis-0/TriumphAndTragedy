@@ -1,4 +1,37 @@
 module.exports = {
+  initialiseMergeWar: function (arg0_user, arg1_war_obj) {
+    //Convert from parameters
+    var user_id = arg0_user;
+    var war_obj = arg1_war_obj;
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var game_obj = getGameObject(user_id);
+    var usr = main.users[actual_id];
+
+    //Initialise visual prompt
+    (war_obj) ?
+      visualPrompt(game_obj.alert_embed, user_id, {
+        title: `Merge ${war_obj.name} With Another War:`,
+        prompts: [
+          [`Which war would you like to merge **${war_obj.name}** with? You must be a war leader in both wars to take this action.\n\nType **[View Wars]** for a list of all ongoing wars.`, "string"]
+        ]
+      },
+      function (arg) {
+        module.exports.mergeWar(user_id, war_obj, arg[0]);
+      }) :
+      visualPrompt(game_obj.alert_embed, user_id, {
+        title: `Merge Wars:`.
+        prompts: [
+          [`Which war would you like to merge? You must be a war leader in both wars to take this action.\n\nType **[View Wars]** for a list of all ongoing wars.`, "string"],
+          [`Which war would you like to merge this conflict into?`, "string"]
+        ]
+      },
+      function (arg) {
+        module.exports.mergeWar(user_id, arg[1], arg[0]);
+      });
+  },
+
   mergeWar: function (arg0_user, arg1_war_name, arg2_war_name) {
     //Convert from parameters
     var user_id = arg0_user;

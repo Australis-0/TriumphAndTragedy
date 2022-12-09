@@ -81,6 +81,7 @@ module.exports = {
 
     //Declare local tracker variables
     var all_allies = Object.keys(usr.diplomacy.allies);
+    var all_wars = Object.keys(main.global.wars);
     var attackers_string = [];
     var attacker_volunteers = [];
     var attackers_wargoal_string = [];
@@ -116,6 +117,9 @@ module.exports = {
       //Peace treaty buttons
       if (!is_archived_war) {
         if (war_obj.attackers.includes(actual_id) || war_obj.defenders.includes(actual_id)) {
+          var can_merge_wars = false;
+          var is_war_leader = (war_obj.attackers_war_leader == actual_id || war_obj.defenders_war_leader == actual_id);
+
           var friendly_side = "";
           var opposing_side = "";
 
@@ -128,13 +132,22 @@ module.exports = {
             opposing_side = "attackers";
           }
 
+          //Check if user can merge wars
+          for (var i = 0; i < all_wars.length; i++) {
+            var local_war = main.global.wars[all_wars[i]];
+
+            if (local_war.attackers_war_leader == actual_id || war_obj.defenders_war_leader == actual_id)
+              if (local_war.id != war_obj.id)
+                if (is_war_leader)
+                  can_merge_wars = true;
+          }
+
           war_string.push((!war_obj.peace_treaties[actual_id]) ?
             `**[Sign Peace Treaty]**` :
             `**[Edit Peace Offer]** | **[Send Peace Offer]**`
           );
 
-          if (can_call_allies)
-            war_string.push(`${(can_call_allies) ? `**[Call Ally]**` : ""}${(war_obj[friendly_side].length > 1) ? ` | **[Change War Leader]** - ${config.icons.political_capital} ${parseNumber(getWarLeadershipCost(user_id, war_obj))} PC` : ""}`);
+          war_string.push(`${(can_call_allies) ? `**[Call Ally]**` : ""}${(war_obj[friendly_side].length > 1) ? ` | **[Change War Leader]** - ${config.icons.political_capital} ${parseNumber(getWarLeadershipCost(user_id, war_obj))} PC` : ""}${(can_merge_wars) ? `**[Merge Wars]** - ${config.icons.political_capital} ${parseNumber(config.defines.diplomacy.merge_war_cost)} PC` : ""}`);
         } else {
           //Intervene in war, volunteer buttons
           war_string.push(`**[Intervene In War]** - ${config.icons.political_capital} ${parseNumber(config.defines.diplomacy.intervene_in_war_cost)} PC ${(can_send_volunteers) ? `\n- **[Send Volunteers]** - ${config.icons.political_capital} ${parseNumber(config.defines.diplomacy.send_volunteer_armies_cost)} PC` : `- **[Recall Volunteers]** | **[Repatriate Volunteers]** | **[Send Volunteer Armies]**`}`);

@@ -1464,6 +1464,10 @@ module.exports = {
           if (input == "intervene in war")
             initialiseInterveneInWar(user_id, war_obj);
 
+          //[Merge War]
+          if (["merge war", "merge wars"].includes(input))
+            initialiseMergeWar(user_id, war_obj);
+
           //[Recall Volunteers]
           if (input == "recall volunteers")
             initialiseRecallVolunteers(user_id, war_obj);
