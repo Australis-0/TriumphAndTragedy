@@ -21,7 +21,7 @@ module.exports = {
         module.exports.mergeWar(user_id, war_obj, arg[0]);
       }) :
       visualPrompt(game_obj.alert_embed, user_id, {
-        title: `Merge Wars:`.
+        title: `Merge Wars:`,
         prompts: [
           [`Which war would you like to merge? You must be a war leader in both wars to take this action.\n\nType **[View Wars]** for a list of all ongoing wars.`, "string"],
           [`Which war would you like to merge this conflict into?`, "string"]

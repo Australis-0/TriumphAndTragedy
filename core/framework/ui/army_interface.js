@@ -145,8 +145,8 @@ module.exports = {
           current_status += `${(current_status.length > 0) ? `\n- ` : ""}Currently on cooldown, will be combat ready in **${parseNumber(army_obj.submarine_cooldown)}** turn(s).`;
 
         //Voluntering status
-        if (local_army.volunteering) {
-          var local_war = main.global.wars[local_army.volunteering[1]];
+        if (army_obj.volunteering) {
+          var local_war = main.global.wars[army_obj.volunteering[1]];
 
           var friendly_side = (local_war[`${actual_id}_sent_volunteers`] == "attackers") ? "attacking" : "defending";
 
