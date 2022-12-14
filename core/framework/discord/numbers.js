@@ -106,6 +106,72 @@ module.exports = {
     return total_sum;
   },
 
+  getLogarithmic: function (arg0_number, arg1_min, arg2_max, arg3_steepness) {
+    //Convert from parameters
+    var number = parseInt(arg0_number);
+    var min = Math.min(parseInt(arg1_min), 1);
+    var max = Math.max(parseInt(arg2_max), 1);
+    var steepness = (arg3_steepness) ? parseInt(arg3_steepness) : 1;
+
+    //Position will be between 0 and 100
+    var min_position = 0;
+    var max_position = 100;
+
+    //Calculate steepness - abs # > %
+    max = Math.max(Math.pow(max, steepness - (number/max)*(steepness - 1)), 1);
+
+    //The result should be between min and max
+    var min_value = Math.log(min);
+    var max_value = Math.log(max);
+
+    //Make sure number can't go lower than min
+    if (number < min)
+      number = min;
+
+    //Calculate adjustment factor
+    var scale = (max_value - min_value)/(max_position - min_position);
+
+    //Return statement
+    return Math.round(
+      (Math.log(number) - min_value)/scale + min_position
+    );
+  },
+
+  getLogarithmicScale: function (arg0_number, arg1_min, arg2_max, arg3_steepness) {
+    //Convert from parameters
+    var number = parseInt(arg0_number);
+    var min = Math.min(parseInt(arg1_min), 1);
+    var max = Math.max(parseInt(arg2_max), 1);
+    var steepness = (arg3_steepness) ? parseInt(arg3_steepness) : 1;
+
+    //Position will be between 0 and 100
+    var min_position = 0;
+    var max_position = 100;
+
+    //Calculate steepness - (number/max) is flawed - % > abs #
+    number = number/Math.min(steepness - 1, 1);
+
+    max = Math.max(
+      Math.pow(max, steepness - (number/100)*(steepness - 1))
+    , 1);
+
+    //The result should be between min and max
+    var min_value = Math.log(min);
+    var max_value = Math.log(max);
+
+    //Make sure number can't go lower than min
+    if (number < min)
+      number = min;
+
+    //Calculate adjustment factor
+    var scale = (max_value - min_value)/(max_position - min_position);
+
+    //Return statement
+    return Math.round(
+      Math.exp(min_value + scale*(number - min_position))
+    );
+  },
+
   /*
     printPercentage() - Formats a string to fit a certain percentage (e.g. 23%), instead of a default decimal number.
     options: {

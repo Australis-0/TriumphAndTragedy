@@ -134,6 +134,7 @@ module.exports = {
     loadMap("atlas_map.svg", "atlas");
   	loadMap("colonisation_map.svg", "colonisation");
     loadMap("political_map.svg", "political");
+    loadMap("population_map.svg", "population");
     loadMap("supply_map.svg", "supply");
 
     console.time(`Initialising graph ..`);

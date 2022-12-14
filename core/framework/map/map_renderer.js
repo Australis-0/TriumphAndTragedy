@@ -93,6 +93,72 @@ module.exports = {
                   }
 
                   break;
+                case "population":
+                  var all_provinces = Object.keys(main.provinces);
+                  var maximum_population = 0;
+
+                  //Get maximum population
+                  for (var i = 0; i < all_provinces.length; i++) {
+                    var local_province = main.provinces[all_provinces[i]];
+
+                    if (local_province.pops)
+                      maximum_population = Math.max(
+                        maximum_population, returnSafeNumber(local_province.pops.population)
+                      );
+                  }
+
+                  //Initialise canvas
+                  var canvas = Canvas.createCanvas(config.defines.map.map_resolution[0], config.defines.map.map_resolution[1]);
+                  var ctx = canvas.getContext("2d");
+
+                  //Load map
+                  var background_layer = new Canvas.Image();
+                  var population_layer = new Canvas.Image();
+
+                  background_layer.onload = () => ctx.drawImage(background_layer, 0, 0, config.defines.map.map_resolution[0], config.defines.map.map_resolution[1]);
+                  background_layer.onerror = err => { throw err; }
+                  background_layer.src = `./map/${config.defines.map.map_background}`;
+
+                  population_layer.onload = () => ctx.drawImage(population_layer, 0, 0, config.defines.map.map_resolution[0], config.defines.map.map_resolution[1]);
+                  population_layer.onerror = err => { throw err; }
+                  population_layer.src = `./map/${map_file.replace(".svg", ".png")}`;
+
+                  //Only render province labels if applicable
+                  if (!hide_province_labels) {
+                    var province_id_layer = new Canvas.Image();
+
+                    province_id_layer.onload = () => ctx.drawImage(province_id_layer, 0, 0, config.defines.map.map_resolution[0], config.defines.map.map_resolution[1]);
+                    province_id_layer.onerror = err => { throw err; }
+                    province_id_layer.src = `./map/${config.defines.map.map_overlay}`;
+                  }
+
+                  //Population rendering; render linear scale
+                  ctx.font = "36px Oswald";
+                  ctx.fillStyle = "#ffffff";
+                  ctx.fillText("Population:", config.defines.map.map_label_coords[0], config.defines.map.map_label_coords[1]);
+
+                  //Generate colour key and accompanying labels
+                  ctx.strokeStyle = "#ffffff";
+
+                  for (var i = 0; i < 110; i+= 10) {
+                    var local_index = i;
+                    if (local_index == 100) local_index--; //Render 99
+
+                    if (i == 0 || maximum_population > 0) {
+                      ctx.fillStyle = RGBToHex(
+                        config.defines.map.scalar_gradient[local_index][0], config.defines.map.scalar_gradient[local_index][1], config.defines.map.scalar_gradient[local_index][2]
+                      );
+                      ctx.fillRect(config.defines.map.map_label_coords[0], config.defines.map.map_label_coords[1] + 15 + (i/10)*40, 36, 36);
+                      ctx.beginPath();
+                      ctx.rect(config.defines.map.map_label_coords[0], config.defines.map.map_label_coords[1] + 15 + (i/10)*40, 36, 36);
+                      ctx.stroke();
+
+                      ctx.fillStyle = "#ffffff";
+                      ctx.fillText(truncateString(`${parseNumber(getLogarithmicScale(local_index, 1, maximum_population, 3))}`, 15), config.defines.map.map_label_coords[0] + 50, config.defines.map.map_label_coords[1] + 47 + (i/10)*40);
+                    }
+                  }
+
+                  break;
                 case "supply":
                   var all_provinces = Object.keys(main.provinces);
                   var maximum_supply_limit = 0;
@@ -373,6 +439,41 @@ module.exports = {
 
         //Cache SVG
         module.exports.cacheSVG("political");
+
+        break;
+      case "population":
+        var maximum_population = 0;
+
+        for (var i = 0; i < all_provinces.length; i++) {
+          var local_province = main.provinces[all_provinces[i]];
+
+          if (local_province.pops)
+            maximum_population = Math.max(
+              maximum_population,
+              returnSafeNumber(local_province.pops.population)
+            );
+        }
+
+        //Shade in province population based on % from 0 to maximum_population
+        for (var i = 0; i < all_provinces.length; i++) {
+          var local_province = main.provinces[all_provinces[i]];
+          var local_population = (local_province.pops) ?
+            returnSafeNumber(local_province.pops.population) : 0;
+
+          var local_colour = (local_population > 0) ?
+            config.defines.map.scalar_gradient[
+              Math.max(
+                getLogarithmic(local_population, 1, maximum_population, 3) - 1,
+              0)
+            ] :
+            config.defines.map.scalar_gradient[0];
+
+          try {
+            setProvinceColour(map_name, all_provinces[i], local_colour);
+          } catch {
+            log.warn(`Could not read colour ${local_population} from index ${(local_population/maximum_population) - 1}`);
+          }
+        }
 
         break;
       case "supply":

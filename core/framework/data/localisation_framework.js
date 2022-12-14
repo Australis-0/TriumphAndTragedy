@@ -101,6 +101,46 @@ module.exports = {
     return pc_string;
   },
 
+  getProvinceColonisationLocalisation: function (arg0_province) {
+    //Convert from parameters
+    var province_id = arg0_province.trim().toLowerCase();
+
+    //Declare local instance variables
+    var all_users = Object.keys(main.users);
+    var localisation_string = [];
+    var province_obj = getProvince(province_id);
+
+    if (province_obj)
+      if (province_obj.controller) {
+        localisation_string.push(`Already controlled by **${main.users[province_obj.controller].name}**.`);
+      } else {
+        var has_colonisation = false;
+
+        for (var i = 0; i < all_users.length; i++) {
+          var local_user = main.users[all_users[i]];
+
+          var local_expeditions = Object.keys(local_user.expeditions);
+
+          for (var x = 0; x < local_expeditions.length; x++) {
+            var local_expedition = local_user.expeditions[local_expeditions[x]];
+
+            if (local_expedition.provinces.includes(province_obj.id)) {
+              //Format localisation_string
+              (!has_colonisation) ?
+                localisation_string.push(`**${local_user.name}** will colonise this province in **${parseNumber(local_expedition.duration)}** turn(s).`) :
+                localisation_string.push(`- **${local_user.name}** is attempting to colonise this province. The settlers will arrive in **${parseNumber(local_expedition.duration)}** turn(s).`);
+
+              //Set has_colonisation flag to true
+              has_colonisation = true;
+            }
+          }
+        }
+      }
+
+    //Return statement
+    return localisation_string;
+  },
+
   getSupplyLocalisation: function (arg0_user) {
     //Convert from parameters
     var user_id = arg0_user;

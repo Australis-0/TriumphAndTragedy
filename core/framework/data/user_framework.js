@@ -681,6 +681,9 @@ module.exports = {
         //Return statement if province is found
         return local_province;
       }
+
+    //If not found, try getCity()
+    return getCity(province_id);
   },
 
   getProvinceDistances: function (arg0_provinces) {

@@ -8,7 +8,7 @@ module.exports = {
     visualPrompt(game_obj.alert_embed, user_id, {
       title: `View A Province:`,
       prompts: [
-        [`Which province in would you like to view?`, "string"]
+        [`Which province would you like to view?`, "string"]
       ]
     },
     function (arg) {
@@ -27,6 +27,7 @@ module.exports = {
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
     var all_pops = Object.keys(config.pops);
+    var all_users = Object.keys(main.users);
     var game_obj = getGameObject(user_id);
     var usr = main.users[actual_id];
 
@@ -42,15 +43,33 @@ module.exports = {
         var culture_obj = main.global.cultures[province_obj.culture];
 
         //Format embed
-        province_string.push(`**[Back]** | **[Jump To Page]** | **[View]**`);
-        province_string.push("");
+        if (game_obj.page != "map") {
+          province_string.push(`**[Back]** | **[Jump To Page]**`);
+          province_string.push("");
+        }
+
         province_string.push(`**Ownership:**`);
         province_string.push("");
-        province_string.push(`Owned by **${main.users[province_obj.owner].name}**.`);
 
-        //Display occupation status
-        if (province_obj.owner != province_obj.controller)
-          province_string.push(`- Currently occupied by **${main.users[province_obj.controller].name}** in a war! This province will not be able to produce anything of value until it is either liberated, or the war is over.`);
+        if (province_obj.controller) {
+          province_string.push(`Owned by **${main.users[province_obj.owner].name}**.`);
+
+          //Display occupation status
+          if (province_obj.owner != province_obj.controller)
+            province_string.push(`- Currently occupied by **${main.users[province_obj.controller].name}** in a war! This province will not be able to produce anything of value until it is either liberated, or the war is over.`);
+        } else {
+          var colonisation_string = getProvinceColonisationLocalisation(province_obj.id);
+
+          province_string.push(`Currently uncolonised.`);
+
+          if (colonisation_string.length > 0) {
+            province_string.push("");
+
+            for (var i = 0; i < colonisation_string.length; i++)
+              province_string.push(colonisation_string[i]);
+          }
+        }
+
         if (province_obj.demilitarised)
           if (!atWar(user_id))
             province_string.push(`- Currently demilitarised for **${parseNumber(getDemilitarisedTurns(province_obj.id))}** turn(s)! None of our combat formations can move into this province until then.`);
@@ -63,22 +82,25 @@ module.exports = {
           province_string.push(`- ${config.icons.railways} Supply Limit: ${config.defines.combat.base_supply_limit}`);
 
         //Display population statistics
-        province_string.push("");
-        province_string.push(config.localisation.divider);
-        province_string.push("");
-        province_string.push(`**Population Statistics:**`);
-        province_string.push("");
+        if (province_obj.controller) {
+          province_string.push("");
+          province_string.push(config.localisation.divider);
+          province_string.push("");
+          province_string.push(`**Population Statistics:**`);
+          province_string.push("");
 
-        //Dynamically display all pops
-        for (var i = 0; i < all_pops.length; i++)
-          province_string.push(`- ${(config.pops[all_pops[i]].icon) ? config.pops[all_pops[i]].icon + " " : ""}${(config.pops[all_pops[i]].name) ? config.pops[all_pops[i]].name : all_pops[i]}: ${parseNumber(province_obj.pops[all_pops[i]])}`);
+          //Dynamically display all pops
+          for (var i = 0; i < all_pops.length; i++)
+            province_string.push(`- ${(config.pops[all_pops[i]].icon) ? config.pops[all_pops[i]].icon + " " : ""}${(config.pops[all_pops[i]].name) ? config.pops[all_pops[i]].name : all_pops[i]}: ${parseNumber(province_obj.pops[all_pops[i]])}`);
 
-        //Display total population, culture
-        province_string.push(`- ${config.icons.population} Population: ${parseNumber(province_obj.pops.population)}`);
-        province_string.push(`- ${config.icons.culture} Culture: ${culture_obj.name}`);
+          //Display total population, culture
+          province_string.push(`- ${config.icons.population} Population: ${parseNumber(province_obj.pops.population)}`);
+          province_string.push(`- ${config.icons.culture} Culture: ${culture_obj.name}`);
+        }
 
         //Change game_obj.page
-        game_obj.page = `view_province_${province_id}`;
+        if (game_obj.page != "map")
+          game_obj.page = `view_province_${province_id}`;
 
         //Return statement
         return splitEmbed(province_string, {
@@ -215,5 +237,32 @@ module.exports = {
         title: "Province List:",
         title_pages: true
       });
+  },
+
+  initialiseViewProvince: function (arg0_user, arg1_map) {
+    //Convert from parameters
+    var user_id = arg0_user;
+    var map = arg1_map;
+
+    //Declare local instance variables
+    var game_obj = getGameObject(user_id);
+
+    //Initialise visual prompt
+    visualPrompt(game_obj.alert_embed, user_id, {
+      title: `View A Province:`,
+      prompts: [
+        [`Which province would you like to view?`, "string"]
+      ]
+    },
+    function (arg) {
+      var province_obj = getProvince(arg[0]);
+
+      (province_obj) ?
+        createPageMenu((map) ? game_obj.alert_embed : game_obj.middle_embed, {
+          embed_pages: printProvince(user_id, arg[0]),
+          user: game_obj.user
+        }) :
+        printError(game_obj.id, `The province you have specified, **${arg[0]}** could not be found anywhere on the map!`);
+    });
   }
 };

@@ -89,6 +89,83 @@ module.exports = {
     //Add collector reactions
     initialiseControlPanel(game_id, (!hide_mapmodes) ? "map" : "special_map");
 
+    //Add select menu
+    if (!hide_mapmodes)
+      setTimeout(function(){
+        addSelectMenu(game_obj.header, {
+          id: "select_mapmode",
+          options: [
+            {
+              label: "Atlas",
+              emoji: "716811246556545035",
+              value: "atlas",
+
+              options: {
+                name: "Atlas"
+              },
+              effect: function (value, options) {
+                map_obj.mapmode = "atlas";
+                module.exports.changeImage(game_id, "atlas", false);
+              }
+            },
+            {
+              label: "Colonisation",
+              emoji: "716821194891853826",
+              value: "colonisation",
+
+              options: {
+                name: "Colonisation"
+              },
+              effect: function (value, options) {
+                map_obj.mapmode = "colonisation";
+                module.exports.changeImage(game_id, "colonisation", false);
+              }
+            },
+            {
+              label: "Political",
+              emoji: "716817688525275257",
+              value: "political",
+
+              options: {
+                name: "Political"
+              },
+
+              effect: function (value, options) {
+                map_obj.mapmode = "political";
+                module.exports.changeImage(game_id, "political", false);
+              }
+            },
+            {
+              label: "Population",
+              emoji: "716817688810356826",
+              value: "population",
+
+              options: {
+                name: "Population"
+              },
+              effect: function (value, options) {
+                map_obj.mapmode = "population";
+                module.exports.changeImage(game_id, "population", false);
+              }
+            },
+            {
+              label: "Supply",
+              emoji: "773451853534986241",
+              value: "supply",
+
+              options: {
+                name: "Supply"
+              },
+              effect: function (value, options) {
+                map_obj.mapmode = "supply";
+                module.exports.changeImage(game_id, "supply", false);
+              }
+            }
+          ],
+          placeholder: `⭭ Select Mapmode ..`
+        });
+      }, 1000);
+
     returnCacheChannel().send({
       content: `${generateRandomID()}_${game_id}`,
       files: [`./map/cache/${map_obj.mapmode}.jpg`]
@@ -247,7 +324,7 @@ module.exports = {
           `You are now viewing the **${parseMapmode(map_obj.mapmode)}** mapmode.`,
           `Zoom: ${map_obj.zoom} | Speed: ${map_obj.speed} | X: ${Math.round(map_obj.x)} | Y: ${Math.round(map_obj.y)}`,
           "",
-          "Use the arrow keys and magnifying icons at the bottom to navigate around the map."
+          "Use the arrow keys and magnifying icons at the bottom to navigate around the map. Type a province or city name to view it."
         ];
 
         if (!do_not_reload_image)

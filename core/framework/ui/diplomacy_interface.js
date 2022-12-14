@@ -99,7 +99,7 @@ module.exports = {
     diplomacy_string.push(config.localisation.divider);
     diplomacy_string.push("");
     diplomacy_string.push(`- **[View Client State Proposals]** ${(all_client_states.length > 0) ? `(__${parseNumber(all_client_states.length)}__)` : ""}`);
-    diplomacy_string.push(`- **[View Ledger]** | **[View Relations]**`);
+    diplomacy_string.push(`- **[View Ledger]** | **[View Relations]** | **[View Province]**`);
     diplomacy_string.push("");
     diplomacy_string.push(`- **[Cede Province]** | **[Allow Ceding]** | **[Deny Ceding]**`);
 

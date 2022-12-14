@@ -17,7 +17,6 @@ module.exports = {
     if (in_visual_prompt)
       in_visual_prompt = (in_visual_prompt.type == "visual_prompt");
 
-
     //Main Menu handler
     {
       if (game_obj.main_menu_embed) {
@@ -350,6 +349,11 @@ module.exports = {
               game_obj.page = "modifiers_list";
 
               break;
+            case "province":
+              if (game_obj.page != "map")
+                initialiseViewProvince(user_id);
+
+              break;
             case "provinces":
               createPageMenu(game_obj.middle_embed, {
                 embed_pages: printProvinces(user_id),
@@ -395,13 +399,18 @@ module.exports = {
             default:
               if (!["view army"].includes(input)) {
                 var army_obj = getArmy(user_id, view_obj);
-                var city_obj = getCity(view_obj, { users: user_id });
+                var city_obj = getCity(view_obj);
                 var ot_user_id = returnMention(view_obj);
                 var province_name = input.replace("view", "").trim()
                   .replace("province", "").trim();
 
                 if (main.provinces[view_obj]) {
-                  printProvince(game_obj.user, view_obj);
+                  var local_province = main.provinces[view_obj];
+
+                  createPageMenu((game_obj.page != "map") ? game_obj.middle_embed : game_obj.alert_embed, {
+                    embed_pages: printProvince(game_obj.user, province_name),
+                    user: game_obj.user
+                  });
                 } else {
                   var army_name_exact_match = false;
                   var city_name_exact_match = false;
@@ -1752,6 +1761,24 @@ module.exports = {
 
               break;
           }
+        }
+      }
+
+      //Map page handler
+      {
+        if (game_obj.page == "map") {
+          //[(Province ID/Name)]
+          var province_obj = getProvince(input);
+
+          if (province_obj)
+            createPageMenu(game_obj.alert_embed, {
+              embed_pages: printProvince(user_id, arg[0]),
+              user: game_obj.user
+            });
+
+          //[View Province]
+          if (input == "view province")
+            initialiseViewProvince(user_id, true);
         }
       }
 
