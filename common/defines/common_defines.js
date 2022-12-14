@@ -9,9 +9,9 @@ config.defines.common = {
   force_render_on_tick: true, //Whether or not force renders should be processed on ticks
   force_render_on_turn: true, //Whether or not force renders should be processed on turns
   resign_cooldown: 4, //How often should players be able to switch nations? (in turns)
-  starting_players: 10, //How many players should the game require before it can start? Set to 0 to disable starting queue
+  starting_players: 15, //How many players should the game require before it can start? Set to 0 to disable starting queue
   starting_provinces: 1,
-  starting_year: 1933, //Should start in 1500 by default
+  starting_year: 1500, //Should start in 1500 by default
 
   //Modifies how fast time elapses during a time period. (e.g. [0, 1750, 2] means that time elapses twice as fast between year(s) 0 and 1750)
   time_modifier: [
@@ -26,14 +26,13 @@ config.defines.common = {
       type: "anarchy",
       value: 1.0
     },
-    actions: 50,
+    actions: 10,
     set_mobilisation_unit: "none",
     money: 50000,
     wood: 10,
     stone: 15,
-    machine_parts: 35,
     food: 50,
-    research_to: 5000,
+    research_to: 0,
 
     magnates: [3, 15],
     unlock_building: [
