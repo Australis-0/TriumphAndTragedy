@@ -5,6 +5,9 @@ module.exports = {
     var all_good_names = getGoods({ exclude_hidden: true, return_names: true });
     var all_goods = getGoods({ exclude_hidden: true });
 
+    //Stub objects
+    if (!main.users) main.users = {};
+
     //Force render all maps
     if (!main.global)
       for (var i = 0; i < mapmodes.length; i++)
@@ -18,7 +21,6 @@ module.exports = {
       if (!main.global.user_map) main.global.user_map = {};
       if (!main.global.wars) main.global.wars = {};
     if (!main.interfaces) main.interfaces = {};
-    if (!main.users) main.users = {};
     if (!main.provinces) main.provinces = JSON.parse(fs.readFileSync(`./map/provinces.js`, "utf8").toString());
 
     //Date trackers
