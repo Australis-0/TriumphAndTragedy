@@ -149,14 +149,17 @@ module.exports = {
     for (var i = 0; i < all_provinces.length; i++)
       if (main.provinces[all_provinces[i]].controller == actual_id) {
         var local_province = main.provinces[all_provinces[i]];
-        var local_culture = getCulture(local_province.culture);
 
-        //Check if local_culture meets the prerequisites for being pushed
-        if (
-          local_culture.accepted_culture.includes(user_id) ||
-          (local_culture.primary_culture.includes(user_id) && !options.exclude_primary_culture)
-        )
-          accepted_culture_provinces.push(all_provinces[i]);
+        if (local_province.culture) {
+          var local_culture = getCulture(local_province.culture);
+
+          //Check if local_culture meets the prerequisites for being pushed
+          if (
+            local_culture.accepted_culture.includes(user_id) ||
+            (local_culture.primary_culture.includes(user_id) && !options.exclude_primary_culture)
+          )
+            accepted_culture_provinces.push(all_provinces[i]);
+        }
       }
 
     //Return statement

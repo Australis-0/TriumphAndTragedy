@@ -104,7 +104,7 @@ module.exports = {
 
         //Return statement
         return splitEmbed(province_string, {
-          title: `Viewing ${parseString(province_obj.type)} Province ${province_id}:`,
+          title: `Viewing ${(province_obj.type) ? parseString(province_obj.type) : "Uncolonised"} Province ${province_id}:`,
           title_pages: true,
           fixed_width: true
         });
