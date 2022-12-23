@@ -245,7 +245,7 @@ module.exports = {
   //parseTechnology() - Parses the technological effects of a given tech for a given user. (Used primarily after the research of a tech has been finished)
   parseTechnology: function (arg0_user, arg1_technology_name) {
     //Convert from parameters
-    var actual_id = main.global.user_map[arg0_user];
+    var user_id = arg0_user;
     var usr = main.users[actual_id];
     var raw_technology_name = arg1_technology_name.toLowerCase();
 
