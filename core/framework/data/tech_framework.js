@@ -246,7 +246,6 @@ module.exports = {
   parseTechnology: function (arg0_user, arg1_technology_name) {
     //Convert from parameters
     var user_id = arg0_user;
-    var usr = main.users[actual_id];
     var raw_technology_name = arg1_technology_name.toLowerCase();
 
     //Declare local instance variables
