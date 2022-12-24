@@ -37,7 +37,7 @@ module.exports = {
           initialiseResign(user_id);
 
         //[Exit Game]
-        if (input == "exit game")
+        if (["exit game", "quit game"].includes(input))
           clearGame(game_obj.id);
 
         if (game_obj.page == "coop_menu") {
@@ -126,6 +126,15 @@ module.exports = {
             });
         }
 
+        //[Building List]
+        if (input == "building list") {
+          createPageMenu(game_obj.middle_embed, {
+            embed_pages: printBuildList(user_id),
+            user: game_obj.user
+          });
+          game_obj.page = "building_list";
+        }
+
         //[Craft]
         if (["craft", "recruit", "train", "train units"].includes(input))
           initialiseCraft(user_id);
@@ -143,6 +152,15 @@ module.exports = {
         //[Set Tax]
         if (input == "set tax")
           initialiseSetTax(user_id);
+
+        //[Unit List]
+        if (input == "unit list") {
+          createPageMenu(game_obj.middle_embed, {
+            embed_pages: printUnitList(game_obj.user),
+            user: game_obj.user
+          });
+          game_obj.page = "unit_list";
+        }
 
         //Topbar commands
         {

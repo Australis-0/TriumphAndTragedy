@@ -144,6 +144,18 @@ module.exports = {
                 //Increase city_count tracker variable
                 usr.city_count++;
 
+                //Subtract resources
+                if (local_province.city_type != "capital")
+                  for (var i = 0; i < all_resource_requirements.length; i++) {
+                    var local_value =  city_resources[all_resource_requirements[i]];
+
+                    if (usr.inventory[all_resource_requirements[i]]) {
+                      usr.inventory[all_resource_requirements[i]] -= local_value;
+                    } else if (usr[all_resource_requirements[i]]) {
+                      usr[all_resource_requirements[i]] -= local_value;
+                    }
+                  }
+
                 //Update UIs
                 if (game_obj.page == "country_interface")
                   printStats(game_obj.user);
