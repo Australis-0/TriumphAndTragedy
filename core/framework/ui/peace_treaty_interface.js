@@ -571,7 +571,10 @@ module.exports = {
 
                         //Order of precedence - minimum provinces allowed > minimum % allowed > maximum provinces allowed > maximum % allowed
                         if (local_value.minimum_percentage_allowed)
-                          provinces_allowed = Math.ceil(local_user.provinces*local_value.minimum_percentage_allowed);
+                          provinces_allowed = Math.max(
+                            Math.ceil(local_user.provinces*local_value.minimum_percentage_allowed),
+                            provinces_allowed
+                          );
                         if (local_value.maximum_provinces_allowed)
                           if (provinces_allowed > local_value.maximum_provinces_allowed)
                             provinces_allowed = local_value.maximum_provinces_allowed;

@@ -906,7 +906,7 @@ module.exports = {
               if (local_effect.minimum_percentage_allowed)
                 wargoal_string.push(`${prefix}We can annex at least **${printPercentage(local_effect.minimum_percentage_allowed)}** of the enemy's provinces.${(local_effect.minimum_provinces_allowed) ? " Supersedes minimum provinces allowed." : ""}`);
               if (local_effect.maximum_percentage_allowed)
-                wargoal_string.push(`${prefix}We can annex at least **${printPercentage(local_effect.minimum_percentage_allowed)}** of the enemy's provinces.${(local_effect.maximum_provinces_allowed) ? " Supersedes maximum provinces allowed." : ""}`);
+                wargoal_string.push(`${prefix}We can annex at most **${printPercentage(local_effect.minimum_percentage_allowed)}** of the enemy's provinces.${(local_effect.maximum_provinces_allowed) ? " Supersedes maximum provinces allowed." : ""}`);
 
               //Custom effects
               for (var i = 0; i < local_effects.length; i++)
