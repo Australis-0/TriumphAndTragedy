@@ -174,7 +174,7 @@ module.exports = {
       var local_value = deficit_goods[all_deficit_goods[i]];
 
       if (i < 20)
-        deficit_localisation.push(`${(local_good.name) ? local_good.name : all_deficit_goods[i]} (${(local_value[0] == local_value[1]) ? `**${parseNumber(local_value[0])}**` : `${parseNumber(Math.min(local_value[0], local_value[1]))}`})`);
+        deficit_localisation.push(`${(local_good) ? local_good.name : all_deficit_goods[i]} (${(local_value[0] == local_value[1]) ? `**${parseNumber(local_value[0])}**` : `${parseNumber(Math.min(local_value[0], local_value[1]))}`})`);
     }
 
     local_obj.deficit_localisation = (deficit_localisation.length > 0) ?

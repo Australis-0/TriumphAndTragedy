@@ -13,8 +13,8 @@ module.exports = {
     try {
       if (!province_obj.type) {
         //Set province type and culture
-        province_obj.owner = user_id;
-        province_obj.controller = user_id; //Used for occupations and other shenanigans
+        province_obj.owner = actual_id;
+        province_obj.controller = actual_id; //Used for occupations and other shenanigans
 
         province_obj.type = "rural";
         province_obj.culture = usr.culture;
