@@ -1277,7 +1277,7 @@ module.exports = {
       ot_user.provinces++;
 
       //Change province colour
-      setAllProvinceColours(ot_user_id, options.province_id);
+      setAllProvinceColours(options.target, options.province_id);
     }
   }
 };
