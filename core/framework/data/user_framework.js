@@ -696,11 +696,8 @@ module.exports = {
     //Fetch distance_array
     for (var i = 0; i < provinces.length; i++)
       if (provinces[i + 1]) {
+        var local_distance = module.exports.getDistance(provinces[i], provinces[i + 1]);
         var local_province = main.provinces[provinces[i]];
-
-        var local_distance = (local_province.adjacency_distances) ?
-          local_province.adjacency_distances[local_province.adjacencies.indexOf(provinces[i + 1])] :
-          module.exports.getDistance(provinces[i], provinces[i + 1]);
 
         //Push actual distance
         distance_array.push(
