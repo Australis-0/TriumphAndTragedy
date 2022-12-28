@@ -102,6 +102,7 @@ module.exports = {
 
         //Army movement
         if (local_army.moving_to?.length > 0) {
+          var army_arrived = false;
           var current_element = local_army.moving_to.indexOf(local_army.province);
           var current_speed = getArmySpeed(local_user.id, local_army)*turn_hours;
           var provinces_moved = 0;
@@ -113,7 +114,7 @@ module.exports = {
           local_army.progress += current_speed;
 
           //Check distances_array
-          if (local_army.distances)
+          if (local_army.distances) {
             for (var x = current_element; x < local_army.distances.length; x++)
               if (local_army.distances[x])
                 if (local_army.progress >= local_army.distances[x]) {
@@ -123,11 +124,20 @@ module.exports = {
                   local_army.province = local_army.moving_to[x];
                 }
 
+            if (local_army.progress >= getSum(local_army.distances))
+              army_arrived = true;
+          }
+
           //Clear movement array if army has arrived
           if (
             local_army.province == local_army.moving_to[local_army.moving_to.length - 1] ||
-            local_army.moving_to.length == 0
+            local_army.moving_to.length == 0 ||
+            army_arrived
           ) {
+            //Set army to destination since they've arrived
+            if (local_army.moving_to.length > 0)
+              local_army.province = local_army.moving_to[local_army.moving_to.length - 1];
+
             local_army.distances = [];
             local_army.moving_to = [];
             local_army.status = "stationed";

@@ -1305,6 +1305,7 @@ module.exports = {
               //Set army_obj.moving_to and so on
               army_obj.distances = distances_array;
               army_obj.moving_to = move_to_array;
+              army_obj.progress = 0;
               army_obj.status = "moving";
 
               var time_to_arrival = module.exports.getArrivalTime(user_id, army_obj);
@@ -1316,8 +1317,8 @@ module.exports = {
           } else {
             army_obj.distances = [];
             army_obj.moving_to = [];
-            army_obj.progress = 0;
             army_obj.status = "stationed";
+            delete army_obj.progress;
 
             return [true, `You have ordered the **${army_obj.name}** to remain still.`];
           }
