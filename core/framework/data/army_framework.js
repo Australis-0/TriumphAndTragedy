@@ -1153,7 +1153,7 @@ module.exports = {
 
       if (local_army.volunteering) {
         has_volunteers = true;
-        
+
         break;
       }
     }
@@ -1255,12 +1255,8 @@ module.exports = {
     if (usr)
       if (army_obj)
         if (!["empty", "navy"].includes(army_obj.type)) {
-          console.log(provinces);
-
           //Push army_obj.province to provinces beginning
           provinces.unshift(army_obj.province);
-
-          console.log(provinces);
 
           //Check to see if army was ordered to stand still
           var same_provinces = 0;
