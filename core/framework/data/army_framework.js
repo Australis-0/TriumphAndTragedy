@@ -527,7 +527,7 @@ module.exports = {
   getArmyEnemies: function (arg0_user, arg1_army_name) {
     //Convert from parameters
     var user_id = arg0_user;
-    var army_name = (typeof arg1_army_name != "object") ? arg1_army_name.trim().toLowerCase() : army_name;
+    var army_name = (typeof arg1_army_name != "object") ? arg1_army_name.trim().toLowerCase() : arg1_army_name;
 
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];

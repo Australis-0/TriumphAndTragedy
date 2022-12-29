@@ -190,7 +190,7 @@ module.exports = {
       number--;
 
     //Return statement
-    return `${(options.display_prefix && number > 0) ? "+" : ""}${Math.round(number*100)}%`;
+    return `${(options.display_prefix && number > 0) ? "+" : ""}${(!options.display_float) ? Math.round(number*100) : Math.round(number*100*100)/100}%`;
   },
 
   /*

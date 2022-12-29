@@ -57,8 +57,11 @@ module.exports = {
       var aeroplane_count = 0;
       var all_embeds = [];
       var all_units = Object.keys(army_obj.units);
+      console.log(army_obj);
+      var army_enemies = getArmyEnemies(user_id, army_obj);
       var army_icon = "";
       var army_power = calculateArmyStats(user_id, army_obj);
+      var army_size = getArmySize(user_id, army_obj);
       var army_stats = calculateArmyType(user_id, army_obj);
       var army_string = [];
       var army_supply = returnSafeNumber(getOverallSupply(user_id, army_obj), 1);
@@ -155,6 +158,25 @@ module.exports = {
 
         //Format army_string
         army_string.push(`${carrier_capacity_string}${current_status}`);
+
+        //Format status_string
+        var status_string = [];
+
+        if (army_enemies.includes(province_obj.controller)) {
+          var required_siege_manpower = Math.ceil(returnSafeNumber(province_obj.pops.population)*config.defines.combat.occupation_requirement);
+
+          if (army_size < required_siege_manpower)
+            status_string.push(`You require an additional **${parseNumber(required_siege_manpower - army_size)}** soldier(s) in your army to siege down **${(province_obj.name) ? province_obj.name : `Province ${province_obj.id}**`}!`);
+            status_string.push(`- You need at least **${printPercentage(province_obj.pops.population, { display_float: true })}** of the local population in an army to siege down a province.`);
+        }
+
+        if (status_string.length > 0) {
+          army_string.push("");
+
+          for (var i = 0; i < status_string.length; i++)
+            army_string.push(status_string[i]);
+        }
+
         army_string.push("");
 
         //Display modifiers
