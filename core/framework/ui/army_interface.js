@@ -166,7 +166,7 @@ module.exports = {
 
           if (army_size < required_siege_manpower)
             status_string.push(`You require an additional **${parseNumber(required_siege_manpower - army_size)}** soldier(s) in your army to siege down **${(province_obj.name) ? province_obj.name : `Province ${province_obj.id}`}**!`);
-            status_string.push(`- You need at least **${printPercentage(config.defines.common.occupation_requirement, { display_float: true })}** of the local population in an army to siege down a province.`);
+            status_string.push(`- You need at least **${printPercentage(config.defines.combat.occupation_requirement, { display_float: true })}** of the local population in an army to siege down a province.`);
         }
 
         if (status_string.length > 0) {
