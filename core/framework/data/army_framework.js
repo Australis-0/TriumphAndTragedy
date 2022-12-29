@@ -457,13 +457,17 @@ module.exports = {
   getArmy: function (arg0_user, arg1_army_name, arg2_options) {
     //Convert from parameters
     var user_id = arg0_user;
-    var army_name = arg1_army_name.trim().toLowerCase();
+    var army_name = (typeof arg1_army_name != "object") ? arg1_army_name.trim().toLowerCase() : arg1_army_name;
     var options = (arg2_options) ? arg2_options : {};
 
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
     var army_exists = [false, ""]; //[army_exists, army_obj/key];
     var usr = main.users[actual_id];
+
+    //Guard clause
+    if (typeof army_name == "object")
+      return usr.armies[army_name.id];
 
     var all_armies = Object.keys(usr.armies);
 

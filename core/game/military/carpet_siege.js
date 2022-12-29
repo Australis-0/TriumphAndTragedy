@@ -2,13 +2,13 @@ module.exports = {
   carpetSiege: function (arg0_user, arg1_user, arg2_armies) {
     //Convert from parameters
     var user_id = arg0_user;
-    var target_id = arg1_user;
+    var ot_user_id = arg1_user;
     var army_list = (arg2_armies && arg2_armies != "none") ?
       parseArmies(arg2_armies) : [];
 
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
-    var actual_ot_user_id = main.global.user_map[target_id];
+    var actual_ot_user_id = main.global.user_map[ot_user_id];
     var game_obj = getGameObject(user_id);
     var ot_user = main.users[actual_ot_user_id];
     var usr = main.users[actual_id];
@@ -48,7 +48,7 @@ module.exports = {
 
           if (local_army.type == "army" && Object.keys(local_army.units).length > 0)
             if (usr.options.ignore_orders || local_army.order == "stationed")
-              acceptable_armies.push(local_army.name);
+              acceptable_armies.push(local_army);
         }
 
       //Begin moving armies
