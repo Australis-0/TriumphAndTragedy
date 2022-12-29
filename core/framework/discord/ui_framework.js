@@ -142,9 +142,11 @@ module.exports = {
         }
       } else {
         log.error("createPageMenu() encountered an error: 'user' object was not defined!");
+        console.log(e);
       }
     } else {
       log.error("createPageMenu() encountered an error: 'embed_pages' was not defined!");
+      console.log(e);
     }
   },
 
