@@ -109,7 +109,7 @@ module.exports = {
           fixed_width: true
         });
       } else {
-        return printCity(user_id, province_obj.name);
+        return printCity(user_id, province_obj.id);
       }
     } else {
       printError(game_obj.id, `The province of ${province_id} couldn't be found anywhere in your territory or otherwise!`);
