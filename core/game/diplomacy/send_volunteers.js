@@ -2,8 +2,11 @@ module.exports = {
   initialiseSendVolunteerArmies: function (arg0_user, arg1_war_obj, arg2_armies) {
     //Convert from parameters
     var user_id = arg0_user;
-    var war_obj = (typeof arg1_war_obj != "object") ? arg1_war_obj.trim().toLowerCase() : arg1_war_obj;
+    var war_obj;
     var armies = arg2_armies;
+
+    if (arg1_war_obj)
+      war_obj = (typeof arg1_war_obj != "object") ? arg1_war_obj.trim().toLowerCase() : arg1_war_obj;
 
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
