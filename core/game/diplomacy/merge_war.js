@@ -19,6 +19,17 @@ module.exports = {
       },
       function (arg) {
         module.exports.mergeWar(user_id, war_obj, arg[0]);
+      },
+      function (arg) {
+        switch (arg) {
+          case "view wars":
+            createPageMenu(game_obj.middle_embed, {
+              embed_pages: printWars(game_obj.user),
+              user: game_obj.user
+            });
+
+            break;
+        }
       }) :
       visualPrompt(game_obj.alert_embed, user_id, {
         title: `Merge Wars:`,
@@ -29,6 +40,17 @@ module.exports = {
       },
       function (arg) {
         module.exports.mergeWar(user_id, arg[1], arg[0]);
+      },
+      function (arg) {
+        switch (arg) {
+          case "view wars":
+            createPageMenu(game_obj.middle_embed, {
+              embed_pages: printWars(game_obj.user),
+              user: game_obj.user
+            });
+
+            break;
+        }
       });
   },
 

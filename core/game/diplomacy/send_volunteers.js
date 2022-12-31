@@ -27,6 +27,18 @@ module.exports = {
       },
       function (arg) {
         module.exports.sendVolunteerArmies(user_id, war_obj, arg[0]);
+      },
+      function (arg) {
+        switch (arg) {
+          case "army list":
+            createPageMenu(game_obj.middle_embed, {
+              embed_pages: printArmyList(game_obj.user),
+              user: game_obj.user
+            });
+            return true;
+
+            break;
+        }
       });
     } else if (armies) {
       visualPrompt(game_obj.alert_embed, user_id, {
@@ -37,6 +49,15 @@ module.exports = {
       },
       function (arg) {
         module.exports.sendVolunteerArmies(user_id, arg[0], armies);
+      },
+      function (arg) {
+        switch (arg) {
+          case "diplomacy":
+            printDiplomacy(user_id);
+            return true;
+
+            break;
+        }
       });
     } else {
       visualPrompt(game_obj.alert_embed, user_id, {
@@ -48,6 +69,23 @@ module.exports = {
       },
       function (arg) {
         module.exports.sendVolunteerArmies(user_id, arg[0], arg[1]);
+      },
+      function (arg) {
+        switch (arg) {
+          case "army list":
+            createPageMenu(game_obj.middle_embed, {
+              embed_pages: printArmyList(game_obj.user),
+              user: game_obj.user
+            });
+            return true;
+
+            break;
+          case "diplomacy":
+            printDiplomacy(user_id);
+            return true;
+
+            break;
+        }
       });
     }
   },
@@ -82,6 +120,17 @@ module.exports = {
       },
       function (arg) {
         module.exports.sendVolunteers(user_id, arg[0], arg[1]);
+      },
+      function (arg) {
+        switch (arg) {
+          case "view wars":
+            createPageMenu(game_obj.middle_embed, {
+              embed_pages: printWars(game_obj.user),
+              user: game_obj.user
+            });
+
+            break;
+        }
       });
   },
 

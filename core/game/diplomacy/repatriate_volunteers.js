@@ -17,6 +17,15 @@ module.exports = {
     },
     function (arg) {
       module.exports.repatriateVolunteers(user_id, arg[0]);
+    },
+    function (arg) {
+      switch (arg) {
+        case "diplomacy":
+          printDiplomacy(user_id);
+          return true;
+
+          break;
+      }
     });
   },
 
