@@ -154,7 +154,7 @@ module.exports = {
                       ctx.stroke();
 
                       ctx.fillStyle = "#ffffff";
-                      ctx.fillText(truncateString(`${parseNumber(getLogarithmicScale(local_index, 1, maximum_population, 3))}`, 15), config.defines.map.map_label_coords[0] + 50, config.defines.map.map_label_coords[1] + 47 + (i/10)*40);
+                      ctx.fillText(truncateString(`${parseNumber((local_index < 99) ? getLogarithmicScale(local_index, 1, maximum_population, 3) : maximum_population)}`, 15), config.defines.map.map_label_coords[0] + 50, config.defines.map.map_label_coords[1] + 47 + (i/10)*40);
                     }
                   }
 
