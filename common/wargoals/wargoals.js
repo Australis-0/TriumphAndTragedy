@@ -90,7 +90,7 @@ config.wargoals = {
         free_annexation: false, //Whether or not a user
         minimum_provinces_allowed: 10,
         minimum_percentage_allowed: 0.20,
-        maximum_percentage_allowed: 0.20
+        maximum_provinces_allowed: 15
       }
     }
   },

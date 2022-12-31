@@ -264,15 +264,15 @@ module.exports = {
                     recipient_count[local_recipient.id]++;
 
                     //Iterate over all provinces
-                    for (var y = 0; y < target_obj.provinces.length; y++) {
-                      var local_province = main.provinces[target_obj.provinces[y]];
+                    for (var z = 0; z < target_obj.provinces.length; z++) {
+                      var local_province = main.provinces[target_obj.provinces[z]];
 
                       provinces_taken[local_province.owner] = (provinces_taken[local_province.owner]) ?
                         provinces_taken[local_province.owner] + 1 :
                         1;
 
-                      if (!provinces_affected.includes(local_provinces[z]))
-                        provinces_affected.push(local_provinces[z]);
+                      if (!provinces_affected.includes(target_obj.provinces[z]))
+                        provinces_affected.push(target_obj.provinces[z]);
 
                       if (local_province.type)
                         type_count[local_province.type] = (type_count[local_province.type]) ?

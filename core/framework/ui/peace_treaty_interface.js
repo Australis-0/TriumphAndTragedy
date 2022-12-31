@@ -1473,9 +1473,9 @@ module.exports = {
                       }
 
                       if (!effect_obj.annexation[local_recipient])
-                        effect_obj.annexation[local_recipient] = {};
+                        effect_obj.annexation[local_recipient] = { provinces: [] };
 
-                      var target_obj = effect_obj.annexation[local_recipient];
+                      var target_obj = effect_obj.annexation[local_recipient].provinces;
 
                       //Push provinces to target_obj
                       for (var x = 0; x < local_provinces.length; x++)
