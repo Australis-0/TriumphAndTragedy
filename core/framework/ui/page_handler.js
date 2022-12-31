@@ -418,6 +418,7 @@ module.exports = {
               if (!["view army"].includes(input)) {
                 var army_obj = getArmy(user_id, view_obj);
                 var city_obj = getCity(view_obj);
+                var edit_embed = (game_obj.page != "map") ? game_obj.middle_embed : game_obj.alert_embed;
                 var ot_user_id = returnMention(view_obj);
                 var province_name = input.replace("view", "").trim()
                   .replace("province", "").trim();
@@ -425,7 +426,7 @@ module.exports = {
                 if (main.provinces[view_obj]) {
                   var local_province = main.provinces[view_obj];
 
-                  createPageMenu((game_obj.page != "map") ? game_obj.middle_embed : game_obj.alert_embed, {
+                  createPageMenu(edit_embed, {
                     embed_pages: printProvince(game_obj.user, province_name),
                     user: game_obj.user
                   });
@@ -443,7 +444,7 @@ module.exports = {
                   //Army smart display
                   if (army_obj) {
                     if (city_name_exact_match && !army_name_exact_match) {
-                      createPageMenu(game_obj.middle_embed, {
+                      createPageMenu(edit_embed, {
                         embed_pages: printCity(game_obj.user, city_obj.name),
                         user: game_obj.user
                       });
@@ -452,7 +453,7 @@ module.exports = {
                     } else {
                       var viewed_army = printArmy(user_id, army_obj.name);
 
-                      createPageMenu(game_obj.middle_embed, {
+                      createPageMenu(edit_embed, {
                         embed_pages: viewed_army,
                         user: game_obj.user
                       });
@@ -465,13 +466,13 @@ module.exports = {
                     if (army_name_exact_match && !city_name_exact_match) {
                       var viewed_army = printArmy(user_id, army_obj.name);
 
-                      createPageMenu(game_obj.middle_embed, {
+                      createPageMenu(edit_embed, {
                         embed_pages: viewed_army,
                         user: game_obj.user
                       });
                       game_obj.page = `army_viewer_${army_obj.name}`;
                     } else {
-                      createPageMenu(game_obj.middle_embed, {
+                      createPageMenu(edit_embed, {
                         embed_pages: printCity(game_obj.user, city_obj.name),
                         user: game_obj.user
                       });
@@ -483,7 +484,7 @@ module.exports = {
                   if (!city_obj)
                     if (main.provinces[province_name])
                       if (main.provinces[province_name].owner == actual_id)
-                      createPageMenu(game_obj.middle_embed, {
+                      createPageMenu(edit_embed, {
                         embed_pages: printProvince(game_obj.user, province_name),
                         user: game_obj.user
                       });

@@ -100,6 +100,7 @@ module.exports = {
     var options = arg1_options;
 
     //Declare local instance variables
+    var game_obj = getGameObject(options.user);
     var starting_page = 0;
 
     starting_page = (options.page) ? options.page : starting_page;
@@ -118,6 +119,14 @@ module.exports = {
         ui_obj.embed_array = options.embed_pages;
         ui_obj.page = starting_page;
         ui_obj.user = options.user;
+
+        if (game_obj)
+          //Remove all reactions if they exist
+          try {
+            game_obj.middle_embed.removeAll();
+            game_obj.middle_control_panel.removeAll();
+            game_obj.bottom_control_panel.removeAll();
+          } catch {}
 
         //Create first embed
         if (starting_page == 0) {

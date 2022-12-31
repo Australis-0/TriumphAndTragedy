@@ -237,7 +237,10 @@ module.exports = {
 
             //Reset map data states
             reloadMap(game_id);
-            reloadMapInterface(map_interface_embed, game_id);
+
+            try {
+              reloadMapInterface(map_interface_embed, game_id);
+            } catch {}
 
             map_obj.increase_pan_speed = false;
             map_obj.decrease_pan_speed = false;
@@ -258,6 +261,7 @@ module.exports = {
             map_obj.atlas = false;
           } catch (e) {
             log.warn(`logic_loop under initialiseMapViewer() was unable to proceed! ${e}.`);
+            console.log(e);
             clearInterval(logic_loop);
           }
         }, 100);
@@ -295,9 +299,10 @@ module.exports = {
     var game_obj = interfaces[game_id];
     var map_obj = game_obj.map;
 
-    if (map_obj.embed_history[map_obj.embed_history.length-2] != map_obj.embed_history[map_obj.embed_history.length-1] || map_obj.objects[map_obj.objects.length-2] != map_obj.objects[map_obj.objects.length-1]) {
-      game_obj.main_embed = embed_obj;
-      game_obj.middle_embed.edit({ embeds: [embed_obj] });
+    if (map_obj.embed_history)
+      if (map_obj.embed_history[map_obj.embed_history.length-2] != map_obj.embed_history[map_obj.embed_history.length-1] || map_obj.objects[map_obj.objects.length-2] != map_obj.objects[map_obj.objects.length-1]) {
+        game_obj.main_embed = embed_obj;
+        game_obj.middle_embed.edit({ embeds: [embed_obj] });
     }
   },
 

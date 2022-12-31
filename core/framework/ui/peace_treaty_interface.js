@@ -2175,6 +2175,7 @@ module.exports = {
 
     //Initialise map viewer
     cacheSVG(map_file);
+    game_obj.page = "map";
 
     setTimeout(function(){
       (!change_image) ?
