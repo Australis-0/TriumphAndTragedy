@@ -262,7 +262,8 @@ config.technology.administrative_technology = {
     year: 1756,
     unlocks: {
       maximum_expeditions: 1,
-      obsolete_unit: "conquistadors"
+      obsolete_unit: "conquistadors",
+      unlock_unit: "settlers"
     }
   },
   national_sovereignty: {
