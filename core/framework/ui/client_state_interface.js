@@ -22,6 +22,11 @@ module.exports = {
     try {
       fs.unlinkSync(`./map/${client_obj.id}_client_state`);
     } catch {}
+
+    //Remove page reactions
+    try {
+      game_obj.alert_embed.reactions.removeAll();
+    } catch {}
   },
 
   deleteClientState: function (arg0_user, arg1_client_state, arg2_force_delete) {
