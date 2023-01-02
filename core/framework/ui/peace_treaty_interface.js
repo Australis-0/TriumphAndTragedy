@@ -1794,7 +1794,9 @@ module.exports = {
       } else
         switch (current_wargoal) {
           case "back":
-            module.exports.modifyPeaceTreaty(user_id, peace_obj, true);
+            setTimeout(function(){
+              module.exports.modifyPeaceTreaty(user_id, peace_obj, true);
+            }, 3000);
 
             break;
           default:
@@ -2012,34 +2014,11 @@ module.exports = {
     if (!change_image)
       loadMap(`${map_file}.svg`, map_file);
 
-    //Shade in the base provinces and treaty changes - but only for the belligerents currently involved in the war
+    //Format belligerents
     for (var i = 0; i < war_obj.attackers.length; i++)
       belligerents.push(war_obj.attackers[i]);
     for (var i = 0; i < war_obj.defenders.length; i++)
       belligerents.push(war_obj.defenders[i]);
-
-    for (var i = 0; i < belligerents.length; i++) {
-      var local_provinces = getProvinces(belligerents[i], { include_hostile_occupations: true });
-      var local_user = main.users[belligerents[i]];
-
-      for (var x = 0; x < local_provinces.length; x++) {
-        //Check if province will be annexed (either by retaking cores, or by outright annexation)
-        var new_colour = local_user.colour;
-        var new_outline = [0, 0, 0];
-
-        //Check for fill change
-        if (fill_cache[local_provinces[x].id])
-          new_colour = fill_cache[local_provinces[x].id];
-
-        //Check for outline change
-        if (outline_cache[local_provinces[x].id])
-          new_outline = outline_cache[local_provinces[x].id];
-
-        //Shade in province
-        setProvinceColour(map_file, local_provinces[x].id, new_colour);
-        //setProvinceOutline(map_file, local_provinces[x].id, new_outline);
-      }
-    }
 
     //Process fill_cache and outline_cache
     if (peace_obj.wargoals.length > 0)
@@ -2172,6 +2151,30 @@ module.exports = {
             }
           }
         }
+
+    //Shade in the base provinces and treaty changes - but only for the belligerents currently involved in the war
+    for (var i = 0; i < belligerents.length; i++) {
+      var local_provinces = getProvinces(belligerents[i], { include_hostile_occupations: true });
+      var local_user = main.users[belligerents[i]];
+
+      for (var x = 0; x < local_provinces.length; x++) {
+        //Check if province will be annexed (either by retaking cores, or by outright annexation)
+        var new_colour = local_user.colour;
+        var new_outline = [0, 0, 0];
+
+        //Check for fill change
+        if (fill_cache[local_provinces[x].id])
+          new_colour = fill_cache[local_provinces[x].id];
+
+        //Check for outline change
+        if (outline_cache[local_provinces[x].id])
+          new_outline = outline_cache[local_provinces[x].id];
+
+        //Shade in province
+        setProvinceColour(map_file, local_provinces[x].id, new_colour);
+        setProvinceOutline(map_file, local_provinces[x].id, new_outline);
+      }
+    }
 
     //Initialise map viewer
     cacheSVG(map_file);
