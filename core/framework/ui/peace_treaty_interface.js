@@ -1848,7 +1848,10 @@ module.exports = {
           break;
         case "send peace offer":
           sendPeaceTreaty(user_id, peace_obj);
-          module.exports.closePeaceTreaty(user_id);
+
+          setTimeout(function(){
+            module.exports.closePeaceTreaty(user_id);
+          }, 3000);
 
           break;
       }
