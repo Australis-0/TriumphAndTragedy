@@ -329,7 +329,10 @@ module.exports = {
         });
 
         //Call initialiseClientStateScreen()
-        module.exports.modifyClientState(user_id, client_state_obj[1]);
+
+        setTinmeout(function(){
+          module.exports.modifyClientState(user_id, client_state_obj[1]);
+        }, 3000);
       } else {
         printError(game_obj.id, `The name you have specified was already taken or otherwise invalid!`);
 
@@ -612,7 +615,7 @@ module.exports = {
         var infamy_reduction = getClientStateInfamyReduction(user_id, all_client_states[i]);
         var local_client_state = usr.client_states[all_client_states[i]];
 
-        proposals_string.push(`**${local_client_state.name}** - ${(local_client_state.capital_id) ? main.provinces[local_client_state.capital_id].name : "_None_"} | ${parseNumber(local_client_state.provinces.length)}${(infamy_reduction > 0) ? ` (${config.icons.infamy} **${parseNumber(infamy_reduction*-1)}**)` : ""}`);
+        proposals_string.push(`**${local_client_state.name}** - ${(local_client_state.capital_id) ? main.provinces[local_client_state.capital_id].name : "_None_"} | ${parseNumber(local_client_state.provinces.length)}${(infamy_reduction > 0) ? ` (${config.icons.infamy} **${parseNumber(infamy_reduction*-1, { display_float: true })}**)` : ""}`);
         proposals_string.push(`- **[Edit ${local_client_state.name}]**`);
       }
     } else {
