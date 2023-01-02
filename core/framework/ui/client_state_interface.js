@@ -220,7 +220,7 @@ module.exports = {
 
     if (returnSafeNumber(infamy_reduction) > 0) {
       client_string.push("");
-      client_string.push(`- Releasing this client state will reduce our infamy by **${parseNumber(infamy_reduction*-1, { display_float: true })}** for **${parseNumber(getInfamyLossPerProvince, { display_float: true })} per province.`);
+      client_string.push(`- Releasing this client state will reduce our infamy by **${parseNumber(infamy_reduction*-1, { display_float: true })}** for **${parseNumber(getInfamyLossPerProvince(user_id), { display_float: true })}** per province.`);
     }
 
     client_string.push("");
