@@ -436,7 +436,7 @@ module.exports = {
     var usr = main.users[actual_id];
 
     var all_vassals = excludeClientStates(Object.keys(usr.diplomacy.vassals));
-    
+
     //Return statement
     return (
       usr.modifiers.political_capital_gain*

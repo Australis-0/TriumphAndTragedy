@@ -1020,8 +1020,12 @@ module.exports = {
         transferProvince(user_id, { target: ot_user_id, province_id: all_provinces[i].id });
 
     //KEEP AT BOTTOM! Remove all diplomatic relations and delete user object
-    destroyAllDiplomaticRelations(user_id);
-    deleteCountry(user_id);
+    try {
+      destroyAllDiplomaticRelations(user_id);
+    } catch {}
+    try {
+      deleteCountry(user_id);
+    } catch {}
 
     //Remove all connections in user map
     for (var i = 0; i < all_mapped_users.length; i++)
