@@ -16,6 +16,7 @@ config.pops = {
     },
     specialised_pop: true
   },
+
   faculty: {
     name: "Faculty",
     formal_name: "Faculty",
@@ -32,6 +33,7 @@ config.pops = {
     },
     specialised_pop: true
   },
+
   workers: {
     name: "Workers",
     formal_name: "Proletariat",
@@ -42,6 +44,7 @@ config.pops = {
     specialised_pop: false,
     stats_display: true
   },
+  
   soldiers: {
     name: "Soldiers",
     formal_name: "Soldiery",
