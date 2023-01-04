@@ -15,9 +15,10 @@ config.defines.common = {
 
   //Modifies how fast time elapses during a time period. (e.g. [0, 1750, 2] means that time elapses twice as fast between year(s) 0 and 1750)
   time_modifier: [
-    [0, 1750, 2],
-    [1750, 1914, 1],
-    [1914, 9999, 0.25]
+    [0, 1648, 1],
+    [1648, 1750, 0.50],
+    [1750, 1914, 0.25],
+    [1914, 9999, 1/12]
   ],
 
   starting_kit: {
