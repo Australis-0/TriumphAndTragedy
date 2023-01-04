@@ -552,6 +552,10 @@ module.exports = {
     var map_file = `${client_obj.id}_client_state`;
     var usr = main.users[actual_id];
 
+    //Visual interface using visualPrompt() before creating a page menu
+    module.exports.initialiseModifyClientState(user_id, client_obj);
+    module.exports.initialiseClientStateScreen(user_id, client_obj);
+
     //Cache a new SVG
     if (!change_image)
       loadMap(`${map_file}.svg`, map_file);
@@ -587,10 +591,6 @@ module.exports = {
         initialiseMapViewer(game_obj.id, map_file, true) :
         changeImage(game_obj.id, map_file);
     }, 10000);
-
-    //Visual interface using visualPrompt() before creating a page menu
-    module.exports.initialiseModifyClientState(user_id, client_obj);
-    module.exports.initialiseClientStateScreen(user_id, client_obj);
   },
 
   printClientStateProposals: function (arg0_user) {
