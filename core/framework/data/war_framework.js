@@ -5,7 +5,7 @@ module.exports = {
 
     //Declare local instance variables
     var war_id = module.exports.getWar(raw_war_name, { return_key: true });
-    var war_obj = (typeof raw_war_name != "object") ? module.exports.getWar(raw_war_name) : raw_war_name;
+    var war_obj = module.exports.getWar(raw_war_name);
 
     //Move to war archive
     if (war_obj) {
@@ -189,12 +189,16 @@ module.exports = {
   */
   getWar: function (arg0_war_name, arg1_options) {
     //Convert from parameters
-    var war_name = arg0_war_name.trim().toLowerCase();
+    var war_name = (typeof arg0_war_name != "object") ? arg0_war_name.trim().toLowerCase() : arg0_war_name;
     var options = (arg1_options) ? arg1_options : {};
 
     //Declare local instance variables
     var all_wars = Object.keys(main.global.wars);
     var war_found = [false, ""];
+
+    //Object guard clause
+    if (typeof war_name == "object")
+      return main.global.wars[war_name.id];
 
     //ID search
     if (main.global.wars[war_name])

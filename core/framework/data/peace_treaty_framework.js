@@ -761,8 +761,8 @@ module.exports = {
         if (local_user) {
           var local_armies = Object.keys(local_user.armies);
 
-          for (var i = 0; i < local_armies.length; i++) {
-            var local_army = usr.armies[local_armies[i]];
+          for (var x = 0; x < local_armies.length; x++) {
+            var local_army = local_user.armies[local_armies[x]];
 
             if (local_army.volunteering)
               if (local_army.volunteering[1] == war_obj.id)
