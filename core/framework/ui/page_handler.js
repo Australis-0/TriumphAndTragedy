@@ -83,7 +83,7 @@ module.exports = {
       main.season_started
     ) {
       //Global commands
-      {
+      if (!["edit_peace_offer"].includes(game_obj.page)) {
         //[Build]
         if (!game_obj.page.startsWith("view_city")) {
           if (input == "build")
@@ -1527,9 +1527,12 @@ module.exports = {
 
           //[View Peace Offer]
           if (["edit peace offer", "view peace offer", "view peace treaty"].includes(input))
-            (war_obj.peace_treaties[actual_id]) ?
-              modifyPeaceTreaty(user_id, war_obj.peace_treaties[actual_id]) :
+            if (war_obj.peace_treaties[actual_id]) {
+              game_obj.page = "edit_peace_offer";
+              modifyPeaceTreaty(user_id, war_obj.peace_treaties[actual_id]);
+            } else {
               printError(game_obj.id, `You don't currently have a peace treaty active for this conflict! Type **[Sign Peace Treaty]** first to create a new peace treaty.`);
+            }
 
           //[(Wargoal Name)]
           if (!default_keys.includes(input)) {

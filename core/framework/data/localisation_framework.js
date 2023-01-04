@@ -361,6 +361,7 @@ module.exports = {
     //Print all sorted_wargoals to the first page
     for (var i = 0; i < sorted_wargoals.length; i++) {
       var wargoal_id = sorted_wargoals[i];
+      console.log(wargoal_id);
       var wargoal_obj = getWargoal(wargoal_id);
 
       var demand_limit = returnSafeNumber(wargoal_obj.demand_limit, 1);

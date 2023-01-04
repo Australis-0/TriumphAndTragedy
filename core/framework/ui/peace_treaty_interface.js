@@ -13,8 +13,6 @@ module.exports = {
     printStats(user_id);
     game_obj.page = "country_interface";
 
-    delete game_obj.freeze_alerts;
-
     //Delete map file
     try {
       fs.unlinkSync(`./map/${actual_id}_peace_treaty`);
@@ -1883,8 +1881,6 @@ module.exports = {
       }),
       user: user_id
     });
-
-    game_obj.freeze_alerts = true;
   },
 
   initialiseRemoveWargoal: function (arg0_user, arg1_peace_treaty_object) {
@@ -2013,6 +2009,10 @@ module.exports = {
     var outline_cache = {};
     var usr = main.users[actual_id];
     var war_obj = main.global.wars[peace_obj.war_id];
+
+    //Visual interface using visualPrompt() before creating a page menu
+    module.exports.initialiseModifyPeaceTreaty(user_id, peace_obj);
+    module.exports.initialisePeaceOfferScreen(user_id, peace_obj);
 
     //Cache a new SVG
     if (!change_image)
@@ -2182,16 +2182,11 @@ module.exports = {
 
     //Initialise map viewer
     cacheSVG(map_file);
-    game_obj.page = "map";
 
     setTimeout(function(){
       (!change_image) ?
         initialiseMapViewer(game_obj.id, map_file, true) :
         changeImage(game_obj.id, map_file);
     }, 15000);
-
-    //Visual interface using visualPrompt() before creating a page menu
-    module.exports.initialiseModifyPeaceTreaty(user_id, peace_obj);
-    module.exports.initialisePeaceOfferScreen(user_id, peace_obj);
   }
 };

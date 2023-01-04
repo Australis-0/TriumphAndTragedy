@@ -67,12 +67,16 @@ module.exports = {
   */
   getWargoal: function (arg0_wargoal_name, arg1_options) {
     //Convert from parameters
-    var wargoal_name = arg0_wargoal_name.trim().toLowerCase();
+    var wargoal_name = (typeof arg0_wargoal_name != "object") ? arg0_wargoal_name.trim().toLowerCase() : arg0_wargoal_name;
     var options = (arg1_options) ? arg1_options : {};
 
     //Declare local instance variables
     var all_wargoals = Object.keys(config.wargoals);
     var wargoal_exists = [false, ""]; //[wargoal_exists, wargoal_name];
+
+    //Object guard clause
+    if (typeof wargoal_name == "object")
+      return wargoal_name;
 
     //Key match
     if (config.wargoals[wargoal_name])

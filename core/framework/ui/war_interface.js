@@ -242,7 +242,7 @@ module.exports = {
 
         (!war_obj.defender_names) ?
           defenders_string.push(`**${(local_defender) ? local_defender.name : war_obj.defenders[i]}** | **${(local_defender) ? printPercentage(local_defender.modifiers.war_exhaustion) : "100%"}** | ${parseNumber(returnSafeNumber(war_obj[war_obj.defenders[i] + "_casualties"]))}`) :
-          defenders_string.push(`${war_obj.defender_names[i]}** | **${(local_defender) ? printPercentage(local_defender.modifiers.war_exhaustion) : "100%"}** | **${parseNumber(returnSafeNumber(war_obj[war_obj.defenders[i] + "_casualties"]))}`);
+          defenders_string.push(`**${war_obj.defender_names[i]}** | **${(local_defender) ? printPercentage(local_defender.modifiers.war_exhaustion) : "100%"}** | ${parseNumber(returnSafeNumber(war_obj[war_obj.defenders[i] + "_casualties"]))}`);
       }
 
       //Format defender_volunteers
