@@ -70,7 +70,9 @@ module.exports = {
             if (client.users.cache.find(user => user.id == all_mapped_users[i]))
               local_vassal_display_players.push(`<@${all_mapped_users[i]}>`);
 
-        pc_string.push(`• **${local_vassal.name}** - ${(local_vassal_display_players.length > 0) ? parseList(local_vassal_display_players) : `_No Player_`}`);
+        try {
+          pc_string.push(`• **${local_vassal.name}** - ${(local_vassal_display_players.length > 0) ? parseList(local_vassal_display_players) : `_No Player_`}`);
+        } catch {}
       }
     }
 

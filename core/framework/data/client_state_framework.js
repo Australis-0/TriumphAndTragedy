@@ -51,7 +51,7 @@ module.exports = {
 
     //Iterate over array and check
     for (var i = array.length - 1; i >= 0; i--)
-      if (module.exports.isClientState(array[i]))
+      if (module.exports.isClientState(array[i]) || !main.users[array[i]])
         array.splice(i, 1);
 
     //Return statement

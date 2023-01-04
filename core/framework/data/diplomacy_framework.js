@@ -173,6 +173,7 @@ module.exports = {
     for (var i = 0; i < all_users.length; i++)
       if (all_users[i] != actual_id) {
         var local_user = main.users[all_users[i]];
+        var overlord_id = module.exports.getVassal(user_id, true);
 
         //Allies
         if (local_user.diplomacy.allies[actual_id]) {
@@ -198,6 +199,10 @@ module.exports = {
 
           module.exports.dissolveNonAggressionPact(all_users[i], user_id);
         }
+
+        //Overlords
+        if (overlord_id)
+          module.exports.dissolveVassal(user_id);
 
         //Relations
         if (local_user.diplomacy.relations[actual_id])

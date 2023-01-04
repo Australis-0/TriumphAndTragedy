@@ -920,7 +920,8 @@ module.exports = {
                 var local_clause = local_value.puppet[local_clauses[y]];
 
                 //Set target as vassal
-                createVassal(local_clause, { target: local_clauses[y] });
+                if (local_clause && local_clauses[y])
+                  createVassal(local_clause, { target: local_clauses[y] });
               }
 
               break;
