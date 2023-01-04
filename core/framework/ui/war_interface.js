@@ -196,8 +196,8 @@ module.exports = {
         var local_attacker = main.users[war_obj.attackers[i]];
 
         (!war_obj.attacker_names) ?
-          attackers_string.push(`**${(local_attacker) ? local_attacker.name : war_obj.attackers[i]}** | **${printPercentage(local_attacker.modifiers.war_exhaustion)}** | ${parseNumber(returnSafeNumber(war_obj[war_obj.attackers[i] + "_casualties"]))}`) :
-          attackers_string.push(`**${war_obj.attacker_names[i]}** | **${printPercentage(local_attacker.modifiers.war_exhaustion)}** | ${parseNumber(returnSafeNumber(war_obj[war_obj.attackers[i] + "_casualties"]))}`);;
+          attackers_string.push(`**${(local_attacker) ? local_attacker.name : war_obj.attackers[i]}** | **${(local_attacker) ? printPercentage( local_attacker.modifiers.war_exhaustion) : "100%"}** | ${parseNumber(returnSafeNumber(war_obj[war_obj.attackers[i] + "_casualties"]))}`) :
+          attackers_string.push(`**${war_obj.attacker_names[i]}** | **${(local_attacker) ? printPercentage(local_attacker.modifiers.war_exhaustion) : "100%"}** | ${parseNumber(returnSafeNumber(war_obj[war_obj.attackers[i] + "_casualties"]))}`);;
       }
 
       //Format attacker_volunteers
@@ -241,8 +241,8 @@ module.exports = {
         var local_defender = main.users[war_obj.defenders[i]];
 
         (!war_obj.defender_names) ?
-          defenders_string.push(`**${(local_defender) ? local_defender.name : war_obj.defenders[i]}** | **${printPercentage(local_defender.modifiers.war_exhaustion)}** | ${parseNumber(returnSafeNumber(war_obj[war_obj.defenders[i] + "_casualties"]))}`) :
-          defenders_string.push(`${war_obj.defender_names[i]}** | **${printPercentage(local_defender.modifiers.war_exhaustion)}** | **${parseNumber(returnSafeNumber(war_obj[war_obj.defenders[i] + "_casualties"]))}`);
+          defenders_string.push(`**${(local_defender) ? local_defender.name : war_obj.defenders[i]}** | **${(local_defender) ? printPercentage(local_defender.modifiers.war_exhaustion) : "100%"}** | ${parseNumber(returnSafeNumber(war_obj[war_obj.defenders[i] + "_casualties"]))}`) :
+          defenders_string.push(`${war_obj.defender_names[i]}** | **${(local_defender) ? printPercentage(local_defender.modifiers.war_exhaustion) : "100%"}** | **${parseNumber(returnSafeNumber(war_obj[war_obj.defenders[i] + "_casualties"]))}`);
       }
 
       //Format defender_volunteers

@@ -13,6 +13,8 @@ module.exports = {
     printStats(user_id);
     game_obj.page = "country_interface";
 
+    delete game_obj.freeze_alerts;
+
     //Delete map file
     try {
       fs.unlinkSync(`./map/${actual_id}_peace_treaty`);
@@ -1881,6 +1883,8 @@ module.exports = {
       }),
       user: user_id
     });
+
+    game_obj.freeze_alerts = true;
   },
 
   initialiseRemoveWargoal: function (arg0_user, arg1_peace_treaty_object) {

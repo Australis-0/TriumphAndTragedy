@@ -705,7 +705,7 @@ module.exports = {
     var all_participants = [];
     var friendly_side = "";
     var opposing_side = "";
-    var war_obj = (typeof war_name != "object") ? JSON.parse(JSON.stringify(getWar(war_name))) : JSON.parse(JSON.stringify(war_name));
+    var war_obj = (typeof war_name != "object") ? getWar(war_name) : war_name;
 
     var all_war_keys = Object.keys(war_obj);
     var infamy_map = module.exports.getPeaceTreatyInfamy(war_obj, peace_obj);
@@ -734,7 +734,7 @@ module.exports = {
     }
 
     //Archive war
-    archiveWar(war_name);
+    archiveWar(war_obj);
 
     //End war first; lift all occupations
     for (var i = 0; i < all_participants.length; i++) {
