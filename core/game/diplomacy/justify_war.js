@@ -131,7 +131,7 @@ module.exports = {
       switch (arg) {
         case "view cb list":
           createPageMenu(game_obj.middle_embed, {
-            embed_pages: printCBList(user_id),
+            embed_pages: printCBs(user_id),
             user: game_obj.user
           });
           return true;

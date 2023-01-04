@@ -296,7 +296,7 @@ module.exports = {
     }
 
     //Return statement
-    return splitEmbed(casus_belli_string, {
+    return splitEmbed(wargoal_string, {
       title: `CB List on ${ot_user.name}:`,
       title_pages: true,
       fixed_width: true
