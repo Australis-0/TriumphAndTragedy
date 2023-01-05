@@ -22,7 +22,7 @@ module.exports = {
             if (returnSafeNumber(army_obj.blockade_recovery_turns) == 0) {
               //Check if the user currently has a blockade cooldown on them
               if (returnSafeNumber(usr.blockaded.blockade_cooldown) == 0) {
-                if (usr.modifiers.enable_blockades) {
+                if (ot_user.modifiers.enable_blockades) {
                   //Check if user is at war or not
                   var at_war = areAtWar(user_id, ot_user_id);
 
