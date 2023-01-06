@@ -225,7 +225,7 @@ module.exports = {
     return (war_found[0]) ? war_found[1] : undefined;
   },
 
-  getWarLeadershipCost: function (arg0_user, arg0_war_name) {
+  getWarLeadershipCost: function (arg0_user, arg1_war_name) {
     //Convert from parameters
     var user_id = arg0_user;
     var war_name = arg1_war_name;

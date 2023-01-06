@@ -86,6 +86,7 @@ module.exports = {
     var attacker_volunteers = [];
     var attackers_wargoal_string = [];
     var can_call_allies = false;
+
     var bottom_war_string = [];
     var defenders_string = [];
     var defender_volunteers = [];
@@ -97,6 +98,7 @@ module.exports = {
       var all_war_keys = Object.keys(war_obj);
       var can_send_volunteers = (!war_obj[`${actual_id}_sent_volunteers`]);
       var cb_obj = getCB(war_obj.cb);
+      var is_war_leader = (war_obj.attackers_war_leader == actual_id || war_obj.defenders_war_leader == actual_id);
 
       //Recalculate attacker, defender casualties
       war_obj.attacker_total_casualties = 0;
@@ -118,7 +120,6 @@ module.exports = {
       if (!is_archived_war) {
         if (war_obj.attackers.includes(actual_id) || war_obj.defenders.includes(actual_id)) {
           var can_merge_wars = false;
-          var is_war_leader = (war_obj.attackers_war_leader == actual_id || war_obj.defenders_war_leader == actual_id);
 
           var friendly_side = "";
           var opposing_side = "";
@@ -268,7 +269,7 @@ module.exports = {
       //Format embed and display
       var war_embed = new Discord.MessageEmbed()
         .setColor(settings.bot_colour)
-        .setTitle(`**[Back]** | ${(!is_archived_war) ? "**[Rename War]** | " : ""}__**${war_obj.name.trim()}**__:`)
+        .setTitle(`**[Back]** | ${(!is_archived_war && is_war_leader) ? "**[Rename War]** | " : ""}__**${war_obj.name.trim()}**__:`)
         .setImage("https://cdn.discordapp.com/attachments/722997700391338046/736141424315203634/margin.png")
         .setDescription(war_string.join("\n"))
         .addFields(
