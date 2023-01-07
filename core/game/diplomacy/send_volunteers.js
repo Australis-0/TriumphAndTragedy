@@ -148,6 +148,8 @@ module.exports = {
 
     //Check if war_obj exists
     if (war_obj) {
+      var friendly_side = war_obj[`${actual_id}_sent_volunteers`];
+
       //Check if user has sent volunteers to the war
       if (war_obj[`${actual_id}_sent_volunteers`]) {
         //Fetch army limit
@@ -228,7 +230,7 @@ module.exports = {
             printError(game_obj.id, `None of the armies you have specified had any troops in them!`);
           }
         } else {
-          printError(game_obj.id, `Only **${printPercentage(config.defines.diplomacy.send_volunteer_army_limit)}** of all active military personnel can be sent as volunteers to an armed conflict! This means you are only able to send **${parseNumber()}`)
+          printError(game_obj.id, `Only **${printPercentage(config.defines.diplomacy.send_volunteer_army_limit)}** of all active military personnel can be sent as volunteers to an armed conflict! This means you are only able to send **${parseNumber(volunteer_limit - current_volunteers)}** volunteers, of which the armies you have named had **${parseNumber(total_sent)}**!`);
         }
       } else {
         (war_obj.attackers.includes(actual_id) || war_obj.defenders.includes(actual_id)) ?

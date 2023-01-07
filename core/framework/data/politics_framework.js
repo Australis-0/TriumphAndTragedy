@@ -186,6 +186,6 @@ module.exports = {
     var volunteered_wars = getVolunteerWars(user_id);
 
     //Return statement
-    return returnSafeNumber(volunteered_wars*config.defines.diplomacy.send_volunteer_armies_maintenance_cost);
+    return returnSafeNumber(volunteered_wars.length*config.defines.diplomacy.send_volunteer_armies_maintenance_cost);
   }
 };

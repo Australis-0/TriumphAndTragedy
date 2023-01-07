@@ -1072,8 +1072,9 @@ module.exports = {
       var local_army = usr.armies[all_armies[i]];
 
       //Check if local_army is involved in the war
-      if (local_army.volunteering[1] == war_obj.id)
-        total_volunteers += getArmySize(user_id, local_army);
+      if (local_army.volunteering)
+        if (local_army.volunteering[1] == war_obj.id)
+          total_volunteers += getArmySize(user_id, local_army);
     }
 
     //Return statement
@@ -1124,16 +1125,15 @@ module.exports = {
     var usr = main.users[actual_id];
     var volunteered_wars = [];
 
-    var all_armies = Object.keys(main.users);
+    var all_wars = Object.keys(main.global.wars);
 
-    //Iterate over all_armies
-    for (var i = 0; i < all_armies.length; i++) {
-      var local_army = main.users[all_armies[i]];
+    //Iterate over all_wars
+    for (var i = 0; i < all_wars.length; i++) {
+      var local_war = main.global.wars[all_wars[i]];
 
-      if (local_army.volunteering)
-        if (local_army.volunteering[1])
-          if (!volunteered_wars.includes(local_army.volunteering[1]))
-            volunteered_wars.push(local_army.volunteering[1]);
+      if (local_war[`${actual_id}_sent_volunteers`])
+        if (!volunteered_wars.includes(local_war.id))
+          volunteered_wars.push(local_war.id);
     }
 
     //Return statement
