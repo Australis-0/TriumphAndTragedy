@@ -177,6 +177,9 @@ module.exports = {
       local_id = generateRandomID();
 
       //Return and break once a true ID is found
+      if (!usr.temporary_modifiers)
+        usr.temporary_modifiers = {};
+
       if (!usr.temporary_modifiers[local_id]) {
         return local_id;
         break;
