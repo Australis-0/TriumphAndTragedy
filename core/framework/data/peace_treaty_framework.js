@@ -740,7 +740,7 @@ module.exports = {
       var local_amount = infamy_map[all_infamy_keys[i]];
       var local_user = main.users[all_infamy_keys[i]];
 
-      //Add to local_user.infamy
+      //Add to local_user.modifiers.infamy
       if (local_user)
         local_user.modifiers.infamy += returnSafeNumber(local_amount);
     }

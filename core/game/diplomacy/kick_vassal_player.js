@@ -106,7 +106,7 @@ module.exports = {
                     delete main.global.user_map[kicked_player];
 
                     //Add infamy penalty
-                    usr.infamy += returnSafeNumber(config.defines.infamy_vassal_kick_player);
+                    usr.modifiers.infamy += returnSafeNumber(config.defines.infamy_vassal_kick_player);
 
                     //Print user feedback
                     try {
