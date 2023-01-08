@@ -4,8 +4,8 @@ module.exports = {
     var raw_war_name = (typeof arg0_war_name != "object") ? arg0_war_name.trim().toLowerCase() : arg0_war_name;
 
     //Declare local instance variables
-    var war_id = module.exports.getWar(raw_war_name, { return_key: true });
-    var war_obj = module.exports.getWar(raw_war_name);
+    var war_id = (typeof raw_war_name != "object") ? module.exports.getWar(raw_war_name, { return_key: true }) : raw_war_name.id;
+    var war_obj = (typeof raw_war_name != "object") ? module.exports.getWar(raw_war_name) : raw_war_name;
 
     //Move to war archive
     if (war_obj) {

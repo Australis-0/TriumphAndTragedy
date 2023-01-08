@@ -40,6 +40,15 @@ module.exports = {
 
       //Parse peace treaty
       parsePeaceTreaty(war_obj.name, peace_obj);
+
+      //Update UI
+      if (game_obj.page.startsWith("view_war_")) {
+        createPageMenu(game_obj.middle_embed, {
+          embed_pages: printWars(game_obj.user),
+          user: game_obj.user
+        });
+        game_obj.page = "war_list";
+      }
     } else {
       sendAlert(war_obj[`${enemy_side}_war_leader`], config.defines.diplomacy.peace_offer_alert_id, {
         FROM: actual_id,
@@ -52,7 +61,7 @@ module.exports = {
       });
 
       //Print user feedback
-      printAlert(game_obj.id, `${config.icons.checkmark} You have successfully sent a peace offer to the enemy war leader, **${main.users[war_obj[`${enemy_side}_war_leader`]].name}**.`);
+      printAlert(game_obj.id, `${config.icons.checkmark} You have successfully sent a peace offer to the enemy war leader, **${main.users[war_obj[`${enemy_side}_war_leader`]].name}**. They must manually accept your peace offer in their diplomatic alerts.`);
     }
 
   }
