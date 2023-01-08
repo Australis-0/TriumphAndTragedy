@@ -371,9 +371,9 @@ module.exports = {
                   if (game_obj.country_picker_page == "claim_country") {
                     initialiseClaimCountry(game_obj.user);
                   } else if (game_obj.country_picker_page == "found_country") {
-                    initialiseFoundCountry(user_id);
+                    initialiseFoundCountry(game_obj.user);
                   } else {
-                    initialiseCountryMenu(user_id);
+                    initialiseCountryMenu(game_obj.user);
                   }
               } else {
                 initialiseSettleStartingProvinces(game_obj.user);

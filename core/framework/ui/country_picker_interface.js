@@ -198,7 +198,8 @@ module.exports = {
       unclaimed_country_string.push(`_No unclaimed countries are currently available to be played._`);
 
     //Mark page
-    game_obj.country_picker_page = "claim_country";
+    if (!main.global.user_map[user_id])
+      game_obj.country_picker_page = "claim_country";
 
     //Initialise visual prompt
     if (game_obj)
@@ -268,7 +269,8 @@ module.exports = {
     var has_previous_menu = (config.defines.common.enable_choose_countries && config.defines.common.enable_custom_countries);
 
     //Mark page
-    game_obj.country_picker_page = "found_country";
+    if (!main.global.user_map[user_id])
+      game_obj.country_picker_page = "found_country";
 
     //Reinitialise visual prompt
     if (game_obj)
