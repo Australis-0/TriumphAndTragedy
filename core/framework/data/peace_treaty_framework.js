@@ -733,6 +733,18 @@ module.exports = {
       war_obj.defender_names.push(main.users[war_obj.defenders[i]].name);
     }
 
+    //Apply infamy
+    var all_infamy_keys = Object.keys(infamy_map);
+
+    for (var i = 0; i < all_infamy_keys.length; i++) {
+      var local_amount = infamy_map[all_infamy_keys[i]];
+      var local_user = main.users[all_infamy_keys[i]];
+
+      //Add to local_user.infamy
+      if (local_user)
+        local_user.modifiers.infamy += returnSafeNumber(local_amount);
+    }
+
     //Archive war
     archiveWar(war_obj);
 
@@ -1133,17 +1145,5 @@ module.exports = {
               break;
           }
       }
-
-    //Apply infamy
-    var all_infamy_keys = Object.keys(infamy_map);
-
-    for (var i = 0; i < all_infamy_keys.length; i++) {
-      var local_amount = infamy_map[all_infamy_keys[i]];
-      var local_user = main.users[all_infamy_keys[i]];
-
-      //Add to local_user.infamy
-      if (local_user)
-        local_user.infamy += returnSafeNumber(local_amount);
-    }
   }
 };
