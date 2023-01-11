@@ -450,42 +450,56 @@ module.exports = {
       ]
     },
     function (arg) {
-      switch (arg[0]) {
+      switch (arg[0].toLowerCase()) {
         case "add provinces":
           module.exports.initialiseClientStateAddProvinces(user_id, client_obj);
+          return true;
 
           break;
         case "back":
           module.exports.closeClientState(user_id, client_obj);
+          return true;
 
           break;
         case "delete client state":
           module.exports.deleteClientState(user_id, client_obj);
+          return true;
 
           break;
         case "release client state":
           module.exports.releaseClientState(user_id, client_obj);
+          return true;
 
           break;
         case "remove provinces":
           module.exports.initialiseClientStateRemoveProvinces(user_id, client_obj);
+          return true;
 
           break;
         case "set capital":
           module.exports.setClientStateCapital(user_id, client_obj);
+          return true;
 
           break;
         case "set color":
         case "set colour":
           module.exports.setClientStateColour(user_id, client_obj);
+          return true;
 
           break;
         case "set flag":
           module.exports.setClientStateFlag(user_id, client_obj);
+          return true;
 
           break;
         case "set name":
           module.exports.setClientStateName(user_id, client_obj);
+          return true;
+
+          break;
+        default:
+          module.exports.modifyClientState(user_id, client_obj);
+          return true;
 
           break;
       }

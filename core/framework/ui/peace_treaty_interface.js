@@ -1771,6 +1771,7 @@ module.exports = {
               switch (arg) {
                 case "back":
                   module.exports.initialiseAddWargoal(user_id, peace_obj);
+                  return true;
 
                   break;
               }
@@ -1794,9 +1795,8 @@ module.exports = {
       } else
         switch (current_wargoal) {
           case "back":
-            setTimeout(function(){
-              module.exports.modifyPeaceTreaty(user_id, peace_obj, true);
-            }, 3000);
+            module.exports.modifyPeaceTreaty(user_id, peace_obj, true);
+            return true;
 
             break;
           default:
@@ -1833,25 +1833,34 @@ module.exports = {
       ]
     },
     function (arg) {
-      switch (arg[0]) {
+      switch (arg[0].toLowerCase()) {
         case "add wargoal":
           module.exports.initialiseAddWargoal(user_id, peace_obj);
+          return true;
 
           break;
         case "back":
           module.exports.closePeaceTreaty(user_id, peace_obj);
+          return true;
 
           break;
         case "remove wargoal":
           module.exports.initialiseRemoveWargoal(user_id, peace_obj);
+          return true;
 
           break;
         case "send peace offer":
           sendPeaceTreaty(user_id, peace_obj);
-
           setTimeout(function(){
             module.exports.closePeaceTreaty(user_id);
           }, 3000);
+
+          return true;
+
+          break;
+        default:
+          module.exports.modifyPeaceTreaty(user_id, peace_obj, true);
+          return true;
 
           break;
       }
