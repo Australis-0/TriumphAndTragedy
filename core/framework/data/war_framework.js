@@ -294,6 +294,69 @@ module.exports = {
     return war_array;
   },
 
+  getWarscore: function (arg0_war_name, arg1_side) {
+    //Convert from parameters
+    var war_name = arg0_war_name;
+    var side = arg1_side;
+
+    //Declare local instance variables
+    var attacker_war_exhaustion = 0;
+    var attacker_warscore = 0;
+    var defender_war_exhaustion = 0;
+    var defender_warscore = 0;
+    var fully_sieged_attackers = 0;
+    var fully_sieged_defenders = 0;
+    var war_obj = (typeof war_name != "object") ? getWar(war_name.trim().toLowerCase()) : war_name;
+
+    //Individual warscore handlers
+    if (war_obj) {
+      for (var i = 0; i < war_obj.attackers.length; i++) {
+        var local_user = main.users[war_obj.attackers[i]];
+
+        if (local_user.provinces == 0) {
+          fully_sieged_attackers++;
+          local_user.modifiers.war_exhaustion = 1;
+        }
+        if (returnSafeNumber(local_user.modifiers.war_exhaustion, 1) == 1)
+          fully_sieged_attackers++;
+
+        attacker_war_exhaustion += returnSafeNumber(local_user.modifiers.war_exhaustion, 1);
+      }
+      for (var i = 0; i < war_obj.defenders.length; i++) {
+        var local_user = main.users[war_obj.defenders[i]];
+
+        if (local_user.provinces == 0) {
+          fully_sieged_defenders++;
+          local_user.modifiers.war_exhaustion = 1;
+        }
+
+        defender_war_exhaustion += returnSafeNumber(local_user.modifiers.war_exhaustion, 1);
+        if (returnSafeNumber(local_user.modifiers.war_exhaustion, 1) == 1)
+          fully_sieged_defenders++;
+      }
+
+      //Set attacker_warscore; defender_warscore
+      if (fully_sieged_defenders != war_obj.defenders.length) {
+        //War leader accounts for 25% of warscore
+        attacker_warscore = 0.75*(defender_war_exhaustion/war_obj.defenders.length)*
+          (0.25*returnSafeNumber(main.users[war_obj.defenders_war_leader].modifiers.war_exhaustion, 1));
+      } else {
+        attacker_warscore = 1;
+      }
+
+      war_obj.attacker_warscore = attacker_warscore;
+
+      if (fully_sieged_defenders != war_obj.attackers.length) {
+        defender_warscore = parseFloat(
+          (attacker_war_exhaustion/war_obj.attackers.length).toFixed(2)
+        );
+      }
+
+      //Return statement
+      return (side == "attackers") ? attacker_warscore : defender_warscore;
+    }
+  },
+
   /*
     initialiseWar() - Creates a new war data structure with aggressors and all. Make sure users can't declare war on themselves
     options: {

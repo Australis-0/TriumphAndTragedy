@@ -316,15 +316,8 @@ module.exports = {
 
       //Iterate over all wars to process warscore; check CB's
       for (var i = 0; i < all_wars.length; i++) {
-        var local_war = main.global.wars[all_wars[i]];
-
         var all_cbs = Object.keys(config.casus_belli);
-        var attacker_war_exhaustion = 0;
-        var attacker_warscore = 0;
-        var defender_war_exhaustion = 0;
-        var defender_warscore = 0;
-        var fully_sieged_attackers = 0;
-        var fully_sieged_defenders = 0;
+        var local_war = main.global.wars[all_wars[i]];
 
         //Dynamic CB handler
         for (var x = 0; x < all_cbs.length; x++) {
@@ -357,51 +350,9 @@ module.exports = {
           }
         }
 
-        //Initialise variables
-        for (var x = 0; x < local_war.attackers.length; x++) {
-          var local_user = main.users[local_war.attackers[x]];
-
-          if (local_user.provinces == 0) {
-            fully_sieged_attackers++;
-            local_user.modifiers.war_exhaustion = 1;
-          }
-          if (returnSafeNumber(local_user.modifiers.war_exhaustion, 1) == 1)
-            fully_sieged_attackers++;
-
-          attacker_war_exhaustion += returnSafeNumber(local_user.modifiers.war_exhaustion, 1);
-        }
-        for (var x = 0; x < local_war.defenders.length; x++) {
-          var local_user = main.users[local_war.defenders[x]];
-
-          if (local_user.provinces == 0) {
-            fully_sieged_defenders++;
-            local_user.modifiers.war_exhaustion = 1;
-          }
-
-          defender_war_exhaustion += returnSafeNumber(local_user.modifiers.war_exhaustion, 1);
-          if (returnSafeNumber(local_user.modifiers.war_exhaustion, 1) == 1)
-            fully_sieged_defenders++;
-        }
-
-        //Set attacker_warscore; defender_warscore
-        if (fully_sieged_defenders != local_war.defenders.length) {
-          //War leader accounts for 25% of warscore
-          attacker_warscore = 0.75*defender_war_exhaustion + (0.25*returnSafeNumber(main.users[local_war.defenders_war_leader].modifiers.war_exhaustion, 1));
-        } else {
-          attacker_warscore = 1;
-        }
-
-        local_war.attacker_warscore = attacker_warscore;
-
-        if (fully_sieged_attackers != local_war.attackers.length) {
-          defender_warscore = parseFloat(
-            (attacker_war_exhaustion/local_war.attackers.length).toFixed(2)
-          );
-        } else {
-          defender_warscore = 1;
-        }
-
-        local_war.defender_warscore = defender_warscore;
+        //Set warscore
+        local_war.attacker_warscore = getWarscore(local_war, "attackers");
+        local_war.defender_warscore = getWarscore(local_war, "defenders");
       }
     }
 
