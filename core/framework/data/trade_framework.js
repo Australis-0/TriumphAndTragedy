@@ -28,7 +28,7 @@ module.exports = {
 
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
-    var ot_user_actual_id = main.global.user_map[ot_user_id];
+    var ot_user_actual_id = returnMention(ot_user_id);
     var ot_user = main.users[ot_user_actual_id];
     var usr = main.users[actual_id];
 

@@ -435,7 +435,7 @@ module.exports = {
 
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id]; //Attacker
-    var actual_ot_user_id = main.global.user_map[ot_user_id]; //Defender
+    var actual_ot_user_id = returnMention(ot_user_id); //Defender
     var all_wars = Object.keys(main.global.wars);
     var attacking_army_obj = (typeof attacking_army_name != "object") ?
       getArmy(user_id, attacking_army_name.trim()) :
@@ -778,7 +778,7 @@ module.exports = {
 
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
-    var actual_ot_user_id = main.global.user_map[ot_user_id];
+    var actual_ot_user_id = returnMention(ot_user_id);
     var army_obj = getArmy(user_id, army_name);
     var game_obj = getGameObject(user_id);
     var ot_game_obj = getGameObject(ot_user_id);

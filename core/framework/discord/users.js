@@ -171,6 +171,10 @@ module.exports = {
     var nation_found = [false, ""];
     var user_exists = false;
 
+    //Guard clause for verbatim ID
+    if (main.users[user_id])
+      return user_id;
+
     //Countries take priority
     {
       //Declare local ID for resolving user ID

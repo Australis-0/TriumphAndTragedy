@@ -7,7 +7,7 @@ module.exports = {
 
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
-    var actual_ot_user_id = main.global.user_map[ot_user_id];
+    var actual_ot_user_id = returnMention(ot_user_id);
     var enemy_side = "";
     var friendly_side = "";
     var game_obj = getGameObject(user_id);
@@ -65,7 +65,7 @@ module.exports = {
 
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
-    var actual_ot_user_id = main.global.user_map[ot_user_id];
+    var actual_ot_user_id = returnMention(ot_user_id);
     var alliance_list = [];
     var display_alliance_list = [];
     var display_war_list = [];

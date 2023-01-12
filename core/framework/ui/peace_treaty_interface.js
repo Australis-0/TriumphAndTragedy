@@ -119,7 +119,7 @@ module.exports = {
                       var usr = main.users[actual_id];
 
                       //Check to see if enemy country is valid
-                      if (!main.global.user_map[ot_user_id])
+                      if (!returnMention(ot_user_id))
                         return [false, `The country you have specified for annexation did not exist!`];
                       if (!war_obj[enemy_side].includes(ot_user_id))
                         return [false, `You can't annex a neutral/allied country!`];
@@ -144,7 +144,7 @@ module.exports = {
                       var usr = main.users[actual_id];
 
                       //Check to see if enemy country is valid
-                      if (!main.global.user_map[ot_user_id])
+                      if (!returnMention(ot_user_id))
                         return [false, `The country you have specified for annexation did not exist!`];
                       if (!war_obj[enemy_side].includes(ot_user_id))
                         return [false, `You can't force a neutral/allied country to cut itself down to size!`];
@@ -601,7 +601,7 @@ module.exports = {
                       var usr = main.users[actual_id];
 
                       //Check to see if enemy country is valid
-                      if (!main.global.user_map[ot_user_id])
+                      if (!returnMention(ot_user_id))
                         return [false, `The country you have specified for annexation did not exist!`];
 
                       //Check to see if any of the provinces have the same owner as the recipient

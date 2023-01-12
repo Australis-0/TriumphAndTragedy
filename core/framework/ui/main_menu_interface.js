@@ -151,7 +151,7 @@ module.exports = {
 
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
-    var actual_ot_user_id = main.global.user_map[ot_user_id];
+    var actual_ot_user_id = returnMention(ot_user_id);
     var game_obj = getGameObject(user_id);
     var ot_user = main.users[actual_ot_user_id];
     var user = client.users.cache.find(user => user.id.toString() == ot_user_id);
@@ -173,9 +173,9 @@ module.exports = {
             delete_after: true
           }, function () {
             //Make sure user isn't currently playing a country
-            if (!main.global.user_map[ot_user_id]) {
+            if (!returnMention(ot_user_id)) {
               //Set user map
-              main.global.user_map[ot_user_id] = actual_id;
+              returnMention(ot_user_id) = actual_id;
 
               //Reload UI
               if (game_obj.page == "coop_menu")
@@ -188,7 +188,7 @@ module.exports = {
               //Print user feedback
               sendPlainEmbed(msg, `You have switched to playing **${usr.name}**.`);
             } else {
-              sendPlainEmbed(msg, `:warning: You are currently playing as **${main.users[main.global.user_map[ot_user_id]].name}**! Quit playing your country first before accepting an invite.`);
+              sendPlainEmbed(msg, `:warning: You are currently playing as **${main.users[returnMention(ot_user_id)].name}**! Quit playing your country first before accepting an invite.`);
             }
           });
         });
@@ -210,9 +210,9 @@ module.exports = {
             delete_after: true
           }, function () {
             //Make sure user isn't currently playing a country
-            if (!main.global.user_map[ot_user_id]) {
+            if (!returnMention(ot_user_id)) {
               //Set user map
-              main.global.user_map[ot_user_id] = actual_id;
+              returnMention(ot_user_id) = actual_id;
 
               //Reload UI
               if (game_obj.page == "coop_menu")
@@ -225,7 +225,7 @@ module.exports = {
               //Print user feedback
               sendPlainEmbed(msg, `You have switched to playing **${usr.name}**.`);
             } else {
-              sendPlainEmbed(msg, `:warning: You are currently playing as **${main.users[main.global.user_map[ot_user_id]].name}**! Quit playing your country first before accepting an invite.`);
+              sendPlainEmbed(msg, `:warning: You are currently playing as **${main.users[returnMention(ot_user_id)].name}**! Quit playing your country first before accepting an invite.`);
             }
           });
         });
@@ -242,7 +242,7 @@ module.exports = {
 
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
-    var actual_ot_user_id = main.global.user_map[ot_user_id];
+    var actual_ot_user_id = returnMention(ot_user_id);
     var game_obj = getGameObject(user_id);
     var ot_user = main.users[actual_ot_user_id];
     var usr = main.users[actual_id];
@@ -250,10 +250,10 @@ module.exports = {
 
     //Check if user is even playing that country
     if (!vassal_obj) {
-      if (main.global.user_map[ot_user_id] == actual_id) {
+      if (returnMention(ot_user_id) == actual_id) {
         if (client.users.cache.find(user => user.id == ot_user_id)) {
           //Kick from party
-          delete main.global.user_map[ot_user_id];
+          delete returnMention(ot_user_id);
 
           //Reload UI
           if (game_obj.page == "coop_menu")
@@ -383,14 +383,14 @@ module.exports = {
 
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
-    var actual_ot_user_id = main.global.user_map[ot_user_id];
+    var actual_ot_user_id = returnMention(ot_user_id);
     var game_obj = getGameObject(user_id);
     var ot_user = main.users[actual_ot_user_id];
     var usr = main.users[actual_id];
     var vassal_obj = getVassal(user_id);
 
     //Make sure player is playing that country to begin with
-    if (main.global.user_map[ot_user_id] == actual_id) {
+    if (returnMention(ot_user_id) == actual_id) {
       if (!vassal_obj) {
         if (client.users.cache.find(user => user.id == ot_user_id)) {
           //Set as owner

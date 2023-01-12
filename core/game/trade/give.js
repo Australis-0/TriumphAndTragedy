@@ -18,7 +18,7 @@ module.exports = {
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
     var game_obj = getGameObject(user_id);
-    var ot_user_actual_id = main.global.user_map[ot_user_id];
+    var ot_user_actual_id = returnMention(ot_user_id);
     var ot_user = main.users[ot_user_actual_id];
     var trade_display_whitelist = [];
     var trade_whitelist = getTradeWhitelist(user_id);

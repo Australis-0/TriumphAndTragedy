@@ -489,16 +489,9 @@ module.exports = {
                         user: game_obj.user
                       });
 
-                  //Process actual_ot_user_id
-                  var actual_ot_user_id;
-
-                  if (ot_user_id)
-                    if (main.global.user_map[ot_user_id])
-                      actual_ot_user_id = main.global.user_map[ot_user_id];
-
                   //If none of the above, try war/nation
                   if (!army_obj && !city_obj)
-                    if (main.users[actual_ot_user_id]) {
+                    if (main.users[ot_user_id]) {
                       viewDiplomacy(user_id, ot_user_id);
                       game_obj.page = `diplomacy_view_${ot_user_id}`;
                     } else {
@@ -1176,7 +1169,7 @@ module.exports = {
             var ot_user_id = returnMention(game_obj.page.replace("view relations ", ""));
 
             viewDiplomacy(user_id, ot_user_id);
-            game_obj.page = `diplomacy_view_${main.global.user_map[ot_user_id]}`;
+            game_obj.page = `diplomacy_view_${returnMention(ot_user_id)}`;
           }
 
           //[War List]
