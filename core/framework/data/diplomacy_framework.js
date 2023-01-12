@@ -684,7 +684,7 @@ module.exports = {
     } else {
       //Improve/decrease gradually over time if not instant
       //Check for improving_type
-      var current_relations = module.exports.getRelations(user_id, ot_user_id)[0];
+      var current_relations = module.exports.getRelations(user_id, options.target)[0];
       var improving_type = "stagnant";
 
       if (relations_value < 0) {
@@ -712,6 +712,10 @@ module.exports = {
           relations_obj.improving_to = Math.max(-100, relations_obj.improving_to);
         } else {
           var relations_obj = usr.diplomacy.relations[actual_ot_user_id];
+
+          if (!relations_obj.improving_to)
+            relations_obj.improving_to = (relations_obj.value) ?
+              relations_obj.value : 0;
 
           relations_obj.improving_to += relations_value;
           relations_obj.status = improving_type;

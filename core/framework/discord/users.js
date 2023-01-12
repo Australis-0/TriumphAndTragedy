@@ -171,22 +171,8 @@ module.exports = {
     var nation_found = [false, ""];
     var user_exists = false;
 
-    if (user_id.match(/^[<0-9>(@)!]+$/)) {
-      //Replace mentions
-      mention_id = mention_id.replace(/(<)(@)(!)/, "")
-        .replace(/(<)(@)/g, "")
-        .replace(">", "");
-
-      if (main.global.user_map[mention_id]) {
-        mention_id = main.global.user_map;
-        user_exists = true;
-
-        //Local case return statement
-        return mention_id;
-      }
-    }
-
-    if (!user_exists) {
+    //Countries take priority
+    {
       //Declare local ID for resolving user ID
       var local_id;
 
@@ -247,8 +233,23 @@ module.exports = {
         return (main.global.user_map[local_id]) ?
           main.global.user_map[local_id] : local_id;
       } else {
-        return (main.global.user_map[nation_found[1]]) ?
-          main.global.user_map[nation_found[1]] : nation_found[1];
+        return nation_found[1];
+      }
+    }
+
+    //Users now take second priority instead of first
+    if (user_id.match(/^[<0-9>(@)!]+$/)) {
+      //Replace mentions
+      mention_id = mention_id.replace(/(<)(@)(!)/, "")
+        .replace(/(<)(@)/g, "")
+        .replace(">", "");
+
+      if (main.global.user_map[mention_id]) {
+        mention_id = main.global.user_map;
+        user_exists = true;
+
+        //Local case return statement
+        return mention_id;
       }
     }
 

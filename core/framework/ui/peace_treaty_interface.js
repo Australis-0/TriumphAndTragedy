@@ -118,14 +118,12 @@ module.exports = {
                       var ot_user_id = returnMention(input);
                       var usr = main.users[actual_id];
 
-                      var actual_ot_user_id = main.global.user_map[ot_user_id];
-
                       //Check to see if enemy country is valid
-                      if (!main.global.user_map[actual_ot_user_id])
+                      if (!main.global.user_map[ot_user_id])
                         return [false, `The country you have specified for annexation did not exist!`];
-                      if (!war_obj[enemy_side].includes(actual_ot_user_id))
+                      if (!war_obj[enemy_side].includes(ot_user_id))
                         return [false, `You can't annex a neutral/allied country!`];
-                      if (actual_ot_user_id == arg[arg.length - 1])
+                      if (ot_user_id == arg[arg.length - 1])
                         return [false, `You can't have a country annex itself!`];
                     }
                   }]);
@@ -145,12 +143,10 @@ module.exports = {
                       var ot_user_id = returnMention(input);
                       var usr = main.users[actual_id];
 
-                      var actual_ot_user_id = main.global.user_map[ot_user_id];
-
                       //Check to see if enemy country is valid
-                      if (!main.global.user_map[actual_ot_user_id])
+                      if (!main.global.user_map[ot_user_id])
                         return [false, `The country you have specified for annexation did not exist!`];
-                      if (!war_obj[enemy_side].includes(actual_ot_user_id))
+                      if (!war_obj[enemy_side].includes(ot_user_id))
                         return [false, `You can't force a neutral/allied country to cut itself down to size!`];
                     }
                   }]);
@@ -385,8 +381,7 @@ module.exports = {
                         var culture_obj = getCulture(arg[arg.length - 1].trim().toLowerCase());
                         var ot_user_id = returnMention(input);
 
-                        var actual_ot_user_id = main.global.user_map[ot_user_id];
-                        var ot_user = main.users[actual_ot_user_id];
+                        var ot_user = main.users[ot_user_id];
 
                         //Fetch a list of potential countries
                         var potential_countries = [];
@@ -402,7 +397,7 @@ module.exports = {
                         }
 
                         //Check to see if current user is on the list of potential_countries
-                        if (!potential_countries.includes(actual_ot_user_id))
+                        if (!potential_countries.includes(ot_user_id))
                           return [false, `**${ot_user.name}** does not hold any **${culture_obj.adjective}** majority provinces! Please select a different enemy nation to release this culture from.`];
                       }
                     }]);
@@ -439,10 +434,8 @@ module.exports = {
                     limit: function (user_id, arg, input) {
                       var ot_user_id = returnMention(input);
 
-                      var actual_ot_user_id = main.global.user_map[ot_user_id];
-
                       //Check to see if the nation specified is actually an enemy nation
-                      if (!war_obj[enemy_side].includes(actual_ot_user_id))
+                      if (!war_obj[enemy_side].includes(ot_user_id))
                         return [false, `You must specify a user of the enemy faction!`];
                     }
                   }]);
@@ -493,15 +486,14 @@ module.exports = {
                       //Declare local instance variables
                       var ot_user_id = returnMention(input);
 
-                      var actual_ot_user_id = main.global.user_map[ot_user_id];
-                      var ot_user = main.users[actual_ot_user_id];
+                      var ot_user = main.users[ot_user_id];
 
                       //Check to see if the liberated user exists
                       if (!ot_user)
                         return [false, `The country you have specified, **${input}**, doesn't even exist!`];
 
-                      //Check if actual_ot_user_id is included in potential_vassals
-                      if (!potential_vassals.includes(actual_ot_user_id))
+                      //Check if ot_user_id is included in potential_vassals
+                      if (!potential_vassals.includes(ot_user_id))
                         return [false, `You must choose one of the above vassals to liberate from their oppressors, not just anything!`];
                     }
                   }]);
@@ -608,10 +600,8 @@ module.exports = {
                       var provinces = arg[arg.length - 1].trim().split(" ");
                       var usr = main.users[actual_id];
 
-                      var actual_ot_user_id = main.global.user_map[ot_user_id];
-
                       //Check to see if enemy country is valid
-                      if (!main.global.user_map[actual_ot_user_id])
+                      if (!main.global.user_map[ot_user_id])
                         return [false, `The country you have specified for annexation did not exist!`];
 
                       //Check to see if any of the provinces have the same owner as the recipient
@@ -619,7 +609,7 @@ module.exports = {
                         try {
                           var local_province = main.provinces[provinces[i]];
 
-                          if (local_province.owner == actual_ot_user_id)
+                          if (local_province.owner == ot_user_id)
                             return [false, `People can't annex themselves! Specify a valid recipient for these territories, not someone you're annexing land from.`];
                         } catch {}
                     }
@@ -638,15 +628,14 @@ module.exports = {
                       //Declare local instance variables
                       var ot_user_id = returnMention(input);
 
-                      var actual_ot_user_id = main.global.user_map[ot_user_id];
-                      var ot_user = main.users[actual_ot_user_id];
+                      var ot_user = main.users[ot_user_id];
 
                       //Check that target exists
                       if (!ot_user)
                         return [false, `The country you have specified, **${input}**, doesn't even exist!`];
 
                       //Check that target is an enemy
-                      if (!war_obj[enemy_side].includes(actual_ot_user_id))
+                      if (!war_obj[enemy_side].includes(ot_user_id))
                         return [false, `You may only puppet enemy nations engaged in this conflict.`];
 
                       //Population clause
@@ -672,15 +661,14 @@ module.exports = {
                         //Declare local instance variables
                         var ot_user_id = returnMention(input);
 
-                        var actual_ot_user_id = main.global.user_map[ot_user_id];
-                        var ot_user = main.users[actual_ot_user_id];
+                        var ot_user = main.users[ot_user_id];
 
                         //Check that target exists
                         if (!ot_user)
                           return [false, `The country you have specified, **${input}**, doesn't even exist!`];
 
                         //Check that target is on the allied side
-                        if (!war_obj.friendly_side.includes(actual_ot_user_id))
+                        if (!war_obj.friendly_side.includes(ot_user_id))
                           return [false, `Only allied countries may inherit this vassal as an overlord!`];
                       }
                     }]);
@@ -833,19 +821,18 @@ module.exports = {
                     limit: function (user_id, arg, input) {
                       var ot_user_id = returnMention(input);
 
-                      var actual_ot_user_id = main.global.user_map[ot_user_id];
-                      var ot_user = main.users[actual_ot_user_id];
+                      var ot_user = main.users[ot_user_id];
 
                       //Check to see if ot_user even exists
                       if (!ot_user)
                         return [false, `The user you have specified, **${input}**, turned out to be entirely nonexistent! Please select from the above list.`];
 
                       //Check for involvement in the war
-                      if (!war_obj[enemy_side].includes(actual_ot_user_id) && !war_obj.friendly_side.includes(actual_ot_user_id))
+                      if (!war_obj[enemy_side].includes(ot_user_id) && !war_obj.friendly_side.includes(ot_user_id))
                         return [false, `The overlord you have specified for your new client state isn't even involved in this conflict! Please select a new overlord from the above list.`];
 
                       //Check to see if they're on the allied side
-                      if (!war_obj.friendly_side.includes(actual_ot_user_id))
+                      if (!war_obj.friendly_side.includes(ot_user_id))
                         return [false, `You cannot specify an enemy nation as the new overlord of your client state! Please select a new overlord from the above list.`];
                     }
                   }]);
@@ -861,19 +848,18 @@ module.exports = {
                     limit: function (user_id, arg, input) {
                       var ot_user_id = returnMention(input);
 
-                      var actual_ot_user_id = main.global.user_map[ot_user_id];
-                      var ot_user = main.users[actual_ot_user_id];
+                      var ot_user = main.users[ot_user_id];
 
                       //Check to see if ot_user even exists
                       if (!ot_user)
                         return [false, `The user you have specified, **${input}**, turned out to be entirely nonexistent! Please select from the above list.`];
 
                       //Check for involvement in the war
-                      if (!war_obj[enemy_side].includes(actual_ot_user_id) && !war_obj.friendly_side.includes(actual_ot_user_id))
+                      if (!war_obj[enemy_side].includes(ot_user_id) && !war_obj.friendly_side.includes(ot_user_id))
                         return [false, `You cannot retake cores for a completely neutral state! Please select a valid allied country from the above list.`];
 
                       //Check to see if they're on the allied side
-                      if (!war_obj.friendly_side.includes(actual_ot_user_id))
+                      if (!war_obj.friendly_side.includes(ot_user_id))
                         return [false, `You cannot retake cores for an enemy state! Please select a valid country from the above list.`];
                     }
                   }]);
@@ -883,18 +869,17 @@ module.exports = {
                     limit: function (user_id, arg, input) {
                       var ot_user_id = returnMention(input);
 
-                      var actual_ot_user_id = main.global.user_map[ot_user_id];
-                      var ot_user = main.users[actual_ot_user_id];
+                      var ot_user = main.users[ot_user_id];
 
                       //Check to see if ot_user even exists
                       if (!ot_user)
                         return [false, `The user you have specified, **${input}**, turned out to be entirely nonexistent! Please select from the above list.`];
 
                       //Check for involvement in the war
-                      if (!war_obj[enemy_side].includes(actual_ot_user_id) && !war_obj.friendly_side.includes(actual_ot_user_id))
+                      if (!war_obj[enemy_side].includes(ot_user_id) && !war_obj.friendly_side.includes(ot_user_id))
                         return [false, `You cannot demand a completely neutral state to return their cores to this country! Please select a valid allied country from the above list.`];
 
-                      if (!war_obj[enemy_side].includes(actual_ot_user_id))
+                      if (!war_obj[enemy_side].includes(ot_user_id))
                         return [false, `You must specify a valid enemy country for them to be able to return their cores! **${input}** was not recognised as a valid country.`];
                     }
                   }]);
@@ -912,19 +897,18 @@ module.exports = {
                       limit: function (user_id, arg, input) {
                         var ot_user_id = returnMention(input);
 
-                        var actual_ot_user_id = main.global.user_map[ot_user_id];
-                        var ot_user = main.users[actual_ot_user_id];
+                        var ot_user = main.users[ot_user_id];
 
                         //Check to see if ot_user even exists
                         if (!ot_user)
                           return [false, `The user you have specified, **${input}**, turned out to be entirely nonexistent! Please select from the above list.`];
 
                         //Check for involvement in the war
-                        if (!war_obj[enemy_side].includes(actual_ot_user_id) && !war_obj.friendly_side.includes(actual_ot_user_id))
+                        if (!war_obj[enemy_side].includes(ot_user_id) && !war_obj.friendly_side.includes(ot_user_id))
                           return [false, `You cannot free a completely neutral state from their war reparations! Please select a valid allied country from the above list.`];
 
                         //Check to see if they're on the friendly_side
-                        if (!war_obj.friendly_side.includes(actual_ot_user_id))
+                        if (!war_obj.friendly_side.includes(ot_user_id))
                           return [false, `You must specify a valid friendly country to cease debt repayments! **${input}** was not recognised as a valid country.`];
                       }
                     }]);
@@ -945,19 +929,18 @@ module.exports = {
                       //Declare local instance variables
                       var ot_user_id = returnMention(input);
 
-                      var actual_ot_user_id = main.global.user_map[ot_user_id];
-                      var ot_user = main.users[actual_ot_user_id];
+                      var ot_user = main.users[ot_user_id];
 
                       //Check to make sure that target even exists
                       if (!ot_user)
                         return [false, `The country you have specified, **${input}**, didn't even exist! Please select a country from the above list.`];
 
                       //Check to make sure that target is involved in the war
-                      if (!war_obj[enemy_side].includes(actual_ot_user_id) && !war_obj.friendly_side.includes(actual_ot_user_id))
+                      if (!war_obj[enemy_side].includes(ot_user_id) && !war_obj.friendly_side.includes(ot_user_id))
                         return [false, `**${ot_user.name}** isn't even involved in the current conflict! Please select a country from the above list.`];
 
                       //Check to make sure that target is on the enemy side
-                      if (!war_obj[enemy_side].includes(actual_ot_user_id))
+                      if (!war_obj[enemy_side].includes(ot_user_id))
                         return [false, `You can't take stuff from an allied nation in a peace deal like that! Please select a country from the above list.`];
                     }
                   }]);
@@ -1038,15 +1021,14 @@ module.exports = {
                       //Declare local instance variables
                       var ot_user_id = returnMention(input);
 
-                      var actual_ot_user_id = main.global.user_map[ot_user_id];
-                      var ot_user = main.users[actual_ot_user_id];
+                      var ot_user = main.users[ot_user_id];
 
                       //Check to see if target exists
                       if (!ot_user)
                         return [false, `The country you have specified, **${input}**, turned out to be entirely nonexistent! Please select from the above list.`]
 
                       //Check to see if target is an enemy
-                      if (!war_obj[enemy_side].includes(actual_ot_user_id))
+                      if (!war_obj[enemy_side].includes(ot_user_id))
                         return [false, `**${ot_user.name}** is not currently on the opposing side of this conflict! You can't force neutral/allied countries into trading with you.`];
                     }
                   }]);
@@ -1063,11 +1045,8 @@ module.exports = {
                         var ot_user_id = returnMention(input);
                         var target_user_id = returnMention(arg[arg.length - 1]);
 
-                        var actual_ot_user_id = main.global.user_map[ot_user_id];
-                        var actual_target_id = main.global.user_map[target_user_id];
-
                         //Check to see if they're the same
-                        if (actual_ot_user_id == actual_target_id)
+                        if (ot_user_id == target_user_id)
                           return [false, `You can't force a country into trading with itself! Pick another country to force this nation into trading with.`];
                       }
                     }]);
@@ -1097,15 +1076,14 @@ module.exports = {
                       //Declare local instance variables
                       var ot_user_id = returnMention(input);
 
-                      var actual_ot_user_id = main.global.user_map[ot_user_id];
-                      var ot_user = main.users[actual_ot_user_id];
+                      var ot_user = main.users[ot_user_id];
 
                       //Check to see if target exists
                       if (!ot_user)
                         return [false, `The country you have specified, **${input}**, turned out to be entirely nonexistent! Please select from the above list.`]
 
                       //Check to see if target is an enemy
-                      if (!war_obj[enemy_side].includes(actual_ot_user_id))
+                      if (!war_obj[enemy_side].includes(ot_user_id))
                         return [false, `**${ot_user.name}** is not currently on the opposing side of this conflict! You can't syphon actions from neutral/allied nations.`];
                     }
                   }]);
@@ -1122,11 +1100,8 @@ module.exports = {
                         var ot_user_id = returnMention(input);
                         var target_user_id = returnMention(arg[arg.length - 1]);
 
-                        var actual_ot_user_id = main.global.user_map[ot_user_id];
-                        var actual_target_id = main.global.user_map[target_user_id];
-
                         //Check to see if they're the same
-                        if (actual_ot_user_id == actual_target_id)
+                        if (ot_user_id == target_user_id)
                           return [false, `You can't syphon a country's actions to themselves! How would that even work?`];
                       }
                     }]);
@@ -1180,15 +1155,14 @@ module.exports = {
                       //Declare local instance variables
                       var ot_user_id = returnMention(input);
 
-                      var actual_ot_user_id = main.global.user_map[ot_user_id];
-                      var ot_user = main.users[actual_ot_user_id];
+                      var ot_user = main.users[ot_user_id];
 
                       //Check to see if target exists
                       if (!ot_user)
                         return [false, `The country you have specified, **${input}**, turned out to be entirely nonexistent! Please select from the above list.`];
 
                       //Check to see if target is an enemy
-                      if (!war_obj[enemy_side].includes(actual_ot_user_id))
+                      if (!war_obj[enemy_side].includes(ot_user_id))
                         return [false, `**${ot_user.name}** is not currently on the opposing side of this conflict! You can't force neutral/allied countries to pay war reparations`];
                     }
                   }]);
@@ -1205,11 +1179,8 @@ module.exports = {
                         var ot_user_id = returnMention(input);
                         var target_user_id = returnMention(arg[arg.length - 1]);
 
-                        var actual_ot_user_id = main.global.user_map[ot_user_id];
-                        var actual_target_id = main.global.user_map[target_user_id];
-
                         //Check to see if they're the same
-                        if (actual_ot_user_id == actual_target_id)
+                        if (ot_user_id == target_user_id)
                           return [false, `You can't have a country pay war reparations to themselves!`];
                       }
                     }]);
