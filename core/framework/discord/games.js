@@ -315,99 +315,116 @@ module.exports = {
     var game_obj = interfaces[game_id];
 
     //Declare local instance variables
+    var game_channel = returnChannel(game_obj.channel);
     var usr = main.users[game_obj.user];
 
     //Alert loop
     cache[`${game_id}_alert_loop`] = setInterval(function(){
-      try {
-        var message_is_prompt = false;
-        var all_visual_prompts = Object.keys(interfaces);
+      if (game_channel) {
+        try {
+          var message_is_prompt = false;
+          var all_visual_prompts = Object.keys(interfaces);
 
-        //Check if message is subject to a current command prompt
-        for (var i = 0; i < all_visual_prompts.length; i++) {
-          var local_prompt = interfaces[all_visual_prompts[i]];
-          if (local_prompt.type == "visual_prompt")
-            if (local_prompt.message.id == game_obj.alert_embed.id)
-              message_is_prompt = true;
-        }
+          //Check if message is subject to a current command prompt
+          for (var i = 0; i < all_visual_prompts.length; i++) {
+            var local_prompt = interfaces[all_visual_prompts[i]];
+            if (local_prompt.type == "visual_prompt")
+              if (local_prompt.message.id == game_obj.alert_embed.id)
+                message_is_prompt = true;
+          }
 
-        //Only edit the message if the message is not a prompt.
-        if (!message_is_prompt)
-          if (game_obj.alert_change)
-            updateAlert(game_obj.user, { freeze_alerts: game_obj.freeze_alerts });
-      } catch {}
+          //Only edit the message if the message is not a prompt.
+          if (!message_is_prompt)
+            if (game_obj.alert_change)
+              updateAlert(game_obj.user, { freeze_alerts: game_obj.freeze_alerts });
+        } catch {}
+      } else {
+        clearInterval(cache[`${game_id}_alert_loop`]);
+      }
     }, 100);
 
     //Date loop
     cache[`${game_id}_date_loop`] = setInterval(function(){
-      var current_date = new Date().getTime();
-      var time_remaining = settings.turn_timer*1000 - (current_date - main.last_turn);
-      var update_allowed = false;
+      if (game_channel) {
+        var current_date = new Date().getTime();
+        var time_remaining = settings.turn_timer*1000 - (current_date - main.last_turn);
+        var update_allowed = false;
 
-      if (!game_obj.last_updated_date) {
-        update_allowed = true;
-      } else if ((current_date - game_obj.last_updated_date) > 9500)
-        update_allowed = true;
+        if (!game_obj.last_updated_date) {
+          update_allowed = true;
+        } else if ((current_date - game_obj.last_updated_date) > 9500)
+          update_allowed = true;
 
-      //Rate-limit editing to once every 9,5 seconds
-      if (update_allowed) {
-        const topbar_embed = new Discord.MessageEmbed()
-          .setColor(settings.bot_colour)
-          .setTitle(`${config.icons.time} **${getDate(main.date)}** - Round ${parseNumber(main.round_count)}`)
-          .setDescription(
-            (main.season_started) ?
-              `- Each round is approximately ${parseMilliseconds(settings.turn_timer*1000)}. ${parseMilliseconds(time_remaining)} remaining until the next turn.` :
-              `This season has not yet started. Waiting on **${parseNumber(config.defines.common.starting_players - Object.keys(main.users).length)}** more player(s) for the game to start ..`
-          )
-          .setImage("https://cdn.discordapp.com/attachments/722997700391338046/736141424315203634/margin.png");
+        //Rate-limit editing to once every 9,5 seconds
+        if (update_allowed) {
+          const topbar_embed = new Discord.MessageEmbed()
+            .setColor(settings.bot_colour)
+            .setTitle(`${config.icons.time} **${getDate(main.date)}** - Round ${parseNumber(main.round_count)}`)
+            .setDescription(
+              (main.season_started) ?
+                `- Each round is approximately ${parseMilliseconds(settings.turn_timer*1000)}. ${parseMilliseconds(time_remaining)} remaining until the next turn.` :
+                `This season has not yet started. Waiting on **${parseNumber(config.defines.common.starting_players - Object.keys(main.users).length)}** more player(s) for the game to start ..`
+            )
+            .setImage("https://cdn.discordapp.com/attachments/722997700391338046/736141424315203634/margin.png");
 
-        try {
-          if (returnChannel(game_obj.channel)) {
-            game_obj.header.edit({ embeds: [topbar_embed] });
+          try {
+            if (returnChannel(game_obj.channel)) {
+              game_obj.header.edit({ embeds: [topbar_embed] });
 
-            if (game_obj.page == "founding_map")
-              if (!main.global.user_map[game_obj.user]) {
-                if (game_obj.country_picker_page)
-                  if (game_obj.country_picker_page == "claim_country") {
-                    initialiseClaimCountry(game_obj.user);
-                  } else if (game_obj.country_picker_page == "found_country") {
-                    initialiseFoundCountry(game_obj.user);
-                  } else {
-                    initialiseCountryMenu(game_obj.user);
-                  }
-              } else {
-                initialiseSettleStartingProvinces(game_obj.user);
-              }
-          } else {
-            if (game_obj)
-              clearGame(game_id);
-          }
-        } catch {}
+              if (game_obj.page == "founding_map")
+                if (!main.global.user_map[game_obj.user]) {
+                  if (game_obj.country_picker_page)
+                    if (game_obj.country_picker_page == "claim_country") {
+                      initialiseClaimCountry(game_obj.user);
+                    } else if (game_obj.country_picker_page == "found_country") {
+                      initialiseFoundCountry(game_obj.user);
+                    } else {
+                      initialiseCountryMenu(game_obj.user);
+                    }
+                } else {
+                  initialiseSettleStartingProvinces(game_obj.user);
+                }
+            } else {
+              if (game_obj)
+                clearGame(game_id);
+            }
+          } catch {}
 
-        //Refresh last updated date
-        game_obj.last_updated_date = current_date;
+          //Refresh last updated date
+          game_obj.last_updated_date = current_date;
+        }
+      } else {
+        clearInterval(cache[`${game_id}_date_loop`]);
       }
     }, 10000);
 
     //Header loop
     cache[`${game_id}_header_loop`] = setInterval(function(){
-      try {
-        if (game_obj.header_change) {
-          game_obj.header.edit({ embeds: [game_obj.new_header] });
-          delete game_obj.header_change;
-        }
-      } catch {}
+      if (game_channel) {
+        try {
+          if (game_obj.header_change) {
+            game_obj.header.edit({ embeds: [game_obj.new_header] });
+            delete game_obj.header_change;
+          }
+        } catch {}
+      } else {
+        clearInterval(cache[`${game_id}_header_loop`]);
+      }
     }, 100);
 
     //Main embed/panel loop
     cache[`${game_id}_main_loop`] = setInterval(function(){
-      try {
-        if (game_obj.main_change) {
-          game_obj.middle_embed.edit({ embeds: [game_obj.main_embed] });
-          game_obj.middle_embed.reactions.removeAll().catch(error => log.error(`Failed to clear reactions: ${error}.`));
-          game_obj.main_change = false;
-        }
-      } catch {}
+      if (game_channel) {
+        try {
+          if (game_obj.main_change) {
+            game_obj.middle_embed.edit({ embeds: [game_obj.main_embed] });
+            game_obj.middle_embed.reactions.removeAll().catch(error => log.error(`Failed to clear reactions: ${error}.`));
+            game_obj.main_change = false;
+          }
+        } catch {}
+      } else {
+        clearInterval(cache[`${game_id}_main_loop`]);
+      }
     }, 100);
   },
 
