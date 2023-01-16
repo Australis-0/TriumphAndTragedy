@@ -69,7 +69,7 @@ module.exports = {
         }
 
         //Army attrition
-        if (returnSafeNumber(lookup.province_troop_strengths[local_army.province]) > returnSafeNumber(province_obj.supply_limit)*1000)
+        if (returnSafeNumber(lookup.province_troop_strengths[local_army.province]) > returnSafeNumber(province_obj.supply_limit, config.defines.combat.base_supply_limit)*1000)
           if (local_enemies.length > 0)
             if (local_army.type != "navy") {
               var is_capital = false;

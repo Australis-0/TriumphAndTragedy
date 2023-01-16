@@ -2,7 +2,7 @@ config.reforms.workhours = {
 	name: "Maximum Workhours",
 	unlimited_work_day: {
 		name: "Unlimited Work Day",
-		description: "No one enjoys this schedule, but proponents of lassiez-faire believe that markets will self-adjust working hours, as workers choose which jobs to work at. However, critics point out that all workplaces have similar working hours.",
+		description: "No one enjoys this schedule, but proponents of laissez-faire believe that markets will self-adjust working hours, as workers choose which jobs to work at. However, critics point out that all workplaces have similar working hours.",
 
 		political_appeasement: {
 			absolute_monarchy_discontent: -3,
