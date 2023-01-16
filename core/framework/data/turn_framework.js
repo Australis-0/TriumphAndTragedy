@@ -264,7 +264,7 @@ module.exports = {
       lookup.province_troop_strengths = {};
 
       for (var i = 0; i < all_provinces.length; i++)
-        lookup.province_troop_strengths[all_provinces[i]] = getTroopsInProvince(all_provinces[i]);
+        lookup.province_troop_strengths[all_provinces[i]] = returnSafeNumber(getTroopsInProvince(all_provinces[i]));
     }
 
     //World Market Up-Logic

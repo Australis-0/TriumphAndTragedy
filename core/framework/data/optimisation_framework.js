@@ -22,5 +22,14 @@ module.exports = {
 
     for (var i = 0; i < guilds.length; i++)
       client.guilds.cache.get(guilds[i]).members.fetch();
+
+    //Post-loading optimisation
+    setTimeout(function(){
+      var all_provinces = Object.keys(main.provinces);
+
+      //Troop strengths
+      for (var i = 0; i < all_provinces.length; i++)
+        lookup.province_troop_strengths[all_provinces[i]] = returnSafeNumber(getTroopsInProvince(all_provinces[i]));
+    }, 2000);
   }
 };
