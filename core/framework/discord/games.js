@@ -54,29 +54,33 @@ module.exports = {
 
     //Delete game channel first
     try {
-      if (!game_obj) {
-        delete interfaces[game_id];
-        delete main.interfaces[game_id];
-      }
+        if (!game_obj) {
+          delete interfaces[game_id];
+          delete main.interfaces[game_id];
+        }
 
-      clearInterval(cache[`${game_id}_alert_loop`]);
-      clearInterval(cache[`${game_id}_date_loop`]);
-      clearInterval(cache[`${game_id}_header_loop`]);
-      clearInterval(cache[`${game_id}_main_loop`]);
+        clearInterval(cache[`${game_id}_alert_loop`]);
+        clearInterval(cache[`${game_id}_date_loop`]);
+        clearInterval(cache[`${game_id}_header_loop`]);
+        clearInterval(cache[`${game_id}_main_loop`]);
 
-      if (game_obj)
-        var delete_loop = setInterval(function(channel_id) {
-          try {
-            if (game_obj.channel != settings.alert_channel) {
-              var local_channel = returnChannel(channel_id);
+        if (game_obj)
+          var delete_loop = setInterval(function(channel_id) {
+            try {
+              if (game_obj.channel != settings.alert_channel) {
+                var local_channel = returnChannel(channel_id);
 
-              if (local_channel)
-                local_channel.delete();
+                if (local_channel)
+                  local_channel.delete();
+
+                //Delete game_obj as well
+                delete interfaces[game_id];
+                delete main.interfaces[game_id];
+              }
+            } catch {
+              clearInterval(delete_loop);
             }
-          } catch {
-            clearInterval(delete_loop);
-          }
-        }, 1000, JSON.parse(JSON.stringify(game_obj.channel)));
+          }, 1000, JSON.parse(JSON.stringify(game_obj.channel)));
     } catch (e) {
       log.warn(`clearGame() - Game channel for Game ID ${game_id} could not be found: ${e}`);
       console.log(e);
