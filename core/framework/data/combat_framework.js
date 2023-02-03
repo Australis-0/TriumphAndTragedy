@@ -605,14 +605,14 @@ module.exports = {
             }
 
             //Add warscore, casualties
-            var attacking_war_exhaustion = returnSafeNumber(Math.round(
-              attacker_casualties/
-                (getTotalActiveDuty(user_id) + returnSafeNumber(usr.mobilisation.current_manpower_mobilised))
-            ));
-            var defending_war_exhaustion = returnSafeNumber(Math.round(
-              defender_casualties/
-                (getTotalActiveDuty(ot_user_id) + returnSafeNumber(ot_user.mobilisation.current_manpower_mobilised))
-            ));
+            var attacking_war_exhaustion = returnSafeNumber(Math.ceil(
+              (attacker_casualties/
+                (getTotalActiveDuty(user_id) + returnSafeNumber(usr.mobilisation.current_manpower_mobilised)))*100
+            )/100);
+            var defending_war_exhaustion = returnSafeNumber(Math.ceil(
+              (defender_casualties/
+                (getTotalActiveDuty(ot_user_id) + returnSafeNumber(ot_user.mobilisation.current_manpower_mobilised)))*100
+            )/100);
 
             attacking_war_exhaustion = Math.min(attacking_war_exhaustion, 0.25);
             attacking_war_exhaustion = Math.max(attacking_war_exhaustion, 0);
@@ -637,7 +637,7 @@ module.exports = {
 
               if (local_war.attackers.includes(actual_ot_user_id))
                 defender_side = "attacker";
-              if (local_war.defenders.includes(actual_id))
+              if (local_war.defenders.includes(actual_ot_user_id))
                 defender_side = "defender";
 
               if (attacker_side != "neutral") {
@@ -645,6 +645,9 @@ module.exports = {
                 local_war[`${defender_side}_total_casualties`] += defender_casualties;
                 local_war[`${actual_id}_casualties`] += attacker_casualties;
                 local_war[`${actual_ot_user_id}_casualties`] += defender_casualties;
+
+                modifyWarscore(actual_id, local_war, attacking_war_exhaustion);
+                modifyWarscore(actual_ot_user_id, local_war, defending_war_exhaustion);
               }
             }
 
@@ -888,11 +891,6 @@ module.exports = {
 
                     var actual_casualties = module.exports.calculateCasualties(user_id, army_obj, random_defender_roll);
                     var ot_casualties = module.exports.calculateCasualties(ot_user_id, random_fleet, random_attacker_roll);
-
-                    console.log(random_fleet);
-                    console.log(random_defender_roll);
-                    console.log(random_attacker_roll);
-                    console.log(actual_casualties);
 
                     //Parse losses
                     var old_attacking_units = Object.keys(old_attacking_fleet.units);

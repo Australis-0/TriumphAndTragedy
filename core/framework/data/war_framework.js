@@ -80,6 +80,38 @@ module.exports = {
     }
   },
 
+  calculateWarscore: function (arg0_user, arg1_war_name) {
+    //Convert from parameters
+    var user_id = arg0_user;
+    var war_name = (typeof arg1_war_name != "object") ? arg1_war_name.trim().toLowerCase() : arg1_war_name;
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var enemy_side = "";
+    var friendly_side = "";
+    var total_allied_warscore = 0;
+    var war_obj = (typeof war_name != "object") ? module.exports.getWar(war_name) : war_name;
+
+    if (war_obj) {
+      //Check for friendly_side and enemy_side
+      if (war_obj.attackers.includes(actual_id)) {
+        friendly_side = "attackers";
+        enemy_side = "defenders";
+      }
+      if (war_obj.defenders.includes(actual_id)) {
+        friendly_side = "defenders";
+        enemy_side = "attackers";
+      }
+
+      //Fetch total_allied_warscore
+      for (var i = 0; i < war_obj[friendly_side].length; i++)
+        total_allied_warscore += returnSafeNumber(war_obj[`${war_obj[friendly_side][i]}_warscore`]);
+
+      //Return statement
+      return returnSafeNumber(war_obj[`${actual_id}_warscore`]/total_allied_warscore);
+    }
+  },
+
   generateArchivedWarID: function () {
     var local_id;
 
@@ -355,6 +387,24 @@ module.exports = {
       //Return statement
       return (side == "attackers") ? attacker_warscore : defender_warscore;
     }
+  },
+
+  modifyWarscore: function (arg0_user, arg1_war_name, arg2_amount) {
+    //Convert from parameters
+    var user_id = arg0_user;
+    var war_name = (typeof war_name != "object") ? arg1_war_name.trim().toLowerCase() : arg1_war_name;
+    var amount = parseFloat(arg2_amount);
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var war_obj = (typeof war_name != "object") ? module.exports.getWar(war_name) : war_name;
+
+    war_obj[`${actual_id}_warscore`] = (war_obj[`${actual_id}_warscore`]) ?
+      war_obj[`${actual_id}_warscore`] + amount :
+      amount;
+
+    //Return statement
+    return war_obj[`${actual_id}_warscore`];
   },
 
   /*
