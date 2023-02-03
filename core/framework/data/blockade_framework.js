@@ -103,5 +103,98 @@ module.exports = {
         //Delete blockading object
         usr.blockaded = {};
       }
+  },
+
+  getBlockadingUserContribution: function (arg0_user, arg1_user) {
+    //Convert from parameters
+    var user_id = arg0_user; //User blockading
+    var ot_user_id = arg1_user; //User being blockaded
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var actual_ot_user_id = main.global.user_map[ot_user_id];
+    var ot_user = main.users[actual_ot_user_id];
+    var total_combined_points = 0;
+    var total_user_points = 0;
+    var user_blockading_fleets = module.exports.getBlockadingUserFleets(user_id, ot_user_id);
+    var usr = main.users[actual_id];
+
+    //Check for ot_user.blockaded
+    if (actual_ot_user_id)
+      if (isBlockaded(ot_user_id))
+        //Go through all the fleets that are still blockading for total_combined_points
+        for (var i = 0; i < ot_user.blockaded.fleets.length; i++)
+          try {
+            var local_fleet = getArmy(ot_user.blockaded.fleets[i].id, ot_user.blockaded.fleets[i].fleet_id);
+
+            if (local_fleet) {
+              var local_fleet_stats = calculateArmyStats(ot_user.blockaded.fleets[i].id, local_fleet);
+
+              total_combined_points += returnSafeNumber(local_fleet_stats.attack);
+              total_combined_points += returnSafeNumber(local_fleet_stats.defence);
+            }
+          }
+
+    //Iterate over user_blockading_fleets
+    for (var i = 0; i < user_blockading_fleets.length; i++) {
+      var local_fleet_stats = calculateArmyStats(user_id, user_blockading_fleets[i]);
+
+      total_user_points += returnSafeNumber(local_fleet_stats.attack);
+      total_user_points += returnSafeNumber(local_fleet_stats.defence);
+    }
+
+    //Return statement
+    return total_user_points/total_combined_points;
+  },
+
+  getBlockadingUserFleets: function (arg0_user, arg1_user) {
+    //Convert from parameters
+    var user_id = arg0_user; //User blockading
+    var ot_user_id = arg1_user; //User being blockaded
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var actual_ot_user_id = main.global.user_map[ot_user_id];
+    var blockading_fleets = [];
+    var ot_user = main.users[actual_ot_user_id];
+    var usr = main.users[actual_id];
+
+    //Check for ot_user.blockaded
+    if (actual_ot_user_id)
+      if (isBlockaded(ot_user_id))
+        //Go through all the fleets that are still blockading
+        for (var i = 0; i < ot_user.blockaded.fleets.length; i++)
+          try {
+            var local_fleet = getArmy(ot_user.blockaded.fleets[i].id, ot_user.blockaded.fleets[i].fleet_id);
+
+            if (local_fleet)
+              blockading_fleets.push(local_fleet);
+          } catch {}
+
+    //Return statement
+    return blockading_fleets;
+  },
+
+  getBlockadingUsers: function (arg0_user) {
+    //Convert from parameters
+    var user_id = arg0_user; //User being blockaded
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var blockading_users = [];
+    var usr = main.users[actual_id];
+
+    //Check if user is actually blockaded
+    if (actual_id)
+      if (isBlockaded(user_id))
+        //Go through all the fleets that are still blockading
+        for (var i = 0; i < usr.blockaded.fleets.length; i++)
+          try {
+            if (!blockading_users.includes(usr.blockaded.fleets[i].id))
+              blockading_users.push(usr.blockaded.fleets[i].id);
+          } catch {}
+
+    //Return statement
+    return blockading_users;
   }
 };

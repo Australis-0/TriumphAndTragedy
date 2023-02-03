@@ -660,6 +660,66 @@ module.exports = {
     }
   },
 
+  getOccupyingUserContribution: function (arg0_user, arg1_user) {
+    //Convert from parameters
+    var user_id = arg0_user; //Occupying user
+    var ot_user_id = arg1_user; //Occupied user
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var controlled_provinces = module.exports.getProvinces(user_id);
+    var occupied_provinces = module.exports.getOccupyingUserProvinces(user_id, ot_user_id);
+    var owned_provinces = module.exports.getProvinces(user_id, { include_hostile_occupations: true });
+    var total_occupied_provinces = owned_provinces.length - controlled_provinces.length;
+
+    //Return statement
+    return returnSafeNumber(occupied_provinces/total_occupied_provinces);
+  },
+
+  getOccupyingUserProvinces: function (arg0_user, arg1_user) {
+    //Convert from parameters
+    var user_id = arg0_user; //Occupying user
+    var ot_user_id = arg1_user; //Occupied user
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var controlled_provinces = module.exports.getProvinces(user_id);
+    var occupied_provinces = [];
+    var owned_provinces = module.exports.getProvinces(user_id, { include_hostile_occupations: true });
+    var total_occupied_provinces = owned_provinces.length - controlled_provinces.length;
+    var usr = main.users[actual_id];
+
+    //Iterate over all owned_provinces
+    for (var i = 0; i < owned_provinces.length; i++)
+      if (owned_provinces[i].owner != owned_provinces[i].controller)
+        if (owned_provinces[i].controller == actual_id)
+          occupied_provinces.push(owned_provinces[i]);
+
+    //Return statement
+    return occupied_provinces;
+  },
+
+  getOccupyingUsers: function (arg0_user) {
+    //Convert from parameters
+    var user_id = arg0_user;
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var controlled_provinces = module.exports.getProvinces(user_id);
+    var occupying_users = [];
+    var owned_provinces = module.exports.getProvinces(user_id, { include_hostile_occupations: true });
+    var usr = main.users[actual_id];
+
+    //Iterate over all owned_provinces
+    for (var i = 0; i < owned_provinces.length; i++)
+      if (owned_provinces[i].owner != owned_provinces[i].controller)
+        if (!occupying_users.includes(owned_provinces[i].controller))
+          occupying_users.push(owned_provinces[i].controller);
+
+    //Return statement
+    return occupying_users;
+  },
+
   getProvince: function (arg0_province) {
     //Convert from parameters
     var province_id = arg0_province;

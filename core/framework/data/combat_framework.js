@@ -127,6 +127,7 @@ module.exports = {
 
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
+    var all_wars = Object.keys(main.global.wars);
     var army_obj = (typeof army_name != "object") ? getArmy(user_id, army_name.trim()) : army_name;
     var city_obj = (typeof city_name != "object") ? getCity(city_name.trim()) : city_name;
     var usr = main.users[actual_id];
@@ -278,6 +279,15 @@ module.exports = {
               var attacker_war_exhaustion = 0;
               var defender_war_exhaustion = 0;
 
+              if (attacker_losses > 0)
+                attacker_war_exhaustion = parseFloat(
+                  (attacker_losses/getTotalActiveDuty(user_id)).toFixed(2)
+                );
+              if (total_casualties > 0)
+                defender_war_exhaustion = parseFloat(
+                  (total_casualties/getTotalActiveDuty(city_obj.controller)).toFixed(2)
+                );
+
               for (var i = 0; i < all_wars.length; i++) {
                 var attacker_side = "neutral";
                 var defender_side = "neutral";
@@ -296,16 +306,11 @@ module.exports = {
                 //Add casualties
                 local_war[`${attacker_side}_total_casualties`] += Math.ceil(attacker_losses);
                 local_war[`${defender_side}_total_casualties`] += Math.ceil(total_casualties);
-              }
 
-              if (attacker_losses > 0)
-                attacker_war_exhaustion = parseFloat(
-                  (attacker_losses/getTotalActiveDuty(user_id)).toFixed(2)
-                );
-              if (total_casualties > 0)
-                defender_war_exhaustion = parseFloat(
-                  (total_casualties/getTotalActiveDuty(city_obj.controller)).toFixed(2)
-                );
+                //Modify warscore
+                modifyWarscore(actual_id, local_war, attacking_war_exhaustion);
+                modifyWarscore(actual_ot_user_id, local_war, defending_war_exhaustion);
+              }
 
               city_obj.bombed_this_turn = true;
 

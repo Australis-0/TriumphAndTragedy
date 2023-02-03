@@ -393,7 +393,7 @@ module.exports = {
     //Convert from parameters
     var user_id = arg0_user;
     var war_name = (typeof war_name != "object") ? arg1_war_name.trim().toLowerCase() : arg1_war_name;
-    var amount = parseFloat(arg2_amount);
+    var amount = returnSafeNumber(parseFloat(arg2_amount));
 
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
