@@ -137,6 +137,25 @@ module.exports = {
     delete war_obj.peace_treaties[actual_id];
   },
 
+  generatePeaceOfferID: function (arg0_war_name) {
+    //Convert from parameters
+    var war_name = (typeof arg0_war_name != "object") ? arg0_war_name.trim().toLowerCase() : arg0_war_name;
+
+    //Declare local instance variables
+    var war_obj = (typeof war_name != "object") ? getWar(war_name) : war_name;
+
+    //While loop to find ID, just in-case of conflicting random ID's:
+    while (true) {
+      var local_id = generateRandomID();
+
+      //Return and break once a true ID is found
+      if (!war_obj.peace_treaties[local_id]) {
+        return local_id;
+        break;
+      }
+    }
+  },
+
   getPeaceTreatyInfamy: function (arg0_war_name, arg1_peace_treaty_object) {
     //Convert from parameters
     var war_name = (typeof arg0_war_name != "object") ? arg0_war_name.trim().toLowerCase() : arg0_war_name;
