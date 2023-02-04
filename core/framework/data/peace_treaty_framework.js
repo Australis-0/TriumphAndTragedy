@@ -113,6 +113,7 @@ module.exports = {
       var peace_treaty_obj = {
         id: actual_id,
         war_id: war_obj.id,
+        name: module.exports.generatePeaceOfferName(user_id, war_obj),
 
         wargoals: []
       };
@@ -154,6 +155,99 @@ module.exports = {
         break;
       }
     }
+  },
+
+  generatePeaceOfferName: function (arg0_user, arg1_war_name) {
+    //Convert from parameters
+    var user_id = arg0_user;
+    var war_name = (typeof arg1_war_name != "object") ? arg1_war_name.trim().toLowerCase() : arg1_war_name;
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var treaty_name = "";
+    var usr = main.users[actual_id];
+    var war_obj = (typeof war_name != "object") ? getWar(war_name) : main.global.wars[war_name];
+
+    //Try to get capital name
+    try {
+      var capital_obj = getCapital(user_id);
+
+      treaty_name = capital_obj.name;
+    } catch {}
+
+    //If capital name didn't work, default to country name
+    if (treaty_name == "")
+      treaty_name = usr.name;
+
+    //Check ordinal by sifting through all .peace_treaties for identical names
+    if (war_obj) {
+      var all_peace_treaties = Object.keys(war_obj.peace_treaties);
+      var iterations = 0;
+
+      while (true) {
+        var local_name = `${(iterations > 0) ? ordinalise(iterations + 1) + " " : ""}Treaty of ${treaty_name}`;
+        var name_taken = false;
+
+        for (var i = 0; i < all_peace_treaties.length; i++) {
+          var local_treaty = war_obj.peace_treaties[all_peace_treaties[i]];
+
+          //Check if local_treaty shares an identical name
+          if (local_treaty.name.trim().toLowerCase() == local_name.trim().toLowerCase())
+            name_taken = true;
+        }
+
+        //Return and break once a valid name is found
+        if (!name_taken) {
+          return local_name;
+          break;
+        }
+      }
+    }
+  },
+
+  /*
+    getPeaceTreaty() - Returns the peace treaty object/key.
+    options: {
+      return_key: true/false - Whether to return the key instead of an object. False by default
+    }
+  */
+  getPeaceTreaty: function (arg0_war_name, arg1_peace_treaty_name, arg2_options) {
+    //Convert from parameters
+    var war_name = (typeof arg0_war_name != "object") ? arg0_war_name.trim().toLowerCase() : war_name;
+    var peace_treaty_name = arg1_peace_treaty_name.trim().toLowerCase();
+    var options = (arg2_options) ? arg2_options : {};
+
+    //Declare local instance variables
+    var peace_treaty_exists = [false, ""];
+    var war_obj = (typeof war_name != "object") ? getWar(war_name) : war_name;
+
+    var all_peace_treaties = Object.keys(war_obj.peace_treaties);
+
+    //Guard clauses
+    if (typeof peace_treaty_name == "object")
+      return peace_treaty_name;
+
+    if (war_obj.peace_treaties[peace_treaty_name])
+      return war_obj.peace_treaties[peace_treaty_name];
+
+    //Name, soft search first
+    for (var i = 0; i < all_peace_treaties.length; i++) {
+      var local_peace_treaty = war_obj.peace_treaties[all_peace_treaties[i]];
+
+      if (local_peace_treaty.name.trim().toLowerCase().indexOf(peace_treaty_name) != -1)
+        peace_treaty_exists = [true, (!options.return_key) ? local_peace_treaty : all_peace_treaties[i]];
+    }
+
+    //Name, hard search second
+    for (var i = 0; i < all_peace_treaties.length; i++) {
+      var local_peace_treaty = war_obj.peace_treaties[all_peace_treaties[i]];
+
+      if (local_peace_treaty.name.trim().toLowerCase() == peace_treaty_name)
+        peace_treaty_exists = [true, (!options.return_key) ? local_peace_treaty : all_peace_treaties[i]];
+    }
+
+    //Return statement
+    return (peace_treaty_exists[0]) ? peace_treaty_exists[1] : undefined;
   },
 
   getPeaceTreatyInfamy: function (arg0_war_name, arg1_peace_treaty_object) {

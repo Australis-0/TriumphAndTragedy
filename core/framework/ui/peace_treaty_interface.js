@@ -2168,5 +2168,9 @@ module.exports = {
         initialiseMapViewer(game_obj.id, map_file, true) :
         changeImage(game_obj.id, map_file);
     }, 15000);
+  },
+
+  printPeaceTreaties: function (arg0_user, arg1_war_name) { //[WIP]
+    
   }
 };

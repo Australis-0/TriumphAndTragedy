@@ -157,6 +157,7 @@ module.exports = {
       FileManager.import("./game/diplomacy/non_aggression_pact");
       FileManager.import("./game/diplomacy/proclaim_guarantee");
       FileManager.import("./game/diplomacy/recall_volunteers");
+      FileManager.import("./game/diplomacy/rename_peace_treaty");
       FileManager.import("./game/diplomacy/rename_vassal_city");
       FileManager.import("./game/diplomacy/rename_vassal_culture");
       FileManager.import("./game/diplomacy/rename_vassal");
