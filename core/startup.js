@@ -134,15 +134,18 @@ module.exports = {
       FileManager.import("./game/diplomacy/allow_cede");
       FileManager.import("./game/diplomacy/ally");
       FileManager.import("./game/diplomacy/annex");
+      FileManager.import("./game/diplomacy/armistice");
       FileManager.import("./game/diplomacy/break_alliance");
       FileManager.import("./game/diplomacy/call_ally");
       FileManager.import("./game/diplomacy/cancel_justification");
       FileManager.import("./game/diplomacy/cancel_military_access");
       FileManager.import("./game/diplomacy/cancel_wargoal");
+      FileManager.import("./game/diplomacy/ceasefire");
       FileManager.import("./game/diplomacy/cede_province");
       FileManager.import("./game/diplomacy/declare_war");
       FileManager.import("./game/diplomacy/decrease_relations");
       FileManager.import("./game/diplomacy/deny_cede");
+      FileManager.import("./game/diplomacy/delete_peace_treaty");
       FileManager.import("./game/diplomacy/end_rivalry");
       FileManager.import("./game/diplomacy/improve_relations");
       FileManager.import("./game/diplomacy/intervene_in_war");
@@ -171,7 +174,9 @@ module.exports = {
       FileManager.import("./game/diplomacy/set_vassal_flag");
       FileManager.import("./game/diplomacy/set_vassal_motto");
       FileManager.import("./game/diplomacy/sign_peace_treaty");
+      FileManager.import("./game/diplomacy/surrender");
       FileManager.import("./game/diplomacy/vassalise");
+      FileManager.import("./game/diplomacy/view_peace_treaty");
 
       FileManager.import("./game/laws/enact_reform");
 

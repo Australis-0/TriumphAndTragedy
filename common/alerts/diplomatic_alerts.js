@@ -20,6 +20,31 @@ config.alerts.diplomacy = {
     }
   },
 
+  armistice: {
+    name: "Armistice!",
+    description: "{FROM.name} is offering an armistice on their entire side for the **{LOCAL.war_name}**. During an armistice period, forces may not occupy each other's territory and war exhaustion for all parties will no longer increase unless the armistice is manually broken by the war leader of either side through air raids, blockades, submarine warfare, and manual cessation.",
+
+    btn_accept_armistice: {
+      ai_chance: 10,
+      title: "Negotiations come before arms.",
+      description: [
+        `All hostilities will immediately cease, and we will sign an armistice with the opposing powers until a peace treaty can be negotiated or conflict resumes.`
+      ],
+      effect: function (options) {
+        var war_obj = main.global.wars[options.LOCAL.war_id];
+
+        war_obj.armistice = true;
+      }
+    },
+    btn_decline_armistice: {
+      ai_chance: 90,
+      title: "Armistice? What do they take us for, fools?",
+      description: [
+        "The war rages on .."
+      ]
+    }
+  },
+
   a_guarantee_for_our_nation: {
     name: "Our Sovereignty Guaranteed!",
     description: "{FROM.name}, seeking to form closer relations with our state, has decided to extend a guarantee of sovereignty to us to protect us from both internal and external threats. Our envoys and diplomats are looking forward to working with {FROM.name} in the future, and our people are relieved to finally have an ally in their time of need.",
@@ -170,7 +195,7 @@ config.alerts.diplomacy = {
 
   an_offer_to_lay_down_arms: {
     name: "An Offer to Lay Down Arms.",
-    description: "{FROM.name} is offering us peace in exchange for the terms listed below for the **{LOCAL.war_name}**. We have the option to either accept or deny this.\n\n---\n\n{LOCAL.peace_treaty_string}",
+    description: "{FROM.name} is offering us peace in exchange for the terms listed below for the **{LOCAL.war_name}**. We are negotiating for our entire side, and they are negotiating for their entire alliance. We have the option to either accept or deny this.\n\n---\n\n{LOCAL.peace_treaty_string}",
 
     btn_accept_conditional_peace: {
       ai_chance: 0,
@@ -234,6 +259,50 @@ config.alerts.diplomacy = {
     }
   },
 
+  ceasefire_proposal: {
+    name: "Ceasefire Proposal.",
+    description: "{FROM.name} is proposing a general ceasefire on behalf of the entire enemy side. If we are happy with ending the war as it is, it might be best to sign onto the deal. Ceasefires transfer all occupied territory to their respective occupiers and once signed, the _de facto_ war will end.",
+
+    btn_accept_ceasefire: {
+      ai_chance: 0,
+      title: "We have no current choice but to accept.",
+      description: [
+        "The ceasefire will immediately begin, all occupied provinces will be transferred, and the war will end."
+      ],
+      effect: function (options) {
+        enforceCeasefire(options.LOCAL.war_id);
+      }
+    },
+    btn_reject_ceasefire: {
+      ai_chance: 100,
+      title: "They haven't seen our fighting yet!",
+      description: [
+        "The war rages on .."
+      ]
+    }
+  },
+
+  conditional_surrender: {
+    name: "Conditional Surrender.",
+    description: "{FROM.name} is offering us peace in exchange for our conditional surrender under the terms listed below for the **{LOCAL.war_name}**. They are negotiating for their entire side, and if we accept, we are merely negotiating for ourselves. We have the option to either accept or deny this\n\n---\n\n{LOCAL.peace_treaty_string}",
+
+    btn_accept_conditional_surrender: {
+      name: "An equitable and lasting peace ..",
+      description: [
+        `The war for us will end immediately, and we will accept **{FROM.name}**'s overtures of separate peace.`
+      ],
+      effect: function (options) {
+        parsePeaceTreaty(options.LOCAL.war_name, options.LOCAL.peace_treaty);
+      }
+    },
+    btn_decline_conditional_surrender: {
+      name: "We shall never surrender!",
+      description: [
+        "The war rages on .."
+      ]
+    }
+  },
+
   guarantee_broken: {
     name: "Guarantee Broken",
     description: "{FROM.name} has rescinded their guarantee for our nation. It seems that they no longer wish to be friends with our great and mighty nation. Whatever the case, our military and our diplomats shall always be standing by at your service.",
@@ -249,6 +318,29 @@ config.alerts.diplomacy = {
 
     btn_non_aggression_pact_expired: {
       title: "Alright. Next brief, please!"
+    }
+  },
+
+  offer_of_surrender: {
+    name: "Enemy Offer of Surrender.",
+    description: "{FROM.name}, an enemy combatant in the **{LOCAL.war_name}**, has decided to offer their conditional surrender under the terms listed below. As the war leader, we are negotiating for our entire side, and they are merely negotiating for themselves. We have the option to either accept or deny this.\n\n---\n\n{LOCAL.peace_treaty_string}",
+
+    btn_accept_surrender_offer: {
+      ai_chance: 20,
+      title: "They've offered us more than their pound of flesh in exchange for peace.",
+      description: [
+        "{FROM.name} will peace out separately from the current war."
+      ],
+      effect: function (options) {
+        parsePeaceTreaty(options.LOCAL.war_name, options.LOCAL.peace_treaty);
+      }
+    },
+    btn_decline_surrender_offer: {
+      ai_chance: 80,
+      title: "They still have ounces to make up!",
+      description: [
+        "We will reject their offer for a separate peace."
+      ]
     }
   },
 
@@ -355,6 +447,30 @@ config.alerts.diplomacy = {
           value: -50
         });
       }
+    }
+  },
+
+  surrender_of_an_allied_combatant: {
+    name: "Surrender of an Allied Combatant.",
+    description: "An allied combatant, **{FROM.name}**, have unconditionally surrendered in all their wars! They now have full war exhaustion and are contributing negatively to our overall war effort.",
+
+    btn_okay: {
+      name: "They just didn't have the moral fibre to keep going ..",
+      description: [
+        "Another one bites the dust."
+      ]
+    }
+  },
+
+  surrender_of_an_enemy_combatant: {
+    name: "Surrender of an Enemy Combatant.",
+    description: "Good news! An enemy combatant, **{FROM.name}**, have unconditionally surrendered in all their wars. They now have full war exhaustion and their belligerent presence is actively detrimental to the enemy.",
+
+    btn_okay: {
+      name: "When's the victory parade?",
+      description: [
+        "One step closer to peace .."
+      ]
     }
   },
 

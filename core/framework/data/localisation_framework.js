@@ -343,6 +343,56 @@ module.exports = {
       opposing_side = "attackers";
     }
 
+    //Print target requirement if applicable
+    if (hasPeaceTreatyTargetRequirement(war_obj, peace_obj)) {
+      var has_no_target = true;
+
+      if (peace_obj.target)
+        if (war_obj[opposing_side].includes(peace_obj.target))
+          if (main.users[peace_obj.target])
+            has_no_target = false;
+
+      peace_string.push(`Proposal Target: ${(has_no_target) ? `_None_` : `**${main.users[peace_obj.target].name}**`}`);
+
+      (has_no_target) ?
+        peace_string.push(`- This peace proposal must be targeted at someone on the other side that is not the enemy war leader in order to be valid! You cannot send this peace proposal until this matter has been resolved.\n\nType **[Change Target]** to resolve this issue.`) :
+        peace_string.push(`- This proposal is a separate peace offer for a single country. Only wargoals regarding this country or its vassals can be enforced if it signed.\n\n- :warning: Any overboard requests that cannot be enforced will still count towards infamy! Imagine if Germany suddenly announced it planned to annex the entirety of Britain after the Russians surrendered.`);
+
+      peace_string.push("");
+      peace_string.push(config.localisation.divider);
+      peace_string.push("");
+    } else if (peace_obj.type == "user") {
+      peace_string.push(`This peace proposal is being negotiated from a position of inferiority as we are not the current war leader. It will be proposed to the entire enemy side and will result in a negotiated settlement.`);
+      peace_string.push("");
+      peace_string.push(config.localisation.divider);
+      peace_string.push("");
+    }
+
+    //Print warscore budgets
+    peace_string.push(`**Warscore Budgets:**`);
+    peace_string.push("");
+    peace_string.push(config.localisation.divider);
+    peace_string.push("");
+
+    //Print all plenipotentiary warscore capacities first
+    for (var i = 0; i < war_obj[friendly_side].length; i++) {
+      var local_capacity = getWarscoreCapacity(war_obj, peace_obj, war_obj[friendly_side[i]]);
+      var local_spent_capacity = getSpentWarscore(war_obj, peace_obj, war_obj[friendly_side[i]]);
+      var local_user = main.users[war_obj[friendly_side][i]];
+
+      peace_string.push(`- **${local_user.name}** Warscore Budget: (${parseNumber(local_spent_capacity)}/**${parseNumber(local_capacity)})`);
+
+      if (local_spent_capacity > local_capacity) {
+        var local_undercapacity = local_spent_capacity - local_capacity;
+
+        peace_string.push(`- This nation is **${parseNumber(local_undercapacity)}** infamy over their warscore capacity, and some of their wargoals will need to be dropped or scaled down for the peace offer to be valid.`);
+      }
+    }
+
+    peace_string.push("");
+    peace_string.push(config.localisation.divider);
+    peace_string.push("");
+
     //Fetch wargoals_demanded
     for (var i = 0; i < peace_obj.wargoals.length; i++) {
       var local_wargoal_id = peace_obj.wargoals[i].id;
@@ -413,6 +463,8 @@ module.exports = {
 
               //Push wargoal name and (wargoals demanded/wargoals limit) to string
               peace_string.push(`• __${(wargoal_obj.name) ? wargoal_obj.name : wargoal_id} #${wargoal_number}__:`);
+              peace_string.push("");
+              peace_string.push(`- Plenipotentiary: **${main.users[wargoal_obj.owner].name}**`);
 
               //Push infamy
               peace_string.push(`\n- ${parseWargoalInfamyLocalisation(user_id, war_obj, peace_obj.wargoals[y]).join("\n- ")}`);

@@ -128,7 +128,9 @@ module.exports = {
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
     var all_wars = Object.keys(main.global.wars);
+    var armistice_broken = false;
     var army_obj = (typeof army_name != "object") ? getArmy(user_id, army_name.trim()) : army_name;
+    var broken_wars = [];
     var city_obj = (typeof city_name != "object") ? getCity(city_name.trim()) : city_name;
     var usr = main.users[actual_id];
 
@@ -164,7 +166,7 @@ module.exports = {
                 }
 
                 //Check to see if attacker is involved in war if defender is
-                if (friendly_side != "")
+                if (friendly_side != "") {
                   if (local_war[opposing_side].includes(actual_id)) {
                     var all_war_keys = Object.keys(local_war);
 
@@ -183,6 +185,17 @@ module.exports = {
                             defender_list.push(local_id);
                       }
                   }
+
+                  //Check if armistice has been broken
+                  if (local_war.armistice)
+                    if (friendly_side != "" && opposing_side != "")
+                      if (friendly_side != opposing_side) {
+                        armistice_broken = true;
+                        broken_wars.push(local_war.name);
+
+                        delete local_war.armistice;
+                      }
+                }
               }
 
               //Iterate over all defender_list users
@@ -400,6 +413,11 @@ module.exports = {
                 result_string.push("");
                 result_string.push(`**${usr.name}** gained ${config.icons.infamy} **${parseNumber(attacker_war_exhaustion*100, { display_float: true, display_prefix: true })}** war exhaustion.`);
                 result_string.push(`**${ot_user.name}** gained ${config.icons.infamy} **${parseNumber(defender_war_exhaustion*100, { display_float: true, display_prefix: true })}** war exhaustion.`);
+
+                if (armistice_broken) {
+                  result_string.push("");
+                  result_string.push(`As a result of this action, armistice(s) have been broken in the following war(s): **${broken_wars.join(", ")}**.`);
+                }
 
                 //Format embed
                 const air_raid_embed = new Discord.MessageEmbed()

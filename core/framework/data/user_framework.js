@@ -594,6 +594,26 @@ module.exports = {
     return total_distance*returnSafeNumber(config.defines.map.km_per_pixel, 1);
   },
 
+  getEnemyOccupiedProvinces: function (arg0_user) {
+    //Convert from parameters
+    var user_id = arg0_user;
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var enemies = getEnemies(user_id);
+    var enemy_occupied_provinces = [];
+    var user_provinces = module.exports.getProvinces(user_id, { include_hostile_occupations: true });
+
+    //Iterate over all provinces
+    for (var i = 0; i < user_provinces.length; i++)
+      if (user_provinces[i].owner != user_provinces[i].controller)
+        if (enemies.includes(user_provinces[i].controller))
+          enemy_occupied_provinces.push(user_provinces[i]);
+
+    //Return statement
+    return enemy_occupied_provinces;
+  },
+
   //Fetches user income before production costs
   getIncome: function (arg0_user, arg1_production, arg2_exclude_war_reparations) {
     //Convert from parameters

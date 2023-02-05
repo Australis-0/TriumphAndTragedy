@@ -1660,44 +1660,45 @@ module.exports = {
     try {
       //Blockades
       if (isBlockaded(user_id))
-        if (usr.blockaded.blockaded_war_exhaustion + config.defines.combat.war_exhaustion_blockade_rate < config.defines.combat.war_exhaustion_blockade_limit) {
-          var blockading_users = getBlockadingUsers(user_id);
-          var local_war_exhaustion_rate = (config.defines.combat.war_exhaustion_blockade_limit - usr.blockaded.blockaded_war_exhaustion < config.defines.combat.war_exhaustion_blockade_rate) ?
-            config.defines.combat.war_exhaustion_blockade_limit - usr.blockaded.blockaded_war_exhaustion :
-            config.defines.combat.war_exhaustion_blockade_rate;
+        if (isBlockadedInArmistice(user_id))
+          if (usr.blockaded.blockaded_war_exhaustion + config.defines.combat.war_exhaustion_blockade_rate < config.defines.combat.war_exhaustion_blockade_limit) {
+            var blockading_users = getBlockadingUsers(user_id);
+            var local_war_exhaustion_rate = (config.defines.combat.war_exhaustion_blockade_limit - usr.blockaded.blockaded_war_exhaustion < config.defines.combat.war_exhaustion_blockade_rate) ?
+              config.defines.combat.war_exhaustion_blockade_limit - usr.blockaded.blockaded_war_exhaustion :
+              config.defines.combat.war_exhaustion_blockade_rate;
 
-          usr.blockaded.blockaded_war_exhaustion += returnSafeNumber(local_war_exhaustion_rate);
-          usr.modifiers.war_exhaustion += returnSafeNumber(local_war_exhaustion_rate);
+            usr.blockaded.blockaded_war_exhaustion += returnSafeNumber(local_war_exhaustion_rate);
+            usr.modifiers.war_exhaustion += returnSafeNumber(local_war_exhaustion_rate);
 
-          //Add local warscore for all blockading users
-          for (var i = 0; i < blockading_users.length; i++)
-            for (var x = 0; x < all_wars.length; x++) {
-              var local_war = main.global.wars[all_wars[x]];
+            //Add local warscore for all blockading users
+            for (var i = 0; i < blockading_users.length; i++)
+              for (var x = 0; x < all_wars.length; x++) {
+                var local_war = main.global.wars[all_wars[x]];
 
-              //Check if blockading_users[i] and user_id are both in the same war on opposite sides
-              var friendly_side = "neutral";
-              var opposing_side = "neutral";
+                //Check if blockading_users[i] and user_id are both in the same war on opposite sides
+                var friendly_side = "neutral";
+                var opposing_side = "neutral";
 
-              if (local_war.attackers.includes(blockading_users[i])) {
-                opposing_side = "attackers";
-                friendly_side = "defenders";
-              }
-              if (local_war.defenders.includes(blockading_users[i])) {
-                opposing_side = "defenders";
-                friendly_side = "attackers";
-              }
-
-              //Check to see that they're both involved in the war
-              if (friendly_side != "neutral" && opposing_side != "neutral")
-                if (friendly_side != opposing_side) {
-                  //Add _warscore to users by contribution
-                  var local_user_contribution = getBlockadingUserContribution(blockading_users[i], user_id);
-
-                  //Add to war_exhaustion
-                  local_war[`${blockading_users[i]}_warscore`] += returnSafeNumber(local_war_exhaustion_rate*local_user_contribution);
+                if (local_war.attackers.includes(blockading_users[i])) {
+                  opposing_side = "attackers";
+                  friendly_side = "defenders";
                 }
-            }
-        }
+                if (local_war.defenders.includes(blockading_users[i])) {
+                  opposing_side = "defenders";
+                  friendly_side = "attackers";
+                }
+
+                //Check to see that they're both involved in the war
+                if (friendly_side != "neutral" && opposing_side != "neutral")
+                  if (friendly_side != opposing_side) {
+                    //Add _warscore to users by contribution
+                    var local_user_contribution = getBlockadingUserContribution(blockading_users[i], user_id);
+
+                    //Add to war_exhaustion
+                    local_war[`${blockading_users[i]}_warscore`] += returnSafeNumber(local_war_exhaustion_rate*local_user_contribution);
+                  }
+              }
+          }
 
       //Mobilisation
       if (usr.mobilisation.is_mobilised) {
@@ -1709,7 +1710,7 @@ module.exports = {
 
       //Occupation
       var occupation_war_exhaustion = 0;
-      var occupied_provinces = owned_provinces.length - controlled_provinces.length;
+      var occupied_provinces = getEnemyOccupiedProvinces(user_id).length;
       var occupying_users = getOccupyingUsers(user_id);
 
       //A full siege of the target user ticks up warscore by 10% per turn unless fully sieged down
@@ -1743,7 +1744,7 @@ module.exports = {
             if (friendly_side != opposing_side) {
               //Add _warscore to users by contribution
               var local_user_contribution = getBlockadingUserContribution(occupying_users[i], user_id);
-              
+
               local_war[`${occupying_users[i]}_warscore`] += getOccupyingUserContribution(occupying_users[i], user_id)*occupation_war_exhaustion;
             }
         }

@@ -51,6 +51,7 @@ module.exports = {
 
     //Iterate over all wars to check
     var all_wars = Object.keys(main.global.wars);
+    var involved_wars = [];
 
     for (var i = 0; i < all_wars.length; i++) {
       var local_war = main.global.wars[all_wars[i]];
@@ -73,11 +74,13 @@ module.exports = {
           ot_user_war_side = "defenders";
         }
 
-      //Return statement
       if (usr_war_side != "none" && ot_user_war_side != "none")
         if (usr_war_side != ot_user_war_side)
-          return true;
+          involved_wars.push(local_war);
     }
+
+    //Return statement
+    return involved_wars;
   },
 
   calculateWarscore: function (arg0_user, arg1_war_name) {
@@ -204,9 +207,10 @@ module.exports = {
         opposing_side = "attackers";
 
       if (opposing_side != "")
-        for (var x = 0; x < local_war[opposing_side].length; x++)
-          if (!enemies.includes(local_war[opposing_side][x]))
-            enemies.push(local_war[opposing_side][x]);
+        if (!local_war.armistice) //Battles cannot happen under armistice
+          for (var x = 0; x < local_war[opposing_side].length; x++)
+            if (!enemies.includes(local_war[opposing_side][x]))
+              enemies.push(local_war[opposing_side][x]);
     }
 
     //Return statement
@@ -530,7 +534,7 @@ module.exports = {
     //Set war_obj
     main.global.wars[war_id] = war_obj;
 
-    //[WIP] - Automatically call in overlords if they exist
+    //Automatically call in overlords if they exist
     var attacker_vassal_obj = getVassal(attacker_id);
     var defender_vassal_obj = getVassal(defender_id);
 
@@ -540,6 +544,16 @@ module.exports = {
     if (defender_vassal_obj)
       if (attacker_id != vassal_obj.overlord)
         module.exports.joinWar(vassal_obj.overlord, "defenders", war_obj.name);
+
+    //Create unified peace treaties for both attackers and defenders
+    createPeaceTreaty(war_obj.attackers_war_leader, war_obj, false, {
+      id: "attackers",
+      type: "attackers"
+    });
+    createPeaceTreaty(war_obj.defenders_war_leader, war_obj, false, {
+      id: "defenders",
+      type: "defenders"
+    });
   },
 
   isVolunteering: function (arg0_user) {

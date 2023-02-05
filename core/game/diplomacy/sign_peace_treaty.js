@@ -6,7 +6,9 @@ module.exports = {
 
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
+    var friendly_side = "neutral";
     var game_obj = getGameObject(user_id);
+    var opposing_side = "neutral";
     var usr = main.users[actual_id];
     var war_obj = (typeof arg1_war_name != "object") ?
       getWar(war_name.trim().toLowerCase()) : arg1_war_name;
@@ -14,10 +16,20 @@ module.exports = {
     //Check if a war is currently active
     if (war_obj) {
       //Check if user is actually involved
-      if (war_obj.attackers.includes(actual_id) || war_obj.defenders.includes(actual_id)) {
-        if (war_obj.attackers_war_leader == actual_id || war_obj.defenders_war_leader == actual_id) {
+      if (war_obj.attackers.includes(actual_id)) {
+        friendly_side = "attackers";
+        opposing_side = "defenders";
+      }
+      if (war_obj.defenders.includes(actual_id)) {
+        friendly_side = "defenders";
+        opposing_side = "attackers";
+      }
+
+      if (friendly_side != "neutral") {
+        //Check to make sure that user is not a vassal
+        if (!getVassal(user_id)) {
           //Create a new peace treaty
-          createPeaceTreaty(user_id, war_obj.name);
+          createPeaceTreaty(user_id, war_obj);
 
           //Refresh UI
           if (game_obj.page.startsWith("view_war_")) {
@@ -26,15 +38,23 @@ module.exports = {
             if (current_war_id == war_obj.id)
               printWar(user_id, war_obj.name);
           }
+          if (game_obj.page.startsWith("view_peace_treaties_")) {
+            createPageMenu(game_obj.middle_embed, {
+              embed_pages: printPeaceTreaties(user_id, war_obj),
+              page: main.interfaces[game_obj.middle_embed.id].page,
+              user: game_obj.user
+            });
+          }
 
-          printAlert(game_obj.id, `${config.icons.checkmark} You have successfully cleared your demands and created a new peace offer for the **${war_obj.name}**.\nIn order to view it, please type **[View Peace Offer]**.`);
+          //Check if actual_id is the war leader of their side
+          (war_obj[`${friendly_side}_war_leader`] == actual_id) ?
+            printAlert(game_obj.id, `${config.icons.checkmark} You have successfully created a new separate peace offer for the enemy side. For this peace offer to be valid, you must specify an enemy combatant that is not the enemy war leader as plenipotentiary.`) :
+            printAlert(game_obj.id, `${config.icons.checkmark} You have successfully created a new separate peace offer for the enemy side. Because you are not the leader in this war, this will be a conditional surrender and has to be negotiated with the enemy war leader.`);
         } else {
-          var friendly_side = (war_obj.attackers.includes(actual_id)) ? "attackers" : "defenders";
-
-          printAlert(game_obj.id, `Only the war leader on your faction, **${main.users[war_obj[`${friendly_side}_war_leader`]].name}** can sign peace treaties on behalf of your entire alliance! Consider becoming the war leader by typing **[Lead War]**, or wait for your war leader to sign a peace treaty for you.`);
+          printError(game_obj.id, `You may not sign a separate peace as a vassal nation! Wait for others to do the talking.`);
         }
       } else {
-        printError(game_obj.id, `You must be involved in the **${war_obj.name}** for you to be able to even think about proposing a peace deal!`);
+        printError(game_obj.id, `You must be involved in the **${war_obj.name}** in order for you to seriously propose a peace treaty!`);
       }
     } else {
       printError(game_obj.id, `You can't sign a peace treaty for a war that is no longer currently ongoing!`);

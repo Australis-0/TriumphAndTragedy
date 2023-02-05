@@ -8,8 +8,13 @@ config.defines.diplomacy = {
   alliance_alert_id: "alliance_proposal", //What alert should popup when an alliance is proposed?
   alliance_break_alert_id: "alliance_broken", //What alert should popup when an alliance is broken?
   alliance_relation_threshold: 75, //How high should relations need to be before one can propose an alliance?
+  ally_surrender_alert_id: "surrender_of_an_allied_combatant", //Which alert should be triggered when an ally surrenders?
   annex_alert_id: "the_coming_integration", //Which alert should be printed out when an annexation request is declared?
   call_to_arms_alert_id: "call_to_arms", //Which alert should be triggered when a call to arms is made?
+  ceasefire_proposal_alert_id: "ceasefire_proposal", //Which alert should be triggered if a ceasefire is proposed?
+  enemy_separate_peace_alert_id: "offer_of_surrender", //Which alert should be triggered for an inferior separate peace (POV of enemy war leader)?
+  enemy_surrender_alert_id: "surrender_of_an_enemy_combatant", //Which alert should be triggered when an enemy surrenders?
+  friendly_separate_peace_alert_id: "conditional_surrender", //Which alert should be triggered for a superior separate peace (POV of enemy war leader)?
   guarantee_alert_id: "the_promise_we_made", //Which alert should popup to call in guarantors when a war breaks out?
   infamy_annex_cost: 3, //How much infamy should an annexation request cost?
   infamy_liberation: -5, //How much infamy should overlords lose from liberating a vassal state?
@@ -18,6 +23,7 @@ config.defines.diplomacy = {
   infamy_vassal_invite_player: -2, //Infamy loss for inviting the first player onto a vassal country (assuming they accept)
   infamy_vassal_kick_player: 2.5, //Infamy for kicking a player off a client state
   infamy_vassal_province_transfer: 0.50, //Infamy scaling for transferring provinces to vassals
+  infamy_warscore_lenience: 1, //How much extra infamy capacity should come with each wargoal at the peace table?
   liberation_alert_id: "we_are_free", //What alert should popup when a vassal is voluntarily liberated by its overlord?
   military_access_cancellation_alert_id: "access_cancelled", //Which alert should popup when military access to another country is cancelled?
   military_access_request_alert_id: "other_armies_our_soil", //Which alert should popup for the target user when military access is being requested of them?
@@ -33,6 +39,7 @@ config.defines.diplomacy = {
   rival_relations_threshold: 50, //How high is too high in terms of relations for countries to be rivals?
   send_volunteer_armies_maintenance_cost: 10, //PC cost for maintaining volunteer armies in a conflict
   send_volunteer_army_limit: 0.05, //What is the percentage of volunteers relative to a user's army that can be sent?
+  separate_peace_warscore_penalty: 0.50, //What is the warscore capacity penalty for a separate peace?
   unconditional_peace_alert_id: "the_national_disaster", //What is the alert that should popup when a user must accept an unconditional peace?
   vassalisation_request_alert_id: "the_option_to_submit", //What alert should be sent to the target of a vassalisation request?
   vassal_maintenance_cost: 0.2, //What is the factor by which vassals should cost PC?

@@ -1,4 +1,32 @@
 module.exports = {
+  initialiseVassalise: function (arg0_user) {
+    //Convert from parameters
+    var user_id = arg0_user;
+
+    //Declare local instance variables
+    var game_obj = getGameObject(user_id);
+
+    //Initialise visual prompt
+    visualPrompt(game_obj.alert_embed, user_id, {
+      title: `Demand Vassalisation:`,
+      prompts: [
+        [`Which country would you like to demand the immediate vassalisation of?\n\nType **[View Ledger]** to a view a ledger of all valid nations.`, "mention"]
+      ]
+    },
+    function (arg) {
+      module.exports.vassalise(user_id, arg[0]);
+    },
+    function (arg) {
+      switch (arg) {
+        case "view ledger":
+          printLedger(user_id);
+          return true;
+
+          break;
+      }
+    });
+  },
+
   vassalise: function (arg0_user, arg1_user) {
     //Convert from parameters
     var user_id = arg0_user;
@@ -46,32 +74,5 @@ module.exports = {
     } else {
       printError(game_obj.id, `You can't run around sending vassalisation requests to countries you've never even heard of! How about Shangri-La?`);
     }
-  },
-
-  initialiseVassalise: function (arg0_user) {
-    var user_id = arg0_user;
-
-    //Declare local instance variables
-    var game_obj = getGameObject(user_id);
-
-    //Initialise visual prompt
-    visualPrompt(game_obj.alert_embed, user_id, {
-      title: `Demand Vassalisation:`,
-      prompts: [
-        [`Which country would you like to demand the immediate vassalisation of?\n\nType **[View Ledger]** to a view a ledger of all valid nations.`, "mention"]
-      ]
-    },
-    function (arg) {
-      module.exports.vassalise(user_id, arg[0]);
-    },
-    function (arg) {
-      switch (arg) {
-        case "view ledger":
-          printLedger(user_id);
-          return true;
-
-          break;
-      }
-    })
   }
 };

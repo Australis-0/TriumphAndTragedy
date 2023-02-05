@@ -143,12 +143,9 @@ module.exports = {
                   can_merge_wars = true;
           }
 
-          war_string.push((!war_obj.peace_treaties[actual_id]) ?
-            `**[Sign Peace Treaty]**` :
-            `**[Edit Peace Offer]** | **[Send Peace Offer]**`
-          );
-
-          war_string.push(`${(can_call_allies) ? `**[Call Ally]**` : ""}${(war_obj[friendly_side].length > 1) ? ` | **[Change War Leader]** - ${config.icons.political_capital} ${parseNumber(getWarLeadershipCost(user_id, war_obj))} PC` : ""}${(can_merge_wars) ? `**[Merge Wars]** - ${config.icons.political_capital} ${parseNumber(config.defines.diplomacy.merge_war_cost)} PC` : ""}`);
+          war_string.push(`**[View Peace Offers]**`);
+          war_string.push("");
+          war_string.push(`${(can_call_allies) ? `**[Call Ally]**` : ""}${(war_obj[friendly_side].length > 1) ? ` | **[Change War Leader]** - ${config.icons.political_capital} ${parseNumber(getWarLeadershipCost(user_id, war_obj))} PC` : ""}${(can_merge_wars) ? ` | **[Merge Wars]** - ${config.icons.political_capital} ${parseNumber(config.defines.diplomacy.merge_war_cost)} PC` : ""}${(is_war_leader) ? ` | ${(!war_obj.armistice) ? `**[Break Armistice]**` : `**[Propose Armistice]**`} | **[Propose Ceasefire]**` : ""}${(friendly_side != "" && usr.modifiers.war_exhaustion < 1) ? ` | **[Surrender]**` : ""}`);
         } else {
           //Intervene in war, volunteer buttons - push to separate array later so that we can check if user can truly intervene in wars [WIP]
           war_string.push(`**[Intervene In War]** - ${config.icons.political_capital} ${parseNumber(config.defines.diplomacy.intervene_in_war_cost)} PC ${(can_send_volunteers) ? `\n- **[Send Volunteers]** - ${config.icons.political_capital} ${parseNumber(config.defines.diplomacy.send_volunteer_armies_cost)} PC` : `- **[Recall Volunteers]** | **[Repatriate Volunteers]** | **[Send Volunteer Armies]**`}`);
@@ -171,6 +168,11 @@ module.exports = {
       try {
         war_string.push(`**${main.users[war_obj.attackers_war_leader].name}** is the war leader for the attacking faction, whilst **${main.users[war_obj.defenders_war_leader].name}** is the war leader for the defending faction.`);
       } catch {}
+
+      //Armistice display
+      if (war_obj.armistice)
+        war_string.push(`- The parties of this war have agreed to an armistice! No fighting can take place unless the armistice is broken.`);
+
       war_string.push("");
 
       //Format attacker wargoal string

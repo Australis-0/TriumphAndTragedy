@@ -24,8 +24,28 @@ module.exports = {
               if (returnSafeNumber(usr.blockaded.blockade_cooldown) == 0) {
                 if (ot_user.modifiers.enable_blockades) {
                   //Check if user is at war or not
+                  var armistice_broken = false;
                   var at_war = areAtWar(user_id, ot_user_id);
+                  var broken_wars = [];
 
+                  //Check if the instigating user is the war leader in any at_war wars with an armistice
+                  for (var i = 0; i < at_war.length; i++)
+                    if (at_war[i].armistice)
+                      if (at_war[i].attackers_war_leader == actual_id || at_war[i].defenders_war_leader == actual_id) {
+                        var friendly_side = (at_war[i].attackers_war_leader == actual_id) ? "attackers" : "defenders";
+                        var opposing_side = (at_war[i].defenders_war_leader == actual_id) ? "defenders" : "attackers";
+
+                        //The armistice has been broken through blockades
+                        if (war_obj[opposing_side].includes(actual_ot_user_id)) {
+                          armistice_broken = true;
+                          broken_wars.push(at_war[i].name);
+
+                          //Remove armistice key
+                          delete main.global.wars[at_war[i].id].armistice;
+                        }
+                      }
+
+                  //Set blockaded status
                   usr.blockaded = {
                     id: usr.id,
                     is_blockaded: true,
@@ -49,7 +69,7 @@ module.exports = {
                     usr.modifiers.infamy += config.defines.diplomacy.peacetime_blockade_penalty;
                   }
 
-                  return [true, `You have instituted a blockade on **${usr.name}**. They may challenge it at any time by typing **[Challenge Blockade]**.`];
+                  return [true, `You have instituted a blockade on **${usr.name}**. They may challenge it at any time by typing **[Challenge Blockade]**.${(armistice_broken) ? `\n\nYou have also broken your armistice(s) in the following war(s): **${broken_wars.join(", ")}**` : ""}`];
                 } else {
                   return [false, `Your people haven't even heard of the concept of a blockade before, let alone of how to implement it on someone else!`];
                 }
@@ -133,7 +153,7 @@ module.exports = {
               total_combined_points += returnSafeNumber(local_fleet_stats.attack);
               total_combined_points += returnSafeNumber(local_fleet_stats.defence);
             }
-          }
+          } catch {}
 
     //Iterate over user_blockading_fleets
     for (var i = 0; i < user_blockading_fleets.length; i++) {
@@ -196,5 +216,75 @@ module.exports = {
 
     //Return statement
     return blockading_users;
+  },
+
+  isBlockadedInArmistice: function (arg0_user) {
+    //Convert from parameters
+    var user_id = arg0_user; //User being blockaded
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var all_wars = Object.keys(main.global.wars);
+    var armisticed_users = [];
+    var blockading_users = module.exports.getBlockadingUsers(user_id);
+
+    //Iterate over all blockading_users, all_wars, check for total armistice
+    for (var i = 0; i < blockading_users.length; i++) {
+      var has_unarmisticed_war = false;
+      var is_at_war = areAtWar(user_id, blockading_users[i]);
+
+      for (var x = 0; x < all_wars.length; x++) {
+        var friendly_side = "";
+        var local_war = main.global.wars[all_wars[x]];
+        var opposing_side = "";
+
+        if (!local_war.armistice) {
+          //Fetch friendly_side, opposing_side
+          if (local_war.attackers.includes(actual_id))
+            friendly_side = "attackers";
+          if (local_war.defenders.includes(actual_id))
+            friendly_side = "defenders";
+          if (local_war.attackers.includes(blockading_users[i]))
+            opposing_side = "attackers";
+          if (local_war.defenders.includes(blockading_users[i]))
+            opposing_side = "defenders";
+
+          if (friendly_side != "" && opposing_side != "")
+            if (friendly_side != opposing_side)
+              has_unarmisticed_war = true;
+        }
+      }
+
+      if (!has_unarmisticed_war && is_at_war)
+        armisticed_users.push(blockading_users[i]);
+    }
+
+    //Remove armisticed_users from blockading_users
+    for (var i = blockading_users.length - 1; i >= 0; i--)
+      if (armisticed_users.includes(blockading_users[i]))
+        blockading_users.splice(i, 1);
+
+    //Return statement
+    return (blockading_users.length == 0);
+  },
+
+  isBlockadedByEnemies: function (arg0_user) {
+    //Convert from parameters
+    var user_id = arg0_user; //User being blockaded
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var blockading_users = module.exports.getBlockadingUsers(user_id);
+    var enemies = getEnemies(user_id);
+    var enemies_blockading = [];
+    var is_blockaded_by_enemies = false;
+
+    //Iterate over blockading_users
+    for (var i = 0; i < blockading_users.length; i++)
+      if (enemies.includes(blockading_users[i]))
+        is_blockaded_by_enemies = true;
+
+    //Return statement
+    return is_blockaded_by_enemies;
   }
 };

@@ -1,6 +1,6 @@
 module.exports = {
   //closePeaceTreaty() - Closes the peace treaty UI and unloads the cached map
-  closePeaceTreaty: function (arg0_user) {
+  closePeaceTreaty: function (arg0_user) { //[WIP] - This should boot you back to the peace treaty interface if the war is still ongoing, not country menu
     //Convert from parameters
     var user_id = arg0_user;
 
@@ -1727,7 +1727,12 @@ module.exports = {
                 }
 
               //Push to peace_obj.wargoals
-              peace_obj.wargoals.push({ id: wargoal_name, effect: effect_obj });
+              peace_obj.wargoals.push({
+                id: wargoal_name,
+                owner: actual_id,
+
+                effect: effect_obj
+              });
 
               var wargoal_infamy_localisation = parseWargoalInfamyLocalisation(user_id, war_obj, peace_obj.wargoals[peace_obj.wargoals.length - 1]);
 
@@ -1785,6 +1790,108 @@ module.exports = {
     });
   },
 
+  initialiseChangePeaceTreatyTarget: function (arg0_user, arg1_peace_treaty_object) {
+    //Convert from parameters
+    var user_id = arg0_user;
+    var peace_obj = arg1_peace_treaty_object;
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var enemy_display_list = [];
+    var enemy_side = "";
+    var friendly_side = "";
+    var game_obj = getGameObject(user_id);
+    var war_obj = main.global.wars[peace_obj.war_id];
+    var usr = main.users[actual_id];
+
+    //Check for user involvement
+    if (war_obj.attackers.includes(actual_id)) {
+      friendly_side = "attackers";
+      enemy_side = "defenders";
+    }
+    if (war_obj.defenders.includes(actual_id)) {
+      friendly_side = "defenders";
+      enemy_side = "attackers";
+    }
+
+    //Format enemy_display_list
+    for (var i = 0; i < war_obj[enemy_side].length; i++)
+      try {
+        if (war_obj[enemy_side][i] != war_obj[`${enemy_side}_war_leader`])
+          enemy_display_list.push(`**${main.users[enemy_display_list[enemy_side][i]].name}**`);
+      } catch {}
+
+    //Make sure that the peace treaty is of type user
+    if (peace_obj.type == "user") {
+      //Check to make sure there are at least multiple countries on the other side
+      if (war_obj[enemy_side].length > 1) {
+        //Check if user is the war leader. If not they are unable to change the target
+        if (war_obj[`${friendly_side}_war_leader`] == actual_id) {
+          //Send visual prompt
+          visualPrompt(game_obj.alert_embed, user_id, {
+            title: `Change Peace Offer Target:`,
+            prompts: [
+              [`Which country would you like to change the peace treaty target to? Please select from one of the following enemy belligerents:\n\n- ${enemy_display_list.join("\n- ")}\n\nTo go back to viewing this peace treaty, type **[Back]**.`, "mention"]
+            ]
+          },
+          function (arg) {
+            //Check if target is valid
+            var actual_ot_user_id = arg[0];
+            var ot_user = main.users[actual_ot_user_id];
+
+            if (actual_ot_user_id != war_obj[`${enemy_side}_war_leader`]) {
+              //Change peace treaty target
+              peace_obj.target = arg[0];
+
+              printAlert(game_obj.id, `${config.icons.checkmark} You have successfully changed the target of your proposal to the nation of **${ot_user.name}**.`);
+
+              //Go back to main peace treaty UI
+              setTimeout(function(){
+                module.exports.modifyPeaceTreaty(user_id, peace_obj, true);
+              }, 3000);
+            } else {
+              has_error = [true, `You cannot propose a separate peace offer to the enemy war leader! Target one of their cobelligerents instead.`];
+            }
+
+            //Error handler
+            if (has_error[0]) {
+              printError(game_obj.id, has_error[1]);
+
+              setTimeout(function(){
+                module.exports.initialiseChangePeaceTreatyTarget(user_id, peace_obj);
+              }, 3000);
+            }
+          },
+          function (arg) {
+            switch (arg) {
+              case "back":
+                module.exports.modifyPeaceTreaty(user_id, peace_obj, true);
+                return true;
+
+                break;
+            }
+          });
+        } else {
+          printError(game_obj.id, `You can only negotiate separate peaces with separate countries if you are the current war leader! Consider challenging war leadership first before taking this action.`);
+
+          //Go back to main peace treaty UI
+          setTimeout(function(){
+            module.exports.modifyPeaceTreaty(user_id, peace_obj, true);
+          }, 3000);
+        }
+      } else {
+        printError(game_obj.id, `There must be multiple cocombatants on the enemy side in order for you to propose a separate peace offer to them!`);
+      }
+    } else {
+      printError(game_obj.id, `You can't change the peace treaty target of a combined peace offer! This peace offer is for your entire belligerent side, not you.`);
+
+      //Go back to main peace treaty UI
+      setTimeout(function(){
+        module.exports.modifyPeaceTreaty(user_id, peace_obj, true);
+      }, 3000);
+    }
+  },
+
   initialiseModifyPeaceTreaty: function (arg0_user, arg1_peace_treaty_object) {
     //Convert from parameters
     var user_id = arg0_user;
@@ -1792,6 +1899,7 @@ module.exports = {
 
     //Declare local instance variables
     var game_obj = getGameObject(user_id);
+    var war_obj = main.global.wars[peace_obj.war_id];
 
     //Initialise visual prompt
     visualPrompt(game_obj.alert_embed, user_id, {
@@ -1815,16 +1923,29 @@ module.exports = {
           return true;
 
           break;
+        case "change target":
+          module.exports.initialiseChangePeaceTreatyTarget(user_id, peace_obj);
+          return true;
+
+          break;
+        case "clear peace offer":
+        case "delete peace offer":
+          deletePeaceTreaty(user_id, peace_obj, war_obj);
+          return true;
+
+          break;
         case "remove wargoal":
           module.exports.initialiseRemoveWargoal(user_id, peace_obj);
           return true;
 
           break;
         case "send peace offer":
-          sendPeaceTreaty(user_id, peace_obj);
-          setTimeout(function(){
-            module.exports.closePeaceTreaty(user_id);
-          }, 3000);
+          var peace_treaty_sent = sendPeaceTreaty(user_id, peace_obj);
+
+          if (peace_treaty_sent)
+            setTimeout(function(){
+              module.exports.closePeaceTreaty(user_id);
+            }, 3000);
 
           return true;
 
@@ -1845,8 +1966,20 @@ module.exports = {
 
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
+    var enemy_side = "";
+    var friendly_side = "";
     var game_obj = getGameObject(user_id);
     var war_obj = main.global.wars[peace_obj.war_id];
+
+    //Check for user involvement
+    if (war_obj.attackers.includes(actual_id)) {
+      friendly_side = "attackers";
+      enemy_side = "defenders";
+    }
+    if (war_obj.defenders.includes(actual_id)) {
+      friendly_side = "defenders";
+      enemy_side = "attackers";
+    }
 
     //Initialise page menu showing peace treaty effects
     createPageMenu(game_obj.alert_embed, {
@@ -1854,7 +1987,7 @@ module.exports = {
         title: `[Back] | Editing Peace Offer For **${war_obj.name}**:`,
         description: [
           "",
-          `**[Add Wargoal]**${(peace_obj.wargoals.length > 0) ? ` | **[Remove Wargoal]**` : ""} | **[Send Peace Offer]**\n\n`
+          `**[Add Wargoal]**${(hasPeaceTreatyTargetRequirement(war_obj, peace_obj)) ? ` | **[Change Target]**` : ""}${(peace_obj.type == "user" && peace_obj.owner == actual_id) ? ` | **[Delete Peace Offer]**` : ""}${(peace_obj.wargoals.length > 0) ? ` | **[Remove Wargoal]**` : ""} | **[Send Peace Offer]**\n\n`
         ],
         title_pages: true,
         fixed_width: true
@@ -1933,16 +2066,21 @@ module.exports = {
         var wargoal_id = peace_obj.wargoals[wargoal_exists[1]].id;
         var wargoal_obj = getWargoal(wargoal_id);
 
-        //Print user feedback
-        printAlert(game_obj.id, `You have removed a **${(wargoal_obj.name) ? wargoal_obj.name : wargoal_id}** wargoal from this peace offer.`);
+        if (wargoal_obj.owner == actual_id) {
+          //Print user feedback
+          printAlert(game_obj.id, `You have removed a **${(wargoal_obj.name) ? wargoal_obj.name : wargoal_id}** wargoal from this peace offer.`);
 
-        //Simply remove the wargoal index from peace_obj.wargoals
-        peace_obj.wargoals.splice(wargoal_exists[1], 1);
+          //Simply remove the wargoal index from peace_obj.wargoals
+          peace_obj.wargoals.splice(wargoal_exists[1], 1);
 
-        //Go back to main peace treaty UI
-        setTimeout(function(){
-          module.exports.modifyPeaceTreaty(user_id, peace_obj, true);
-        }, 3000);
+          //Go back to main peace treaty UI
+          setTimeout(function(){
+            module.exports.modifyPeaceTreaty(user_id, peace_obj, true);
+          }, 3000);
+        } else {
+          //Print error
+          has_error = [true, `You may only remove wargoals that you have added!`];
+        }
       } else {
         switch (current_wargoal) {
           case "back":
@@ -1965,6 +2103,15 @@ module.exports = {
         setTimeout(function(){
           module.exports.initialiseRemoveWargoal(user_id, peace_obj);
         }, 3000);
+      }
+    },
+    function (arg) {
+      switch (arg) {
+        case "back":
+          module.exports.modifyPeaceTreaty(user_id, peace_obj, true);
+          return true;
+
+          break;
       }
     });
   },
@@ -2170,7 +2317,72 @@ module.exports = {
     }, 15000);
   },
 
-  printPeaceTreaties: function (arg0_user, arg1_war_name) { //[WIP]
-    
+  printPeaceTreaties: function (arg0_user, arg1_war_name) {
+    //Convert from parameters
+    var user_id = arg0_user;
+    var war_name = (typeof arg1_war_name != "object") ? arg1_war_name.trim().toLowerCase() : arg1_war_name;
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var friendly_side = "neutral";
+    var game_obj = getGameObject(user_id);
+    var opposing_side = "neutral";
+    var usr = main.users[actual_id];
+    var war_obj = (typeof war_name != "object") ? getWar(war_name) : war_name;
+
+    var peace_treaties = getUserPeaceTreaties(user_id, war_obj);
+
+    //Initialise peace_treaties_string
+    var peace_treaties_string = [];
+
+    //Check if user is currently involved in the war, and if so, on which side
+    if (war_obj.attackers.includes(actual_id)) {
+      friendly_side = "attackers";
+      opposing_side = "defenders";
+    }
+    if (war_obj.defenders.includes(actual_id)) {
+      friendly_side = "defenders";
+      opposing_side = "attackers";
+    }
+
+    //Check to make sure actual_id is involved in the war
+    if (friendly_side != "neutral") {
+      var combined_peace_treaty = getCombinedPeaceTreaty(war_obj, friendly_side);
+
+      //Format peace_treaties_string - append combined peace treaty first
+      peace_treaties_string.push(`**[Edit ${combined_peace_treaty.name}]**`);
+      peace_treaties_string.push(`- This is the combined peace treaty for all friendly combatants.`);
+
+      peace_treaties_string.push("");
+      peace_treaties_string.push(`---`);
+      peace_treaties_string.push("");
+
+      //Append user peace treaties
+      if (peace_treaties.length > 0) {
+        for (var i = 0; i < peace_treaties.length; i++) {
+          peace_treaties_string.push(`**[Edit ${peace_treaties[i].name}]**`);
+          peace_treaties_string.push(`- This is a separately negotiated peace offer. ${(war_obj[`${friendly_side}_war_leader`] == actual_id) ? `We are negotiating our conditional surrender to the entire enemy side.` : ""}`);
+        }
+      } else {
+        peace_treaties_string.push(`_We are currently not negotiating any separate peaces with the enemy._`);
+      }
+    } else {
+      peace_treaties_string.push(`_You are not currently involved in this conflict!_`);
+      peace_treaties_string.push("");
+      peace_treaties_string.push(`You must be involved in the **${war_obj.name}** in order to edit and send peace offers!`);
+    }
+
+    //Return statement
+    return splitEmbed(peace_treaties_string, {
+      title: `[Back] | [Jump To Page] | List of Peace Offers for the ${war_obj.name}:`,
+      description: [
+        `**[Create Peace Offer]**${(peace_treaties.length > 0) ? ` | **[Delete Peace Offer]** | **[Edit Peace Offer]** | **[Rename Peace Offer]**` : ""}`,
+        "",
+        config.localisation.divider,
+        ""
+      ],
+      title_pages: true,
+      fixed_width: true
+    });
   }
 };
