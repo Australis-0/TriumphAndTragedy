@@ -66,16 +66,27 @@ module.exports = {
     //Check if current DB is valid
   	if (rawdata.toString().length != 0) {
       try {
-    		global.main = JSON.parse(rawdata);
+        try {
+          var processed_data = compressJSON.decompress(JSON.parse(rawdata.toString()));
+          global.main = JSON.parse(JSON.stringify(processed_data));
+        } catch {
+          log.warn(`Raw data had to be loaded instead of compressed!`);
+          global.main = JSON.parse(rawdata);
+        }
+
         interfaces = main.interfaces;
 
         log.info(`Loaded default savedata.`);
 
         setTimeout(reinitialiseGameEmbeds, 1000);
-      } catch {
+      } catch (e) {
+        log.warn(`Ran into an error whilst loading current database: ${e}`);
+        console.log(e);
+
         invalid_save = true;
       }
   	} else {
+      log.warn(`Current database had nothing in it!`);
       invalid_save = true;
     }
 
@@ -111,7 +122,13 @@ module.exports = {
 
   						setTimeout(function(){
   							rawdata = fs.readFileSync("database.js");
-  							global.main = JSON.parse(rawdata);
+
+                try {
+                  var processed_data = compressJSON.decompress(JSON.parse(rawdata.toString()));
+                  global.main = JSON.parse(JSON.stringify(processed_data));
+                } catch {
+                  global.main = JSON.parse(rawdata);
+                }
 
                 //Restore interfaces
                 interfaces = main.interfaces;
@@ -160,13 +177,18 @@ module.exports = {
 
     //Declare local instance variables
 		var file_path = `./backups/${returnABRSDateString()}.txt`;
+    var main_string = JSON.stringify(main);
 
     //Write to file if JSON is not undefined
-		if (JSON.stringify(main).length != 0) {
+		if (main_string.length != 0) {
+      compressJSON.trimUndefined(global.main);
+      compressJSON.trimUndefinedRecursively(global.main);
+
+      var compressed_data = compressJSON.compress(global.main);
 			var create_backup = fs.createWriteStream(`./backups/${returnABRSDateString()}.txt`);
 			create_backup.end();
 
-			fs.writeFile(file_path, JSON.stringify(main), function (err, data) {
+			fs.writeFile(file_path, compressed_data.toString(), function (err, data) {
 				if (err) return log.error(err);
 			});
 		} else {

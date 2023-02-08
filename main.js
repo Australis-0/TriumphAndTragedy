@@ -13,6 +13,9 @@ console.timeEnd(`Loading "ngraph.path" ..`);
 console.time(`Loading "canvas" ..`);
 global.Canvas = require("canvas");
 console.timeEnd(`Loading "canvas" ..`);
+console.time(`Loading "compress-json" ..`);
+global.compressJSON = require("compress-json");
+console.timeEnd(`Loading "compress-json" ..`);
 console.time(`Loading "diacriticless" ..`);
 global.diacriticless = require("diacriticless");
 console.timeEnd(`Loading "diacriticless" ..`);
@@ -295,8 +298,12 @@ setInterval(function(){
 //Logic loops, 30-second logic loop
 setInterval(function(){
   //Write to database.js
+  compressJSON.trimUndefined(global.main);
+  compressJSON.trimUndefinedRecursively(global.main);
+
+  var compressed_data = compressJSON.compress(global.main);
   try {
-  	fs.writeFile('database.js', JSON.stringify(main), function (err, data) {
+  	fs.writeFile('database.js', JSON.stringify(compressed_data), function (err, data) {
   		if (err) return log.info(err);
   	});
   } catch (e) {
