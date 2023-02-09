@@ -30,7 +30,6 @@
   "dependencies": {
     "@discordjs/voice": "^0.6.0",
     "canvas": "^2.9.1",
-    "compress-json": "^2.1.2",
     "convert-svg-to-png": "^0.6.4",
     "diacriticless": "^1.0.1",
     "discord.js": "^13.6.0",

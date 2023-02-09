@@ -17,7 +17,7 @@ module.exports = {
       .replace(/><\/path>/gm, " />")
       .trim();
 
-    fs.promises.writeFile(`./map/${map_file}`, current_file_data.toString(), (err) => {
+    fs.promises.writeFile(`./map/${map_file}`, current_file_data, (err) => {
       console.log(err);
     }).then(() => {
       SVG.convertFile(`./map/${map_file}`).then((png) => {

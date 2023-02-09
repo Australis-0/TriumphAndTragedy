@@ -490,26 +490,6 @@ module.exports = {
     return (unit_category_exists[0]) ? unit_category_exists[1] : undefined;
   },
 
-  getUnitBranches: function () {
-    //Declare local instance variables
-    var all_unit_categories = Object.keys(config.units);
-    var branches = [];
-
-    //Iterate over all_unit_categories
-    for (var i = 0; i < all_unit_categories.length; i++) {
-      var local_unit_category = config.units[all_unit_categories[i]];
-      var local_unit_type = (config.defines.combat.army_type_map[local_unit_category.type]) ?
-        config.defines.combat.army_type_map[local_unit_category.type] :
-        local_unit_category.type;
-
-      if (!branches.includes(local_unit_type))
-        branches.push(local_unit_type);
-    }
-
-    //Return statement
-    return branches;
-  },
-
   /*
     getUnitCost() - Returns the cost of a unit for the specified user as a JSON object/integer.
     options: {
@@ -591,6 +571,26 @@ module.exports = {
 
     //Return object
     return (options.type != "money") ? costs_obj : returnSafeNumber(costs_obj.money, 0);
+  },
+
+  getUnitBranches: function () {
+    //Declare local instance variables
+    var all_unit_categories = Object.keys(config.units);
+    var branches = [];
+
+    //Iterate over all_unit_categories
+    for (var i = 0; i < all_unit_categories.length; i++) {
+      var local_unit_category = config.units[all_unit_categories[i]];
+      var local_unit_type = (config.defines.combat.army_type_map[local_unit_category.type]) ?
+        config.defines.combat.army_type_map[local_unit_category.type] :
+        local_unit_category.type;
+
+      if (!branches.includes(local_unit_type))
+        branches.push(local_unit_type);
+    }
+
+    //Return statement
+    return branches;
   },
 
   getUnitTypes: function () {
