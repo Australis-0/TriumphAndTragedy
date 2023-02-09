@@ -179,6 +179,8 @@ module.exports = {
 		var file_path = `./backups/${returnABRSDateString()}.txt`;
     var main_string = JSON.stringify(main);
 
+    log.info("Writing to backup!");
+
     //Write to file if JSON is not undefined
 		if (main_string.length != 0) {
       compressJSON.trimUndefined(global.main);
@@ -191,6 +193,8 @@ module.exports = {
 			fs.writeFile(file_path, compressed_data.toString(), function (err, data) {
 				if (err) return log.error(err);
 			});
+
+      log.info(`A backup was successfully created.`);
 		} else {
 			loadMostRecentSave();
 		}

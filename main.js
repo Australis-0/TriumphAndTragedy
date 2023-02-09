@@ -290,7 +290,7 @@ setInterval(function(){
       clearBadInterfaces();
 
       nextBattleTick(true);
-      nextGlobalTurn();
+      //nextGlobalTurn();
     }
   }
 }, 1000);
