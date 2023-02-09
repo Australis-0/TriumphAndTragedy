@@ -303,7 +303,7 @@ setInterval(function(){
 
   var compressed_data = compressJSON.compress(global.main);
   try {
-  	fs.writeFile('database.js', JSON.stringify(compressed_data), function (err, data) {
+  	fs.writeFile('database.js', JSON.stringify(main), function (err, data) {
   		if (err) return log.info(err);
   	});
   } catch (e) {
