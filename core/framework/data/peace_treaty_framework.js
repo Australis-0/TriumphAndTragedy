@@ -135,19 +135,6 @@ module.exports = {
     }
   },
 
-  deletePeaceTreaty: function (arg0_user, arg1_war_name) {
-    //Convert from parameters
-    var user_id = arg0_user;
-    var war_name = arg1_war_name.trim().toLowerCase();
-
-    //Declare local instance variables
-    var actual_id = main.global.user_map[user_id];
-    var war_obj = getWar(war_name);
-
-    //Delete peace treaty object
-    delete war_obj.peace_treaties[actual_id];
-  },
-
   enforceCeasefire: function (arg0_war_name) {
     //Convert from parameters
     var war_name = (typeof arg0_war_name != "object") ? arg0_war_name.trim().toLowerCase() : arg0_war_name;
