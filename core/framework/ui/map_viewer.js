@@ -290,10 +290,10 @@ module.exports = {
     });
   },
 
-  reloadMapInterface: function (arg0_embed_obj, arg1_game_id, arg2_message) {
+  reloadMapInterface: function (arg0_game_id, arg1_embed_obj) {
     //Convert from parameters
-    var embed_obj = arg0_embed_obj;
-    var game_id = arg1_game_id;
+    var game_id = arg0_game_id;
+    var embed_obj = arg1_embed_obj;
 
     //Declare local instance variables
     var game_obj = interfaces[game_id];

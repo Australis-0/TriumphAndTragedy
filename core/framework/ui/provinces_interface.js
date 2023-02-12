@@ -1,8 +1,8 @@
 module.exports = {
-  initialisePrintProvince: function (arg0_user, arg1_game_id) {
+  initialisePrintProvince: function (arg0_user) {
     //Convert from parameters
     var user_id = arg0_user;
-    var game_obj = interfaces[arg1_game_id];
+    var game_obj = getGameObject(user_id);
 
     //Initialise visual prompt
     visualPrompt(game_obj.alert_embed, user_id, {
