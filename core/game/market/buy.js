@@ -161,12 +161,12 @@ module.exports = {
     visualPrompt(game_obj.alert_embed, user_id, {
       title: `Buy Goods From The World Market:`,
       prompts: [
-        [`What type of good would you like to buy from the World Market?`, "string"],
-        [`How much of this material would you like to buy?\n\nType **[Inventory]** to view your current inventory.\nType **[World Market]** for a list of valid goods.`, "number", { min: 1 }]
+        [`How much material would you like to buy?\n\nType **[Inventory]** to view your current inventory.\nType **[World Market]** for a list of valid goods.`, "number", { min: 1 }],
+        [`What type of good would you like to buy from the World Market?`, "string"]
       ]
     },
     function (arg) {
-      module.exports.buy(user_id, arg[1], arg[0]);
+      module.exports.buy(user_id, arg[0], arg[1]);
     },
     function (arg) {
       switch (arg) {

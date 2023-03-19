@@ -10,12 +10,12 @@ module.exports = {
     visualPrompt(game_obj.alert_embed, user_id, {
       title: `Sell Goods To The World Market:`,
       prompts: [
+        [`How much material would you like to sell?\n\nType **[Inventory]** to view your current inventory.\nType **[World Market]** for a list of valid goods.`, "number", { min: 1 }],
         [`What type of good would you like to sell to the World Market?`, "string"],
-        [`How much of this material would you like to sell?\n\nType **[Inventory]** to view your current inventory.\nType **[World Market]** for a list of valid goods.`, "number", { min: 1 }]
       ]
     },
     function (arg) {
-      module.exports.sell(user_id, arg[1], arg[0]);
+      module.exports.sell(user_id, arg[0], arg[1]);
     },
     function (arg) {
       switch (arg) {

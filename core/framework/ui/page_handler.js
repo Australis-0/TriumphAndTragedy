@@ -414,6 +414,14 @@ module.exports = {
               game_obj.page = "war_list";
 
               break;
+            case "world market":
+              createPageMenu(game_obj.middle_embed, {
+                embed_pages: printGlobalMarket(user_id),
+                user: game_obj.user
+              });
+              game_obj.page = "world_market";
+
+              break;
             default:
               if (!["view army"].includes(input)) {
                 var army_obj = getArmy(user_id, view_obj);
