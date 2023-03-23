@@ -25,6 +25,9 @@ console.timeEnd(`Loading "fs" ..`);
 console.time(`Loading "node-html-parser" ..`);
 global.HTML = require("node-html-parser");
 console.timeEnd(`Loading "node-html-parser" ..`);
+console.time(`Loading "jsonpack" ..`);
+global.JSONPack = require("jsonpack");
+console.timeEnd(`Loading "jsonpack" ..`);
 console.time(`Loading "opusscript" ..`);
 global.opus = require("opusscript");
 console.timeEnd(`Loading "opusscript" ..`);
@@ -296,10 +299,13 @@ setInterval(function(){
 setInterval(function(){
   //Write to database.js
   try {
-  	fs.writeFile('database.js', JSON.stringify(main), function (err, data) {
+    var compressed_json = JSONPack.pack(main);
+
+  	fs.writeFile("database.js", compressed_json, function (err, data) {
   		if (err) return log.info(err);
   	});
   } catch (e) {
     log.error(`Ran into an error whilst attempting to save to database.js! ${e}.`);
+    console.log(e);
   }
 }, 30000);

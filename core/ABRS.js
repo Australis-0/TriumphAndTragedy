@@ -66,12 +66,22 @@ module.exports = {
     //Check if current DB is valid
   	if (rawdata.toString().length != 0) {
       try {
-    		global.main = JSON.parse(rawdata);
-        interfaces = main.interfaces;
+        try {
+          global.main = JSON.parse(rawdata);
+          interfaces = main.interfaces;
 
-        log.info(`Loaded default savedata.`);
+          log.info(`Loaded default uncompressed savedata.`);
 
-        setTimeout(reinitialiseGameEmbeds, 1000);
+          setTimeout(reinitialiseGameEmbeds, 1000);
+        } catch {
+          var decompressed_json = JSONPack.unpack(rawdata.toString());
+      		global.main = decompressed_json;
+          interfaces = main.interfaces;
+
+          log.info(`Loaded default savedata.`);
+
+          setTimeout(reinitialiseGameEmbeds, 1000);
+        }
       } catch {
         invalid_save = true;
       }
@@ -111,7 +121,8 @@ module.exports = {
 
   						setTimeout(function(){
   							rawdata = fs.readFileSync("database.js");
-  							global.main = JSON.parse(rawdata);
+                var decompressed_json = JSONPack.unpack(rawdata.toString());
+  							global.main = decompressed_json;
 
                 //Restore interfaces
                 interfaces = main.interfaces;
@@ -163,10 +174,11 @@ module.exports = {
 
     //Write to file if JSON is not undefined
 		if (JSON.stringify(main).length != 0) {
+      var compressed_json = JSONPack.pack(main);
 			var create_backup = fs.createWriteStream(`./backups/${returnABRSDateString()}.txt`);
 			create_backup.end();
 
-			fs.writeFile(file_path, JSON.stringify(main), function (err, data) {
+			fs.writeFile(file_path, JSON.stringify(compressed_json), function (err, data) {
 				if (err) return log.error(err);
 			});
 		} else {

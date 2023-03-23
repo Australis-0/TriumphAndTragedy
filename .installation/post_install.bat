@@ -10,33 +10,35 @@ set "warn=[33m[WARN][0m"
 :: Begin installing npm dependencies
 cd ..
 
-echo %info% %logo% Installing dependencies (1/13) 'underscore' ..
+echo %info% %logo% Installing dependencies (1/14) 'underscore' ..
 call npm install underscore
-echo %info% %logo% Installing dependencies (2/13) 'ngraph.graph' ..
+echo %info% %logo% Installing dependencies (2/14) 'ngraph.graph' ..
 call npm install ngraph.graph
-echo %info% %logo% Installing dependencies (3/13) 'ngraph.path' ..
+echo %info% %logo% Installing dependencies (3/14) 'ngraph.path' ..
 call npm install ngraph.path
-echo %info% %logo% Installing dependencies (4/13) 'canvas' ..
+echo %info% %logo% Installing dependencies (4/14) 'canvas' ..
 call npm install canvas
-echo %info% %logo% Installing dependencies (5/13) 'diacriticless' ..
+echo %info% %logo% Installing dependencies (5/14) 'diacriticless' ..
 call npm install diacriticless
-echo %info% %logo% Installing dependencies (6/13) 'discord.js' ..
+echo %info% %logo% Installing dependencies (6/14) 'discord.js' ..
 call npm uninstall discord.js
 call npm install discord.js
-echo %info% %logo% Installing dependencies (7/13) 'fs' ..
+echo %info% %logo% Installing dependencies (7/14) 'fs' ..
 call npm install fs
-echo %info% %logo% Installing dependencies (8/13) 'node-html-parser' ..
+echo %info% %logo% Installing dependencies (8/14) 'node-html-parser' ..
 call npm install node-html-parser
-echo %info% %logo% Installing dependencies (9/13) 'opusscript' ..
+echo %info% %logo% Installing dependencies (9/14) 'opusscript' ..
 call npm install opusscript
-echo %info% %logo% Installing dependencies (10/13) 'path' ..
+echo %info% %logo% Installing dependencies (10/14) 'path' ..
 call npm install path
-echo %info% %logo% Installing dependencies (11/13) '@discordjs/voice' ..
+echo %info% %logo% Installing dependencies (11/14) '@discordjs/voice' ..
 call npm install @discordjs/voice
-echo %info% %logo% Installing dependencies (12/13) 'form-data' ..
+echo %info% %logo% Installing dependencies (12/14) 'form-data' ..
 call npm install --save form-data
-echo %info% %logo% Installing dependencies (13/13) 'convert-svg-to-png' ..
+echo %info% %logo% Installing dependencies (13/14) 'convert-svg-to-png' ..
 call npm install convert-svg-to-png
+echo %info% %logo% Installing dependencies (14/14) 'jsonpack' ..
+call npm install jsonpack
 
 echo %info% %logo% All dependencies successfully installed, patching issues ..
 call npm install

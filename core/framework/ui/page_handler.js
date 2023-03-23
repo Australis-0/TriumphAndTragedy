@@ -149,6 +149,17 @@ module.exports = {
         if (input == "settle")
           initialiseSettle(user_id);
 
+        //[Settle (Provinces)]
+        if (input.startsWith("settle ")) {
+          var provinces = input.replace("settle ", "").split(" ").split(",");
+
+          for (var i = 0; i < provinces.length; i++)
+            provinces[i] = provinces[i].trim();
+
+          //Settle provinces
+          settle(user_id, provinces);
+        }
+
         //[Set Tax]
         if (input == "set tax")
           initialiseSetTax(user_id);
@@ -2835,7 +2846,7 @@ module.exports = {
               });
 
             //[Research]; [Research (Tech)]
-            if (input.startsWith("research ") && input != "research list") {
+            if (input.startsWith("research ") && !["research list", "research_queue"].includes(input)) {
               var tech_to_research = input.replace("research ", "");
 
               research(user_id, tech_to_research);
@@ -2847,8 +2858,13 @@ module.exports = {
           case "research_queue":
             //Button handler
             //[Add Technology]
-            if (input.startsWith("add technology ")) {
-              var tech_to_add = input.replace("add technology ", "");
+            if (
+              input.startsWith("add technology ") ||
+              (input.startsWith("add ") && input != "add technology")
+            ) {
+              var tech_to_add = input
+                .replace("add technology ", "")
+                .replace("add ", "");
 
               addResearchQueue(user_id, tech_to_add);
             } else if (input == "add technology") {
@@ -2868,8 +2884,13 @@ module.exports = {
             }
 
             //[Remove Technology]
-            if (input.startsWith("remove technology ")) {
-              var tech_to_remove = input.replace("remove technology ", "");
+            if (
+              input.startsWith("remove technology ") ||
+              (input.startsWith("remove ") && input != "remove technology")
+            ) {
+              var tech_to_remove = input
+                .replace("remove technology ", "")
+                .replace("remove ", "");
 
               removeResearchQueue(user_id, tech_to_add);
             } else if (input == "remove technology") {

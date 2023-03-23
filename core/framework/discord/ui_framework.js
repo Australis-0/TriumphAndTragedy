@@ -481,8 +481,13 @@ module.exports = {
 
     //Declare local instance variables
     var game_obj = getGameObject(user_id);
+    var in_visual_prompt = interfaces[user_id];
 
-    if (game_obj) {
+    //Check if user is in_visual_prompt
+    if (in_visual_prompt)
+      in_visual_prompt = (in_visual_prompt.type == "visual_prompt");
+
+    if (game_obj && !in_visual_prompt) {
       if (game_obj.alert_array.length == 0) {
         const new_alert_embed = new Discord.MessageEmbed()
           .setColor(settings.bot_colour)

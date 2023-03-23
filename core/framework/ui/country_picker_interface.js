@@ -124,7 +124,6 @@ module.exports = {
     //Mark page
     if (!main.global.user_map[user_id]) {
       try {
-        console.log(`Country menu initialised for ${user_id}!`);
         game_obj.country_picker_page = "country_menu";
 
         //Initialise visual prompt

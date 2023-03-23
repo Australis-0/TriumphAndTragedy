@@ -65,6 +65,9 @@ module.exports = {
     var game_obj = getGameObject(user_id);
     var usr = main.users[actual_id];
 
+    var alerts_length = (usr.alerts) ? usr.alerts.length : 0;
+    var events_length = (usr.events) ? usr.events.length : 0;
+
     //Add buttons to top row
     const main_menu_row = new Discord.MessageActionRow()
       .addComponents(
@@ -84,18 +87,21 @@ module.exports = {
           .setEmoji("716821884867444746"),
         new Discord.MessageButton()
           .setCustomId("alerts_btn")
-          .setLabel(`You have ${parseNumber(usr.alerts.length)} alert(s).`)
+          .setLabel((alerts_length > 0) ?
+            `You have ${parseNumber(alerts_length)} alert(s).` :
+            `No new alerts.`
+          )
           .setStyle("DANGER")
-          .setDisabled(usr.alerts.length == 0)
+          .setDisabled(alerts_length == 0)
           .setEmoji("798006990638940160"),
         new Discord.MessageButton()
           .setCustomId("events_btn")
-          .setLabel((usr.events.length > 0) ?
-            `You have ${parseNumber(usr.events.length)} event(s) that need your attention.` :
+          .setLabel((events_length > 0) ?
+            `You have ${parseNumber(events_length)} event(s) that need your attention.` :
             `No new events.`
           )
           .setStyle("DANGER")
-          .setDisabled(usr.events.length == 0)
+          .setDisabled(events_length == 0)
           .setEmoji("800548280589221888")
       );
     const country_row_1 = new Discord.MessageActionRow()
