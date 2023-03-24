@@ -174,7 +174,7 @@ module.exports = {
 
     //Write to file if JSON is not undefined
 		if (JSON.stringify(main).length != 0) {
-      var compressed_json = JSONPack.pack(main);
+      var compressed_json = JSONPack.pack(JSON.parse(JSON.stringify(main)));
 			var create_backup = fs.createWriteStream(`./backups/${returnABRSDateString()}.txt`);
 			create_backup.end();
 

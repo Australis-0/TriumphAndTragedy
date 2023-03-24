@@ -299,9 +299,7 @@ setInterval(function(){
 setInterval(function(){
   //Write to database.js
   try {
-    var compressed_json = JSONPack.pack(main);
-
-  	fs.writeFile("database.js", compressed_json, function (err, data) {
+  	fs.writeFile("database.js", JSON.stringify(main), function (err, data) {
   		if (err) return log.info(err);
   	});
   } catch (e) {
