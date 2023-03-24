@@ -239,7 +239,7 @@ module.exports = {
             reloadMap(game_id);
 
             try {
-              reloadMapInterface(map_interface_embed, game_id);
+              reloadMapInterface(game_id, map_interface_embed);
             } catch {}
 
             map_obj.increase_pan_speed = false;
@@ -366,13 +366,13 @@ module.exports = {
                 map_obj.image_url = attachment[1].url.toString();
 
                 if (force_reload)
-                  module.exports.reloadMapInterface(map_obj.current_embed, game_id);
+                  module.exports.reloadMapInterface(game_id, map_obj.current_embed);
               });
             });
           } else {
             map_obj.image_url = image_url;
             if (force_reload)
-              module.exports.reloadMapInterface(map_obj.current_embed, game_id);
+              module.exports.reloadMapInterface(game_id, map_obj.current_embed);
           }
       }
     } catch {}
