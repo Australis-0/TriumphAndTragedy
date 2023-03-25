@@ -2846,7 +2846,7 @@ module.exports = {
               });
 
             //[Research]; [Research (Tech)]
-            if (input.startsWith("research ") && !["research list", "research_queue"].includes(input)) {
+            if (input.startsWith("research ") && !["research list", "research queue"].includes(input)) {
               var tech_to_research = input.replace("research ", "");
 
               research(user_id, tech_to_research);

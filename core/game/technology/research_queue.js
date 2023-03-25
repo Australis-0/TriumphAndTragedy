@@ -38,15 +38,15 @@ module.exports = {
               });
 
             //Print user feedback
-            printAlert(`You have successfully added **${(tech_obj.name) ? tech_obj.name : tech_name}** to your research queue.`);
+            printAlert(game_obj.id, `You have successfully added **${(tech_obj.name) ? tech_obj.name : tech_name}** to your research queue.`);
           } else {
-            printError(`You are already researching this item! Therefore, this technology could not be added to your queue.`);
+            printError(game_obj.id, `You are already researching this item! Therefore, this technology could not be added to your queue.`);
           }
         } else {
-          printError(`**${tech_name}** has already been added into your queue! Check your current queue for more information.`);
+          printError(game_obj.id, `**${tech_name}** has already been added into your queue! Check your current queue for more information.`);
         }
       } else {
-        printError(`You have already hit your maximum queue limit! Consider freeing up space by cancelling one of your queued items.`);
+        printError(game_obj.id, `You have already hit your maximum queue limit! Consider freeing up space by cancelling one of your queued items.`);
       }
     } else {
       printError(game_obj.id, `The tech you have specified proved as elusive as perpetual motion!`);
