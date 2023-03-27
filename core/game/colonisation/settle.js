@@ -12,7 +12,7 @@ module.exports = {
     visualPrompt(game_obj.alert_embed, user_id, {
       title: "Create A New Colonisation Charter:",
       prompts: [
-        [`Which Province ID's would you like to claim in the name of **${usr.name}**? Please list them out as numeric ID's separated by spaces`, "string"]
+        [`Which Province ID's would you like to claim in the name of **${usr.name}**? Please list them out as numeric ID's separated by spaces.`, "string"]
       ]
     },
     function (arg) {

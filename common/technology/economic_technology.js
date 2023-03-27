@@ -245,6 +245,7 @@ config.technology.economic_technology = {
     icon: "factory",
     description: "Manufactories were organised places of work where valuable goods were assembled. The advent of this institution quickly obsoleted the guild.",
     prerequisite_techs: ["the_watermill", "steel_tools"],
+    research_cost: 250,
     unlocks: {
       unlock_building: "manufactories",
       obsolete_building: "workshops"
