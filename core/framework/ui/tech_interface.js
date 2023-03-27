@@ -203,7 +203,7 @@ module.exports = {
           if (local_tech.description)
             local_tech_category_string.push(`\n_${local_tech.description}_\n`);
 
-          local_tech_category_string.push(`- **Cost:** ${config.icons.knowledge} ${parseNumber(technology_cost)}${(aot_penalty != 1) ? `( **${printPercentage(aot_penalty, { display_prefix: true })}** ${aot_string})` : ""}`);
+          local_tech_category_string.push(`- **Cost:** ${config.icons.knowledge} ${parseNumber(technology_cost)}${(aot_penalty != 1) ? ` ( **${printPercentage(aot_penalty, { display_prefix: true })}** ${aot_string})` : ""}`);
           local_tech_category_string.push(`- **Effects:**`);
 
           //Push modifiers, but only if the tech unlocks something first
