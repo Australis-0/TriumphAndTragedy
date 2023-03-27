@@ -736,8 +736,8 @@ module.exports = {
               visualPrompt(game_obj.alert_embed, user_id, {
                 title: `Demolishing Building(s) in ${city_obj.name}:`,
                 prompts: [
-                  [`What sort of building would you like to demolish in **${city_obj.name}**?`, "string"],
-                  [`How many buildings of this type would you like to get rid of?`, "number", { min: 1 }]
+                  [`How many buildings of this type would you like to get rid of?`, "number", { min: 1 }],
+                  [`What sort of building would you like to demolish in **${city_obj.name}**?`, "string"]
                 ]
               },
               function (arg) {

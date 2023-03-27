@@ -28,8 +28,8 @@ module.exports = {
 
         var all_buildings_in_category = Object.keys(local_building_category);
 
-        for (var i = 0; i < all_buildings_in_category.length; i++) {
-          var local_building = local_building_category[all_buildings_in_category[i]];
+        for (var x = 0; x < all_buildings_in_category.length; x++) {
+          var local_building = local_building_category[all_buildings_in_category[x]];
 
           if (typeof local_building == "object")
             if (local_building.singular)
