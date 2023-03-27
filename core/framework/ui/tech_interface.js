@@ -176,6 +176,10 @@ module.exports = {
 
           var gfx_icon = (local_tech.icon) ? config.icons[local_tech.icon] + " " : "";
           var researching_status = "";
+          var technology_cost = getTechnologyCost(local_tech_category[x]);
+
+          var aot_penalty = technology_cost/local_tech.research_cost;
+          var aot_string = (aot_penalty < 1) ? `Catchup Bonus` : `Ahead of Time Penalty`;
 
           for (var y = 0; y < usr.researching.length; y++)
             if (usr.researching[y].technology == local_tech_category[x])
@@ -191,10 +195,15 @@ module.exports = {
           local_tech_category_string.push("");
           local_tech_category_string.push(`${gfx_icon}**${(local_tech.name) ? local_tech.name : local_tech_category[x]}**: ${researching_status}`);
 
+          if (local_tech.year) {
+            local_tech_category_string.push("");
+            local_tech_category_string.push(`Year: ${config.icons.time} **${local_tech.year}**`);
+          }
+
           if (local_tech.description)
             local_tech_category_string.push(`\n_${local_tech.description}_\n`);
 
-          local_tech_category_string.push(`- **Cost:** ${config.icons.knowledge} ${parseNumber(getTechnologyCost(local_tech_category[x]))}`);
+          local_tech_category_string.push(`- **Cost:** ${config.icons.knowledge} ${parseNumber(technology_cost)}${(aot_penalty != 1) ? `( **${printPercentage(aot_penalty, { display_prefix: true })}** ${aot_string})` : ""}`);
           local_tech_category_string.push(`- **Effects:**`);
 
           //Push modifiers, but only if the tech unlocks something first

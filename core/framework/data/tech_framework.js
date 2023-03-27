@@ -201,7 +201,7 @@ module.exports = {
     var final_aot_penalty = 1;
     var has_aot_penalty = false;
 
-    for (var i = 0; i < ahead_of_time_config; i++)
+    for (var i = 0; i < ahead_of_time_config.length; i++)
       if (main.date.year >= ahead_of_time_config[i][0] && main.date.year < ahead_of_time_config[i][1])
         aot_penalty = 2/ahead_of_time_config[i][2];
 
