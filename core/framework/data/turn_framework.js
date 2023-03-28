@@ -815,13 +815,16 @@ module.exports = {
             //Deep copy construction
             var local_construction = JSON.parse(JSON.stringify(usr.under_construction[i]));
 
+            //Splice construction
+            usr.under_construction.splice(i, 1);
+
             //Fetch city_obj
             var local_city_obj = getProvince(local_construction.province_id);
 
             //Try/catch to prevent duplication
             if (local_city_obj.buildings)
               //Individual buildings are treated as objects in an array here because this allows for further granularity in the future
-              constructBuilding(local_construction.building_amount, local_construction.building_type, local_construction.province_id, i);
+              constructBuilding(local_construction.building_amount, local_construction.building_type, local_construction.province_id);
           } else if (usr.under_construction[i].construction_turns < 0) {
             //Splice if construction is bugged for some reason
             usr.under_construction.splice(i, 1);
