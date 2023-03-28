@@ -741,7 +741,7 @@ module.exports = {
                 ]
               },
               function (arg) {
-                demolish(user_id, arg[1], arg[0], city_obj.name);
+                demolish(user_id, arg[0], arg[1], city_obj.name);
               });
 
               break;
