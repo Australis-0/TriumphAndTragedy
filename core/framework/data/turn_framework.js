@@ -811,7 +811,7 @@ module.exports = {
           usr.under_construction[i].construction_turns--;
 
           //Check if building(s) are done being built
-          if (usr.under_construction[i].construction_turns <= 0) {
+          if (usr.under_construction[i].construction_turns == 0) {
             //Deep copy construction
             var local_construction = JSON.parse(JSON.stringify(usr.under_construction[i]));
 
@@ -822,6 +822,9 @@ module.exports = {
             if (local_city_obj.buildings)
               //Individual buildings are treated as objects in an array here because this allows for further granularity in the future
               constructBuilding(local_construction.building_amount, local_construction.building_type, local_construction.province_id, i);
+          } else if (usr.under_construction[i].construction_turns < 0) {
+            //Splice if construction is bugged for some reason
+            usr.under_construction.splice(i, 1);
           }
         } catch (e) {
           console.log(e);
