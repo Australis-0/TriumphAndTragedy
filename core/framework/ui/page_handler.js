@@ -2783,6 +2783,8 @@ module.exports = {
 
       //Technology page handler
       {
+        var ignore_research = ["research list", "research possibilities", "research queue"];
+
         switch (game_obj.page) {
           case "research":
             //Button handler
@@ -2846,7 +2848,7 @@ module.exports = {
               });
 
             //[Research]; [Research (Tech)]
-            if (input.startsWith("research ") && !["research list", "research queue"].includes(input)) {
+            if (input.startsWith("research ") && !ignore_research.includes(input)) {
               var tech_to_research = input.replace("research ", "");
 
               research(user_id, tech_to_research);
@@ -2908,7 +2910,7 @@ module.exports = {
                 user: game_obj.user
               });
               game_obj.page = "research_list";
-            } else if (input.startsWith("research ")) {
+            } else if (input.startsWith("research ") && !ignore_research.includes(input)) {
               var tech_to_research = input.replace("research ", "");
 
               research(user_id, tech_to_research);
@@ -2942,7 +2944,7 @@ module.exports = {
                   user: game_obj.user
                 });
                 game_obj.page = "research_list";
-              } else if (input.startsWith("research ")) {
+              } else if (input.startsWith("research " && !ignore_research.includes(input))) {
                 var tech_to_research = input.replace("research ", "");
 
                 research(user_id, tech_to_research);

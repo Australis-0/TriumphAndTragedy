@@ -30,9 +30,15 @@ module.exports = {
             usr.research_queue.push(tech_name);
 
             //UI updater
-            if (game_obj.page == "research_queue")
+            if (game_obj.page == "research_list")
               createPageMenu(game_obj.middle_embed, {
                 embed_pages: printResearchList(user_id),
+                page: interfaces[game_obj.middle_embed.id].page,
+                user: game_obj.user
+              });
+            if (game_obj.page == "research_queue")
+              createPageMenu(game_obj.middle_embed, {
+                embed_pages: printResearchQueue(user_id),
                 page: interfaces[game_obj.middle_embed.id].page,
                 user: game_obj.user
               });
@@ -141,9 +147,15 @@ module.exports = {
         var local_tech_obj = getTechnology(usr.research_queue[slot_number]);
 
         //UI updater
-        if (game_obj.page == "research_queue")
+        if (game_obj.page == "research_list")
           createPageMenu(game_obj.middle_embed, {
             embed_pages: printResearchList(user_id),
+            page: interfaces[game_obj.middle_embed.id].page,
+            user: game_obj.user
+          });
+        if (game_obj.page == "research_queue")
+          createPageMenu(game_obj.middle_embed, {
+            embed_pages: printResearchQueue(user_id),
             page: interfaces[game_obj.middle_embed.id].page,
             user: game_obj.user
           });
