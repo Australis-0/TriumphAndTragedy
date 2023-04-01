@@ -214,6 +214,38 @@ config.units.infantry = {
     },
     quantity: 10000
   },
+  pike_and_shot: {
+    name: "Pike and Shot",
+    singular: "Pike and Shot",
+
+    attack: 3,
+    defence: 5,
+    manoeuvre: 2,
+    movement: 3,
+    initiative: 3,
+
+    cost: {
+      wood: 1,
+      iron: 4,
+      lead: 2,
+      food: 3,
+      money: 2500,
+
+      ground_units_cp: 5
+    },
+    maintenance: {
+      iron: 2,
+      food: 2,
+      wood: 2,
+
+      ground_units_cp: 7,
+      money: 1500
+    },
+    manpower_cost: {
+      soldiers: 10000
+    },
+    quantity: 10000
+  },
   tercio: {
     name: "Tercio",
 
