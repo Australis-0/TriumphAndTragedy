@@ -237,6 +237,8 @@ module.exports = {
               //Return statement used for research_queue processing
               return true;
             } else {
+              addResearchQueue(user_id, tech_obj.name);
+
               if (!display)
                 printError(game_obj.id, `Your research slots are already full up! **${(tech_obj.name) ? tech_obj.name : tech_name}** was added to your queue instead. Next time, consider cancelling one of your current research slots, or queue up technologies manually in your **[Research Queue]**.`);
             }
