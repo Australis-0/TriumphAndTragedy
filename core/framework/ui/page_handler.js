@@ -2803,6 +2803,15 @@ module.exports = {
               initialiseCancelResearch(user_id);
             }
 
+            //[Research]; [Research (Tech)]
+            if (input.startsWith("research ") && !ignore_research.includes(input)) {
+              var tech_to_research = input.replace("research ", "");
+
+              research(user_id, tech_to_research);
+            } else if (input == "research") {
+              initialiseResearch(user_id);
+            }
+
             //[Research List]
             if (input == "research list") {
               createPageMenu(game_obj.middle_embed, {
