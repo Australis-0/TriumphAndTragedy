@@ -80,7 +80,7 @@ module.exports = {
     }
 
     //Return statement
-    return involved_wars;
+    return (involved_wars.length > 0) ? involved_wars : undefined;
   },
 
   calculateWarscore: function (arg0_user, arg1_war_name) {
