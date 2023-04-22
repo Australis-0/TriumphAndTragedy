@@ -44,6 +44,8 @@ module.exports = {
         parsePeaceTreaty(war_obj.name, peace_obj);
 
         //Update UI
+        if (game_obj.page == "edit_peace_offer")
+          closePeaceTreaty(game_obj.user);
         if (game_obj.page.startsWith("view_war_")) {
           createPageMenu(game_obj.middle_embed, {
             embed_pages: printWars(game_obj.user),
@@ -51,13 +53,13 @@ module.exports = {
           });
           game_obj.page = "war_list";
         }
-        if (game_obj.page.startsWith("view_peace_treaties_")) {
+        if (game_obj.page.startsWith("view_peace_treaties_"))
           createPageMenu(game_obj.middle_embed, {
             embed_pages: printPeaceTreaties(user_id, war_obj),
             page: main.interfaces[game_obj.middle_embed.id].page,
             user: game_obj.user
           });
-        }
+
       } else {
         //Check to see if the peace treaty is inferior or superior separate
         var is_separate_inferior_peace = false;
