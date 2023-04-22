@@ -66,23 +66,24 @@ module.exports = {
     //Check if current DB is valid
   	if (rawdata.toString().length != 0) {
       try {
-        try {
+        if (rawdata.toString()[0] == "{") {
           global.main = JSON.parse(rawdata);
           interfaces = main.interfaces;
 
           log.info(`Loaded default uncompressed savedata.`);
 
           setTimeout(reinitialiseGameEmbeds, 1000);
-        } catch {
+        } else {
+          log.info(`Loading compressed savedata.`);
+
           var decompressed_json = JSONPack.unpack(rawdata.toString());
       		global.main = decompressed_json;
           interfaces = main.interfaces;
 
-          log.info(`Loaded default savedata.`);
-
           setTimeout(reinitialiseGameEmbeds, 1000);
         }
-      } catch {
+      } catch (e) {
+        console.log(e);
         invalid_save = true;
       }
   	} else {
