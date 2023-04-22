@@ -334,11 +334,11 @@ module.exports = {
     var wargoals_demanded = {};
 
     //Fetch friendly side
-    if (war_obj.attackers.includes(peace_obj.id)) {
+    if (war_obj.attackers.includes(peace_obj.owner)) {
       friendly_side = "attackers";
       opposing_side = "defenders";
     }
-    if (war_obj.defenders.includes(peace_obj.id)) {
+    if (war_obj.defenders.includes(peace_obj.owner)) {
       friendly_side = "defenders";
       opposing_side = "attackers";
     }
@@ -376,11 +376,11 @@ module.exports = {
 
     //Print all plenipotentiary warscore capacities first
     for (var i = 0; i < war_obj[friendly_side].length; i++) {
-      var local_capacity = getWarscoreCapacity(war_obj, peace_obj, war_obj[friendly_side[i]]);
-      var local_spent_capacity = getSpentWarscore(war_obj, peace_obj, war_obj[friendly_side[i]]);
+      var local_capacity = getWarscoreCapacity(war_obj, peace_obj, war_obj[friendly_side][i]);
+      var local_spent_capacity = getSpentWarscore(war_obj, peace_obj, war_obj[friendly_side][i]);
       var local_user = main.users[war_obj[friendly_side][i]];
 
-      peace_string.push(`- **${local_user.name}** Warscore Budget: (${parseNumber(local_spent_capacity)}/**${parseNumber(local_capacity)})`);
+      peace_string.push(`- **${local_user.name}** - Warscore Budget: (${parseNumber(local_spent_capacity)}/**${parseNumber(local_capacity)}**)`);
 
       if (local_spent_capacity > local_capacity) {
         var local_undercapacity = local_spent_capacity - local_capacity;
@@ -464,7 +464,7 @@ module.exports = {
               //Push wargoal name and (wargoals demanded/wargoals limit) to string
               peace_string.push(`• __${(wargoal_obj.name) ? wargoal_obj.name : wargoal_id} #${wargoal_number}__:`);
               peace_string.push("");
-              peace_string.push(`- Plenipotentiary: **${main.users[wargoal_obj.owner].name}**`);
+              peace_string.push(`- Plenipotentiary: **${main.users[peace_obj.wargoals[x].owner].name}**`);
 
               //Push infamy
               peace_string.push(`\n- ${parseWargoalInfamyLocalisation(user_id, war_obj, peace_obj.wargoals[y]).join("\n- ")}`);
@@ -764,6 +764,7 @@ module.exports = {
 
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
+
     var peace_treaty_simulation = createPeaceTreaty(user_id, war_obj, true);
     var usr = main.users[actual_id];
 

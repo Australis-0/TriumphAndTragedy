@@ -1695,7 +1695,7 @@ module.exports = {
                     var local_user_contribution = getBlockadingUserContribution(blockading_users[i], user_id);
 
                     //Add to war_exhaustion
-                    local_war[`${blockading_users[i]}_warscore`] += returnSafeNumber(local_war_exhaustion_rate*local_user_contribution);
+                    modifyWarscore(user_id, local_war, returnSafeNumber(local_war_exhaustion_rate*local_user_contribution));
                   }
               }
           }
@@ -1745,7 +1745,7 @@ module.exports = {
               //Add _warscore to users by contribution
               var local_user_contribution = getBlockadingUserContribution(occupying_users[i], user_id);
 
-              local_war[`${occupying_users[i]}_warscore`] += getOccupyingUserContribution(occupying_users[i], user_id)*occupation_war_exhaustion;
+              modifyWarscore(occupying_users[i], local_war, getOccupyingUserContribution(occupying_users[i], user_id)*occupation_war_exhaustion);
             }
         }
     } catch (e) {

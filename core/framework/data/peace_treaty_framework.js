@@ -204,7 +204,7 @@ module.exports = {
     var actual_id = main.global.user_map[user_id];
     var treaty_name = "";
     var usr = main.users[actual_id];
-    var war_obj = (typeof war_name != "object") ? getWar(war_name) : main.global.wars[war_name];
+    var war_obj = (typeof war_name != "object") ? getWar(war_name) : war_name;
 
     //Try to get capital name
     try {
@@ -230,14 +230,17 @@ module.exports = {
           var local_treaty = war_obj.peace_treaties[all_peace_treaties[i]];
 
           //Check if local_treaty shares an identical name
-          if (local_treaty.name.trim().toLowerCase() == local_name.trim().toLowerCase())
-            name_taken = true;
+          if (local_treaty.name)
+            if (local_treaty.name.trim().toLowerCase() == local_name.trim().toLowerCase())
+              name_taken = true;
         }
 
         //Return and break once a valid name is found
         if (!name_taken) {
           return local_name;
           break;
+        } else {
+          iterations++;
         }
       }
     }
@@ -275,7 +278,7 @@ module.exports = {
   */
   getCombinedPeaceTreaty: function (arg0_war_name, arg1_side, arg2_options) {
     //Convert from parameters
-    var war_name = (typeof arg1_war_name != "object") ? arg1_war_name.trim().toLowerCase() : arg1_war_name;
+    var war_name = (typeof arg0_war_name != "object") ? arg0_war_name.trim().toLowerCase() : arg0_war_name;
     var side = arg1_side.trim().toLowerCase();
     var options = (arg2_options) ? arg2_options : {};
 
@@ -302,7 +305,7 @@ module.exports = {
   */
   getPeaceTreaty: function (arg0_war_name, arg1_peace_treaty_name, arg2_options) {
     //Convert from parameters
-    var war_name = (typeof arg0_war_name != "object") ? arg0_war_name.trim().toLowerCase() : war_name;
+    var war_name = (typeof arg0_war_name != "object") ? arg0_war_name.trim().toLowerCase() : arg0_war_name;
     var peace_treaty_name = arg1_peace_treaty_name.trim().toLowerCase();
     var options = (arg2_options) ? arg2_options : {};
 
@@ -323,16 +326,18 @@ module.exports = {
     for (var i = 0; i < all_peace_treaties.length; i++) {
       var local_peace_treaty = war_obj.peace_treaties[all_peace_treaties[i]];
 
-      if (local_peace_treaty.name.trim().toLowerCase().indexOf(peace_treaty_name) != -1)
-        peace_treaty_exists = [true, (!options.return_key) ? local_peace_treaty : all_peace_treaties[i]];
+      if (local_peace_treaty.name)
+        if (local_peace_treaty.name.trim().toLowerCase().indexOf(peace_treaty_name) != -1)
+          peace_treaty_exists = [true, (!options.return_key) ? local_peace_treaty : all_peace_treaties[i]];
     }
 
     //Name, hard search second
     for (var i = 0; i < all_peace_treaties.length; i++) {
       var local_peace_treaty = war_obj.peace_treaties[all_peace_treaties[i]];
 
-      if (local_peace_treaty.name.trim().toLowerCase() == peace_treaty_name)
-        peace_treaty_exists = [true, (!options.return_key) ? local_peace_treaty : all_peace_treaties[i]];
+      if (local_peace_treaty.name)
+        if (local_peace_treaty.name.trim().toLowerCase() == peace_treaty_name)
+          peace_treaty_exists = [true, (!options.return_key) ? local_peace_treaty : all_peace_treaties[i]];
     }
 
     //Return statement
@@ -358,11 +363,11 @@ module.exports = {
     var infamy_scaling = returnSafeNumber(cb_obj.infamy_scaling, 1);
 
     //Fetch friendly side
-    if (war_obj.attackers.includes(peace_obj.id)) {
+    if (war_obj.attackers.includes(peace_obj.owner)) {
       friendly_side = "attackers";
       opposing_side = "defenders";
     }
-    if (war_obj.defenders.includes(peace_obj.id)) {
+    if (war_obj.defenders.includes(peace_obj.owner)) {
       friendly_side = "defenders";
       opposing_side = "attackers";
     }
@@ -893,7 +898,7 @@ module.exports = {
 
     //Iterate over all wargoals in peace_obj
     for (var i = 0; i < peace_obj.wargoals.length; i++)
-      if (peace_obj.warogals[i].owner == actual_id)
+      if (peace_obj.wargoals[i].owner == actual_id)
         spent_infamy += module.exports.getWargoalInfamy(user_id, war_obj, peace_obj.wargoals[i]);
 
     //Return statement
@@ -998,7 +1003,7 @@ module.exports = {
     var total_peace_treaty_infamy = getCBTotalWarscore(war_obj, friendly_side);
 
     //Return statement
-    return Math.ceil(retotal_peace_treaty_infamy*separate_peace_penalty*calculated_warscore);
+    return Math.ceil(total_peace_treaty_infamy*separate_peace_penalty*calculated_warscore);
   },
 
   hasPeaceTreatyTargetRequirement: function (arg0_war_name, arg1_peace_treaty_object) {
@@ -1008,16 +1013,16 @@ module.exports = {
 
     //Declare local instance variables
     var actual_id = peace_obj.owner;
-    var enemy_side = "";
     var friendly_side = "";
+    var opposing_side = "";
     var war_obj = (typeof war_name != "object") ? getWar(war_name) : war_name;
 
     //Check for enemy_side, friendly_side
-    if (war_obj.attackers.includes(peace_obj.id)) {
+    if (war_obj.attackers.includes(peace_obj.owner)) {
       friendly_side = "attackers";
       opposing_side = "defenders";
     }
-    if (war_obj.defenders.includes(peace_obj.id)) {
+    if (war_obj.defenders.includes(peace_obj.owner)) {
       friendly_side = "defenders";
       opposing_side = "attackers";
     }
@@ -1025,7 +1030,7 @@ module.exports = {
     //Return statement
     return (
       war_obj[`${friendly_side}_war_leader`] &&
-      war_obj[enemy_side].length > 1 &&
+      war_obj[opposing_side].length > 1 &&
       peace_obj.type == "user"
     );
   },
@@ -1044,11 +1049,11 @@ module.exports = {
     var war_obj = (typeof war_name != "object") ? getWar(war_name) : war_name;
 
     //Fetch friendly_side, opposing_side
-    if (war_obj.attackers.includes(peace_obj.id)) {
+    if (war_obj.attackers.includes(peace_obj.owner)) {
       friendly_side = "attackers";
       opposing_side = "defenders";
     }
-    if (war_obj.defenders.includes(peace_obj.id)) {
+    if (war_obj.defenders.includes(peace_obj.owner)) {
       friendly_side = "defenders";
       opposing_side = "attackers";
     }
@@ -1089,11 +1094,11 @@ module.exports = {
     //Make sure peace treaty is valid before parsing
     if (module.exports.isPeaceTreatyValid(war_obj, peace_obj)) {
       //Fetch friendly side
-      if (war_obj.attackers.includes(peace_obj.id)) {
+      if (war_obj.attackers.includes(peace_obj.owner)) {
         friendly_side = "attackers";
         opposing_side = "defenders";
       }
-      if (war_obj.defenders.includes(peace_obj.id)) {
+      if (war_obj.defenders.includes(peace_obj.owner)) {
         friendly_side = "defenders";
         opposing_side = "attackers";
       }
