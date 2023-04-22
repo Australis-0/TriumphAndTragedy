@@ -4,9 +4,20 @@ module.exports = {
     //Declare local tracker variables
     var all_good_names = getGoods({ exclude_hidden: true, return_names: true });
     var all_goods = getGoods({ exclude_hidden: true });
+    var all_main_keys = Object.keys(main);
 
     //Stub objects
     if (!main.users) main.users = {};
+
+    //Compressed data fix
+    {
+      //No clue why it does this
+      for (var i = 0; i < all_main_keys.length; i++)
+        if (all_main_keys[i].endsWith("users") && all_main_keys[i] != "users") {
+          main.users = main[all_main_keys[i]];
+          delete main[all_main_keys[i]];
+        }
+    }
 
     //Force render all maps
     if (!main.global)
