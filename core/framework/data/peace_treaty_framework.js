@@ -356,7 +356,7 @@ module.exports = {
     var friendly_side = "";
     var infamy_map = {};
     var opposing_side = "";
-    var usr = main.users[peace_obj.id];
+    var usr = main.users[peace_obj.owner];
     var war_obj = (typeof war_name != "object") ? JSON.parse(JSON.stringify(getWar(war_name))) : war_name;
 
     var cb_obj = getCB(war_obj.cb);
@@ -425,10 +425,11 @@ module.exports = {
                   var provinces_taken = 0;
 
                   for (var y = 0; y < local_clauses.length; y++) {
-                    var local_target_id = local_value.annex_all[local_clauses[y]];
+                    var local_recipient_id = local_value.annex_all[local_clauses[y]];
+                    var local_target_id = local_clauses[y];
                     var local_provinces = getProvinces(local_target_id, { include_hostile_occupations: true });
 
-                    var local_recipient = main.users[local_clauses[y]];
+                    var local_recipient = main.users[local_recipient_id];
                     var local_target = main.users[local_target_id];
 
                     //Track recipient
@@ -509,7 +510,7 @@ module.exports = {
                   var enemy_soldiers_disbanded = 0;
 
                   //Track recipient
-                  recipient_count[peace_obj.id]++;
+                  recipient_count[local_wargoal.owner]++;
 
                   //Fetch enemy_soldiers_disbanded
                   for (var y = 0; y < local_clauses.length; y++) {
@@ -544,7 +545,7 @@ module.exports = {
                   var provinces_demilitarised = 0;
 
                   //Track recipient
-                  recipient_count[peace_obj.id]++;
+                  recipient_count[local_wargoal.owner]++;
 
                   for (var y = 0; y < local_value.demilitarisation.demilitarised_provinces.length; y++) {
                     var local_province = main.provinces[local_value.demilitarisation.demilitarised_provinces.length];
@@ -569,7 +570,7 @@ module.exports = {
                   var local_clauses = Object.keys(local_value.free_oppressed_people);
 
                   //Track recipient
-                  recipient_count[peace_obj.id]++;
+                  recipient_count[local_wargoal.owner]++;
 
                   for (var y = 0; y < local_clauses.length; y++) {
                     var local_target = main.users[local_clauses[y]];
@@ -607,7 +608,7 @@ module.exports = {
                   var local_clauses = Object.keys(local_value.install_government);
 
                   //Track recipient
-                  recipient_count[peace_obj.id]++;
+                  recipient_count[local_wargoal.owner]++;
 
                   //Percentage calculation
                   total_percentage_affected += local_clauses.length/war_obj[opposing_side].length;
@@ -826,8 +827,8 @@ module.exports = {
 
           //Get primary beneficiary
           var all_recipients = Object.keys(recipient_count);
-          var biggest_recipient = [peace_obj.id, 0];
-          var primary_beneficiary = peace_obj.id;
+          var biggest_recipient = [peace_obj.owner, 0];
+          var primary_beneficiary = peace_obj.owner;
 
           for (var x = 0; x < all_recipients.length; x++) {
             var local_recipient_count = recipient_count[all_recipients[x]];
@@ -898,8 +899,11 @@ module.exports = {
 
     //Iterate over all wargoals in peace_obj
     for (var i = 0; i < peace_obj.wargoals.length; i++)
-      if (peace_obj.wargoals[i].owner == actual_id)
-        spent_infamy += module.exports.getWargoalInfamy(user_id, war_obj, peace_obj.wargoals[i]);
+      if (peace_obj.wargoals[i].owner == actual_id) {
+        var wargoal_infamy = module.exports.getWargoalInfamy(user_id, war_obj, peace_obj.wargoals[i]);
+
+        spent_infamy += returnSafeNumber(wargoal_infamy[actual_id]);
+      }
 
     //Return statement
     return spent_infamy;
@@ -1017,7 +1021,7 @@ module.exports = {
     var opposing_side = "";
     var war_obj = (typeof war_name != "object") ? getWar(war_name) : war_name;
 
-    //Check for enemy_side, friendly_side
+    //Check for opposing_side, friendly_side
     if (war_obj.attackers.includes(peace_obj.owner)) {
       friendly_side = "attackers";
       opposing_side = "defenders";
@@ -1037,7 +1041,7 @@ module.exports = {
 
   isPeaceTreatyValid: function (arg0_war_name, arg1_peace_treaty_object) {
     //Convert from parameters
-    var war_name = (typeof arg0_war_name != "object") ? arg0_war_name.trim().toLowerCase() : war_name;
+    var war_name = (typeof arg0_war_name != "object") ? arg0_war_name.trim().toLowerCase() : arg0_war_name;
     var peace_obj = arg1_peace_treaty_object;
 
     //Declare local instance variables
@@ -1082,7 +1086,7 @@ module.exports = {
 
   parsePeaceTreaty: function (arg0_war_name, arg1_peace_treaty_object) {
     //Convert from parameters
-    var war_name = (typeof arg0_war_name != "object") ? arg0_war_name.trim().toLowerCase() : war_name;
+    var war_name = (typeof arg0_war_name != "object") ? arg0_war_name.trim().toLowerCase() : arg0_war_name;
     var peace_obj = arg1_peace_treaty_object;
 
     //Declare local instance variables
@@ -1223,7 +1227,7 @@ module.exports = {
                 var local_clauses = Object.keys(local_value.annex_all);
 
                 for (var y = 0; y < local_clauses.length; y++)
-                  if (war_obj[enemy_side].includes(local_clauses[y]))
+                  if (war_obj[opposing_side].includes(local_clauses[y]))
                     inherit(local_clauses[y], local_value.annex_all[local_clauses[y]]);
 
                 break;
@@ -1237,7 +1241,7 @@ module.exports = {
                     try {
                       var local_province = main.provinces[local_clause.provinces[z]];
 
-                      if (war_obj[enemy_side].includes(local_province.owner))
+                      if (war_obj[opposing_side].includes(local_province.owner))
                         transferProvince(local_province.owner, { target: local_clauses[y], province_id: local_clause.provinces[z] });
                     } catch {}
                 }
@@ -1253,7 +1257,7 @@ module.exports = {
                   var target_keys = Object.keys(target_obj);
 
                   //Loop through all cut_down_to_size keys
-                  if (war_obj[enemy_side].includes(local_clauses[y]))
+                  if (war_obj[opposing_side].includes(local_clauses[y]))
                     for (var z = 0; z < target_keys.length; z++)
                       if (target_keys[z].includes("_removal")) {
                         var army_type = target_keys[z].replace("_removal", "");
