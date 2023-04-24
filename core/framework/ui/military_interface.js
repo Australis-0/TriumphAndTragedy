@@ -35,9 +35,9 @@ module.exports = {
     //Format strings - Page 3 (Top-down)
     var military_organisation_string = [];
 
-    var global_orders_string = [];
     var army_creation_string = [];
     var army_management_string = [];
+    var global_orders_string = [];
 
     //Format strings - Page 4 (Top-down)
     var battle_plans_string = [];
@@ -276,8 +276,8 @@ module.exports = {
       //Format Page 3 - UI - Global Orders
       global_orders_string.push(`- **[Carpet Siege]** - Order your troops to siege down an entire nation.`);
       global_orders_string.push(`- **[Garrison Cities]** - Guard all the cities within your country.`);
-      global_orders_string.push(`- **[Garrison Provinces]** - Guard all the provinces within your country.`);
       global_orders_string.push(`- **[Delete All Armies]** - Delete all your armies and return all troops and materiel to your reserves.`);
+      global_orders_string.push(`- **[Garrison Provinces]** - Guard all the provinces within your country.`);
       global_orders_string.push(`- **[Move All]** - Moves all your armies into a single province.`);
 
       if (hasVolunteers(user_id))
