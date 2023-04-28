@@ -378,6 +378,14 @@ module.exports = {
               game_obj.page = "modifiers_list";
 
               break;
+            case "population":
+              game_obj.page = "provinces_list";
+              createPageMenu(game_obj.middle_embed, {
+                embed_pages: printProvinces(user_id),
+                user: game_obj.user
+              });
+
+              break;
             case "province":
               if (game_obj.page != "map")
                 initialiseViewProvince(user_id);
@@ -2585,15 +2593,6 @@ module.exports = {
             //[Rename Culture Adjective]
             if (input == "rename culture adjective")
               initialiseRenameCultureAdjective(user_id);
-
-            //[View Population]
-            if (input == "view population") {
-              game_obj.page = "provinces_list";
-              createPageMenu(game_obj.middle_embed, {
-                embed_pages: printProvinces(game_obj.user),
-                user: game_obj.user
-              });
-            }
 
             break;
           case "reforms":

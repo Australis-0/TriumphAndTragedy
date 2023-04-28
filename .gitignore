@@ -5,3 +5,9 @@ node_modules/
 scenarios/
 database.js
 settings.js
+
+!map/background.png
+!map/colourmap.jpg
+!map/province_ids.png
+!map/provinces.js
+!map/provinces.svg

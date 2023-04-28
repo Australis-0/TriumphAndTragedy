@@ -375,19 +375,23 @@ module.exports = {
     peace_string.push("");
 
     //Print all plenipotentiary warscore capacities first
-    for (var i = 0; i < war_obj[friendly_side].length; i++) {
-      var local_capacity = getWarscoreCapacity(war_obj, peace_obj, war_obj[friendly_side][i]);
-      var local_spent_capacity = getSpentWarscore(war_obj, peace_obj, war_obj[friendly_side][i]);
-      var local_user = main.users[war_obj[friendly_side][i]];
+    for (var i = 0; i < war_obj[friendly_side].length; i++)
+      try {
+        var local_capacity = getWarscoreCapacity(war_obj, peace_obj, war_obj[friendly_side][i]);
+        var local_spent_capacity = getSpentWarscore(war_obj, peace_obj, war_obj[friendly_side][i]);
+        var local_user = main.users[war_obj[friendly_side][i]];
 
-      peace_string.push(`- **${local_user.name}** - Warscore Budget: (${parseNumber(local_spent_capacity)}/**${parseNumber(local_capacity)}**)`);
+        peace_string.push(`- **${local_user.name}** - Warscore Budget: (${parseNumber(local_spent_capacity)}/**${parseNumber(local_capacity)}**)`);
 
-      if (local_spent_capacity > local_capacity) {
-        var local_undercapacity = local_spent_capacity - local_capacity;
+        if (local_spent_capacity > local_capacity) {
+          var local_undercapacity = local_spent_capacity - local_capacity;
 
-        peace_string.push(`- This nation is **${parseNumber(local_undercapacity)}** infamy over their warscore capacity, and some of their wargoals will need to be dropped or scaled down for the peace offer to be valid.`);
+          peace_string.push(`- This nation is **${parseNumber(local_undercapacity)}** infamy over their warscore capacity, and some of their wargoals will need to be dropped or scaled down for the peace offer to be valid.`);
+        }
+      } catch (e) {
+        log.warn(`Error occurred whilst parsing peace treaty localisation!`);
+        console.log(e);
       }
-    }
 
     peace_string.push("");
     peace_string.push(config.localisation.divider);
@@ -470,7 +474,7 @@ module.exports = {
 
               peace_string.push("");
 
-              for (var y = 0; y < all_effects.length; y++) {
+              for (var y = 0; y < all_effects.length; y++) try {
                 var local_value = peace_obj.wargoals[x].effect[all_effects[y]];
 
                 switch (all_effects[y]) {
@@ -682,7 +686,7 @@ module.exports = {
 
                     break;
                 }
-              }
+              } catch {}
 
               peace_string.push("");
             }

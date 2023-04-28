@@ -2030,8 +2030,8 @@ module.exports = {
 
       //Set wargoal_counter
       wargoal_counter[wargoal_id] = (wargoal_counter[wargoal_id]) ?
-        wargoal_counter[wargoal_id] :
-        0;
+        wargoal_counter[wargoal_id] + 1 :
+        1;
 
       wargoal_map.push([`${(wargoal_obj.name) ? wargoal_obj.name : wargoal_id} #${wargoal_counter[wargoal_id]}`, i]);
 
@@ -2063,10 +2063,11 @@ module.exports = {
           wargoal_exists = [true, wargoal_map[i][1]];
 
       if (wargoal_exists[0]) {
+        var local_wargoal = peace_obj.wargoals[wargoal_exists[1]];
         var wargoal_id = peace_obj.wargoals[wargoal_exists[1]].id;
         var wargoal_obj = getWargoal(wargoal_id);
 
-        if (wargoal_obj.owner == actual_id) {
+        if (local_wargoal.owner == actual_id) {
           //Print user feedback
           printAlert(game_obj.id, `You have removed a **${(wargoal_obj.name) ? wargoal_obj.name : wargoal_id}** wargoal from this peace offer.`);
 

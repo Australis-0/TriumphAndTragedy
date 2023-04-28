@@ -407,12 +407,12 @@ module.exports = {
           var wargoal_infamy = 0; //All infamy lands on the primary beneficiary of the wargoal
 
           //Initialise enemy soldiers
-          for (var i = 0; i < war_obj[opposing_side].length; i++)
-            enemy_soldiers += getTotalSoldiers(war_obj[opposing_side][i]);
+          for (var x = 0; x < war_obj[opposing_side].length; x++)
+            enemy_soldiers += getTotalSoldiers(war_obj[opposing_side][x]);
 
           //Initialise recipient_count
-          for (var i = 0; i < all_users.length; i++)
-            recipient_count[all_users[i]] = 0;
+          for (var x = 0; x < all_users.length; x++)
+            recipient_count[all_users[x]] = 0;
 
           //Begin iterating over all wargoal effects
           if (local_value) {
@@ -436,20 +436,22 @@ module.exports = {
                     recipient_count[local_recipient.id]++;
 
                     //Add to tracker variables
-                    provinces_taken += local_target.provinces;
-                    recipient_count[local_clauses[y]]++;
+                    if (local_target) {
+                      provinces_taken += local_target.provinces;
+                      recipient_count[local_clauses[y]]++;
 
-                    //Iterate over all province types
-                    for (var z = 0; z < local_provinces.length; z++) {
-                      var local_province = local_provinces[z];
+                      //Iterate over all province types
+                      for (var z = 0; z < local_provinces.length; z++) {
+                        var local_province = local_provinces[z];
 
-                      if (!provinces_affected.includes(local_provinces[z].id))
-                        provinces_affected.push(local_provinces[z].id);
+                        if (!provinces_affected.includes(local_provinces[z].id))
+                          provinces_affected.push(local_provinces[z].id);
 
-                      if (local_province.type)
-                        type_count[local_province.type] = (type_count[local_province.type]) ?
-                          type_count[local_province.type] + 1 :
-                          1;
+                        if (local_province.type)
+                          type_count[local_province.type] = (type_count[local_province.type]) ?
+                            type_count[local_province.type] + 1 :
+                            1;
+                      }
                     }
                   }
 
@@ -496,7 +498,8 @@ module.exports = {
                   for (var y = 0; y < all_targets.length; y++) {
                     var local_target = main.users[all_targets[y]];
 
-                    percentage_affected += provinces_taken[all_targets[y]]/local_target.provinces;
+                    if (local_target)
+                      percentage_affected += returnSafeNumber(provinces_taken[all_targets[y]]/local_target.provinces);
                   }
 
                   percentage_affected = percentage_affected/all_targets.length;
@@ -515,29 +518,32 @@ module.exports = {
                   //Fetch enemy_soldiers_disbanded
                   for (var y = 0; y < local_clauses.length; y++) {
                     var local_target = main.users[local_clauses[y]];
-                    var target_armies = Object.keys(local_target.armies);
-                    var target_obj = local_value.cut_down_to_size[local_clauses[y]];
 
-                    var local_keys = Object.keys(target_obj);
+                    if (local_target) {
+                      var target_armies = Object.keys(local_target.armies);
+                      var target_obj = local_value.cut_down_to_size[local_clauses[y]];
 
-                    for (var z = 0; z < local_keys.length; z++) {
-                      var local_amount = target_obj[local_keys[z]];
+                      var local_keys = Object.keys(target_obj);
 
-                      if (local_keys[z].includes("_removal")) {
-                        var local_key = local_keys[z].replace("_removal", "");
+                      for (var z = 0; z < local_keys.length; z++) {
+                        var local_amount = target_obj[local_keys[z]];
 
-                        for (var a = 0; a < target_armies.length; a++) {
-                          var local_army = local_target.armies[target_armies[a]];
+                        if (local_keys[z].includes("_removal")) {
+                          var local_key = local_keys[z].replace("_removal", "");
 
-                          if (local_army.type == local_key)
-                            enemy_soldiers_disbanded += getArmySize(local_clauses[y], local_army);
+                          for (var a = 0; a < target_armies.length; a++) {
+                            var local_army = local_target.armies[target_armies[a]];
+
+                            if (local_army.type == local_key)
+                              enemy_soldiers_disbanded += getArmySize(local_clauses[y], local_army);
+                          }
                         }
                       }
-                    }
 
-                    //Percentage calculation
-                    total_percentage_affected = enemy_soldiers_disbanded/enemy_soldiers;
-                    total_percentage++;
+                      //Percentage calculation
+                      total_percentage_affected = enemy_soldiers_disbanded/enemy_soldiers;
+                      total_percentage++;
+                    }
                   }
 
                   break;
@@ -599,8 +605,10 @@ module.exports = {
                     }
 
                     //Percentage calculation is per user
-                    total_percentage_affected += provinces_taken/local_target.provinces;
-                    total_percentage++;
+                    if (local_target) {
+                      total_percentage_affected += provinces_taken/local_target.provinces;
+                      total_percentage++;
+                    }
                   }
 
                   break;
@@ -728,8 +736,8 @@ module.exports = {
                   break;
                 case "revoke_reparations":
                   //Track recipient
-                  for (var i = 0; i < local_value.revoke_reparations.length; i++)
-                    recipient_count[local_value.revoke_reparations[i]]++;
+                  for (var x = 0; x < local_value.revoke_reparations.length; x++)
+                    recipient_count[local_value.revoke_reparations[x]]++;
 
                   //Percentage calculation
                   total_percentage_affected += local_value.revoke_reparations.length/war_obj[friendly_side].length;
@@ -827,8 +835,8 @@ module.exports = {
 
           //Get primary beneficiary
           var all_recipients = Object.keys(recipient_count);
-          var biggest_recipient = [peace_obj.owner, 0];
-          var primary_beneficiary = peace_obj.owner;
+          var biggest_recipient = [peace_obj.wargoals[i].owner, 0];
+          var primary_beneficiary = peace_obj.wargoals[i].owner;
 
           for (var x = 0; x < all_recipients.length; x++) {
             var local_recipient_count = recipient_count[all_recipients[x]];
@@ -837,7 +845,8 @@ module.exports = {
               biggest_recipient = [all_recipients[x], local_recipient_count];
           }
 
-          primary_beneficiary = biggest_recipient[0];
+          if (!war_obj[opposing_side].includes(biggest_recipient[0]))
+            primary_beneficiary = biggest_recipient[0];
 
           //Add infamy to primary beneficiary's infamy_map
           var default_infamy_keys = ["infamy_per_percentage", "infamy_per_province", "maximum_infamy", "minimum_infamy"];
@@ -1353,8 +1362,9 @@ module.exports = {
                   var local_target = main.users[local_clauses[y]];
 
                   //Change government type, but don't set party popularity
-                  if (war_obj[opposing_side].includes(local_clauses[y]))
-                    local_target.government = local_value.install_government[local_clauses[y]];
+                  if (local_target)
+                    if (war_obj[opposing_side].includes(local_clauses[y]))
+                      local_target.government = local_value.install_government[local_clauses[y]];
                 }
 
                 break;
@@ -1499,34 +1509,35 @@ module.exports = {
                     //Add goods_obj from local_target to local_recipient's inventory
                     var all_goods = Object.keys(goods_obj);
 
-                    for (var z = 0; z < all_goods.length; z++) {
-                      var local_percentage = goods_obj[all_goods[z]];
+                    if (local_target)
+                      for (var z = 0; z < all_goods.length; z++) {
+                        var local_percentage = goods_obj[all_goods[z]];
 
-                      if (all_goods[z] == "actions" || all_goods[z] == "money") {
-                        var local_amount = Math.ceil(local_target[all_goods[z]]*(1 - local_percentage));
+                        if (all_goods[z] == "actions" || all_goods[z] == "money") {
+                          var local_amount = Math.ceil(local_target[all_goods[z]]*(1 - local_percentage));
 
-                        local_target[all_goods[z]] -= local_amount;
-                        local_recipient[all_goods[z]] += local_amount;
-                      } else if (all_goods[z] == "inventory") {
-                        var all_goods = Object.keys(lookup.all_goods);
+                          local_target[all_goods[z]] -= local_amount;
+                          local_recipient[all_goods[z]] += local_amount;
+                        } else if (all_goods[z] == "inventory") {
+                          var all_goods = Object.keys(lookup.all_goods);
 
-                        for (var a = 0; a < all_goods.length; a++) {
-                          var local_good = lookup.all_goods[all_goods[a]];
+                          for (var a = 0; a < all_goods.length; a++) {
+                            var local_good = lookup.all_goods[all_goods[a]];
 
-                          if (!local_good.is_cp && !local_good.doesnt_stack) {
-                            var local_amount = Math.ceil(local_target.inventory[local_goods[a]]*(1 - local_percentage));
+                            if (!local_good.is_cp && !local_good.doesnt_stack) {
+                              var local_amount = Math.ceil(local_target.inventory[local_goods[a]]*(1 - local_percentage));
 
-                            local_target.inventory[local_goods[a]] -= local_amount;
-                            local_recipient.inventory[local_goods[a]] += local_amount;
+                              local_target.inventory[local_goods[a]] -= local_amount;
+                              local_recipient.inventory[local_goods[a]] += local_amount;
+                            }
                           }
-                        }
-                      } else {
-                        var local_amount = Math.ceil(local_target.inventory[all_goods[z]]*(1 - local_percentage));
+                        } else {
+                          var local_amount = Math.ceil(local_target.inventory[all_goods[z]]*(1 - local_percentage));
 
-                        local_target.inventory[all_goods[z]] -= local_amount;
-                        local_recipient.inventory[all_goods[z]] += local_amount;
+                          local_target.inventory[all_goods[z]] -= local_amount;
+                          local_recipient.inventory[all_goods[z]] += local_amount;
+                        }
                       }
-                    }
                   }
                 }
 
@@ -1542,12 +1553,13 @@ module.exports = {
                   //Append to cooldown
                   var cooldown_id = generateUserCooldownID(local_clauses[y], "steer_trade");
 
-                  if (war_obj[opposing_side].includes(local_clauses[y]))
-                    local_target.cooldowns[cooldown_id] = {
-                      overlord: local_clause.overlord,
+                  if (local_target)
+                    if (war_obj[opposing_side].includes(local_clauses[y]))
+                      local_target.cooldowns[cooldown_id] = {
+                        overlord: local_clause.overlord,
 
-                      duration: (local_clause.turns) ? local_clause.turns : 1000
-                    };
+                        duration: (local_clause.turns) ? local_clause.turns : 1000
+                      };
                 }
 
                 break;
@@ -1560,15 +1572,16 @@ module.exports = {
                   //Add to local_target.cooldowns
                   var cooldown_id = generateUserCooldownID(local_clause.debtor, "syphon_actions");
 
-                  if (war_obj[opposing_side].includes(local_clause.debtor))
-                    local_target.cooldowns[cooldown_id] = {
-                      owner: local_clause.owner,
+                  if (local_target)
+                    if (war_obj[opposing_side].includes(local_clause.debtor))
+                      local_target.cooldowns[cooldown_id] = {
+                        owner: local_clause.owner,
 
-                      amount: local_clause.amount,
-                      percentage_amount: local_clause.percentage_amount,
+                        amount: local_clause.amount,
+                        percentage_amount: local_clause.percentage_amount,
 
-                      duration: (local_clause.turns) ? local_clause.turns : 1000
-                    };
+                        duration: (local_clause.turns) ? local_clause.turns : 1000
+                      };
                 }
 
                 break;
@@ -1581,14 +1594,15 @@ module.exports = {
                   //Add to local_target.cooldowns
                   var cooldown_id = generateUserCooldownID(local_clause.debtor, "war_reparations");
 
-                  if (war_obj[opposing_side].includes(local_clause.debtor))
-                    local_target.cooldowns[cooldown_id] = {
-                      owner: local_clause.owner,
+                  if (local_target)
+                    if (war_obj[opposing_side].includes(local_clause.debtor))
+                      local_target.cooldowns[cooldown_id] = {
+                        owner: local_clause.owner,
 
-                      percentage_amount: local_clause.amount,
+                        percentage_amount: local_clause.amount,
 
-                      duration: (local_clause.turns) ? local_clause.turns : 1000
-                    };
+                        duration: (local_clause.turns) ? local_clause.turns : 1000
+                      };
                 }
 
                 break;
