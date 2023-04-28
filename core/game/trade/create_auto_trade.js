@@ -25,6 +25,8 @@ module.exports = {
     if (ot_user) {
       if (ot_user_actual_id != actual_id) {
         if (good_obj || raw_good_name == "money") {
+          if (raw_good_name == "money") good_obj = {};
+
           if (!good_obj.research_good) {
             if (!good_obj.doesnt_stack) {
               if (!isNaN(raw_amount)) {
