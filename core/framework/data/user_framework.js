@@ -687,13 +687,13 @@ module.exports = {
 
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
-    var controlled_provinces = module.exports.getProvinces(user_id);
+    var controlled_provinces = module.exports.getProvinces(ot_user_id);
     var occupied_provinces = module.exports.getOccupyingUserProvinces(user_id, ot_user_id);
-    var owned_provinces = module.exports.getProvinces(user_id, { include_hostile_occupations: true });
+    var owned_provinces = module.exports.getProvinces(ot_user_id, { include_hostile_occupations: true });
     var total_occupied_provinces = owned_provinces.length - controlled_provinces.length;
 
     //Return statement
-    return returnSafeNumber(occupied_provinces/total_occupied_provinces);
+    return returnSafeNumber(occupied_provinces.length/total_occupied_provinces);
   },
 
   getOccupyingUserProvinces: function (arg0_user, arg1_user) {
@@ -703,9 +703,9 @@ module.exports = {
 
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
-    var controlled_provinces = module.exports.getProvinces(user_id);
+    var controlled_provinces = module.exports.getProvinces(ot_user_id);
     var occupied_provinces = [];
-    var owned_provinces = module.exports.getProvinces(user_id, { include_hostile_occupations: true });
+    var owned_provinces = module.exports.getProvinces(ot_user_id, { include_hostile_occupations: true });
     var total_occupied_provinces = owned_provinces.length - controlled_provinces.length;
     var usr = main.users[actual_id];
 
@@ -721,7 +721,7 @@ module.exports = {
 
   getOccupyingUsers: function (arg0_user) {
     //Convert from parameters
-    var user_id = arg0_user;
+    var user_id = arg0_user; //Occupied user
 
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];

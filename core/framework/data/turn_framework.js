@@ -1709,9 +1709,9 @@ module.exports = {
       }
 
       //Occupation
+      var enemies = getEnemies(user_id);
       var occupation_war_exhaustion = 0;
       var occupied_provinces = getEnemyOccupiedProvinces(user_id).length;
-      var occupying_users = getOccupyingUsers(user_id);
 
       //A full siege of the target user ticks up warscore by 10% per turn unless fully sieged down
       if (occupied_provinces >= owned_provinces.length) {
@@ -1722,19 +1722,19 @@ module.exports = {
       }
 
       //Iterate over all occupying users to modify their warscore
-      for (var i = 0; i < occupying_users.length; i++)
+      for (var i = 0; i < enemies.length; i++)
         for (var x = 0; x < all_wars.length; x++) {
           var local_war = main.global.wars[all_wars[x]];
 
-          //Check if occupying_users[i] and user_id are both in the same war on opposite sides
+          //Check if enemies[i] and user_id are both in the same war on opposite sides
           var friendly_side = "neutral";
           var opposing_side = "neutral";
 
-          if (local_war.attackers.includes(occupying_users[i])) {
+          if (local_war.attackers.includes(enemies[i])) {
             opposing_side = "attackers";
             friendly_side = "defenders";
           }
-          if (local_war.defenders.includes(occupying_users[i])) {
+          if (local_war.defenders.includes(enemies[i])) {
             opposing_side = "defenders";
             friendly_side = "attackers";
           }
@@ -1743,9 +1743,10 @@ module.exports = {
           if (friendly_side != "neutral" && opposing_side != "neutral")
             if (friendly_side != opposing_side) {
               //Add _warscore to users by contribution
-              var local_user_contribution = getBlockadingUserContribution(occupying_users[i], user_id);
+              var local_blockade_contribution = getBlockadingUserContribution(enemies[i], user_id);
+              var local_occupation_contribution = getOccupyingUserContribution(enemies[i], user_id)*occupation_war_exhaustion;
 
-              modifyWarscore(occupying_users[i], local_war, getOccupyingUserContribution(occupying_users[i], user_id)*occupation_war_exhaustion);
+              modifyWarscore(enemies[i], local_war, local_blockade_contribution + local_occupation_contribution);
             }
         }
     } catch (e) {

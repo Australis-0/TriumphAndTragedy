@@ -164,7 +164,7 @@ module.exports = {
     }
 
     //Return statement
-    return total_user_points/total_combined_points;
+    return returnSafeNumber(total_user_points/total_combined_points);
   },
 
   getBlockadingUserFleets: function (arg0_user, arg1_user) {

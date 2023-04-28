@@ -396,7 +396,7 @@ module.exports = {
   modifyWarscore: function (arg0_user, arg1_war_name, arg2_amount) {
     //Convert from parameters
     var user_id = arg0_user;
-    var war_name = (typeof war_name != "object") ? arg1_war_name.trim().toLowerCase() : arg1_war_name;
+    var war_name = (typeof arg1_war_name != "object") ? arg1_war_name.trim().toLowerCase() : arg1_war_name;
     var amount = returnSafeNumber(parseFloat(arg2_amount));
 
     //Declare local instance variables
