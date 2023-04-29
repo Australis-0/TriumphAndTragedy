@@ -70,7 +70,7 @@ module.exports = {
         ]
       },
       function (arg) {
-        var change_home_port(user_id, army_name, arg[0]);
+        var change_home_port = changeHomePort(user_id, army_name, arg[0]);
 
         //Print feedback; update UI
         if (change_home_port[0]) {

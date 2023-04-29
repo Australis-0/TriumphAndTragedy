@@ -37,6 +37,8 @@ module.exports = {
       var province_obj = main.provinces[local_army.province];
       var speed_sample = [local_army.province];
 
+      var capital_obj = getCapital(local_user.id);
+
       //Per turn updates
       if (is_new_turn) {
         //Append local_enemies for volunteer armies
@@ -146,6 +148,18 @@ module.exports = {
 
             delete local_army.progress;
           }
+        }
+
+        //Naval processing
+        if (local_army.type == "navy") {
+          var home_port_is_allowed = false;
+
+          if (province_obj.controller == local_user.id) home_port_is_allowed = true;
+          if (hasAlliance(local_army.owner, province_obj.controller) || hasMilitaryAccess(local_army.owner, province_obj.controller)) home_port_is_allowed = true;
+
+          if (!home_port_is_allowed)
+            if (capital_obj)
+              changeHomePort(local_army.owner, local_army, capital_obj.id);
         }
       }
 
