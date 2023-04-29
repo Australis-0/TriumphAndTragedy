@@ -195,7 +195,7 @@ module.exports = {
           command_string.push(`- **[Merge Army]** | **[Move]**${volunteer_string}`);
         } else if (army_obj.type == "navy") {
           var submarine_string = (army_power.pure_submarines) ?
-            ` | **[Convoy Raid]** | **[Harbour Raid]** | **[Torpedo Fleet]**` :
+            ` | **[Change Home Port]** | **[Convoy Raid]** | **[Harbour Raid]** | **[Torpedo Fleet]**` :
             "";
           (!army_obj.is_blockading) ?
             command_string.push(`- **[Blockade]** | **[Challenge Blockade]** ${submarine_string}`) :

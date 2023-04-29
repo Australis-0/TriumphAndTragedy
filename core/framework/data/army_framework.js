@@ -146,6 +146,53 @@ module.exports = {
       }
   },
 
+  changeHomePort: function (arg0_user, arg1_army_name, arg2_province_id) {
+    //Convert from parameters
+    var user_id = arg0_user;
+    var army_name = arg1_army_name;
+    var province_id = arg2_province_id;
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var army_obj = (typeof army_name != "object") ? module.exports.getArmy(user_id, army_name) : army_name;
+    var province_obj = getProvince(province_id.trim().toLowerCase());
+    var usr = main.users[actual_id];
+
+    //Check if usr, army_obj, and province_obj exist
+    if (usr) {
+      if (army_obj) {
+        if (army_obj.type == "navy") {
+          if (province_obj) {
+            var is_allowed = false;
+
+            if (province_obj.controller == actual_id) is_allowed = true;
+            if (hasAlliance(user_id, province_obj.controller) || hasMilitaryAccess(user_id, province_obj.controller)) is_allowed = true;
+
+            if (is_allowed) {
+              var old_province = main.provinces[army_obj.province];
+              var old_province_name = (province_obj.name) ? `**${province_obj.name}**` : `Province **${province_obj.id}**`;
+
+              army_obj.province = province_obj.id;
+
+              return [true, `You have successfully changed the home port of the **${army_obj.name}** from ${old_province_name} to ${(province_obj.name) ? `**${province_obj.name}**` : `Province **${province_obj.id}**`}.`];
+            } else {
+              return [false, `You must actually control ${(province_obj.name) ? `**${province_obj.name}**` : `Province **${province_obj.id}**`} or be have a military alliance or access to the current controller, **${main.users[province_obj.controller].name}** for you to base the **${army_obj.name}** there!`];
+            }
+          } else {
+            return [false, `Your admirals struggled to find the Province of **${province_id}** on the map! No seriously. Where is it?`];
+          }
+        } else {
+          return [false, `Only navies can change their home ports!`];
+        }
+      } else {
+        return [false, `The fleet **${army_name}** doesn't even exist!`];
+      }
+    } else {
+      return [false, `The country that has requested this fleet to change its home port doesn't even exist!`];
+    }
+
+  },
+
   createArmy: function (arg0_user, arg1_army_name, arg2_province) {
     //Convert from parameters
     var user_id = arg0_user;

@@ -187,6 +187,7 @@ module.exports = {
       FileManager.import("./game/military/blockade");
       FileManager.import("./game/military/carpet_siege");
       FileManager.import("./game/military/challenge_blockade");
+      FileManager.import("./game/military/change_home_port");
       FileManager.import("./game/military/convoy_raid");
       FileManager.import("./game/military/create_armies");
       FileManager.import("./game/military/create_army");

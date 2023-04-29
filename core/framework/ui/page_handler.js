@@ -2029,6 +2029,11 @@ module.exports = {
           if (input == "challenge blockade")
             initialiseChallengeBlockade(user_id);
 
+          //[Change Home Port]
+          if (!game_obj.page.startsWith("army_viewer_"))
+            if (input == "change home port")
+              initialiseChangeHomePort(user_id);
+
           //[Convoy Raid]
           if (input == "convoy raid")
             initialiseConvoyRaid(user_id);
@@ -2102,6 +2107,10 @@ module.exports = {
           //[Challenge Blockade]
           if (input == "challenge blockade")
             initialiseChallengeBlockade(user_id, viewed_army);
+
+          //[Change Home Port]
+          if (input == "change home port")
+            initialiseChangeHomePort(user_id, viewed_army);
 
           //[Close] - Closes pathing info
           if (input == "close") {
