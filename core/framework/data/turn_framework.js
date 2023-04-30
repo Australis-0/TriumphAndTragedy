@@ -1729,6 +1729,7 @@ module.exports = {
 
       //A full siege of the target user ticks up warscore by 10% per turn unless fully sieged down
       if (occupied_provinces >= owned_provinces.length) {
+        occupation_war_exhaustion = 1;
         usr.modifiers.war_exhaustion = 1;
       } else {
         occupation_war_exhaustion = returnSafeNumber(parseFloat(((occupied_provinces/owned_provinces.length)*0.1).toFixed(2)));
