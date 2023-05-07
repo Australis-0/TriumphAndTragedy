@@ -15,7 +15,7 @@ config.buildings.petrochemicals = {
       coal: 1
     },
     manpower_cost: {
-      workers: 25000
+      labourers: 25000
     },
     produces: {
       petroil: 5
@@ -38,7 +38,7 @@ config.buildings.petrochemicals = {
       petroil: 2
     },
     manpower_cost: {
-      workers: 60000
+      labourers: 60000
     },
     produces: {
       refined_petroil: 4

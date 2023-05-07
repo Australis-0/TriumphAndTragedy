@@ -12,7 +12,7 @@ config.buildings.agriculture = {
       money: 2000
     },
     manpower_cost: {
-      workers: 50000
+      labourers: 50000
     },
     produces: {
       wheat: 2,
@@ -32,7 +32,7 @@ config.buildings.agriculture = {
       money: 4000
     },
     manpower_cost: {
-      workers: 25000
+      labourers: 25000
     },
     produces: {
       wheat: 3,
@@ -57,7 +57,7 @@ config.buildings.agriculture = {
       refined_petroil: 1
     },
     manpower_cost: {
-      workers: 25000
+      labourers: 25000
     },
     produces: {
       wheat: 5,
@@ -82,7 +82,7 @@ config.buildings.agriculture = {
       refined_petroil: 2
     },
     manpower_cost: {
-      workers: 15000
+      labourers: 15000
     },
     produces: {
       wheat: 5,
@@ -106,7 +106,7 @@ config.buildings.agriculture = {
       machine_parts: 2
     },
     manpower_cost: {
-      workers: 10000
+      labourers: 10000
     },
     produces: {
       wheat: 10,
@@ -124,7 +124,7 @@ config.buildings.agriculture = {
       money: 1200
     },
     manpower_cost: {
-      workers: 15000
+      labourers: 15000
     },
     produces: {
       meat: 2
@@ -142,7 +142,7 @@ config.buildings.agriculture = {
       money: 400
     },
     manpower_cost: {
-      workers: 35000
+      labourers: 35000
     },
     produces: {
       meat: 3
@@ -160,7 +160,7 @@ config.buildings.agriculture = {
       money: 5000
     },
     manpower_cost: {
-      workers: 25000
+      labourers: 25000
     },
     produces: {
       cotton: 15

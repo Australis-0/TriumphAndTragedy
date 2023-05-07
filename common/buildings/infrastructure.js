@@ -14,7 +14,7 @@ config.buildings.infrastructure = {
       money: 5000
     },
     manpower_cost: {
-      workers: 1000
+      labourers: 1000
     },
     maximum: 10,
     modifiers: {
@@ -37,7 +37,7 @@ config.buildings.infrastructure = {
     },
     maximum: 5,
     manpower_cost: {
-      workers: 5000
+      labourers: 5000
     },
     modifiers: {
       isolation: -0.05,
@@ -61,7 +61,7 @@ config.buildings.infrastructure = {
     },
     maximum: 10,
     manpower_cost: {
-      workers: 2000
+      labourers: 2000
     },
     modifiers: {
       isolation: -0.05,
@@ -84,7 +84,7 @@ config.buildings.infrastructure = {
     },
     maximum: 10,
     manpower_cost: {
-      workers: 2000
+      labourers: 2000
     },
     modifiers: {
       isolation: -0.10,

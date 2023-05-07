@@ -123,8 +123,8 @@ config.icons = {
   //Pops icons - Dynamic set
   aristocrats: "<:aristocrats:732730754643132457>",
   faculty: "<:faculty:732730754911436830>",
+  labourers: "<:workers:732730754735276124>",
   soldiers: "<:soldiers:732730754592669702>",
-  workers: "<:workers:732730754735276124>",
 
   //Technology icons - [WIP]
 

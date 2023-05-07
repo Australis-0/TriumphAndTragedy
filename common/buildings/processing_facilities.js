@@ -16,7 +16,7 @@ config.buildings.processing_facilities = {
       bauxite: 10
     },
     manpower_cost: {
-      workers: 40000
+      labourers: 40000
     },
     produces: {
       aluminium: 5
@@ -42,7 +42,7 @@ config.buildings.processing_facilities = {
       iron: 1
     },
     manpower_cost: {
-      workers: 50000
+      labourers: 50000
     },
     produces: {
       ammunition: 50
@@ -65,7 +65,7 @@ config.buildings.processing_facilities = {
       steel: 5
     },
     manpower_cost: {
-      workers: 35000
+      labourers: 35000
     },
     produces: {
       artillery: 1
@@ -87,7 +87,7 @@ config.buildings.processing_facilities = {
       stone: 10
     },
     manpower_cost: {
-      workers: 20000
+      labourers: 20000
     },
     produces: {
       concrete: 5
@@ -109,7 +109,7 @@ config.buildings.processing_facilities = {
       sulphur: 10
     },
     manpower_cost: {
-      workers: 20000
+      labourers: 20000
     },
     produces: {
       fertiliser: 5
@@ -131,7 +131,7 @@ config.buildings.processing_facilities = {
       iron: 1
     },
     manpower_cost: {
-      workers: 35000
+      labourers: 35000
     },
     produces: {
       steel: 1
@@ -154,7 +154,7 @@ config.buildings.processing_facilities = {
       wheat: 1
     },
     manpower_cost: {
-      workers: 10000
+      labourers: 10000
     },
     produces: {
       food: 5
@@ -177,7 +177,7 @@ config.buildings.processing_facilities = {
       copper: 2
     },
     manpower_cost: {
-      workers: 55000
+      labourers: 55000
     },
     produces: {
       machine_parts: 5
@@ -197,7 +197,7 @@ config.buildings.processing_facilities = {
       wood: 5
     },
     manpower_cost: {
-      workers: 40000
+      labourers: 40000
     },
     produces: {
       lumber: 5
@@ -220,7 +220,7 @@ config.buildings.processing_facilities = {
       steel: 3
     },
     manpower_cost: {
-      workers: 50000
+      labourers: 50000
     },
     produces: {
       small_arms: 20
@@ -241,7 +241,7 @@ config.buildings.processing_facilities = {
       iron: 5
     },
     manpower_cost: {
-      workers: 60000
+      labourers: 60000
     },
     produces: {
       steel: 5
@@ -261,7 +261,7 @@ config.buildings.processing_facilities = {
       cotton: 2
     },
     manpower_cost: {
-      workers: 40000
+      labourers: 40000
     },
     produces: {
       uniforms: 10

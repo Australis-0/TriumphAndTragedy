@@ -12,7 +12,7 @@ config.buildings.mines = {
       money: 5500
     },
     manpower_cost: {
-      workers: 25000
+      labourers: 25000
     },
     produces: {
       bauxite: 10
@@ -30,7 +30,7 @@ config.buildings.mines = {
       money: 3500
     },
     manpower_cost: {
-      workers: 40000
+      labourers: 40000
     },
     produces: {
       coal: 10
@@ -48,7 +48,7 @@ config.buildings.mines = {
       money: 5000
     },
     manpower_cost: {
-      workers: 40000
+      labourers: 40000
     },
     produces: {
       copper: 5
@@ -66,7 +66,7 @@ config.buildings.mines = {
       money: 6500
     },
     manpower_cost: {
-      workers: 50000
+      labourers: 50000
     },
     produces: {
       gold: 2
@@ -84,7 +84,7 @@ config.buildings.mines = {
       money: 3300
     },
     manpower_cost: {
-      workers: 50000
+      labourers: 50000
     },
     produces: {
       iron: 20
@@ -102,7 +102,7 @@ config.buildings.mines = {
       money: 3000
     },
     manpower_cost: {
-      workers: 30000
+      labourers: 30000
     },
     produces: {
       lead: 15
@@ -120,7 +120,7 @@ config.buildings.mines = {
       money: 5000
     },
     manpower_cost: {
-      workers: 25000
+      labourers: 25000
     },
     produces: {
       silver: 5
@@ -139,7 +139,7 @@ config.buildings.mines = {
       money: 7000
     },
     manpower_cost: {
-      workers: 40000
+      labourers: 40000
     },
     produces: {
       sulphur: 10

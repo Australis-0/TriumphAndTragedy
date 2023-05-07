@@ -12,7 +12,7 @@ config.buildings.resource_extraction = {
       money: 2500
     },
     manpower_cost: {
-      workers: 40000
+      labourers: 40000
     },
     produces: {
       stone: 10
@@ -31,7 +31,7 @@ config.buildings.resource_extraction = {
       money: 6000
     },
     manpower_cost: {
-      workers: 40000
+      labourers: 40000
     },
     produces: {
       wood: 20

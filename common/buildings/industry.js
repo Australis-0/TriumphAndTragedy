@@ -13,7 +13,7 @@ config.buildings.industry = {
       money: 2500,
     },
     manpower_cost: {
-      workers: 65000
+      labourers: 65000
     },
     produces: {
       actions: 1
@@ -34,7 +34,7 @@ config.buildings.industry = {
       money: 5000
     },
     manpower_cost: {
-      workers: 55000
+      labourers: 55000
     },
     produces: {
       actions: [2, 3]
@@ -54,7 +54,7 @@ config.buildings.industry = {
       money: 6500
     },
     manpower_cost: {
-      workers: 55000
+      labourers: 55000
     },
     produces: {
       actions: [3, 5]
@@ -74,7 +74,7 @@ config.buildings.industry = {
       money: 7500,
     },
     manpower_cost: {
-      workers: 30000
+      labourers: 30000
     },
     produces: {
       actions: [4, 6]
@@ -94,7 +94,7 @@ config.buildings.industry = {
       money: 8000
     },
     manpower_cost: {
-      workers: 30000
+      labourers: 30000
     },
     produces: {
       actions: [5, 7]
@@ -114,7 +114,7 @@ config.buildings.industry = {
       money: 10000
     },
     manpower_cost: {
-      workers: 50000
+      labourers: 50000
     },
     produces: {
       actions: [7, 10]
@@ -135,7 +135,7 @@ config.buildings.industry = {
       money: 10000
     },
     manpower_cost: {
-      workers: 50000
+      labourers: 50000
     },
     produces: {
       actions: [10, 12]
@@ -171,7 +171,7 @@ config.buildings.industry = {
       money: 50000
     },
     manpower_cost: {
-      workers: 55000
+      labourers: 55000
     },
     produces: {
       actions: [12, 18]
@@ -192,7 +192,7 @@ config.buildings.industry = {
       money: 65000
     },
     manpower_cost: {
-      workers: 55000
+      labourers: 55000
     },
     produces: {
       actions: [20, 25]
@@ -213,7 +213,7 @@ config.buildings.industry = {
       money: 70000
     },
     manpower_cost: {
-      workers: 60000
+      labourers: 60000
     },
     produces: {
       aeroplanes_cp: 20,
@@ -236,7 +236,7 @@ config.buildings.industry = {
       money: 85000
     },
     manpower_cost: {
-      workers: 50000
+      labourers: 50000
     },
     produces: {
       actions: [20, 25]
@@ -255,7 +255,7 @@ config.buildings.industry = {
       money: 150000
     },
     manpower_cost: {
-      workers: 50000
+      labourers: 50000
     },
     produces: {
       actions: [25, 30]
@@ -275,7 +275,7 @@ config.buildings.industry = {
       money: 200000
     },
     manpower_cost: {
-      workers: 35000
+      labourers: 35000
     },
     produces: {
       actions: [25, 40]

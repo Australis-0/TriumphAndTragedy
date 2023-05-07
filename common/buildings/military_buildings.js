@@ -30,7 +30,7 @@ config.buildings.military_buildings = {
       money: 60000
     },
     manpower_cost: {
-      workers: 70000
+      labourers: 70000
     },
     produces: {
       aeroplanes_cp: 20
@@ -49,7 +49,7 @@ config.buildings.military_buildings = {
       money: 25000
     },
     manpower_cost: {
-      workers: 50000
+      labourers: 50000
     },
     produces: {
       ground_artillery_cp: 20
@@ -69,7 +69,7 @@ config.buildings.military_buildings = {
       money: 80000
     },
     manpower_cost: {
-      workers: 100000
+      labourers: 100000
     },
     produces: {
       ground_vehicles_cp: 20
@@ -87,7 +87,7 @@ config.buildings.military_buildings = {
       money: 20000
     },
     manpower_cost: {
-      workers: 70000
+      labourers: 70000
     },
     produces: {
       ground_units_cp: 20
@@ -105,7 +105,7 @@ config.buildings.military_buildings = {
       money: 25000
     },
     manpower_cost: {
-      workers: 80000
+      labourers: 80000
     },
     produces: {
       naval_units_cp: 20
