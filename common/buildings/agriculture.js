@@ -1,5 +1,6 @@
 config.buildings.agriculture = {
   order: 2,
+  
   beekeepers: {
     name: "Beekeepers",
     singular: "Beekeeper",
