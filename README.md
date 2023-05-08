@@ -11,6 +11,8 @@
 
 ## About
 
+⚠️ Please note that we're currently in the process of overhauling this game. Please download from the __Releases__ section instead.
+
 **Triumph & Tragedy** is a turn-based grand-strategy Discord bot game featuring fully automated economic, diplomatic, combat, and political mechanics. It comes with a variety of frameworks as well as a revolutionary new UI system that utilises private channels for a more seamless in-game experience.
 
 * Brutally simple and readable
