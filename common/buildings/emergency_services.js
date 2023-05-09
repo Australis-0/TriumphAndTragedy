@@ -1,4 +1,6 @@
 config.buildings.emergency_services = {
+  order: 6,
+
   clinics: {
     name: "Clinics",
     singular: "Clinic",
