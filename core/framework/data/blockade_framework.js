@@ -29,21 +29,22 @@ module.exports = {
                   var broken_wars = [];
 
                   //Check if the instigating user is the war leader in any at_war wars with an armistice
-                  for (var i = 0; i < at_war.length; i++)
-                    if (at_war[i].armistice)
-                      if (at_war[i].attackers_war_leader == actual_id || at_war[i].defenders_war_leader == actual_id) {
-                        var friendly_side = (at_war[i].attackers_war_leader == actual_id) ? "attackers" : "defenders";
-                        var opposing_side = (at_war[i].defenders_war_leader == actual_id) ? "defenders" : "attackers";
+                  if (at_war)
+                    for (var i = 0; i < at_war.length; i++)
+                      if (at_war[i].armistice)
+                        if (at_war[i].attackers_war_leader == actual_id || at_war[i].defenders_war_leader == actual_id) {
+                          var friendly_side = (at_war[i].attackers_war_leader == actual_id) ? "attackers" : "defenders";
+                          var opposing_side = (at_war[i].defenders_war_leader == actual_id) ? "defenders" : "attackers";
 
-                        //The armistice has been broken through blockades
-                        if (war_obj[opposing_side].includes(actual_ot_user_id)) {
-                          armistice_broken = true;
-                          broken_wars.push(at_war[i].name);
+                          //The armistice has been broken through blockades
+                          if (war_obj[opposing_side].includes(actual_ot_user_id)) {
+                            armistice_broken = true;
+                            broken_wars.push(at_war[i].name);
 
-                          //Remove armistice key
-                          delete main.global.wars[at_war[i].id].armistice;
+                            //Remove armistice key
+                            delete main.global.wars[at_war[i].id].armistice;
+                          }
                         }
-                      }
 
                   //Set blockaded status
                   usr.blockaded = {

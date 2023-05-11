@@ -16,6 +16,17 @@ config.buildings.petrochemicals = { //[WIP] - Add maintenance/production fields
       stainless_steel: 3,
       money: 30000
     },
+    maintenance: {
+      production_choice_one: {
+        carbon: 2,
+        methanol: 3
+      },
+      production_choice_two: {
+        ethylene: 2,
+        ethanol: 1,
+        oxygen: 1
+      }
+    },
     manpower_cost: {
       engineers: 10000
     }
@@ -31,6 +42,17 @@ config.buildings.petrochemicals = { //[WIP] - Add maintenance/production fields
       glass: 2,
       machine_parts: 2,
       money: 25000
+    },
+    maintenance: {
+      production_choice_one: {
+        acetic_acid: 2,
+        calcium: 1,
+        salt: 1
+      },
+      production_choice_two: {
+        benzene: 2,
+        propylene: 2
+      }
     },
     manpower_cost: {
       engineers: 10000
@@ -49,6 +71,27 @@ config.buildings.petrochemicals = { //[WIP] - Add maintenance/production fields
       machine_parts: 3,
       cement: 2,
       money: 20000
+    },
+    maintenance: {
+      production_choice_phosphoric_acid_one: {
+        calcium: 3,
+        sulphuric_acid: 1
+      },
+      production_choice_phosphoric_acid_two: {
+        phosphorus: 3,
+        coal_coke: 1,
+        silica: 1,
+        gas: 1
+      },
+      production_choice_sulphuric_acid_one: {
+        sulphur: 2,
+        oxygen: 1,
+        gas: 1
+      },
+      production_choice_sulphuric_acid_two: {
+        sulphur: 2,
+        coals: 1
+      }
     },
     manpower_cost: {
       engineers: 10000
@@ -70,6 +113,11 @@ config.buildings.petrochemicals = { //[WIP] - Add maintenance/production fields
       lightbulbs: 3,
       money: 15000
     },
+    maintenance: {
+      hydrogen: 3,
+      nitrogen: 2,
+      gas: 1
+    },
     manpower_cost: {
       engineers: 10000
     }
@@ -90,6 +138,23 @@ config.buildings.petrochemicals = { //[WIP] - Add maintenance/production fields
       lightbulbs: 2,
       money: 15000
     },
+    maintenance: {
+      production_choice_one: {
+        methylbenzene: 6,
+        chromium: 1
+      },
+      production_choice_two: {
+        methylbenzene: 6,
+        molybdenum: 1
+      },
+      production_choice_three: {
+        hydrogen: 3,
+        carbon: 2,
+        gas: 1,
+        platinum: 1,
+        chloride: 1
+      }
+    },
     manpower_cost: {
       engineers: 10000
     }
@@ -108,12 +173,25 @@ config.buildings.petrochemicals = { //[WIP] - Add maintenance/production fields
       machine_parts: 3,
       money: 10000
     },
+    maintenance: {
+      production_choice_one: {
+        sugarcane: 2,
+        ethylene: 1
+      },
+      production_choice_two: {
+        corn: 4,
+        ethylene: 1
+      },
+      production_choice_three: {
+        refined_petroil: 3
+      }
+    },
     manpower_cost: {
       engineers: 10000
     }
   },
-  bromine_distillers: {
-    name: "Bromine Distillers",
+  bromine_distilleries: {
+    name: "Bromine Distilleries",
     singular: "Bromine Distiller",
 
     construction_turns: 4,
@@ -124,6 +202,10 @@ config.buildings.petrochemicals = { //[WIP] - Add maintenance/production fields
       machine_parts: 4,
       lead: 3,
       money: 10000
+    },
+    maintenance: {
+      salt: 3,
+      chlorine: 2
     },
     manpower_cost: {
       engineers: 10000
@@ -140,6 +222,14 @@ config.buildings.petrochemicals = { //[WIP] - Add maintenance/production fields
       steel_beams: 4,
       money: 12500
     },
+    maintenance: {
+      production_choice_one: {
+        limestone: 3
+      },
+      production_choice_two: {
+        limestone: 3
+      }
+    },
     manpower_cost: {
       engineers: 10000
     }
@@ -153,6 +243,10 @@ config.buildings.petrochemicals = { //[WIP] - Add maintenance/production fields
       stone: 10,
       wood: 8,
       money: 6000
+    },
+    maintenance: {
+      charcoal: 2,
+      gas: 1
     },
     manpower_cost: {
       any_pop: {
@@ -188,6 +282,17 @@ config.buildings.petrochemicals = { //[WIP] - Add maintenance/production fields
       machine_parts: 3,
       money: 8000
     },
+    maintenance: {
+      production_choice_one: {
+        salt: 3,
+        machine_parts: 1
+      },
+      production_choice_two: {
+        hydrogen: 4,
+        copper: 1,
+        gas: 2
+      }
+    },
     manpower_cost: {
       labourers: 10000
     }
@@ -205,6 +310,12 @@ config.buildings.petrochemicals = { //[WIP] - Add maintenance/production fields
       electric_gear: 5,
       steel: 4,
       money: 25000
+    },
+    maintenance: {
+      ethylene: 3,
+      carbon: 2,
+      hydrogen: 2,
+      gas: 2
     },
     manpower_cost: {
       engineers: 10000
@@ -225,6 +336,20 @@ config.buildings.petrochemicals = { //[WIP] - Add maintenance/production fields
       steel: 4,
       money: 25000
     },
+    maintenance: {
+      production_choice_one: {
+        calcium: 2,
+        chlorine: 1,
+        oxygen: 1,
+        hydrogen: 1,
+        gas: 2
+      },
+      production_choice_two: {
+        ethylene: 4,
+        oxygen: 2,
+        gas: 1
+      }
+    },
     manpower_cost: {
       engineers: 10000
     }
@@ -244,6 +369,10 @@ config.buildings.petrochemicals = { //[WIP] - Add maintenance/production fields
       dyes: 2,
       money: 18000
     },
+    maintenance: {
+      hydrogen_fluoride: 2,
+      sulphuric_acid: 1
+    },
     manpower_cost: {
       engineers: 10000
     }
@@ -259,6 +388,12 @@ config.buildings.petrochemicals = { //[WIP] - Add maintenance/production fields
       steel: 5,
       copper: 5,
       money: 20000
+    },
+    maintenance: {
+      methanol: 3,
+      oxygen: 2,
+      iron: 1,
+      molybdenum: 1
     },
     manpower_cost: {
       engineers: 10000
@@ -278,6 +413,32 @@ config.buildings.petrochemicals = { //[WIP] - Add maintenance/production fields
       copper_wire: 3,
       money: 30000
     },
+    maintenance: {
+      production_choice_argon: {
+        electric_gear: 2,
+        machine_parts: 1
+      },
+      production_choice_krypton: {
+        gas: 2,
+        machine_parts: 1
+      },
+      production_choice_neon: {
+        electric_gear: 2,
+        machine_parts: 1
+      },
+      production_choice_nitrogen: {
+        electric_gear: 2,
+        machine_parts: 1
+      },
+      production_choice_oxygen: {
+        electric_gear: 2,
+        machine_parts: 1
+      },
+      production_choice_xenon: {
+        electric_gear: 2,
+        machine_parts: 1
+      }
+    },
     manpower_cost: {
       engineers: 10000
     }
@@ -295,6 +456,9 @@ config.buildings.petrochemicals = { //[WIP] - Add maintenance/production fields
       lightbulbs: 3,
       copper_wire: 3,
       money: 30000
+    },
+    maintenance: {
+      bituminous_coal: 10
     },
     manpower_cost: {
       engineers: 10000
@@ -314,6 +478,36 @@ config.buildings.petrochemicals = { //[WIP] - Add maintenance/production fields
       copper_wire: 3,
       money: 25000
     },
+    maintenance: {
+      production_choice_hydrochloric_acid: {
+        gas: 2,
+        hydrogen_chloride: 2
+      },
+      production_choice_hydrogen: {
+        gas: 1,
+        aluminium: 1
+      },
+      production_choice_hydrogen_chloride_one: {
+        chlorine: 2,
+        hydrogen: 2
+      },
+      production_choice_hydrogen_chloride_two: {
+        hydrogen: 2,
+        sulphuric_acid: 1
+      },
+      production_choice_hydrogen_fluoride: {
+        sulphuric_acid: 4,
+        fluorite: 2
+      },
+      production_choice_hydrogen_peroxide_one: {
+        ammonium: 4,
+        sulphuric_acid: 2
+      },
+      production_choice_hydrogen_peroxide_two: {
+        hydrogen: 2,
+        oxygen: 2
+      }
+    },
     manpower_cost: {
       engineers: 10000
     }
@@ -330,6 +524,11 @@ config.buildings.petrochemicals = { //[WIP] - Add maintenance/production fields
       reinforced_concrete: 4,
       lamps: 2,
       money: 20000
+    },
+    maintenance: {
+      salt: 3,
+      oxygen: 1,
+      sulphuric_acid: 1
     },
     manpower_cost: {
       engineers: 10000
@@ -349,6 +548,12 @@ config.buildings.petrochemicals = { //[WIP] - Add maintenance/production fields
       copper: 2,
       money: 12000
     },
+    maintenance: {
+      calcium: 2,
+      chlorine: 2,
+      salt: 1,
+      machine_parts: 1
+    },
     manpower_cost: {
       engineers: 10000
     }
@@ -366,6 +571,13 @@ config.buildings.petrochemicals = { //[WIP] - Add maintenance/production fields
       lamps: 3,
       copper_wire: 3,
       money: 8500
+    },
+    maintenance: {
+      hydrogen: 3,
+      carbon: 1,
+      copper: 1,
+      zinc: 1,
+      alumina: 1
     },
     manpower_cost: {
       engineers: 10000
@@ -386,6 +598,13 @@ config.buildings.petrochemicals = { //[WIP] - Add maintenance/production fields
       copper_wire: 3,
       money: 8500
     },
+    maintenance: {
+      methanol: 3,
+      butadiene: 2,
+      graphite: 1,
+      refined_petroil: 1,
+      gas: 1
+    },
     manpower_cost: {
       engineers: 10000
     }
@@ -404,6 +623,9 @@ config.buildings.petrochemicals = { //[WIP] - Add maintenance/production fields
     },
     manpower_cost: {
       engineers: 10000
+    },
+    produces: {
+      natural_gas: 5
     }
   },
   nitric_acid_plants: {
@@ -438,6 +660,10 @@ config.buildings.petrochemicals = { //[WIP] - Add maintenance/production fields
       electric_gear: 3,
       money: 15000
     },
+    maintenance: {
+      nitrogen: 3,
+      oxygen: 2
+    },
     manpower_cost: {
       engineers: 10000
     }
@@ -458,6 +684,24 @@ config.buildings.petrochemicals = { //[WIP] - Add maintenance/production fields
       lamps: 4,
       money: 8500
     },
+    maintenance: {
+      production_choice_one: {
+        bitumen_coal: 3
+      },
+      production_choice_two: {
+        chloride: 3,
+        benzene: 1
+      },
+      production_choice_three: {
+        benzene: 2,
+        propylene: 2
+      },
+      production_choice_four: {
+        benzene: 2,
+        methylbenzene: 2,
+        oxygen: 1
+      }
+    },
     manpower_cost: {
       engineers: 10000
     }
@@ -474,6 +718,12 @@ config.buildings.petrochemicals = { //[WIP] - Add maintenance/production fields
       glass: 5,
       concrete: 3,
       money: 10000
+    },
+    maintenance: {
+      calcium: 3,
+      sand: 1,
+      coal_coke: 1,
+      gas: 5
     },
     manpower_cost: {
       engineers: 10000
@@ -493,6 +743,9 @@ config.buildings.petrochemicals = { //[WIP] - Add maintenance/production fields
       copper: 4,
       lightbulbs: 3,
       money: 15000
+    },
+    maintenance: {
+      refined_petroil: 5
     },
     manpower_cost: {
       engineers: 10000
@@ -514,6 +767,9 @@ config.buildings.petrochemicals = { //[WIP] - Add maintenance/production fields
       glass: 3,
       money: 8800
     },
+    maintenance: {
+      petroil: 5
+    },
     manpower_cost: {
       engineers: 10000
     }
@@ -531,6 +787,25 @@ config.buildings.petrochemicals = { //[WIP] - Add maintenance/production fields
       cement: 8,
       lamps: 6,
       money: 12500
+    },
+    maintenance: {
+      production_choice_one: {
+        salt: 2,
+        sulphuric_acid: 1,
+        limestone: 1,
+        coals: 1
+      },
+      production_choice_two: {
+        salt: 2,
+        carbon: 1,
+        chloride: 1,
+        ammonia: 1
+      },
+      production_choice_three: {
+        salt: 2,
+        carbon: 1,
+        ammonia: 1
+      }
     },
     manpower_cost: {
       engineers: 10000
@@ -550,6 +825,23 @@ config.buildings.petrochemicals = { //[WIP] - Add maintenance/production fields
       lamps: 6,
       money: 12500
     },
+    maintenance: {
+      production_choice_butadiene: {
+        hydrogen: 2,
+        carbon: 2,
+        gas: 1
+      },
+      production_choice_ethylene: {
+        hydrogen: 2,
+        carbon: 2,
+        gas: 1
+      },
+      production_choice_propylene: {
+        hydrogen: 2,
+        carbon: 2,
+        gas: 1
+      }
+    },
     manpower_cost: {
       engineers: 10000
     }
@@ -567,6 +859,9 @@ config.buildings.petrochemicals = { //[WIP] - Add maintenance/production fields
       glass: 4,
       lightbulbs: 3,
       money: 15000
+    },
+    maintenance: {
+      ilmenite: 2
     },
     manpower_cost: {
       engineers: 10000
@@ -588,6 +883,18 @@ config.buildings.petrochemicals = { //[WIP] - Add maintenance/production fields
       cement: 2,
       money: 12500
     },
+    maintenance: {
+      production_choice_one: {
+        refined_petroil: 3
+      },
+      production_choice_two: {
+        coal_coke: 2
+      },
+      production_choice_three: {
+        benzene: 2,
+        alumina: 1
+      }
+    },
     manpower_cost: {
       engineers: 10000
     }
@@ -605,6 +912,10 @@ config.buildings.petrochemicals = { //[WIP] - Add maintenance/production fields
       lightbulbs: 4,
       cement: 4,
       money: 15000
+    },
+    maintenance: {
+      ammonia: 3,
+      carbon: 2
     },
     manpower_cost: {
       engineers: 10000
