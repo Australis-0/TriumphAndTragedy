@@ -1,4 +1,4 @@
-config.buildings.petrochemicals = { //[WIP] - Add gas refineries
+config.buildings.petrochemicals = {
   order: 13,
 
   acetic_acid_plants: {
@@ -558,9 +558,33 @@ config.buildings.petrochemicals = { //[WIP] - Add gas refineries
       }
     }
   },
+  gas_refineries: {
+    name: "Gas Refineries",
+    singular: "Gas Refinery",
+
+    construction_turns: 6,
+    cost: {
+      machine_parts: 12,
+      steel_beams: 8,
+      reinforced_concrete: 6,
+      lightbulbs: 4,
+      aluminium: 4,
+      electric_gear: 2,
+      money: 12500
+    },
+    maintenance: {
+      natural_gas: 5
+    },
+    manpower_cost: {
+      engineers: 10000
+    },
+    produces: {
+      gas: 8
+    }
+  },
   gas_works: {
     name: "Gas Works",
-    singular: "Gas Work",
+    singular: "Gas Works",
 
     construction_turns: 8,
     cost: {
