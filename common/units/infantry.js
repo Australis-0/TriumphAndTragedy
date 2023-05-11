@@ -670,7 +670,7 @@ config.units.infantry = {
     initiative: 5,
 
     cost: {
-      lumbe: 10,
+      lumber: 10,
       ammunition: 5,
       food: 4,
       money: 1500,
