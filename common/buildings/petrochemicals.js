@@ -1,4 +1,4 @@
-config.buildings.petrochemicals = { //[WIP] - Add maintenance/production fields
+config.buildings.petrochemicals = { //[WIP] - Add gas refineries
   order: 13,
 
   acetic_acid_plants: {
