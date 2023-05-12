@@ -576,5 +576,156 @@ config.buildings.processing_facilities = {
       labourers: 5000,
       engineers: 5000
     }
+  },
+  fertiliser_factories: {
+    name: "Fertiliser Factories",
+    singular: "Fertiliser Factory",
+    aliases: ["fertilizer factories", "fertilizer factory"],
+
+    construction_turns: 8,
+    cost: {
+      bricks: 15,
+      machine_parts: 12,
+      glass: 10,
+      sulphur: 8,
+      ammonia: 6,
+      cement: 5,
+      limestone: 5,
+      tools: 5,
+      common_furniture: 4,
+      lamps: 4,
+      money: 12000
+    },
+    manpower_cost: {
+      labourers: 3000,
+      engineers: 200
+    }
+  },
+  filament_works: {
+    name: "Filament Works",
+    singular: "Filament Works",
+    aliases: ["filament factories", "filament factory"],
+
+    construction_turns: 6,
+    cost: {
+      steel_beams: 14,
+      iron: 12,
+      reinforced_concrete: 12,
+      bricks: 10,
+      machine_parts: 10,
+      cement: 8,
+      lamps: 8,
+      rubber: 6,
+      copper: 6,
+      copper_wire: 6,
+      film: 5,
+      money: 8000
+    },
+    manpower: {
+      labourers: 2000,
+      engineers: 200
+    }
+  },
+  fineries: {
+    name: "Fineries",
+    singular: "Finery",
+
+    construction_turns: 4,
+    cost: {
+      lumber: 12,
+      wood: 8,
+      cloth: 6,
+      tools: 3,
+      money: 6500
+    },
+    manpower_cost: {
+      artisans: 600,
+      any_pop: {
+        peasants: 250,
+        labourers: 250
+      }
+    }
+  },
+  flour_mills: {
+    name: "Flour Mills",
+    singular: "Flour Mill",
+
+    construction_turns: 3,
+    cost: {
+      stone: 12,
+      lumber: 8,
+      wood: 6,
+      cloth: 3,
+      money: 2500
+    },
+    manpower_cost: {
+      any_pop: {
+        peasants: 1000,
+        labourers: 1000
+      }
+    }
+  },
+  food_factories: {
+    name: "Food Factories",
+    singular: "Food Factory",
+
+    construction_turns: 3,
+    cost: {
+      bricks: 12,
+      glass: 10,
+      machine_parts: 8,
+      tools: 8,
+      tin: 7,
+      copper: 5,
+      common_furniture: 4,
+      glass: 3,
+      money: 4000
+    },
+    manpower_cost: {
+      any_pop: {
+        peasants: 5000,
+        labourers: 5000
+      }
+    }
+  },
+  forgeries: {
+    name: "Forgeries",
+    singular: "Forgery",
+
+    construction_turns: 3,
+    cost: {
+      stone: 10,
+      coals: 10,
+      iron: 8,
+      wood: 5,
+      money: 3500
+    },
+    manpower_cost: {
+      any_pop: {
+        peasants: 800,
+        labourers: 800
+      },
+      artisans: 200
+    }
+  },
+  furniture_factories: {
+    name: "Furniture Factories",
+    singular: "Furniture Factory",
+
+    construction_turns: 3,
+    cost: {
+      stone: 10,
+      wood: 9,
+      lumber: 8,
+      tools: 3,
+      money: 3000
+    },
+    manpower_cost: {
+      any_pop: {
+        peasants: 500,
+        labourers: 500
+      },
+      artisans: 500
+    }
   }
 };
