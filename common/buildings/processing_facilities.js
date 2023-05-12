@@ -1,270 +1,580 @@
 config.buildings.processing_facilities = {
-  order: 5,
-  aluminium_factories: {
-    name: "Aluminium Factories",
-    singular: "Aluminium Factory",
-    aliases: ["aluminum_factories", "aluminium_factory", "aluminium_refinery", "aluminum_factory"],
-    icon: "aluminium_factories",
+  order: 14,
 
+  apothecaries: {
+    name: "Apothecaries",
+    singular: "Apothecary",
+
+    construction_turns: 2,
     cost: {
-      steel: 15,
-      concrete: 10,
-      machine_parts: 10,
-      money: 7500
-    },
-    maintenance: {
-      bauxite: 10
+      stone: 7,
+      lumber: 5,
+      wood: 5,
+      woad: 3,
+      money: 5500
     },
     manpower_cost: {
-      labourers: 40000
-    },
-    produces: {
-      aluminium: 5
+      artisans: 200
     }
   },
-  ammunition_factories: {
-    name: "Ammunition Factories",
-    singular: "Ammunition Factory",
-    aliases: ["ammunition_factory"],
-    icon: "ammunition_factories",
+  arms_factories: {
+    name: "Arms Factories",
+    singular: "Arms Factory",
 
+    construction_turns: 4,
     cost: {
-      iron: 10,
-      stone: 10,
-      lumber: 5,
-      machine_parts: 5,
+      limestone: 16,
+      bricks: 12,
+      cement: 8,
+      lumber: 8,
+      tools: 5,
+      steel: 5,
+      money: 8000
+    },
+    manpower_cost: {
+      labourers: 5000,
+      engineers: 500
+    }
+  },
+  audio_appliance_factories: {
+    name: "Audio Appliance Factories",
+    singular: "Audio Appliance Factory",
+
+    construction_turns: 5,
+    cost: {
+      bricks: 15,
+      ceramics: 10,
+      cement: 8,
+      machine_parts: 8,
+      steel_beams: 6,
+      lightbulbs: 6,
+      filaments: 4,
+      glass: 4,
+      money: 12000
+    },
+    manpower_cost: {
+      labourers: 2500,
+      engineers: 1000
+    }
+  },
+  automobile_factories: {
+    name: "Automobile Factories",
+    singular: "Automobile Factory",
+
+    construction_turns: 6,
+    cost: {
+      bricks: 20,
+      glass: 16,
+      ceramics: 16,
+      steel_beams: 14,
+      machine_parts: 12,
+      electric_gear: 10,
+      copper_wire: 10,
+      reinforced_concrete: 10,
+      lightbulbs: 8,
+      glass: 5,
+      cement: 5,
+      money: 20000
+    },
+    manpower_cost: {
+      labourers: 20000,
+      engineers: 8500
+    }
+  },
+  bakeries: {
+    name: "Bakeries",
+    singular: "Bakery",
+
+    construction_turns: 2,
+    cost: {
+      lumber: 8,
+      bricks: 5,
+      stone: 5,
+      glass: 3,
+      money: 2000
+    },
+    manpower_cost: {
+      any_pop: {
+        peasants: 600,
+        labourers: 600
+      },
+      artisans: 500
+    }
+  },
+  bicycle_factories: {
+    name: "Bicycle Factories",
+    singular: "Bicycle Factory",
+
+    construction_turns: 3,
+    cost: {
+      iron: 12,
+      ceramics: 10,
+      bricks: 10,
+      glass: 9,
+      steel_beams: 8,
+      machine_parts: 8,
+      cement: 6,
+      copper_wire: 5,
       money: 5000
     },
-    maintenance: {
-      sulphur: 2,
-      lead: 2,
-      coal: 1,
-      iron: 1
-    },
     manpower_cost: {
-      labourers: 50000
-    },
-    produces: {
-      ammunition: 50
+      labourers: 2000,
+      engineers: 100
     }
   },
-  artillery_factories: {
-    name: "Artillery Factories",
-    singular: "Artillery Factory",
-    aliases: ["artillery_factory"],
-    icon: "artillery_factories",
+  breweries: {
+    name: "Breweries",
+    singular: "Brewery",
 
+    construction_turns: 4,
     cost: {
-      iron: 10,
-      stone: 10,
-      lumber: 5,
-      machine_parts: 5,
-      money: 5000
-    },
-    maintenance: {
-      steel: 5
-    },
-    manpower_cost: {
-      labourers: 35000
-    },
-    produces: {
-      artillery: 1
-    }
-  },
-  concrete_factories: {
-    name: "Concrete Factories",
-    singular: "Concrete Factory",
-    aliases: ["concrete_factory"],
-    icon: "concrete_factories",
-
-    cost: {
-      steel: 10,
-      stone: 15,
-      machine_parts: 5,
+      iron: 12,
+      bricks: 10,
+      lumber: 8,
+      copper: 6,
+      oak_wood: 6,
       money: 3500
     },
-    maintenance: {
-      stone: 10
-    },
     manpower_cost: {
-      labourers: 20000
-    },
-    produces: {
-      concrete: 5
+      any_pop: {
+        peasants: 2000,
+        labourers: 2000
+      },
+      artisans: 500
     }
   },
-  fertiliser_factories: {
-    name: "Fertiliser Factories",
-    singular: "Fertiliser Factory",
-    aliases: ["fertilizer_factories", "fertilizer_factory", "fertilizer_factory"],
-    icon: "fertiliser_factories",
+  brick_kilns: {
+    name: "Brick Kilns",
+    singular: "Brick Kiln",
 
+    construction_turns: 2,
     cost: {
-      stone: 15,
-      lumber: 10,
-      iron: 5,
+      stone: 12,
+      lumber: 8,
+      wood: 6,
+      money: 2000
+    },
+    manpower_cost: {
+      any_pop: {
+        peasants: 5000,
+        labourers: 5000
+      }
+    }
+  },
+  camera_factories: {
+    name: "Camera Factories",
+    singular: "Camera Factory",
+
+    construction_turns: 4,
+    cost: {
+      iron: 20,
+      machine_parts: 16,
+      reinforced_concrete: 15,
+      ceramics: 12,
+      glass: 8,
+      steel_beams: 8,
+      regular_steel: 6,
+      lightbulbs: 6,
+      copper: 5,
+      film: 5,
+      electric_gear: 4,
+      money: 10000
+    },
+    manpower_cost: {
+      labourers: 5000,
+      engineers: 200
+    }
+  },
+  candleworks: {
+    name: "Candleworks",
+    singular: "Candlework",
+
+    construction_turns: 1,
+    cost: {
+      lumber: 8,
+      limestone: 5,
+      tallow: 4,
+      wood: 4,
+      cement: 3,
+      money: 1500
+    },
+    manpower_cost: {
+      any_pop: {
+        peasants: 2000,
+        labourers: 2000
+      }
+    }
+  },
+  canneries: {
+    name: "Canneries",
+    singular: "Cannery",
+
+    construction_turns: 3,
+    cost: {
+      steel_beams: 12,
+      machine_parts: 10,
+      regular_steel: 9,
+      tin: 8,
+      glass: 8,
+      lamps: 4,
+      lumber: 4,
+      money: 7500
+    },
+    manpower_cost: {
+      any_pop: {
+        peasants: 8500,
+        labourers: 8500
+      }
+    }
+  },
+  capacitor_factories: {
+    name: "Capacitor Factories",
+    singular: "Capacitor Factory",
+
+    construction_turns: 5,
+    cost: {
+      regular_steel: 12,
+      reinforced_concrete: 10,
+      glass: 10,
+      machine_parts: 8,
+      bricks: 8,
+      ceramics: 6,
+      cement: 5,
+      money: 12500
+    },
+    manpower_cost: {
+      labourers: 8000,
+      engineers: 500
+    }
+  },
+  cement_factories: {
+    name: "Cement Factories",
+    singular: "Cement Factory",
+
+    construction_turns: 4,
+    cost: {
+      bricks: 13,
+      ceramics: 10,
+      lumber: 8,
+      steel: 8,
+      glass: 5,
+      tools: 5,
       money: 5000
     },
-    maintenance: {
-      sulphur: 10
-    },
     manpower_cost: {
-      labourers: 20000
-    },
-    produces: {
-      fertiliser: 5
+      any_pop: {
+        peasants: 4000,
+        labourers: 4000
+      }
     }
   },
-  forgeries: {
-    name: "Forgeries",
-    singular: "Forgery",
-    icon: "forgeries",
+  cheesemakers: {
+    name: "Cheesemakers",
+    singular: "Cheesemaker",
 
+    construction_turns: 8,
     cost: {
-      iron: 5,
-      wood: 5,
-      stone: 10,
-      coal: 10
-    },
-    maintenance: {
-      coal: 1,
-      iron: 1
-    },
-    manpower_cost: {
-      labourers: 35000
-    },
-    produces: {
-      steel: 1
-    }
-  },
-  food_processing_facilities: {
-    name: "Food Processing Facilities",
-    singular: "Food Processing Facility",
-    aliases: ["food_processing_facility"],
-    icon: "food_processing_facilities",
-
-    cost: {
-      stone: 5,
-      lumber: 5,
-      iron: 2,
+      lumber: 12,
+      oak_wood: 8,
+      iron: 6,
       money: 1000
     },
-    maintenance: {
-      meat: 2,
-      wheat: 1
+    manpower_cost: {
+      any_pop: {
+        peasants: 2000,
+        labourers: 2000
+      }
+    }
+  },
+  chocolatiers: {
+    name: "Chocolatiers",
+    singular: "Chocolatier",
+
+    construction_turns: 7,
+    cost: {
+      iron: 8,
+      lumber: 6,
+      copper: 6,
+      mahogany_lumber: 5,
+      lamps: 4,
+      glass: 4,
+      ceramics: 3,
+      tools: 2,
+      money: 3000
+    },
+    manpower_cost: {
+      any_pop: {
+        peasants: 2500,
+        labourers: 2500
+      },
+      artisans: 350
+    }
+  },
+  cigar_factories: {
+    name: "Cigar Factories",
+    singular: "Cigar Factory",
+
+    construction_turns: 2,
+    cost: {
+      lumber: 12,
+      bricks: 10,
+      glass: 6,
+      common_furniture: 5,
+      tobacco: 4,
+      money: 3500
+    },
+    manpower_cost: {
+      any_pop: {
+        peasants: 2500,
+        labourers: 2500
+      },
+      artisans: 50
+    }
+  },
+  cigarette_factories: {
+    name: "Cigarette Factories",
+    singular: "Cigarette Factory",
+
+    construction_turns: 3,
+    cost: {
+      iron: 12,
+      machine_parts: 8,
+      copper: 6,
+      lumber: 6,
+      lamps: 4,
+      money: 2500
+    },
+    manpower_cost: {
+      labourers: 7000
+    }
+  },
+  coffee_roasters: {
+    name: "Coffee Roasters",
+    singular: "Coffee Roaster",
+
+    construction_turns: 2,
+    cost: {
+      lumber: 12,
+      copper: 8,
+      iron: 8,
+      tools: 5,
+      money: 2000
+    },
+    manpower_cost: {
+      labourers: 5000
+    }
+  },
+  computer_factories: {
+    name: "Computer Factories",
+    singular: "Computer Factory",
+
+    construction_turns: 6,
+    cost: {
+      reinforced_concrete: 25,
+      steel_beams: 20,
+      machine_parts: 18,
+      electric_gear: 18,
+      glass: 15,
+      ceramics: 12,
+      copper_wire: 12,
+      glass: 10,
+      common_furniture: 8,
+      cement: 6,
+      bricks: 5,
+      stone: 5,
+      gold: 2,
+      money: 25000
+    },
+    manpower_cost: {
+      engineers: 20000,
+      labouers: 35000
+    }
+  },
+  concrete_plants: {
+    name: "Concrete Plants",
+    singular: "Concrete Plant",
+
+    construction_turns: 4,
+    cost: {
+      iron: 10,
+      ceramics: 9,
+      steel_beams: 8,
+      machine_parts: 6,
+      tools: 5,
+      lamps: 5,
+      glass: 4,
+      money: 8000
     },
     manpower_cost: {
       labourers: 10000
-    },
-    produces: {
-      food: 5
     }
   },
-  machine_parts_factories: {
-    name: "Machine Parts Factories",
-    singular: "Machine Parts Factory",
-    aliases: ["machine_parts_factory"],
-    icon: "machine_parts_factories",
+  cottage_drug_industries: {
+    name: "Cottage Drug Industries",
+    singular: "Cottage Drug Industry",
 
+    construction_turns: 1,
     cost: {
-      steel: 5,
-      iron: 10,
-      stone: 20,
-      money: 10000
-    },
-    maintenance: {
-      steel: 1,
-      copper: 2
+      lumber: 8,
+      glass: 5,
+      lamps: 3,
+      industrial_chemicals: 2,
+      tools: 2,
+      money: 500
     },
     manpower_cost: {
-      labourers: 55000
-    },
-    produces: {
-      machine_parts: 5
+      labourers: 20000
     }
   },
-  sawmills: {
-    name: "Sawmills",
-    singular: "Sawmill",
-    icon: "sawmills",
+  cosmetic_works: {
+    name: "Cosmetic Works",
+    singular: "Cosmetic Works",
 
+    construction_turns: 3,
     cost: {
-      wood: 10,
-      iron: 5,
-      money: 3000
-    },
-    maintenance: {
-      wood: 5
-    },
-    manpower_cost: {
-      labourers: 40000
-    },
-    produces: {
-      lumber: 5
-    }
-  },
-  small_arms_factories: {
-    name: "Small Arms Factories",
-    singular: "Small Arms Factory",
-    aliases: ["small_arms_factory"],
-    icon: "small_arms_factories",
-
-    cost: {
-      stone: 15,
-      steel: 5,
+      iron: 12,
       lumber: 10,
+      tools: 8,
+      glass: 6,
+      dyes: 4,
+      money: 12000
+    },
+    manpower_cost: {
+      any_pop: {
+        labourers: 15000,
+        peasants: 15000
+      },
+      artisans: 200,
+      engineers: 500
+    }
+  },
+  distilleries: {
+    name: "Distilleries",
+    singular: "Distillery",
+
+    construction_turns: 4,
+    cost: {
+      iron: 10,
+      lumber: 9,
+      copper: 8,
+      glass: 5,
+      brass: 2,
+      bronze: 2,
+      money: 4500
+    },
+    manpower_cost: {
+      any_pop: {
+        peasants: 4000,
+        labourers: 4000
+      },
+      artisans: 200
+    }
+  },
+  drug_labs: {
+    name: "Drug Labs",
+    singular: "Drug Lab",
+
+    construction_turns: 2,
+    cost: {
+      glass: 8,
+      industrial_chemicals: 6,
+      machine_parts: 6,
+      electric_gear: 4,
+      lightbulbs: 4,
+      tools: 2,
+      money: 1000
+    },
+    manpower_cost: {
+      labourers: 10000,
+      engineers: 2000
+    }
+  },
+  dye_works: {
+    name: "Dye Works",
+    singular: "Dye Works",
+
+    construction_turns: 3,
+    cost: {
+      wood: 6,
+      woad: 3,
+      indigo: 2,
+      tools: 1,
+      money: 1000
+    },
+    manpower_cost: {
+      any_pop: {
+        peasants: 3500,
+        labourers: 3500
+      }
+    }
+  },
+  engine_factories: {
+    name: "Engine Factories",
+    singular: "Engine Factory",
+
+    construction_turns: 5,
+    cost: {
+      reinforced_concrete: 16,
+      iron: 14,
+      ceramics: 12,
+      steel_beams: 12,
+      machine_parts: 10,
+      copper: 8,
+      electric_gear: 6,
+      lightbulbs: 4,
+      common_furniture: 4,
+      rubber: 4,
+      money: 8500
+    },
+    manpower_cost: {
+      labourers: 10000,
+      engineers: 750
+    }
+  },
+  explosive_factories: {
+    name: "Explosive Factories",
+    singular: "Explosive Factory",
+
+    construction_turns: 4,
+    cost: {
+      machine_parts: 10,
+      copper_wire: 8,
+      industrial_chemicals: 8,
+      rubber: 6,
+      steel_beams: 5,
+      glass: 5,
+      brass: 5,
+      common_furniture: 4,
+      lamps: 4,
       money: 10000
     },
-    maintenance: {
-      lumber: 2,
-      steel: 3
-    },
     manpower_cost: {
-      labourers: 50000
-    },
-    produces: {
-      small_arms: 20
+      labourers: 15000,
+      engineers: 300
     }
   },
-  steelworks: {
-    name: "Steelworks",
-    singular: "Steelwork",
-    icon: "steelworks",
+  fabrication_plants: {
+    name: "Fabrication Plants",
+    singular: "Fabrication Plant",
 
+    construction_turns: 12,
     cost: {
-      stone: 20,
-      iron: 15,
-      money: 15000
-    },
-    maintenance: {
-      coal: 5,
-      iron: 5
+      electric_gear: 20,
+      machine_parts: 18,
+      reinforced_concrete: 15,
+      glass: 14,
+      ceramics: 12,
+      tools: 10,
+      stainless_steel: 9,
+      lightbulbs: 8,
+      transistors: 5,
+      capacity: 5,
+      common_furniture: 5,
+      money: 40000
     },
     manpower_cost: {
-      labourers: 60000
-    },
-    produces: {
-      steel: 5
-    }
-  },
-  textile_mills: {
-    name: "Textile Mills",
-    singular: "Textile Mill",
-    icon: "textile_mills",
-
-    cost: {
-      iron: 20,
-      machine_parts: 10,
-      money: 7000
-    },
-    maintenance: {
-      cotton: 2
-    },
-    manpower_cost: {
-      labourers: 40000
-    },
-    produces: {
-      uniforms: 10
+      labourers: 5000,
+      engineers: 5000
     }
   }
 };
