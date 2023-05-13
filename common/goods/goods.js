@@ -489,6 +489,9 @@ config.goods = { //[WIP] - Redo mine chances, buy/sell prices
       citrus: {
         name: "Citrus"
       },
+      coffee_beans: {
+        name: "Coffee Beans"
+      },
       dates: {
         name: "Dates"
       },

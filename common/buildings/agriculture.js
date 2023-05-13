@@ -1,6 +1,6 @@
 config.buildings.agriculture = {
   order: 2,
-  
+
   beekeepers: {
     name: "Beekeepers",
     singular: "Beekeeper",
@@ -509,7 +509,7 @@ config.buildings.agriculture = {
         cacao: 4
       },
       production_choice_coffee: {
-        coffee: 3
+        coffee_beans: 3
       },
       production_choice_quina: {
         quina: 3
