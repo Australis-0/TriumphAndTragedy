@@ -476,7 +476,8 @@ module.exports = {
                         user: game_obj.user
                       });
 
-                      game_obj.page = `view_city_${city_obj.name}`;
+                      if (game_obj.page != "map")
+                        game_obj.page = `view_city_${city_obj.name}`;
                     } else {
                       var viewed_army = printArmy(user_id, army_obj.name);
 
@@ -484,7 +485,9 @@ module.exports = {
                         embed_pages: viewed_army,
                         user: game_obj.user
                       });
-                      game_obj.page = `army_viewer_${army_obj.name}`;
+
+                      if (game_obj.page != "map")
+                        game_obj.page = `army_viewer_${army_obj.name}`;
                     }
                   }
 
@@ -497,27 +500,30 @@ module.exports = {
                         embed_pages: viewed_army,
                         user: game_obj.user
                       });
-                      game_obj.page = `army_viewer_${army_obj.name}`;
+
+                      if (game_obj.page != "map")
+                        game_obj.page = `army_viewer_${army_obj.name}`;
                     } else {
                       createPageMenu(edit_embed, {
                         embed_pages: printCity(game_obj.user, city_obj.name),
                         user: game_obj.user
                       });
 
-                      game_obj.page = `view_city_${city_obj.name}`;
+                      if (game_obj.page != "map")
+                        game_obj.page = `view_city_${city_obj.name}`;
                     }
 
                   //Province smart display
                   if (!city_obj)
                     if (main.provinces[province_name])
                       if (main.provinces[province_name].owner == actual_id)
-                      createPageMenu(edit_embed, {
-                        embed_pages: printProvince(game_obj.user, province_name),
-                        user: game_obj.user
-                      });
+                        createPageMenu(edit_embed, {
+                          embed_pages: printProvince(game_obj.user, province_name),
+                          user: game_obj.user
+                        });
 
                   //If none of the above, try war/nation
-                  if (!army_obj && !city_obj)
+                  if (!army_obj && !city_obj && game_obj.page != "map")
                     if (main.users[ot_user_id]) {
                       viewDiplomacy(user_id, ot_user_id);
                       game_obj.page = `diplomacy_view_${ot_user_id}`;
