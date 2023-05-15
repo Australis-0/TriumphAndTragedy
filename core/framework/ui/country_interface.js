@@ -168,7 +168,7 @@ module.exports = {
     stats_string.push(config.localisation.divider);
     stats_string.push("");
     stats_string.push(`${config.icons.development} Cities: (**${parseInt(getCities(user_id).length)}**/**${parseInt(getCitiesCap(user_id))}**): ${name_string}${ending_string}`);
-    stats_string.push(`${config.icons.population} Population: **${parseNumber(getPopulation(usr.id))}** (Requires ${config.icons.food} **${Math.ceil((usr.population/1000000)*config.defines.economy.food_required_per_million)}** food per turn)`);
+    stats_string.push(`${config.icons.population} Population: **${parseNumber(getPopulation(user_id))}** (Requires ${config.icons.food} **${Math.ceil((usr.population/1000000)*config.defines.economy.food_required_per_million)}** food per turn)`);
 
     //Push all pops to stats menu if set to visible
     for (var i = 0; i < all_pops.length; i++) {
