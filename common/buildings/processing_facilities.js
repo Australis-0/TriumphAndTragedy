@@ -1,4 +1,4 @@
-config.buildings.processing_facilities = {
+config.buildings.processing_facilities = { //[WIP] - Add Synthetic Ruby Factory
   order: 14,
 
   apothecaries: {
@@ -1974,9 +1974,43 @@ config.buildings.processing_facilities = {
       tools: 2,
       money: 12000
     },
+    maintenance: {
+      production_choice_electric_lamps: {
+        filaments: 2,
+        machine_parts: 1,
+        glass: 1
+      },
+      production_choice_lanterns: {
+        candles: 3,
+        glass: 2,
+        coals: 1
+      },
+      production_choice_oil_lamps: {
+        glass: 2,
+        whale_oil: 2
+      },
+      production_choice_lightbulbs: {
+        filaments: 3,
+        glass: 2
+      }
+    },
     manpower_cost: {
       labourers: 4000,
       engineers: 500
+    },
+    produces: {
+      production_choice_electric_lamps: {
+        electric_lamps: 5
+      },
+      production_choice_lanterns: {
+        lanterns: 5
+      },
+      production_choice_oil_lamps: {
+        oil_lamps: 6
+      },
+      production_choice_lightbulbs: {
+        lightbulbs: 5
+      }
     }
   },
   luxury_furniture_factories: {
@@ -1996,12 +2030,22 @@ config.buildings.processing_facilities = {
       cement: 3,
       money: 10000
     },
+    maintenance: {
+      lumber: 3,
+      velvet: 2,
+      leather: 2,
+      silk: 1,
+      stainless_steel: 1
+    },
     manpower_cost: {
       any_pop: {
         peasants: 2000,
         labourers: 2000
       },
       artisans: 1000
+    },
+    produces: {
+      luxury_furniture: 3
     }
   },
   luxury_tailors: {
@@ -2019,12 +2063,75 @@ config.buildings.processing_facilities = {
       common_furniture: 4,
       money: 8500
     },
+    maintenance: {
+      production_choice_bowler_hats: {
+        leather: 5,
+        dyes: 1
+      },
+      production_choice_finery: {
+        velvet: 3,
+        silk: 1
+      },
+      production_choice_fur_coats: {
+        furs: 3,
+        leather: 1
+      },
+      production_choice_fur_hats: {
+        furs: 1,
+        leather: 1
+      },
+      production_choice_leather_boots: {
+        leather: 3,
+        wool: 1
+      },
+      production_choice_pocketwatches: {
+        machine_parts: 2,
+        gold: 1,
+        brass: 1
+      },
+      production_choice_tailored_suits: {
+        leather: 5,
+        linen: 3,
+        dyes: 3
+      },
+      production_choice_wristwatches: {
+        machine_parts: 2,
+        brass: 1,
+        bronze: 1
+      }
+    },
     manpower_cost: {
       any_pop: {
         peasants: 1500,
         labourers: 1500
       },
       artisans: 1000
+    },
+    produces: {
+      production_choice_bowler_hats: {
+        bowler_hats: 4
+      },
+      production_choice_finery: {
+        finery: 5
+      },
+      production_choice_fur_coats: {
+        fur_coats: 1
+      },
+      production_choice_fur_hats: {
+        fur_hats: 1
+      },
+      production_choice_leather_boots: {
+        leather_boots: 6
+      },
+      production_choice_pocketwatches: {
+        pocketwatches: 8
+      },
+      production_choice_tailored_suits: {
+        tailored_suits: 5
+      },
+      production_choice_wristwatches: {
+        wristwatches: 8
+      }
     }
   },
   machine_parts_factories: {
@@ -2043,6 +2150,12 @@ config.buildings.processing_facilities = {
       common_furniture: 3,
       money: 20000
     },
+    maintenance: {
+      regular_steel: 3,
+      stainless_steel: 2,
+      copper: 1,
+      coals: 1
+    },
     manpower_cost: {
       any_pop_peasants_labourers: {
         peasants: 8500,
@@ -2052,6 +2165,9 @@ config.buildings.processing_facilities = {
         engineers: 1000,
         scholars: 1000
       }
+    },
+    produces: {
+      machine_parts: 5
     }
   },
   malting_works: {
@@ -2065,16 +2181,23 @@ config.buildings.processing_facilities = {
       tools: 2,
       money: 2500
     },
+    maintenance: {
+      wheat: 5
+    },
     manpower_cost: {
       any_pop: {
         peasants: 2500,
         labourers: 2500
       }
+    },
+    produces: {
+      malt: 3
     }
   },
-  marquestry_workshops: {
-    name: "Marquestry Workshops",
-    singular: "Marquestry Workshop",
+  marquetry_workshops: {
+    name: "Marquetry Workshops",
+    singular: "Marquetry Workshop",
+    aliases: ["marquestry workshops"],
 
     construction_turns: 3,
     cost: {
@@ -2085,12 +2208,18 @@ config.buildings.processing_facilities = {
       tools: 2,
       money: 6500
     },
+    maintenance: {
+      lumber: 5
+    },
     manpower_cost: {
       any_pop: {
         peasants: 500,
         labourers: 500
       },
       artisans: 350
+    },
+    produces: {
+      wood_veneers: 1
     }
   },
   meat_packing_plants: {
@@ -2107,10 +2236,28 @@ config.buildings.processing_facilities = {
       lamps: 2,
       money: 5000
     },
+    maintenance: {
+      production_choice_pemmican: {
+        dried_meat: 3,
+        tallow: 1
+      },
+      production_choice_sausages: {
+        meat: 3,
+        tallow: 1
+      }
+    },
     manpower_cost: {
       any_pop: {
         peasants: 6500,
         labourers: 6500
+      }
+    },
+    produces: {
+      production_choice_pemmican: {
+        pemmican: 5
+      },
+      production_choice_sausages: {
+        sausages: 3
       }
     }
   },
@@ -2127,11 +2274,17 @@ config.buildings.processing_facilities = {
       glass: 2,
       money: 2000
     },
+    maintenance: {
+      sugarcane: 5
+    },
     manpower_cost: {
       any_pop: {
         peasants: 2000,
         labourers: 2000
       }
+    },
+    produces: {
+      molasses: 3
     }
   },
   oast_house: {
@@ -2147,11 +2300,17 @@ config.buildings.processing_facilities = {
       glass: 2,
       money: 2000
     },
+    maintenance: {
+      hops: 3
+    },
     manpower_cost: {
       any_pop: {
         peasants: 2000,
         labourers: 2000
       }
+    },
+    produces: {
+      processed_hops: 3
     }
   },
   oil_manufactories: {
@@ -2166,11 +2325,17 @@ config.buildings.processing_facilities = {
       iron: 3,
       money: 1800
     },
+    maintenance: {
+      olives: 3
+    },
     manpower_cost: {
       any_pop: {
         peasants: 1200,
         labourers: 1200
       }
+    },
+    produces: {
+      olive_oil: 5
     }
   },
   naval_suppliers: {
@@ -2188,11 +2353,24 @@ config.buildings.processing_facilities = {
       lamps: 2,
       money: 2000
     },
+    maintenance: {
+      meat: 10,
+      teff: 10,
+      linen: 6,
+      steel: 5,
+      bronze: 3,
+      brass: 2,
+      steel_beams: 2,
+      stainless_steel: 2
+    },
     manpower_cost: {
       any_pop: {
         peasants: 2000,
         labourers: 2000
       }
+    },
+    produces: {
+      naval_supplies: 10
     }
   },
   paper_mills: {
@@ -2206,11 +2384,17 @@ config.buildings.processing_facilities = {
       wood: 5,
       money: 1200
     },
+    maintenance: {
+      wood: 5
+    },
     manpower_cost: {
       any_pop: {
         peasants: 1500,
         labourers: 1500
       }
+    },
+    produces: {
+      paper: 5
     }
   },
   peat_dryers: {
@@ -2228,6 +2412,9 @@ config.buildings.processing_facilities = {
         peasants: 1200,
         labourers: 1200
       }
+    },
+    produces: {
+      peat: 5
     }
   },
   pharmaceuticals: {
@@ -2249,9 +2436,108 @@ config.buildings.processing_facilities = {
       gold: 2,
       money: 25000
     },
+    maintenance: {
+      production_choice_antipyretics: {
+        hydrogen: 14,
+        chlorine: 10,
+        nickel: 2,
+        aluminium: 1,
+        petroil: 1,
+        palladium: 1
+      },
+      production_choice_analgesics: {
+        opium: 5
+      },
+      production_choice_antimalarial_drugs: {
+        quina: 5
+      },
+      production_choice_antiseptics_one: {
+        iodine: 5
+      },
+      production_choice_antiseptics_two: {
+        bituminous_coal: 3
+      },
+      production_choice_contraceptives: {
+        hydrochloric_acid: 2,
+        iodine: 1,
+        bromine: 1,
+        ethylene: 1,
+        sodium_hydroxide: 1
+      },
+      production_choice_hormone_medications: {
+        hydrochloric_acid: 2,
+        iodine: 1,
+        bromine: 1,
+        ethylene: 1,
+        sodium_hydroxide: 1
+      },
+      production_choice_mood_stabilisers: {
+        nitrogen: 2,
+        oxygen: 1,
+        fluoride: 1,
+        palladium: 1
+      },
+      production_choice_statins: {
+        rice: 5
+      },
+      production_choice_stimulants: {
+        hydrogen_chloride: 3,
+        bromine: 1,
+        nitrogen: 1,
+        sodium_hydroxide: 1
+      },
+      production_choice_tranquilisers: {
+        pepper: 25
+      },
+      production_choice_vaccines: {
+        machine_parts: 8,
+        glass: 5
+      }
+    },
     manpower_cost: {
       labourers: 15000,
       engineers: 10000
+    },
+    produces: {
+      production_choice_antipyretics: {
+        antipyretics: 5
+      },
+      production_choice_analgesics: {
+        analgesics: 1
+      },
+      production_choice_antimalarial_drugs: {
+        antimalarial_drugs: 3
+      },
+      production_choice_antibiotics: {
+        antibiotics: 5
+      },
+      production_choice_antiseptics_one: {
+        antiseptics: 4
+      },
+      production_choice_antiseptics_two: {
+        antiseptics: 5
+      },
+      production_choice_contraceptives: {
+        contraceptives: 3
+      },
+      production_choice_hormone_medications: {
+        hormone_medications: 2
+      },
+      production_choice_mood_stabilisers: {
+        mood_stabilisers: 5
+      },
+      production_choice_statins: {
+        statins: 1
+      },
+      production_choice_stimulants: {
+        stimulants: 4
+      },
+      production_choice_tranquilisers: {
+        tranquilisers: 1
+      },
+      production_choice_vaccines: {
+        vaccines: 10
+      }
     }
   },
   photographic_film_factories: {
@@ -2269,15 +2555,23 @@ config.buildings.processing_facilities = {
       industrial_chemicals: 5,
       money: 7500
     },
+    maintenance: {
+      acetic_acid: 2,
+      silver: 1
+    },
     manpower_cost: {
       labourers: 8000,
       artisans: 500,
       engineers: 200
+    },
+    produces: {
+      film: 5
     }
   },
   rebar_factories: {
     name: "Rebar Factories",
     singular: "Rebar Factory",
+    aliases: ["reinforced concrete factories", "reinforced concrete factory"],
 
     construction_turns: 4,
     cost: {
@@ -2291,8 +2585,15 @@ config.buildings.processing_facilities = {
       lamps: 5,
       money: 6500
     },
+    maintenance: {
+      concrete: 10,
+      steel: 5
+    },
     manpower_cost: {
       labourers: 4500
+    },
+    produces: {
+      reinforced_concrete: 10
     }
   },
   rendering_works: {
@@ -2312,6 +2613,9 @@ config.buildings.processing_facilities = {
         peasants: 2000,
         labourers: 2000
       }
+    },
+    produces: {
+      tallow: 3
     }
   },
   resistor_factories: {
@@ -2332,12 +2636,38 @@ config.buildings.processing_facilities = {
       gold: 2,
       money: 12000
     },
+    maintenance: {
+      production_choice_one: {
+        chromium: 2,
+        copper_wire: 2,
+        nickel: 1
+      },
+      production_choice_two: {
+        copper_wire: 3,
+        glass: 1
+      },
+      production_choice_three: {
+        copper_wire: 3,
+        carbon: 1
+      }
+    },
     manpower_cost: {
       any_pop: {
         peasants: 5500,
         labourers: 5500
       },
       engineers: 2000
+    },
+    produces: {
+      production_choice_one: {
+        resistors: 5
+      },
+      production_choice_two: {
+        resistors: 5
+      },
+      production_choice_three: {
+        resistors: 5
+      }
     }
   },
   rice_wineries: {
@@ -2351,10 +2681,68 @@ config.buildings.processing_facilities = {
       glass: 3,
       money: 1500
     },
+    maintenance: {
+      production_choice_cheongju: {
+        rice: 5
+      },
+      production_choice_chhaang: {
+        rice: 2,
+        wheat: 1
+      },
+      production_choice_gwahaju: {
+        rice: 7
+      },
+      production_choice_huangjiu: {
+        wheat: 3,
+        sorghum: 1,
+        flour: 1
+      },
+      production_choice_mirin: {
+        rice: 3
+      },
+      production_choice_sake: {
+        rice: 4,
+        sugar: 1
+      },
+      production_choice_shaoxing: {
+        rice: 4,
+        sorghum: 1,
+        wood: 1
+      },
+      production_choice_tapuy: {
+        rice: 5
+      }
+    },
     manpower_cost: {
       any_pop: {
         peasants: 500,
         farmers: 500
+      }
+    },
+    produces: {
+      production_choice_cheongju: {
+        cheongju: 3
+      },
+      production_choice_chhaang: {
+        chhaang: 2
+      },
+      production_choice_gwahaju: {
+        gwahaju: 2
+      },
+      production_choice_huangjiu: {
+        huangjiu: 5
+      },
+      production_choice_mirin: {
+        mirin: 5
+      },
+      production_choice_sake: {
+        sake: 5
+      },
+      production_choice_shaoxing: {
+        production_choice_shaoxing: 6
+      },
+      production_choice_tapuy: {
+        tapuy: 3
       }
     }
   },
@@ -2370,11 +2758,17 @@ config.buildings.processing_facilities = {
       tools: 2,
       money: 8000
     },
+    maintenance: {
+      caoutchouc: 5
+    },
     manpower_cost: {
       any_pop: {
         peasants: 5000,
         farmers: 5000
       }
+    },
+    produces: {
+      rubber: 5
     }
   },
   salt_works: {
@@ -2392,6 +2786,9 @@ config.buildings.processing_facilities = {
         peasants: 4500,
         labourers: 4500
       }
+    },
+    produces: {
+      salt: 5
     }
   },
   silk_mills: {
@@ -2412,6 +2809,9 @@ config.buildings.processing_facilities = {
         labourers: 1200
       },
       artisans: 200
+    },
+    produces: {
+      silk: 1
     }
   },
   sleeping_bag_factories: {
@@ -2426,11 +2826,19 @@ config.buildings.processing_facilities = {
       tools: 3,
       money: 3000
     },
+    maintenance: {
+      linen: 6,
+      fur: 4,
+      wool: 2
+    },
     manpower_cost: {
       any_pop: {
         peasants: 3000,
         labourers: 3000
       }
+    },
+    produces: {
+      sleeping_bags: 2
     }
   },
   soap_factories: {
@@ -2467,12 +2875,18 @@ config.buildings.processing_facilities = {
       textiles: 2,
       money: 5000
     },
+    maintenance: {
+      tallow: 5
+    },
     manpower_cost: {
       any_pop: {
         peasants: 2000,
         labourers: 2000
       },
       artisans: 1200
+    },
+    produces: {
+      soap: 4
     }
   },
   sugar_refineries: {
@@ -2487,11 +2901,17 @@ config.buildings.processing_facilities = {
       stainless_steel: 2,
       money: 6500
     },
+    maintenance: {
+      sugarcane: 5
+    },
     manpower_cost: {
       any_pop: {
         peasants: 3500,
         labourers: 3500
       }
+    },
+    produces: {
+      sugar: 5
     }
   },
   tailors: {
@@ -2505,12 +2925,41 @@ config.buildings.processing_facilities = {
       tools: 2,
       money: 5000
     },
+    maintenance: {
+      production_choice_boots: {
+        leather: 2
+      },
+      production_choice_parkas: {
+        furs: 2
+      },
+      production_choice_ponchos: {
+        linen: 2
+      },
+      production_choice_work_clothes: {
+        linen: 5,
+        wool: 1
+      }
+    },
     manpower_cost: {
       any_pop: {
         peasants: 2000,
         labourers: 2000
       },
       artisans: 800
+    },
+    produces: {
+      production_choice_boots: {
+        boots: 10
+      },
+      production_choice_parkas: {
+        parkas: 3
+      },
+      production_choice_ponchos: {
+        ponchos: 5
+      },
+      production_choice_work_clothes: {
+        work_clothes: 20
+      }
     }
   },
   tapestry_looms: {
@@ -2525,12 +2974,19 @@ config.buildings.processing_facilities = {
       textiles: 2,
       money: 4000
     },
+    maintenance: {
+      linen: 5,
+      dyes: 2
+    },
     manpower_cost: {
       any_pop: {
         peasants: 5000,
         labourers: 5000
       },
       artisans: 600
+    },
+    produces: {
+      tapestries: 5
     }
   },
   tea_driers: {
@@ -2543,10 +2999,72 @@ config.buildings.processing_facilities = {
       lumber: 3,
       money: 2000
     },
+    maintenance: {
+      production_choice_black_tea: {
+        pine: 1,
+        cinnamon: 1,
+        tea: 3
+      },
+      production_choice_chai_tea: {
+        cardamom: 1,
+        ginger: 1,
+        tea: 3
+      },
+      production_choice_green_tea: {
+        tea: 5
+      },
+      production_choice_herbal_tea: {
+        cinnamon: 1,
+        apple: 1,
+        cardamom: 1,
+        pepper: 1,
+        nuts: 1,
+        tea: 3
+      },
+      production_choice_hibiscus_tea: {
+        ginger: 1,
+        tea: 3
+      },
+      production_choice_oolong_tea: {
+        tea: 5
+      },
+      production_choice_puerh_tea: {
+        tea: 5
+      },
+      production_choice_white_tea: {
+        tea: 5
+      }
+    },
     manpower_cost: {
       any_pop: {
         peasants: 5000,
         farmers: 5000
+      }
+    },
+    produces: {
+      production_choice_black_tea: {
+        black_tea: 4
+      },
+      production_choice_chai_tea: {
+        chai_tea: 3
+      },
+      production_choice_green_tea: {
+        green_tea: 5
+      },
+      production_choice_herbal_tea: {
+        herbal_tea: 3
+      },
+      production_choice_hibiscus_tea: {
+        hibiscus_tea: 3
+      },
+      production_choice_oolong_tea: {
+        oolong_tea: 4
+      },
+      production_choice_puerh_tea: {
+        puerh_tea: 3
+      },
+      production_choice_white_tea: {
+        white_tea: 3
       }
     }
   },
@@ -2566,9 +3084,18 @@ config.buildings.processing_facilities = {
       wood_veneers: 4,
       money: 8500
     },
+    maintenance: {
+      filaments: 3,
+      electric_gear: 2,
+      wood_veneers: 2,
+      machine_parts: 1
+    },
     manpower_cost: {
       labourers: 8500,
       engineers: 3000
+    },
+    produces: {
+      telephones: 4
     }
   },
   television_factories: {
@@ -2608,10 +3135,40 @@ config.buildings.processing_facilities = {
       tools: 5,
       money: 6000
     },
+    maintenance: {
+      production_choice_cloth_one: {
+        cotton: 3
+      },
+      production_choice_cloth_two: {
+        wool: 5
+      },
+      production_choice_linen: {
+        linseed: 6
+      },
+      production_choice_synthetic_fabric: {
+        refined_petroil: 4,
+        ethylene_glycol: 1,
+        linen: 1
+      }
+    },
     manpower_cost: {
       any_pop: {
         peasants: 3500,
         labourers: 3500
+      }
+    },
+    produces: {
+      production_choice_cloth_one: {
+        cloth: 5
+      },
+      production_choice_cloth_two: {
+        cloth: 5
+      },
+      production_choice_linen: {
+        linen: 5
+      },
+      production_choice_synthetic_fabric: {
+        synthetic_fabric: 3
       }
     }
   },
@@ -2629,12 +3186,19 @@ config.buildings.processing_facilities = {
       coals: 2,
       money: 5000
     },
+    maintenance: {
+      wood: 5,
+      steel: 3
+    },
     manpower_cost: {
       any_pop: {
         peasants: 2000,
         labourers: 2000
       },
       artisans: 500
+    },
+    produces: {
+      tools: 10
     }
   },
   train_factories: {
@@ -2655,9 +3219,53 @@ config.buildings.processing_facilities = {
       copper_wire: 4,
       money: 15000
     },
+    maintenance: {
+      production_choice_cabins: {
+        steel: 15,
+        wood: 10,
+        furniture: 5,
+        machine_parts: 5,
+        copper_wire: 3,
+        electric_gear: 3
+      },
+      production_choice_locomotives_one: {
+        machine_parts: 10,
+        coals: 10,
+        glass: 5,
+        regular_steel: 5,
+        wood: 2,
+        stainless_steel: 1
+      },
+      production_choice_locomotives_two: {
+        steel: 15,
+        glass: 5,
+        machine_parts: 5,
+        engines: 3,
+        copper_wire: 2,
+        turbines: 2
+      },
+      production_choice_trains: {
+        cabins: 5,
+        locomotive: 1
+      }
+    },
     manpower_cost: {
       labourers: 6500,
       engineers: 2000
+    },
+    produces: {
+      production_choice_cabins: {
+        cabins: 5
+      },
+      production_choice_locomotives_one: {
+        locomotives: 5
+      },
+      production_choice_locomotives_two: {
+        locomotives: 10
+      },
+      production_choice_trains: {
+        trains: 1
+      }
     }
   },
   transistor_manufacturers: {
@@ -2671,9 +3279,28 @@ config.buildings.processing_facilities = {
       tools: 5,
       money: 12500
     },
+    maintenance: {
+      production_choice_one: {
+        silicon: 3,
+        copper_wire: 1
+      },
+      production_choice_two: {
+        carbon: 3,
+        electric_gear: 2,
+        copper_wire: 1
+      }
+    },
     manpower_cost: {
       labourers: 6000,
       engineers: 1500
+    },
+    produces: {
+      production_choice_one: {
+        transistors: 4
+      },
+      production_choice_two: {
+        transistors: 20
+      }
     }
   },
   turbine_manufactories: {
@@ -2689,9 +3316,17 @@ config.buildings.processing_facilities = {
       tools: 5,
       money: 14000
     },
+    maintenance: {
+      machine_parts: 7,
+      stainless_steel: 5,
+      copper: 1
+    },
     manpower_cost: {
       labourers: 8000,
       engineers: 1000
+    },
+    produces: {
+      turbines: 3
     }
   },
   tyres_factories: {
@@ -2713,9 +3348,15 @@ config.buildings.processing_facilities = {
       lamps: 4,
       money: 8500
     },
+    maintenance: {
+      rubber: 20
+    },
     manpower_cost: {
       labourers: 4000,
       engineers: 100
+    },
+    produces: {
+      tyres: 4
     }
   },
   uniforms_factories: {
@@ -2732,12 +3373,20 @@ config.buildings.processing_facilities = {
       tools: 3,
       money: 6500
     },
+    maintenance: {
+      linen: 6,
+      bronze: 1,
+      wool: 1
+    },
     manpower_cost: {
       any_pop: {
         labourers: 1000,
         peasants: 1000
       },
       artisans: 300
+    },
+    produces: {
+      uniforms: 10
     }
   },
   violin_makers: {
@@ -2754,8 +3403,17 @@ config.buildings.processing_facilities = {
       tools: 3,
       money: 3000
     },
+    maintenance: {
+      cherry_lumber: 3,
+      dyes: 2,
+      stainless_steel: 1,
+      linen: 1
+    },
     manpower_cost: {
       artisans: 500
+    },
+    produces: {
+      violins: 4
     }
   },
   wineries: {
@@ -2770,12 +3428,259 @@ config.buildings.processing_facilities = {
       copper: 3,
       money: 6000
     },
+    maintenance: {
+      production_choice_champagne: {
+        chardonnay: 3,
+        pinot_noir: 1,
+        pinot_gris: 1
+      },
+      production_choice_barbera: {
+        oak_wood: 1,
+        grapes: 2,
+        apples: 1
+      },
+      production_choice_cabernet_franc: {
+        oak_wood: 1,
+        grapes: 5
+      },
+      production_choice_cabernet_sauvignon: {
+        oak_wood: 1,
+        grapes: 5
+      },
+      production_choice_charbono: {
+        oak_wood: 1,
+        grapes: 5
+      },
+      production_choice_dolcetto: {
+        oak_wood: 1,
+        grapes: 5
+      },
+      production_choice_gamay: {
+        oak_wood: 1,
+        grapes: 5
+      },
+      production_choice_grenache: {
+        oak_wood: 1,
+        grapes: 5
+      },
+      production_choice_malbec: {
+        oak_wood: 1,
+        grapes: 5
+      },
+      production_choice_merlot: {
+        oak_wood: 1,
+        grapes: 5
+      },
+      production_choice_mourvedre: {
+        oak_wood: 1,
+        grapes: 5
+      },
+      production_choice_nehbyehlas: {
+        oak_wood: 1,
+        grapes: 5
+      },
+      production_choice_petite_sirah: {
+        oak_wood: 1,
+        grapes: 5
+      },
+      production_choice_pinot_gris: {
+        oak_wood: 1,
+        grapes: 5
+      },
+      production_choice_pinot_noir: {
+        oak_wood: 1,
+        grapes: 5
+      },
+      production_choice_port: {
+        oak_wood: 1,
+        grapes: 5
+      },
+      production_choice_red_bordeaux: {
+        oak_wood: 1,
+        grapes: 5
+      },
+      production_choice_sangiovese: {
+        oak_wood: 1,
+        grapes: 5
+      },
+      production_choice_syrah: {
+        oak_wood: 1,
+        grapes: 5
+      },
+      production_choice_zinfandel: {
+        oak_wood: 1,
+        grapes: 5
+      },
+
+      production_choice_chardonnay: {
+        oak_wood: 1,
+        grapes: 5,
+        apples: 1
+      },
+      production_choice_gewurztraminer: {
+        oak_wood: 1,
+        grapes: 5
+      },
+      production_choice_gruner_veltliner: {
+        oak_wood: 1,
+        grapes: 5
+      },
+      production_choice_malvasia: {
+        oak_wood: 1,
+        grapes: 5
+      },
+      production_choice_marsanne: {
+        oak_wood: 1,
+        grapes: 5
+      },
+      production_choice_muscat: {
+        oak_wood: 1,
+        grapes: 5
+      },
+      production_choice_pinot_blanc: {
+        oak_wood: 1,
+        grapes: 5
+      },
+      production_choice_prosecco: {
+        oak_wood: 1,
+        grapes: 5
+      },
+      production_choice_riesling: {
+        oak_wood: 1,
+        grapes: 5
+      },
+      production_choice_sauvignon_blanc: {
+        oak_wood: 1,
+        grapes: 5
+      },
+      production_choice_semillon: {
+        oak_wood: 1,
+        grapes: 5
+      },
+      production_choice_vernaccia: {
+        oak_wood: 1,
+        grapes: 5
+      },
+      production_choice_viognier: {
+        oak_wood: 1,
+        grapes: 5
+      },
+      production_choice_white_bordeaux: {
+        oak_wood: 1,
+        grapes: 5
+      },
+    },
     manpower_cost: {
       any_pop: {
         peasants: 350,
         farmers: 350
       },
       artisans: 50
+    },
+    produces: {
+      production_choice_champagne: {
+        champagne: 3
+      },
+      production_choice_barbera: {
+        barbera: 4
+      },
+      production_choice_cabernet_franc: {
+        cabernet_franc: 4
+      },
+      production_choice_cabernet_sauvignon: {
+        cabernet_sauvignon: 5
+      },
+      production_choice_charbono: {
+        charbono: 2
+      },
+      production_choice_dolcetto: {
+        dolcetto: 3
+      },
+      production_choice_gamay: {
+        gamay: 4
+      },
+      production_choice_grenache: {
+        grenache: 5
+      },
+      production_choice_malbec: {
+        malbec: 3
+      },
+      production_choice_merlot: {
+        merlot: 4
+      },
+      production_choice_mourvedre: {
+        mourvedre: 4
+      },
+      production_choice_nehbyehlas: {
+        nehbyehlas: 1
+      },
+      production_choice_petite_sirah: {
+        petite_sirah: 3
+      },
+      production_choice_pinot_gris: {
+        pinot_gris: 2
+      },
+      production_choice_pinot_noir: {
+        pinot_noir: 2
+      },
+      production_choice_port: {
+        port: 4
+      },
+      production_choice_red_bordeaux: {
+        red_bordeaux: 5
+      },
+      production_choice_sangiovese: {
+        sangiovese: 3
+      },
+      production_choice_syrah: {
+        syrah: 2
+      },
+      production_choice_zinfandel: {
+        zinfandel: 3
+      },
+
+      production_choice_chardonnay: {
+        chardonnay: 6
+      },
+      production_choice_gewurztraminer: {
+        gewurztraminer: 3
+      },
+      production_choice_gruner_veltliner: {
+        gruner_veltliner: 4
+      },
+      production_choice_malvasia: {
+        malvasia: 4
+      },
+      production_choice_marsanne: {
+        marsanne: 3
+      },
+      production_choice_muscat: {
+        muscat: 4
+      },
+      production_choice_pinot_blanc: {
+        pinot_blanc: 3
+      },
+      production_choice_prosecco: {
+        prosecco: 4
+      },
+      production_choice_riesling: {
+        riesling: 4
+      },
+      production_choice_sauvignon_blanc: {
+        sauvignon_blanc: 5
+      },
+      production_choice_semillon: {
+        semillon: 4
+      },
+      production_choice_vernaccia: {
+        vernaccia: 2
+      },
+      production_choice_viognier: {
+        viognier: 4
+      },
+      production_choice_white_bordeaux: {
+        white_bordeaux: 5
+      }
     }
   },
   wire_manufactories: {
@@ -2794,8 +3699,32 @@ config.buildings.processing_facilities = {
       lamps: 4,
       money: 10000
     },
+    maintenance: {
+      production_choice_one: {
+        copper: 3
+      },
+      production_choice_two: {
+        copper: 2,
+        lead: 1
+      },
+      production_choice_three: {
+        copper: 2,
+        plastics: 1
+      }
+    },
     manpower_cost: {
       labourers: 8000
+    },
+    produces: {
+      production_choice_one: {
+        copper_wire: 2
+      },
+      production_choice_two: {
+        copper_wire: 3
+      },
+      production_choice_three: {
+        copper_wire: 5
+      }
     }
   }
 };
