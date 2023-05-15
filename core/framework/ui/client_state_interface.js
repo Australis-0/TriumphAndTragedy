@@ -152,7 +152,7 @@ module.exports = {
     var usr = main.users[actual_id];
 
     //Send visual prompt
-    visualPrompt(game_obj.id, user_id, {
+    visualPrompt(game_obj.alert_embed, user_id, {
       title: `Remove Provinces from Client State:`,
       prompts: [
         [`Which provinces would you like to remove from the posession of **${client_obj.name}**?\nPlease separate each province with a space like so: '4702 4703 4709'.\n\nType **[Back]** to cancel taking away provinces from this client state's control.`, "string"]
@@ -856,7 +856,7 @@ module.exports = {
     var usr = main.users[actual_id];
 
     //Initialise visual prompt
-    visualPrompt(game_obj.id, user_id, {
+    visualPrompt(game_obj.alert_embed, user_id, {
       title: `Set Client State Capital:`,
       prompts: [
         [`What city would you like to set as your client state's new capital?\n\nType **[View Cities]** to view a full list of your cities.`, "text"]
@@ -911,7 +911,7 @@ module.exports = {
     var usr = main.users[actual_id];
 
     //Initialise visual prompt
-    visualPrompt(game_obj.id, user_id, {
+    visualPrompt(game_obj.alert_embed, user_id, {
       title: `Set Client State Colour:`,
       prompts: [
         [`Please insert the R code of your colour.\n\nOnly RGB values between 20-175 and 185-255 are accepted.`, "number", { min: 20, max: 255 }],
@@ -952,7 +952,7 @@ module.exports = {
     var usr = main.users[actual_id];
 
     //Initialise visual prompt
-    visualPrompt(game_obj.id, user_id, {
+    visualPrompt(game_obj.alert_embed, user_id, {
       title: `Set Client State Flag:`,
       prompts: [
         [`What would you like to change the standard of **${client_obj.name}** to? Please insert a valid image URL.`, "string"]
@@ -989,7 +989,7 @@ module.exports = {
     var usr = main.users[actual_id];
 
     //Initialise visual prompt
-    visualPrompt(game_obj.id, user_id, {
+    visualPrompt(game_obj.alert_embed, user_id, {
       title: `Rename Client State:`,
       prompts: [
         [`What would you like to rename the client state of **${client_obj.name}** to?`, "text"]

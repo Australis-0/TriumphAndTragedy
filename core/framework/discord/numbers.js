@@ -223,7 +223,7 @@ module.exports = {
     var default_number = (arg1_default) ? arg1_default : 0;
 
     //Return statement
-    return (!isNaN(operation) && isFinite(operation) && operation) ?
+    return (!isNaN(operation) && isFinite(operation) && operation != undefined && operation != null) ?
       operation :
       default_number;
   },

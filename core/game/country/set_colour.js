@@ -89,9 +89,9 @@ module.exports = {
               }
           } else {
             if (!do_not_display)
-              printError(game_obj.id, `Only RGB values between 20-175 and 185-255 are accepted!`);
+              printError(game_obj.id, `Only RGB values between 20-175 and 185-200 are accepted!`);
             if (is_vassal)
-              return [false, `Only RGB values between 20-175 and 185-255 are accepted!`]
+              return [false, `Only RGB values between 20-175 and 185-200 are accepted!`];
           }
         } else {
           if (!do_not_display)

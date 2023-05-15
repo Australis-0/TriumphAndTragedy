@@ -1642,8 +1642,33 @@ config.buildings.processing_facilities = {
       tools: 5,
       money: 3000
     },
+    maintenance: {
+      production_choice_one: {
+        coals: 5,
+        quartz_sand: 10
+      },
+      production_choice_two: {
+        gas: 3,
+        quartz_sand: 10
+      },
+      production_choice_three: {
+        wood: 10,
+        quartz_sand: 10
+      }
+    },
     manpower_cost: {
       artisans: 800
+    },
+    produces: {
+      production_choice_one: {
+        glass: 5
+      },
+      production_choice_two: {
+        glass: 5
+      },
+      production_choice_three: {
+        glass: 5
+      }
     }
   },
   incense_works: {
@@ -1657,8 +1682,30 @@ config.buildings.processing_facilities = {
       iron: 5,
       money: 2000
     },
+    maintenance: {
+      production_choice_one: {
+        charcoal: 3
+      },
+      production_choice_two: {
+        camphor: 2
+      },
+      production_choice_three: {
+        sandalwood: 1
+      }
+    },
     manpower_cost: {
       artisans: 800
+    },
+    produces: {
+      production_choice_one: {
+        incense: 3
+      },
+      production_choice_two: {
+        incense: 5
+      },
+      production_choice_three: {
+        incense: 6
+      }
     }
   },
   inkworks: {
@@ -1672,12 +1719,19 @@ config.buildings.processing_facilities = {
       iron: 5,
       money: 2000
     },
+    maintenance: {
+      charcoal: 1,
+      dyes: 1
+    },
     manpower_cost: {
       any_pop: {
         peasants: 1400,
         labourers: 1400
       },
       artisans: 200
+    },
+    produces: {
+      ink: 5
     }
   },
   jewellers: {
@@ -1693,8 +1747,54 @@ config.buildings.processing_facilities = {
       regular_steel: 2,
       money: 4500
     },
+    maintenance: {
+      production_choice_one: {
+        diamond: 1
+      },
+      production_choice_two: {
+        gold: 1
+      },
+      production_choice_three: {
+        silver: 1
+      },
+      production_choice_four: {
+        platinum: 1
+      },
+      production_choice_five: {
+        palladium: 1
+      },
+      production_choice_six: {
+        cut_ruby: 1
+      },
+      production_choice_seven: {
+        pearls: 1
+      }
+    },
     manpower_cost: {
       artisans: 250
+    },
+    produces: {
+      production_choice_one: {
+        jewellery: 1
+      },
+      production_choice_two: {
+        jewellery: 1
+      },
+      production_choice_three: {
+        jewellery: 1
+      },
+      production_choice_four: {
+        jewellery: 1
+      },
+      production_choice_five: {
+        jewellery: 1
+      },
+      production_choice_six: {
+        jewellery: 1
+      },
+      production_choice_seven: {
+        jewellery: 1
+      }
     }
   },
   kiln_works: {
@@ -1711,10 +1811,72 @@ config.buildings.processing_facilities = {
       tools: 1,
       money: 2000
     },
+    maintenance: {
+      production_choice_ceramics: {
+        clay: 2,
+        coals: 2,
+        lime: 1
+      },
+      production_choice_bone_china: {
+        calcium: 3,
+        clay: 2,
+        quartz_sand: 2,
+        coals: 1
+      },
+      production_choice_china: {
+        clay: 3,
+        calcium: 2,
+        quartz_sand: 1,
+        dyes: 1,
+        coals: 1
+      },
+      production_choice_doccia_porcelain: {
+        clay: 5,
+        calcium: 3,
+        dyes: 3,
+        quartz_sand: 2,
+        coals: 1
+      },
+      production_choice_lacquerware: {
+        dyes: 4,
+        porcelain: 2,
+        wood: 2,
+        iron: 1,
+        coals: 1
+      },
+      production_choice_porcelain: {
+        clay: 5,
+        quartz_sand: 3,
+        ceramics: 2,
+        calcium: 2,
+        dyes: 1,
+        coals: 1
+      }
+    },
     manpower_cost: {
       any_pop: {
         peasants: 2000,
         labourers: 2000
+      }
+    },
+    produces: {
+      production_choice_ceramics: {
+        ceramics: 3
+      },
+      production_choice_bone_china: {
+        bone_china: 2
+      },
+      production_choice_china: {
+        china: 5
+      },
+      production_choice_doccia_porcelain: {
+        doccia_porcelain: 3
+      },
+      production_choice_lacquerware: {
+        lacquerware: 3
+      },
+      production_choice_porcelain: {
+        porcelain: 6
       }
     }
   },
@@ -1734,8 +1896,16 @@ config.buildings.processing_facilities = {
       capacitors: 5,
       money: 25000
     },
+    maintenance: {
+      electric_gear: 5,
+      glass: 5,
+      cut_ruby: 1
+    },
     manpower_cost: {
       engineers: 10000
+    },
+    produces: {
+      lasers: 3
     }
   },
   lens_manufactories: {
@@ -1754,10 +1924,18 @@ config.buildings.processing_facilities = {
       common_furniture: 5,
       money: 20000
     },
+    maintenance: {
+      glass: 3,
+      steel: 1,
+      gas: 1
+    },
     manpower_cost: {
       engineers: 15000,
       artisans: 5000,
       labourers: 500
+    },
+    produces: {
+      glasses: 5
     }
   },
   lift_factories: {

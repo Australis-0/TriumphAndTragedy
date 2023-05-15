@@ -374,18 +374,16 @@ module.exports = {
       //Set attacker_warscore; defender_warscore
       if (fully_sieged_defenders != war_obj.defenders.length) {
         //War leader accounts for 25% of warscore
-        attacker_warscore = 0.75*(defender_war_exhaustion/war_obj.defenders.length)*
+        attacker_warscore = 0.75*(defender_war_exhaustion/war_obj.defenders.length) +
           (0.25*returnSafeNumber(main.users[war_obj.defenders_war_leader].modifiers.war_exhaustion, 1));
       } else {
         attacker_warscore = 1;
       }
 
-      war_obj.attacker_warscore = attacker_warscore;
-
-      if (fully_sieged_defenders != war_obj.attackers.length) {
-        defender_warscore = parseFloat(
-          (attacker_war_exhaustion/war_obj.attackers.length).toFixed(2)
-        );
+      if (fully_sieged_attackers != war_obj.attackers.length) {
+        defender_warscore = attacker_war_exhaustion/war_obj.attackers.length;
+      } else {
+        defender_warscore = 1;
       }
 
       //Return statement
