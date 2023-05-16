@@ -1,5 +1,6 @@
 config.buildings.research_buildings = {
-  order: 8,
+  order: 16,
+  
   schools: {
     name: "Schools",
     singular: "School",

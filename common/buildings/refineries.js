@@ -18,9 +18,15 @@ config.buildings.refineries = {
       tools: 3,
       money: 4500
     },
+    maintenance: {
+      alumina: 5
+    },
     manpower_cost: {
       labourers: 15000,
       engineers: 800
+    },
+    produces: {
+      aluminium: 4
     }
   },
   aluminium_refineries: {
@@ -39,9 +45,15 @@ config.buildings.refineries = {
       tools: 4,
       money: 5500
     },
+    maintenance: {
+      bauxite: 10
+    },
     manpower_cost: {
       labourers: 10000,
       engineers: 250
+    },
+    produces: {
+      alumina: 8
     }
   },
   arsenic_refineries: {
@@ -59,9 +71,15 @@ config.buildings.refineries = {
       bronze: 3,
       money: 7000
     },
+    maintenance: {
+      arsenopyrite: 10
+    },
     manpower_cost: {
       labourers: 8000,
       engineers: 200
+    },
+    produces: {
+      arsenic: 5
     }
   },
   barium_refineries: {
@@ -78,9 +96,15 @@ config.buildings.refineries = {
       copper: 2,
       money: 3500
     },
+    maintenance: {
+      baryte: 5
+    },
     manpower_cost: {
       labourers: 5000,
       engineers: 200
+    },
+    produces: {
+      barium: 4
     }
   },
   beryllium_refineries: {
@@ -97,9 +121,15 @@ config.buildings.refineries = {
       tools: 3,
       money: 6000
     },
+    maintenance: {
+      beryl: 2
+    },
     manpower_cost: {
       labourers: 4000,
       engineers: 300
+    },
+    produces: {
+      beryllium: 1
     }
   },
   bronze_factories: {
@@ -117,11 +147,18 @@ config.buildings.refineries = {
       tools: 3,
       money: 4000
     },
+    maintenance: {
+      copper: 7,
+      tin: 1
+    },
     manpower_cost: {
       any_pop: {
         peasants: 5000,
         labourers: 5000
       }
+    },
+    produces: {
+      bronze: 6
     }
   },
   centrifuges: {
@@ -137,9 +174,26 @@ config.buildings.refineries = {
       glass: 2,
       money: 10000
     },
+    maintenance: {
+      production_choice_heu: {
+        uranium: 5
+      },
+      production_choice_wgeu: {
+        highly_enriched_uranium: 5
+      }
+    },
     manpower_cost: {
       labourers: 10000,
       engineers: 1000
+    },
+    produces: {
+      production_choice_heu: {
+        highly_enriched_uranium: 1,
+        depleted_uranium: 1
+      },
+      production_choice_wgeu: {
+        weapons_grade_enriched_uranium: 1
+      }
     }
   },
   chromium_refineries: {
@@ -157,9 +211,15 @@ config.buildings.refineries = {
       glass: 3,
       money: 9000
     },
+    maintenance: {
+      chromite: 5
+    },
     manpower_cost: {
       labourers: 12000,
       engineers: 800
+    },
+    produces: {
+      chromium: 5
     }
   },
   coal_kilns: {
@@ -191,11 +251,17 @@ config.buildings.refineries = {
       tools: 2,
       money: 2000
     },
+    maintenance: {
+      wood: 5
+    },
     manpower_cost: {
       any_pop: {
         peasants: 2000,
         labourers: 2000
       }
+    },
+    produces: {
+      charcoal: 3
     }
   },
   cobalt_refineries: {
@@ -212,12 +278,18 @@ config.buildings.refineries = {
       lumber: 4,
       money: 8000
     },
+    maintenance: {
+      cobaltite: 5
+    },
     manpower_cost: {
       any_pop: {
         peasants: 6000,
         labourers: 6000
       },
       engineers: 600
+    },
+    produces: {
+      cobalt: 3
     }
   },
   diamond_refineries: {
@@ -231,11 +303,17 @@ config.buildings.refineries = {
       tools: 4,
       money: 2500
     },
+    maintenance: {
+      kimberlite: 5
+    },
     manpower_cost: {
       any_pop: {
         peasants: 2000,
         labourers: 2000
       }
+    },
+    produces: {
+      diamond: 1
     }
   },
   ferrochromite_refineries: {
@@ -252,9 +330,16 @@ config.buildings.refineries = {
       lamps: 4,
       money: 14000
     },
+    maintenance: {
+      chromium: 7,
+      iron: 3
+    },
     manpower_cost: {
       labourers: 5000,
       engineers: 600
+    },
+    produces: {
+      ferrochromium: 5
     }
   },
   gold_refineries: {
@@ -271,10 +356,26 @@ config.buildings.refineries = {
       lamps: 2,
       money: 5500
     },
+    maintenance: {
+      production_choice_one: {
+        placer_gold: 1
+      },
+      production_choice_two: {
+        quartz_gold: 5
+      }
+    },
     manpower_cost: {
       any_pop: {
         peasants: 1500,
         labourers: 1500
+      }
+    },
+    produces: {
+      production_choice_one: {
+        gold: 1
+      },
+      production_choice_two: {
+        gold: 3
       }
     }
   },
@@ -309,11 +410,21 @@ config.buildings.refineries = {
       wood: 4,
       money: 1000
     },
+    maintenance: {
+      acetic_acid: 1,
+      butadiene: 1,
+      ethylene: 1,
+      olive_oil: 1,
+      sugar: 1
+    },
     manpower_cost: {
       any_pop: {
         peasants: 2000,
         labourers: 2000
       }
+    },
+    produces: {
+      chewing_gum: 10
     }
   },
   ironworks: {
@@ -328,6 +439,23 @@ config.buildings.refineries = {
       wood: 3,
       money: 2500
     },
+    maintenance: {
+      production_choice_one: {
+        hematite: 10
+      },
+      production_choice_two: {
+        magnetite: 10
+      },
+      production_choice_three: {
+        pentlandite: 3
+      },
+      production_choice_four: {
+        sphalerite: 50
+      },
+      production_choice_five: {
+        wolframite: 10
+      }
+    },
     manpower_cost: {
       any_pop_peasants_labourers: {
         peasants: 1500,
@@ -336,6 +464,23 @@ config.buildings.refineries = {
       any_pop_artisans_engineers: {
         artisans: 200,
         engineers: 200
+      }
+    },
+    produces: {
+      production_choice_one: {
+        iron: 7
+      },
+      production_choice_two: {
+        iron: 8
+      },
+      production_choice_three: {
+        iron: 1
+      },
+      production_choice_four: {
+        iron: 1
+      },
+      production_choice_five: {
+        iron: 1
       }
     }
   },
@@ -354,11 +499,17 @@ config.buildings.refineries = {
       leather: 2,
       money: 2000
     },
+    maintenance: {
+      galena: 8
+    },
     manpower_cost: {
       any_pop: {
         peasants: 2500,
         labourers: 2500
       }
+    },
+    produces: {
+      lead: 7
     }
   },
   manganese_refineries: {
@@ -375,9 +526,25 @@ config.buildings.refineries = {
       lamps: 4,
       money: 5500
     },
+    maintenance: {
+      production_choice_one: {
+        pyrolusite: 5
+      },
+      production_choice_two: {
+        wolframite: 10
+      }
+    },
     manpower_cost: {
       labourers: 1500,
       engineers: 200
+    },
+    produces: {
+      production_choice_one: {
+        manganese: 3
+      },
+      production_choice_two: {
+        manganese: 1
+      }
     }
   },
   mercuric_refineries: {
@@ -396,9 +563,15 @@ config.buildings.refineries = {
       aluminium: 3,
       money: 8000
     },
+    maintenance: {
+      cinnabar: 4
+    },
     manpower_cost: {
       labourers: 1000,
       engineers: 100
+    },
+    produces: {
+      mercury: 3
     }
   },
   molybdenite_refineries: {
@@ -416,12 +589,18 @@ config.buildings.refineries = {
       lumber: 5,
       money: 8000
     },
+    maintenance: {
+      molybdenite: 5
+    },
     manpower_cost: {
       labourers: 5000,
       any_pop: {
         artisans: 200,
         engineers: 200
       }
+    },
+    produces: {
+      molybdenum: 3
     }
   },
   nickelworks: {
@@ -438,6 +617,9 @@ config.buildings.refineries = {
       glass: 3,
       money: 5800
     },
+    maintenance: {
+      pentlandite: 6
+    },
     manpower_cost: {
       any_pop_peasants_labourers: {
         peasants: 4500,
@@ -447,6 +629,9 @@ config.buildings.refineries = {
         artisans: 500,
         engineers: 500
       }
+    },
+    produces: {
+      nickel: 2
     }
   },
   niobic_refineries: {
@@ -463,9 +648,15 @@ config.buildings.refineries = {
       lamps: 4,
       money: 6000
     },
+    maintenance: {
+      coltan: 5
+    },
     manpower_cost: {
       labourers: 3000,
       engineers: 200
+    },
+    produces: {
+      niobium: 1
     }
   },
   palladium_refineries: {
@@ -484,12 +675,18 @@ config.buildings.refineries = {
       lamps: 4,
       money: 12000
     },
+    maintenance: {
+      cooperite: 2
+    },
     manpower_cost: {
       labourers: 2500,
       any_pop: {
         artisans: 600,
         engineers: 600
       }
+    },
+    produces: {
+      palladium: 1
     }
   },
   platinum_refineries: {
@@ -508,18 +705,24 @@ config.buildings.refineries = {
       copper: 3,
       money: 10000
     },
+    maintenance: {
+      sperrylite: 4
+    },
     manpower_cost: {
       any_pop: {
         peasants: 2000,
         labourers: 2000
       },
       artisans: 250
+    },
+    produces: {
+      platinum: 2
     }
   },
   saltpetre_works: {
     name: "Saltpetre Works",
     singular: "Saltpetre Works",
-    aliases: ["saltpeter works"],
+    aliases: ["saltpetre factory", "saltpetre factories", "saltpeter works"],
 
     construction_turns: 4,
     cost: {
@@ -531,11 +734,17 @@ config.buildings.refineries = {
       lamps: 2,
       money: 4000
     },
+    maintenance: {
+      nitre: 5
+    },
     manpower_cost: {
       any_pop: {
         peasants: 4000,
         labourers: 4000
       }
+    },
+    produces: {
+      saltpetre: 5
     }
   },
   silicate_factories: {
@@ -552,11 +761,17 @@ config.buildings.refineries = {
       tools: 2,
       money: 2000
     },
+    maintenance: {
+      quartz_sand: 10
+    },
     manpower_cost: {
       any_pop: {
         peasants: 4000,
         labourers: 4000
       }
+    },
+    produces: {
+      silicon: 9
     }
   },
   silver_refineries: {
@@ -572,11 +787,17 @@ config.buildings.refineries = {
       leather: 3,
       money: 3500
     },
+    maintenance: {
+      acanthite: 5
+    },
     manpower_cost: {
       any_pop: {
         peasants: 2000,
         labourers: 2000
       }
+    },
+    produces: {
+      silver: 1
     }
   },
   stainless_steel_factories: {
@@ -596,9 +817,17 @@ config.buildings.refineries = {
       silicon: 2,
       money: 10000
     },
+    maintenance: {
+      iron: 5,
+      carbon: 5,
+      ferrochromium: 2
+    },
     manpower_cost: {
       labourers: 3000,
       engineers: 500
+    },
+    produces: {
+      stainless_steel: 5
     }
   },
   steel_beams_factories: {
@@ -616,6 +845,10 @@ config.buildings.refineries = {
       lamps: 2,
       money: 5000
     },
+    maintenance: {
+      steel: 5,
+      coals: 3
+    },
     manpower_cost: {
       any_pop_peasants_labourers: {
         peasants: 5000,
@@ -625,6 +858,9 @@ config.buildings.refineries = {
         artisans: 200,
         engineers: 200
       }
+    },
+    produces: {
+      steel_beams: 5
     }
   },
   steelworks: {
@@ -641,6 +877,16 @@ config.buildings.refineries = {
       lamps: 2,
       money: 4000
     },
+    maintenance: {
+      production_choice_one: {
+        pig_iron: 5,
+        coal_coke: 5
+      },
+      production_choice_two: {
+        iron: 5,
+        coal_coke: 5
+      }
+    },
     manpower_cost: {
       any_pop_peasants_labourers: {
         peasants: 2000,
@@ -649,6 +895,14 @@ config.buildings.refineries = {
       any_pop_artisans_engineers: {
         artisans: 200,
         engineers: 200
+      }
+    },
+    produces: {
+      production_choice_one: {
+        steel: 10
+      },
+      production_choice_two: {
+        steel: 5
       }
     }
   },
@@ -667,9 +921,15 @@ config.buildings.refineries = {
       lamps: 2,
       money: 8000
     },
+    maintenance: {
+      coltan: 5
+    },
     manpower_cost: {
       labourers: 5000,
       engineers: 500
+    },
+    produces: {
+      tantalum: 2
     }
   },
   tin_factories: {
@@ -688,9 +948,15 @@ config.buildings.refineries = {
       lamps: 4,
       money: 6000
     },
+    maintenance: {
+      cassiterite: 4
+    },
     manpower_cost: {
       labourers: 2500,
       engineers: 200
+    },
+    produces: {
+      tin: 3
     }
   },
   titanium_refineries: {
@@ -708,9 +974,15 @@ config.buildings.refineries = {
       lamps: 4,
       money: 12000
     },
+    maintenance: {
+      cassiterite: 4
+    },
     manpower_cost: {
       labourers: 3000,
       engineers: 200
+    },
+    produces: {
+      tin: 3
     }
   },
   tungsten_refineries: {
@@ -728,9 +1000,25 @@ config.buildings.refineries = {
       coals: 4,
       money: 6500
     },
+    maintenance: {
+      production_choice_one: {
+        scheelite: 5
+      },
+      production_choice_two: {
+        wolframite: 5
+      }
+    },
     manpower_cost: {
       labourers: 5000,
       engineers: 400
+    },
+    produces: {
+      production_choice_one: {
+        tungsten: 3
+      },
+      production_choice_two: {
+        tungsten: 3
+      }
     }
   },
   uranium_refineries: {
@@ -749,9 +1037,15 @@ config.buildings.refineries = {
       brass: 2,
       money: 8500
     },
+    maintenance: {
+      uraninite: 5
+    },
     manpower_cost: {
       labourers: 5000,
       engineers: 400
+    },
+    produces: {
+      uranium: 5
     }
   },
   zinc_refineries: {
@@ -770,9 +1064,15 @@ config.buildings.refineries = {
       lightbulbs: 2,
       money: 10000
     },
+    maintenance: {
+      sphalerite: 6
+    },
     manpower_cost: {
       labourers: 4000,
       engineers: 300
+    },
+    produces: {
+      zinc: 4
     }
   }
 };
