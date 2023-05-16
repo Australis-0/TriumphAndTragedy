@@ -1,5 +1,6 @@
 config.buildings.amenities = {
   order: 3,
+  
   amusement_parks: {
     name: "Amusement Parks",
     singular: "Amusement Park",
