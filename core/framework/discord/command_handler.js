@@ -82,7 +82,7 @@ module.exports = {
 
                     if (satisfies_requirements[0])
                       local_prompt.answers.push(parseInt(input));
-                  } else if (local_prompt.prompts[current_step][1] == "string") {
+                  } else if (["string", "text"].includes(local_prompt.prompts[current_step][1])) {
                     if (satisfies_requirements[0])
                       local_prompt.answers.push(input);
                   } else if (local_prompt.prompts[current_step][1] == "mention") {

@@ -859,7 +859,7 @@ module.exports = {
     visualPrompt(game_obj.alert_embed, user_id, {
       title: `Set Client State Capital:`,
       prompts: [
-        [`What city would you like to set as your client state's new capital?\n\nType **[View Cities]** to view a full list of your cities.`, "text"]
+        [`What city would you like to set as your client state's new capital?\n\nType **[View Cities]** to view a full list of your cities.`, "string"]
       ]
     },
     function (arg) {
