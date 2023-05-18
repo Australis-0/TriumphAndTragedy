@@ -9,14 +9,25 @@ module.exports = {
     //Stub objects
     if (!main.users) main.users = {};
 
-    //Compressed data fix
+    //Bugfixes
     {
-      //No clue why it does this
-      for (var i = 0; i < all_main_keys.length; i++)
-        if (all_main_keys[i].endsWith("users") && all_main_keys[i] != "users") {
-          main.users = main[all_main_keys[i]];
-          delete main[all_main_keys[i]];
-        }
+      //Compressed data fix
+      {
+        //No clue why it does this
+        for (var i = 0; i < all_main_keys.length; i++)
+          if (all_main_keys[i].endsWith("users") && all_main_keys[i] != "users") {
+            main.users = main[all_main_keys[i]];
+            delete main[all_main_keys[i]];
+          }
+      }
+      //Undefined user fix
+      {
+        var all_users = Object.keys(main.users);
+
+        for (var i = 0; i < all_users.length; i++)
+          if (!main.global.user_map[all_users[i]])
+            main.global.user_map[all_users[i]] = all_users[i];
+      }
     }
 
     //Force render all maps
