@@ -26,11 +26,11 @@ config.buildings.administration = {
       bureaucrats: 1000
     },
     modifiers: {
+      local_districts: 2,
       local_production_efficiency: 0.15,
       local_housing: 0.10,
       local_rgo_throughput: 0.05,
-      bureaucrats_pop_chance: 0.01,
-      districts: 2
+      bureaucrats_pop_chance: 0.01
     }
   },
   courthouses: {

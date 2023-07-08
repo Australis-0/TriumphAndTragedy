@@ -212,8 +212,11 @@ module.exports = {
 
             local_tech_category_string.push(parseModifiers(local_tech.unlocks, false, true));
           } else {
-            if (local_tech.custom_effect_description)
+            if (local_tech.custom_effect_description) {
               local_tech_category_string.push(`_${local_tech.custom_effect_description}_`);
+            } else {
+              local_tech_category_string.push(` - This technology currently has no effect.`);
+            }
           }
 
           //Print what other technologies the current tech leads to
