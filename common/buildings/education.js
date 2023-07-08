@@ -41,7 +41,7 @@ config.buildings.education = { //[WIP] - Add special_effect
     },
     modifiers: {
       cultural_research_efficiency: 0.20,
-      artisan_pop_chance: 0.02
+      artisans_pop_chance: 0.02
     }
   },
   community_colleges: {
@@ -79,6 +79,15 @@ config.buildings.education = { //[WIP] - Add special_effect
         faculty: 3500
       },
       artisans: 1000
+    },
+    produces: {
+      education_level: {
+        min: 0.60,
+        max: 0.75,
+
+        capacity: 80000,
+        rate_per_year: 0.10
+      }
     }
   },
   libraries: {
@@ -104,6 +113,14 @@ config.buildings.education = { //[WIP] - Add special_effect
       any_pop: {
         scholars: 5000,
         faculty: 5000
+      }
+    },
+    produces: {
+      education_level: {
+        max: 0.20,
+
+        capacity: 50000,
+        rate_per_year: 0.04
       }
     }
   },
@@ -133,6 +150,21 @@ config.buildings.education = { //[WIP] - Add special_effect
         scholars: 1000,
         faculty: 1000
       }
+    },
+    produces: {
+      education_level_literacy: {
+        max: 0.20,
+
+        capacity: 100000,
+        rate_per_year: 0.04
+      },
+      education_level_primary_education: {
+        min: 0.20,
+        max: 0.40,
+
+        capacity: 100000,
+        rate_per_year: 0.04
+      }
     }
   },
   schoolhouses: {
@@ -158,6 +190,21 @@ config.buildings.education = { //[WIP] - Add special_effect
       any_pop: {
         scholars: 100,
         faculty: 100
+      }
+    },
+    produces: {
+      education_level_literacy: {
+        max: 0.20,
+
+        capacity: 10000,
+        rate_per_year: 0.04
+      },
+      education_level_primary_education: {
+        min: 0.20,
+        max: 0.40,
+
+        capacity: 10000,
+        rate_per_year: 0.04
       }
     }
   },
@@ -189,6 +236,15 @@ config.buildings.education = { //[WIP] - Add special_effect
       any_pop: {
         scholars: 5000,
         faculty: 5000
+      }
+    },
+    produces: {
+      education_level: {
+        min: 0.30,
+        max: 0.60,
+
+        capacity: 100000,
+        rate: 0.04
       }
     }
   },
@@ -231,7 +287,15 @@ config.buildings.education = { //[WIP] - Add special_effect
     },
     produces: {
       faculty: 2000,
-      scientists: 1000
+      scientists: 1000,
+
+      education_level: {
+        min: 0.60,
+        max: 1,
+
+        capacity: 50000,
+        rate: 0.10
+      }
     }
   }
 };

@@ -230,7 +230,7 @@ config.buildings.research_buildings = {
     manpower_cost: {
       scientists: 10000
     },
-    produces: {
+    modifiers: {
       research_efficiency: 0.10
     }
   },

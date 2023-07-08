@@ -320,7 +320,7 @@ config.buildings.military_buildings = { //[WIP] - Add £ maintenance
       }
     },
     modifiers: {
-      local_naval_maintenance: -0.10,
+      local_ship_maintenance: -0.10,
       naval_capacity: 10
     }
   },

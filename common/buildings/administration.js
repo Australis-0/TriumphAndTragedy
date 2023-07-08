@@ -1,6 +1,6 @@
 config.buildings.administration = {
   order: 1,
-  
+
   city_halls: {
     name: "City Halls",
     singular: "City Hall",
@@ -29,7 +29,7 @@ config.buildings.administration = {
       local_production_efficiency: 0.15,
       local_housing: 0.10,
       local_rgo_throughput: 0.05,
-      bureaucrat_pop_chance: 0.01,
+      bureaucrats_pop_chance: 0.01,
       districts: 2
     }
   },
@@ -65,7 +65,7 @@ config.buildings.administration = {
     modifiers: {
       cultural_integration_speed: 0.20,
       local_manpower: 0.05,
-      bureaucrat_pop_chance: 0.01,
+      bureaucrats_pop_chance: 0.01,
       local_corruption: -0.10,
       local_crime_rate: -0.50,
       local_title_strength: -5
@@ -188,7 +188,7 @@ config.buildings.administration = {
       tools: 2
     },
     modifiers: {
-      national_stockpile: 0.50,
+      national_stockpile: 50,
       money_per_action: 10,
       global_supply_limit: 5,
       political_capital_gain: 2

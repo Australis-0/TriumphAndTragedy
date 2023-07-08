@@ -77,7 +77,7 @@ module.exports = {
           "";
       var local_good_name = (local_good) ?
         (local_good) ?
-          getGood(local_export).name :
+          local_good.name :
           local_export :
         local_export;
 

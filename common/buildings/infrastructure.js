@@ -985,7 +985,7 @@ config.buildings.infrastructure = {
     },
     maximum: 4,
     modifiers: {
-      tram_lines_bonus: 0.50,
+      local_tram_lines_bonus: 0.50,
       regional_transit_capacity: 50000,
       domestic_transit_capacity: 100000
     },

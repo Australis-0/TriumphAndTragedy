@@ -77,7 +77,7 @@ config.buildings.emergency_services = {
     },
     modifiers: {
       fire_suppression: 0.20,
-      housing_maintenance: -0.15
+      local_housing_maintenance: -0.15
     }
   },
   fire_stations: {
@@ -278,6 +278,12 @@ config.buildings.emergency_services = {
         scholars: 1000,
         scientists: 1000
       }
+    },
+    produces: {
+      palliative_care_scope: {
+        physical_health_negative_effects_modifier: -0.20
+      },
+      palliative_care_capacity: 10000
     }
   }
 };

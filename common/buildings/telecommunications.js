@@ -193,7 +193,8 @@ config.buildings.telecommunications = {
     },
     modifiers: {
       public_communication: {
-        distance: 5
+        distance: 5,
+        value: 1
       }
     }
   }

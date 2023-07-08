@@ -1024,6 +1024,7 @@ config.pops = { //[WIP] - Rework chances, icons
     name: "Officers",
     formal_name: "Officer Corps",
     singular: "Officer",
+    disabled: true,
 
     chance: 0,
     class: "middle",

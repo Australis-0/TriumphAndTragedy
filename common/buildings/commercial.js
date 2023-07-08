@@ -31,6 +31,22 @@ config.buildings.commercial = { //[WIP] - Add special_effect
     manpower_cost: {
       capitalists: 2000,
       engineers: 1500
+    },
+    produces: {
+      per_100k_upper: {
+        pop_class: "upper",
+
+        produces: {
+          money: 10000
+        }
+      },
+      per_100k_middle: {
+        pop_class: "middle",
+
+        produces: {
+          money: 10000
+        }
+      }
     }
   },
   central_business_districts: {
@@ -96,6 +112,9 @@ config.buildings.commercial = { //[WIP] - Add special_effect
     },
     manpower_cost: {
       engineers: 10000
+    },
+    produces: {
+      pharmaceuticals_import_price: -0.10
     }
   },
   counting_houses: {
@@ -124,6 +143,9 @@ config.buildings.commercial = { //[WIP] - Add special_effect
     manpower_cost: {
       artisans: 8000,
       bureaucrats: 5000
+    },
+    modifiers: {
+      local_commercial_bonus: 0.20
     }
   },
   department_stores: {
@@ -400,6 +422,15 @@ config.buildings.commercial = { //[WIP] - Add special_effect
       any_pop: {
         labourers: 10000,
         peasants: 10000
+      }
+    },
+    produces: {
+      per_100k: {
+        pop_class: "middle",
+
+        produces: {
+          money: 2500
+        }
       }
     }
   },

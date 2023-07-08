@@ -1,6 +1,6 @@
 config.buildings.amenities = {
   order: 3,
-  
+
   amusement_parks: {
     name: "Amusement Parks",
     singular: "Amusement Park",
@@ -79,7 +79,7 @@ config.buildings.amenities = {
     },
     modifiers: {
       local_tourism_modifier: 0.10,
-      education_modifier: 0.05,
+      education_efficiency: 0.01,
       local_happiness: 0.05,
       tourism_value: 100,
       cultural_prestige_to_primary_culture: 15,
@@ -247,7 +247,7 @@ config.buildings.amenities = {
       variety_bonus: 0.05,
       local_consciousness: 0.02,
       local_crime_rate: -0.05,
-      tourism_value: 0.05
+      local_tourism_modifier: 0.05
     }
   },
   esplanades: {
@@ -276,7 +276,7 @@ config.buildings.amenities = {
       local_amenities_bonus: 0.10,
       local_happiness: 0.05,
       local_tourism_modifier: 0.05,
-      physical_health: 0.02,
+      physical_health: 0.005,
       cultural_prestige_to_primary_culture: 5,
       tourism_value: 15
     }
@@ -461,7 +461,7 @@ config.buildings.amenities = {
     },
     modifiers: {
       local_tourism_modifier: 0.15,
-      local_education_modifier: 0.10,
+      local_education_efficiency: 0.10,
       research_efficiency: 0.01,
       cultural_prestige_to_primary_culture: 20,
       tourism_value: 40,
@@ -878,7 +878,7 @@ config.buildings.amenities = {
     },
     modifiers: {
       local_tourism_modifier: 0.50,
-      local_education_modifier: 0.05,
+      local_education_efficiency: 0.05,
       prestige_per_turn: 10,
       local_tax_revenue: -0.10,
       tourism_value: 500,
@@ -922,7 +922,7 @@ config.buildings.amenities = {
     },
     produces: {
       local_tourism_modifier: 0.10,
-      local_education_modifier: 0.05,
+      local_education_efficiency: 0.05,
       tourism_value: 60,
       cultural_prestige_to_primary_culture: 10,
       local_commercial_slots: 1
