@@ -18,6 +18,7 @@ config.technology.naval_technology = {
     research_cost: 20,
     year: 1451,
     unlocks: {
+      unlock_building: "dockyards",
       unlock_unit: "caravels",
       colonist_travel_speed: 0.25
     }
@@ -45,7 +46,8 @@ config.technology.naval_technology = {
     unlocks: {
       colonist_travel_speed: 0.50,
       naval_dp: 0.05,
-      shipment_time: -0.05
+      shipment_time: -0.05,
+      unlock_building: "trade_depots"
     }
   },
 
@@ -81,7 +83,8 @@ config.technology.naval_technology = {
     research_cost: 100,
     year: 1505,
     unlocks: {
-      tax_efficiency: 0.05
+      tax_efficiency: 0.05,
+      unlock_building: ["clove_plantations", "palm_oil_plantations", "spice_plantations", "trade_offices", "warehouses"]
     }
   },
   circumnavigation: {
@@ -106,6 +109,7 @@ config.technology.naval_technology = {
     research_cost: 150,
     year: 1600,
     unlocks: {
+      unlock_building: "whaling_stations",
       tax_efficiency: 0.05,
       shipment_time: -0.10
     }
@@ -119,6 +123,7 @@ config.technology.naval_technology = {
     research_cost: 200,
     year: 1690,
     unlocks: {
+      unlock_building: ["coastal_defences", "naval_bases"],
       naval_ap: 0.10
     }
   },
@@ -131,6 +136,7 @@ config.technology.naval_technology = {
     research_cost: 250,
     year: 1664,
     unlocks: {
+      unlock_building: "impressment_offices",
       national_manpower: 0.02,
       unit_cost: -0.10,
       training_cost: -0.10,

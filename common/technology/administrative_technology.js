@@ -7,6 +7,7 @@ config.technology.administrative_technology = {
     research_cost: 20,
     year: 1520,
     unlocks: {
+      unlock_building: "harbourmasters",
       maximum_expeditions: 1
     }
   },
@@ -19,6 +20,7 @@ config.technology.administrative_technology = {
     research_cost: 50,
     year: 1550,
     unlocks: {
+      unlock_building: "the_courthouse",
       stability_modifier: 0.05
     }
   },
@@ -42,7 +44,7 @@ config.technology.administrative_technology = {
     research_cost: 75,
     year: 1500,
     unlocks: {
-      unlock_building: "universities"
+      unlock_building: ["botanical_gardens", "universities"]
     }
   },
   colonial_charters: {
@@ -65,6 +67,7 @@ config.technology.administrative_technology = {
     research_cost: 100,
     year: 1600,
     unlocks: {
+      unlock_building: ["city_halls", "post_offices"],
       building_cost: -0.05,
       unlock_reform: "bureaucracy"
     }
@@ -90,6 +93,7 @@ config.technology.administrative_technology = {
     research_cost: 150,
     year: 1620,
     unlocks: {
+      unlock_building: "local_departments",
       national_manpower: 0.05
     }
   },
@@ -112,7 +116,8 @@ config.technology.administrative_technology = {
     research_cost: 200,
     year: 1643,
     unlocks: {
-      enable_centralisation: true
+      enable_centralisation: true,
+      unlock_building: ["national_departments", "palaces"]
     }
   },
   tax_oversight: {
@@ -123,6 +128,7 @@ config.technology.administrative_technology = {
     research_cost: 200,
     year: 1600,
     unlocks: {
+      unlock_building: ["state_houses", "town_halls"],
       tax_efficiency: 0.03
     }
   },
@@ -157,6 +163,7 @@ config.technology.administrative_technology = {
     research_cost: 250,
     year: 1660,
     unlocks: {
+      unlock_building: ["mental_institutions", "prisons"],
       unlock_reform: "penal_system"
     }
   },
@@ -365,6 +372,7 @@ config.technology.administrative_technology = {
     research_cost: 1000,
     year: 1789,
     unlocks: {
+      unlock_building: "trade_unions",
       political_capital_gain: 2
     }
   },
@@ -400,6 +408,7 @@ config.technology.administrative_technology = {
     research_cost: 1200,
     year: 1848,
     unlocks: {
+      unlock_building: ["political_departments", "political_stations"],
       ruling_party_support: 0.01
     }
   },
@@ -423,7 +432,6 @@ config.technology.administrative_technology = {
     research_cost: 1400,
     year: 1791,
     unlocks: {
-      unlock_building: "research_labs",
       research_buildings: 1,
       centralisation: 0.05
     }
@@ -507,6 +515,7 @@ config.technology.administrative_technology = {
     unlocks: {
       research_buildings: 1,
       political_capital_gain: 2,
+      unlock_building: ["clinics", "fire_departments", "parks"],
       unlock_reform: "school_system"
     }
   },

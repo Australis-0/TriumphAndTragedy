@@ -7,7 +7,6 @@ config.technology.military_technology = {
     research_cost: 20,
     year: 1385,
     unlocks: {
-      unlock_building: "artillery_encampments",
       production_efficiency: 0.05,
       artillery_ap: 0.05
     }
@@ -55,6 +54,7 @@ config.technology.military_technology = {
     year: 1385,
     unlocks: {
       unlock_unit: "bombard",
+      unlock_building: "the_bombard",
       unit_cost: 0.03
     }
   },
@@ -139,7 +139,8 @@ config.technology.military_technology = {
     research_cost: 100,
     year: 1453,
     unlocks: {
-      ground_artillery_dp: 0.05
+      ground_artillery_dp: 0.05,
+      unlock_building: ["bastions", "ramparts", "star_forts"]
     }
   },
   the_arquebus: {
@@ -249,6 +250,7 @@ config.technology.military_technology = {
     research_cost: 200,
     year: 1590,
     unlocks: {
+      unlock_building: "forts",
       unlock_unit: "field_culverins",
       artillery_ap: 0.05
     }
@@ -359,6 +361,7 @@ config.technology.military_technology = {
     research_cost: 350,
     year: 1600,
     unlocks: {
+      unlock_building: "fortresses",
       unlock_unit: "field_cannon",
       artillery_dp: 0.05,
       obsolete_unit: "long_cannons"
@@ -421,6 +424,7 @@ config.technology.military_technology = {
     research_cost: 500,
     year: 1648,
     unlocks: {
+      unlock_building: ["military_academies", "training_fields"],
       military_buildings: 1,
       infantry_ap: 0.05,
       infantry_dp: 0.05,
@@ -486,6 +490,7 @@ config.technology.military_technology = {
     research_cost: 650,
     year: 1640,
     unlocks: {
+      unlock_building: "conscription_centres",
       national_manpower: 0.10
     }
   },
@@ -602,7 +607,8 @@ config.technology.military_technology = {
     research_cost: 900,
     year: 1754,
     unlocks: {
-      infantry_dp: 0.10
+      infantry_dp: 0.10,
+      unlock_building: "trenches"
     }
   },
   uhlans: {
@@ -635,10 +641,7 @@ config.technology.military_technology = {
     description: "Since ancient times, man has dreamed of being able to fly. With modern advances and the discovery of lighter than air elements, the potential to fulfil this dream is more likely than ever ...",
     prerequisite_techs: ["regular_conscription", "mysorean_rocket"],
     research_cost: 1000,
-    year: 1753,
-    unlocks: {
-      unlock_building: ["air_bases"]
-    }
+    year: 1753
   },
   light_infantry: {
     name: "Light Infantry",
@@ -722,6 +725,7 @@ config.technology.military_technology = {
     research_cost: 1400,
     year: 1793,
     unlocks: {
+      unlock_building: "recruitment_offices",
       unlock_reform: "conscription",
       mobilisation_size: 0.50,
       national_manpower: 0.05,
@@ -975,6 +979,7 @@ config.technology.military_technology = {
     research_cost: 3000,
     year: 1900,
     unlocks: {
+      unlock_building: ["aerodromes", "air_bases"],
       unlock_unit: "dirigibles"
     }
   },
@@ -1045,6 +1050,7 @@ config.technology.military_technology = {
     research_cost: 3500,
     year: 1893,
     unlocks: {
+      unlock_building: "lng_terminals",
       unlock_unit: "zeppelins"
     }
   },
@@ -1096,6 +1102,7 @@ config.technology.military_technology = {
     research_cost: 3500,
     year: 1913,
     unlocks: {
+      unlock_building: "bunkers",
       infantry_dp: 0.15
     }
   },
@@ -1120,6 +1127,7 @@ config.technology.military_technology = {
     research_cost: 4000,
     year: 1913,
     unlocks: {
+      unlock_building: "airstrips",
       unlock_unit: "biplanes",
       aeroplanes_dp: 0.05
     }
@@ -1254,6 +1262,7 @@ config.technology.military_technology = {
     research_cost: 5000,
     year: 1916,
     unlocks: {
+      unlock_building: "regional_aeroports",
       unlock_unit: "improved_biplanes"
     }
   },
@@ -1326,6 +1335,7 @@ config.technology.military_technology = {
     research_cost: 5500,
     year: 1915,
     unlocks: {
+      unlock_building: "international_aeroports",
       unlock_unit: "monoplane_fighters"
     }
   },
@@ -1598,6 +1608,7 @@ config.technology.military_technology = {
     research_cost: 7000,
     year: 1940,
     unlocks: {
+      unlock_building: "military_bases",
       infantry_ap: 0.10,
       artillery_ap: 0.05
     }
@@ -1898,7 +1909,10 @@ config.technology.military_technology = {
     description: "Through the creation of guided missile systems, artillery accuracy on the ground can be drastically improved, allowing for future extensions not just in range, but in the effectiveness of artillery as a whole.",
     prerequisite_techs: ["rocket_artillery"],
     research_cost: 9000,
-    year: 1944
+    year: 1944,
+    unlocks: {
+      unlock_building: "sams"
+    }
   },
   modern_armoured_car: {
     name: "Modern Armoured Car",

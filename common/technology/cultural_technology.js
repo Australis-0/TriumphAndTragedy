@@ -18,6 +18,7 @@ config.technology.cultural_technology = {
     research_cost: 50,
     year: 1450,
     unlocks: {
+      unlock_building: "art_academies",
       prestige_gain: 0.05,
       tax_efficiency: -0.02
     }
@@ -54,6 +55,7 @@ config.technology.cultural_technology = {
     research_cost: 75,
     year: 1495,
     unlocks: {
+      unlock_building: "memorials",
       permanent_prestige: 20,
       prestige_gain: 0.01
     }
@@ -168,6 +170,7 @@ config.technology.cultural_technology = {
     research_cost: 200,
     year: 1564,
     unlocks: {
+      unlock_building: ["hospitals", "primary_schools"],
       title_strength: -5,
       political_capital_gain_modifier: 0.02,
       constitutional_monarchy: 0.01,
@@ -203,6 +206,7 @@ config.technology.cultural_technology = {
     research_cost: 250,
     year: 1642,
     unlocks: {
+      unlock_building: "cafes",
       diplomatic_slots: 1,
       political_capital_gain_modifier: 0.02
     }
@@ -250,6 +254,7 @@ config.technology.cultural_technology = {
     research_cost: 500,
     year: 1618,
     unlocks: {
+      unlock_building: "secondary_schools",
       cultural_prestige_to_primary_culture: 5,
       literacy_gain: 0.05,
       bureaucrats_pop_chance: 0.01
@@ -262,6 +267,7 @@ config.technology.cultural_technology = {
     research_cost: 500,
     year: 1715,
     unlocks: {
+      unlock_building: ["members_clubs", "zoos"],
       education_efficiency: 0.05
     }
   },
@@ -283,6 +289,7 @@ config.technology.cultural_technology = {
     research_cost: 650,
     year: 1730,
     unlocks: {
+      unlock_building: ["georgian_blocks", "operas"],
       permanent_prestige: 20,
       prestige_gain: 0.01
     }
@@ -324,6 +331,7 @@ config.technology.cultural_technology = {
     research_cost: 750,
     year: 1730,
     unlocks: {
+      unlock_building: "theatres",
       permanent_prestige: 20,
       prestige_gain: 0.01
     }
@@ -357,6 +365,7 @@ config.technology.cultural_technology = {
     research_cost: 900,
     year: 1787,
     unlocks: {
+      unlock_building: "museums",
       permanent_prestige: 20,
       prestige_gain: 0.01
     }
@@ -390,6 +399,7 @@ config.technology.cultural_technology = {
     research_cost: 1000,
     year: 1800,
     unlocks: {
+      unlock_building: "haussmann_blocks",
       permanent_prestige: 20,
       prestige_gain: 0.01
     }
@@ -414,6 +424,7 @@ config.technology.cultural_technology = {
     year: 1800,
     research_cost: 1200,
     unlocks: {
+      unlock_building: ["esplanades", "sanatoriums"],
       permanent_prestige: 20,
       prestige_gain: 0.01
     }
@@ -492,6 +503,7 @@ config.technology.cultural_technology = {
     research_cost: 1400,
     year: 1848,
     unlocks: {
+      unlock_building: "worlds_fair",
       maximum_expeditions: 1,
       political_capital_gain_modifier: 0.15,
       ruling_party_support: 0.05
@@ -505,6 +517,7 @@ config.technology.cultural_technology = {
     research_cost: 1600,
     year: 1848,
     unlocks: {
+      unlock_building: "flats",
       permanent_prestige: 20,
       prestige_gain: 0.01
     }
@@ -516,6 +529,7 @@ config.technology.cultural_technology = {
     research_cost: 1600,
     year: 1850,
     unlocks: {
+      unlock_building: "schoolhouses",
       literacy_gain: 0.15,
       primary_education_efficiency: 0.10
     }
@@ -540,7 +554,8 @@ config.technology.cultural_technology = {
     year: 1844,
     unlocks: {
       permanent_prestige: 20,
-      prestige_gain: 0.01
+      prestige_gain: 0.01,
+      unlocks: "nightclubs"
     }
   },
   naturalism: {
@@ -585,6 +600,7 @@ config.technology.cultural_technology = {
     research_cost: 2000,
     year: 1852,
     unlocks: {
+      unlock_building: ["community_centres", "stadiums"],
       primary_education_efficiency: 0.15
     }
   },
@@ -873,6 +889,7 @@ config.technology.cultural_technology = {
     research_cost: 5500,
     year: 1920,
     unlocks: {
+      unlock_building: "community_colleges",
       research_efficiency: 0.05
     }
   },
@@ -941,6 +958,7 @@ config.technology.cultural_technology = {
     research_cost: 7000,
     year: 1950,
     unlocks: {
+      unlock_building: "commie_blocks",
       permanent_prestige: 20,
       prestige_gain: 0.01
     }
@@ -989,6 +1007,7 @@ config.technology.cultural_technology = {
     year: 1960,
     research_cost: 8000,
     unlocks: {
+      unlock_building: "condominiums",
       permanent_prestige: 20,
       prestige_gain: 0.01
     }
