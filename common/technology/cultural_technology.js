@@ -67,6 +67,7 @@ config.technology.cultural_technology = {
     research_cost: 75,
     year: 1440,
     unlocks: {
+      unlock_building: "publishing_houses",
       education_efficiency: 0.15,
       literacy_gain: 0.05,
       research_efficiency: 0.05,
@@ -231,6 +232,7 @@ config.technology.cultural_technology = {
     research_cost: 350,
     year: 1688,
     unlocks: {
+      unlock_building: "research_labs",
       research_efficiency: 0.05,
       political_capital_gain_modifier: 0.02
     }
@@ -517,7 +519,7 @@ config.technology.cultural_technology = {
     research_cost: 1600,
     year: 1848,
     unlocks: {
-      unlock_building: "flats",
+      unlock_building: ["camera_factories", "flats"],
       permanent_prestige: 20,
       prestige_gain: 0.01
     }
@@ -553,9 +555,9 @@ config.technology.cultural_technology = {
     research_cost: 1800,
     year: 1844,
     unlocks: {
+      unlock_building: "nightclubs",
       permanent_prestige: 20,
-      prestige_gain: 0.01,
-      unlocks: "nightclubs"
+      prestige_gain: 0.01
     }
   },
   naturalism: {
@@ -577,6 +579,7 @@ config.technology.cultural_technology = {
     research_cost: 1800,
     year: 1874,
     unlocks: {
+      unlock_building: "archivists",
       permanent_prestige: 10,
       research_efficiency: 0.02
     }
@@ -621,6 +624,7 @@ config.technology.cultural_technology = {
     research_cost: 2000,
     year: 1892,
     unlocks: {
+      unlock_building: "research_complexes",
       higher_education_efficiency: 0.05,
       research_efficiency: 0.02
     }
@@ -688,6 +692,7 @@ config.technology.cultural_technology = {
     research_cost: 3000,
     year: 1900,
     unlocks: {
+      unlock_building: "research_institutes",
       research_slots: 1,
       research_efficiency: 0.05
     }

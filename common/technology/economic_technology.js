@@ -91,6 +91,7 @@ config.technology.economic_technology = {
     research_cost: 100,
     year: 1550,
     unlocks: {
+      unlock_building: "sugar_refineries",
       agriculture: 1,
       canals: 1
     }
@@ -212,6 +213,7 @@ config.technology.economic_technology = {
     research_cost: 200,
     year: 1618,
     unlocks: {
+      unlock_building: ["cigar_factories", "cigarette_factories", "methanol_plants", "violin_makers"],
       resource_extraction: 4,
       canals: 1,
       construction_speed: -0.05
@@ -237,6 +239,7 @@ config.technology.economic_technology = {
     research_cost: 250,
     year: 1674,
     unlocks: {
+      unlock_building: ["cosmetic_works", "cottage_drug_industries"],
       pop_growth_modifier: 0.03,
       agriculture: 2
     }
@@ -247,8 +250,9 @@ config.technology.economic_technology = {
     description: "Manufactories were organised places of work where valuable goods were assembled. The advent of this institution quickly obsoleted the guild.",
     prerequisite_techs: ["the_watermill", "steel_tools"],
     research_cost: 250,
+    year: 1620,
     unlocks: {
-      unlock_building: "manufactories"
+      unlock_building: ["manufactories"]
     }
   },
   trading_companies: {
@@ -259,6 +263,7 @@ config.technology.economic_technology = {
     research_cost: 250,
     year: 1602,
     unlocks: {
+      unlock_building: ["chocolatiers", "uniforms_factories"],
       production_efficiency: 0.05,
       shipment_time: -0.05
     }
@@ -272,6 +277,7 @@ config.technology.economic_technology = {
     research_cost: 350,
     year: 1650,
     unlocks: {
+      unlock_building: "coffee_roasters",
       pop_growth_modifier: 0.05,
       agriculture: -1,
       stability_modifier: -0.10
@@ -319,6 +325,7 @@ config.technology.economic_technology = {
     research_cost: 500,
     year: 1750,
     unlocks: {
+      unlock_building: "lens_manufactories",
       rgo_throughput: 0.10
     }
   },
@@ -366,7 +373,7 @@ config.technology.economic_technology = {
     research_cost: 650,
     year: 1770,
     unlocks: {
-      unlock_building: "mills",
+      unlock_building: ["mills", "textile_mills"],
       industry: 1
     }
   },
@@ -452,6 +459,7 @@ config.technology.economic_technology = {
     research_cost: 900,
     year: 1763,
     unlocks: {
+      unlock_building: "machine_parts_factories",
       rgo_throughput: 0.05
     }
   },
@@ -513,7 +521,7 @@ config.technology.economic_technology = {
     research_cost: 1000,
     year: 1770,
     unlocks: {
-      unlock_building: ["factories", "tenements"],
+      unlock_building: ["arms_factories", "factories", "hydrogen_plants", "nitric_acid_plants", "tenements"],
       unlock_reform: "wage"
     }
   },
@@ -550,7 +558,7 @@ config.technology.economic_technology = {
     research_cost: 1200,
     year: 1775,
     unlocks: {
-      unlock_building: "lignite_coal_mines",
+      unlock_building: ["canneries", "chloralkali_process_plants", "coal_washers", "food_factories", "lignite_coal_mines"],
       rgo_throughput: 0.03,
       production_efficiency: 0.02,
       canals: 2
@@ -600,7 +608,7 @@ config.technology.economic_technology = {
     research_cost: 1400,
     year: 1802,
     unlocks: {
-      unlock_building: "guano_gatherers",
+      unlock_building: ["calcium_preparators", "iodine_plants", "guano_gatherers"],
       pop_growth_modifier: 0.02
     }
   },
@@ -612,6 +620,7 @@ config.technology.economic_technology = {
     year: 1720,
     research_cost: 1400,
     unlocks: {
+      unlock_building: "lye_factories",
       industry: 1
     }
   },
@@ -647,7 +656,7 @@ config.technology.economic_technology = {
     research_cost: 1600,
     year: 1829,
     unlocks: {
-      unlock_building: ["hotels", "railways", "train_depots"],
+      unlock_building: ["hotels", "railways", "train_depots", "train_factories"],
       extra_building_slots: 1
     }
   },
@@ -659,7 +668,7 @@ config.technology.economic_technology = {
     research_cost: 1600,
     year: 1840,
     unlocks: {
-      unlock_building: ["barium_mines", "chromite_mines", "gas_pipelines", "kimberlite_mines"],
+      unlock_building: ["barium_mines", "barium_refineries", "bromine_distilleries", "chromite_mines", "chromium_refineries", "diamond_refineries", "kimberlite_mines", "natural_gas_extractors", "phenol_plants", "toluene_works"],
       mines: 3,
       resource_extraction: 1
     }
@@ -695,6 +704,7 @@ config.technology.economic_technology = {
     research_cost: 1800,
     year: 1850,
     unlocks: {
+      unlock_building: ["acid_manufacturers", "explosive_factories", "fertiliser_factories"],
       agriculture: 5,
       pop_growth_modifier: -0.04
     }
@@ -743,7 +753,7 @@ config.technology.economic_technology = {
     research_cost: 2000,
     year: 1852,
     unlocks: {
-      unlock_building: "arsenals"
+      unlock_building: ["ammonia_plants", "arsenals", "cement_factories", "drug_labs", "photographic_film_factories", "urea_factories"]
     }
   },
   global_finance: {
@@ -754,6 +764,7 @@ config.technology.economic_technology = {
     research_cost: 2000,
     year: 1851,
     unlocks: {
+      unlock_building: ["telegraph_lines", "telegraph_offices"],
       tax_efficiency: 0.05
     }
   },
@@ -777,6 +788,7 @@ config.technology.economic_technology = {
     research_cost: 2500,
     year: 1850,
     unlocks: {
+      unlock_building: "phosphate_works",
       agriculture: 1
     }
   },
@@ -801,6 +813,7 @@ config.technology.economic_technology = {
     research_cost: 2500,
     year: 1856,
     unlocks: {
+      unlock_building: ["concrete_plants", "gas_works", "rebar_factories", "steel_beams_factories", "steelworks"]
     }
   },
   laissez_faire_doctrine: {
@@ -824,7 +837,7 @@ config.technology.economic_technology = {
     research_cost: 3000,
     year: 1885,
     unlocks: {
-      unlock_building: "assembly_plants",
+      unlock_building: ["assembly_plants", "audio_appliance_factories", "formaldehyde_plants", "lift_factories", "lighting_factories", "experimental_facilities"],
       construction_speed: -0.05
     }
   },
@@ -836,6 +849,7 @@ config.technology.economic_technology = {
     research_cost: 3000,
     year: 1861,
     unlocks: {
+      unlock_building: "engine_factories",
       processing_facilities: 2
     }
   },
@@ -872,6 +886,7 @@ config.technology.economic_technology = {
     research_cost: 3500,
     year: 1859,
     unlocks: {
+      unlock_building: ["derricks", "gum_factories", "refineries", "rubber_plants"]
     }
   },
   cheap_coal: {
@@ -882,6 +897,7 @@ config.technology.economic_technology = {
     research_cost: 3500,
     year: 1860,
     unlocks: {
+      unlock_building: ["benzene_plants", "sodium_carbonate_works"],
       mines: 3,
       railways: 1
     }
@@ -906,7 +922,7 @@ config.technology.economic_technology = {
     research_cost: 4000,
     year: 1890,
     unlocks: {
-      unlock_building: "amusement_parks",
+      unlock_building: ["amusement_parks", "bicycle_factories", "fluorine_plants", "gas_plants", "oxygen_chemical_factories", "steam_crackers"],
       pop_growth_modifier: 0.01,
       national_manpower: 0.05
     }
@@ -919,6 +935,7 @@ config.technology.economic_technology = {
     research_cost: 4000,
     year: 1870,
     unlocks: {
+      unlock_building: ["acetic_acid_plants", "gas_pipelines", "gas_refineries"],
       petrochemicals: 2
     }
   },
@@ -930,6 +947,7 @@ config.technology.economic_technology = {
     research_cost: 4000,
     year: 1870,
     unlocks: {
+      unlock_building: ["filament_works", "telephone_manufacturers", "wire_manufactories"],
       mines: 3,
       railways: 1,
       construction_speed: -0.05
@@ -943,6 +961,7 @@ config.technology.economic_technology = {
     research_cost: 4000,
     year: 1896,
     unlocks: {
+      unlock_building: "biolabs",
       unlock_reform: ["safety_regulations", "unemployment"]
     }
   },
@@ -954,6 +973,7 @@ config.technology.economic_technology = {
     research_cost: 4000,
     year: 1905,
     unlocks: {
+      unlock_building: "telecommunication_lines",
       ports: 1,
       production_efficiency: 0.05
     }
@@ -966,7 +986,7 @@ config.technology.economic_technology = {
     research_cost: 4000,
     year: 1892,
     unlocks: {
-      unlock_building: ["fuel_stations", "tractor_barns"]
+      unlock_building: ["fuel_stations", "automobile_factories", "tractor_barns", "tyres_factories"]
     }
   },
 
@@ -978,7 +998,7 @@ config.technology.economic_technology = {
     research_cost: 4500,
     year: 1914,
     unlocks: {
-      unlock_building: "industrial_complexes"
+      unlock_building: ["acetone_manufacturers", "biofuel_plants", "capacitor_factories", "epoxyethane_works", "ethylene_glycol_boiling_plants", "industrial_complexes", "pharmaceuticals", "plastic_factories", "radio_towers", "stainless_steel_factories"]
     }
   },
   bank_holidays: {
@@ -1013,7 +1033,7 @@ config.technology.economic_technology = {
     research_cost: 5000,
     year: 1920,
     unlocks: {
-      unlock_building: "neighbourhoods",
+      unlock_building: ["ferrochromite_refineries", "neighbourhoods", "resistor_factories"],
       industry: 1,
       processing_facilities: 2,
       production_efficiency: 0.02,
@@ -1028,7 +1048,7 @@ config.technology.economic_technology = {
     research_cost: 5000,
     year: 1886,
     unlocks: {
-      unlock_building: ["bauxite_mines", "manganese_mines", "nickel_mines", "tungsten_mines"],
+      unlock_building: ["aluminium_factories", "aluminium_refineries", "bauxite_mines", "manganese_mines", "manganese_refineries", "nickel_mines", "nickelworks", "tungsten_mines", "titanium_dioxide_works"],
       processing_facilities: 1
     }
   },
@@ -1064,7 +1084,7 @@ config.technology.economic_technology = {
     research_cost: 5500,
     year: 1920,
     unlocks: {
-      unlock_building: ["civilian_industries", "department_stores"],
+      unlock_building: ["civilian_industries", "department_stores", "tantalum_factories", "turbine_manufactories"],
       processing_facilities: 1,
       construction_speed: -0.10
     }
@@ -1079,7 +1099,7 @@ config.technology.economic_technology = {
     unlocks: {
       reform_desire_gain: -0.02,
       production_efficiency: -0.10,
-      unlock_building: ["beryllium_mines", "cobalt_mines", "cooperite_mines", "molybdenum_mines", "platinum_mines"]
+      unlock_building: ["beryllium_mines", "cobalt_mines", "cobalt_refineries", "cooperite_mines", "molybdenum_mines", "molybdenite_refineries", "palladium_refineries", "platinum_mines", "platinum_refineries"]
     }
   },
   mutual_funds: {
@@ -1138,7 +1158,7 @@ config.technology.economic_technology = {
     research_cost: 6000,
     year: 1940,
     unlocks: {
-      unlock_building: ["ilmenite_titanium_mines", "scheelite_mines"],
+      unlock_building: ["ilmenite_titanium_mines", "scheelite_mines", "titanium_refineries", "tungsten_refineries"],
       rgo_throughput: 0.05
     }
   },
@@ -1174,7 +1194,7 @@ config.technology.economic_technology = {
     research_cost: 6500,
     year: 1942,
     unlocks: {
-      unlock_building: "uranium_mines",
+      unlock_building: ["centrifuges", "uranium_mines", "uranium_refineries"],
       rgo_throughput: 0.10
     }
   },
@@ -1243,6 +1263,7 @@ config.technology.economic_technology = {
     research_cost: 7000,
     year: 1947,
     unlocks: {
+      unlock_building: ["broadcast_stations", "fabrication_plants", "silicate_factories", "television_factories", "transistor_manufacturers", "television_towers"],
       production_efficiency: 0.05
     }
   },
@@ -1302,6 +1323,7 @@ config.technology.economic_technology = {
     research_cost: 8000,
     year: 1950,
     unlocks: {
+      unlock_building: "computer_factories",
       processing_facilities: 3
     }
   },
@@ -1385,6 +1407,7 @@ config.technology.economic_technology = {
     research_cost: 8500,
     year: 1985,
     unlocks: {
+      unlock_building: ["internet_cables", "server_rooms"],
       ports: 1,
       production_efficiency: 0.05
     }
@@ -1398,6 +1421,7 @@ config.technology.economic_technology = {
     research_cost: 9000,
     year: 1970,
     unlocks: {
+      unlock_building: "mtbe_manufacturing_plants",
       pop_growth_modifier: 0.02,
       agriculture: 1
     }
@@ -1423,7 +1447,7 @@ config.technology.economic_technology = {
     research_cost: 9000,
     year: 1990,
     unlocks: {
-      unlock_building: "coltan_mines",
+      unlock_building: ["coltan_mines", "niobic_refineries"],
       mines: 8,
       resource_extraction: 2
     }
@@ -1470,7 +1494,7 @@ config.technology.economic_technology = {
     research_cost: 9500,
     year: 1990,
     unlocks: {
-      unlock_building: "production_facilities",
+      unlock_building: ["laser_factories", "production_facilities"],
       processing_facilities: 1
     }
   },
