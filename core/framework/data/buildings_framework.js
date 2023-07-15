@@ -148,6 +148,40 @@ module.exports = {
           }
   },
 
+  //getAllBuildingGoods() - Returns a key array of all goods relevant to the set of a user's available_buildings
+  getAllBuildingGoods: function (arg0_user) {
+    //Convert from parameters
+    var user_id = arg0_user;
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var all_building_goods = [];
+    var all_building_keys = Object.keys(lookup.all_buildings);
+    var usr = main.users[actual_id];
+
+    //Iterate through all buildings to get all_building_goods
+    for (var i = 0; i < all_building_keys.length; i++)
+      if (usr.available_buildings.includes(all_building_keys[i])) {
+        var local_building = lookup.all_buildings[all_building_keys[i]];
+
+        for (var x = 0; x < reserved.building_good_keys.length; x++) {
+          var local_goods_field = local_building[reserved.building_good_keys[x]];
+
+          if (local_goods_field) {
+            var local_good_keys = Object.keys(local_goods_field);
+
+            for (var y = 0; y < local_good_keys.length; y++)
+              if (!all_building_goods.includes(local_good_keys[y]))
+                if (lookup.all_goods[local_good_keys[y]])
+                  all_building_goods.push(local_good_keys[y]);
+          }
+        }
+      }
+
+    //Return statement
+    return all_building_goods;  
+  },
+
   /*
     getBuilding() - Returns back a building object/key based on options
     options: {

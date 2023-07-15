@@ -16,7 +16,7 @@ module.exports = {
       var local_key = all_good_keys[i];
       var local_object = goods_object[all_good_keys[i]];
 
-      if (!["icon", "name", "type"].includes(local_key))
+      if (!reserved.goods.includes(local_key))
         if (local_object.type == "category") {
           var is_primary_category = (config.goods[local_key]);
 
@@ -205,10 +205,11 @@ module.exports = {
     return economy_string;
   },
 
-  printInventory: function (arg0_user, arg1_page) {
+  printInventory: function (arg0_user, arg1_page, arg2_do_not_display) {
     //Convert from parameters
     var user_id = arg0_user;
     var page = (arg1_page) ? parseInt(arg1_page) : 0;
+    var do_not_display = arg2_do_not_display;
 
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
@@ -272,10 +273,16 @@ module.exports = {
         title_pages: true
       });
 
-    game_obj.main_embed = createPageMenu(game_obj.middle_embed, {
-      embed_pages: inventory_embeds,
-      user: game_obj.user
-    });
-    game_obj.main_change = true;
+    if (!do_not_display) {
+      game_obj.main_embed = createPageMenu(game_obj.middle_embed, {
+        embed_pages: inventory_embeds,
+        user: game_obj.user,
+        page: page
+      });
+      game_obj.main_change = true;
+    }
+
+    //Return statement
+    return inventory_embeds;
   }
 };

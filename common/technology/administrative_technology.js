@@ -785,7 +785,7 @@ config.technology.administrative_technology = {
   },
   socialism: {
     name: "Socialism",
-    icon: "workers",
+    icon: "labourers",
     description: "Socialism is a blanket term for a wide range of economic and social systems characterised by social ownership of the means of production and workers' self-management of enterprises.",
     prerequisite_techs: ["fascism"],
     research_cost: 5000,
@@ -920,7 +920,7 @@ config.technology.administrative_technology = {
   },
   universal_human_rights: {
     name: "Universal Human Rights",
-    icon: "workers",
+    icon: "labourers",
     description: "The establishment of moral principles and norms that set an international standard for fundamental rights to which a person is inherently entitled simply because he or she is a human being, regardless of age, ethnic origin, location, language, religion, ethnicity or any other status.",
     prerequisite_techs: ["international_treaties"],
     research_cost: 6500,

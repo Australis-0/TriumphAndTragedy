@@ -601,7 +601,7 @@ config.technology.military_technology = {
   },
   early_trenches: {
     name: "Early Trenches",
-    icon: "workers",
+    icon: "labourers",
     description: "Trenches and related earthworks began to first take shape around the time of line battle warfare, with earthworks being able to cover the firing infantry as they were reloading.",
     prerequisite_techs: ["line_infantry"],
     research_cost: 900,

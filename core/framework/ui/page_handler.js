@@ -1721,6 +1721,19 @@ module.exports = {
             printEconomy(user_id);
             game_obj.page = "economy";
           }
+
+          //[Jump To Page]
+          if (input == "jump to page")
+            visualPrompt(game_obj.alert_embed, user_id, {
+              title: `Jump To Page:`,
+              prompts: [
+                [`Which page would you like to jump to?`, "number", { min: 1, max: printInventory(user_id, undefined, true).length }]
+              ]
+            },
+            function (arg) {
+              log.debug(`Jumping to page ${arg[0] - 1}!`);
+              printInventory(user_id, arg[0] - 1, false);
+            });
         }
 
         if (game_obj.page == "view_constructions") {

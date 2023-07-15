@@ -13,7 +13,7 @@ config.goods = { //[WIP] - Redo mine chances, buy/sell prices
   //Crafting Points - Represents training capacity for military units
   crafting_points: {
     name: "Crafting Points",
-    icon: "workers",
+    icon: "labourers",
     type: "category",
 
     ground_units_cp: {

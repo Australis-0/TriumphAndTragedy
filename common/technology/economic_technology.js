@@ -14,7 +14,7 @@ config.technology.economic_technology = {
 
   the_workshop: {
     name: "The Workshop",
-    icon: "workers",
+    icon: "labourers",
     description: "The workshop was a standing improvement over guilds that allowed individual tasks to be conducted more effectively.",
     prerequisite_techs: ["cottage_industry"],
     research_cost: 50,
@@ -770,7 +770,7 @@ config.technology.economic_technology = {
   },
   protectionism: {
     name: "Protectionism",
-    icon: "workers",
+    icon: "labourers",
     description: "By protecting our companies from foreign competitors whilst still in their infancy, we can help nurture a growing domestic industry here at home. Free trade is not always right.",
     prerequisite_techs: ["iron_railways"],
     research_cost: 2000,
@@ -1188,7 +1188,7 @@ config.technology.economic_technology = {
   },
   deep_mining: {
     name: "Deep Mining",
-    icon: "workers",
+    icon: "labourers",
     description: "Deep mining, similar to shaft mining, poses numerous problems, but can be solved with the ingenuity of our engineers. Providing increased efficiency as workers no longer have to descend down long corridors, deep mining will allow us to produce the excess in raw resources that our factories desperately need.",
     prerequisite_techs: ["heavy_mining_machinery"],
     research_cost: 6500,
