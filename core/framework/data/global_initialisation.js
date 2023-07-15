@@ -2,8 +2,8 @@
 module.exports = {
   initGlobal: function () {
     //Declare local tracker variables
-    var all_good_names = getGoods({ exclude_hidden: true, return_names: true });
-    var all_goods = getGoods({ exclude_hidden: true });
+    var all_good_names = lookup.all_good_names_excluding_hidden;
+    var all_goods = lookup.all_goods_excluding_hidden;
     var all_main_keys = Object.keys(main);
 
     //Stub objects

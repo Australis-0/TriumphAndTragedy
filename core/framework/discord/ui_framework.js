@@ -55,7 +55,7 @@ module.exports = {
     //Declare local instance variables
     var spacing = "";
 
-    if (spacing >= 1)
+    if (nesting >= 1)
       for (var i = 0; i < nesting - 1; i++)
         spacing += "  ";
 
@@ -505,23 +505,31 @@ module.exports = {
         //Split embeds based on characters
         for (var i = 0; i < array_string.length; i++) {
           var added_line = false;
+          var hit_maximum = false;
 
           if (
             local_array_string.join("\n").length + array_string[i].length <= maximum_characters_per_array
           ) {
             local_array_string.push(array_string[i]);
             added_line = true;
+          } else {
+            hit_maximum = true;
           }
+
           if (i != 0 || array_string.length == 1)
             if (
-              (!added_line && local_array_string.join("\n").length + array_string[i].length > maximum_characters_per_array) || i == array_string.length - 1 &&
+              (i == array_string.length - 1 &&
 
               //Check to see that string is not empty
-              local_array_string.join("\n").length > 0
+              local_array_string.join("\n").length > 0) ||
+              hit_maximum
             ) {
               //Push to all_strings
               all_strings.push(local_array_string.join("\n"));
               local_array_string = [];
+
+              if (hit_maximum)
+                i--;
             }
         }
       } else {

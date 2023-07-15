@@ -25,7 +25,12 @@ module.exports = {
           if (is_primary_category)
             inventory_string.push(`---`);
 
-          inventory_string.push(module.exports.getGoodsInventoryString(user_id, local_object, nesting + 1).join("\n"));
+          log.debug(`Goods inventory recursion on ${(local_object.name) ? local_object.name : local_key}!`);
+
+          var recursive_inventory_string = module.exports.getGoodsInventoryString(user_id, local_object, nesting + 1);
+
+          for (var x = 0; x < recursive_inventory_string.length; x++)
+            inventory_string.push(recursive_inventory_string[x]);
         } else {
           inventory_string.push(`${bulletPoint(nesting)}${(local_object.icon) ? config.icons[local_object.icon] + " " : ""}**${(local_object.name) ? local_object.name : local_key}**: ${parseNumber(usr.inventory[local_key])}`);
         }
@@ -105,16 +110,17 @@ module.exports = {
       ));
     }
 
-    for (var i = 0; i < all_good_names.length; i++) {
-      var local_good = getGood(all_good_names[i]);
-      var processed_good_name = (local_good.name) ? local_good.name : all_good_names[i];
-      var processed_good_icon = (local_good.icon) ? config.icons[local_good.icon] + " " : "";
+    for (var i = 0; i < all_good_names.length; i++)
+      if (!reserved.goods.includes(all_good_names[i])) {
+        var local_good = getGood(all_good_names[i]);
+        var processed_good_name = (local_good.name) ? local_good.name : all_good_names[i];
+        var processed_good_icon = (local_good.icon) ? config.icons[local_good.icon] + " " : "";
 
-      if (local_resource_modifiers[all_good_names[i]].count != 0) {
-        modifiers_string.push(`${processed_good_icon}Base **${printPercentage(usr.modifiers.rgo_throughput, { display_prefix: true })}** ${processed_good_name} Gain in **${local_resource_modifiers[all_good_names[i]].count}** citie(s):`);
-        modifiers_string.push(`- ${local_resource_modifiers[all_good_names[i]].cities.join(", ")}`);
+        if (local_resource_modifiers[all_good_names[i]].count != 0) {
+          modifiers_string.push(`${processed_good_icon}Base **${printPercentage(usr.modifiers.rgo_throughput, { display_prefix: true })}** ${processed_good_name} Gain in **${local_resource_modifiers[all_good_names[i]].count}** citie(s):`);
+          modifiers_string.push(`- ${local_resource_modifiers[all_good_names[i]].cities.join(", ")}`);
+        }
       }
-    }
 
     //Resource production
     resource_production_string.push("");
@@ -165,7 +171,7 @@ module.exports = {
     }
 
     if (Object.keys(all_production).length == 0) {
-      footer_string.push(`- _Our economy is not currently producing any goods! Consider constructing some new buildings in order to jumpstart our economy._`);
+      footer_string.push(`_Our economy is not currently producing any goods! Consider constructing some new buildings in order to jumpstart our economy._`);
       footer_string.push("");
     } else {
       footer_string.push(`Note: Buildings that lack requisite goods or maintenance will not produce anything. Infrastructure can improve your RGO Throughput.`);
@@ -199,17 +205,17 @@ module.exports = {
     return economy_string;
   },
 
-  printInventory: function (arg0_user) {
+  printInventory: function (arg0_user, arg1_page) {
     //Convert from parameters
     var user_id = arg0_user;
+    var page = (arg1_page) ? parseInt(arg1_page) : 0;
 
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
     var game_obj = getGameObject(user_id);
     var usr = main.users[actual_id];
 
-    //Initialise inventory_fields, inventory_string
-    var field_categories = []; //Tracker variable to check which categories have already been pushed or not
+    //Initialise fields_list, inventory_string
     var fields_list = [];
     var inventory_string = [];
 
@@ -217,7 +223,7 @@ module.exports = {
     var all_material_categories = Object.keys(config.goods);
 
     //Format embed
-    inventory_string.push(`**[Back]**`);
+    inventory_string.push(`**[Back]** | **[Jump To Page]**`);
     inventory_string.push("");
     inventory_string.push(`${config.icons.money} Money: **${parseNumber(usr.money)}**`);
     inventory_string.push("");
@@ -226,10 +232,7 @@ module.exports = {
     inventory_string.push("");
 
     for (var i = 0; i < all_material_categories.length; i++)
-      if (!field_categories.includes(all_material_categories[i]) && all_material_categories[i] != "hidden") {
-        //Push to tracker variable for ease of use
-        field_categories.push(all_material_categories[i]);
-
+      if (all_material_categories[i] != "hidden") {
         //Loop over all local keys in object and display them. [WIP] - Hide obsolete or unlocked resources not used in any building or crafting recipe later
         var local_category = config.goods[all_material_categories[i]];
         var local_goods = Object.keys(local_category);
@@ -243,13 +246,13 @@ module.exports = {
         var local_string = getGoodsInventoryString(user_id, local_category);
 
         //Used for processing more than one string at a time
-        var local_split_string = splitText(local_string);
+        var local_split_string = splitText(local_string, { maximum_characters: 512 });
 
         //Push formatted fields to inventory
-        for (var i = 0; i < local_split_string.length; i++)
+        for (var x = 0; x < local_split_string.length; x++)
           fields_list.push({
             name: local_name.join("\n"),
-            value: local_split_string[i],
+            value: local_split_string[x],
             inline: true
           });
       }

@@ -1,11 +1,16 @@
 module.exports = {
   initOptimisation: function () {
+    global.reserved = {
+      goods: ["name", "icon", "type"]
+    };
     global.lookup = {
       all_buildings: getBuildings({ return_object: true }),
       all_event_names: getEvents({ return_names: true }),
       all_events: getEvents(),
       all_good_names: getGoods({ return_names: true }),
+      all_good_names_excluding_hidden: getGoods({ exclude_hidden: true, return_names: true }),
       all_goods: getGoods({ return_object: true }),
+      all_goods_excluding_hidden: getGoods({ exclude_hidden: true }),
       all_goods_array: getGoods(),
       all_modifiers: getAllModifiers(),
       all_modifier_names: getAllModifiers({ return_names: true }),

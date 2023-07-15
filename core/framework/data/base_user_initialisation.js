@@ -326,22 +326,11 @@ module.exports = {
     if (!usr.trades) usr.trades = {};
 
     //Post-object processing (Goods):
-    var all_good_categories = Object.keys(config.goods);
-    for (var i = 0; i < all_good_categories.length; i++) {
-      var local_category = config.goods[all_good_categories[i]];
+    for (var i = 0; i < lookup.all_good_names.length; i++) {
+      var local_good_key = lookup.all_good_names[i];
 
-      if (all_good_categories[i] != "name") {
-        var local_goods = Object.keys(local_category);
-
-        for (var x = 0; x < local_goods.length; x++) {
-          var local_good = local_category[local_goods[x]];
-
-          if (!["name", "icon"].includes(local_goods[x])) {
-            if (!usr.inventory[local_goods[x]]) usr.inventory[local_goods[x]] = 0;
-            if (!usr.modifiers[`${local_goods[x]}_gain`]) usr.modifiers[`${local_goods[x]}_gain`] = 1;
-          }
-        }
-      }
+      if (!usr.inventory[local_good_key]) usr.inventory[local_good_key] = 0;
+      if (!usr.modifiers[`${local_good_key}_gain`]) usr.modifiers[`${local_good_key}_gain`] = 1;
     }
 
     //Obsoletion variables
