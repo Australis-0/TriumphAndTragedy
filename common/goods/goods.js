@@ -1045,7 +1045,7 @@ config.goods = { //[WIP] - Redo mine chances, buy/sell prices
       },
       gin: {
         name: "Gin"
-      }.
+      },
       schnapps: {
         name: "Schnapps"
       },
@@ -1183,712 +1183,712 @@ config.goods = { //[WIP] - Redo mine chances, buy/sell prices
           }
         }
       },
-      ammunition: {
-        name: "Ammunition",
+    },
+    ammunition: {
+      name: "Ammunition",
+      type: "category",
+
+      ap_rounds: {
+        name: "AP Rounds"
+      },
+      artillery_shells: {
+        name: "Artillery Shells",
         type: "category",
 
-        ap_rounds: {
-          name: "AP Rounds"
+        delayed_fuse_shells: {
+          name: "Delayed-Fuse Shells"
         },
-        artillery_shells: {
-          name: "Artillery Shells",
-          type: "category",
-
-          delayed_fuse_shells: {
-            name: "Delayed-Fuse Shells"
-          },
-          regular_shells: {
-            name: "Regular Shells"
-          }
-        },
-        high_calibre_ammunition: {
-          name: "High-calibre Ammunition",
-          aliases: ["high-caliber ammunition", "high caliber ammunition", "high calibre ammunition"]
-        },
-        low_calibre_ammunition: {
-          name: "Low-calibre Ammunition",
-          aliases: ["low-caliber ammunition", "low caliber ammunition", "low calibre ammunition"]
-        },
-        sabot_rounds: {
-          name: "Sabot Rounds"
+        regular_shells: {
+          name: "Regular Shells"
         }
       },
-      automobiles: {
-        name: "Automobiles",
-        type: "category",
-
-        cars: {
-          name: "Cars"
-        },
-        humvees: {
-          name: "Humvees"
-        },
-        jeeps: {
-          name: "Jeeps"
-        },
-        lorries: {
-          name: "Lorries"
-        },
-        luxury_cars: {
-          name: "Luxury Cars"
-        },
-        motorbikes: {
-          name: "Motorbikes"
-        },
-        steam_carriages: {
-          name: "Steam Carriages"
-        },
-        tractors: {
-          name: "Tractors"
-        },
-        vans: {
-          name: "Vans"
-        }
-      },
-      bicycles: {
-        name: "Bicycles"
-      },
-      bricks: {
-        name: "Bricks"
-      },
-      cameras: {
-        name: "Cameras"
-      },
-      cement: {
-        name: "Cement"
-      },
-      ceramics: {
-        name: "Ceramics"
-      },
-      chassis: {
-        name: "Chassis"
-      },
-      chinaware: {
-        name: "Chinaware",
-        type: "category",
-
-        bone_china: {
-          name: "Bone China"
-        },
-        china: {
-          name: "China"
-        },
-        doccia_porcelain: {
-          name: "Doccia Porcelain"
-        },
-        lacquerware: {
-          name: "Lacquerware"
-        },
-        porcelain: {
-          name: "Porcelain"
-        }
-      },
-      chewing_gum: {
-        name: "Chewing Gum"
-      },
-      chocolate: {
-        name: "Chocolate"
-      },
-      cigars: {
-        name: "Cigars"
-      },
-      cigarettes: {
-        name: "Cigarettes"
-      },
-      clothes: {
-        name: "Clothes",
-        type: "category",
-
-        luxury_clothes: {
-          name: "Luxury Clothes",
-          type: "category",
-
-          bowler_hats: {
-            name: "Bowler Hats"
-          },
-          finery: {
-            name: "Finery"
-          },
-          fur_coats: {
-            name: "Fur Coats"
-          },
-          fur_hats: {
-            name: "Fur Hats"
-          },
-          leather_boots: {
-            name: "Leather Boots"
-          },
-          pocketwatches: {
-            name: "Pocketwatches",
-            aliases: ["pocket watches"]
-          },
-          tailored_suits: {
-            name: "Tailored Suits"
-          },
-          wristwatches: {
-            name: "Wristwatches"
-          }
-        },
-        staple_clothes: {
-          name: "Staple Clothes",
-          type: "category",
-
-          boots: {
-            name: "Boots"
-          },
-          parkas: {
-            name: "Parkas"
-          },
-          ponchos: {
-            name: "Ponchos"
-          },
-          work_clothes: {
-            name: "Work Clothes"
-          }
-        }
-      },
-      clay_pipes: {
-        name: "Clay Pipes"
-      },
-      coffee: {
-        name: "Coffee"
-      },
-      computers: {
-        name: "Computers"
-      },
-      cosmetic_products: {
-        name: "Cosmetic Products"
-      },
-      dyes: {
-        name: "Dyes"
-      },
-      enriched_uranium: {
-        name: "Enriched Uranium",
-        type: "category",
-
-        depleted_uranium: {
-          name: "Depleted Uranium"
-        },
-        uranium: {
-          name: "Uranium"
-        },
-        highly_enriched_uranium: {
-          name: "Highly Enriched Uranium",
-          aliases: ["HEU"]
-        },
-        weapons_grade_enriched_uranium: {
-          name: "Weapons-Grade Enriched Uranium",
-          aliases: ["weapons grade enriched uranium"]
-        }
-      },
-      fertiliser: {
-        name: "Fertiliser"
-      },
-      film: {
-        name: "Film"
-      },
-      foods: {
-        name: "Foods",
-        type: "category",
-
-        bread: {
-          name: "Bread"
-        },
-        canned_food: {
-          name: "Canned Food"
-        },
-        cheese: {
-          name: "Cheese",
-          type: "category",
-          aliases: ["cheeses"],
-
-          american: {
-            name: "American"
-          },
-          blue: {
-            name: "Blue",
-            type: "category",
-
-            gorgonzola: {
-              name: "Gorgonzola"
-            },
-            roquefort: {
-              name: "Roquefort"
-            },
-            stilton: {
-              name: "Stilton"
-            }
-          },
-          brie: {
-            name: "Brie"
-          },
-          butterkase: {
-            name: "Butterkäse",
-            aliases: ["butterkase", "butterkaese"]
-          },
-          cantal: {
-            name: "Cantal"
-          },
-          cascaval: {
-            name: "Cascaval"
-          },
-          cheddar: {
-            name: "Cheddar"
-          },
-          cheshire: {
-            name: "Cheshire"
-          },
-          coulommiers: {
-            name: "Coulommiers"
-          },
-          cream_cheese: {
-            name: "Cream Cheese"
-          },
-          edam: {
-            name: "Edam"
-          },
-          feta: {
-            name: "Feta"
-          },
-          gloucester: {
-            name: "Gloucester"
-          },
-          gouda: {
-            name: "Gouda"
-          },
-          grana_padano: {
-            name: "Grana Padano"
-          },
-          havarti: {
-            name: "Havarti"
-          },
-          jarlsberg: {
-            name: "Jarlsberg"
-          },
-          munster: {
-            name: "Munster"
-          },
-          neufchatel: {
-            name: "Neufchatel"
-          },
-          parmesan: {
-            name: "Parmesan"
-          },
-          pecorino: {
-            name: "Pecorino"
-          },
-          port_salut: {
-            name: "Port Salut"
-          },
-          ricotta: {
-            name: "Ricotta"
-          },
-          swiss: {
-            name: "Swiss"
-          }
-        },
-        dried_meat: {
-          name: "Dried Meat"
-        },
-        jam: {
-          name: "Jam"
-        },
-        lemonade: {
-          name: "Lemonade"
-        },
-        pemmican: {
-          name: "Pemmican"
-        },
-        sausages: {
-          name: "Sausages"
-        },
-        soup: {
-          name: "Soup"
-        },
-        stew: {
-          name: "Stew"
-        },
-        syrup: {
-          name: "Syrup"
-        },
-        tortillas: {
-          name: "Tortillas"
-        }
-      },
-      furniture: {
-        name: "Furniture",
-        type: "category",
-
-        common_furniture: {
-          name: "Common Furniture"
-        },
-        luxury_furniture: {
-          name: "Luxury Furniture"
-        }
-      },
-      gas: {
-        name: "Gas"
-      },
-      gems: {
-        name: "Gems",
-        type: "category",
-
-        cut_ruby: {
-          name: "Cut Ruby"
-        },
-        diamond: {
-          name: "Diamond"
-        },
-        jewellery: {
-          name: "Jewellery",
-          aliases: ["jewelry"]
-        }
-      },
-      glasses: {
-        name: "Glasses"
-      },
-      gramophones: {
-        name: "Gramophones"
-      },
-      heavy_weaponry: {
-        name: "Heavy Weaponry"
-      },
-      honey: {
-        name: "Honey"
-      },
-      illicit_drugs: {
-        name: "Illicit Drugs",
-        type: "category",
-
-        cannabis: {
-          name: "Cannabis",
-          aliases: ["weed"]
-        },
-        carfentanil: {
-          name: "Carfentanil",
-          aliases: ["carfentanyl"]
-        },
-        cocaine: {
-          name: "Cocaine",
-          aliases: ["coke"]
-        },
-        crack_cocaine: {
-          name: "Crack Cocaine"
-        },
-        fentanyl: {
-          name: "Fentanyl",
-          aliases: ["fentanil"]
-        },
-        hashish: {
-          name: "Hashish"
-        },
-        heroin: {
-          name: "Heroin"
-        },
-        methamphetamine: {
-          name: "Methamphetamine"
-        },
-        opium: {
-          name: "Opium"
-        },
-        psychedelics: {
-          name: "Psychedelics"
-        }
-      },
-      incense: {
-        name: "Incense"
-      },
-      ink: {
-        name: "Ink"
-      },
-      lamps: {
-        name: "Lamps",
-        type: "category",
-
-        candles: {
-          name: "Candles"
-        },
-        electric_lamps: {
-          name: "Electric Lamps"
-        },
-        lanterns: {
-          name: "Lanterns"
-        },
-        oil_lamps: {
-          name: "Oil Lamps"
-        }
-      },
-      lasers: {
-        name: "Lasers"
-      },
-      lifts: {
-        name: "Lifts"
-      },
-      lightbulbs: {
-        name: "Lightbulbs",
-        aliases: ["light bulbs"]
-      },
-      lumber: {
-        name: "Lumber",
-        type: "category",
-
-        acacia_lumber: {
-          name: "Acacia Lumber"
-        },
-        ash_lumber: {
-          name: "Ash Lumber"
-        },
-        balsa_lumber: {
-          name: "Balsa Lumber"
-        },
-        basswood_lumber: {
-          name: "Basswood Lumber"
-        },
-        blackwood_lumber: {
-          name: "Blackwood Lumber"
-        },
-        bloodwood_lumber: {
-          name: "Bloodwood Lumber"
-        },
-        cedar_lumber: {
-          name: "Cedar Lumber"
-        },
-        cherry_lumber: {
-          name: "Cherry Lumber"
-        },
-        chestut_lumber: {
-          name: "Chestnut Lumber"
-        },
-        cottonwood_lumber: {
-          name: "Cottonwood Lumber"
-        },
-        cypress_lumber: {
-          name: "Cypress Lumber"
-        },
-        ebony_lumber: {
-          name: "Ebony Lumber"
-        },
-        elm_lumber: {
-          name: "Elm Lumber"
-        },
-        eucalyptus_lumber: {
-          name: "Eucalyptus Lumber"
-        },
-        fir_lumber: {
-          name: "Fir Lumber"
-        },
-        hickory_lumber: {
-          name: "Hickory Lumber"
-        },
-        ironwood_lumber: {
-          name: "Ironwood Lumber"
-        },
-        lacewood_lumber: {
-          name: "Lacewood Lumber"
-        },
-        mahogany_lumber: {
-          name: "Mahogany Lumber"
-        },
-        maple_lumber: {
-          name: "Maple Lumber"
-        },
-        oak_lumber: {
-          name: "Oak Lumber"
-        },
-        pine_lumber: {
-          name: "Pine Lumber"
-        },
-        redwood_lumber: {
-          name: "Redwood Lumber"
-        },
-        rosewood_lumber: {
-          name: "Rosewood Lumber"
-        },
-        sandalwood_lumber: {
-          name: "Sandalwood Lumber"
-        },
-        spruce_lumber: {
-          name: "Spruce Lumber"
-        },
-        turpentine_lumber: {
-          name: "Turpentine Lumber"
-        },
-        walnut_lumber: {
-          name: "Walnut Lumber"
-        },
-        willow_lumber: {
-          name: "Willow Lumber"
-        }
-      },
-      medicines: {
-        name: "Medicines",
-        type: "category",
-
-        pharmaceuticals: {
-          name: "Pharmaceuticals",
-          type: "category",
-
-          antipyretics: {
-            name: "Antipyretics"
-          },
-          analgesics: {
-            name: "Analgesics"
-          },
-          antimalarial_drugs: {
-            name: "Antimalarial Drugs"
-          },
-          antibiotics: {
-            name: "Antibiotics"
-          },
-          antiseptics: {
-            name: "Antiseptics"
-          },
-          contraceptives: {
-            name: "Contraceptives"
-          },
-          hormone_medications: {
-            name: "Hormone Medications"
-          },
-          mood_stabilisers: {
-            name: "Mood Stabilisers",
-            aliases: ["mood stabilizers"]
-          },
-          statins: {
-            name: "Statins"
-          },
-          stimulants: {
-            name: "Stimulants"
-          },
-          tranquilisers: {
-            name: "Tranquilisers",
-            aliases: ["tranquilizers"]
-          },
-          vaccines: {
-            name: "Vaccines"
-          }
-        },
-        traditional_medicines: {
-          name: "Traditional Medicines"
-        }
-      },
-      naval_supplies: {
-        name: "Naval Supplies"
-      },
-      olive_oil: {
-        name: "Olive Oil"
-      },
-      paper: {
-        name: "Paper"
-      },
-      plastics: {
-        name: "Plastics"
-      },
-      radios: {
-        name: "Radios"
-      },
-      recording_devices: {
-        name: "Recording Devices"
-      },
-      refined_petroil: {
-        name: "Refined Petroil"
-      },
-      reinforced_concrete: {
-        name: "Reinforced Concrete"
-      },
-      rubber: {
-        name: "Rubber"
-      },
-      salt: {
-        name: "Salt"
-      },
-      sewing_machines: {
-        name: "Sewing Machines"
-      },
-      shampoo: {
-        name: "Shampoo"
-      },
-      sleeping_bags: {
-        name: "Sleeping Bags"
-      },
-      souvenirs: {
-        name: "Souvenirs"
-      },
-      small_arms: {
-        name: "Small Arms"
-      },
-      soap: {
-        name: "Soap"
-      },
-      steel_beams: {
-        name: "Steel Beams"
-      },
-      sugar: {
-        name: "Sugar"
-      },
-      tapestries: {
-        name: "Tapestries"
-      },
-      tea: {
-        name: "Tea",
-        type: "category",
-
-        black_tea: {
-          name: "Black Tea"
-        },
-        chai_tea: {
-          name: "Chai Tea"
-        },
-        green_tea: {
-          name: "Green Tea"
-        },
-        herbal_tea: {
-          name: "Herbal Tea"
-        },
-        hibiscus_tea: {
-          name: "Hibiscus Tea"
-        },
-        oolong_tea: {
-          name: "Oolong Tea"
-        },
-        puerh_tea: {
-          name: "Pu-erh Tea",
-          aliases: ["puerh tea", "pu erh tea"]
-        },
-        white_tea: {
-          name: "White Tea"
-        }
-      },
-      telephones: {
-        name: "Telephones"
-      },
-      televisions: {
-        name: "Televisions",
-        aliases: ["TVs"]
-      },
-      tools: {
-        name: "Tools"
-      },
-      torpedoes: {
-        name: "Torpedoes"
-      },
-      trains: {
-        name: "Trains"
-      },
-      typewriters: {
-        name: "Typewriters"
-      },
-      tyres: {
-        name: "Tyres"
-      },
-      uniforms: {
-        name: "Uniforms"
-      },
-      violins: {
-        name: "Violins"
-      },
-      wood_veneers: {
-        name: "Wood Veneers"
+      high_calibre_ammunition: {
+        name: "High-calibre Ammunition",
+        aliases: ["high-caliber ammunition", "high caliber ammunition", "high calibre ammunition"]
+      },
+      low_calibre_ammunition: {
+        name: "Low-calibre Ammunition",
+        aliases: ["low-caliber ammunition", "low caliber ammunition", "low calibre ammunition"]
+      },
+      sabot_rounds: {
+        name: "Sabot Rounds"
       }
+    },
+    automobiles: {
+      name: "Automobiles",
+      type: "category",
+
+      cars: {
+        name: "Cars"
+      },
+      humvees: {
+        name: "Humvees"
+      },
+      jeeps: {
+        name: "Jeeps"
+      },
+      lorries: {
+        name: "Lorries"
+      },
+      luxury_cars: {
+        name: "Luxury Cars"
+      },
+      motorbikes: {
+        name: "Motorbikes"
+      },
+      steam_carriages: {
+        name: "Steam Carriages"
+      },
+      tractors: {
+        name: "Tractors"
+      },
+      vans: {
+        name: "Vans"
+      }
+    },
+    bicycles: {
+      name: "Bicycles"
+    },
+    bricks: {
+      name: "Bricks"
+    },
+    cameras: {
+      name: "Cameras"
+    },
+    cement: {
+      name: "Cement"
+    },
+    ceramics: {
+      name: "Ceramics"
+    },
+    chassis: {
+      name: "Chassis"
+    },
+    chinaware: {
+      name: "Chinaware",
+      type: "category",
+
+      bone_china: {
+        name: "Bone China"
+      },
+      china: {
+        name: "China"
+      },
+      doccia_porcelain: {
+        name: "Doccia Porcelain"
+      },
+      lacquerware: {
+        name: "Lacquerware"
+      },
+      porcelain: {
+        name: "Porcelain"
+      }
+    },
+    chewing_gum: {
+      name: "Chewing Gum"
+    },
+    chocolate: {
+      name: "Chocolate"
+    },
+    cigars: {
+      name: "Cigars"
+    },
+    cigarettes: {
+      name: "Cigarettes"
+    },
+    clothes: {
+      name: "Clothes",
+      type: "category",
+
+      luxury_clothes: {
+        name: "Luxury Clothes",
+        type: "category",
+
+        bowler_hats: {
+          name: "Bowler Hats"
+        },
+        finery: {
+          name: "Finery"
+        },
+        fur_coats: {
+          name: "Fur Coats"
+        },
+        fur_hats: {
+          name: "Fur Hats"
+        },
+        leather_boots: {
+          name: "Leather Boots"
+        },
+        pocketwatches: {
+          name: "Pocketwatches",
+          aliases: ["pocket watches"]
+        },
+        tailored_suits: {
+          name: "Tailored Suits"
+        },
+        wristwatches: {
+          name: "Wristwatches"
+        }
+      },
+      staple_clothes: {
+        name: "Staple Clothes",
+        type: "category",
+
+        boots: {
+          name: "Boots"
+        },
+        parkas: {
+          name: "Parkas"
+        },
+        ponchos: {
+          name: "Ponchos"
+        },
+        work_clothes: {
+          name: "Work Clothes"
+        }
+      }
+    },
+    clay_pipes: {
+      name: "Clay Pipes"
+    },
+    coffee: {
+      name: "Coffee"
+    },
+    computers: {
+      name: "Computers"
+    },
+    cosmetic_products: {
+      name: "Cosmetic Products"
+    },
+    dyes: {
+      name: "Dyes"
+    },
+    enriched_uranium: {
+      name: "Enriched Uranium",
+      type: "category",
+
+      depleted_uranium: {
+        name: "Depleted Uranium"
+      },
+      uranium: {
+        name: "Uranium"
+      },
+      highly_enriched_uranium: {
+        name: "Highly Enriched Uranium",
+        aliases: ["HEU"]
+      },
+      weapons_grade_enriched_uranium: {
+        name: "Weapons-Grade Enriched Uranium",
+        aliases: ["weapons grade enriched uranium"]
+      }
+    },
+    fertiliser: {
+      name: "Fertiliser"
+    },
+    film: {
+      name: "Film"
+    },
+    foods: {
+      name: "Foods",
+      type: "category",
+
+      bread: {
+        name: "Bread"
+      },
+      canned_food: {
+        name: "Canned Food"
+      },
+      cheese: {
+        name: "Cheese",
+        type: "category",
+        aliases: ["cheeses"],
+
+        american: {
+          name: "American"
+        },
+        blue: {
+          name: "Blue",
+          type: "category",
+
+          gorgonzola: {
+            name: "Gorgonzola"
+          },
+          roquefort: {
+            name: "Roquefort"
+          },
+          stilton: {
+            name: "Stilton"
+          }
+        },
+        brie: {
+          name: "Brie"
+        },
+        butterkase: {
+          name: "Butterkäse",
+          aliases: ["butterkase", "butterkaese"]
+        },
+        cantal: {
+          name: "Cantal"
+        },
+        cascaval: {
+          name: "Cascaval"
+        },
+        cheddar: {
+          name: "Cheddar"
+        },
+        cheshire: {
+          name: "Cheshire"
+        },
+        coulommiers: {
+          name: "Coulommiers"
+        },
+        cream_cheese: {
+          name: "Cream Cheese"
+        },
+        edam: {
+          name: "Edam"
+        },
+        feta: {
+          name: "Feta"
+        },
+        gloucester: {
+          name: "Gloucester"
+        },
+        gouda: {
+          name: "Gouda"
+        },
+        grana_padano: {
+          name: "Grana Padano"
+        },
+        havarti: {
+          name: "Havarti"
+        },
+        jarlsberg: {
+          name: "Jarlsberg"
+        },
+        munster: {
+          name: "Munster"
+        },
+        neufchatel: {
+          name: "Neufchatel"
+        },
+        parmesan: {
+          name: "Parmesan"
+        },
+        pecorino: {
+          name: "Pecorino"
+        },
+        port_salut: {
+          name: "Port Salut"
+        },
+        ricotta: {
+          name: "Ricotta"
+        },
+        swiss: {
+          name: "Swiss"
+        }
+      },
+      dried_meat: {
+        name: "Dried Meat"
+      },
+      jam: {
+        name: "Jam"
+      },
+      lemonade: {
+        name: "Lemonade"
+      },
+      pemmican: {
+        name: "Pemmican"
+      },
+      sausages: {
+        name: "Sausages"
+      },
+      soup: {
+        name: "Soup"
+      },
+      stew: {
+        name: "Stew"
+      },
+      syrup: {
+        name: "Syrup"
+      },
+      tortillas: {
+        name: "Tortillas"
+      }
+    },
+    furniture: {
+      name: "Furniture",
+      type: "category",
+
+      common_furniture: {
+        name: "Common Furniture"
+      },
+      luxury_furniture: {
+        name: "Luxury Furniture"
+      }
+    },
+    gas: {
+      name: "Gas"
+    },
+    gems: {
+      name: "Gems",
+      type: "category",
+
+      cut_ruby: {
+        name: "Cut Ruby"
+      },
+      diamond: {
+        name: "Diamond"
+      },
+      jewellery: {
+        name: "Jewellery",
+        aliases: ["jewelry"]
+      }
+    },
+    glasses: {
+      name: "Glasses"
+    },
+    gramophones: {
+      name: "Gramophones"
+    },
+    heavy_weaponry: {
+      name: "Heavy Weaponry"
+    },
+    honey: {
+      name: "Honey"
+    },
+    illicit_drugs: {
+      name: "Illicit Drugs",
+      type: "category",
+
+      cannabis: {
+        name: "Cannabis",
+        aliases: ["weed"]
+      },
+      carfentanil: {
+        name: "Carfentanil",
+        aliases: ["carfentanyl"]
+      },
+      cocaine: {
+        name: "Cocaine",
+        aliases: ["coke"]
+      },
+      crack_cocaine: {
+        name: "Crack Cocaine"
+      },
+      fentanyl: {
+        name: "Fentanyl",
+        aliases: ["fentanil"]
+      },
+      hashish: {
+        name: "Hashish"
+      },
+      heroin: {
+        name: "Heroin"
+      },
+      methamphetamine: {
+        name: "Methamphetamine"
+      },
+      opium: {
+        name: "Opium"
+      },
+      psychedelics: {
+        name: "Psychedelics"
+      }
+    },
+    incense: {
+      name: "Incense"
+    },
+    ink: {
+      name: "Ink"
+    },
+    lamps: {
+      name: "Lamps",
+      type: "category",
+
+      candles: {
+        name: "Candles"
+      },
+      electric_lamps: {
+        name: "Electric Lamps"
+      },
+      lanterns: {
+        name: "Lanterns"
+      },
+      oil_lamps: {
+        name: "Oil Lamps"
+      }
+    },
+    lasers: {
+      name: "Lasers"
+    },
+    lifts: {
+      name: "Lifts"
+    },
+    lightbulbs: {
+      name: "Lightbulbs",
+      aliases: ["light bulbs"]
+    },
+    lumber: {
+      name: "Lumber",
+      type: "category",
+
+      acacia_lumber: {
+        name: "Acacia Lumber"
+      },
+      ash_lumber: {
+        name: "Ash Lumber"
+      },
+      balsa_lumber: {
+        name: "Balsa Lumber"
+      },
+      basswood_lumber: {
+        name: "Basswood Lumber"
+      },
+      blackwood_lumber: {
+        name: "Blackwood Lumber"
+      },
+      bloodwood_lumber: {
+        name: "Bloodwood Lumber"
+      },
+      cedar_lumber: {
+        name: "Cedar Lumber"
+      },
+      cherry_lumber: {
+        name: "Cherry Lumber"
+      },
+      chestut_lumber: {
+        name: "Chestnut Lumber"
+      },
+      cottonwood_lumber: {
+        name: "Cottonwood Lumber"
+      },
+      cypress_lumber: {
+        name: "Cypress Lumber"
+      },
+      ebony_lumber: {
+        name: "Ebony Lumber"
+      },
+      elm_lumber: {
+        name: "Elm Lumber"
+      },
+      eucalyptus_lumber: {
+        name: "Eucalyptus Lumber"
+      },
+      fir_lumber: {
+        name: "Fir Lumber"
+      },
+      hickory_lumber: {
+        name: "Hickory Lumber"
+      },
+      ironwood_lumber: {
+        name: "Ironwood Lumber"
+      },
+      lacewood_lumber: {
+        name: "Lacewood Lumber"
+      },
+      mahogany_lumber: {
+        name: "Mahogany Lumber"
+      },
+      maple_lumber: {
+        name: "Maple Lumber"
+      },
+      oak_lumber: {
+        name: "Oak Lumber"
+      },
+      pine_lumber: {
+        name: "Pine Lumber"
+      },
+      redwood_lumber: {
+        name: "Redwood Lumber"
+      },
+      rosewood_lumber: {
+        name: "Rosewood Lumber"
+      },
+      sandalwood_lumber: {
+        name: "Sandalwood Lumber"
+      },
+      spruce_lumber: {
+        name: "Spruce Lumber"
+      },
+      turpentine_lumber: {
+        name: "Turpentine Lumber"
+      },
+      walnut_lumber: {
+        name: "Walnut Lumber"
+      },
+      willow_lumber: {
+        name: "Willow Lumber"
+      }
+    },
+    medicines: {
+      name: "Medicines",
+      type: "category",
+
+      pharmaceuticals: {
+        name: "Pharmaceuticals",
+        type: "category",
+
+        antipyretics: {
+          name: "Antipyretics"
+        },
+        analgesics: {
+          name: "Analgesics"
+        },
+        antimalarial_drugs: {
+          name: "Antimalarial Drugs"
+        },
+        antibiotics: {
+          name: "Antibiotics"
+        },
+        antiseptics: {
+          name: "Antiseptics"
+        },
+        contraceptives: {
+          name: "Contraceptives"
+        },
+        hormone_medications: {
+          name: "Hormone Medications"
+        },
+        mood_stabilisers: {
+          name: "Mood Stabilisers",
+          aliases: ["mood stabilizers"]
+        },
+        statins: {
+          name: "Statins"
+        },
+        stimulants: {
+          name: "Stimulants"
+        },
+        tranquilisers: {
+          name: "Tranquilisers",
+          aliases: ["tranquilizers"]
+        },
+        vaccines: {
+          name: "Vaccines"
+        }
+      },
+      traditional_medicines: {
+        name: "Traditional Medicines"
+      }
+    },
+    naval_supplies: {
+      name: "Naval Supplies"
+    },
+    olive_oil: {
+      name: "Olive Oil"
+    },
+    paper: {
+      name: "Paper"
+    },
+    plastics: {
+      name: "Plastics"
+    },
+    radios: {
+      name: "Radios"
+    },
+    recording_devices: {
+      name: "Recording Devices"
+    },
+    refined_petroil: {
+      name: "Refined Petroil"
+    },
+    reinforced_concrete: {
+      name: "Reinforced Concrete"
+    },
+    rubber: {
+      name: "Rubber"
+    },
+    salt: {
+      name: "Salt"
+    },
+    sewing_machines: {
+      name: "Sewing Machines"
+    },
+    shampoo: {
+      name: "Shampoo"
+    },
+    sleeping_bags: {
+      name: "Sleeping Bags"
+    },
+    souvenirs: {
+      name: "Souvenirs"
+    },
+    small_arms: {
+      name: "Small Arms"
+    },
+    soap: {
+      name: "Soap"
+    },
+    steel_beams: {
+      name: "Steel Beams"
+    },
+    sugar: {
+      name: "Sugar"
+    },
+    tapestries: {
+      name: "Tapestries"
+    },
+    tea: {
+      name: "Tea",
+      type: "category",
+
+      black_tea: {
+        name: "Black Tea"
+      },
+      chai_tea: {
+        name: "Chai Tea"
+      },
+      green_tea: {
+        name: "Green Tea"
+      },
+      herbal_tea: {
+        name: "Herbal Tea"
+      },
+      hibiscus_tea: {
+        name: "Hibiscus Tea"
+      },
+      oolong_tea: {
+        name: "Oolong Tea"
+      },
+      puerh_tea: {
+        name: "Pu-erh Tea",
+        aliases: ["puerh tea", "pu erh tea"]
+      },
+      white_tea: {
+        name: "White Tea"
+      }
+    },
+    telephones: {
+      name: "Telephones"
+    },
+    televisions: {
+      name: "Televisions",
+      aliases: ["TVs"]
+    },
+    tools: {
+      name: "Tools"
+    },
+    torpedoes: {
+      name: "Torpedoes"
+    },
+    trains: {
+      name: "Trains"
+    },
+    typewriters: {
+      name: "Typewriters"
+    },
+    tyres: {
+      name: "Tyres"
+    },
+    uniforms: {
+      name: "Uniforms"
+    },
+    violins: {
+      name: "Violins"
+    },
+    wood_veneers: {
+      name: "Wood Veneers"
     }
   }
 };

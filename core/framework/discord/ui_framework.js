@@ -474,6 +474,63 @@ module.exports = {
     }
   },
 
+  splitText: function (arg0_array, arg1_options) {
+    //Convert from parameters
+    var array_string = arg0_array;
+    var options = (arg1_options) ? arg1_options : {};
+
+    //Declare local instance variables
+    var all_strings = [];
+    var local_array_string = [];
+    var maximum_characters_per_array = (options.maximum_characters) ? options.maximum_characters : 1024;
+
+    //Error trapping
+    try {
+      if (!options.maximum_lines) {
+        //Split embeds based on characters
+        for (var i = 0; i < array_string.length; i++) {
+          var added_line = false;
+
+          if (
+            local_array_string.join("\n").length + array_string[i].length <= maximum_characters_per_array
+          ) {
+            local_array_string.push(array_string[i]);
+            added_line = true;
+          }
+          if (i != 0 || array_string.length == 1)
+            if (
+              (!added_line && local_array_string.join("\n").length + array_string[i].length > maximum_characters_per_array) || i == array_string.length - 1 &&
+
+              //Check to see that string is not empty
+              local_array_string.join("\n").length > 0
+            ) {
+              //Push to all_strings
+              all_strings.push(local_array_string.join("\n"));
+              local_array_string = [];
+            }
+        }
+      } else {
+        //Split embeds based on lines
+        for (var i = 0; i < array_string.length; i++) {
+          local_array_string.push(array_string[i]);
+
+          if (i != 0 || array_string.length == 1)
+            if (i % options.maximum_lines == 0 || i == array_string.length - 1) {
+              //Push to all_strings
+              all_strings.push(local_array_string.join("\n"));
+              local_array_string = [];
+            }
+        }
+      }
+
+      //Return statement
+      return all_strings;
+    } catch (e) {
+      log.error(`Ran into an error whilst parsing text at splitText(): ${e}`);
+      console.log(e);
+    }
+  },
+
   updateAlert: function (arg0_user, arg1_options) {
     //Convert from parameters
     var user_id = arg0_user;

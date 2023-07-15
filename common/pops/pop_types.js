@@ -610,7 +610,7 @@ config.pops = { //[WIP] - Rework chances, icons
         },
         add_chance_capitalist_pops: {
           limit: {
-            capitalist_percentage: 0.05
+            capitalists_percentage: 0.05
           },
           value: -0.10
         }
@@ -1810,7 +1810,7 @@ config.pops = { //[WIP] - Rework chances, icons
     demotes_to: {
       artisans: {
         limit: {
-          staple_goods: 0.75
+          has_staple_goods: 0.75
         },
 
         add_chance_wealth: {

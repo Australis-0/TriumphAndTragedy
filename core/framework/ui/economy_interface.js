@@ -211,12 +211,16 @@ module.exports = {
             local_string.push(`${(local_good.icon) ? config.icons[local_good.icon] + " ": ""} **${(local_good.name) ? local_good.name : local_goods[x]}**: ${parseNumber(usr.inventory[local_goods[x]])}`);
         }
 
-        //Push formatted field to inventory
-        inventory_fields.push({
-          name: local_name.join("\n"),
-          value: local_string.join("\n"),
-          inline: true
-        });
+        //Used for processing more than one string at a time
+        var local_split_string = splitText(local_string);
+
+        //Push formatted fields to inventory
+        for (var i = 0; i < local_split_string.length; i++)
+          inventory_fields.push({
+            name: local_name.join("\n"),
+            value: local_split_string[i],
+            inline: true
+          });
       }
 
     //Create embed and edit to message

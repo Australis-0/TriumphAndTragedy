@@ -1023,4 +1023,4 @@ config.buildings.infrastructure = {
     separate_building_slots: true,
     supply_limit: 5
   }
-},
+};
