@@ -14,6 +14,7 @@ config.goods = { //[WIP] - Redo mine chances, buy/sell prices
   crafting_points: {
     name: "Crafting Points",
     icon: "workers",
+    type: "category",
 
     ground_units_cp: {
       name: "Army CP",
@@ -55,6 +56,7 @@ config.goods = { //[WIP] - Redo mine chances, buy/sell prices
   raw_resources: {
     name: "Raw Materials",
     icon: "government",
+    type: "category",
 
     animal_products: {
       name: "Animal Products",
@@ -662,6 +664,9 @@ config.goods = { //[WIP] - Redo mine chances, buy/sell prices
   },
 
   intermediate_goods: {
+    name: "Intermediate Goods",
+    type: "category",
+
     aluminium: {
       name: "Aluminium",
       aliases: ["aluminum"]
@@ -1035,6 +1040,7 @@ config.goods = { //[WIP] - Redo mine chances, buy/sell prices
   processed_goods: {
     name: "Processed Goods",
     icon: "construction_time",
+    type: "category",
 
     alcohol: {
       name: "Alcohol",

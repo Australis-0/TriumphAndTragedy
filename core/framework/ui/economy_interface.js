@@ -1,4 +1,40 @@
 module.exports = {
+  getGoodsInventoryString: function (arg0_user, arg1_goods_object, arg2_nesting) {
+    //Convert from parameters
+    var user_id = arg0_user;
+    var goods_object = arg1_goods_object;
+    var nesting = (arg2_nesting) ? parseInt(arg2_nesting) : 0;
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var all_good_keys = Object.keys(goods_object);
+    var inventory_string = [];
+    var usr = main.users[actual_id];
+
+    //Iterate over all keys in goods_object
+    for (var i = 0; i < all_good_keys.length; i++) {
+      var local_key = all_good_keys[i];
+      var local_object = goods_object[all_good_keys[i]];
+
+      if (!["icon", "name", "type"].includes(local_key))
+        if (local_object.type == "category") {
+          var is_primary_category = (config.goods[local_key]);
+
+          //Recursive parsing for category
+          inventory_string.push(`${bulletPoint(nesting)}${(local_object.icon) ? config.icons[local_object.icon] + " " : ""}${(is_primary_category) ? `**__` : `**`}${(local_object.name) ? `${local_object.name}` : local_key}:${(is_primary_category) ? `__**` : `**`}`);
+          if (is_primary_category)
+            inventory_string.push(`---`);
+
+          inventory_string.push(module.exports.getGoodsInventoryString(user_id, local_object, nesting + 1).join("\n"));
+        } else {
+          inventory_string.push(`${bulletPoint(nesting)}${(local_object.icon) ? config.icons[local_object.icon] + " " : ""}**${(local_object.name) ? local_object.name : local_key}**: ${parseNumber(usr.inventory[local_key])}`);
+        }
+    }
+
+    //Return statement
+    return inventory_string;
+  },
+
   printEconomy: function (arg0_user) {
     //Convert from parameters
     var user_id = arg0_user;
@@ -174,7 +210,7 @@ module.exports = {
 
     //Initialise inventory_fields, inventory_string
     var field_categories = []; //Tracker variable to check which categories have already been pushed or not
-    var inventory_fields = [];
+    var fields_list = [];
     var inventory_string = [];
 
     //Fetch all goods and process them into individual fields
@@ -204,19 +240,14 @@ module.exports = {
         local_name.push(`${(local_category.icon) ? config.icons[local_category.icon] + " " : ""} **__${(local_category.name) ? local_category.name : all_material_categories[i]}:__**`);
         local_name.push(`---`);
 
-        for (var x = 0; x < local_goods.length; x++) {
-          var local_good = local_category[local_goods[x]];
-
-          if (!["icon", "name"].includes(local_goods[x]))
-            local_string.push(`${(local_good.icon) ? config.icons[local_good.icon] + " ": ""} **${(local_good.name) ? local_good.name : local_goods[x]}**: ${parseNumber(usr.inventory[local_goods[x]])}`);
-        }
+        var local_string = getGoodsInventoryString(user_id, local_category);
 
         //Used for processing more than one string at a time
         var local_split_string = splitText(local_string);
 
         //Push formatted fields to inventory
         for (var i = 0; i < local_split_string.length; i++)
-          inventory_fields.push({
+          fields_list.push({
             name: local_name.join("\n"),
             value: local_split_string[i],
             inline: true
@@ -224,22 +255,24 @@ module.exports = {
       }
 
     //Create embed and edit to message
-    var inventory_embed = new Discord.MessageEmbed()
-      .setColor(settings.bot_colour)
-      .setTitle(`**Inventory:**`)
-      .setThumbnail(usr.flag)
-      .setImage("https://cdn.discordapp.com/attachments/722997700391338046/736141424315203634/margin.png")
-      .setDescription(inventory_string.join("\n"));
+    var inventory_embeds = (fields_list.length > 0) ?
+      splitEmbed(inventory_string, {
+        fields: fields_list,
+        fixed_width: true,
+        maximum_fields: 4,
+        table_width: 2,
+        title: "Inventory:",
+        title_pages: true
+      }) :
+      splitEmbed(inventory_string, {
+        title: "Inventory:",
+        title_pages: true
+      });
 
-    //Append fields to existing embed
-    for (var i = 0; i < inventory_fields.length; i++)
-      inventory_embed.addField(
-        inventory_fields[i].name,
-        inventory_fields[i].value,
-        inventory_fields[i].inline
-      );
-
-    game_obj.main_embed = inventory_embed;
+    game_obj.main_embed = createPageMenu(game_obj.middle_embed, {
+      embed_pages: inventory_embeds,
+      user: game_obj.user
+    });
     game_obj.main_change = true;
   }
 };

@@ -48,6 +48,21 @@ module.exports = {
     msg.edit({ components: new_component_array })
   },
 
+  bulletPoint: function (arg0_nesting) {
+    //Convert from parameters
+    var nesting = (arg0_nesting) ? parseInt(arg0_nesting) : 0;
+
+    //Declare local instance variables
+    var spacing = "";
+
+    if (spacing >= 1)
+      for (var i = 0; i < nesting - 1; i++)
+        spacing += "  ";
+
+    //Return statement
+    return (nesting != 0) ? spacing + "- " : "";
+  },
+
   confirmDialogue: function (arg0_message_obj, arg1_contents, arg2_function) {
     //Convert from parameters
     var message_id = arg0_message_obj;
