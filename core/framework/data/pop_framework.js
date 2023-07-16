@@ -90,6 +90,45 @@ module.exports = {
     }
   },
 
+  //getAllPopGoods() - Returns an array of all good keys demanded or produced by pop types w/ more than 0 people
+  getAllPopGoods: function (arg0_user) { //[WIP] - Finish function body
+    //Convert from parameters
+    var user_id = arg0_user;
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var all_pop_goods = [];
+    var relevant_pops = module.exports.getRelevantPops(user_id);
+    var usr = main.users[actual_id];
+
+    //Iterate over relevant_pops and recursively parse objects and subobjects for goods
+    for (var i = 0; i < relevant_pops.length; i++) {
+      var local_pop = config.pops[relevant_pops[i]];
+
+      //max_modifier_limit
+      if (local_pop.max_modifier_limit) {
+        var max_modifier_limit_keys = Object.keys(local_pop.max_modifier_limit);
+
+        for (var x = 0; x < max_modifier_limit_keys.length; x++)
+          if (!all_pop_goods.includes(max_modifier_limit_keys[x]))
+            if (lookup.all_goods[max_modifier_limit_keys[x]])
+              all_pop_goods.push(max_modifier_limit_keys[x]);
+      }
+
+      //per_100k handler
+      if (local_pop.per_100k) {
+        var all_relevant_subgoods = getAllSubgoods(local_pop.per_100k);
+
+        for (var x = 0; x < all_relevant_subgoods.length; x++)
+          if (!all_pop_goods.includes(all_relevant_subgoods[x]))
+            all_pop_goods.push(all_relevant_subgoods[x]);
+      }
+    }
+
+    //Return statement
+    return all_pop_goods;
+  },
+
   getDemographics: function (arg0_user) {
     //Convert from parameters
     var user_id = arg0_user;
@@ -210,6 +249,27 @@ module.exports = {
 
     //Return statement
     return pop_obj.population;
+  },
+
+  //getRelevantPops() - Returns an array of all pop keys with more than 0 population in a player country
+  getRelevantPops: function (arg0_user) {
+    //Convert from parameters
+    var user_id = arg0_user;
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var all_pop_keys = Object.keys(config.pops);
+    var relevant_pops = [];
+    var usr = main.users[actual_id];
+
+    //Iterate over all_pop_keys and check if usr.pops finds a match
+    for (var i = 0; i < all_pop_keys.length; i++)
+      if (usr.pops[all_pop_keys[i]])
+        if (!relevant_pops.includes(all_pop_keys[i]))
+          relevant_pops.push(all_pop_keys[i]);
+
+    //Return statement
+    return relevant_pops;
   },
 
   getTotalActiveDuty: function (arg0_user) {

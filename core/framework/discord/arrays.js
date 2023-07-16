@@ -46,6 +46,23 @@ module.exports = {
 		return a;
 	},
 
+  //mergeArrays() - Merges an array without duplicating elements
+  mergeArrays: function (...arg0_arrays) {
+    //Convert from parameters
+    var arrays = arg0_arrays;
+
+    //Declare local instance variables
+    var merged_array = [];
+
+    for (var i = 0; i < arrays.length; i++)
+      for (var x = 0; x < arrays[i].length; x++)
+        if (!merged_array.includes(arrays[i][x]))
+          merged_array.push(arrays[i][x]);
+
+    //Return statement
+    return merged_array;
+  },
+
   moveElement: function (arg0_array, arg1_old_index, arg2_new_index) {
     //Convert from parameters
     var array = arg0_array;

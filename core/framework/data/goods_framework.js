@@ -1,4 +1,34 @@
 module.exports = {
+  //getAllSubgoods() - Returns an array of subgood keys
+  getAllSubgoods: function (arg0_object) {
+    //Convert from parameters
+    var local_obj = arg0_object;
+
+    //Declare local instance variables
+    var all_keys = Object.keys(local_obj);
+    var all_subgoods = [];
+
+    //Iterate over all keys to determine
+    for (var i = 0; i < all_keys.length; i++) {
+      var local_value = local_obj[all_keys[i]];
+
+      if (!all_subgoods.includes(all_keys[i]))
+        if (lookup.all_goods[all_keys[i]])
+          all_subgoods.push(all_keys[i]);
+
+      //Add recursive criteria
+      if (typeof local_value == "object") {
+        var local_subgoods = module.exports.getAllSubgoods(local_value);
+
+        for (var x = 0; x < local_subgoods.length; x++)
+          all_subgoods.push(local_subgoods[x]);
+      }
+    }
+
+    //Return statement
+    return all_subgoods;
+  },
+
   /*
     getGood() - Fetches a good's key/object based on its options.
     options: {
@@ -143,6 +173,47 @@ module.exports = {
     return (!options.return_object) ? goods_array : goods_object;
   },
 
+  //getRelevantGoods() - Returns an array of good keys considered relevant to a user
+  getRelevantGoods: function (arg0_user) {
+    //Convert from parameters
+    var user_id = arg0_user;
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var all_building_goods = getAllBuildingGoods(user_id);
+    var all_goods = Object.keys(lookup.all_goods);
+    var all_pop_goods = getAllPopGoods(user_id);
+    var all_unit_goods = getAllUnitGoods(user_id);
+    var relevant_goods = [];
+    var usr = main.users[actual_id];
+
+    //Merge all_building_goods, all_pop_goods, all_unit_goods
+    relevant_goods = mergeArrays(relevant_goods, all_building_goods, all_pop_goods, all_unit_goods);
+
+    //Check whether goods has .relevant flag
+    for (var i = 0; i < all_goods.length; i++) {
+      var local_good = lookup.all_goods[all_goods[i]];
+
+      if (!relevant_goods.includes(all_goods[i]))
+        //.relevant handler
+        if (local_good.relevant)
+          relevant_goods.push(all_goods[i]);
+    }
+
+    //Check whether goods contains subgood that is relevant
+    for (var i = 0; i < all_goods.length; i++) {
+      var local_good = lookup.all_goods[all_goods[i]];
+
+      if (!relevant_goods.includes(all_goods[i]))
+        //Child relevancy handler
+        if (module.exports.hasRelevantSubgood(local_good, relevant_goods))
+          relevant_goods.push(all_goods[i]);
+    }
+
+    //Return statement
+    return relevant_goods;
+  },
+
   getRawGoods: function (arg0_options) {
     //Declare local instance variables
     var all_good_names = module.exports.getGoods({ return_names: true });
@@ -205,5 +276,32 @@ module.exports = {
 
     //Return statement
     return (!options.return_object) ? goods_array : goods_object;
+  },
+
+  hasRelevantSubgood: function (arg0_object, arg1_relevant_goods) {
+    //Convert from parameters
+    var goods_obj = arg0_object;
+    var relevant_goods = (arg1_relevant_goods) ? arg1_relevant_goods : [];
+
+    //Declare local instance variables
+    var all_subgood_keys = Object.keys(goods_obj);
+    var has_relevant_subgood;
+
+    //Iterate over all_subgood_keys
+    for (var i = 0; i < all_subgood_keys.length; i++) {
+      //Guard clause if all_subgood_keys[i] is included in relevant_goods
+      if (relevant_goods.includes(all_subgood_keys[i]))
+        return true;
+
+      //Keep going
+      var local_good = goods_obj[all_subgood_keys[i]];
+
+      if (typeof local_good == "object")
+        if (local_good.type == "category")
+          has_relevant_subgood = module.exports.hasRelevantSubgood(local_good, relevant_goods);
+    }
+
+    //Return statement
+    return has_relevant_subgood;
   }
 };

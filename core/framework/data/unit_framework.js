@@ -160,6 +160,35 @@ module.exports = {
     }
   },
 
+  //getAllUnitGoods() - Returns an array of relevant good keys
+  getAllUnitGoods: function (arg0_user) {
+    //Convert from parameters
+    var user_id = arg0_user;
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var all_unit_goods = [];
+    var usr = main.users[actual_id];
+
+    //Iterate over usr.available_units
+    for (var i = 0; i < usr.available_units.length; i++) {
+      var local_unit = lookup.all_units[usr.available_units[i]];
+
+      for (var x = 0; x < reserved.unit_good_keys.length; x++)
+        if (local_unit[reserved.unit_good_keys[x]]) {
+          var local_subgoods = getAllSubgoods(local_unit[reserved.unit_good_keys[x]]);
+
+          //Push local_subgoods to all_unit_goods
+          for (var y = 0; y < local_subgoods.length; y++)
+            if (!all_unit_goods.includes(local_subgoods[y]))
+              all_unit_goods.push(local_subgoods[y]);
+        }
+    }
+
+    //Return statement
+    return all_unit_goods;
+  },
+
   /*
     getAllUnits() - Fetches an object/key list of all units.
     options: {
