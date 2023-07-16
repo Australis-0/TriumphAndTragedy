@@ -501,6 +501,64 @@ module.exports = {
 
     //Error trapping
     try {
+      //Join all bullet point blocks together
+      var exclude_indices = [];
+      var new_array_string = [];
+
+      if (!options.split_bullet_points) {
+        var local_joined_string = [];
+        var local_starting_element = -1;
+
+        for (var i = 0; i < array_string.length; i++) {
+          var next_element_length = 0;
+
+          if (array_string[i + 1])
+            next_element_length = array_string[i + 1].length;
+
+          if (array_string[i].startsWith("- ") ||
+            (local_joined_string.join("\n").length + next_element_length > options.maximum_characters) ||
+            i == array_string.length - 1
+          ) {
+            if (i == array_string.length - 1)
+              local_joined_string.push(array_string[i]);
+
+            //Set local_joined_string
+            new_array_string.push(local_joined_string.join("\n"));
+            local_indices_to_remove = [];
+
+            //1st bullet point, mark as local_starting_element
+            local_joined_string = [];
+            local_joined_string.push(array_string[i]);
+            local_starting_element = i;
+          } else {
+            //Check how many spaces are remaining until the first character, which should be a -
+            var first_character = "";
+            var nesting = 0;
+            var spaces_until_first_character = 0;
+
+            for (var x = 0; x < array_string[i].length; x++)
+              if (array_string[i][x] == " ") {
+                spaces_until_first_character++;
+              } else {
+                if (first_character == "")
+                  first_character = array_string[i][x];
+              }
+
+            if (first_character == "-")
+              nesting = Math.ceil(spaces_until_first_character/2);
+
+            //If nesting >= 1, push to local_indices_to_remove and local_joined_string
+            if (nesting >= 1) {
+              local_joined_string.push(array_string[i]);
+              exclude_indices.push(i);
+            }
+          }
+        }
+      }
+
+      array_string = new_array_string;
+      log.debug(`Array String: `, array_string);
+
       if (!options.maximum_lines) {
         //Split embeds based on characters
         for (var i = 0; i < array_string.length; i++) {
@@ -528,6 +586,7 @@ module.exports = {
               all_strings.push(local_array_string.join("\n"));
               local_array_string = [];
 
+              //Maximum safeguard to prevent max call stack size
               if (hit_maximum)
                 i--;
             }

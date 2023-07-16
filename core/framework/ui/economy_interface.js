@@ -1,38 +1,52 @@
 module.exports = {
-  getGoodsInventoryString: function (arg0_user, arg1_goods_object, arg2_nesting) {
+  getGoodsInventoryString: function (arg0_user, arg1_goods_object, arg2_nesting, arg3_display_goods) {
     //Convert from parameters
     var user_id = arg0_user;
-    var goods_object = arg1_goods_object;
+    var goods_obj = arg1_goods_object;
     var nesting = (arg2_nesting) ? parseInt(arg2_nesting) : 0;
+    var display_goods = (arg3_display_goods) ? arg3_display_goods : lookup.all_good_names; //Goods to display as an array
 
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
-    var all_good_keys = Object.keys(goods_object);
+    var all_good_keys = Object.keys(goods_obj);
     var inventory_string = [];
     var usr = main.users[actual_id];
 
-    //Iterate over all keys in goods_object
+    //Append all good categories that contain a relevant subgood
+    for (var i = 0; i < all_good_keys.length; i++)
+      if (!display_goods.includes(all_good_keys[i])) {
+        var local_obj = goods_obj[all_good_keys[i]];
+
+        if (local_obj.type == "category")
+          if (hasSubgood(lookup.all_goods[all_good_keys[i]], display_goods))
+            display_goods.push(all_good_keys[i]);
+      }
+
+    //Iterate over all keys in goods_obj
     for (var i = 0; i < all_good_keys.length; i++) {
       var local_key = all_good_keys[i];
-      var local_object = goods_object[all_good_keys[i]];
+      var local_obj = goods_obj[all_good_keys[i]];
 
       if (!reserved.goods.includes(local_key))
-        if (local_object.type == "category") {
+        if (local_obj.type == "category") {
           var is_primary_category = (config.goods[local_key]);
 
           //Recursive parsing for category
-          inventory_string.push(`${bulletPoint(nesting)}${(local_object.icon) ? config.icons[local_object.icon] + " " : ""}${(is_primary_category) ? `**__` : `**`}${(local_object.name) ? `${local_object.name}` : local_key}:${(is_primary_category) ? `__**` : `**`}`);
+          if (display_goods.includes(all_good_keys[i])) {
+            inventory_string.push(`${bulletPoint(nesting)}${(local_obj.icon) ? config.icons[local_obj.icon] + " " : ""}${(is_primary_category) ? `**__` : `**`}${(local_obj.name) ? `${local_obj.name}` : local_key}:${(is_primary_category) ? `__**` : `**`}`);
+          }
           if (is_primary_category)
             inventory_string.push(`---`);
 
-          log.debug(`Goods inventory recursion on ${(local_object.name) ? local_object.name : local_key}!`);
+          log.debug(`Goods inventory recursion on ${(local_obj.name) ? local_obj.name : local_key}!`);
 
-          var recursive_inventory_string = module.exports.getGoodsInventoryString(user_id, local_object, nesting + 1);
+          var recursive_inventory_string = module.exports.getGoodsInventoryString(user_id, local_obj, nesting + 1, display_goods);
 
           for (var x = 0; x < recursive_inventory_string.length; x++)
             inventory_string.push(recursive_inventory_string[x]);
         } else {
-          inventory_string.push(`${bulletPoint(nesting)}${(local_object.icon) ? config.icons[local_object.icon] + " " : ""}**${(local_object.name) ? local_object.name : local_key}**: ${parseNumber(usr.inventory[local_key])}`);
+          if (display_goods.includes(all_good_keys[i]))
+            inventory_string.push(`${bulletPoint(nesting)}${(local_obj.icon) ? config.icons[local_obj.icon] + " " : ""}**${(local_obj.name) ? local_obj.name : local_key}**: ${parseNumber(usr.inventory[local_key])}`);
         }
     }
 
@@ -205,16 +219,20 @@ module.exports = {
     return economy_string;
   },
 
-  printInventory: function (arg0_user, arg1_page, arg2_do_not_display) {
+  printInventory: function (arg0_user, arg1_page, arg2_options) {
     //Convert from parameters
     var user_id = arg0_user;
     var page = (arg1_page) ? parseInt(arg1_page) : 0;
-    var do_not_display = arg2_do_not_display;
+    var options = (arg2_options) ? arg2_options : { display_relevant_goods: true };
 
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
     var game_obj = getGameObject(user_id);
+    var relevant_goods = getRelevantGoods(user_id);
     var usr = main.users[actual_id];
+
+    var goods_to_display = (options.display_goods) ? getList(options.display_goods) :
+      (options.display_relevant_goods) ? relevant_goods : lookup.all_good_names;
 
     //Initialise fields_list, inventory_string
     var fields_list = [];
@@ -244,10 +262,14 @@ module.exports = {
         local_name.push(`${(local_category.icon) ? config.icons[local_category.icon] + " " : ""} **__${(local_category.name) ? local_category.name : all_material_categories[i]}:__**`);
         local_name.push(`---`);
 
-        var local_string = getGoodsInventoryString(user_id, local_category);
+        var local_string = getGoodsInventoryString(user_id, local_category, 1, goods_to_display);
+
+        log.debug(`local_string: `, local_string);
 
         //Used for processing more than one string at a time
-        var local_split_string = splitText(local_string, { maximum_characters: 512 });
+        var local_split_string = splitText(local_string, { maximum_characters: 1024 });
+
+        log.debug(`local_split_string: `, local_split_string);
 
         //Push formatted fields to inventory
         for (var x = 0; x < local_split_string.length; x++)
@@ -273,7 +295,7 @@ module.exports = {
         title_pages: true
       });
 
-    if (!do_not_display) {
+    if (!options.do_not_display) {
       game_obj.main_embed = createPageMenu(game_obj.middle_embed, {
         embed_pages: inventory_embeds,
         user: game_obj.user,

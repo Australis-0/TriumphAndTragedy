@@ -210,6 +210,12 @@ module.exports = {
           relevant_goods.push(all_goods[i]);
     }
 
+    //Add non-zero goods in inventory to relevant goods list
+    for (var i = 0; i < all_goods.length; i++)
+      if (usr.inventory[all_goods[i]] != 0)
+        if (!relevant_goods.includes(all_goods[i]))
+          relevant_goods.push(all_goods[i]);
+
     //Return statement
     return relevant_goods;
   },
@@ -303,5 +309,32 @@ module.exports = {
 
     //Return statement
     return has_relevant_subgood;
+  },
+
+  hasSubgood: function (arg0_object, arg1_good_key) {
+    //Convert from parameters
+    var goods_obj = arg0_object;
+    var good_keys = getList(arg1_good_key);
+
+    //Declare local instance variables
+    var all_subgood_keys = Object.keys(goods_obj);
+    var has_subgood;
+
+    //Guard clause if all_subgood_keys[i] is included by good_keys
+    for (var i = 0; i < good_keys.length; i++)
+      if (all_subgood_keys.includes(good_keys[i]))
+        return true;
+
+    //Iterate over all_subgood_keys
+    for (var i = 0; i < all_subgood_keys.length; i++) {
+      var local_good = goods_obj[all_subgood_keys[i]];
+
+      if (typeof local_good == "object")
+        if (local_good.type == "category")
+          has_subgood = module.exports.hasSubgood(local_good, good_keys);
+    }
+
+    //Return statement
+    return has_subgood;
   }
 };

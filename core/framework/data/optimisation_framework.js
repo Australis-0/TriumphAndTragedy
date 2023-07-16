@@ -2,7 +2,7 @@ module.exports = {
   initOptimisation: function () {
     global.reserved = {
       building_good_keys: ["cost", "maintenance", "production"],
-      goods: ["name", "icon", "id", "type"],
+      goods: ["aliases", "name", "icon", "id", "type"],
       unit_good_keys: ["cost", "maintenance"]
     };
     global.lookup = {
