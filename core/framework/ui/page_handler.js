@@ -1722,6 +1722,16 @@ module.exports = {
             game_obj.page = "economy";
           }
 
+          //[Clear]
+          if (["clear", "clear search"].includes(input))
+            printInventory(user_id, main.interfaces[game_obj.middle_embed.id].page);
+
+          //[Hide All Goods]
+          if (["hide goods", "hide all goods"].includes(input)) {
+            delete game_obj.inventory_show_all_goods;
+            printInventory(user_id, main.interfaces[game_obj.middle_embed.id].page);
+          }
+
           //[Jump To Page]
           if (input == "jump to page")
             visualPrompt(game_obj.alert_embed, user_id, {
@@ -1731,9 +1741,26 @@ module.exports = {
               ]
             },
             function (arg) {
-              log.debug(`Jumping to page ${arg[0] - 1}!`);
-              printInventory(user_id, arg[0] - 1, false);
+              printInventory(user_id, arg[0] - 1);
             });
+
+          //[Search]
+          if (input == "search")
+            visualPrompt(game_obj.alert_embed, user_id, {
+              title: `Search Inventory:`,
+              prompts: [
+                [`What is the name of the good you would like to view?`, "string"]
+              ]
+            },
+            function (arg) {
+              printInventory(user_id, undefined, { search_query: arg[0] });
+            });
+
+          //[Show All Goods]
+          if (input == "show all goods") {
+            game_obj.inventory_show_all_goods = true;
+            printInventory(user_id, main.interfaces[game_obj.middle_embed.id].page);
+          }
         }
 
         if (game_obj.page == "view_constructions") {

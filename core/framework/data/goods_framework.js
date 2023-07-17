@@ -106,6 +106,27 @@ module.exports = {
   },
 
   /*
+    getGoodCategory() - Fetches a good's parent category/object based on its options
+    options: {
+      return_object: true/false - Whether or not to return the object instead of the key. False by default
+    }
+  */
+  getGoodCategory: function (arg0_name, arg1_options) {
+    //Convert from parameters
+    var good_name = arg0_name;
+    var options = (arg1_options) ? arg1_options : {};
+
+    //Declare local instance variables
+    var all_good_categories = Object.keys(config.goods);
+    var good_key = getGood(good_name, { return_key : true });
+
+    //Iterate over all_good_categories
+    for (var i = 0; i < all_good_categories.length; i++)
+      if (hasSubgood(config.goods[all_good_categories[i]]))
+        return (!options.return_object) ? all_good_categories[i] : config.goods[all_good_categories[i]];
+  },
+
+  /*
     getGoods() - Returns an array of all good objects unless specified otherwise.
     options: {
       exclude_categories: []
@@ -311,19 +332,28 @@ module.exports = {
     return has_relevant_subgood;
   },
 
-  hasSubgood: function (arg0_object, arg1_good_key) {
+  /*
+    hasSubgood() - Returns whether a good has a given subgood
+    options: {
+      return_key: true/false - Whether to return the good key that was found or not
+    }
+  */
+  hasSubgood: function (arg0_object, arg1_good_key, arg2_options) {
     //Convert from parameters
     var goods_obj = arg0_object;
-    var good_keys = getList(arg1_good_key);
+    var raw_good_keys = arg1_good_key;
+    var options = (arg2_options) ? arg2_options : {};
 
     //Declare local instance variables
     var all_subgood_keys = Object.keys(goods_obj);
+    var good_keys = getList(raw_good_keys);
     var has_subgood;
 
     //Guard clause if all_subgood_keys[i] is included by good_keys
     for (var i = 0; i < good_keys.length; i++)
-      if (all_subgood_keys.includes(good_keys[i]))
-        return true;
+      if (all_subgood_keys.includes(good_keys[i])) {
+        return (!options.return_key) ? true : good_keys[i];
+      }
 
     //Iterate over all_subgood_keys
     for (var i = 0; i < all_subgood_keys.length; i++) {
@@ -331,10 +361,52 @@ module.exports = {
 
       if (typeof local_good == "object")
         if (local_good.type == "category")
-          has_subgood = module.exports.hasSubgood(local_good, good_keys);
+          if (!has_subgood)
+            has_subgood = module.exports.hasSubgood(local_good, raw_good_keys, options);
     }
 
     //Return statement
     return has_subgood;
+  },
+
+  /*
+    returnInventorySearchGoods() - Returns an array of good keys from a search query string
+    options: {
+      return_object: false/true - False by default
+    }
+  */
+  returnInventorySearchGoods: function (arg0_string, arg1_options) {
+    //Convert from parameters
+    var search_query = arg0_string.trim().toLowerCase();
+    var options = (arg1_options) ? arg1_options : {};
+
+    //Declare local instance variables
+    var significance_matrix = {}; //{ <good_key>: <significance_score> };
+
+    //Iterate over all good keys and objects
+    for (var i = 0; i < lookup.all_good_names.length; i++) {
+      var local_good = lookup.all_goods[lookup.all_good_names[i]];
+      var local_significance = 0;
+
+      //Iterate over all reserved.goods keys and check for significance
+      for (var x = 0; x < reserved.goods.length; x++)
+        if (local_good[reserved.goods[x]]) {
+          var local_value_list = getList(local_good[reserved.goods[x]]);
+
+          for (var y = 0; y < local_value_list.length; y++)
+            if (local_value_list[y].trim().toLowerCase().includes(search_query))
+              local_significance += search_query.length/local_value_list[y].length;
+        }
+
+      //Set local_significance in significance_matrix
+      if (local_significance > 0)
+        significance_matrix[lookup.all_good_names[i]] = local_significance;
+    }
+
+    //Sort significance_matrix
+    significance_matrix = sortObject(significance_matrix);
+
+    //Return statement
+    return (!options.return_object) ? Object.keys(significance_matrix) : significance_matrix;
   }
 };

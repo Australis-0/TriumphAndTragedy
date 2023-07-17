@@ -122,6 +122,9 @@ module.exports = {
     starting_page = (options.starting_page) ? options.starting_page : starting_page;
 
     if (options.embed_pages) {
+      if (starting_page >= options.embed_pages.length)
+        starting_page = options.embed_pages.length - 1;
+
       if (options.user) {
         //Add to interface
         interfaces[msg.id] = {};
@@ -198,6 +201,46 @@ module.exports = {
       local_embed.setImage("https://cdn.discordapp.com/attachments/722997700391338046/736141424315203634/margin.png");
 
     all_embeds.push(local_embed);
+  },
+
+  formatSubstring: function (arg0_string, arg1_substring, arg2_mode, arg3_offset) {
+    //Convert from parameters
+    var string = arg0_string;
+    var substring = arg1_substring.trim().toLowerCase();
+    var mode = (arg2_mode) ? arg2_mode : "underline";
+    var offset = returnSafeNumber(parseInt(arg3_offset));
+
+    //Declare local instance variables
+    var formatter;
+    var lowercase_string = string.trim().toLowerCase();
+    var split_string = [];
+    var substring_index = lowercase_string.indexOf(substring);
+
+    //Manually split string to preserve whitespace
+    for (var i = 0; i < string.length; i++)
+      split_string.push(string[i]);
+
+    if (mode == "bold") formatter = `**`;
+    if (mode == "italic") formatter = `_`;
+    if (mode == "underline") formatter = `__`;
+
+    if (substring_index != -1) {
+      var hit_non_space = false;
+
+      for (var i = 0; i < split_string.length; i++)
+        if (split_string[i] == " ") {
+          if (!hit_non_space)
+            offset++;
+        } else {
+          hit_non_space = true;
+        }
+
+      split_string.splice(substring_index + offset, 0, formatter);
+      split_string.splice(substring_index + substring.length + 1 + offset, 0, formatter);
+    }
+
+    //Return statement
+    return split_string.join("");
   },
 
   getGame: function (arg0_user) {
@@ -386,9 +429,13 @@ module.exports = {
                       .setDescription(array_string.join("\n"));
 
                     //Declare local options variables
+                    var current_page = (all_embeds.length + 1 + page_index);
+                    var total_pages = total_page_count + added_pages;
+
                     var page_ending = (options.title && options.title_pages) ? `(Page ${all_embeds.length + 1 + page_index} of ${parseNumber(total_page_count + added_pages)}):` : "";
 
-                    formatEmbed(local_embed, all_embeds, page_ending, options);
+                    //if (parseInt(current_page) <= parseInt(total_pages))
+                      formatEmbed(local_embed, all_embeds, page_ending, options);
 
                     //Add fields
                     for (var y = 0; y < local_array_string.length; y++)
@@ -452,11 +499,18 @@ module.exports = {
                   );
 
                 //Declare local options variables
+                var current_page = (all_embeds.length + 1 + page_index);
+                var total_pages = (total_page_count + added_pages);
+
                 var page_ending = (options.title && options.title_pages) ? `(Page ${all_embeds.length + 1 + page_index} of ${total_page_count + added_pages}):` : "";
 
-                formatEmbed(local_embed, all_embeds, page_ending, options);
-                current_character_count = 0;
-                local_array_string = [];
+                if (parseInt(current_page) <= parseInt(total_pages)) {
+                  formatEmbed(local_embed, all_embeds, page_ending, options);
+                  current_character_count = 0;
+                  local_array_string = [];
+                } else {
+                  console.log("Stop!")
+                }
               }
           }
         } else {
@@ -472,10 +526,17 @@ module.exports = {
                   .setDescription(local_array_string.join("\n"));
 
                 //Declare local options variables
+                var current_page = (all_embeds.length + 1 + page_index);
+                var total_pages = (total_page_count + added_pages);
+
                 var page_ending = (options.title && options.title_pages) ? `(Page ${all_embeds.length + 1 + page_index} of ${total_page_count + added_pages}):` : "";
 
-                formatEmbed(local_embed, all_embeds, page_ending, options);
-                local_array_string = [];
+                if (parseInt(current_page) <= parseInt(total_pages)) {
+                  formatEmbed(local_embed, all_embeds, page_ending, options);
+                  local_array_string = [];
+                } else {
+                  console.log("Stop!")
+                }
               }
           }
         }
@@ -513,10 +574,10 @@ module.exports = {
           var next_element_length = 0;
 
           if (array_string[i + 1])
-            next_element_length = array_string[i + 1].length;
+            next_element_length = array_string[i].length;
 
           if (array_string[i].startsWith("- ") ||
-            (local_joined_string.join("\n").length + next_element_length > options.maximum_characters) ||
+            (local_joined_string.join("\n").length + next_element_length > Math.ceil(options.maximum_characters/1.5)) ||
             i == array_string.length - 1
           ) {
             if (i == array_string.length - 1)
@@ -588,7 +649,7 @@ module.exports = {
 
               //Maximum safeguard to prevent max call stack size
               if (hit_maximum)
-                i--;
+                i--; //Potentially leads to a fatal crash
             }
         }
       } else {

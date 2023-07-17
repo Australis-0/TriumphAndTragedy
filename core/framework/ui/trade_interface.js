@@ -244,7 +244,6 @@ module.exports = {
       import_string.push(`+${parseNumber(local_imports.length-10)} more ...`);
 
     //Print exports; may only print up to 10 exports
-
     (all_exports.length > 0) ?
       export_string.push(`You currently have **${all_exports.length}** exports in transfer.`) :
       export_string.push(`_You have no outgoing exports._`);

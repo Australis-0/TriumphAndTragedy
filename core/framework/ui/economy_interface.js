@@ -1,10 +1,18 @@
 module.exports = {
-  getGoodsInventoryString: function (arg0_user, arg1_goods_object, arg2_nesting, arg3_display_goods) {
+  /*
+    getGoodsInventoryString() - Displays an inventory string recursively from a set of arguments
+    options: {
+      search_query: "acanth", - Used to underline relevant parts of words if available
+      search_significance: {} - Passes search significance matrix
+    }
+  */
+  getGoodsInventoryString: function (arg0_user, arg1_goods_object, arg2_nesting, arg3_display_goods, arg4_options) {
     //Convert from parameters
     var user_id = arg0_user;
     var goods_obj = arg1_goods_object;
     var nesting = (arg2_nesting) ? parseInt(arg2_nesting) : 0;
     var display_goods = (arg3_display_goods) ? arg3_display_goods : lookup.all_good_names; //Goods to display as an array
+    var options = (arg4_options) ? arg4_options : {};
 
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
@@ -12,14 +20,28 @@ module.exports = {
     var inventory_string = [];
     var usr = main.users[actual_id];
 
+    //Rearrange all_good_keys to fit in with display_goods
+    for (var i = all_good_keys.length - 1; i >= 0; i--)
+      if (display_goods.includes(all_good_keys[i]) || reserved.goods.includes(all_good_keys[i]))
+        all_good_keys.splice(i, 1);
+
+    all_good_keys = display_goods.concat(all_good_keys);
+
     //Append all good categories that contain a relevant subgood
     for (var i = 0; i < all_good_keys.length; i++)
       if (!display_goods.includes(all_good_keys[i])) {
         var local_obj = goods_obj[all_good_keys[i]];
 
-        if (local_obj.type == "category")
-          if (hasSubgood(lookup.all_goods[all_good_keys[i]], display_goods))
+        if (local_obj.type == "category") {
+          var subgood_found = hasSubgood(lookup.all_goods[all_good_keys[i]], display_goods, { return_key: true });
+
+          if (subgood_found) {
+            //Move category key before the subgood key
             display_goods.push(all_good_keys[i]);
+            all_good_keys = moveElement(all_good_keys, i, all_good_keys.indexOf(subgood_found));
+            display_goods = moveElement(display_goods, display_goods.length - 1, display_goods.indexOf(subgood_found));
+          }
+        }
       }
 
     //Iterate over all keys in goods_obj
@@ -28,26 +50,62 @@ module.exports = {
       var local_obj = goods_obj[all_good_keys[i]];
 
       if (!reserved.goods.includes(local_key))
-        if (local_obj.type == "category") {
-          var is_primary_category = (config.goods[local_key]);
+        if (local_obj)
+          if (local_obj.type == "category") {
+            var is_primary_category = (config.goods[local_key]);
 
-          //Recursive parsing for category
-          if (display_goods.includes(all_good_keys[i])) {
-            inventory_string.push(`${bulletPoint(nesting)}${(local_obj.icon) ? config.icons[local_obj.icon] + " " : ""}${(is_primary_category) ? `**__` : `**`}${(local_obj.name) ? `${local_obj.name}` : local_key}:${(is_primary_category) ? `__**` : `**`}`);
+            //Recursive parsing for category
+            if (hasSubgood(local_obj, display_goods)) {
+              var significance_string = "";
+
+              if (options.search_significance)
+                if (options.search_significance[local_key]) {
+                  var local_significance = options.search_significance[local_key];
+
+                  significance_string = `(:star: ${parseNumber(local_significance, { display_float: true })}) `;
+                }
+
+              var category_string = `${(local_obj.icon) ? config.icons[local_obj.icon] + " " : ""}${(is_primary_category) ? `**__` : `**`}${(local_obj.name) ? `${local_obj.name}` : local_key}:${(is_primary_category) ? `__**` : `**`}`;
+
+              //Highlight search query if applicable
+              if (options.search_query)
+                category_string = formatSubstring(category_string, options.search_query, "underline");
+
+              category_string = `${bulletPoint(nesting)}${significance_string}${category_string}`;
+
+              inventory_string.push(category_string);
+            }
+            if (is_primary_category)
+              inventory_string.push(`---`);
+
+            log.debug(`Goods inventory recursion on ${(local_obj.name) ? local_obj.name : local_key}!`);
+
+            var recursive_inventory_string = module.exports.getGoodsInventoryString(user_id, local_obj, nesting + 1, display_goods, options);
+
+            for (var x = 0; x < recursive_inventory_string.length; x++)
+              inventory_string.push(recursive_inventory_string[x]);
+          } else {
+            if (display_goods.includes(all_good_keys[i])) {
+              var significance_string = "";
+
+              if (options.search_significance)
+                if (options.search_significance[local_key]) {
+                  var local_significance = options.search_significance[local_key];
+
+                  significance_string = `(:star: ${parseNumber(local_significance, { display_float: true })}) `;
+                }
+
+              var good_string = `${(local_obj.icon) ? config.icons[local_obj.icon] + " " : ""}**${(local_obj.name) ? local_obj.name : local_key}**: ${parseNumber(usr.inventory[local_key])}`;
+
+              //Highlight search query if applicable
+              if (options.search_query)
+                good_string = formatSubstring(good_string, options.search_query, "underline");
+
+              good_string = `${bulletPoint(nesting)}${significance_string}${good_string}`;
+
+              inventory_string.push(good_string);
+            }
           }
-          if (is_primary_category)
-            inventory_string.push(`---`);
-
-          log.debug(`Goods inventory recursion on ${(local_obj.name) ? local_obj.name : local_key}!`);
-
-          var recursive_inventory_string = module.exports.getGoodsInventoryString(user_id, local_obj, nesting + 1, display_goods);
-
-          for (var x = 0; x < recursive_inventory_string.length; x++)
-            inventory_string.push(recursive_inventory_string[x]);
-        } else {
-          if (display_goods.includes(all_good_keys[i]))
-            inventory_string.push(`${bulletPoint(nesting)}${(local_obj.icon) ? config.icons[local_obj.icon] + " " : ""}**${(local_obj.name) ? local_obj.name : local_key}**: ${parseNumber(usr.inventory[local_key])}`);
-        }
     }
 
     //Return statement
@@ -219,6 +277,14 @@ module.exports = {
     return economy_string;
   },
 
+  /*
+    printInventory() - Prints a player's inventory depending on what they want
+    options: {
+      display_goods: [], - The list of goods to display, undefined by default, overridden by search_query
+      display_relevant_goods: true/false - Whether or not to display relevant goods only. True by default, overridden by display_goods
+      search_query: "acanth" - Whatever substring the player wants to search up
+    }
+  */
   printInventory: function (arg0_user, arg1_page, arg2_options) {
     //Convert from parameters
     var user_id = arg0_user;
@@ -229,10 +295,24 @@ module.exports = {
     var actual_id = main.global.user_map[user_id];
     var game_obj = getGameObject(user_id);
     var relevant_goods = getRelevantGoods(user_id);
+    var searched_goods;
+    var searched_goods_significance;
     var usr = main.users[actual_id];
+
+    //Check if game_obj.inventory_show_all_goods is enabled
+    if (game_obj.inventory_show_all_goods)
+      options.display_relevant_goods = false;
 
     var goods_to_display = (options.display_goods) ? getList(options.display_goods) :
       (options.display_relevant_goods) ? relevant_goods : lookup.all_good_names;
+
+    if (options.search_query) {
+      searched_goods_significance = returnInventorySearchGoods(options.search_query, { return_object: true });
+      searched_goods = Object.keys(searched_goods_significance);
+
+      goods_to_display = searched_goods;
+      log.debug(`Goods to display: `, searched_goods_significance);
+    }
 
     //Initialise fields_list, inventory_string
     var fields_list = [];
@@ -242,7 +322,11 @@ module.exports = {
     var all_material_categories = Object.keys(config.goods);
 
     //Format embed
-    inventory_string.push(`**[Back]** | **[Jump To Page]**`);
+    inventory_string.push(`**[Back]** | **[Jump To Page]** | **[Search]** | ${(!game_obj.inventory_show_all_goods) ? `**[Show All Goods]**` : `**[Hide All Goods]**`}`);
+
+    if (options.search_query)
+      inventory_string.push(`Search Query: :mag_right: __${options.search_query}__ | **[Clear]**`);
+
     inventory_string.push("");
     inventory_string.push(`${config.icons.money} Money: **${parseNumber(usr.money)}**`);
     inventory_string.push("");
@@ -262,12 +346,15 @@ module.exports = {
         local_name.push(`${(local_category.icon) ? config.icons[local_category.icon] + " " : ""} **__${(local_category.name) ? local_category.name : all_material_categories[i]}:__**`);
         local_name.push(`---`);
 
-        var local_string = getGoodsInventoryString(user_id, local_category, 1, goods_to_display);
+        var local_string = getGoodsInventoryString(user_id, local_category, 1, goods_to_display, {
+          search_query: options.search_query,
+          search_significance: searched_goods_significance
+        });
 
         log.debug(`local_string: `, local_string);
 
         //Used for processing more than one string at a time
-        var local_split_string = splitText(local_string, { maximum_characters: 1024 });
+        var local_split_string = splitText(local_string, { maximum_characters: 800 });
 
         log.debug(`local_split_string: `, local_split_string);
 
@@ -285,7 +372,7 @@ module.exports = {
       splitEmbed(inventory_string, {
         fields: fields_list,
         fixed_width: true,
-        maximum_fields: 4,
+        maximum_fields: 2,
         table_width: 2,
         title: "Inventory:",
         title_pages: true
