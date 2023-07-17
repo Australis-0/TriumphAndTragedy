@@ -65,13 +65,13 @@ module.exports = {
                   significance_string = `(:star: ${parseNumber(local_significance, { display_float: true })}) `;
                 }
 
-              var category_string = `${(local_obj.icon) ? config.icons[local_obj.icon] + " " : ""}${(is_primary_category) ? `**__` : `**`}${(local_obj.name) ? `${local_obj.name}` : local_key}:${(is_primary_category) ? `__**` : `**`}`;
+              var category_string = `${(is_primary_category) ? `**__` : `**`}${(local_obj.name) ? `${local_obj.name}` : local_key}:${(is_primary_category) ? `__**` : `**`}`;
 
               //Highlight search query if applicable
               if (options.search_query)
                 category_string = formatSubstring(category_string, options.search_query, "underline");
 
-              category_string = `${bulletPoint(nesting)}${significance_string}${category_string}`;
+              category_string = `${bulletPoint(nesting)}${significance_string}${(local_obj.icon) ? config.icons[local_obj.icon] + " " : ""}${category_string}`;
 
               inventory_string.push(category_string);
             }
@@ -95,13 +95,13 @@ module.exports = {
                   significance_string = `(:star: ${parseNumber(local_significance, { display_float: true })}) `;
                 }
 
-              var good_string = `${(local_obj.icon) ? config.icons[local_obj.icon] + " " : ""}**${(local_obj.name) ? local_obj.name : local_key}**: ${parseNumber(usr.inventory[local_key])}`;
+              var good_string = `**${(local_obj.name) ? local_obj.name : local_key}**: ${parseNumber(usr.inventory[local_key])}`;
 
               //Highlight search query if applicable
               if (options.search_query)
                 good_string = formatSubstring(good_string, options.search_query, "underline");
 
-              good_string = `${bulletPoint(nesting)}${significance_string}${good_string}`;
+              good_string = `${bulletPoint(nesting)}${significance_string}${(local_obj.icon) ? config.icons[local_obj.icon] + " " : ""}${good_string}`;
 
               inventory_string.push(good_string);
             }

@@ -434,7 +434,7 @@ module.exports = {
 
                     var page_ending = (options.title && options.title_pages) ? `(Page ${all_embeds.length + 1 + page_index} of ${parseNumber(total_page_count + added_pages)}):` : "";
 
-                    //if (parseInt(current_page) <= parseInt(total_pages))
+                    if (parseInt(current_page) <= parseInt(total_pages))
                       formatEmbed(local_embed, all_embeds, page_ending, options);
 
                     //Add fields
