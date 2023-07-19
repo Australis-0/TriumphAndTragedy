@@ -251,121 +251,159 @@ config.goods = { //[WIP] - Redo mine chances, buy/sell prices
       type: "category",
 
       acanthite: {
-        name: "Acanthite"
+        name: "Acanthite",
+        mine_action_chance: 14 //8,314 million tons
       },
       anthracite: {
-        name: "Anthracite"
+        name: "Anthracite",
+        mine_action_chance: 34 //219 billion tonnes
       },
       arsenopyrite: {
-        name: "Arsenopyrite"
+        name: "Arsenopyrite",
+        mine_action_chance: 15 //25 million tons
       },
       baryte: {
         name: "Baryte",
-        aliases: ["Barite"]
+        aliases: ["Barite"],
+        mine_action_chance: 28 //2 billion tons
       },
       bauxite: {
-        name: "Bauxite"
+        name: "Bauxite",
+        mine_action_chance: 33 //31 billion tonnes
       },
       beryl: {
-        name: "Beryl"
+        name: "Beryl",
+        mine_action_chance: 5 //100 thousand tons
       },
       bitumen: {
-        name: "Bitumen"
+        name: "Bitumen",
+        mine_action_chance: 29 //10,513 billion tons
       },
       bornite: {
-        name: "Bornite"
+        name: "Bornite",
+        mine_action_chance: 20 //90 million tons
       },
       cassiterite: {
-        name: "Cassiterite"
+        name: "Cassiterite", //155 million tons
+        mine_action_chance: 22
       },
       chalcocite: {
-        name: "Chalcocite"
+        name: "Chalcocite",
+        mine_action_chance: 30 //12,5 billion tonnes
       },
       chalcopyrite: {
-        name: "Chalcopyrite"
+        name: "Chalcopyrite",
+        mine_action_chance: 25 //700 million tonnes
       },
       chromite: {
-        name: "Chromite"
+        name: "Chromite",
+        mine_action_chance: 24 //560 million tonnes
       },
       cinnabar: {
-        name: "Cinnabar"
+        name: "Cinnabar",
+        mine_action_chance: 6 //147 thousand tons
       },
       cobaltite: {
-        name: "Cobalt"
+        name: "Cobalt",
+        mine_action_chance: 16 //25 million tonnes
       },
       coltan: {
-        name: "Coltan"
+        name: "Coltan",
+        mine_action_chance: 1 //1 thousand tonnes
       },
       cooperite: {
-        name: "Cooperite"
+        name: "Cooperite",
+        mine_action_chance: 3 //10 thousand tonnes
       },
       fluorite: {
-        name: "Fluorite"
+        name: "Fluorite",
+        mine_action_chance: 26 //1 billion tonnes
       },
       galena: {
-        name: "Galena"
+        name: "Galena",
+        mine_action_chance: 19, //85 million tonnes
       },
       hematite: {
-        name: "Hematite"
+        name: "Hematite",
+        mine_action_chance: 32, //28,31 billion tons
       },
       ilmenite: {
-        name: "Ilmenite"
+        name: "Ilmenite",
+        mine_action_chance: 23, //160 million tonnes
       },
       kimberlite: {
-        name: "Kimberlite"
+        name: "Kimberlite",
+        mine_action_chance: 17, //26 million tonnes
       },
       lignite: {
-        name: "Lignite"
+        name: "Lignite",
+        mine_action_chance: 35, //400 billion tonnes
       },
       magnetite: {
-        name: "Magnetite"
+        name: "Magnetite",
+        mine_action_chance: 31, //13,8 billion tons
       },
       malachite: {
-        name: "Malachite"
+        name: "Malachite",
+        //1 thousand tonnes
+        mine_action_chance: 1
       },
       molybdenite: {
-        name: "Molybdenite"
+        name: "Molybdenite",
+        //20 million tonnes
       },
       native_gold: {
         name: "Native Gold",
         type: "category",
 
         placer_gold: {
-          name: "Placer Gold"
+          name: "Placer Gold",
+          mine_action_chance: 5, //180 tons prod.
         },
         quartz_gold: {
-          name: "Quartz Gold"
+          name: "Quartz Gold",
+          mine_action_chance: 7, //244 thousand tonnes
         }
       },
       nitre: {
-        name: "Nitre"
+        name: "Nitre",
+        mine_action_chance: 9, //1 million tons
       },
       pentlandite: {
-        name: "Pentlandite"
+        name: "Pentlandite",
+        mine_action_chance: 21, //100 million tonnes
       },
       pyrolusite: {
-        name: "Pyrlousite"
+        name: "Pyrlousite",
+        mine_action_chance: 13, //6,4 million tonnes
       },
       quartz_sand: {
-        name: "Quartz Sand"
+        name: "Quartz Sand",
+        mine_action_chance: 27, //1,665 billion tonnes
       },
       ruby: {
-        name: "Ruby"
+        name: "Ruby",
+        mine_action_chance: 2 //10 thousand tons
       },
       scheelite: {
-        name: "Scheelite"
+        name: "Scheelite",
+        mine_action_chance: 11, //3 million tons
       },
       sperrylite: {
-        name: "Sperrylite"
+        name: "Sperrylite",
+        mine_action_chance: 8, //900 thousand tons
       },
       sphalerite: {
-        name: "Sphalerite"
+        name: "Sphalerite",
+        mine_action_chance: 12, //5,256 million tonnes
       },
       uraninite: {
-        name: "Uraninite"
+        name: "Uraninite",
+        mine_action_chance: 10, //1,5 million tons
       },
       wolframite: {
-        name: "Wolframite"
+        name: "Wolframite",
+        mine_action_chance: 18, //42 million tonnes
       }
     },
     seasoning: {
