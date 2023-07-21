@@ -105,6 +105,41 @@ module.exports = {
     undefined;
   },
 
+  getGoodAmount: function (arg0_user, arg1_name) {
+    //Convert from parameters
+    var user_id = arg0_user;
+    var name = arg1_name;
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var good_amount = 0;
+    var good_obj = (typeof name == "object") ? name : module.exports.getGood(name);
+    var usr = main.users[actual_id];
+
+    var all_good_keys = Object.keys(good_obj);
+
+    //Recursively iterate over subgoods if category
+    if (good_obj.type == "category") {
+      for (var i = 0; i < all_good_keys.length; i++) {
+        var local_subgood_obj = good_obj[all_good_keys[i]];
+
+        //Add goods to good_amount
+        if (typeof local_subgood_obj == "object")
+          if (local_subgood_obj.type == "category") {
+            good_amount += module.exports.getGoodAmount(user_id, local_subgood_obj);
+          } else {
+            if (!reserved.goods.includes(all_good_keys[i]))
+              good_amount += returnSafeNumber(usr.inventory[all_good_keys[i]]);
+          }
+      }
+    } else {
+      good_amount += returnSafeNumber(usr.inventory[good_obj.id]);
+    }
+
+    //Return statement
+    return good_amount;
+  },
+
   /*
     getGoodCategory() - Fetches a good's parent category/object based on its options
     options: {
@@ -367,6 +402,35 @@ module.exports = {
 
     //Return statement
     return has_subgood;
+  },
+
+  modifyGoodAmount: function (arg0_user, arg1_good_name, arg2_value) {
+    //Convert from parameters
+    var user_id = arg0_user;
+    var good_name = arg1_good_name;
+    var value = arg2_value;
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var raw_good_name;
+    var usr = main.users[actual_id];
+
+    //Set good_obj
+    if (typeof good_name != "object") {
+      raw_good_name = (lookup.all_goods[good_name]) ?
+        good_name : getGood(good_name, { return_key: true });
+    } else {
+      if (good_name.id) {
+        raw_good_name = good_name.id;
+      } else {
+        if (good_name.name)
+          raw_good_name = getGood(good_name.name, { return_key: true });
+      }
+    }
+
+    //Modify inventory value
+    if (raw_good_name)
+      usr.inventory[raw_good_name] += returnSafeNumber(parseInt(value));
   },
 
   /*

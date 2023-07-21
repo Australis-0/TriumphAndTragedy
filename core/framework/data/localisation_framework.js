@@ -190,6 +190,38 @@ module.exports = {
     return local_obj;
   },
 
+  parseGood: function (arg0_user, arg1_good_name, arg2_formatting) {
+    //Convert from parameters
+    var user_id = arg0_user;
+    var good_name = arg1_good_name;
+    var formatting = arg2_formatting;
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var formatter = "";
+    var good_icon = "";
+    var good_obj = (typeof good_name == "object") ? good_name : getGood(good_name);
+    var usr = main.users[actual_id];
+
+    var good_key = (typeof good_name == "object") ?
+      getGood(good_obj.name, { return_key: true }) :
+      getGood(good_name, { return_key: true });
+
+    if (good_obj.icon)
+      good_icon = (config.icons[good_obj.icon]) ? `${config.icons[good_obj.icon]} ` : "";
+
+    //Set formatter
+    if (formatting == "bold")
+      formatter = "**";
+    if (formatting == "italic")
+      formatter = "_";
+    if (formatting == "underline")
+      formatter = "__";
+
+    //Return statement
+    return `${good_icon}${formatter}${(good_obj.name) ? good_obj.name : good_key}${formatter}`;
+  },
+
   /*
     parseLocalisation() - Returns the processed string of a bit of localisation.
     options: {
