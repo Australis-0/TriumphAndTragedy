@@ -300,6 +300,15 @@ config.modifiers = {
 
     minimum: 0.05
   },
+  standard_of_living: {
+    name: "Standard of Living",
+    type: "percentage",
+    local: true,
+    default_value: 0.10,
+
+    minimum: 0,
+    maximum: 1
+  },
   tax_efficiency: {
     name: "Tax Efficiency",
     type: "percentage",
