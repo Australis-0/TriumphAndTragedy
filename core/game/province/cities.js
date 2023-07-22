@@ -89,8 +89,8 @@ module.exports = {
     var resource_shortages = {};
 
     for (var i = 0; i < all_resource_requirements.length; i++) {
-      var resource_amount = (usr.inventory[all_resource_requirements[i]]) ?
-        usr.inventory[all_resource_requirements[i]] :
+      var resource_amount = (getGoodAmount(user_id, all_resource_requirements[i])) ?
+        getGoodAmount(user_id, all_resource_requirements[i]) :
         usr[all_resource_requirements[i]];
 
       if (resource_amount) {
@@ -149,8 +149,8 @@ module.exports = {
                   for (var i = 0; i < all_resource_requirements.length; i++) {
                     var local_value =  city_resources[all_resource_requirements[i]];
 
-                    if (usr.inventory[all_resource_requirements[i]]) {
-                      usr.inventory[all_resource_requirements[i]] -= local_value;
+                    if (lookup.all_goods[all_resource_requirements[i]]) {
+                      modifyGoodAmount(user_id, all_resource_requirements[i], local_value);
                     } else if (usr[all_resource_requirements[i]]) {
                       usr[all_resource_requirements[i]] -= local_value;
                     }
@@ -208,7 +208,7 @@ module.exports = {
           var local_shortage = resource_shortages[all_resource_shortages[i]];
 
           //Determine icon
-          if (!usr.inventory[all_resource_shortages[i]]) {
+          if (!lookup.all_goods[all_resource_shortages[i]]) {
             if (all_resource_shortages[i] == "money")
               local_icon = config.icons.money;
           } else {

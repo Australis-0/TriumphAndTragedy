@@ -55,7 +55,7 @@ module.exports = {
 
                       usr.money -= main.market[good_name].buy_price;
                       total_buy_price += main.market[good_name].buy_price;
-                      usr.inventory[good_name]++;
+                      modifyGoodAmount(user_id, good_name, 1);
 
                       main.market[good_name].stock--;
 

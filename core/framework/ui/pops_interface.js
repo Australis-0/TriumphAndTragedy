@@ -101,7 +101,7 @@ module.exports = {
         } else if (getGood(all_current_pop_modifiers[i])) { //Is of type good
           var local_good = getGood(all_current_pop_modifiers[i]);
 
-          total_pops_string.push(`${(local_good.icon) ? config.icons[local_good.icon] + " " : ""}${(local_good.name) ? local_good.name : all_current_pop_modifiers[i]}: **${parseNumber(usr.inventory[all_current_pop_modifiers[i]], { display_prefix: true })}**`);
+          total_pops_string.push(`${(local_good.icon) ? config.icons[local_good.icon] + " " : ""}${(local_good.name) ? local_good.name : all_current_pop_modifiers[i]}: **${parseNumber(getGoodAmount(user_id, all_current_pop_modifiers[i]), { display_prefix: true })}**`);
         } else { //Default catch handler
           total_pops_string.push(`${all_current_pop_modifiers[i]}: **${parseNumber(usr[all_current_pop_modifiers[i]], { display_prefix: true })}**`);
         }

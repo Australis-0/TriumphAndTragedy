@@ -46,7 +46,7 @@ module.exports = {
                         //Check if user has enough items to actually carry this out
                         if (
                           (raw_good_name == "money" && usr.money >= raw_amount) ||
-                          (good_obj && usr.inventory[good_name] >= raw_amount)
+                          (good_obj && getGoodAmount(user_id, good_name) >= raw_amount)
                         ) {
                           if (trade_whitelist.includes(ot_user_actual_id)) {
                             try {
@@ -62,7 +62,7 @@ module.exports = {
                               if (good_obj || raw_good_name == "money") {
                                 //Deduct goods from inventory first
                                 if (good_obj)
-                                  usr.inventory[good_name] -= raw_amount;
+                                  modifyGoodAmount(user_id, good_name, raw_amount);
                                 if (raw_good_name)
                                   usr.money -= raw_amount;
 

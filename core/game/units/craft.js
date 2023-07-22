@@ -40,8 +40,8 @@ module.exports = {
 
                   //Check if resource cost is good, pop, or other
                   if (all_goods.includes(all_unit_costs[i])) {
-                    if (usr.inventory[all_unit_costs[i]] < local_cost)
-                      resource_shortages[all_unit_costs[i]] = local_cost - usr.inventory[all_unit_costs[i]];
+                    if (getGoodAmount(user_id, all_unit_costs[i]) < local_cost)
+                      resource_shortages[all_unit_costs[i]] = local_cost - getGoodAmount(user_id, all_unit_costs[i]);
                   } else if (all_pops.includes(all_unit_costs[i])) {
                     var available_pops = usr.pops[all_unit_costs[i]] - usr.pops[`used_${all_unit_costs[i]}`];
 
@@ -74,7 +74,7 @@ module.exports = {
 
                     //Check if resource cost is good, pop, or other
                     if (all_goods.includes(all_unit_costs[i])) {
-                      usr.inventory[all_unit_costs[i]] -= local_cost;
+                      modifyGoodAmount(user_id, all_unit_costs[i], local_cost);
                     } else if (all_pops.includes(all_unit_costs[i])) {
                       usr.pops[`used_${all_unit_costs[i]}`] += local_cost;
                     } else {

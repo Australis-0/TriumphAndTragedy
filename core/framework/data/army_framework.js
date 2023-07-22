@@ -1831,7 +1831,7 @@ module.exports = {
       var local_amount = maintenance_obj[all_maintenance_costs[i]];
 
       if (all_maintenance_costs[i] != "money") {
-        if (usr.inventory[all_maintenance_costs[i]] <= 0)
+        if (getGoodAmount(all_maintenance_costs[i]]) <= 0)
           deficit_goods[all_maintenance_costs[i]] = 1; //100% shortage of good
       } else {
         if (usr[all_maintenance_costs[i]] <= 0)

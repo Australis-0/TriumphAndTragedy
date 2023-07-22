@@ -179,7 +179,7 @@ module.exports = {
       }
 
     //Return statement
-    return all_building_goods;  
+    return all_building_goods;
   },
 
   /*
@@ -993,8 +993,8 @@ module.exports = {
             var local_good = lookup.all_goods[all_goods[i]];
 
             if (local_good.special_effect) {
-              changeProductionValue(all_goods[i], "minimum", virtual_inventory[all_goods[i]] - usr.inventory[all_goods[i]]);
-              changeProductionValue(all_goods[i], "maximum", virtual_inventory[all_goods[i]] - usr.inventory[all_goods[i]]);
+              changeProductionValue(all_goods[i], "minimum", virtual_inventory[all_goods[i]] - getGoodAmount(user_id, all_goods[i]));
+              changeProductionValue(all_goods[i], "maximum", virtual_inventory[all_goods[i]] - getGoodAmount(user_id, all_goods[i]));
             }
           }
         else
@@ -1002,8 +1002,8 @@ module.exports = {
             if (lookup.all_goods[good_type].special_effect) {
               local_good.special_effect(virtual_usr);
 
-              changeProductionValue(good_type, "minimum", virtual_inventory[good_type] - usr.inventory[good_type]);
-              changeProductionValue(good_type, "maximum", virtual_inventory[good_type] - usr.inventory[good_type]);
+              changeProductionValue(good_type, "minimum", virtual_inventory[good_type] - getGoodAmount(user_id, good_type));
+              changeProductionValue(good_type, "maximum", virtual_inventory[good_type] - getGoodAmount(user_id, good_type));
             }
 
         //Sort goods_production so that each key is actually [min, max]
@@ -1110,7 +1110,7 @@ module.exports = {
 
     for (var i = 0; i < all_inventory_goods.length; i++) {
       var local_simulation_value = returnSafeNumber(virtual_user.inventory[all_inventory_goods[i]]);
-      var local_true_value = returnSafeNumber(usr.inventory[all_inventory_goods[i]]);
+      var local_true_value = getGoodAmount(user_id, all_inventory_goods[i]);
 
       if (local_simulation_value != local_true_value) {
         var local_change = local_simulation_value - local_true_value;

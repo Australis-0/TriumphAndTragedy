@@ -72,7 +72,7 @@ module.exports = {
             amount_taken*5;
 
           //Add to inventory; subtract from remaining_actions
-          usr.inventory[current_element[1]] += amount_taken*5;
+          modifyGoodAmount(user_id, current_element[1], amount_taken*5);
           remaining_actions -= amount_taken;
         }
 

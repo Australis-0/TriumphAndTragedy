@@ -724,7 +724,7 @@ module.exports = {
 
         //Reset local_good if it doesn't stack
         if (local_good.doesnt_stack)
-          usr.inventory[all_good_names[i]] = 0;
+          setGoodAmount(user_id, all_good_names[i], 0);
       }
 
       var all_produced_goods = Object.keys(all_production);
@@ -737,8 +737,8 @@ module.exports = {
           if (!all_produced_goods[i].includes("money")) {
             var upkeep_to_process = all_produced_goods[i].replace("_upkeep", "");
 
-            if (usr.inventory[upkeep_to_process] != undefined)
-              usr.inventory[upkeep_to_process] -= randomNumber(local_value[0], local_value[1]);
+            if (lookup.all_goods[upkeep_to_process] != undefined)
+              modifyGoodAmount(user_id, upkeep_to_process, randomNumber(local_value[0], local_value[1]));
             else
               usr[upkeep_to_process] -= randomNumber(local_value[0], local_value[1]);
           }
@@ -752,8 +752,8 @@ module.exports = {
             building_obj.special_effect(usr);
         } else {
           //Process goods
-          if (usr.inventory[all_produced_goods[i]] != undefined)
-            usr.inventory[all_produced_goods[i]] += randomNumber(local_value[0], local_value[1]);
+          if (lookup.all_goods[all_produced_goods[i]] != undefined)
+            modifyGoodAmount(user_id, all_produced_goods[i], randomNumber(local_value[0], local_value[1]));
           else
             usr[all_produced_goods[i]] += randomNumber(local_value[0], local_value[1]);
         }
@@ -1779,7 +1779,9 @@ module.exports = {
       //Economic modifiers
       //Make sure good amount can't go lower than 0
       for (var i = 0; i < lookup.all_good_names.length; i++)
-        usr.inventory[lookup.all_good_names[i]] = Math.max(usr.inventory[lookup.all_good_names[i]], 0);
+        setGoodAmount(user_id, lookup.all_good_names[i], Math.max(
+          getGoodAmount(user_id, lookup.all_good_names[i]), 0
+        ));
 
       //Political modifiers
       balanceParties(user_id);

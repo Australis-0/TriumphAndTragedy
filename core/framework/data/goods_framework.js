@@ -472,5 +472,17 @@ module.exports = {
 
     //Return statement
     return (!options.return_object) ? Object.keys(significance_matrix) : significance_matrix;
+  },
+
+  setGoodAmount: function (arg0_user, arg1_good_name, arg2_value) {
+    //Convert from parameters
+    var user_id = arg0_user;
+    var good_name = arg1_good_name;
+    var value = parseInt(arg2_value);
+
+    //Set value
+    module.exports.modifyGoodAmount(user_id, good_name,
+      (module.exports.getGoodAmount(user_id, good_name)*-1) + value
+    );
   }
 };
