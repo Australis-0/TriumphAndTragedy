@@ -137,13 +137,12 @@ module.exports = {
     );
   },
 
-  getLogarithmicScale: function (arg0_number, arg1_min, arg2_max, arg3_steepness, arg4_recursion) {
+  getLogarithmicScale: function (arg0_number, arg1_min, arg2_max, arg3_steepness) {
     //Convert from parameters
     var number = parseInt(arg0_number);
     var min = Math.min(parseInt(arg1_min), 1);
     var max = Math.max(parseInt(arg2_max), 1);
     var steepness = (arg3_steepness) ? parseInt(arg3_steepness) : 1;
-    var recursion = arg4_recursion;
 
     //Position will be between 0 and 100
     var min_position = 0;

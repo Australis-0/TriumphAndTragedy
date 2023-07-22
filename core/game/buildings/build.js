@@ -41,7 +41,7 @@ module.exports = {
 
                     //Iterate over all keys in building_costs and check for prospective shortages
                     var all_building_costs = Object.keys(building_costs);
-                    var all_goods = getGoods({ return_names: true });
+                    var all_goods = lookup.all_good_names;
                     var all_pops = Object.keys(config.pops);
 
                     for (var i = 0; i < all_building_costs.length; i++) {
@@ -86,7 +86,7 @@ module.exports = {
 
                         //Check if resource cost is good, pop, or other
                         if (all_goods.includes(all_building_costs[i])) {
-                          getGoodAmount(user_id, all_building_costs[i])] -= local_cost;
+                          modifyGoodAmount(user_id, all_building_costs[i], local_cost*-1);
                         } else if (all_pops.includes(all_building_costs[i])) {
                           usr.pops[`used_${all_building_costs[i]}`] += local_cost;
                         } else {

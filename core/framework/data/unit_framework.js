@@ -582,7 +582,7 @@ module.exports = {
         //Fetch resource_type
         var resource_type = {
           is_money: (all_costs[i] == "money"),
-          is_resource: getGoods({ return_names: true }).includes(all_costs[i])
+          is_resource: lookup.all_good_names.includes(all_costs[i])
         };
         var valid_resource = false;
 

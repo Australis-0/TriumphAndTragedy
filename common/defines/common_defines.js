@@ -37,7 +37,7 @@ config.defines.common = {
 
     magnates: [3, 15],
     unlock_building: [
-      "beekeeprs",
+      "beekeepers",
       "camphor_plantations",
       "carmine_harvesters",
       "cinnamon_plantations",

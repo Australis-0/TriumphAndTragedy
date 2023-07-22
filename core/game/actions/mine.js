@@ -28,8 +28,8 @@ module.exports = {
 
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
-    var all_resource_names = getGoods({ return_names: true });
-    var all_resources = getGoods();
+    var all_resource_names = lookup.all_good_names;
+    var all_resources = lookup.all_goods_array;
     var game_obj = getGameObject(user_id);
     var usr = main.users[actual_id];
 

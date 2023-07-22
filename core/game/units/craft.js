@@ -31,7 +31,7 @@ module.exports = {
                 console.log(unit_costs);
 
                 //Iterate over all keys in unit_costs and check for prospective shortages
-                var all_goods = getGoods({ return_names: true });
+                var all_goods = lookup.all_good_names;
                 var all_pops = Object.keys(config.pops);
                 var all_unit_costs = Object.keys(unit_costs);
 

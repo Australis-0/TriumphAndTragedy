@@ -71,7 +71,7 @@ module.exports = {
               if (options.search_query)
                 category_string = formatSubstring(category_string, options.search_query, "underline");
 
-              category_string = `${bulletPoint(nesting)}${significance_string}${(local_obj.icon) ? config.icons[local_obj.icon] + " " : ""}${category_string}`;
+              category_string = `${bulletPoint(nesting)}${significance_string}${(local_obj.icon) ? config.icons[local_obj.icon] + " " : ""}${category_string} ${parseNumber(getGoodAmount(user_id, local_key))}`;
 
               inventory_string.push(category_string);
             }
@@ -118,7 +118,7 @@ module.exports = {
 
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
-    var all_good_names = getGoods({ return_names: true });
+    var all_good_names = lookup.all_good_names;
     var all_goods = lookup.all_goods;
     var all_pops = Object.keys(config.pops);
     var game_obj = getGameObject(user_id);

@@ -112,28 +112,32 @@ module.exports = {
 
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
-    var good_amount = 0;
+    var good_amount = undefined;
     var good_obj = (typeof name == "object") ? name : module.exports.getGood(name);
     var usr = main.users[actual_id];
 
-    var all_good_keys = Object.keys(good_obj);
-
     //Recursively iterate over subgoods if category
-    if (good_obj.type == "category") {
-      for (var i = 0; i < all_good_keys.length; i++) {
-        var local_subgood_obj = good_obj[all_good_keys[i]];
+    if (good_obj) {
+      var all_good_keys = Object.keys(good_obj);
+      good_amount = 0;
 
-        //Add goods to good_amount
-        if (typeof local_subgood_obj == "object")
-          if (local_subgood_obj.type == "category") {
-            good_amount += module.exports.getGoodAmount(user_id, local_subgood_obj);
-          } else {
-            if (!reserved.goods.includes(all_good_keys[i]))
-              good_amount += returnSafeNumber(usr.inventory[all_good_keys[i]]);
+      if (good_obj.type == "category") {
+        good_amount += returnSafeNumber(usr.inventory[good_obj.id]);
+
+        for (var i = 0; i < all_good_keys.length; i++) {
+          var local_subgood_obj = lookup.all_goods[all_good_keys[i]];
+
+          //Add goods to good_amount
+          if (!reserved.goods.includes(all_good_keys[i])) {
+            good_amount += returnSafeNumber(usr.inventory[all_good_keys[i]]);
+
+            if (local_subgood_obj.type == "category")
+              good_amount += module.exports.getGoodAmount(user_id, local_subgood_obj);
           }
+        }
+      } else {
+        good_amount += returnSafeNumber(usr.inventory[good_obj.id]);
       }
-    } else {
-      good_amount += returnSafeNumber(usr.inventory[good_obj.id]);
     }
 
     //Return statement
@@ -191,9 +195,11 @@ module.exports = {
       var category_meets_conditions = true;
 
       try {
-        if (options.exclude_categories.includes(all_good_categories[i])) category_meets_conditions = false;
+        if (options.exclude_categories.includes(all_good_categories[i]))
+          category_meets_conditions = false;
       } catch {}
-      if (options.exclude_hidden && all_good_categories[i] == "hidden") category_meets_conditions = false;
+      if (options.exclude_hidden && all_good_categories[i] == "hidden")
+        category_meets_conditions = false;
 
       //If the category meets the conditions, push all the local goods inside of it to goods_array, either with their name, or with their object depending on the options
       if (category_meets_conditions)

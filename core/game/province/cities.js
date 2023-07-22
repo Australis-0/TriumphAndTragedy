@@ -89,8 +89,12 @@ module.exports = {
     var resource_shortages = {};
 
     for (var i = 0; i < all_resource_requirements.length; i++) {
-      var resource_amount = (getGoodAmount(user_id, all_resource_requirements[i])) ?
-        getGoodAmount(user_id, all_resource_requirements[i]) :
+      var good_amount = getGoodAmount(user_id, all_resource_requirements[i]);
+
+      log.debug(`good_amount for ${all_resource_requirements[i]}`, good_amount);
+
+      var resource_amount = (good_amount != undefined) ?
+        good_amount :
         usr[all_resource_requirements[i]];
 
       if (resource_amount) {

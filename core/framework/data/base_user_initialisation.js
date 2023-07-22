@@ -80,7 +80,7 @@ module.exports = {
         //Check if local_name is of type good or "money"
         if (local_good)
           //Check to see if good has random range or not
-          modifyGoodAmount(local_good.id, user_id, (local_list.length >= 2) ?
+          modifyGoodAmount(user_id, local_good.id, (local_list.length >= 2) ?
             randomNumber(local_list[0], local_list[1]) :
             local_list[0]);
 
