@@ -1,6 +1,7 @@
 module.exports = {
   initOptimisation: function () {
     global.reserved = {
+      buildings: ["aliases", "ideal_climate", "name", "singular", "unlimited_slots"],
       building_good_keys: ["cost", "maintenance", "production"],
       goods: ["aliases", "name", "icon", "id", "type"],
       unit_good_keys: ["cost", "maintenance"]

@@ -142,7 +142,7 @@ config.buildings.agriculture = {
       production_choice_hops: {
         hops: 3
       },
-      production_bell_peppers: {
+      production_choice_bell_peppers: {
         bell_peppers: 4
       },
       production_choice_garlic: {

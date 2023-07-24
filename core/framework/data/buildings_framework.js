@@ -9,6 +9,38 @@ module.exports = {
     "order"
   ],
 
+  changeProductionValue: function (arg0_scope, arg1_good_key, arg2_min_max_argument, arg3_value) {
+    //Convert from parameters
+    var production_obj = arg0_scope;
+    var good_key = arg1_good_key;
+    var min_max_argument = (arg2_min_max_argument) ? arg2_min_max_argument : "both"; //Can be "minimum", "maximum", or "both"
+    var value = parseInt(arg3_value);
+
+    //Modify value
+    if (production_obj[good_key]) {
+      var local_good_value = production_obj[good_key];
+
+      if (min_max_argument == "minimum")
+        local_good_value[0] += local_value;
+      if (min_max_argument == "maximum")
+        local_good_value[1] += local_value;
+      if (min_max_argument == "both") {
+        local_good_value[0] += local_value;
+        local_good_value[1] += local_value;
+      }
+    } else {
+      if (min_max_argument == "minimum")
+        production_obj[good_key] = [value, 0];
+      if (min_max_argument == "maximum")
+        production_obj[good_key] = [0, value];
+      if (min_max_argument == "both")
+        production_obj[good_key] = [value, value];
+    }
+
+    //Return statement
+    return production_obj;
+  },
+
   constructBuilding: function (arg0_amount, arg1_building_name, arg2_province, arg3_index) {
     //Convert from parameters
     var amount = Math.ceil(parseInt(arg0_amount));
@@ -396,34 +428,13 @@ module.exports = {
     if (building_obj.maintenance) {
       var all_maintenance_costs = Object.keys(building_obj.maintenance);
 
-      for (var i = 0; i < all_maintenance_costs.length; i++) {
-        var local_consumption_value = getList(building_obj.maintenance[all_maintenance_costs[i]]);
-
-        if (local_consumption_value.length >= 2) {
-          maintenance_obj[all_maintenance_costs[i]] = (!maintenance_obj[all_maintenance_costs[i]]) ?
-            [local_consumption_value[0], local_consumption_value[1]] :
-            [
-              maintenance_obj[all_maintenance_costs[i]][0] + local_consumption_value[0],
-              maintenance_obj[all_maintenance_costs[i]][1] + local_consumption_value[1]
-            ];
-        } else {
-          maintenance_obj[all_maintenance_costs[i]] = (!maintenance_obj[all_maintenance_costs[i]]) ?
-            [local_consumption_value[0], local_consumption_value[0]] :
-            [
-              maintenance_obj[all_maintenance_costs[i]][0] + local_consumption_value[0],
-              maintenance_obj[all_maintenance_costs[i]][1] + local_consumption_value[0]
-            ];
+      maintenance_obj = module.exports.modifyBuildingScope(
+        JSON.parse(JSON.stringify(building_obj.maintenance)),
+        {
+          building_obj: building_obj,
+          current_scope: { name: "maintenance" }
         }
-
-        //Sort in ascending order
-        if (maintenance_obj[all_maintenance_costs[i]])
-          maintenance_obj[all_maintenance_costs[i]].sort(function(a, b){
-            return a - b;
-          });
-
-        if (maintenance_obj[all_maintenance_costs[i]][0] == maintenance_obj[all_maintenance_costs[i]][1])
-          maintenance_obj[all_maintenance_costs[i]] = [maintenance_obj[all_maintenance_costs[i]][0]];
-      }
+      );
     }
 
     //Return statement
@@ -525,104 +536,29 @@ module.exports = {
     var production_obj = {};
     var usr = main.users[actual_id];
 
-    //Declare changeProductionValue() local function for altering production_obj keys
-    function changeProductionValue (arg0_key, arg1_min_max_argument, arg2_value) {
-      //Convert from parameters
-      var local_key = arg0_key;
-      var min_max_argument = arg1_min_max_argument;
-      var local_value = Math.ceil(returnSafeNumber(arg2_value));
-
-      //Add to production_obj
-      if (production_obj[local_key]) {
-        switch (min_max_argument) {
-          case "minimum":
-            production_obj[local_key][0] += local_value;
-
-            break;
-          case "maximum":
-            production_obj[local_key][1] += local_value;
-
-            break;
-          default:
-            production_obj[local_key][0] += local_value;
-            production_obj[local_key][1] += local_value;
-
-            break;
-        }
-      } else {
-        switch (min_max_argument) {
-          case "minimum":
-            production_obj[local_key] = [local_value, 0];
-
-            break;
-          case "maximum":
-            production_obj[local_key] = [0, local_value];
-
-            break;
-          default:
-            production_obj[local_key] = [local_value, local_value];
-
-            break;
-        }
-      }
-    }
-
     //Only start appending if the user and building_obj.produces is actually defined
     if (usr)
       try {
         if (building_obj.produces) {
           var all_produced_goods = Object.keys(building_obj.produces);
+          var city_rgo_throughput = getCityRGOThroughput(city_obj);
 
-          for (var i = 0; i < all_produced_goods.length; i++) {
-            var actual_resource = lookup.all_goods[all_produced_goods[i]];
-            var is_knowledge = false;
-
-            if (actual_resource)
-              is_knowledge = (actual_resource.research_good);
-
-            //Get actual production efficiency
-            var actual_production_efficiency = (building_obj.maintenance) ?
-              usr.modifiers.production_efficiency : 1;
-            var actual_rgo_throughput = (usr.modifiers.rgo_throughput < 1) ?
-              usr.modifiers.rgo_throughput : 1;
-
-            //Apply local RGO throughput to the building's production if the resource lines up
-            actual_rgo_throughput = (city_obj.resource == all_produced_goods[i]) ?
-              getCityRGOThroughput(city_obj) : actual_rgo_throughput;
-
-            //This is the only actual modifier that affects the production value of this good for this building
+          production_obj = module.exports.modifyBuildingScope(
+            JSON.parse(JSON.stringify(building_obj.produces)),
             {
-              actual_production_efficiency = (building_obj.maintenance) ?
-                actual_production_efficiency :
-                actual_rgo_throughput;
+              building_obj: building_obj,
+              current_scope: { name: "produces" },
+              province_id: city_obj.id,
 
-              //research_efficiency modifier is used if good is of type knowledge
-              if (is_knowledge)
-                actual_production_efficiency = usr.modifiers.research_efficiency;
-            }
-
-            //Add production value of good to matrix
-            var production_list = getList(building_obj.produces[all_produced_goods[i]]);
-
-            if (production_list.length >= 2) {
-              if (!actual_resource) {
-                changeProductionValue(all_produced_goods[i], "minimum", production_list[0]*actual_production_efficiency);
-                changeProductionValue(all_produced_goods[i], "maximum", production_list[1]*actual_production_efficiency);
-              } else {
-                if (!is_knowledge) {
-                  changeProductionValue(all_produced_goods[i], "minimum", production_list[0]*usr.modifiers[`${all_produced_goods[i]}_gain`]*actual_production_efficiency);
-                  changeProductionValue(all_produced_goods[i], "maximum", production_list[1]*usr.modifiers[`${all_produced_goods[i]}_gain`]*actual_production_efficiency);
-                } else {
-                  changeProductionValue(all_produced_goods[i], "minimum", production_list[0]*actual_production_efficiency*usr.modifiers[`${all_produced_goods[i]}_gain`]);
-                  changeProductionValue(all_produced_goods[i], "maximum", production_list[1]*actual_production_efficiency*usr.modifiers[`${all_produced_goods[i]}_gain`]);
-                }
+              modifiers: {
+                [`${city_obj.resource}_gain`]:
+                  (city_obj.resource && city_rgo_throughput) ? city_rgo_throughput : 1,
+                production_efficiency: usr.modifiers.production_efficiency,
+                research_efficiency: usr.modifiers.research_efficiency,
+                rgo_throughput: usr.modifiers.rgo_throughput
               }
-            } else {
-              (!is_knowledge) ?
-                changeProductionValue(all_produced_goods[i], "all", production_list[0]*actual_production_efficiency) :
-                changeProductionValue(all_produced_goods[i], "all", production_list[0]);
             }
-          }
+          );
         }
       } catch (e) {
         log.error(`getBuildingProduction() encountered an error whilst parsing for building type ${building_name}.`);
@@ -1046,6 +982,97 @@ module.exports = {
 
     //Return statement
     return total;
+  },
+
+  /*
+    modifyBuildingScope() - Used internally for getBuildingProduction() recursion
+    options: {
+      building_obj: {}, //Passes original building_obj to check for top-level fields
+      current_scope: { name: "produces" }, //What the current scope being passed to the function is
+      modifiers: {}, //Modifier scope, optional
+      province_id: "6709",
+    }
+  */
+  modifyBuildingScope: function (arg0_produces_scope, arg1_options) {
+    //Convert from parameters
+    var scope = arg0_produces_scope;
+    var options = (arg1_options) ? arg1_options : {};
+
+    //Declare local instance variables
+    var all_good_keys = Object.keys(scope);
+    var building_obj = options.building_obj;
+    var current_scope_name = options.current_scope;
+
+    //Initialise defaults for options
+    if (!current_scope_name) current_scope_name = "produces"; //.produces by default
+    if (!options.modifiers) options.modifiers = {};
+
+    var production_efficiency_applicable = (
+      building_obj.produces && building_obj.maintenance &&
+      current_scope_name == "produces"
+    );
+    var research_efficiency_applicable = (
+      building_obj.produces &&
+      current_scope_name == "produces"
+    );
+    var rgo_throughput_applicable = (
+      building_obj.produces && !building_obj.maintenance &&
+      current_scope_name == "produces"
+    );
+
+    if (building_obj) {
+      for (var i = 0; i < all_good_keys.length; i++) {
+        var local_subobj = scope[all_good_keys[i]];
+        var local_values = getList(local_subobj);
+
+        if (all_good_keys[i] == "production_choice" || all_good_keys[i].startsWith("production_choice_")) {
+          local_subobj = module.exports.modifyBuildingScope(local_subobj, options);
+        } else {
+          if (lookup.all_goods[all_good_keys[i]]) {
+            var local_good = lookup.all_goods[all_good_keys[i]];
+
+            if (all_good_keys[i] == "knowledge") {
+              if (research_efficiency_applicable)
+                if (options.modifiers.research_efficiency) {
+                  for (var x = 0; x < local_values.length; x++)
+                    local_values[x] = local_values[x]*options.modifiers.research_efficiency;
+                  local_subobj = (local_values.length == 1) ?
+                    local_values[0] : local_values;
+                }
+            } else {
+              //production_efficiency
+              if (production_efficiency_applicable)
+                if (options.modifiers.production_efficiency) {
+                  for (var x = 0; x < local_values.length; x++)
+                    local_values[x] = local_values[x]*options.modifiers.production_efficiency;
+                  local_subobj = (local_values.length == 1) ?
+                    local_values[0] : local_values;
+                }
+              //<resource_key>_gain
+              if (options.modifiers[`${all_good_keys[i]}_gain`]) {
+                for (var x = 0; x < local_values.length; x++)
+                  local_values[x] = local_values[x]*options.modifiers[`${all_good_keys[i]}_gain`];
+                local_subobj = (local_values.length == 1) ?
+                  local_values[0] : local_values;
+              }
+              //rgo_throughput
+              if (rgo_throughput_applicable)
+                if (options.modifiers.rgo_throughput) {
+                  for (var x = 0; x < local_values.length; x++)
+                    local_values[x] = local_values[x]*options.modifiers.rgo_throughput;
+                  local_subobj = (local_values.length == 1) ?
+                    local_values[0] : local_values;
+                }
+            }
+          }
+        }
+      }
+    } else {
+      log.warn(`modifyBuildingScope() was passed with no options.building_obj!`);
+    }
+
+    //Return statement
+    return scope;
   },
 
   parseProduction: function (arg0_user) {

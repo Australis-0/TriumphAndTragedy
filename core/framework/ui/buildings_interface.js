@@ -37,15 +37,12 @@ module.exports = {
             var building_maintenance = getBuildingConsumption(user_id, local_buildings[x]);
             var building_production = getBuildingProduction(user_id, local_buildings[x], getCapital(user_id).name);
             var local_building = getBuilding(local_buildings[x]);
+            var local_options = { nesting: 0, no_formatting: true };
 
             //Production indicator stuff
-            var costs_array = [];
-            var maintenance_array = [];
-            var manpower_array = [];
-            var production_array = [];
-
             var construction_string = "";
             var costs_string = "";
+            var maintenance_string = "";
             var manpower_string = "";
             var production_string = "";
 
@@ -54,122 +51,35 @@ module.exports = {
             var building_name = (local_building.name) ? local_building.name : local_buildings[x];
             var building_obj = local_building;
 
-            //Run through all building costs
-            var all_building_costs = Object.keys(building_costs);
+            if (building_obj.cost)
+              costs_string = parseModifiers({ cost: building_obj.cost }, undefined, undefined, undefined, local_options);
+            if (building_obj.manpower_cost)
+              manpower_string = parseModifiers({ manpower_cost: building_obj.manpower_cost }, undefined, undefined, undefined, local_options);
+            production_string = parseModifiers({ produces: building_production }, undefined, undefined, undefined, local_options);
+            maintenance_string = parseModifiers({ maintenance: building_maintenance }, undefined, undefined, undefined, local_options);
+            construction_string = parseModifiers(
+              applyModifiersToObject({
+                construction_turns: (local_building.construction_turns) ?
+                  local_building.construction_turns : config.defines.economy.construction_turns
+              }, usr.modifiers.construction_time),
+            undefined, undefined, undefined, local_options);
 
-            //Get costs string
-            for (var y = 0; y < all_building_costs.length; y++) {
-              var local_building_cost = building_costs[all_building_costs[y]];
-              var resource_obj = getGood(all_building_costs[y]);
-
-              //Fetch resource_name, pop_name
-              var resource_name = (resource_obj) ?
-                (resource_obj.name) ? resource_obj.name : all_building_costs[y] :
-                parseString(all_building_costs[y]);
-              var pop_name = (Object.keys(config.pops).includes(all_building_costs[y])) ?
-                (config.pops[all_building_costs[y]].name) ?
-                  config.pops[all_building_costs[y]].name :
-                  all_building_costs[y] :
-                parseString(all_building_costs[y]);
-
-              //Parse debug name
-              if (Object.keys(config.pops).includes(all_building_costs[y]))
-                manpower_array.push(`${parseNumber(Math.ceil(local_building_cost))} ${pop_name}`);
-              else
-                (all_building_costs[y] != "money") ?
-                  costs_array.push(`${parseNumber(Math.ceil(local_building_cost))} ${resource_name}`) :
-                  costs_array.push(`£${parseNumber(Math.ceil(local_building_cost))}`);
-
-              //Set costs_string
-              if (costs_array.length > 0)
-                costs_string = `Costs:\n- ${costs_array.join("\n- ")}`;
-
-              //Set manpower_string
-              if (manpower_array.length > 0)
-                manpower_string = `- ${manpower_array.join("\n- ")}`;
-            }
-
-            //Get production_string
-            var all_produced_goods = Object.keys(building_production);
-
-            for (var y = 0; y < all_produced_goods.length; y++) {
-              var local_building_production = building_production[all_produced_goods[y]];
-              var resource_obj = getGood(all_produced_goods[y]);
-
-              //Fetch resource_name
-              var resource_name = (resource_obj) ?
-                (resource_obj.name) ? resource_obj.name : all_produced_goods[y] :
-                parseString(all_produced_goods[y]);
-
-              //Parse debug name; two-fold array with random minimum to maximum production, one-fold array with the same production value all the time
-              if (local_building_production[0] != local_building_production[1]) {
-                (all_produced_goods[y] != "money") ?
-                  production_array.push(`${parseNumber(Math.ceil(local_building_production[0]))} to ${parseNumber(Math.ceil(local_building_production[1]))} ${resource_name}`) :
-                  production_array.push(`£${parseNumber(Math.ceil(local_building_production[0]))} to £${parseNumber(Math.ceil(local_building_production[1]))}`);
-              } else {
-                (all_produced_goods[y] != "money") ?
-                  production_array.push(`${parseNumber(Math.ceil(local_building_production[0]))} ${resource_name}`) :
-                  production_array.push(`£${parseNumber(Math.ceil(local_building_production[0]))}`);
-              }
-            }
-
-            //Get maintenance_string
-            var all_maintenance_costs = Object.keys(building_maintenance);
-
-            for (var y = 0; y < all_maintenance_costs.length; y++) {
-              var local_building_consumption = building_maintenance[all_maintenance_costs[y]];
-              var resource_obj = getGood(all_maintenance_costs[y]);
-
-              //Fetch resource_name
-              var resource_name = (resource_obj) ?
-                (resource_obj.name) ? resource_obj.name : all_maintenance_costs[y] :
-                parseString(all_maintenance_costs[y]);
-
-              //Parse debug name; two-fold array with random minimum to maximum production, one-fold array with the same production value all the time
-              if (local_building_consumption.length > 1) {
-                (all_maintenance_costs[y] != "money") ?
-                  maintenance_array.push(`${parseNumber(Math.ceil(local_building_consumption[0]))} to ${parseNumber(Math.ceil(local_building_consumption[1]))} ${resource_name}`) :
-                  maintenance_array.push(`£${parseNumber(Math.ceil(local_building_consumption[0]))} to £${parseNumber(Math.ceil(local_building_consumption[1]))}`);
-              } else {
-                (all_maintenance_costs[y] != "money") ?
-                  maintenance_array.push(`${parseNumber(Math.ceil(local_building_consumption[0]))} ${resource_name}`) :
-                  maintenance_array.push(`£${parseNumber(Math.ceil(local_building_consumption[0]))}`);
-              }
-            }
-
-            //Get construction_string
-            if (building_obj.construction_turns) {
-              construction_string = (building_obj.construction_turns > 0) ?
-                `\nConstruction Time: ${parseNumber(Math.ceil(building_obj.construction_turns))} Turn(s)` :
-                `\nConstruction Time: Instant`;
-            } else {
-              construction_string = `\nConstruction Time: ${parseNumber(Math.ceil(config.defines.economy.construction_turns*usr.modifiers.construction_time))} Turn(s)`;
-            }
-
-            //Entry logic
-            if (production_array.length > 0 || building_obj.description || building_obj.houses || building_obj.modifiers)
-              production_string = `\nProduces:`;
-            if (production_array.length > 0)
-              production_string += `\n- ${production_array.join("\n- ")}`;
-            if (maintenance_array.length > 0)
-              production_string += `\nMaintenance:\n- ${maintenance_array.join("\n- ")}`;
-
-            //Custom localisation
-            if (building_obj.description)
-              production_string += `\n- ${building_obj.description}`;
-            if (building_obj.houses)
-              production_string += `\n- Houses ${parseNumber(building_obj.houses)}`;
-            if (building_obj.modifiers)
-              production_string += `\n- ${stripMarkdown(parseModifiers(building_obj.modifiers, true))}`;
-
-            //Manpower string
-            if (manpower_array.length > 0)
-              manpower_string = `${(costs_array.length > 0) ? "\n" : ""}- ${manpower_array.join("\n- ")}`;
+            //Insert linebreaks to strings
+            if (costs_string.length != 0)
+              costs_string = `\n${costs_string}`;
+            if (manpower_string.length != 0)
+              manpower_string = `\n${manpower_string}`;
+            if (production_string.length != 0)
+              production_string = `\n${production_string}`;
+            if (maintenance_string.length != 0)
+              maintenance_string = `\n${maintenance_string}`;
+            if (construction_string.length != 0)
+              construction_string = `\n${construction_string}`;
 
             //Push to local fields
             local_fields.push({
               name: `${building_icon} __**${building_name}**:__`,
-              value: `\`\`\`yaml\n${costs_string}${manpower_string}${production_string}\n${construction_string}\`\`\``,
+              value: `\`\`\`yaml\n${costs_string}${manpower_string}${production_string}${maintenance_string}\n${construction_string}\`\`\``,
               inline: true
             });
           }
