@@ -465,6 +465,7 @@ module.exports = {
     //Declare local instance variables
     var all_modifier_keys = Object.keys(modifier_obj);
     var f = "**"; //Formatter
+    var h_prefix = (!exclude_bullets) ? bulletPoint(Math.max(options.nesting - 1, 0)) : "";
     var modifier_string = [];
     var prefix = (!exclude_bullets) ? bulletPoint(options.nesting) : "";
 
@@ -503,7 +504,6 @@ module.exports = {
       //Good handling
       if (lookup.all_goods[all_modifier_keys[i]]) {
         var good_obj = lookup.all_goods[all_modifier_keys[i]];
-        console.log(local_value);
 
         if (local_value.length == 1) {
           modifier_string.push(`${prefix}${f}${parseNumber(local_value[0])}${f} ${(good_obj.name) ? good_obj.name : all_modifier_keys[i]}`);
@@ -514,6 +514,14 @@ module.exports = {
         (local_value.length == 1) ?
           modifier_string.push(`${prefix}£${parseNumber(local_value[0])}`) :
           modifier_string.push(`${prefix}£${parseNumber(local_value[0])} - ${parseNumber(local_value[1])}`);
+      } else if (config.pops[all_modifier_keys[i]]) { //Pops handling
+        var pop_obj = config.pops[all_modifier_keys[i]];
+
+        var local_pop_name = (pop_obj.name) ? pop_obj.name : all_modifier_keys[i];
+
+        (local_value.length == 1) ?
+          modifier_string.push(`${prefix}${parseNumber(local_value[0])} ${local_pop_name}`) :
+          modifier_string.push(`${prefix}${parseNumber(local_value[0])} - ${parseNumber(local_value[1])} ${local_pop_name}`);
       } else {
         if (local_modifier.type == "integer") {
           var prefix_displayed = true;
@@ -525,35 +533,40 @@ module.exports = {
           modifier_string.push(`${prefix}${f}${parseNumber(local_value[0], { display_prefix: prefix_displayed })}${f} ${local_modifier_name}`);
         } else {
           //Effects/scopes parsing
-          if (all_modifier_keys[i] == "construction_turns") {
-            modifier_string.push(`${prefix}Construction Time: ${f}${parseNumber(local_value[0])}${f} Turn(s)`);
-          } else if (all_modifier_keys[i] == "cost") {
-            var local_obj = local_value[0];
-
-            var local_keys = Object.keys(local_obj);
+          if (all_modifier_keys[i] == "any_pop" || all_modifier_keys[i].startsWith("any_pop_")) {
             var new_options = JSON.parse(JSON.stringify(options));
             new_options.nesting++;
 
-            modifier_string.push(`Cost:`);
+            modifier_string.push(`${h_prefix}Any Pop:`);
+            modifier_string.push(
+              module.exports.parseModifiers(local_value[0], exclude_bullets, base_zero, base_one, new_options)
+            );
+          } else if (all_modifier_keys[i] == "construction_turns") {
+            modifier_string.push(`${prefix}Construction Time: ${f}${parseNumber(local_value[0])}${f} Turn(s)`);
+          } else if (all_modifier_keys[i] == "cost") {
+            var new_options = JSON.parse(JSON.stringify(options));
+            new_options.nesting++;
+
+            modifier_string.push(`${h_prefix}Cost:`);
             modifier_string.push(
               module.exports.parseModifiers(local_value[0], exclude_bullets, base_zero, base_one, new_options)
             );
           } else if (all_modifier_keys[i] == "enable_centralisation") {
             modifier_string.push((local_value[0]) ? `Enables Centralisation` : `Disables Centralisation`);
           } else if (all_modifier_keys[i] == "houses") {
-            modifier_string.push(`Houses ${f}${parseNumber(local_value[0])}${f}`);
+            modifier_string.push(`${h_prefix}Houses ${f}${parseNumber(local_value[0])}${f}`);
           } else if (all_modifier_keys[i] == "infamy_loss") {
             modifier_string.push(`${prefix}${f}${printPercentage(local_value[0], { display_prefix: true, base_zero: true })}${f} ${local_modifier_name}`);
           } else if (all_modifier_keys[i] == "maintenance") {
             var new_options = JSON.parse(JSON.stringify(options));
             new_options.nesting++;
 
-            modifier_string.push(`Maintenance:`);
+            modifier_string.push(`${h_prefix}Maintenance:`);
             modifier_string.push(
               module.exports.parseModifiers(local_value[0], exclude_bullets, base_zero, base_one, new_options)
             );
           } else if (all_modifier_keys[i] == "maximum") {
-            modifier_string.push(`Maximum: ${parseNumber(local_value[0])}`);
+            modifier_string.push(`${h_prefix}Maximum: ${parseNumber(local_value[0])}`);
           } else if (all_modifier_keys[i] == "manpower_cost") {
             var local_obj = local_value[0];
 
@@ -562,7 +575,7 @@ module.exports = {
             for (var x = 0; x < local_keys.length; x++) {
               var local_subobj = local_obj[local_keys[x]];
 
-              modifier_string.push(`Manpower:`);
+              modifier_string.push(`${h_prefix}Manpower:`);
               //Recursive scopes
               if (local_keys[x] == "any_pop" || local_keys[i].startsWith("any_pop_")) {
                 var new_options = JSON.parse(JSON.stringify(options));
@@ -630,7 +643,7 @@ module.exports = {
             var new_options = JSON.parse(JSON.stringify(options));
             new_options.nesting++;
 
-            modifier_string.push(`Produces:`);
+            modifier_string.push(`${h_prefix}Produces:`);
             modifier_string.push(
               module.exports.parseModifiers(local_value[0], exclude_bullets, base_zero, base_one, new_options)
             );
