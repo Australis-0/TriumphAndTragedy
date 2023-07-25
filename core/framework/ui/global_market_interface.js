@@ -29,42 +29,21 @@ module.exports = {
         value: "```yaml" + `\nBuy Price: £${parseNumber(local_market_good.buy_price)}\nSell Price: £${parseNumber(local_market_good.sell_price)}` + "``````css" + `\n- [Buy ${(local_good.name) ? local_good.name : all_market_goods[i]}]\n- [Sell ${(local_good.name) ? local_good.name : all_market_goods[i]}]` + "\n```",
         inline: true
       });
-
-      if ((i + 1) % 2 == 0)
-        market_fields.push({
-          name: config.localisation.blank,
-          value: config.localisation.blank
-        });
     }
 
     //Interject ending message
     market_ending_string.push(`Our deals are always steals!`);
 
-    //Begin churning out embeds!
-    var local_market_fields = [];
-
-    if (market_fields.length > 0)
-      for (var i = 0; i < market_fields.length; i++) {
-        local_market_fields.push(market_fields[i]);
-
-        if (i != 0 || market_fields.length == 1)
-          if (i % 13 == 0 || i == market_fields.length - 1) {
-            var market_embed = new Discord.MessageEmbed()
-              .setColor(settings.bot_colour)
-              .setTitle(`[Back] | [Jump To Page] | **World Market:**`)
-              .setDescription(market_string.join("\n"))
-              .setImage("https://cdn.discordapp.com/attachments/722997700391338046/736141424315203634/margin.png")
-              .setFooter(market_ending_string.join("\n"));
-
-            for (var x = 0; x < local_market_fields.length; x++)
-              market_embed.addField(local_market_fields[x].name, local_market_fields[x].value, local_market_fields[x].inline);
-
-            market_embeds.push(market_embed);
-            local_market_fields = [];
-          }
-      }
-
     //Return statement
-    return market_embeds;
+    return splitEmbed(market_string, {
+      fields: market_fields,
+      maximum_fields: 12,
+      table_width: 2,
+      fixed_width: true,
+      title: `[Back] | [Jump To Page] | **World Market:**`,
+      title_pages: true,
+
+      footer_description: market_ending_string
+    });
   }
 };
