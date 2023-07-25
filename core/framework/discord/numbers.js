@@ -173,6 +173,19 @@ module.exports = {
     );
   },
 
+  modifyValue: function (arg0_object, arg1_key, arg2_number) {
+    //Convert from parameters
+    var object = arg0_object;
+    var key = arg1_key;
+    var number = parseInt(arg2_number);
+
+    //Set value
+    object[key] = (object[key]) ? object[key] + number : number;
+
+    //Return statement
+    return object[key];
+  },
+
   /*
     printPercentage() - Formats a string to fit a certain percentage (e.g. 23%), instead of a default decimal number.
     options: {
@@ -211,9 +224,12 @@ module.exports = {
       `${parseNumber(Math.min(array[0], array[1]))} - ${parseNumber(Math.max(array[0], array[1]))}`;
   },
 
-  randomNumber: function (min, max) {
+  randomNumber: function (min, max, do_not_round) {
+    //Declare local instance variables
+    var random_number = Math.random() * (max - min) + min;
+
     //Return statement
-  	return Math.round(Math.random() * (max - min) + min);
+  	return (!do_not_round) ? Math.round(random_number) : random_number;
   },
 
   returnSafeNumber: function (arg0_operation, arg1_default) {
@@ -282,5 +298,28 @@ module.exports = {
     }
 
     yield number - sum_parts;
+  },
+
+  standardiseObjectPercent: function (arg0_object) {
+    //Convert from parameters
+    var object = arg0_object;
+
+    //Declare local instance variables
+    var all_obj_keys = Object.keys(object);
+    var object_sum = 0;
+
+    //Fetch object_sum
+    for (var i = 0; i < all_obj_keys.length; i++)
+      object_sum += object[all_obj_keys[i]];
+
+    //Standardise to object_sum
+    for (var i = 0; i < all_obj_keys.length; i++) {
+      var local_value = object[all_obj_keys[i]];
+
+      local_value = local_value/object_sum;
+    }
+
+    //Return statement
+    return local_value;
   }
 };
