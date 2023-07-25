@@ -129,7 +129,7 @@ module.exports = {
                   randomNumber(250000, 800000);
 
                 //Generate city pop object
-                generatePops(province_id, {
+                createPops(province_id, {
                   type: "all",
                   amount: population_amount
                 });
