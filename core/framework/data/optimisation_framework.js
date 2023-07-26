@@ -21,6 +21,8 @@ module.exports = {
       all_national_modifier_names: getNationalModifiers({ return_names: true }),
       all_units: getAllUnits({ return_object: true }),
       all_unit_names: getAllUnits({ return_names: true }),
+      
+      building_category: getBuildingsToCategoryMap(),
 
       province_troop_strengths: {}
     };

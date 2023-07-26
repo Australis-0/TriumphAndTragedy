@@ -293,10 +293,11 @@ module.exports = {
     return modifier_dump;
   },
 
-  getFlag: function (arg0_flags, arg1_flag) {
+  getFlag: function (arg0_flags, arg1_flag, arg2_substring) {
     //Convert from parameters
     var flags = arg0_flags;
     var flag = arg1_flag;
+    var substring = arg2_substring;
 
     //Declare local instance variables
     for (var i = 0; i < flags.length; i++)
@@ -450,17 +451,62 @@ module.exports = {
     parseLimit() - Determines whether a limit resolves to true/false from the given scope. Not recursive.
     options: {
       parent_obj: {}, - The object of the initial parent. Optional.
-      scope: "country", "province", "pop", - The scope which to target for the limit. Defaults to "country"
+      parents: [], - An array of parent elements used for placing relevant flags. Defaults to []
+      pop_flags: {}, - The pop scope to target. Only applies to pop scope
+      province_id: "6709", - The province ID to target. Only applies to province scope
+      scope: "country", "province", "pop", - The scope which to target for the limit. Defaults to "country",
+      user_id: "801410420942" - The user ID to target. Only applies to country scope
     }
   */
-  parseLimit: function (arg0_scope, arg1_options) {
+  parseLimit: function (arg0_scope, arg1_options) { //[WIP] - Finish function body
     //Convert from parameters
     var scope = arg0_scope;
     var options = (arg1_options) ? arg1_options : {};
 
+    //Initialise options [WIP]
+    if (!options.parents) options.parents = [];
+    if (!options.scope) options.scope = "country";
+
+    var province_obj = (options.scope == "province" && options.province_id) ?
+      main.provinces[options.province_id] : undefined;
+
     //Declare local instance variables
-    var meets_conditions = false;
+    var all_keys = Object.keys(scope);
+    var meets_conditions = true;
+    var pops_in_criteria
     var value = 0;
+
+    //Iterate over all_keys
+    for (var i = 0; i < all_keys.length; i++) {
+      var local_value = scope[all_keys[i]];
+
+      //Recursive scopes within limit
+
+      //Conditions
+      if (all_keys[i] == "base_chance") {
+        value += local_value;
+      } else if (all_keys[i] == "fully_employed") { //[WIP]
+
+      } else if (all_keys[i] == "has_no_building_category") {
+        //Check if province scope (if applicable) has building categories
+        if (province_obj) {
+          var all_building_categories = Object.keys(config.buildings);
+
+          if (province_obj.buildings)
+            for (var x = 0; x < province_obj.buildings.length; x++) {
+              var local_building_category_key = lookup.building_category[province_obj.buildings[x].id];
+
+              if (local_value.includes(local_building_category_key)) {
+                meets_conditions = false;
+                break;
+              }
+            }
+        }
+      }
+    }
+
+    //Return statement
+    return [meets_conditions, value];
   },
 
   //Parses modifiers to a string

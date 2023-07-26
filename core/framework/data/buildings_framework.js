@@ -604,6 +604,23 @@ module.exports = {
     return (!options.return_object) ? all_buildings : building_object;
   },
 
+  //getBuildingsToCategoryMap() - Returns an object of building keys to their building category key
+  getBuildingsToCategoryMap: function () {
+    //Declare local instance variables
+    var all_building_categories = Object.keys(config.buildings);
+    var all_buildings = module.exports.getBuildings({ return_object: true });
+    var category_map = {};
+
+    var all_building_keys = Object.keys(all_buildings);
+
+    //Iterate over all_building_keys and call module.exports.getBuildingCategoryFromBuilding()
+    for (var i = 0; i < all_building_keys.length; i++)
+      category_map[all_building_keys[i]] = module.exports.getBuildingCategoryFromBuilding({ return_key: true });
+
+    //Return statement
+    return category_map;
+  },
+
   //Gets building slots for a given category/building, returns -1 if unlimited
   /*
     getBuildingSlots() - Returns an object of various building slot statistics for a given category within a city.

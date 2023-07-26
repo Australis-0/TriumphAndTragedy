@@ -34,6 +34,18 @@ module.exports = {
     return (Array.isArray(list)) ? list : [list];
   },
 
+  getSubstringInArray: function (arg0_array, arg1_substring) {
+    //Convert from parameters
+    var array = arg0_array;
+    var substring = arg1_substring;
+
+    //Iterate through array for substring
+    for (var i = 0; i < array.length; i++)
+      if (array[i].includes(substring))
+        //Return statement
+        return array[i];
+  },
+
   indexesOf: function (arg0_substring, arg1_string) {
 		//Convert from parameters
 		var substring = arg0_substring;
