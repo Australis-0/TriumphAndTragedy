@@ -307,50 +307,6 @@ module.exports = {
     return (!raw_modifier) ? Math.ceil(usr.pops[pop_type]*availability_modifier) : availability_modifier;
   },
 
-  /*
-    killPops() - Kills a certain number of pops from a user based on the available options.
-    options: {
-      type: "soldiers", - Which type of pop to kill off
-      amount: 10000 - How much of the pop to kill off
-    }
-  */
-  killPops: function (arg0_user, arg1_options) {
-    //Convert from parameters
-    var user_id = arg0_user;
-    var options = arg1_options;
-
-    //Declare local instance variables
-    var actual_id = main.global.user_map[user_id];
-    var decimation_obj = {};
-    var pop_obj = config.pops[options.type];
-    var pop_types = getList(options.type);
-    var remaining_population = returnSafeNumber(options.amount);
-    var usr = main.users[actual_id];
-
-    //Parse 'all' argument as well
-    pop_types = (pop_types.includes("all")) ? Object.keys(config.pops) : pop_types;
-
-    //Assign decimation_array to decimation_obj
-    var decimation_array = splitNumber(1, pop_types.length);
-
-    for (var i = 0; i < pop_types.length; i++)
-      decimation_obj[pop_types[i]] = decimation_array[i];
-
-    //Begin subtracting pops
-    for (var i = 0; i < pop_types.length; i++)
-      removePops(user_id, Math.ceil(decimation_obj[pop_types[i]]*remaining_population), pop_types[i]);
-
-    //Add to civilian/military casualties tracker
-    if (!getList(options.type).includes("all")) {
-      if (pop_obj.military_pop)
-        usr.recent_military_casualties[usr.recent_military_casualties.length - 1] += options.amount;
-      else
-        usr.recent_civilian_casualties[usr.recent_civilian_casualties.length - 1] += options.amount;
-    } else {
-      usr.recent_civilian_casualties[usr.recent_civilian_casualties.length - 1] += options.amount;
-    }
-  },
-
   parsePops: function () {
     //Declare local instance variables
     var all_pops = Object.keys(config.pops);
@@ -400,31 +356,83 @@ module.exports = {
     return killed;
   },
 
-  removePops: function (arg0_user, arg1_amount, arg2_type) {
+  /*
+    removePops() - Kills a certain number of pops from a user based on the available options.
+    options: {
+      migration: true/false, - Whether the pops migrated or not instead of being killed. False by default
+      provinces: ["6709", "6710"], - A list of provinces to target for removing pops. All of a user's provinces by default
+      type: "soldiers", - Which type of pop to kill off
+      amount: 10000 - How much of the pop to kill off
+    }
+  */
+  removePops: function (arg0_user, arg1_options) {
     //Convert from parameters
     var user_id = arg0_user;
-    var amount = arg1_amount;
-    var remaining_population = returnSafeNumber(amount);
-    var pop_type = arg2_type;
+    var options = arg1_options;
 
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
+    var decimation_obj = {};
+    var pop_obj = config.pops[options.type];
+    var pop_types = getList(options.type);
+    var remaining_population = returnSafeNumber(options.amount);
     var shuffled_provinces = shuffleArray(getProvinces(user_id));
     var usr = main.users[actual_id];
 
-    //Begin subtracting
-    for (var i = 0; i < shuffled_provinces.length; i++)
-      if (remaining_population > 0)
-        if (shuffled_provinces[i].pops[pop_type] >= remaining_population) {
-          shuffled_provinces[i].pops[pop_type] -= remaining_population;
-          remaining_population = 0;
-        } else {
-          shuffled_provinces[i].pops[pop_type] = 0;
-          remaining_population -= shuffled_provinces[i].pops[pop_type];
-        }
+    var target_provinces = (options.provinces) ? getList(options.provinces) : shuffled_provinces;
 
-    //Update tracker variables
-    usr.pops[pop_type] -= returnSafeNumber(amount);
-    usr.population -= returnSafeNumber(amount);
+    //Parse 'all' argument as well
+    pop_types = (pop_types.includes("all")) ? Object.keys(config.pops) : pop_types;
+
+    //Assign decimation_array to decimation_obj
+    var decimation_array = splitNumber(1, pop_types.length);
+
+    for (var i = 0; i < pop_types.length; i++)
+      decimation_obj[pop_types[i]] = decimation_array[i];
+
+    //Begin subtracting pops
+    for (var i = 0; i < pop_types.length; i++) {
+      var amount_to_remove = decimation_obj[pop_types[i]];
+      var total_pops = 0;
+
+      //Sum up total_pops from target_provinces
+      for (var x = 0; x < target_provinces.length; x++) {
+        var local_province = main.provinces[target_provinces[x]];
+
+        if (local_province.pops)
+          if (local_province.pops[pop_types[i]])
+            total_pops += local_province.pops[pop_types[i]];
+      }
+
+      var total_pop_percentage = returnSafeNumber(amount_to_remove/total_pops);
+
+      //Subtract local_province.pops[pop_types[i]]*total_pop_percentage from each city
+      for (var x = 0; x < target_provinces.length; x++) {
+        var local_province = main.provinces[target_provinces[x]];
+        var local_removed_pops = module.exports.removePop(user_id, {
+          province_id: target_provinces[x],
+
+          pop_type: pop_types[i],
+          amount: local_province.pops[pop_types[i]]*total_pop_percentage
+        });
+
+        decimation_obj[pop_types[i]] -= local_removed_pops;
+      }
+    }
+
+    //Add to civilian/military casualties tracker
+    if (!options.migration)
+      if (!getList(options.type).includes("all")) {
+        if (pop_obj.military_pop) {
+          usr.recent_military_casualties[usr.recent_military_casualties.length - 1] += options.amount;
+        } else {
+          usr.recent_civilian_casualties[usr.recent_civilian_casualties.length - 1] += options.amount;
+        }
+      } else {
+        usr.recent_civilian_casualties[usr.recent_civilian_casualties.length - 1] += options.amount;
+      }
+
+    //Return statement
+    return decimation_obj;
   }
 };
