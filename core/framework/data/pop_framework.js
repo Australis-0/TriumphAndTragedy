@@ -364,6 +364,42 @@ module.exports = {
     }
   },
 
+  /*
+    removePop() - Removes pops from a province
+    options: {
+      province_id: "6709", - The province ID which to target pops from
+
+      pop_type: "soldiers", - Which type of pop to kill off. Doesn't accept lists
+      amount: 5000 - How much of the pop to kill off
+    }
+  */
+  removePop: function (arg0_user, arg1_options) {
+    //Convert from parameters
+    var user_id = arg0_user;
+    var options = (arg1_options) ? arg1_options : {};
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var killed = 0;
+    var province_obj = main.provinces[options.province_id];
+    var usr = main.users[actual_id];
+
+    //Subtract population
+    if (province_obj)
+      if (province_obj.pops[options.pop_type]) {
+        if (province_obj.pops[options.pop_type] >= options.amount) {
+          killed = JSON.parse(JSON.stringify(options.amount));
+          province_obj.pops[options.pop_type] -= options.amount;
+        } else {
+          killed = JSON.parse(JSON.stringify(province_obj.pops[options.pop_type]));
+          province_obj.pops[options.pop_type] = 0;
+        }
+      }
+
+    //Return statement
+    return killed;
+  },
+
   removePops: function (arg0_user, arg1_amount, arg2_type) {
     //Convert from parameters
     var user_id = arg0_user;
@@ -390,10 +426,5 @@ module.exports = {
     //Update tracker variables
     usr.pops[pop_type] -= returnSafeNumber(amount);
     usr.population -= returnSafeNumber(amount);
-
-    //Append to either recent_civilian_casualties or recent_military_casualties depending on pop type
-    (getMilitaryPops().includes(pop_type)) ?
-      usr.recent_military_casualties[usr.recent_military_casualties.length-1] += returnSafeNumber(amount) :
-      usr.recent_civilian_casualties[usr.recent_civilian_casualties.length-1] += returnSafeNumber(amount);
   }
 };
