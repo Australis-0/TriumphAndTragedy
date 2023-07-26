@@ -257,7 +257,7 @@ module.exports = {
   },
 
   /*
-    Returns either an object or key list of all available modifiers.
+    getAllModifiers() - Returns either an object or key list of all available modifiers.
     options: {
       return_names: true/false - Whether or not to return modifier keys instead of objects
     }
@@ -444,6 +444,23 @@ module.exports = {
 
     //Return statement
     return (modifier_exists[0]) ? modifier_exists[1] : undefined;
+  },
+
+  /*
+    parseLimit() - Determines whether a limit resolves to true/false from the given scope. Not recursive.
+    options: {
+      parent_obj: {}, - The object of the initial parent. Optional.
+      scope: "country", "province", "pop", - The scope which to target for the limit. Defaults to "country"
+    }
+  */
+  parseLimit: function (arg0_scope, arg1_options) {
+    //Convert from parameters
+    var scope = arg0_scope;
+    var options = (arg1_options) ? arg1_options : {};
+
+    //Declare local instance variables
+    var meets_conditions = false;
+    var value = 0;
   },
 
   //Parses modifiers to a string

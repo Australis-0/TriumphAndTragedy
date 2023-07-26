@@ -249,9 +249,21 @@ module.exports = {
 
     //Iterate over all_pop_keys and check if usr.pops finds a match
     for (var i = 0; i < all_pop_keys.length; i++)
-      if (usr.pops[all_pop_keys[i]])
-        if (!relevant_pops.includes(all_pop_keys[i]))
-          relevant_pops.push(all_pop_keys[i]);
+      if (usr.pops[all_pop_keys[i]]) {
+        var local_pop = usr.pops[all_pop_keys[i]];
+        var meets_conditions = true;
+
+        //Global pop limit handling
+        if (local_pop.disabled)
+          meets_conditions = false;
+        if (local_pop.industrial_pop)
+          if (main.date.year < 1815)
+            meets_conditions = false;
+
+        if (meets_conditions)
+          if (!relevant_pops.includes(all_pop_keys[i]))
+            relevant_pops.push(all_pop_keys[i]);
+      }
 
     //Return statement
     return relevant_pops;

@@ -194,7 +194,7 @@ config.pops = { //[WIP] - Rework chances, icons
     singular: "Artisan",
 
     artisan_pop: true,
-    chance: 0,
+    chance: 0.12,
     class: "middle",
     per_100k: {
       needs: {
@@ -503,7 +503,7 @@ config.pops = { //[WIP] - Rework chances, icons
     formal_name: "Bureaucracy",
     singular: "Bureaucrat",
 
-    chance: 0,
+    chance: 0.005,
     class: "middle",
     per_100k: {
       needs: {
@@ -737,7 +737,7 @@ config.pops = { //[WIP] - Rework chances, icons
     formal_name: "Bourgeois",
     singular: "Burgher",
 
-    chance: 0,
+    chance: 0.03,
     class: "middle",
     investor_pop: true,
     per_100k: {
@@ -966,7 +966,7 @@ config.pops = { //[WIP] - Rework chances, icons
     formal_name: "Clergy",
     singular: "Clergyman",
 
-    chance: 0,
+    chance: 0.05,
     class: "middle",
     per_100k: {
       needs: {
@@ -1244,7 +1244,7 @@ config.pops = { //[WIP] - Rework chances, icons
     formal_name: "Peasantry",
     singular: "Peasant",
 
-    chance: 0,
+    chance: 0.4775,
     class: "lower",
     per_100k: {
       needs: {
@@ -1474,7 +1474,7 @@ config.pops = { //[WIP] - Rework chances, icons
     formal_name: "Academia",
     singular: "Scholar",
 
-    chance: 0,
+    chance: 0.02,
     class: "upper",
     per_100k: {
       needs: {
@@ -1613,7 +1613,7 @@ config.pops = { //[WIP] - Rework chances, icons
     formal_name: "Serfdom",
     singular: "Serf",
 
-    chance: 0,
+    chance: 0.1275,
     class: "lower",
     per_100k: {
       needs: {
@@ -1948,7 +1948,7 @@ config.pops = { //[WIP] - Rework chances, icons
     formal_name: "Capitalists",
     singular: "Capitalist",
 
-    chance: 0,
+    chance: 0.01,
     class: "upper",
     industrial_pop: true,
     inherits: "burghers",
@@ -2105,7 +2105,7 @@ config.pops = { //[WIP] - Rework chances, icons
     formal_name: "Engineers",
     singular: "Engineer",
 
-    chance: 0,
+    chance: 0.15,
     class: "middle",
     industrial_pop: true,
     per_100k: {
@@ -2440,7 +2440,7 @@ config.pops = { //[WIP] - Rework chances, icons
     formal_name: "Agrarians",
     singular: "Farmer",
 
-    chance: 0,
+    chance: 0.05,
     class: "lower",
     industrial_pop: true,
     inherits: ["peasants", "serfs"],
@@ -2558,7 +2558,7 @@ config.pops = { //[WIP] - Rework chances, icons
     singular: "Labourer",
     icon: "labourers",
 
-    chance: 0.73,
+    chance: 0.50,
     class: "lower",
     industrial_pop: true,
     per_100k: {
@@ -2841,6 +2841,7 @@ config.pops = { //[WIP] - Rework chances, icons
         }
       }
     },
+
     military_pop: true,
     specialised_pop: false
   },
@@ -2850,7 +2851,7 @@ config.pops = { //[WIP] - Rework chances, icons
     formal_name: "Scientific Community",
     singular: "Scientist",
 
-    chance: 0,
+    chance: 0.02,
     class: "middle",
     industrial_pop: true,
     per_100k: {
