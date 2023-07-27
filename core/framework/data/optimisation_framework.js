@@ -4,6 +4,7 @@ module.exports = {
       buildings: ["aliases", "ideal_climate", "name", "singular", "unlimited_slots"],
       building_good_keys: ["cost", "maintenance", "production"],
       goods: ["aliases", "name", "icon", "id", "type"],
+      pop_needs_order: ["staple_goods", "luxury_goods"],
       unit_good_keys: ["cost", "maintenance"]
     };
     global.lookup = {
@@ -21,7 +22,7 @@ module.exports = {
       all_national_modifier_names: getNationalModifiers({ return_names: true }),
       all_units: getAllUnits({ return_object: true }),
       all_unit_names: getAllUnits({ return_names: true }),
-      
+
       building_category: getBuildingsToCategoryMap(),
 
       province_troop_strengths: {}

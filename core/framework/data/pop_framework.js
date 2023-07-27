@@ -223,6 +223,169 @@ module.exports = {
     }
   },
 
+  getPopNeeds: function (arg0_type, arg1_amount, arg2_needs_category) {
+    //Convert from parameters
+    var pop_type = arg0_type;
+    var amount = (arg1_amount) ? parseInt(arg1_amount) : 100000; //per_100k is the default needs scope
+    var needs_category = arg2_needs_category;
+
+    //Declare local instance variables
+    var goods_obj = {};
+    var needs_obj = (typeof needs_category != "object") ? needs_category.trim().toLowerCase() : undefined;
+    var pop_obj = config.pops[pop_type];
+
+    //Fetch needs_obj recursively
+    if (pop_obj)
+      if (pop_obj.per_100k)
+        if (pop_obj.per_100k.needs)
+          needs_obj = JSON.parse(JSON.stringify(
+            getSubobject(pop_obj.per_100k.needs, needs_category)
+          ));
+
+    //Multiply everything in needs_obj by a given amount
+    needs_obj = multiplyObject(needs_obj, amount/100000, false, "ceil");
+
+    return needs_obj;
+  },
+
+  /*
+    getPopNeedsFulfilment() - Returns the total fulfilment of a set of pop needs.
+    options: {
+      needs_category: "food", - Which needs category to return fulfilment/variety for. Defaults to all
+      return_object: true/false, - Whether to return the variety of goods and fulfilment used as a single object: { fulfilment: (Number), variety: (Number) }
+      return_variety: true/false - Whether or not to return the variety of goods used in fulfilment instead of total fulfilment
+    }
+  */
+  getPopNeedsFulfilment: function (arg0_goods, arg1_type, arg2_amount, arg3_options) {
+    //Convert from parameters
+    var goods_obj = arg0_goods; //These are the goods fulfilment is calculated against
+    var pop_type = arg1_type;
+    var amount = (arg2_amount) ? parseInt(arg2_amount) : 100000;
+    var options = (arg3_options) ? arg3_options : {};
+
+    //Declare local instance variables
+    var all_goods = Object.keys(goods_obj);
+    var multiplier = amount/100000;
+    var pop_obj = config.pops[pop_type];
+    var total_fulfilment = 0;
+    var total_variety = 0;
+
+    //Make sure pop has needs to begin with
+    if (pop_obj)
+      if (pop_obj.per_100k)
+        if (pop_obj.per_100k.needs) {
+          var all_needs_groups = Object.keys(pop_obj.per_100k.needs).reverse();
+          var is_needs_category = false;
+
+          if (!options.needs_category) is_needs_category = true;
+          if (pop_obj.per_100k.needs[options.needs_category]) {
+            all_needs_groups = [options.needs_category];
+            is_needs_category = true;
+          }
+
+          //Iterate through all_needs_keys in needs_obj and figure out its total fulfilment
+          if (is_needs_category) {
+            //all_needs_groups are things like "luxury_goods" in this boolean
+            for (var i = 0; i < all_needs_groups.length; i++) {
+              var divide_goods_obj = {}; //Total amount of categories that need a certain good key
+              var local_needs_group = pop_obj.per_100k.needs[all_needs_groups[i]];
+
+              var fulfilment_array = [];
+              var variety_array = [];
+
+              var all_local_needs_categories = Object.keys(local_needs_group);
+
+              //Parse local fulfilment and variety for each
+              for (var x = 0; x < all_local_needs_categories.length; x++) {
+                //These are now objects like staple_goods.basics
+                var local_needs_category = local_needs_group[all_local_needs_categories[x]];
+
+                var all_local_goods = Object.keys(local_needs_category);
+                var percent_fulfilled = 0;
+                var percent_variety = 0;
+                var total_goods = 0;
+
+                //Calculate total_goods
+                for (var y = 0; y < all_local_goods.length; y++) {
+                  var local_value = local_needs_category[all_local_goods[y]];
+
+                  total_goods += returnSafeNumber(local_value*multiplier);
+                }
+
+                //Iterate over all_local_goods to check for fulfilment; subtract resultant goods_obj[all_local_goods[y]] from goods_obj
+                for (var y = 0; y < all_local_goods.length; y++) {
+                  var local_allowance = returnSafeNumber(goods_obj[all_local_goods[y]]);
+                  var local_value = local_needs_category[all_local_goods[y]]*multiplier;
+
+                  //Calculate current_fulfillment, variety
+                  var current_fulfillment = local_allowance/local_value;
+
+                  percent_fulfilled += current_fulfillment*(local_value/total_goods);
+
+                  if (local_allowance > 0)
+                    percent_variety += 1/all_local_goods.length;
+
+                  //Subtract from goods_obj[all_local_goods[y]]
+                  if (local_allowance >= Math.ceil(local_value)) {
+                    goods_obj[all_local_goods[y]] -= Math.ceil(local_value);
+                  } else {
+                    goods_obj[all_local_goods[y]] = 0;
+                  }
+                }
+
+                //Push percent_fulfilled, percent_variety to fulfilment_array, variety_array
+                fulfilment_array.push(percent_fulfilled);
+                variety_array.push(percent_variety);
+              }
+
+              total_fulfilment += getAverage(fulfilment_array)*(1/all_needs_groups.length);
+              total_variety += getAverage(variety_array)*(1/all_needs_groups.length);
+            }
+          } else {
+            //This is a junior category such as .luxury_goods.food, treat it as such
+            var needs_obj = module.exports.getPopNeeds(pop_type, amount, options.needs_category); //Already pre-multiplied
+            var total_goods = 0;
+
+            if (needs_obj) {
+              //Calculate total_goods
+              var all_needs_keys = Object.keys(needs_obj);
+
+              for (var i = 0; i < all_needs_keys.length; i++)
+                total_goods += returnSafeNumber(needs_obj[all_needs_keys[i]]);
+
+              //Calculate total_fulfilment and total_variety
+              for (var i = 0; i < all_needs_keys.length; i++) {
+                var local_allowance = returnSafeNumber(goods_obj[all_needs_keys[i]]);
+                var local_value = needs_obj[all_needs_keys[i]];
+
+                //Add to total_fulfilment; total_variety
+                total_fulfilment += (local_allowance/local_value)*(1/all_needs_keys.length);
+
+                if (local_allowance > 0)
+                  total_variety += 1/all_needs_keys.length;
+
+                //Subtract from goods_obj[all_needs_keys[i]];
+                if (local_allowance >= Math.ceil(local_value)) {
+                  goods_obj[all_needs_keys[i]] -= Math.ceil(local_value);
+                } else {
+                  goods_obj[all_needs_keys[i]] = 0;
+                }
+              }
+            }
+          }
+        }
+
+    //Return statement
+    if (!options.return_object) {
+      return (!options.return_variety) ? total_fulfilment : total_variety;
+    } else {
+      return {
+        fulfilment: total_fulfilment,
+        variety: total_variety
+      };
+    }
+  },
+
   getPopulation: function (arg0_user) {
     //Convert from parameters
     var user_id = arg0_user;
