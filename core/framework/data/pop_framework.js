@@ -211,9 +211,10 @@ module.exports = {
       total_modifier = (total_pop_type/100000)*pop_obj.per_100k[raw_modifier];
 
       //Make sure to implement a proper cap
-      if (pop_obj.max_modifier_limit[raw_modifier])
-        if (total_modifier > pop_obj.max_modifier_limit[raw_modifier])
-          total_modifier = pop_obj.max_modifier_limit[raw_modifier];
+      if (pop_obj.max_modifier_limit)
+        if (pop_obj.max_modifier_limit[raw_modifier])
+          if (total_modifier > pop_obj.max_modifier_limit[raw_modifier])
+            total_modifier = pop_obj.max_modifier_limit[raw_modifier];
 
       //Return statement
       return total_modifier;

@@ -654,15 +654,29 @@ config.icons = {
   stability: "<:stability:716817688722407424>",
 
   //Pops icons - Dynamic set
-  aristocrats: "<:aristocrats:732730754643132457>",
-  faculty: "<:faculty:732730754911436830>",
-  labourers: "<:workers:732730754735276124>",
-  soldiers: "<:soldiers:732730754592669702>",
+  aristocrats: "<:aristocrats:1134472201874178088>",
+  artisans: "<:artisans:1134472203816153168>",
+  bureaucrats: "<:bureaucrats:1134472204956991578>",
+  burghers: "<:burghers:1134472206571806781>",
+  capitalists: "<:capitalists:1134472209218412734>",
+  clergy: "<:clergy:1134472232651984967>",
+  engineers: "<:engineers:1134472234661068820>",
+  faculty: "<:faculty:1134472235978063872>",
+  farmers: "<:farmers:1134472237227982948>",
+  labourers: "<:labourers:1134472256848941166>",
+  officers: "<:officers:1134472258916716626>",
+  peasants: "<:peasants:1134472260321816636>",
+  scholars: "<:scholars:1134472261399760907>",
+  scientists: "<:scientists:1134472323269931160>",
+  serfs: "<:serfs:1134472324805046305>",
+  slaves: "<:slaves:1134472326591823882>",
+  soldiers: "<:soldiers:1134472329213263882>",
 
   //Technology icons - [WIP]
 
   //UI icons
   back_button: "<:back_button:716829986266546187>",
+  blank: "<:blank_1:778437227276402688>",
   blank_1: "<:blank_1:778437227276402688>",
   blank_2: "<:blank_2:778437227117805579>",
   blank_3: "<:blank_3:778437227272732732>",
