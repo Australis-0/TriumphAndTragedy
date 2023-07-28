@@ -238,9 +238,9 @@ module.exports = {
     if (pop_obj)
       if (pop_obj.per_100k)
         if (pop_obj.per_100k.needs)
-          needs_obj = JSON.parse(JSON.stringify(
+          needs_obj = (needs_category) ? JSON.parse(JSON.stringify(
             getSubobject(pop_obj.per_100k.needs, needs_category)
-          ));
+          )) : JSON.parse(JSON.stringify(pop_obj.per_100k.needs));
 
     //Multiply everything in needs_obj by a given amount
     needs_obj = multiplyObject(needs_obj, amount/100000, false, "ceil");

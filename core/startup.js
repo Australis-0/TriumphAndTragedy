@@ -27,6 +27,7 @@ module.exports = {
     FileManager.import("./framework/discord/date");
     FileManager.import("./framework/discord/games");
     FileManager.import("./framework/discord/inactivity_clearer");
+    FileManager.import("./framework/discord/objects");
     FileManager.import("./framework/discord/permissions_handler");
     FileManager.import("./framework/discord/reaction_framework");
     FileManager.import("./framework/discord/select_handler");

@@ -60,29 +60,48 @@ module.exports = {
     return scope;
   },
 
-  getSubobject: function (arg0_scope, arg1_key) {
+  getSubobject: function (arg0_scope, arg1_key, arg2_restrict_search) {
     //Convert from parameters
     var scope = arg0_scope;
     var key = arg1_key;
+    var restrict_search = arg2_restrict_search;
 
     //Declare local instance variables
     var all_scope_keys = Object.keys(scope);
+
+    //Process key
+    if (!Array.isArray(key))
+      key = getList(key.split("."));
 
     //Iterate over all_scope_keys
     for (var i = 0; i < all_scope_keys.length; i++) {
       var local_subobj = scope[all_scope_keys[i]];
 
-      if (all_scope_keys[i] == key) {
+      if (all_scope_keys[i] == key[key.length - 1]) {
         //Guard clause
         return local_subobj;
         break;
       } else if (typeof local_subobj == "object") {
-        var has_subobj = module.exports.getSubobject(local_subobj, key);
+        var explore_object = false;
+        var new_key = JSON.parse(JSON.stringify(key));
+        if (key.length > 1)
+          restrict_search = true;
 
-        if (has_subobj) {
-          //Return statement
-          return local_subobj;
-          break;
+        if (restrict_search && all_scope_keys[i] == key[0]) {
+          new_key.splice(0, 1);
+          explore_object = true;
+        }
+        if (!restrict_search) explore_object = true;
+
+        //Restrict search for certain arguments
+        if (explore_object) {
+          var has_subobj = module.exports.getSubobject(local_subobj, new_key, restrict_search);
+
+          if (has_subobj) {
+            //Return statement
+            return has_subobj;
+            break;
+          }
         }
       }
     }
