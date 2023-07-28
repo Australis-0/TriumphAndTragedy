@@ -190,18 +190,15 @@ module.exports = {
     return local_obj;
   },
 
-  parseGood: function (arg0_user, arg1_good_name, arg2_formatting) {
+  parseGood: function (arg0_good_name, arg1_formatting) {
     //Convert from parameters
-    var user_id = arg0_user;
-    var good_name = arg1_good_name;
-    var formatting = arg2_formatting;
+    var good_name = arg0_good_name;
+    var formatting = arg1_formatting;
 
     //Declare local instance variables
-    var actual_id = main.global.user_map[user_id];
     var formatter = "";
     var good_icon = "";
     var good_obj = (typeof good_name == "object") ? good_name : getGood(good_name);
-    var usr = main.users[actual_id];
 
     var good_key = (typeof good_name == "object") ?
       getGood(good_obj.name, { return_key: true }) :
@@ -749,6 +746,17 @@ module.exports = {
 
     //Return statement
     return (wargoal_localisation) ? wargoal_localisation : [];
+  },
+
+  parsePop: function (arg0_pop_name) {
+    //Convert from parameters
+    var pop_type = arg0_pop_name;
+
+    //Declare local instance variables
+    var pop_obj = (typeof pop_type == "object") ? pop_type : config.pops[pop_type];
+
+    //Return statement
+    return `${(pop_obj.icon) ? pop_obj.icon + " " : ""}${(pop_obj.name) ? pop_obj.name : pop_type}`;
   },
 
   parseProvinces: function (arg0_provinces, arg1_options) {

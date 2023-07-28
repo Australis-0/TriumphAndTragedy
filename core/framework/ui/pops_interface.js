@@ -30,7 +30,7 @@ module.exports = {
     for (var i = 0; i < all_pops.length; i++) {
       var local_pop = config.pops[all_pops[i]];
 
-      urban_pops_string.push(`${(local_pop.icon) ? local_pop.icon + " " : ""}${(local_pop.name) ? local_pop.name : all_pops[i]}: \n- **${parseNumber(returnSafeNumber(pop_obj[`urban_${all_pops[i]}`]))}**`);
+      urban_pops_string.push(`- ${parsePop(all_pops[i])}: **${parseNumber(returnSafeNumber(pop_obj[`urban_${all_pops[i]}`]))}**`);
     }
 
     urban_pops_string.push("");
@@ -42,7 +42,7 @@ module.exports = {
     for (var i = 0; i < all_pops.length; i++) {
       var local_pop = config.pops[all_pops[i]];
 
-      rural_pops_string.push(`${(local_pop.icon) ? local_pop.icon + " " : ""}${(local_pop.name) ? local_pop.name : all_pops[i]}: \n- **${parseNumber(returnSafeNumber(pop_obj[`rural_${all_pops[i]}`]))}**`);
+      rural_pops_string.push(`- ${parsePop(all_pops[i])}: **${parseNumber(returnSafeNumber(pop_obj[`rural_${all_pops[i]}`]))}**`);
     }
 
     rural_pops_string.push("");
@@ -52,7 +52,7 @@ module.exports = {
     for (var i = 0; i < all_pops.length; i++) {
       var local_pop = config.pops[all_pops[i]];
 
-      total_pops_string.push(`- ${(local_pop.icon) ? local_pop.icon + " " : ""}Total ${(local_pop.name) ? local_pop.name : all_pops[i]}: **${parseNumber(returnSafeNumber(usr.pops[all_pops[i]]))}**`);
+      total_pops_string.push(`- ${parsePop(all_pops[i])}: **${parseNumber(returnSafeNumber(usr.pops[all_pops[i]]))}**`);
     }
 
     //Print dynamic total pops - Availability
