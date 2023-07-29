@@ -981,6 +981,65 @@ module.exports = {
       (goods_production[good_type]) ? goods_production[good_type] : [0, 0];
   },
 
+  getProductionObject: function (arg0_user) {
+    //Convert from parameters
+    var user_id = arg0_user;
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var all_produced_goods = [];
+    var all_production = module.exports.getProduction(user_id);
+    var all_unprocessed_goods = Object.keys(all_production);
+    var sorted_goods_cache = [];
+    var usr = main.users[actual_id];
+
+    //Sort goods first
+    for (var i = 0; i < all_unprocessed_goods.length; i++) {
+      var local_good = lookup.all_goods[all_unprocessed_goods[i]];
+
+      (local_good) ?
+        sorted_goods_cache.push([(local_good.name) ? local_good.name : all_unprocessed_goods[i], all_unprocessed_goods[i]]) :
+        sorted_goods_cache.push([all_unprocessed_goods[i], all_unprocessed_goods[i]]);
+    }
+
+    sorted_goods_cache.sort(); //Only the first element in a nested array is sorted
+
+    for (var i = 0; i < sorted_goods_cache.length; i++)
+      all_produced_goods.push(sorted_goods_cache[i][1]);
+
+    for (var i = 0; i < all_produced_goods.length; i++) {
+      var local_good = lookup.all_goods[all_produced_goods[i]];
+      var local_value = all_production[all_produced_goods[i]];
+
+      if (local_good) {
+        //Deduct upkeep from good production
+        if (Array.isArray(local_value)) {
+          var upkeep_array = (all_production[`${all_produced_goods[i]}_upkeep`]) ?
+            all_production[`${all_produced_goods[i]}_upkeep`] :
+            [0, 0];
+
+          upkeep_array.sort(function (a, b) { return a - b; });
+
+          all_production[all_produced_goods[i]] = [
+            local_value[0] - upkeep_array[1],
+            local_value[1] - upkeep_array[0],
+          ].sort(function (a, b) { return a - b; });
+        }
+      }
+    }
+
+    //Make sure _upkeep keys are cloned to regular good if regular good doesn't exist
+    var all_production_keys = Object.keys(all_production);
+
+    for (var i = 0; i < all_production_keys.length; i++)
+      if (all_production_keys[i].includes("_upkeep"))
+        if (!all_production[all_production_keys[i].replace("_upkeep", "")])
+          all_production[all_production_keys[i].replace("_upkeep", "")] = all_production[all_production_keys[i]];
+
+    //Return statement
+    return all_production;
+  },
+
   getTotalBuildings: function (arg0_city_name, arg1_building_name) {
     //Convert from parameters
     var city_name = (typeof arg0_city_name != "object") ? arg0_city_name.toLowerCase().trim() : arg0_city_name;

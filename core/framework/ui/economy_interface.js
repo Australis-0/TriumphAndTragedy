@@ -199,48 +199,7 @@ module.exports = {
     resource_production_string.push(`- **[Building List]** | **[Build]**`);
 
     //Dynamically push resource production to resource_production_string
-    var all_production = getProduction(user_id);
-    var all_unprocessed_goods = Object.keys(all_production);
-    var sorted_goods_cache = [];
-
-    var all_produced_goods = [];
-
-    for (var i = 0; i < all_unprocessed_goods.length; i++) {
-      var local_good = lookup.all_goods[all_unprocessed_goods[i]];
-
-      (local_good) ?
-        sorted_goods_cache.push([(local_good.name) ? local_good.name : all_unprocessed_goods[i], all_unprocessed_goods[i]]) :
-        sorted_goods_cache.push([all_unprocessed_goods[i], all_unprocessed_goods[i]]);
-    }
-
-    sorted_goods_cache.sort(); //Only the first element in a nested array is sorted
-
-    for (var i = 0; i < sorted_goods_cache.length; i++)
-      all_produced_goods.push(sorted_goods_cache[i][1]);
-
-    for (var i = 0; i < all_produced_goods.length; i++) {
-      var local_good = lookup.all_goods[all_produced_goods[i]];
-      var local_value = all_production[all_produced_goods[i]];
-
-      if (local_good) {
-        //Deduct upkeep from good production
-        if (Array.isArray(local_value)) {
-          var upkeep_array = (all_production[`${all_produced_goods[i]}_upkeep`]) ?
-            all_production[`${all_produced_goods[i]}_upkeep`] :
-            [0, 0];
-
-          upkeep_array.sort(function (a, b) { return a - b; });
-
-          local_value = [
-            local_value[0] - upkeep_array[1],
-            local_value[1] - upkeep_array[0],
-          ].sort(function (a, b) { return a - b; });
-        }
-
-        //Push to string
-        resource_production_string.push(`- **${(local_value[0] == local_value[1]) ? parseNumber(local_value[0]) : parseNumber(local_value[0]) + " - " + parseNumber(local_value[1])}** ${(local_good.name) ? local_good.name : all_produced_goods[i]}.`);
-      }
-    }
+    resource_production_string = getProductionLocalisation(user_id);
 
     if (Object.keys(all_production).length == 0) {
       footer_string.push(`_Our economy is not currently producing any goods! Consider constructing some new buildings in order to jumpstart our economy._`);

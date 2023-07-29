@@ -103,6 +103,50 @@ module.exports = {
     return pc_string;
   },
 
+  /*
+    getProductionLocalisation() - Returns an array string of total building production
+    options: {
+      exclude_bullets: true/false, - Whether to exclude bullets or not
+      display_icons: true/false, - Whether good icons should be displayed or not
+      formatter: "**", - The markdown formatter to use for good numbers
+      no_formatting: true/false - Whether formatting should be disabled or not
+    }
+  */
+  getProductionLocalisation: function (arg0_user, arg1_options) {
+    //Convert from parameters
+    var user_id = arg0_user;
+    var options = (arg1_options) ? arg1_options : {};
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var formatter = "";
+    var production_obj = getProductionObject(user_id);
+    var resource_production_string = [];
+    var usr = main.users[actual_id];
+
+    var all_production_keys = Object.keys(production_obj);
+
+    formatter = (options.formatter) ? options.formatter : "**";
+    if (options.no_formatting)
+      formatter = "";
+
+    //Iterate over all_produced_goods to push to resource_production_string
+    for (var i = 0; i < all_production_keys.length; i++) {
+      var local_good = lookup.all_goods[all_production_keys[i]];
+      var local_value = production_obj[all_production_keys[i]];
+
+      if (!all_production_keys[i].includes("_upkeep"))
+        if (all_production_keys[i] != "money") {
+          resource_production_string.push(`${(!options.exclude_bullets) ? "- " : ""}**${(local_value[0] == local_value[1]) ? parseNumber(local_value[0]) : parseNumber(local_value[0]) + " - " + parseNumber(local_value[1])}** ${(options.display_icons) ? module.exports.parseGood(local_good) : (local_good.name) ? local_good.name : all_production_keys[i]}.`);
+        } else {
+          resource_production_string.push(`${(!options.exclude_bullets) ? "- " : ""}**${(local_value[0] == local_value[1]) ? parseNumber(local_value[0]) : parseNumber(local_value[0]) + " - " + parseNumber(local_value[1])}** Money`);
+        }
+    }
+
+    //Return statement
+    return resource_production_string;
+  },
+
   getProvinceColonisationLocalisation: function (arg0_province) {
     //Convert from parameters
     var province_id = arg0_province.trim().toLowerCase();
@@ -190,10 +234,11 @@ module.exports = {
     return local_obj;
   },
 
-  parseGood: function (arg0_good_name, arg1_formatting) {
+  parseGood: function (arg0_good_name, arg1_formatting, arg2_exclude_icon) {
     //Convert from parameters
     var good_name = arg0_good_name;
     var formatting = arg1_formatting;
+    var exclude_icon = arg2_exclude_icon;
 
     //Declare local instance variables
     var formatter = "";
