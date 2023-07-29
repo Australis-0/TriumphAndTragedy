@@ -131,6 +131,30 @@ module.exports = {
     return all_pop_needs_obj;
   },
 
+  //getAllPopNeedCategories() - Returns a list of pop need categories such as luxury-goods, staple_goods, etc.
+  getAllPopNeedCategories: function () {
+    //Declare local instance variables
+    var all_pops = Object.keys(config.pops);
+    var pop_categories = [];
+
+    //Iterate over all_pops
+    for (var i = 0; i < all_pops.length; i++) {
+      var local_pop = config.pops[all_pops[i]];
+
+      if (local_pop.per_100k)
+        if (local_pop.per_100k.needs) {
+          var all_local_needs_categories = Object.keys(local_pop.per_100k.needs);
+
+          for (var x = 0; x < all_local_needs_categories.length; x++)
+            if (!pop_categories.includes(all_local_needs_categories[x]))
+              pop_categories.push(all_local_needs_categories[x]);
+        }
+    }
+
+    //Return statement
+    return pop_categories;
+  },
+
   getDemographics: function (arg0_user) {
     //Convert from parameters
     var user_id = arg0_user;

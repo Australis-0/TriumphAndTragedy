@@ -2,7 +2,7 @@ module.exports = {
   /*
     printPops() - Displays a user's pops countrywide
   */
-  printPops: function (arg0_user, arg1_options) {
+  printPops: function (arg0_user, arg1_options) { //[WIP] - Finish function body
     //Convert from parameters
     var user_id = arg0_user;
     var options = (arg1_options) ? arg1_options : {};
@@ -213,7 +213,11 @@ module.exports = {
     //Page 2 - Pop Needs - Total Consumption/Production
     {
       var production_string = getProductionLocalisation(user_id);
-      
+
+      //Iterate over lookup.all_pop_needs_categories
+      for (var i = 0; i < lookup.all_pop_needs_categories) {
+
+      }
     }
 
     game_obj.main_embed = population_overview_embed;
