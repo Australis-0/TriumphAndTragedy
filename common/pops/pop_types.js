@@ -2119,63 +2119,65 @@ config.pops = { //[WIP] - Rework chances, icons
     class: "middle",
     industrial_pop: true,
     per_100k: {
-      luxury_goods: {
-        food: {
-          tea: 3,
-          alcohol: 2,
-          canned_food: 2,
-          chocolate: 2,
-          canned_food: 1,
-          cheese: 1,
-          chewing_gum: 1
+      needs: {
+        luxury_goods: {
+          food: {
+            tea: 3,
+            alcohol: 2,
+            canned_food: 2,
+            chocolate: 2,
+            canned_food: 1,
+            cheese: 1,
+            chewing_gum: 1
+          },
+          furnishings: {
+            common_furniture: 3,
+            chinaware: 2,
+            velvet: 2,
+            automobiles: 1,
+            sleeping_bags: 1,
+            tailored_suits: 1
+          },
+          personal: {
+            leather_boots: 2,
+            cameras: 1,
+            cigars: 1,
+            clay_pipes: 1,
+            cosmetic_products: 1,
+            glasses: 1,
+            gramophones: 1,
+            film: 1,
+            jewellery: 1,
+            radios: 1,
+            recording_devices: 1,
+            refined_petroil: 1,
+            televisions: 1
+          }
         },
-        furnishings: {
-          common_furniture: 3,
-          chinaware: 2,
-          velvet: 2,
-          automobiles: 1,
-          sleeping_bags: 1,
-          tailored_suits: 1
-        },
-        personal: {
-          leather_boots: 2,
-          cameras: 1,
-          cigars: 1,
-          clay_pipes: 1,
-          cosmetic_products: 1,
-          glasses: 1,
-          gramophones: 1,
-          film: 1,
-          jewellery: 1,
-          radios: 1,
-          recording_devices: 1,
-          refined_petroil: 1,
-          televisions: 1
-        }
-      },
-      staple_goods: {
-        basics: {
-          paper: 3,
-          tools: 3,
-          computers: 2,
-          ink: 2,
-          lamps: 2,
-          machine_parts: 2,
-          medicines: 2,
-          clothes: 1,
-          natural_gas: 1,
-          telephones: 1,
-          typewriters: 1
-        },
-        food: {
-          grains: 3,
-          meat: 2,
-          vegetables: 2,
-          fruit: 1,
-          fish: 1,
-          milk: 1,
-          salt: 1,
-          seasoning: 1
+        staple_goods: {
+          basics: {
+            paper: 3,
+            tools: 3,
+            computers: 2,
+            ink: 2,
+            lamps: 2,
+            machine_parts: 2,
+            medicines: 2,
+            clothes: 1,
+            natural_gas: 1,
+            telephones: 1,
+            typewriters: 1
+          },
+          food: {
+            grains: 3,
+            meat: 2,
+            vegetables: 2,
+            fruit: 1,
+            fish: 1,
+            milk: 1,
+            salt: 1,
+            seasoning: 1
+          }
         }
       }
     },
@@ -2868,71 +2870,73 @@ config.pops = { //[WIP] - Rework chances, icons
     class: "middle",
     industrial_pop: true,
     per_100k: {
-      luxury_goods: {
-        food: {
-          coffee: 4,
-          foods: 3,
-          tea: 2,
-          canned_food: 1,
-          honey: 1,
-          olive_oil: 1
+      needs: {
+        luxury_goods: {
+          food: {
+            coffee: 4,
+            foods: 3,
+            tea: 2,
+            canned_food: 1,
+            honey: 1,
+            olive_oil: 1
+          },
+          furnishings: {
+            common_furniture: 5,
+            glass: 4,
+            chinaware: 2,
+            lightbulbs: 2,
+            wood_veneers: 2,
+            automobiles: 1,
+            bicycles: 1,
+            ceramics: 1,
+            luxury_furniture: 1,
+            velvet: 1
+          },
+          personal: {
+            boots: 2,
+            cigarettes: 2,
+            film: 2,
+            tyres: 2,
+            cameras: 1,
+            clay_pipes: 1,
+            cosmetic_products: 1,
+            gramophones: 1,
+            incense: 1,
+            jewellery: 1,
+            shampoo: 1,
+            soap: 1,
+            tailored_suits: 1,
+            work_clothes: 1
+          }
         },
-        furnishings: {
-          common_furniture: 5,
-          glass: 4,
-          chinaware: 2,
-          lightbulbs: 2,
-          wood_veneers: 2,
-          automobiles: 1,
-          bicycles: 1,
-          ceramics: 1,
-          luxury_furniture: 1,
-          velvet: 1
-        },
-        personal: {
-          boots: 2,
-          cigarettes: 2,
-          film: 2,
-          tyres: 2,
-          cameras: 1,
-          clay_pipes: 1,
-          cosmetic_products: 1,
-          gramophones: 1,
-          incense: 1,
-          jewellery: 1,
-          shampoo: 1,
-          soap: 1,
-          tailored_suits: 1,
-          work_clothes: 1
-        }
-      },
-      staple_goods: {
-        basics: {
-          paper: 4,
-          ink: 4,
-          lamps: 3,
-          tools: 3,
-          computers: 2,
-          typewriters: 2,
-          chalk: 1,
-          glasses: 1,
-          industrial_chemicals: 1,
-          natural_gas: 1,
-          recording_devices: 1,
-          telephones: 1,
-          televisions: 1
-        },
-        food: {
-          vegetables: 3,
-          grains: 2,
-          fruit: 2,
-          meat: 2,
-          seasoning: 2,
-          tropical_fruit: 2,
-          fish: 1,
-          milk: 1,
-          nuts: 1,
-          salt: 1
+        staple_goods: {
+          basics: {
+            paper: 4,
+            ink: 4,
+            lamps: 3,
+            tools: 3,
+            computers: 2,
+            typewriters: 2,
+            chalk: 1,
+            glasses: 1,
+            industrial_chemicals: 1,
+            natural_gas: 1,
+            recording_devices: 1,
+            telephones: 1,
+            televisions: 1
+          },
+          food: {
+            vegetables: 3,
+            grains: 2,
+            fruit: 2,
+            meat: 2,
+            seasoning: 2,
+            tropical_fruit: 2,
+            fish: 1,
+            milk: 1,
+            nuts: 1,
+            salt: 1
+          }
         }
       }
     },

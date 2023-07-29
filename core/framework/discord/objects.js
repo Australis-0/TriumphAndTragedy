@@ -2,7 +2,7 @@
 module.exports = {
   divideObject: function (arg0_scope, arg1_amount, arg2_not_recursive, arg3_round) {
     //Convert from parameters
-    var scope = arg0_scope;
+    var scope = JSON.parse(JSON.stringify(arg0_scope));
     var amount = arg1_amount;
     var not_recursive = arg2_not_recursive;
     var round = arg3_round;
@@ -17,7 +17,7 @@ module.exports = {
   //flattenObject() - Moves all keys into the first nesting
   flattenObject: function (arg0_scope) {
     //Convert from parameters
-    var scope = arg0_scope;
+    var scope = JSON.parse(JSON.stringify(arg0_scope)); //Deep copy or bad things happen
 
     //Declare local instance variables
     var all_scope_keys = Object.keys(scope);
@@ -28,7 +28,7 @@ module.exports = {
       var local_subobj = scope[all_scope_keys[i]];
 
       if (typeof local_subobj == "object") {
-        flattened_subobj = module.exports.flattenObject(scope);
+        flattened_subobj = module.exports.flattenObject(local_subobj);
 
         var all_flattened_keys = Object.keys(flattened_subobj);
 
@@ -50,7 +50,7 @@ module.exports = {
     }
 
     //Delete any remanent typeof object in the current scope
-    all_scope_keys = Objcet.keys(scope);
+    all_scope_keys = Object.keys(scope);
 
     for (var i = 0; i < all_scope_keys.length; i++)
       if (typeof scope[all_scope_keys[i]] == "object")
@@ -107,9 +107,35 @@ module.exports = {
     }
   },
 
+  mergeObjects: function (arg0_scope, arg1_scope) {
+    //Convert from parameters
+    var merged_obj = JSON.parse(JSON.stringify(arg0_scope));
+    var merge_obj = JSON.parse(JSON.stringify(arg1_scope));
+
+    //Declare local instance variables
+    var all_merge_keys = Object.keys(merge_obj);
+
+    for (var i = 0; i < all_merge_keys.length; i++) {
+      var local_value = merge_obj[all_merge_keys[i]];
+
+      if (typeof local_value == "number") {
+        if (merged_obj[all_merge_keys[i]]) {
+          merged_obj[all_merge_keys[i]] = merged_obj[all_merge_keys[i]] + local_value; //Add numbers together
+        } else {
+          merged_obj[all_merge_keys[i]] = local_value;
+        }
+      } else {
+        merged_obj[all_merge_keys[i]] = local_value;
+      }
+    }
+
+    //Return statement
+    return merged_obj;
+  },
+
   multiplyObject: function (arg0_scope, arg1_amount, arg2_not_recursive, arg3_round) {
     //Convert from parameters
-    var scope = arg0_scope;
+    var scope = JSON.parse(JSON.stringify(arg0_scope));
     var amount = arg1_amount;
     var not_recursive = arg2_not_recursive;
     var round = arg3_round;

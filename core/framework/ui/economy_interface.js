@@ -201,7 +201,7 @@ module.exports = {
     //Dynamically push resource production to resource_production_string
     resource_production_string = getProductionLocalisation(user_id);
 
-    if (Object.keys(all_production).length == 0) {
+    if (Object.keys(resource_production_string).length == 0) {
       footer_string.push(`_Our economy is not currently producing any goods! Consider constructing some new buildings in order to jumpstart our economy._`);
       footer_string.push("");
     } else {

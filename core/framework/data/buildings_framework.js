@@ -1033,8 +1033,14 @@ module.exports = {
 
     for (var i = 0; i < all_production_keys.length; i++)
       if (all_production_keys[i].includes("_upkeep"))
-        if (!all_production[all_production_keys[i].replace("_upkeep", "")])
-          all_production[all_production_keys[i].replace("_upkeep", "")] = all_production[all_production_keys[i]];
+        if (!all_production[all_production_keys[i].replace("_upkeep", "")]) {
+          var new_value = all_production[all_production_keys[i]];
+
+          //Invert upkeep since it's not production
+          for (var x = 0; x < new_value.length; x++) new_value[x] = new_value[x]*-1;
+
+          all_production[all_production_keys[i].replace("_upkeep", "")] = new_value;
+        }
 
     //Return statement
     return all_production;

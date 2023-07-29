@@ -114,6 +114,23 @@ module.exports = {
     return all_pop_goods;
   },
 
+  //getAllPopNeeds() - Returns an object of all flattened pop needs
+  getAllPopNeeds: function () {
+    //Declare local instance variables
+    var all_pops = Object.keys(config.pops);
+    var all_pop_needs_obj = {};
+
+    for (var i = 0; i < all_pops.length; i++) {
+      var local_pop = config.pops[all_pops[i]];
+
+      if (local_pop.per_100k)
+        if (local_pop.per_100k.needs)
+          all_pop_needs_obj[all_pops[i]] = flattenObject(local_pop.per_100k.needs);
+    }
+
+    return all_pop_needs_obj;
+  },
+
   getDemographics: function (arg0_user) {
     //Convert from parameters
     var user_id = arg0_user;
@@ -232,7 +249,7 @@ module.exports = {
 
     //Declare local instance variables
     var goods_obj = {};
-    var needs_obj = (typeof needs_category != "object") ? needs_category.trim().toLowerCase() : undefined;
+    var needs_obj = (typeof needs_category != "object" && needs_category) ? needs_category.trim().toLowerCase() : undefined;
     var pop_obj = config.pops[pop_type];
 
     //Fetch needs_obj recursively
@@ -450,6 +467,38 @@ module.exports = {
 
     //Return statement
     return total_active_duty;
+  },
+
+  getTotalPopConsumption: function (arg0_user, arg1_mode) {
+    //Convert from parameters
+    var user_id = arg0_user;
+    var mode = arg1_mode; //"staple_goods", "luxury_goods"
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var all_pops = Object.keys(config.pops);
+    var consumption_obj = {};
+    var usr = main.users[actual_id];
+
+    //Iterate over all_pops for user and merge with consumption_obj
+    for (var i = 0; i < all_pops.length; i++)
+      try {
+        var local_pop = config.pops[all_pops[i]];
+
+        if (local_pop.per_100k)
+          if (local_pop.per_100k.needs) {
+            var total_pop_amount = returnSafeNumber(usr.pops[all_pops[i]]);
+            var total_pop_needs = getPopNeeds(all_pops[i], total_pop_amount, mode);
+
+            consumption_obj = mergeObjects(consumption_obj, total_pop_needs);
+          }
+      } catch (e) {
+        log.warn(`${all_pops[i]} ran into an error whilst trying to fetch consumption_obj!`);
+        console.log(e);
+      }
+
+    //Return statement
+    return flattenObject(consumption_obj);
   },
 
   getTotalPopManpower: function (arg0_user, arg1_type, arg2_raw_modifier) {

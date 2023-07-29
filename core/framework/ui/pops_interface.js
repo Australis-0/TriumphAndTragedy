@@ -212,6 +212,8 @@ module.exports = {
 
     //Page 2 - Pop Needs - Total Consumption/Production
     {
+      var production_string = getProductionLocalisation(user_id);
+      
     }
 
     game_obj.main_embed = population_overview_embed;
