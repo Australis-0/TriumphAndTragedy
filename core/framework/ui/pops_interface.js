@@ -1,7 +1,11 @@
 module.exports = {
-  printPops: function (arg0_user) {
+  /*
+    printPops() - Displays a user's pops countrywide
+  */
+  printPops: function (arg0_user, arg1_options) {
     //Convert from parameters
     var user_id = arg0_user;
+    var options = (arg1_options) ? arg1_options : {};
 
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
@@ -14,6 +18,7 @@ module.exports = {
     var all_pops = Object.keys(config.pops);
     var all_provinces = getProvinces(user_id);
     var pop_obj = getDemographics(user_id);
+    var relevant_pops = getRelevantPops(user_id);
 
     //Initialise pops_string and other formatting variables
     var pops_string = [];
@@ -22,6 +27,8 @@ module.exports = {
 
     //Format pops_string
     {
+      pops_string.push(`**[${(game_obj.display_irrelevant_pops) ? `Display Relevant Pops` : `Display Irrelevant Pops`}]** | **[${(game_obj.display_no_pops) ? `Display Populated Pops` : `Display All Pops`}]**`);
+
       pops_string.push(`- ${config.icons.culture} **[Culture]** | ${config.icons.population} **[View Provinces]**`);
       pops_string.push("");
       pops_string.push(`__**Population Modifiers:**__`);
@@ -77,9 +84,19 @@ module.exports = {
       //Total pops
       //Print dynamic total pops - Total
       for (var i = 0; i < all_pops.length; i++) {
+        var display_pop = false;
         var local_pop = config.pops[all_pops[i]];
+        var local_value = returnSafeNumber(pop_obj[`urban_${all_pops[i]}`]);
 
-        pops_string.push(`- ${parsePop(all_pops[i])}: **${parseNumber(returnSafeNumber(usr.pops[all_pops[i]]))}**`);
+        if (relevant_pops.includes(all_pops[i]))
+          display_pop = true;
+        if (game_obj.display_irrelevant_pops && local_value != 0)
+          display_pop = true;
+        if (game_obj.display_irrelevant_pops && game_obj.display_no_pops)
+          display_pop = true;
+
+        if (display_pop)
+          pops_string.push(`- ${parsePop(all_pops[i])}: **${parseNumber(local_value)}**`);
       }
 
       //Print dynamic total pops - Availability
@@ -103,9 +120,19 @@ module.exports = {
 
       //Print dynamic urban pops
       for (var i = 0; i < all_pops.length; i++) {
+        var display_pop = false;
         var local_pop = config.pops[all_pops[i]];
+        var local_value = returnSafeNumber(pop_obj[`urban_${all_pops[i]}`]);
 
-        urban_pops_string.push(`- ${parsePop(all_pops[i])}: **${parseNumber(returnSafeNumber(pop_obj[`urban_${all_pops[i]}`]))}**`);
+        if (relevant_pops.includes(all_pops[i]))
+          display_pop = true;
+        if (game_obj.display_irrelevant_pops && local_value != 0)
+          display_pop = true;
+        if (game_obj.display_irrelevant_pops && game_obj.display_no_pops)
+          display_pop = true;
+
+        if (display_pop)
+          urban_pops_string.push(`- ${parsePop(all_pops[i])}: **${parseNumber(local_value)}**`);
       }
 
       urban_pops_string.push("");
@@ -118,9 +145,19 @@ module.exports = {
 
       //Print dynamic rural pops
       for (var i = 0; i < all_pops.length; i++) {
+        var display_pop = false;
         var local_pop = config.pops[all_pops[i]];
+        var local_value = returnSafeNumber(pop_obj[`urban_${all_pops[i]}`]);
 
-        rural_pops_string.push(`- ${parsePop(all_pops[i])}: **${parseNumber(returnSafeNumber(pop_obj[`rural_${all_pops[i]}`]))}**`);
+        if (relevant_pops.includes(all_pops[i]))
+          display_pop = true;
+        if (game_obj.display_irrelevant_pops && local_value != 0)
+          display_pop = true;
+        if (game_obj.display_irrelevant_pops && game_obj.display_no_pops)
+          display_pop = true;
+
+        if (display_pop)
+          rural_pops_string.push(`- ${parsePop(all_pops[i])}: **${parseNumber(local_value)}**`);
       }
 
       rural_pops_string.push("");
@@ -143,7 +180,7 @@ module.exports = {
     for (var i = 0; i < rural_pops_split_string.length; i++)
       all_fields.push({
         name: (i == 0) ?
-          `${config.icons.development} __Rural Population:__ **${printPercentage(pop_obj.rural_population/pop_obj.population)}**\n-` :
+          `${config.icons.provinces} __Rural Population:__ **${printPercentage(pop_obj.rural_population/pop_obj.population)}**\n-` :
           `${config.icons.development} __Rural Population:__`,
         value: rural_pops_split_string.join("\n"),
         inline: true

@@ -2729,6 +2729,31 @@ module.exports = {
 
       //Pops page handler
       {
+        if (game_obj.page == "population") {
+          //[Display All Pops]
+          if (input == "display all pops") {
+            game_obj.display_no_pops = true;
+            printPops(user_id);
+          }
+
+          //[Display Irrelevant Pops]
+          if (input == "display irrelevant pops") {
+            game_obj.display_irrelevant_pops = true;
+            printPops(user_id);
+          }
+
+          //[Display Relevant Pops]
+          if (input == "display relevant pops") {
+            delete game_obj.display_irrelevant_pops;
+            printPops(user_id);
+          }
+
+          //[Display Populated Pops]
+          if (input == "display populated pops") {
+            delete game_obj.display_no_pops;
+            printPops(user_id);
+          }
+        }
         if (population_pages.includes(game_obj.page)) {
           switch (input) {
             case "culture":
