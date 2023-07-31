@@ -1309,6 +1309,40 @@ module.exports = {
   },
 
   /*
+    sortProvinces() - Sorts an array of user provinces by a certain mode.
+    mode: "population_ascending", "population_descending"
+  */
+  sortProvinces: function (arg0_user, arg1_mode) {
+    //Convert from parameters
+    var user_id = arg0_user;
+    var mode = arg1_mode.toLowerCase();
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var provinces = getProvinces(user_id, {
+      include_hostile_occupations: true,
+      include_occupations: true
+    });
+    var usr = main.users[actual_id];
+
+    //Iterate over all provinces and sort
+    provinces.sort(function(a, b) {
+      if (!a.pops)
+        a.pops = { population: 0 };
+      if (!b.pops)
+        b.pops = { population: 0 };
+
+      if (mode == "population_ascending")
+        return a.pops.population - b.pops.population;
+      if (mode == "population_descending")
+        return b.pops.population - a.pops.population;
+    });
+
+    //Return statement
+    return provinces;
+  },
+
+  /*
     transferProvince() - Transfers a province from the base user to another one. Cannot transfer an uncolonised province.
     options: {
       province_id: "province_id", //Which province to transfer

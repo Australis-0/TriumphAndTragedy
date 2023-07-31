@@ -841,6 +841,25 @@ module.exports = {
     return `${(pop_obj.icon) ? pop_obj.icon + " " : ""}${(pop_obj.name) ? pop_obj.name : pop_type}`;
   },
 
+  parseProvince: function (arg0_province) {
+    //Convert from parameters
+    var province_name = arg0_province;
+
+    //Declare local instance variables
+    var province_obj = (typeof province_name != "object") ? getProvince(province_name) : province_name;
+    var province_string = "";
+
+    if (province_obj)
+      if (province_obj.name) {
+        province_string = province_obj.name;
+      } else {
+        province_string = `Province ${province_obj.id}`;
+      }
+
+    //Return statement
+    return province_string;
+  },
+
   parseProvinces: function (arg0_provinces, arg1_options) {
     //Convert from parameters
     var provinces = getList(arg0_provinces);

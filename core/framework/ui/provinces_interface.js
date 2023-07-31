@@ -90,8 +90,18 @@ module.exports = {
           province_string.push("");
 
           //Dynamically display all pops
-          for (var i = 0; i < all_pops.length; i++)
-            province_string.push(`- ${(config.pops[all_pops[i]].icon) ? config.pops[all_pops[i]].icon + " " : ""}${(config.pops[all_pops[i]].name) ? config.pops[all_pops[i]].name : all_pops[i]}: ${parseNumber(province_obj.pops[all_pops[i]])}`);
+          for (var i = 0; i < all_pops.length; i++) {
+            var display_pop = false;
+            var local_value = province_obj.pops[all_pops[i]];
+
+            if (game_obj.display_irrelevant_pops && local_value != 0)
+              display_pop = true;
+            if (game_obj.display_irrelevant_pops && game_obj.display_no_pops)
+              display_pop = true;
+
+            if (display_pop)
+              province_string.push(` - ${parsePop(all_pops[i])}: ${parseNumber(local_value)}`);
+          }
 
           //Display total population, culture
           province_string.push(`- ${config.icons.population} Population: ${parseNumber(province_obj.pops.population)}`);
@@ -124,19 +134,12 @@ module.exports = {
     var actual_id = main.global.user_map[user_id];
     var all_pops = Object.keys(config.pops);
     var game_obj = getGameObject(user_id);
+    var relevant_pops = getRelevantPops(user_id);
     var usr = main.users[actual_id];
 
     //Declare local tracker variables
     var accepted_cultures = getAcceptedCultures(user_id);
-    var cities = getCities(user_id, {
-      include_hostile_occupations: true,
-      include_occupations: true
-    });
-    var provinces = getProvinces(user_id, {
-      exclude_cities: true,
-      include_hostile_occupations: true,
-      include_occupations: true
-    });
+    var provinces = sortProvinces(user_id, "population_descending");
 
     //Initialise province_string, fields_list
     var fields_list = [];
@@ -151,71 +154,44 @@ module.exports = {
     province_string.push(config.localisation.divider);
     province_string.push(`**Provinces:**`);
 
-    if (cities.length != 0 || provinces.length != 0) {
-      //Print cities first
-      province_string.push("");
-      province_string.push(`__**Cities:**__`);
-      province_string.push("");
-
-      if (cities.length != 0) {
-        for (var i = 0; i < cities.length; i++) {
-          var culture_obj = getCulture(cities[i].culture);
+    //Print rural provinces next
+    province_string.push("");
+    if (provinces.length != 0) {
+      for (var i = 0; i < provinces.length; i++) {
+        try {
+          var culture_obj = getCulture(provinces[i].culture);
           var local_field = [];
 
-          local_field.push(`**[View ${cities[i].name}]**`);
           local_field.push("");
-          local_field.push(`- ${config.icons.population} Population: **${parseNumber(cities[i].pops.population)}**`);
+          local_field.push(`**[View ${parseProvince(provinces[i])}]**`);
+          local_field.push("");
+          local_field.push(`- ${config.icons.population} Population: **${parseNumber(provinces[i].pops.population)}**`);
 
-          //Print individual pop statistics
-          for (var x = 0; x < all_pops.length; x++)
-            local_field.push(`- ${(config.pops[all_pops[x]].icon) ? config.pops[all_pops[x]].icon : ""} ${(config.pops[all_pops[x]].name) ? config.pops[all_pops[x]].name : all_pops[x]}: ${parseNumber(cities[i].pops[all_pops[x]])}`);
+          //Print individual pop statistics again
+          for (var x = 0; x < all_pops.length; x++) {
+            var display_pop = false;
+            var local_value = provinces[i].pops[all_pops[x]];
+
+            if (relevant_pops.includes(all_pops[x]))
+              display_pop = true;
+            if (game_obj.display_irrelevant_pops && local_value != 0)
+              display_pop = true;
+            if (game_obj.display_irrelevant_pops && game_obj.display_no_pops)
+              display_pop = true;
+
+            if (display_pop)
+              local_field.push(` - ${parsePop(all_pops[x])}: ${parseNumber(provinces[i].pops[all_pops[x]])}`);
+          }
 
           //Print culture
           local_field.push(`- ${config.icons.culture} Culture: ${culture_obj.name}`);
 
-          if (!accepted_cultures.includes(cities[i].culture))
+          if (!accepted_cultures.includes(provinces[i].culture))
             local_field.push(`- **[Assimilate]**`);
 
           //Push field to list
-          fields_list.push({ name: `__**${cities[i].name}**:__`, value: local_field.join("\n"), inline: true });
-        }
-      } else {
-        (provinces.length > 0) ?
-          province_string.push(`_We currently have no cities to speak of! Consider founding a new city by typing _**[Found City]**_._`) :
-          province_string.push(`_We are currently without cities or provinces, rendering us nonexistent in all but name._`);
-      }
-
-      province_string.push("");
-      province_string.push(`${config.localisation.divider}`);
-
-      //Print rural provinces next
-      province_string.push("");
-      if (provinces.length != 0) {
-        for (var i = 0; i < provinces.length; i++) {
-          try {
-            var culture_obj = getCulture(provinces[i].culture);
-            var local_field = [];
-
-            local_field.push(`**[View Province ${provinces[i].id}]**`);
-            local_field.push("");
-            local_field.push(`- ${config.icons.population} Population: **${parseNumber(provinces[i].pops.population)}**`);
-
-            //Print individual pop statistics again
-            for (var x = 0; x < all_pops.length; x++)
-              local_field.push(`- ${(config.pops[all_pops[x]].icon) ? config.pops[all_pops[x]].icon : ""} ${(config.pops[all_pops[x]].name) ? config.pops[all_pops[x]].name : all_pops[x]}: ${parseNumber(provinces[i].pops[all_pops[x]])}`);
-
-            //Print culture
-            local_field.push(`- ${config.icons.culture} Culture: ${culture_obj.name}`);
-
-            if (!accepted_cultures.includes(provinces[i].culture))
-              local_field.push(`- **[Assimilate]**`);
-
-            //Push field to list
-            fields_list.push({ name: `__**Province ${provinces[i].id}**:__`, value: local_field.join("\n"), inline: true });
-          } catch {}
-        }
-      } else {
-        province_string.push(`_We do not have any rural provinces in our possession._`);
+          fields_list.push({ name: `__**${parseProvince(provinces[i])}**:__`, value: local_field.join("\n"), inline: true });
+        } catch {}
       }
     } else {
       province_string.push(`_You currently don't have any provinces in your possession!_`);
