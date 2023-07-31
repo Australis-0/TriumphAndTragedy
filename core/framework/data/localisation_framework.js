@@ -234,11 +234,12 @@ module.exports = {
     return local_obj;
   },
 
-  parseGood: function (arg0_good_name, arg1_formatting, arg2_exclude_icon) {
+  parseGood: function (arg0_good_name, arg1_formatting, arg2_exclude_icon, arg3_string) {
     //Convert from parameters
     var good_name = arg0_good_name;
     var formatting = arg1_formatting;
     var exclude_icon = arg2_exclude_icon;
+    var string = (arg3_string) ? arg3_string : "";
 
     //Declare local instance variables
     var formatter = "";
@@ -250,7 +251,7 @@ module.exports = {
       getGood(good_name, { return_key: true });
 
     if (good_obj.icon)
-      good_icon = (config.icons[good_obj.icon]) ? `${config.icons[good_obj.icon]} ` : "";
+      good_icon = (config.icons[good_obj.icon] && !exclude_icon) ? `${config.icons[good_obj.icon]} ` : "";
 
     //Set formatter
     if (formatting == "bold")
@@ -261,7 +262,43 @@ module.exports = {
       formatter = "__";
 
     //Return statement
-    return `${good_icon}${formatter}${(good_obj.name) ? good_obj.name : good_key}${formatter}`;
+    return `${good_icon}${string}${formatter}${(good_obj.name) ? good_obj.name : good_key}${formatter}`;
+  },
+
+  /*
+    parseGoods() - Returns an array string of a goods object passed to it
+    options: {
+      exclude_bullets: true/false, - Whether to exclude bullets or not
+      no_formatting: true/false - Whether to format strings or not
+    }
+  */
+  parseGoods: function (arg0_goods, arg1_options) {
+    //Convert from parameters
+    var goods_obj = arg0_goods;
+    var options = (arg1_options) ? arg1_options : {};
+
+    //Declare local instance variables
+    var all_good_keys = Object.keys(goods_obj);
+    var f = (!options.no_formatting) ? `**` : "";
+    var goods_string = [];
+    var prefix = (!options.exclude_bullets) ? `- ` : "";
+
+    //Iterate over all_good_keys and parseGood() with local value
+    for (var i = 0; i < all_good_keys.length; i++) {
+      var local_good = lookup.all_goods[all_good_keys[i]];
+      var local_value = goods_obj[all_good_keys[i]];
+
+      if (local_good) {
+        goods_string.push(`${prefix}${module.exports.parseGood(all_good_keys[i], "", false, `${f}${printRange(local_value)}${f} `)}`);
+      } else if (all_good_keys[i] == "money") {
+        goods_string.push(`${prefix}${config.icons.money} ${f}${printRange(local_value)}${f}`);
+      } else {
+        goods_string.push(`${prefix}${f}${printRange(local_value)}${f} ${all_good_keys[i]}`);
+      }
+    }
+
+    //Return statement
+    return goods_string;
   },
 
   /*

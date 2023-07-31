@@ -2,10 +2,10 @@ module.exports = {
   /*
     printPops() - Displays a user's pops countrywide
   */
-  printPops: function (arg0_user, arg1_options) { //[WIP] - Finish function body
+  printPops: function (arg0_user, arg1_page) { //[WIP] - Finish function body
     //Convert from parameters
     var user_id = arg0_user;
-    var options = (arg1_options) ? arg1_options : {};
+    var page = (arg1_page) ? parseInt(arg1_page) : 0;
 
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
@@ -13,12 +13,30 @@ module.exports = {
     var usr = main.users[actual_id];
 
     //Declare local tracker variables
+    var all_embeds = [];
     var all_fields = [];
     var all_modifiers = getAllModifiers();
     var all_pops = Object.keys(config.pops);
     var all_provinces = getProvinces(user_id);
     var pop_obj = getDemographics(user_id);
+    var pops_to_display = [];
     var relevant_pops = getRelevantPops(user_id);
+
+    //Calculate pops_to_display
+    pops_to_display = JSON.parse(JSON.stringify(relevant_pops));
+
+    for (var i = 0; i < all_pops.length; i++)
+      if (!pops_to_display.includes(all_pops[i])) {
+        var display_pop = false;
+        var local_value = usr.pops[all_pops[i]];
+
+        if (game_obj.display_irrelevant_pops && local_value != 0)
+          display_pop = true;
+        if (game_obj.display_irrelevant_pops && game_obj.display_no_pops)
+          display_pop = true;
+
+        if (display_pop) pops_to_display.push(all_pops[i]);
+      }
 
     //Page 1 - Total Pops
     {
@@ -201,26 +219,121 @@ module.exports = {
       removeControlPanel(game_obj.id);
 
       //Edit main embed display
-      var population_overview_embed = new Discord.MessageEmbed()
+      var page_one = new Discord.MessageEmbed()
         .setColor(settings.bot_colour)
         .setTitle(`**Population:**`)
         .setThumbnail(usr.flag)
         .setImage("https://cdn.discordapp.com/attachments/722997700391338046/736141424315203634/margin.png")
         .setDescription(pops_string.join("\n"))
         .addFields(all_fields);
+
+      all_embeds.push(page_one);
     }
 
     //Page 2 - Pop Needs - Total Consumption/Production
     {
+      var consumption_production_string = [];
       var production_string = getProductionLocalisation(user_id);
 
-      //Iterate over lookup.all_pop_needs_categories
-      for (var i = 0; i < lookup.all_pop_needs_categories) {
+      //Format production_string to consumption_production_string
+      consumption_production_string.push(`${config.icons.trade} **__Total Resource Production:__ (per turn)**`);
+      consumption_production_string.push(`-`);
+      consumption_production_string.push("");
 
+      for (var i = 0; i < production_string.length; i++)
+        consumption_production_string.push(production_string[i]);
+      if (production_string.length == 0)
+        consumption_production_string.push(`_You have no goods currently under production!_`);
+
+      //Iterate over lookup.all_pop_needs_categories
+      for (var i = 0; i < lookup.all_pop_needs_categories.length; i++) {
+        consumption_production_string.push("");
+
+        var local_consumption_obj = getTotalPopConsumption(user_id, lookup.all_pop_needs_categories[i]);
+        var needs_category_name = (config.localisation[lookup.all_pop_needs_categories[i]]) ?
+          config.localisation[lookup.all_pop_needs_categories[i]] :
+          lookup.all_pop_needs_categories[i];
+
+        var all_local_goods = Object.keys(local_consumption_obj);
+
+        //Format local consumption category
+        consumption_production_string.push(`**${needs_category_name} Consumption:** (All Pops)`);
+        consumption_production_string.push("");
+        consumption_production_string.push(`-`);
+        consumption_production_string.push("");
+
+        for (var x = 0; x < all_local_goods.length; x++) {
+          var local_value = local_consumption_obj[all_local_goods[x]];
+
+          if (lookup.all_goods[all_local_goods[x]])
+            consumption_production_string.push(`- ${parseGood(all_local_goods[x], "", false, `${printRange(local_value)} `)}`);
+        }
       }
+
+      //Split consumption_production_string over multiple embeds
+      var page_two = splitEmbed(consumption_production_string, {
+        title: `Total Pop Consumption and Production:`,
+        title_pages: true,
+        fixed_width: true
+      });
+
+      for (var i = 0; i < page_two.length; i++)
+        all_embeds.push(page_two[i]);
     }
 
-    game_obj.main_embed = population_overview_embed;
+    //Page 3 - Pop Needs - Pop Needs by Type
+    {
+      var pop_needs_string = [];
+
+      for (var i = 0; i < pops_to_display.length; i++) {
+        var local_pop = config.pops[pops_to_display[i]];
+        var local_value = usr.pops[pops_to_display[i]];
+
+        //Push pop header
+        pop_needs_string.push(`**__${parsePop(pops_to_display[i])}:__**`);
+        pop_needs_string.push("");
+
+        //Iterate over lookup.all_pop_needs_categories
+        for (var x = 0; x < lookup.all_pop_needs_categories.length; x++) {
+          var category_singular_string = config.localisation[`${lookup.all_pop_needs_categories[x]}_singular`];
+          var category_string = config.localisation[lookup.all_pop_needs_categories[x]];
+          var local_consumption_obj = getPopNeeds(pops_to_display[i], local_value, lookup.all_pop_needs_categories[x]);
+          var local_consumption_string = [];
+
+          if (local_consumption_obj) {
+            local_consumption_obj = flattenObject(local_consumption_obj);
+            local_consumption_string = parseGoods(local_consumption_obj);
+          }
+
+          pop_needs_string.push(`- **${category_string} Consumption:**`);
+
+          if (local_consumption_string.length > 0) {
+            for (var y = 0; y < local_consumption_string.length; y++)
+              pop_needs_string.push(` ${local_consumption_string[y]}`);
+          } else {
+            pop_needs_string.push(`_This pop currently has no ${category_singular_string} needs._`);
+          }
+        }
+
+        pop_needs_string.push("");
+      }
+
+      //Split pop_needs_string over multiple embeds
+      var page_three = splitEmbed(pop_needs_string, {
+        title: `Pop Needs and Fulfilment:`,
+        title_pages: true,
+        fixed_width: true
+      });
+
+      for (var i = 0; i < page_three.length; i++)
+        all_embeds.push(page_three[i]);
+    }
+
+    game_obj.main_embed = createPageMenu(game_obj.middle_embed, {
+      embed_pages: all_embeds,
+      user: game_obj.user,
+      page: page
+    });
     game_obj.main_change = true;
   }
 };

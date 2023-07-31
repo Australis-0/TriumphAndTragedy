@@ -1693,6 +1693,11 @@ config.goods = { //[WIP] - Redo mine chances, buy/sell prices
     icon: "construction_time",
     type: "category",
 
+    aeroplanes: {
+      name: "Aeroplanes",
+      icon: "aeroplanes",
+      buy_price: 7800
+    },
     alcohol: {
       name: "Alcohol",
       type: "category",

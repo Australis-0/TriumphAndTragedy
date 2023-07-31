@@ -218,10 +218,16 @@ module.exports = {
     //Convert from parameters
     var array = arg0_array;
 
+    if (!Array.isArray(array))
+      array = getList(array);
+
     //Return statement
-    return (array[0] == array[1]) ?
-      parseNumber(array[0]) :
-      `${parseNumber(Math.min(array[0], array[1]))} - ${parseNumber(Math.max(array[0], array[1]))}`;
+    if (array.length > 1)
+      return (array[0] == array[1]) ?
+        parseNumber(array[0]) :
+        `${parseNumber(Math.min(array[0], array[1]))} - ${parseNumber(Math.max(array[0], array[1]))}`;
+    if (array.length == 1)
+      return parseNumber(array[0]);
   },
 
   randomNumber: function (min, max, do_not_round) {

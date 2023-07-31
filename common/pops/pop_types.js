@@ -79,10 +79,9 @@ config.pops = { //[WIP] - Rework chances, icons
             milk: 3,
             salt: 3,
             grains: 2,
-            fruit: 2,
+            fruits: 2,
             seasoning: 2,
             tropical_crops: 1,
-            tropical_fruit: 1,
             vegetables: 1
           }
         }
@@ -211,9 +210,9 @@ config.pops = { //[WIP] - Rework chances, icons
             tea: 2,
             chewing_gum: 1,
             flour: 1,
-            fruit: 1,
+            fruits: 1,
             olive_oil: 1,
-            tropical_fruit: 1
+            tropical_crops: 1
           },
           furnishings: {
             furniture: 5,
@@ -568,7 +567,7 @@ config.pops = { //[WIP] - Rework chances, icons
             milk: 2,
             vegetables: 2,
             flour: 1,
-            fruit: 1,
+            fruits: 1,
             salt: 1,
             tropical_crops: 1
           }
@@ -781,7 +780,7 @@ config.pops = { //[WIP] - Rework chances, icons
             jewellery: 1
           }
         },
-        staple_chores: {
+        staple_goods: {
           basics: {
             paper: 5,
             ink: 3,
@@ -798,10 +797,9 @@ config.pops = { //[WIP] - Rework chances, icons
             meat: 4,
             milk: 3,
             grains: 2,
-            fruit: 2,
+            fruits: 2,
             seasoning: 2,
             tropical_crops: 1,
-            tropical_fruit: 1,
             vegetables: 1
           }
         }
@@ -1026,7 +1024,7 @@ config.pops = { //[WIP] - Rework chances, icons
             vegetables: 3,
             grains: 3,
             meat: 2,
-            fruit: 1,
+            fruits: 1,
             salt: 1
           }
         }
@@ -1281,7 +1279,7 @@ config.pops = { //[WIP] - Rework chances, icons
           food: {
             grains: 3,
             vegetables: 3,
-            fruit: 1,
+            fruits: 1,
             meat: 1,
             salt: 1
           }
@@ -1518,7 +1516,7 @@ config.pops = { //[WIP] - Rework chances, icons
             bread: 3,
             meat: 3,
             vegetables: 2,
-            fruit: 2,
+            fruits: 2,
             salt: 2,
             animal_products: 1
           }
@@ -1647,7 +1645,7 @@ config.pops = { //[WIP] - Rework chances, icons
           food: {
             vegetables: 2,
             grains: 1,
-            fruit: 1,
+            fruits: 1,
             meat: 1,
             salt: 1,
             wool: 1
@@ -1806,7 +1804,7 @@ config.pops = { //[WIP] - Rework chances, icons
             meat: 3,
             bread: 2,
             vegetables: 1,
-            fruit: 1,
+            fruits: 1,
             grains: 1,
             milk: 1,
             salt: 1
@@ -2020,7 +2018,7 @@ config.pops = { //[WIP] - Rework chances, icons
           food: {
             meat: 4,
             grains: 3,
-            fruit: 3,
+            fruits: 3,
             bread: 2,
             salt: 2,
             vegetables: 2,
@@ -2172,7 +2170,7 @@ config.pops = { //[WIP] - Rework chances, icons
             grains: 3,
             meat: 2,
             vegetables: 2,
-            fruit: 1,
+            fruits: 1,
             fish: 1,
             milk: 1,
             salt: 1,
@@ -2325,10 +2323,10 @@ config.pops = { //[WIP] - Rework chances, icons
           food: {
             vegetables: 3,
             grains: 2,
-            fruit: 2,
+            fruits: 2,
             meat: 2,
             seasoning: 2,
-            tropical_fruit: 2,
+            tropical_crops: 2,
             fish: 1,
             milk: 1,
             nuts: 1,
@@ -2472,7 +2470,7 @@ config.pops = { //[WIP] - Rework chances, icons
             olive_oil: 1,
             seasoning: 1,
             tea: 1,
-            tropical_fruit: 1
+            tropical_crops: 1
           },
           furnishings: {
             common_furniture: 3,
@@ -2512,7 +2510,7 @@ config.pops = { //[WIP] - Rework chances, icons
           food: {
             grains: 2,
             vegetables: 2,
-            fruit: 1,
+            fruits: 1,
             meat: 1
           }
         }
@@ -2588,8 +2586,7 @@ config.pops = { //[WIP] - Rework chances, icons
             olive_oil: 1,
             seasoning: 1,
             tea: 1,
-            tropical_crops: 1,
-            tropical_fruit: 1
+            tropical_crops: 1
           },
           furnishings: {
             common_furniture: 2,
@@ -2627,7 +2624,7 @@ config.pops = { //[WIP] - Rework chances, icons
             meat: 2,
             bread: 1,
             fish: 1,
-            fruit: 1,
+            fruits: 1,
             grains: 1,
             salt: 1,
             vegetables: 1
@@ -2845,10 +2842,10 @@ config.pops = { //[WIP] - Rework chances, icons
             grains: 2,
             liquor: 2,
             meat: 2,
-            tropical_fruit: 2,
+            tropical_crops: 2,
             cheese: 1,
             fish: 1,
-            fruit: 1,
+            fruits: 1,
             sugar: 1,
             vegetables: 1
           }
@@ -2928,10 +2925,10 @@ config.pops = { //[WIP] - Rework chances, icons
           food: {
             vegetables: 3,
             grains: 2,
-            fruit: 2,
+            fruits: 2,
             meat: 2,
             seasoning: 2,
-            tropical_fruit: 2,
+            tropical_crops: 2,
             fish: 1,
             milk: 1,
             nuts: 1,
