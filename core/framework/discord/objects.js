@@ -138,7 +138,7 @@ module.exports = {
     var scope = JSON.parse(JSON.stringify(arg0_scope));
     var amount = arg1_amount;
     var not_recursive = arg2_not_recursive;
-    var round = arg3_round;
+    var round = (arg3_round) ? arg3_round : "ceil";
 
     //Declare local instance variables
     var all_scope_keys = Object.keys(scope);
@@ -152,7 +152,7 @@ module.exports = {
           Math[round](local_subobj*amount);
       if (typeof local_subobj == "object")
         if (!not_recursive)
-          local_subobj = module.exports.multiplyObject(local_subobj, amount, not_recursive);
+          local_subobj = module.exports.multiplyObject(local_subobj, amount, not_recursive, round);
     }
 
     //Return statement

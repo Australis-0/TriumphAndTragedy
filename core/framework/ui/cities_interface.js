@@ -77,131 +77,244 @@ module.exports = {
       });
   },
 
-  printCity: function (arg0_user, arg1_name) {
+  printCity: function (arg0_user, arg1_name) { //[WIP] - Rename to printProvince() and merge with Province UI
     //Convert from parameters
     var user_id = arg0_user;
-    var city_name = arg1_name;
+    var province_name = arg1_name;
 
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
+    var all_pops = Object.keys(config.pops);
     var game_obj = getGameObject(user_id);
     var usr = main.users[actual_id];
 
     //Declare local tracker variables
-    var city_obj = getCity(city_name);
+    var province_obj = getCity(province_name);
     var culture_obj;
+    var relevant_pops = getRelevantPops(user_id);
     try {
-      culture_obj = main.global.cultures[city_obj.culture];
+      culture_obj = main.global.cultures[province_obj.culture];
     } catch {}
 
-    if (city_obj) {
-      var rgo_name = (getGood(city_obj.resource).name) ? getGood(city_obj.resource).name : city_obj.resource;
-      var rgo_icon = (getGood(city_obj.resource).icon) ? config.icons[getGood(city_obj.resource).icon] + " " : "";
+    if (province_obj) {
+      var rgo_name = (getGood(province_obj.resource).name) ? getGood(province_obj.resource).name : province_obj.resource;
+      var rgo_icon = (getGood(province_obj.resource).icon) ? config.icons[getGood(province_obj.resource).icon] + " " : "";
 
-      //Initialise city_string
-      var city_string = [];
+      //Initialise province_string
+      var province_string = [];
 
       //Format string
-      city_string.push(`**[Back]** | **[Jump To Page]**`);
-      city_string.push("");
-      city_string.push(`${config.icons.globe} Country: **${usr.name}**`);
-      city_string.push(`Type **[Cities]** to view a full list of all your cities.`);
-      city_string.push("");
-      city_string.push(config.localisation.divider);
-      city_string.push("");
-      city_string.push(`City Options: ${(city_obj.city_type != "capital") ? "**[Move Capital]** | " : ""}**[Rename City]**`);
-      city_string.push(`Manage Buildings: **[Build]** | **[Demolish]**`);
-      city_string.push(`Promote Urbanisation: **[Develop]** - Gain an extra building slot in this city for **${parseNumber(getDevelopmentCost(user_id, city_obj.id))}** ${config.icons.political_capital} Political Capital.`);
-      city_string.push(config.localisation.divider);
+      province_string.push(`**[Back]** | **[Jump To Page]**`);
+      province_string.push("");
+      province_string.push(`${config.icons.globe} Country: **${usr.name}**`);
+      province_string.push(`Type **[Cities]** to view a full list of all your cities.`);
+      province_string.push("");
+      province_string.push(config.localisation.divider);
+      province_string.push("");
+      province_string.push(`City Options: ${(province_obj.city_type != "capital") ? "**[Move Capital]** | " : ""}**[Rename City]**`);
+      province_string.push(`Manage Buildings: **[Build]** | **[Demolish]**`);
+      province_string.push(`Promote Urbanisation: **[Develop]** - Gain an extra building slot in this city for **${parseNumber(getDevelopmentCost(user_id, province_obj.id))}** ${config.icons.political_capital} Political Capital.`);
+      province_string.push(config.localisation.divider);
 
       //Print city information
-      city_string.push(`**${city_obj.name}:**`);
-      city_string.push("");
+      province_string.push(`**${province_obj.name}:**`);
+      province_string.push("");
 
-      if (city_obj.demilitarised) {
-        city_string.push(`- Currently demilitarised for **${parseNumber(getDemilitarisedTurns(city_obj.id))}** turn(s).`);
-        city_string.push("");
+      if (province_obj.demilitarised) {
+        province_string.push(`- Currently demilitarised for **${parseNumber(getDemilitarisedTurns(province_obj.id))}** turn(s).`);
+        province_string.push("");
       }
 
-      city_string.push(`**Province:** ${config.icons.provinces} ${city_obj.id}`);
-      city_string.push(`**Population:** ${config.icons.population} ${parseNumber(city_obj.pops.population)} (**${printPercentage(getCityPopGrowthRate(city_obj), { base_zero: true, display_prefix: true })}** per turn)`);
-      city_string.push(`**Development:** ${config.icons.development} ${parseNumber(city_obj.development)}`);
-      city_string.push(`**RGO:** ${rgo_icon}${rgo_name}`);
-      city_string.push(`- **${(usr.modifiers.rgo_throughput-1 >= 0) ? "+" : ""}${printPercentage(usr.modifiers.rgo_throughput)}** modifier to ${rgo_icon}${rgo_name} production in this province.`);
-      city_string.push("");
-      city_string.push(`**Culture:** ${config.icons.culture} ${(culture_obj) ? culture_obj.name : "None"}`);
-      city_string.push(`**Supply Limit:** ${config.icons.railways} ${parseNumber((city_obj.supply_limit) ? city_obj.supply_limit : config.defines.combat.base_supply_limit)}`);
+      province_string.push(`**Province:** ${config.icons.provinces} ${province_obj.id}`);
+      province_string.push(`**Population:** ${config.icons.population} ${parseNumber(province_obj.pops.population)} (**${printPercentage(getCityPopGrowthRate(province_obj), { base_zero: true, display_prefix: true })}** per turn)`);
+      province_string.push(`**Development:** ${config.icons.development} ${parseNumber(province_obj.development)}`);
+      province_string.push(`**RGO:** ${rgo_icon}${rgo_name}`);
+      province_string.push(`- **${(usr.modifiers.rgo_throughput-1 >= 0) ? "+" : ""}${printPercentage(usr.modifiers.rgo_throughput)}** modifier to ${rgo_icon}${rgo_name} production in this province.`);
+      province_string.push("");
+      province_string.push(`**Culture:** ${config.icons.culture} ${(culture_obj) ? culture_obj.name : "None"}`);
+      province_string.push(`**Supply Limit:** ${config.icons.railways} ${parseNumber((province_obj.supply_limit) ? province_obj.supply_limit : config.defines.combat.base_supply_limit)}`);
 
-      city_string.push("");
-      city_string.push(`**Buildings:**`);
-      city_string.push(config.localisation.divider);
-      city_string.push("");
+      province_string.push("");
 
-      //Display buildings in building categories!
-      var all_building_categories = getBuildingCategories();
-      var people_housed = 0;
+      //Buildings
+      {
+        province_string.push(`**Buildings:**`);
+        province_string.push(config.localisation.divider);
+        province_string.push("");
 
-      //Fetch housing amount first
-      for (var i = 0; i < city_obj.buildings.length; i++) {
-        var local_building = getBuilding(city_obj.buildings[i].building_type);
+        //Display buildings in building categories!
+        var all_building_categories = getBuildingCategories();
+        var people_housed = 0;
 
-        if (local_building.houses)
-          people_housed += local_building.houses;
+        //Fetch housing amount first
+        for (var i = 0; i < province_obj.buildings.length; i++) {
+          var local_building = getBuilding(province_obj.buildings[i].building_type);
+
+          if (local_building.houses)
+            people_housed += local_building.houses;
+        }
+
+        //Fix province housing [REMOVE IN FUTURE]
+        province_obj.housing = people_housed;
+
+        for (var i = 0; i < all_building_categories.length; i++) {
+          var local_building_category = getBuildingCategory(all_building_categories[i]);
+          var local_building_slots = getBuildingSlots(user_id, province_obj.id, all_building_categories[i]);
+          var special_string = (local_building_category.is_housing || local_building_category.description) ?
+            (local_building_category.is_housing) ?
+              `\n • **Current Limit:** ${parseNumber(people_housed)}. Cities cannot grow once they surpass their housing limit. Build more **housing** to increase this limit.` :
+              `\n • ${local_building_category.description}`
+          : "";
+
+          //Display category and all buildings inside only if the local building category should either always be displayed or buildings are present inside of the building category
+          if (local_building_category)
+            if (local_building_slots.total_buildings > 0 || local_building_slots.total_buildings_under_construction > 0 || local_building_category.always_display) {
+              var all_buildings_in_category = Object.keys(local_building_category);
+
+              //Generate and push header to page
+              (!local_building_category.disable_slots) ?
+                province_string.push(`- **${parseString(all_building_categories[i])}:** (${parseNumber(local_building_slots.total_buildings + local_building_slots.total_buildings_under_construction)}/${parseNumber(local_building_slots.total_slots)}) ${special_string}`) :
+                province_string.push(` - **${parseString(all_building_categories[i])}:** ${special_string}`);
+
+              //Iterate over all building objects in array
+              for (var x = 0; x < all_buildings_in_category.length; x++)
+                if (!ignore_building_keys.includes(all_buildings_in_category[x])) {
+                  var all_buildings = 0;
+                  var local_building = getBuilding(all_buildings_in_category[x]);
+                  var local_building_name = (local_building.name) ? local_building.name : all_buildings_in_category[x];
+                  var local_slots = getBuildingSlots(user_id, province_obj.id, all_buildings_in_category[x]);
+
+                  for (var y = 0; y < province_obj.buildings.length; y++)
+                    if (province_obj.buildings[y].building_type == all_buildings_in_category[x])
+                      all_buildings++;
+
+                  if (all_buildings > 0 || local_slots.total_buildings_under_construction > 0)
+                    province_string.push(` - ${(local_building.icon) ? config.icons[local_building.icon] + " " : ""}${local_building_name}: ${parseNumber(all_buildings)}${(local_building.separate_building_slots) ? " (" + parseNumber(all_buildings) + "/" + parseNumber(local_slots.total_slots) + ")" : ""} ${(local_slots.total_buildings_under_construction > 0) ? `(+${parseNumber(local_slots.total_buildings_under_construction)} under construction)` : ""}`);
+                }
+
+              province_string.push("");
+            }
+        }
       }
 
-      //Fix province housing [REMOVE IN FUTURE]
-      city_obj.housing = people_housed;
+      //Pops
+      {
+        province_string.push("");
+        province_string.push(`**Population:**`);
+        province_string.push(config.localisation.divider);
+        province_string.push("");
 
-      for (var i = 0; i < all_building_categories.length; i++) {
-        var local_building_category = getBuildingCategory(all_building_categories[i]);
-        var local_building_slots = getBuildingSlots(user_id, city_obj.id, all_building_categories[i]);
-        var special_string = (local_building_category.is_housing || local_building_category.description) ?
-          (local_building_category.is_housing) ?
-            `\n • **Current Limit:** ${parseNumber(people_housed)}. Cities cannot grow once they surpass their housing limit. Build more **housing** to increase this limit.` :
-            `\n • ${local_building_category.description}`
-        : "";
+        if (province_obj.pops) {
+          province_string.push(`- ${config.icons.population} Population: ${parseNumber(returnSafeNumber(province_obj.pops.population))}`);
 
-        //Display category and all buildings inside only if the local building category should either always be displayed or buildings are present inside of the building category
-        if (local_building_category)
-          if (local_building_slots.total_buildings > 0 || local_building_slots.total_buildings_under_construction > 0 || local_building_category.always_display) {
-            var all_buildings_in_category = Object.keys(local_building_category);
+          for (var i = 0; i < all_pops.length; i++) {
+            var display_pop = false;
+            var local_pop = config.pops[all_pops[i]];
+            var local_value = returnSafeNumber(province_obj.pops[all_pops[i]]);
 
-            //Generate and push header to page
-            (!local_building_category.disable_slots) ?
-              city_string.push(`- **${parseString(all_building_categories[i])}:** (${parseNumber(local_building_slots.total_buildings + local_building_slots.total_buildings_under_construction)}/${parseNumber(local_building_slots.total_slots)}) ${special_string}`) :
-              city_string.push(` - **${parseString(all_building_categories[i])}:** ${special_string}`);
+            if (relevant_pops.includes(all_pops[i]))
+              display_pop = true;
+            if (game_obj.display_irrelevant_pops && local_value != 0)
+              display_pop = true;
+            if (game_obj.display_irrelevant_pops && game_obj.display_no_pops)
+              display_pop = true;
 
-            //Iterate over all building objects in array
-            for (var x = 0; x < all_buildings_in_category.length; x++)
-              if (!ignore_building_keys.includes(all_buildings_in_category[x])) {
-                var all_buildings = 0;
-                var local_building = getBuilding(all_buildings_in_category[x]);
-                var local_building_name = (local_building.name) ? local_building.name : all_buildings_in_category[x];
-                var local_slots = getBuildingSlots(user_id, city_obj.id, all_buildings_in_category[x]);
-
-                for (var y = 0; y < city_obj.buildings.length; y++)
-                  if (city_obj.buildings[y].building_type == all_buildings_in_category[x])
-                    all_buildings++;
-
-                if (all_buildings > 0 || local_slots.total_buildings_under_construction > 0)
-                  city_string.push(` - ${(local_building.icon) ? config.icons[local_building.icon] + " " : ""}${local_building_name}: ${parseNumber(all_buildings)}${(local_building.separate_building_slots) ? " (" + parseNumber(all_buildings) + "/" + parseNumber(local_slots.total_slots) + ")" : ""} ${(local_slots.total_buildings_under_construction > 0) ? `(+${parseNumber(local_slots.total_buildings_under_construction)} under construction)` : ""}`);
-              }
-
-            city_string.push("");
+            if (display_pop)
+              province_string.push(` - ${parsePop(all_pops[i])}: **${parseNumber(local_value)}**`);
           }
+        } else {
+          province_string.push(`_This province currently has no one living in it!_`);
+        }
+      }
+
+      //Total Pop needs By Category
+      {
+        if (province_obj.pops) {
+          province_string.push("");
+          province_string.push(`**Pop Needs:**`);
+          province_string.push(config.localisation.divider);
+          province_string.push("");
+
+          var pop_needs = {};
+
+          for (var i = 0; i < lookup.all_pop_needs_categories.length; i++) {
+            var category_pop_needs = {};
+            var local_category_name = config.localisation[lookup.all_pop_needs_categories[i]];
+            var total_category_pop_needs = {};
+
+            province_string.push(` - **${(local_category_name) ? local_category_name : lookup.all_pop_needs_categories[i]}:**`);
+
+            for (var x = 0; x < all_pops.length; x++) {
+              var local_pop_needs = getPopNeeds(all_pops[x], returnSafeNumber(province_obj.pops[all_pops[x]]), lookup.all_pop_needs_categories[i]);
+
+              if (local_pop_needs) {
+                local_pop_needs = sortObject(flattenObject(local_pop_needs));
+
+                category_pop_needs[all_pops[x]] = local_pop_needs;
+                pop_needs[`${all_pops[x]}_${lookup.all_pop_needs_categories[i]}`] = local_pop_needs;
+              }
+            }
+
+            //Flatten and sort category_pop_needs
+            try {
+              total_category_pop_needs = sortObject(flattenObject(category_pop_needs));
+            } catch (e) {
+              log.warn(`Couldn't flatten and sort category_pop_needs when parsing ${lookup.all_pop_needs_categories[i]}!`);
+              console.log(e);
+            }
+
+            var all_category_needs = Object.keys(flattenObject(total_category_pop_needs));
+
+            console.log(category_pop_needs);
+            console.log(all_category_needs);
+
+            //Iterate over all_category_needs and display
+            for (var x = 0; x < all_category_needs.length; x++) {
+              var good_obj = lookup.all_goods[all_category_needs[x]];
+              var local_pops_string = [];
+              var local_total = total_category_pop_needs[all_category_needs[x]];
+
+              if (good_obj) {
+                for (var y = 0; y < all_pops.length; y++) {
+                  //Display next turn fulfilment
+                  var local_good_fulfilment = getPopNeedsFulfilment({
+                    [all_category_needs[x]]: getGoodAmount(user_id, all_category_needs[x])
+                  },
+                  all_pops[y],
+                  returnSafeNumber(province_obj.pops[all_pops[y]]),
+                  {
+                    return_object: true,
+                    restrict_goods: [all_category_needs[x]]
+                  });
+                  var local_pop = config.pops[all_pops[y]];
+                  var local_value = returnSafeNumber(category_pop_needs[all_pops[y]][all_category_needs[x]]);
+
+                  //Push to local_pops_string
+                  if (local_value != 0)
+                    local_pops_string.push(`${(local_pop.icon) ? local_pop.icon + " " : ""}${parseNumber(local_value)} - ${printPercentage(local_good_fulfilment.fulfilment)}/${printPercentage(local_good_fulfilment.variety)}`);
+                }
+
+                //Push to province_string
+                province_string.push(` - ${parseGood(all_category_needs[x], "", false, `${parseNumber(local_total)} `)} - [${local_pops_string.join(", ")}]`);
+              }
+            }
+          }
+        } else {
+          province_string.push(`_This province currently has no pop needs._`);
+        }
       }
 
       //Change game_obj.page
-      game_obj.page = `view_city_${city_obj.name}`;
+      game_obj.page = `view_city_${province_obj.name}`;
 
       //Return statement
-      return splitEmbed(city_string, {
-        title: `${city_obj.name}:`,
+      return splitEmbed(province_string, {
+        title: `${province_obj.name}:`,
         title_pages: true,
         fixed_width: true
       });
     } else {
-      printError(game_obj.id, `The city of ${city_name} couldn't be found anywhere in your territory!`);
+      printError(game_obj.id, `The Province of ${province_name} couldn't be found anywhere in your territory!`);
     }
   }
 };
