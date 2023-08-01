@@ -60,6 +60,25 @@ module.exports = {
     return scope;
   },
 
+  getDepth: function (arg0_scope, arg1_depth) {
+    //Convert from parameters
+    var scope = arg0_scope;
+    var depth = (arg1_depth) ? arg1_depth : 1;
+
+    //Iterate over scope
+    for (var key in scope) {
+      if (!scope.hasOwnProperty(key)) continue;
+
+      if (typeof scope[key] == "object") {
+        var level = module.exports.getDepth(scope[key]) + 1;
+        depth = Math.max(depth, level);
+      }
+    }
+
+    //Return statement
+    return depth;
+  },
+
   getSubobject: function (arg0_scope, arg1_key, arg2_restrict_search) {
     //Convert from parameters
     var scope = arg0_scope;

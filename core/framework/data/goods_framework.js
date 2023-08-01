@@ -105,10 +105,17 @@ module.exports = {
     undefined;
   },
 
-  getGoodAmount: function (arg0_user, arg1_name) {
+  /*
+    getGoodAmount() - Fetches a good amount based on its options from a user's inventory.
+    options: {
+      exclude_categories: true/false, - Whether to exclude categories from the counting. False by default
+    }
+  */
+  getGoodAmount: function (arg0_user, arg1_name, arg2_options) {
     //Convert from parameters
     var user_id = arg0_user;
     var name = arg1_name;
+    var options = (arg2_options) ? arg2_options : {};
 
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
@@ -122,17 +129,19 @@ module.exports = {
       good_amount = 0;
 
       if (good_obj.type == "category") {
-        good_amount += returnSafeNumber(usr.inventory[good_obj.id]);
+        if (!options.exclude_categories)
+          good_amount += returnSafeNumber(usr.inventory[good_obj.id]);
 
         for (var i = 0; i < all_good_keys.length; i++) {
           var local_subgood_obj = lookup.all_goods[all_good_keys[i]];
 
           //Add goods to good_amount
           if (!reserved.goods.includes(all_good_keys[i])) {
-            good_amount += returnSafeNumber(usr.inventory[all_good_keys[i]]);
-
-            if (local_subgood_obj.type == "category")
-              good_amount += module.exports.getGoodAmount(user_id, local_subgood_obj);
+            if (local_subgood_obj.type == "category") {
+              good_amount += returnSafeNumber(module.exports.getGoodAmount(user_id, local_subgood_obj));
+            } else {
+              good_amount += returnSafeNumber(usr.inventory[all_good_keys[i]]);
+            }
           }
         }
       } else {
@@ -447,8 +456,11 @@ module.exports = {
     var actual_id = main.global.user_map[user_id];
     var usr = main.users[actual_id];
 
-    for (var i = 0; i < lookup.all_good_names.length; i++)
-      usr.inventory[lookup.all_good_names[i]] = module.exports.getGoodAmount(user_id, lookup.all_good_names[i]);
+    for (var i = 0; i < lookup.goods_depth; i++)
+      for (var x = 0; x < lookup.all_good_names.length; x++)
+        usr.inventory[lookup.all_good_names[x]] = module.exports.getGoodAmount(user_id, lookup.all_good_names[x], {
+          exclude_categories: true
+        });
   },
 
   /*

@@ -260,7 +260,12 @@ module.exports = {
                 local_pop_needs = sortObject(flattenObject(local_pop_needs));
 
                 category_pop_needs[all_pops[x]] = local_pop_needs;
-                pop_needs[`${all_pops[x]}_${lookup.all_pop_needs_categories[i]}`] = local_pop_needs;
+
+                if (!pop_needs[all_pops[x]]) {
+                  pop_needs[all_pops[x]] = local_pop_needs;
+                } else {
+                  pop_needs[all_pops[x]] = mergeObjects(pop_needs[all_pops[x]], local_pop_needs);
+                }
               }
             }
 
@@ -315,6 +320,50 @@ module.exports = {
           }
         } else {
           province_string.push(`_This province currently has no pop needs._`);
+        }
+      }
+
+      //Total Pop Needs
+      {
+        if (Object.keys(pop_needs).length > 0) {
+          province_string.push(`**Total Pop Needs:**`);
+          province_string.push("");
+          province_string.push("");
+          province_string.push(`${(game_obj.show_pop_need_warnings) ? `**[Hide Warnings]**` : `**[Show Warnings]**`}`);
+          province_string.push("");
+          province_string.push(config.localisation.divider);
+
+          var reference_needs = JSON.parse(JSON.stringify(pop_needs));
+          var total_needs = {};
+
+          for (var i = 0; i < all_pops.length; i++)
+            total_needs = mergeObjects(total_needs, reference_needs[all_pops[i]]);
+          total_needs = sortObject(total_needs);
+
+          var all_total_needs = Object.keys(total_needs);
+
+          for (var i = 0; i < all_total_needs.length; i++) {
+            var local_good = lookup.all_goods[all_total_needs[i]];
+
+            if (local_good) {
+              var local_amount = getGoodAmount(user_id, all_total_needs[i]);
+              var local_value = total_needs[all_total_needs[i]];
+              var percent_fulfilled = Math.min(local_amount/local_value, 1);
+              var warning_string = "";
+
+              //Warning string
+              if (game_obj.show_pop_need_warnings)
+                if (percent_fulfilled > 0 && percent_fulfilled < 1) {
+                  warning_string = " - :warning:";
+                } else {
+                  warning_string = ` - ${config.icons.cancel}`;
+                }
+
+              province_string.push(`- ${parseGood(all_total_needs[i], "", false, `${parseNumber(local_value)} `)} - ${parseNumber(local_amount)} in Inventory (**${printPercentage(percent_fulfilled)}** fulfilled)${warning_string}`);
+            }
+          }
+
+          province_string.push("");
         }
       }
 

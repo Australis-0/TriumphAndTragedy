@@ -772,6 +772,15 @@ module.exports = {
               });
 
               break;
+            case "hide warnings":
+              delete game_obj.show_pop_need_warnings;
+              createPageMenu(game_obj.middle_embed, {
+                embed_pages: printCity(game_obj.user, city_name),
+                page: main.interfaces[game_obj.middle_embed.id].page,
+                user: game_obj.user
+              });
+
+              break;
             case "jump to page":
               visualPrompt(game_obj.alert_embed, user_id, {
                 title: `Jump To Page:`,
@@ -802,6 +811,17 @@ module.exports = {
               function (arg) {
                 renameCity(game_obj.user, city_name, arg[0]);
               });
+
+              break;
+            case "show warnings":
+              game_obj.show_pop_need_warnings = true;
+              createPageMenu(game_obj.middle_embed, {
+                embed_pages: printCity(game_obj.user, city_name),
+                page: main.interfaces[game_obj.middle_embed.id].page,
+                user: game_obj.user
+              });
+
+              break;
           }
         }
       }
