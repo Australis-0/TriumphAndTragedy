@@ -2,6 +2,7 @@ global.settings = {
   //General settings
   administrator_roles: ["INSERT_ADMIN_ROLE_ID"], //Role ID's for administrators
   bot_token: "INSERT_BOT_TOKEN_HERE",
+  debug_mode: false, //Used for printing out special information regarding performance
   prefix: "$",
   no_space: true,
   visual_prompt_delay: 5000, //How many milliseconds should the bot wait before moving onto the next visual prompt?

@@ -268,7 +268,7 @@ module.exports = {
   getPopNeeds: function (arg0_type, arg1_amount, arg2_needs_category) {
     //Convert from parameters
     var pop_type = arg0_type;
-    var amount = (arg1_amount) ? parseInt(arg1_amount) : 100000; //per_100k is the default needs scope
+    var amount = (arg1_amount != undefined) ? parseInt(arg1_amount) : 100000; //per_100k is the default needs scope
     var needs_category = arg2_needs_category;
 
     //Declare local instance variables
@@ -289,7 +289,7 @@ module.exports = {
           }
 
     //Multiply everything in needs_obj by a given amount
-    needs_obj = multiplyObject(needs_obj, amount/100000, false, "ceil");
+    needs_obj = removeZeroes(multiplyObject(needs_obj, amount/100000, false, "ceil"));
 
     return needs_obj;
   },
@@ -342,9 +342,28 @@ module.exports = {
               var variety_array = [];
 
               var all_local_needs_categories = Object.keys(local_needs_group);
+              var total_need_groups = all_local_needs_categories.length;
+
+              //Remove total_need_groups
+              for (var x = 0; x < all_local_needs_categories.length; x++) {
+                var has_subgood = false;
+
+                var local_needs_category = local_needs_group[all_local_needs_categories[x]];
+
+                if (!options.restrict_goods) has_subgood = true;
+                if (options.restrict_goods)
+                  for (var y = 0; y < options.restrict_goods.length; y++)
+                    if (local_needs_category[options.restrict_goods[y]])
+                      has_subgood = true;
+
+                if (!has_subgood)
+                  total_need_groups--;
+              }
 
               //Parse local fulfilment and variety for each
               for (var x = 0; x < all_local_needs_categories.length; x++) {
+                var has_subgood = false;
+
                 //These are now objects like staple_goods.basics
                 var local_needs_category = local_needs_group[all_local_needs_categories[x]];
 
@@ -352,6 +371,12 @@ module.exports = {
                 var percent_fulfilled = 0;
                 var percent_variety = 0;
                 var total_goods = 0;
+
+                if (!options.restrict_goods) has_subgood = true;
+                if (options.restrict_goods)
+                  for (var y = 0; y < options.restrict_goods.length; y++)
+                    if (local_needs_category[options.restrict_goods[y]])
+                      has_subgood = true;
 
                 //Calculate total_goods
                 for (var y = 0; y < all_local_goods.length; y++) {
@@ -364,7 +389,10 @@ module.exports = {
                 //Iterate over all_local_goods to check for fulfilment; subtract resultant goods_obj[all_local_goods[y]] from goods_obj
                 for (var y = 0; y < all_local_goods.length; y++)
                   if (allowed_goods.includes(all_local_goods[y])) {
+                    var local_good = lookup.all_goods[all_local_goods[y]];
+
                     var local_allowance = returnSafeNumber(goods_obj[all_local_goods[y]]);
+                    var local_goods_amount = (!options.restrict_goods) ? all_local_goods.length : options.restrict_goods.length;
                     var local_value = local_needs_category[all_local_goods[y]]*multiplier;
 
                     //Calculate current_fulfillment, variety
@@ -373,23 +401,38 @@ module.exports = {
                     percent_fulfilled += current_fulfillment*(local_value/total_goods);
 
                     if (local_allowance > 0)
-                      percent_variety += 1/all_local_goods.length;
+                      percent_variety += 1/local_goods_amount;
 
                     //Subtract from goods_obj[all_local_goods[y]]
-                    if (local_allowance >= Math.ceil(local_value)) {
-                      goods_obj[all_local_goods[y]] -= Math.ceil(local_value);
-                    } else {
-                      goods_obj[all_local_goods[y]] = 0;
+                    goods_obj[all_local_goods[y]] = Math.max(goods_obj[all_local_goods[y]] - local_value, 0);
+
+                    //Special variety parsing logic for local_good.type 'category'
+                    if (local_good.type == "category") {
+                      var all_subgood_keys = getSubobjectKeys(local_good, { exclude_keys: reserved.goods, only_objects: true });
+
+                      percent_variety = 0;
+
+                      for (var z = 0; z < all_subgood_keys.length; z++) {
+                        var local_subgood = lookup.all_goods[all_subgood_keys[z]];
+
+                        if (local_subgood) {
+                          var local_subgood_allowance = goods_obj[all_subgood_keys[z]];
+
+                          if (local_subgood_allowance > 0)
+                            percent_variety += returnSafeNumber(1/all_subgood_keys.length);
+                        }
+                      }
                     }
                   }
 
                 //Push percent_fulfilled, percent_variety to fulfilment_array, variety_array
-                fulfilment_array.push(percent_fulfilled);
-                variety_array.push(percent_variety);
+                if (has_subgood) {
+                  fulfilment_array.push(Math.min(percent_fulfilled, 1));
+                  variety_array.push(Math.min(percent_variety, 1));
+                }
               }
-
-              total_fulfilment += getAverage(fulfilment_array)*(1/all_needs_groups.length);
-              total_variety += getAverage(variety_array)*(1/all_needs_groups.length);
+              total_fulfilment += returnSafeNumber(getAverage(fulfilment_array)*(1/total_need_groups));
+              total_variety += returnSafeNumber(getAverage(variety_array)*(1/total_need_groups));
             }
           } else {
             //This is a junior category such as .luxury_goods.food, treat it as such
@@ -399,6 +442,7 @@ module.exports = {
             if (needs_obj) {
               //Calculate total_goods
               var all_needs_keys = Object.keys(needs_obj);
+              var needs_amount = (!options.restrict_goods) ? all_needs_keys.length : options.restrict_goods.length;
 
               for (var i = 0; i < all_needs_keys.length; i++)
                 if (allowed_goods.includes(all_needs_keys[i]))
@@ -411,10 +455,10 @@ module.exports = {
                   var local_value = needs_obj[all_needs_keys[i]];
 
                   //Add to total_fulfilment; total_variety
-                  total_fulfilment += (local_allowance/local_value)*(1/all_needs_keys.length);
+                  total_fulfilment += Math.min((local_allowance/local_value)*(1/needs_amount));
 
                   if (local_allowance > 0)
-                    total_variety += 1/all_needs_keys.length;
+                    total_variety += 1/needs_amount;
 
                   //Subtract from goods_obj[all_needs_keys[i]];
                   if (local_allowance >= Math.ceil(local_value)) {

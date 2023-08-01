@@ -1884,7 +1884,7 @@ config.goods = { //[WIP] - Redo mine chances, buy/sell prices
           },
           muscat: {
             name: "Muscat",
-            icon: "musact",
+            icon: "muscat",
             buy_price: 2500
           },
           pinot_blanc: {

@@ -439,6 +439,18 @@ module.exports = {
       usr.inventory[raw_good_name] += returnSafeNumber(parseInt(value));
   },
 
+  recalculateInventory: function (arg0_user) {
+    //Convert from parameters
+    var user_id = arg0_user;
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var usr = main.users[actual_id];
+
+    for (var i = 0; i < lookup.all_good_names.length; i++)
+      usr.inventory[lookup.all_good_names[i]] = module.exports.getGoodAmount(user_id, lookup.all_good_names[i]);
+  },
+
   /*
     returnInventorySearchGoods() - Returns an array of good keys from a search query string
     options: {

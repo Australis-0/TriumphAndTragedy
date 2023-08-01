@@ -107,6 +107,50 @@ module.exports = {
     }
   },
 
+  /*
+    getSubobjectKeys() - Returns a list of subobject keys from the current scope
+    options: {
+      exclude_keys: [], - A list of keys to exclude
+      include_objects: true/false, - Whether or not to include object keys
+      only_objects: true/false - Whether to only include objects
+    }
+  */
+  getSubobjectKeys: function (arg0_scope, arg1_options) {
+    //Convert from parameters
+    var scope = arg0_scope;
+    var options = (arg1_options) ? arg1_options : {};
+
+    if (!options.exclude_keys) options.exclude_keys = [];
+
+    //Declare local instance variables
+    var all_keys = [];
+    var all_scope_keys = Object.keys(scope);
+
+    //Iterate over all_scope_keys
+    for (var i = 0; i < all_scope_keys.length; i++) {
+      var local_subobj = scope[all_scope_keys[i]];
+
+      if (typeof local_subobj == "object") {
+        var all_subkeys = module.exports.getSubobjectKeys(local_subobj, options);
+
+        if (options.include_objects || options.only_objects)
+          if (!options.exclude_keys.includes(all_scope_keys[i]))
+            all_keys.push(all_scope_keys[i]);
+
+        for (var x = 0; x < all_subkeys.length; x++)
+          if (!options.exclude_keys.includes(all_subkeys[x]))
+            all_keys.push(all_subkeys[x]);
+      } else {
+        if (!options.only_objects)
+          if (!options.exclude_keys.includes(all_scope_keys[i]))
+            all_keys.push(all_scope_keys[i]);
+      }
+    }
+
+    //Return statement
+    return all_keys;
+  },
+
   mergeObjects: function (arg0_scope, arg1_scope) {
     //Convert from parameters
     var merged_obj = JSON.parse(JSON.stringify(arg0_scope));
@@ -148,11 +192,33 @@ module.exports = {
       var local_subobj = scope[all_scope_keys[i]];
 
       if (typeof local_subobj == "number")
-        local_subobj = (!round) ? local_subobj*amount :
+        scope[all_scope_keys[i]] = (!round) ? local_subobj*amount :
           Math[round](local_subobj*amount);
       if (typeof local_subobj == "object")
         if (!not_recursive)
-          local_subobj = module.exports.multiplyObject(local_subobj, amount, not_recursive, round);
+          scope[all_scope_keys[i]] = module.exports.multiplyObject(local_subobj, amount, not_recursive, round);
+    }
+
+    //Return statement
+    return scope;
+  },
+
+  removeZeroes: function (arg0_scope) {
+    //Convert from parameters
+    var scope = JSON.parse(JSON.stringify(arg0_scope));
+
+    //Declare local instance variables
+    var all_scope_keys = Object.keys(scope);
+
+    //Iterate over all_scope_keys
+    for (var i = 0; i < all_scope_keys.length; i++) {
+      var local_subobj = scope[all_scope_keys[i]];
+
+      if (typeof local_subobj == "number")
+        if (local_subobj == 0)
+          delete scope[all_scope_keys[i]];
+      if (typeof local_subobj == "object")
+        scope[all_scope_keys[i]] = module.exports.removeZeroes(local_subobj);
     }
 
     //Return statement

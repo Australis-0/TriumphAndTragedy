@@ -313,7 +313,7 @@ module.exports = {
         log.debug(`local_string: `, local_string);
 
         //Used for processing more than one string at a time
-        var local_split_string = splitText(local_string, { maximum_characters: 800 });
+        var local_split_string = splitText(local_string, { maximum_characters: 1000 });
 
         log.debug(`local_split_string: `, local_split_string);
 
@@ -331,7 +331,7 @@ module.exports = {
       splitEmbed(inventory_string, {
         fields: fields_list,
         fixed_width: true,
-        maximum_fields: 2,
+        maximum_fields: 4,
         table_width: 2,
         title: "Inventory:",
         title_pages: true

@@ -300,6 +300,17 @@ module.exports = {
     loadBackupArray();
     loadMostRecentSave();
 
+    //Debug warnings for missing icons
+    if (settings.debug_mode) {
+      for (var i = 0; i < lookup.all_good_names.length; i++) {
+        var local_good = lookup.all_goods[lookup.all_good_names[i]];
+
+        if (local_good.icon)
+          if (!config.icons[local_good.icon])
+            log.warn(`${(local_good.name) ? local_good.name : lookup.all_good_names[i]} has no icon ${local_good.icon}!`);
+      }
+    }
+
     log.info(`Optimisation cache processed.`);
   }
 };

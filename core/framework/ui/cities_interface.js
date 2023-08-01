@@ -91,12 +91,15 @@ module.exports = {
     //Declare local tracker variables
     var province_obj = getCity(province_name);
     var culture_obj;
+    var relevant_goods = getRelevantGoods(user_id);
     var relevant_pops = getRelevantPops(user_id);
     try {
       culture_obj = main.global.cultures[province_obj.culture];
     } catch {}
 
     if (province_obj) {
+      recalculateInventory(user_id); //Recalculate inventory to display pop needs
+
       var rgo_name = (getGood(province_obj.resource).name) ? getGood(province_obj.resource).name : province_obj.resource;
       var rgo_icon = (getGood(province_obj.resource).icon) ? config.icons[getGood(province_obj.resource).icon] + " " : "";
 
@@ -235,6 +238,12 @@ module.exports = {
           province_string.push(config.localisation.divider);
           province_string.push("");
 
+          province_string.push(`_Displaying_ **Pop Needs** _for next turn._`);
+          province_string.push("");
+          province_string.push(`> **Needs Category:**`);
+          province_string.push(`>  - Total Good Amount - Good Name - [Pop Icon - Pop Consumption - Fulfilment %/Variety %]`);
+          province_string.push("");
+
           var pop_needs = {};
 
           for (var i = 0; i < lookup.all_pop_needs_categories.length; i++) {
@@ -242,7 +251,7 @@ module.exports = {
             var local_category_name = config.localisation[lookup.all_pop_needs_categories[i]];
             var total_category_pop_needs = {};
 
-            province_string.push(` - **${(local_category_name) ? local_category_name : lookup.all_pop_needs_categories[i]}:**`);
+            province_string.push(`- **${(local_category_name) ? local_category_name : lookup.all_pop_needs_categories[i]}:**`);
 
             for (var x = 0; x < all_pops.length; x++) {
               var local_pop_needs = getPopNeeds(all_pops[x], returnSafeNumber(province_obj.pops[all_pops[x]]), lookup.all_pop_needs_categories[i]);
@@ -265,39 +274,44 @@ module.exports = {
 
             var all_category_needs = Object.keys(flattenObject(total_category_pop_needs));
 
-            console.log(category_pop_needs);
-            console.log(all_category_needs);
-
             //Iterate over all_category_needs and display
             for (var x = 0; x < all_category_needs.length; x++) {
+              var display_good = false;
               var good_obj = lookup.all_goods[all_category_needs[x]];
               var local_pops_string = [];
               var local_total = total_category_pop_needs[all_category_needs[x]];
 
               if (good_obj) {
-                for (var y = 0; y < all_pops.length; y++) {
-                  //Display next turn fulfilment
-                  var local_good_fulfilment = getPopNeedsFulfilment({
-                    [all_category_needs[x]]: getGoodAmount(user_id, all_category_needs[x])
-                  },
-                  all_pops[y],
-                  returnSafeNumber(province_obj.pops[all_pops[y]]),
-                  {
-                    return_object: true,
-                    restrict_goods: [all_category_needs[x]]
-                  });
-                  var local_pop = config.pops[all_pops[y]];
-                  var local_value = returnSafeNumber(category_pop_needs[all_pops[y]][all_category_needs[x]]);
+                if (relevant_goods.includes(all_category_needs[x]))
+                  display_good = true;
+                if (game_obj.inventory_show_all_goods)
+                  display_good = true;
 
-                  //Push to local_pops_string
-                  if (local_value != 0)
-                    local_pops_string.push(`${(local_pop.icon) ? local_pop.icon + " " : ""}${parseNumber(local_value)} - ${printPercentage(local_good_fulfilment.fulfilment)}/${printPercentage(local_good_fulfilment.variety)}`);
+                if (display_good) {
+                  for (var y = 0; y < all_pops.length; y++) {
+                    //Display next turn fulfilment
+                    var local_good_fulfilment = getPopNeedsFulfilment(JSON.parse(JSON.stringify(usr.inventory)),
+                    all_pops[y],
+                    returnSafeNumber(province_obj.pops[all_pops[y]]),
+                    {
+                      return_object: true,
+                      restrict_goods: [all_category_needs[x]]
+                    });
+                    var local_pop = config.pops[all_pops[y]];
+                    var local_value = returnSafeNumber(category_pop_needs[all_pops[y]][all_category_needs[x]]);
+
+                    //Push to local_pops_string
+                    if (local_value != 0)
+                      local_pops_string.push(`${(local_pop.icon) ? local_pop.icon + " " : ""}${parseNumber(local_value)} - ${printPercentage(local_good_fulfilment.fulfilment)}/${printPercentage(local_good_fulfilment.variety)}`);
+                  }
+
+                  //Push to province_string
+                  province_string.push(` - ${parseGood(all_category_needs[x], "", false, `${parseNumber(local_total)} `)} - [${local_pops_string.join(", ")}]`);
                 }
-
-                //Push to province_string
-                province_string.push(` - ${parseGood(all_category_needs[x], "", false, `${parseNumber(local_total)} `)} - [${local_pops_string.join(", ")}]`);
               }
             }
+
+            province_string.push("");
           }
         } else {
           province_string.push(`_This province currently has no pop needs._`);
