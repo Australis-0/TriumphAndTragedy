@@ -353,7 +353,9 @@ module.exports = {
 
               //Warning string
               if (game_obj.show_pop_need_warnings)
-                if (percent_fulfilled > 0 && percent_fulfilled < 1) {
+                if (percent_fulfilled == 1) {
+                  warning_string = ` - ${config.icons.checkmark}`;
+                } else if (percent_fulfilled > 0 && percent_fulfilled < 1) {
                   warning_string = " - :warning:";
                 } else if (percent_fulfilled == 0) {
                   warning_string = ` - ${config.icons.cancel}`;
