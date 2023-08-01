@@ -355,7 +355,7 @@ module.exports = {
               if (game_obj.show_pop_need_warnings)
                 if (percent_fulfilled > 0 && percent_fulfilled < 1) {
                   warning_string = " - :warning:";
-                } else {
+                } else if (percent_fulfilled == 0) {
                   warning_string = ` - ${config.icons.cancel}`;
                 }
 
