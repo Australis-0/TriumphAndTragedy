@@ -111,7 +111,7 @@ module.exports = {
                 case "view cities":
                 case "cities list":
                   createPageMenu(game_obj.middle_embed, {
-                    embed_pages: printCities(game_obj.user),
+                    embed_pages: printProvinces(game_obj.user),
                     user: game_obj.user
                   });
                   return true;
@@ -319,7 +319,7 @@ module.exports = {
               break;
             case "cities":
               createPageMenu(game_obj.middle_embed, {
-                embed_pages: printCities(game_obj.user),
+                embed_pages: printProvinces(game_obj.user),
                 user: game_obj.user
               });
               game_obj.page = "cities_list";
@@ -658,52 +658,7 @@ module.exports = {
 
       //Cities page handler
       {
-        if (game_obj.page == "cities_list") {
-          if (arg[0] == "view") {
-            if (arg.length > 1) {
-              //Process city_name by removing initial argument and print city
-              var city_name = input.replace("view", "").trim();
-              var city_obj = getCity(city_name, { users: user_id });
-
-              if (city_obj) {
-                createPageMenu(game_obj.middle_embed, {
-                  embed_pages: printProvince(game_obj.user, city_name),
-                  user: game_obj.user
-                });
-
-                game_obj.page = `view_city_${city_obj.name}`;
-              }
-            } else {
-              initialiseprintProvince(game_obj.user, game_obj.id);
-            }
-          }
-
-          switch (input) {
-            case "back":
-              game_obj.page = "economy";
-              printEconomy(user_id);
-
-              break;
-            case "found city":
-              initialiseFoundCity(game_obj.user);
-
-              break;
-            case "jump to page":
-              visualPrompt(game_obj.alert_embed, user_id, {
-                title: `Jump To Page:`,
-                prompts: [
-                  [`Which page would you like to jump to?`, "number", { min: 1, max: printCities(game_obj.user).length }]
-                ]
-              },
-              function (arg) {
-                createPageMenu(game_obj.middle_embed, {
-                  embed_pages: printCities(game_obj.user),
-                  page: arg[0] - 1,
-                  user: game_obj.user
-                });
-              });
-          }
-        } else if (game_obj.page.startsWith("view_city")) {
+        if (game_obj.page.startsWith("view_city")) {
           var city_name = game_obj.page.replace("view_city_", "");
           var city_obj = getCity(city_name);
 
@@ -711,7 +666,7 @@ module.exports = {
             case "back":
               game_obj.page = "cities_list";
               createPageMenu(game_obj.middle_embed, {
-                embed_pages: printCities(game_obj.user),
+                embed_pages: printProvinces(game_obj.user),
                 user: game_obj.user
               });
 
@@ -1699,7 +1654,7 @@ module.exports = {
                     break;
                   case "view cities":
                     createPageMenu(game_obj.middle_embed, {
-                      embed_pages: printCities(game_obj.user),
+                      embed_pages: printProvinces(game_obj.user),
                       user: game_obj.user
                     });
                     return true;

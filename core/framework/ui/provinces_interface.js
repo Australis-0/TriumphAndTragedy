@@ -398,9 +398,14 @@ module.exports = {
 
           local_field.push("");
           local_field.push(`**[View ${parseProvince(provinces[i])}]**${province_type}`);
+
+          //Print resource if possible
+          if (provinces[i].resource)
+            local_field.push(`- Resource: ${parseGood(provinces[i].resource)}`);
+
           local_field.push("");
 
-          if (province_obj.type == "urban") {
+          if (provinces[i].type == "urban") {
             local_field.push(`- ${config.icons.population} Population: ${parseNumber(provinces[i].pops.population)}/${parseNumber(provinces[i].housing)} (**${printPercentage(getCityPopGrowthRate(provinces[i]), { base_zero: true, display_prefix: true })}**)`);
           } else {
             local_field.push(`- ${config.icons.population} Population: **${parseNumber(provinces[i].pops.population)}**`);
@@ -428,11 +433,7 @@ module.exports = {
           if (!accepted_cultures.includes(provinces[i].culture))
             local_field.push(`- **[Assimilate]**`);
 
-          //Print resource if possible
-          if (provinces[i].resource)
-            local_field.push(`- Resource: ${parseGood(provinces[i].resource)}`);
-
-          local_field.push(`**Supply Limit:** ${config.icons.railways} ${parseNumber((province_obj.supply_limit) ? province_obj.supply_limit : config.defines.combat.base_supply_limit)}`);
+          local_field.push(`- Supply Limit: ${config.icons.railways} ${parseNumber((provinces[i].supply_limit) ? provinces[i].supply_limit : config.defines.combat.base_supply_limit)}`);
 
           //Push field to list
           fields_list.push({ name: `__**${parseProvince(provinces[i])}**:__`, value: local_field.join("\n"), inline: true });

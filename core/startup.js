@@ -77,7 +77,6 @@ module.exports = {
     FileManager.import("./framework/ui/buildings_interface");
     FileManager.import("./framework/ui/budget_interface");
     FileManager.import("./framework/ui/casus_belli_interface");
-    FileManager.import("./framework/ui/cities_interface");
     FileManager.import("./framework/ui/client_state_interface");
     FileManager.import("./framework/ui/colonisation_interface");
     FileManager.import("./framework/ui/country_interface");
