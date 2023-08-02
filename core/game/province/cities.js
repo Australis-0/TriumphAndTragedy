@@ -39,7 +39,7 @@ module.exports = {
                   //Update UI
                   if (game_obj.page == `view_city_${city_obj.name}`)
                     createPageMenu(game_obj.middle_embed, {
-                      embed_pages: printCity(game_obj.user, city_obj.name),
+                      embed_pages: printProvince(game_obj.user, city_obj.name),
                       page: interfaces[game_obj.middle_embed.id].page,
                       user: game_obj.user
                     });
@@ -268,26 +268,6 @@ module.exports = {
     });
   },
 
-  initialisePrintCity: function (arg0_user, arg1_game_id) {
-    //Convert from parameters
-    var user_id = arg0_user;
-    var game_obj = interfaces[arg1_game_id];
-
-    //Initialise visual prompt
-    visualPrompt(game_obj.alert_embed, user_id, {
-      title: "View A City:",
-      prompts: [
-        [`What is the name of the city you would like to view?`, "string"]
-      ]
-    },
-    function (arg) {
-      createPageMenu(game_obj.middle_embed, {
-        embed_pages: printCity(game_obj.user, arg[0]),
-        user: game_obj.user
-      })
-    });
-  },
-
   moveCapital: function (arg0_user, arg1_city_name, arg2_force_move, arg3_do_not_display) {
     //Convert from parameters
     var user_id = arg0_user;
@@ -413,7 +393,7 @@ module.exports = {
                   var viewed_city = game_obj.page.replace("view_city_", "");
 
                   createPageMenu(game_obj.middle_embed, {
-                    embed_pages: printCity(game_obj.user, viewed_city),
+                    embed_pages: printProvince(game_obj.user, viewed_city),
                     page: interfaces[game_obj.middle_embed.id].page,
                     user: game_obj.user
                   });

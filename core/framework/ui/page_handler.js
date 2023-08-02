@@ -472,7 +472,7 @@ module.exports = {
                   if (army_obj) {
                     if (city_name_exact_match && !army_name_exact_match) {
                       createPageMenu(edit_embed, {
-                        embed_pages: printCity(game_obj.user, city_obj.name),
+                        embed_pages: printProvince(game_obj.user, city_obj.name),
                         user: game_obj.user
                       });
 
@@ -505,7 +505,7 @@ module.exports = {
                         game_obj.page = `army_viewer_${army_obj.name}`;
                     } else {
                       createPageMenu(edit_embed, {
-                        embed_pages: printCity(game_obj.user, city_obj.name),
+                        embed_pages: printProvince(game_obj.user, city_obj.name),
                         user: game_obj.user
                       });
 
@@ -667,14 +667,14 @@ module.exports = {
 
               if (city_obj) {
                 createPageMenu(game_obj.middle_embed, {
-                  embed_pages: printCity(game_obj.user, city_name),
+                  embed_pages: printProvince(game_obj.user, city_name),
                   user: game_obj.user
                 });
 
                 game_obj.page = `view_city_${city_obj.name}`;
               }
             } else {
-              initialisePrintCity(game_obj.user, game_obj.id);
+              initialiseprintProvince(game_obj.user, game_obj.id);
             }
           }
 
@@ -775,7 +775,7 @@ module.exports = {
             case "hide warnings":
               delete game_obj.show_pop_need_warnings;
               createPageMenu(game_obj.middle_embed, {
-                embed_pages: printCity(game_obj.user, city_name),
+                embed_pages: printProvince(game_obj.user, city_name),
                 page: main.interfaces[game_obj.middle_embed.id].page,
                 user: game_obj.user
               });
@@ -785,12 +785,12 @@ module.exports = {
               visualPrompt(game_obj.alert_embed, user_id, {
                 title: `Jump To Page:`,
                 prompts: [
-                  [`Which page would you like to jump to?`, "number", { min: 1, max: printCity(game_obj.user, city_name).length }]
+                  [`Which page would you like to jump to?`, "number", { min: 1, max: printProvince(game_obj.user, city_name).length }]
                 ]
               },
               function (arg) {
                 createPageMenu(game_obj.middle_embed, {
-                  embed_pages: printCity(game_obj.user, city_name),
+                  embed_pages: printProvince(game_obj.user, city_name),
                   page: arg[0] - 1,
                   user: game_obj.user
                 })
@@ -816,7 +816,7 @@ module.exports = {
             case "show warnings":
               game_obj.show_pop_need_warnings = true;
               createPageMenu(game_obj.middle_embed, {
-                embed_pages: printCity(game_obj.user, city_name),
+                embed_pages: printProvince(game_obj.user, city_name),
                 page: main.interfaces[game_obj.middle_embed.id].page,
                 user: game_obj.user
               });
@@ -2801,7 +2801,7 @@ module.exports = {
 
                   if (getCity(city_name)) {
                     createPageMenu(game_obj.middle_embed, {
-                      embed_pages: printCity(game_obj.user, city_name),
+                      embed_pages: printProvince(game_obj.user, city_name),
                       user: game_obj.user
                     });
                   } else if (getProvince(province_name)) {

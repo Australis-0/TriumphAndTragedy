@@ -59,7 +59,7 @@ module.exports = {
 
                     if (getCity(province_name)) {
                       createPageMenu(game_obj.middle_embed, {
-                        embed_pages: printCity(game_obj.user, province_name),
+                        embed_pages: printProvince(game_obj.user, province_name),
                         user: game_obj.user
                       });
                     } else if (getProvince(province_name)) {
