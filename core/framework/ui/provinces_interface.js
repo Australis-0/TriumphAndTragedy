@@ -387,6 +387,8 @@ module.exports = {
           var culture_obj = getCulture(provinces[i].culture);
           var local_field = [];
           var province_type = "";
+          var supply_limit = (provinces[i].supply_limit) ? provinces[i].supply_limit : config.defines.combat.base_supply_limit;
+          var supply_use = Math.ceil(lookup.province_troop_strengths[provinces[i].id]/1000);
 
           if (provinces[i].city_type == "capital") {
             province_type = " - Capital City";
@@ -433,7 +435,7 @@ module.exports = {
           if (!accepted_cultures.includes(provinces[i].culture))
             local_field.push(`- **[Assimilate]**`);
 
-          local_field.push(`- Supply Limit: ${config.icons.railways} ${parseNumber((provinces[i].supply_limit) ? provinces[i].supply_limit : config.defines.combat.base_supply_limit)}`);
+          local_field.push(`- Supply: ${config.icons.railways} (${parseNumber(supply_use)}/${parseNumber(supply_limit)})${(supply_use > supply_limit) ? ` :warning:` : ""}`);
 
           //Push field to list
           fields_list.push({ name: `__**${parseProvince(provinces[i])}**:__`, value: local_field.join("\n"), inline: true });
