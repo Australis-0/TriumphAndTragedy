@@ -379,6 +379,77 @@ module.exports = {
     return (building_exists[0]) ? building_exists[1] : undefined;
   },
 
+  /*
+    getBuildingByID() - Returns a building by its given ID
+    options: {
+      return_key: true/false - Whether to return the array element instead of the building object
+    }
+  */
+  getBuildingByID: function (arg0_id) {
+    //Convert from parameters
+    var id = (typeof arg0_id != "object") ? arg0_id.trim().toLowerCase() : arg0_id;
+
+    //Guard clause
+    if (typeof id == "object") return id;
+
+    //Declare local instance variables
+    var building_obj;
+    var split_id = id.split("-");
+
+    var province_obj = main.provinces[split_id[0]];
+
+    if (province_obj)
+      if (province_obj.buildings)
+        for (var i = 0; i < province_obj.buildings.length; i++)
+          if (province_obj.buildings[i].id == id) {
+            building_obj = (!options.return_key) ? province_obj.buildings[i] : i;
+            break;
+          }
+
+    //Return statement
+    return building_obj;
+  },
+
+  /*
+    getBuildingByName() - Returns a building by its name string
+    options: {
+      return_key: true/false - Whether to return an array [province_id, building_element] instead of an object
+    }
+  */
+  getBuildingByName: function (arg0_user, arg1_building_name) {
+    //Convert from parameters
+    var user_id = arg0_user;
+    var building_name = (typeof arg1_building_name != "object") ? arg1_building_name.trim().toLowerCase() : arg1_building_name;
+
+    //Guard clause
+    if (typeof building_name == "object") return building_name;
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var building_obj;
+    var provinces = getProvinces(user_id, { include_occupations: true });
+    var usr = main.users[actual_id];
+
+    //Iterate over all provinces; soft search first
+    for (var i = 0; i < provinces.length; i++)
+      if (provinces[i].buildings)
+        for (var x = 0; x < provinces[i].buildings.length; x++)
+          if (provinces[i].buildings[x].name)
+            if (provinces[i].buildings[x].name.trim().toLowerCase().indexOf(building_name) != -1)
+              building_obj = (!options.return_key) ? provinces[i].buildings[x] : [provinces[i].id, x];
+
+    //Iterate over all provinces; hard search second
+    for (var i = 0; i < provinces.length; i++)
+      if (provinces[i].buildings)
+        for (var x = 0; x < provinces[i].buildings.length; x++)
+          if (provinces[i].buildings[x].name)
+            if (provinces[i].buildings[x].name.trim().toLowerCase() == building_name)
+              building_obj = (!options.return_key) ? provinces[i].buildings[x] : [provinces[i].id, x];
+
+    //Return statement
+    return building_obj;
+  },
+
   //Returns all building categories based on order (if it exists)
   getBuildingCategories: function () {
     //Declare local instance variables
