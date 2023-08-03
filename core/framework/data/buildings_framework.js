@@ -106,6 +106,7 @@ module.exports = {
 
             for (var i = 0; i < amount; i++)
               province_obj.buildings.push({
+                id: module.exports.generateBuildingID(province_id),
                 building_type: raw_building_name
               });
           }
@@ -178,6 +179,59 @@ module.exports = {
             //Return statement
             return freed_manpower;
           }
+  },
+
+  generateBuildingID: function (arg0_province_id) {
+    //Convert from parameters
+    var province_id = arg0_province_id;
+
+    //Declare local instance variables
+    var province_obj = getProvince(province_id);
+
+    //While loop to find ID just in case of conflicting random ID's:
+    if (province_obj)
+      while (true) {
+        var duplicate_id = false;
+        var local_id_suffix = generateRandomID();
+
+        var full_id = `${province_obj.id}-${local_id_suffix}`;
+
+        //Return and break once a true ID is found
+        for (var i = 0; i < province_obj.buildings.length; i++)
+          if (province_obj.buildings[i].id == full_id)
+            duplicate_id = true;
+
+        if (!duplicate_id) {
+          return full_id;
+          break;
+        }
+      }
+  },
+
+  generateBuildingName: function (arg0_province_id, arg1_building_name) {
+    //Convert from parameters
+    var province_id = arg0_province_id;
+    var building_name = arg1_building_name.trim().toLowerCase();
+
+    //Declare local instance variables
+    var building_key = module.exports.getBuilding(building_name, { return_key: true });
+    var building_obj = module.exports.getBuilding(building_name);
+    var building_string = "";
+    var province_obj = getProvince(province_id);
+
+    //Fetch building name
+    if (province_obj) {
+      building_name = `${(province_obj.name) ? province_obj.name : `Province ${province_obj.id}`}`;
+
+      if (building_obj) {
+        var total_building_count = module.exports.getTotalBuildings(province_obj.id, building_key);
+
+        building_name = `${building_name} ${(building_obj.name) ? building_obj.name : building_key} #${total_building_count + 1}`;
+      }
+    }
+
+    //Return statement
+    return building_name;
   },
 
   //getAllBuildingGoods() - Returns a key array of all goods relevant to the set of a user's available_buildings
