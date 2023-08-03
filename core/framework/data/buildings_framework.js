@@ -208,10 +208,17 @@ module.exports = {
       }
   },
 
-  generateBuildingName: function (arg0_province_id, arg1_building_name) {
+  /*
+    generateBuildingName() - Returns a valid building name in a province as a string.
+    options: {
+      exclude_number: true/false - Whether to exclude the ending number (e.g. #15)
+    }
+  */
+  generateBuildingName: function (arg0_province_id, arg1_building_name, arg2_options) {
     //Convert from parameters
     var province_id = arg0_province_id;
     var building_name = arg1_building_name.trim().toLowerCase();
+    var options = (arg2_options) ? arg2_options : {};
 
     //Declare local instance variables
     var building_key = module.exports.getBuilding(building_name, { return_key: true });
@@ -224,9 +231,12 @@ module.exports = {
       building_name = `${(province_obj.name) ? province_obj.name : `Province ${province_obj.id}`}`;
 
       if (building_obj) {
-        var total_building_count = module.exports.getTotalBuildings(province_obj.id, building_key);
+        var total_building_count = 0;
 
-        building_name = `${building_name} ${(building_obj.name) ? building_obj.name : building_key} #${total_building_count + 1}`;
+        if (!options.exclude_number)
+          total_building_count = module.exports.getTotalBuildings(province_obj.id, building_key);
+
+        building_name = `${building_name} ${(building_obj.name) ? building_obj.name : building_key}${(!options.exclude_number) ? ` #${total_building_count + 1}` : ""}`;
       }
     }
 
