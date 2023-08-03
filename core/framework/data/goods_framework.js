@@ -50,6 +50,7 @@ module.exports = {
     //Check if argument provided is a raw name
     if (all_goods[good_name])
       good_exists = [true, all_goods[good_name], good_name];
+
     if (!good_exists[0]) {
       //Search by name matches - Soft match first
       for (var x = 0; x < local_goods.length; x++) {
@@ -423,7 +424,7 @@ module.exports = {
     //Convert from parameters
     var user_id = arg0_user;
     var good_name = arg1_good_name;
-    var value = arg2_value;
+    var value = parseInt(arg2_value);
 
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
@@ -444,8 +445,31 @@ module.exports = {
     }
 
     //Modify inventory value
-    if (raw_good_name)
-      usr.inventory[raw_good_name] += returnSafeNumber(parseInt(value));
+    if (raw_good_name) {
+      var good_obj = lookup.all_goods[raw_good_name];
+
+      if (typeof good_obj == "object") {
+        var subgoods = getSubobjectKeys(good_obj, { exclude_keys: reserved.goods });
+
+        if (value != 0) {
+          //Distribute goods equally across subgood keys
+          var amount = Math.floor(value/subgoods.length);
+          var remainder = value % subgoods.length;
+
+          for (var i = 0; i < subgoods.length; i++)
+            if (usr.inventory[subgoods[i]]) {
+              usr.inventory[subgoods[i]] += returnSafeNumber(amount);
+
+              if (remainder > 0) {
+                usr.inventory[subgoods[i]]++;
+                remainder--;
+              }
+            }
+        }
+      } else {
+        usr.inventory[raw_good_name] += returnSafeNumber(value);
+      }
+    }
   },
 
   recalculateInventory: function (arg0_user) {
