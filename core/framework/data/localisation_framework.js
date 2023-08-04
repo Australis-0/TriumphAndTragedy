@@ -4,19 +4,20 @@ module.exports = {
     var building_id = arg0_building_id;
 
     //Declare local instance variables
-    var building_obj = (typeof building_id != "object") ? getBuildingByID(building_id) : building_id;
     var building_string = [];
+    var local_building = (typeof building_id != "object") ? getBuildingByID(building_id) : building_id;
 
-    if (building_obj) {
-      var province_id = building_obj.id.split("-")[0];
+    if (local_building) {
+      var province_id = local_building.id.split("-")[0];
       var province_obj = main.provinces[province_id];
 
       if (province_obj) {
         var actual_id = main.global.user_map[user_id];
+        var building_obj = getBuilding(local_building.building_type);
         var usr = main.users[actual_id];
 
         //Push building name and display ID; current national owner
-        building_string.push(`${(building_obj.custom_name) ? `${config.icons.old_scroll} ` : ""}__**${building_obj.name}:**__ (ID: ${building_obj.id})`);
+        building_string.push(`${(local_building.custom_name) ? `${config.icons.old_scroll} ` : ""}__**${local_building.name}:**__ (ID: ${local_building.id})`);
         building_string.push("");
         building_string.push(`**[Rename Building]**`);
         building_string.push("");
@@ -26,6 +27,12 @@ module.exports = {
         //Display building employment
       }
     }
+  },
+
+  getBuildingEmploymentLocalisation: function (arg0_building_obj, arg1_config_obj) {
+    //Convert from parameters
+    var local_building = arg0_building_obj;
+    var building_obj = arg1_config_obj;
   },
 
   getPeaceDemandsLocalisation: function (arg0_cb_name) {
