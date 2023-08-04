@@ -107,7 +107,9 @@ module.exports = {
             for (var i = 0; i < amount; i++)
               province_obj.buildings.push({
                 id: module.exports.generateBuildingID(province_id),
-                building_type: raw_building_name
+                building_type: raw_building_name,
+
+                employment: {}
               });
           }
   },

@@ -1,4 +1,33 @@
 module.exports = {
+  getBuildingLocalisation: function (arg0_building_id) {
+    //Convert from parameters
+    var building_id = arg0_building_id;
+
+    //Declare local instance variables
+    var building_obj = (typeof building_id != "object") ? getBuildingByID(building_id) : building_id;
+    var building_string = [];
+
+    if (building_obj) {
+      var province_id = building_obj.id.split("-")[0];
+      var province_obj = main.provinces[province_id];
+
+      if (province_obj) {
+        var actual_id = main.global.user_map[user_id];
+        var usr = main.users[actual_id];
+
+        //Push building name and display ID; current national owner
+        building_string.push(`${(building_obj.custom_name) ? `${config.icons.old_scroll} ` : ""}__**${building_obj.name}:**__ (ID: ${building_obj.id})`);
+        building_string.push("");
+        building_string.push(`**[Rename Building]**`);
+        building_string.push("");
+        building_string.push(`- Province: **${(province_obj.name) ? province_obj.name : province_id}**`);
+        building_string.push(`- Nationality: __${usr.name}__`);
+
+        //Display building employment
+      }
+    }
+  },
+
   getPeaceDemandsLocalisation: function (arg0_cb_name) {
     //Convert from parameters
     var cb_name = (typeof arg0_cb_name != "object") ? arg0_cb_name.trim().toLowerCase() : arg0_cb_name;
