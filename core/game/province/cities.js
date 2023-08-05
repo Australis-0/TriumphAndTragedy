@@ -365,6 +365,7 @@ module.exports = {
               //Set city_obj.name to a new name
               if (city_obj) {
                 city_obj.name = new_name;
+                refreshBuildingNames(city_obj.id); //Refresh building names
 
                 printAlert(game_obj.id, `You have renamed **${old_name}** to **${new_name}**!`);
 

@@ -1382,5 +1382,24 @@ module.exports = {
 
     //Return statement
     return virtual_inventory;
+  },
+
+  refreshBuildingNames: function (arg0_province_id) {
+    //Convert from parameters
+    var province_id = arg0_province;
+
+    //Declare local instance variables
+    var building_count = {};
+    var province_obj = main.provinces[province_id];
+
+    if (province_obj.buildings)
+      for (var i = 0; i < province_obj.buildings.length; i++) {
+        var local_building = province_obj.buildings[i];
+
+        var building_obj = getBuilding(local_building.building_type);
+
+        modifyValue(building_count, local_building.building_type, 1);
+        local_building.name = `${(province_obj.name) ? province_obj.name : `Province ${province_obj.id}`} ${(building_obj.name) ? building_obj.name : local_building.building_type} #${building_count[local_building.building_type]}`;
+      }
   }
 };
