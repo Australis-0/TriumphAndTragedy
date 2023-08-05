@@ -234,18 +234,42 @@ module.exports = {
     }
   },
 
-  printProvinceBuildings: function (arg0_user) {
+  printProvinceBuildings: function (arg0_user, arg1_province_id, arg2_page) {
     //Convert from parameters
     var user_id = arg0_user;
+    var province_id = arg1_province_id;
+    var page = (arg2_page) ? parseInt(arg2_page) : 0;
 
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
     var game_obj = getGameObject(user_id);
+    var province_obj = main.provinces[province_id];
     var usr = main.users[actual_id];
 
     //Format buildings_string
     var buildings_string = [];
 
-    //
+    //Iterate over all buildings in province
+    if (province_obj) {
+      buildings_string.push(`**[Back]** | **[Jump To Page]**`);
+      buildings_string.push("");
+
+      if (province_obj.buildings) {
+        for (var i = 0; i < province_obj.buildings.length; i++) {
+          var building_obj = getBuilding(province_obj.buildings[i].building_type);
+          var employment_string = [];
+          var local_building = province_obj.buildings[i];
+
+          
+        }
+
+      } else {
+        buildings_string.push(`_This province currently has no buildings. Type_ **[Build]** _to construct some buildings in this province._`);
+      }
+    } else {
+      printError(game_obj.id, `The specified province, **${province_id}** doesn't exist!`);
+    }
+
+    //Return statement
   }
 };

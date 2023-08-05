@@ -99,6 +99,75 @@ module.exports = {
     return employment_string;
   },
 
+  /*
+    getBuildingEmploymentLocalisation() - Formats employment criteria as a single nested string
+    options: {
+      parent: "any_pop",
+      any_pop_fulfilment: 0, - How many pops have currently fulfiled the current scope
+      any_pop_total: 70 - How many pops are required to fulfil the current any_pop scope
+    }
+  */
+  getBuildingEmploymentStringLocalisation: function (arg0_building_obj, arg1_manpower_obj, arg2_options) {
+    //Convert from parameters
+    var local_building = arg0_building_obj;
+    var manpower_obj = arg1_manpower_obj;
+    var options = (arg2_options) ? arg2_options : {};
+
+    if (!options.employment) options.employment = JSON.parse(JSON.stringify(local_building.employment));
+
+    //Declare local instance variables
+    var all_manpower_keys = Object.keys(manpower_obj);
+    var any_pop_scope = (options.parent == "any_pop");
+    var any_pop_string = [];
+    var employment_string = [];
+
+    //Iterate over all_manpower_keys
+    for (var i = 0; i < all_manpower_keys.length; i++) {
+      var change_remaining;
+      var local_pop = config.pops[all_manpower_keys[i]];
+      var local_subobj = manpower_obj[all_manpower_keys[i]];
+      var local_value = returnSafeNumber(options.employment[all_manpower_keys[i]]);
+
+      if (local_pop) {
+        //Add local_value to options.any_pop_fulfilment if any_pop_scope
+        if (!any_pop_scope) {
+          change_remaining = options.any_pop_total - returnSafeNumber(options.any_pop_fulfilment);
+
+          if (change_remaining > 0) {
+            modifyValue(options, "any_pop_fulfilment", change_remaining);
+
+            any_pop_string.push(`${(local_pop.icon) ? local_pop.icon + " " : ""}`);
+
+            options.any_pop_fulfilment += change_remaining;
+            if (options.employment[all_manpower_keys[i]])
+              options.employment[all_manpower_keys[i]] -= change_remaining;
+          }
+        } else {
+          change_remaining = Math.max(local_subobj - local_value, 0);
+
+          //Regular x/y employment string
+          employment_string.push(`${(local_pop.icon) ? local_pop.icon + " " : ""}${parseNumber(local_value)}/${parseNumber(local_subobj)}`);
+
+          if (change_remaining > 0)
+            if (options.employment[all_manpower_keys[i]])
+              options.employment[all_manpower_keys[i]] -= change_remaining;
+        }
+      } else {
+        //Recursively call function
+        if (all_manpower_keys[i] == "any_pop" || all_manpower_keys[i].startsWith("any_pop_")) {
+
+        }
+      }
+    }
+
+    //Push any_pop_string to end of employment_string
+    if (any_pop_scope)
+      employment_string.push(`(${any_pop_string.join("/")}: ${parseNumber(options.any_pop_fulfilment)}/${parseNumber(options.any_pop_total)})`);
+
+    //Return something different if not nested
+    return `(${employment_string.join(", ")})`;
+  },
+
   getPeaceDemandsLocalisation: function (arg0_cb_name) {
     //Convert from parameters
     var cb_name = (typeof arg0_cb_name != "object") ? arg0_cb_name.trim().toLowerCase() : arg0_cb_name;
