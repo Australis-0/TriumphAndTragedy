@@ -25,14 +25,78 @@ module.exports = {
         building_string.push(`- Nationality: __${usr.name}__`);
 
         //Display building employment
+        if (building_obj.manpower_cost) {
+          var employment_string = module.exports.getBuildingEmploymentLocalisation(local_building, building_obj.manpower_cost);
+
+          //Push to building_string
+          building_string.push("");
+          building_string.push(`**Employment:**`);
+          building_string.push("");
+
+          for (var i = 0; i < employment_string.length; i++)
+            building_string.push(employment_string[i]);
+        }
       }
     }
+
+    //Return statement
+    return building_string;
   },
 
-  getBuildingEmploymentLocalisation: function (arg0_building_obj, arg1_config_obj) {
+  getBuildingEmploymentLocalisation: function (arg0_building_obj, arg1_manpower_obj, arg2_options) {
     //Convert from parameters
     var local_building = arg0_building_obj;
-    var building_obj = arg1_config_obj;
+    var manpower_obj = arg1_manpower_obj;
+    var options = (arg2_options) ? arg2_options : {};
+
+    if (!options.nesting) options.nesting = 0;
+
+    //Declare local instance variables
+    var all_manpower_keys = Object.keys(manpower_obj);
+    var employment_string = [];
+
+    //Iterate over all_manpower_keys
+    for (var i = 0; i < all_manpower_keys.length; i++) {
+      var local_subobj = manpower_obj[all_manpower_keys[i]];
+
+      if (all_manpower_keys[i] == "any_pop" || all_manpower_keys[i].startsWith("any_pop_")) {
+        var all_subobj_keys = Object.keys(local_subobj);
+        var employment_substring = [];
+
+        for (var x = 0; x < all_subobj_keys.length; x++) {
+          var local_manpower_obj = local_subobj[all_subobj_keys[x]];
+
+          if (config.pops[all_subobj_keys[x]]) {
+            var local_pop = config.pops[all_subobj_keys[x]];
+
+            employment_string.push(`${bulletPoint(options.nesting)}${parsePop(all_subobj_keys[x])}: ${returnSafeNumber(local_building.employment[all_subobj_keys[x]])}/${returnSafeNumber(local_manpower_obj)}`);
+          } else {
+            if (all_subobj_keys[x] == "any_pop" || all_subobj_keys[x].startsWith("any_pop_")) {
+              var local_subobj_value = local_subobj[all_subobj_keys[x]];
+
+              //Iterate over nesting and pass local_subobj_value into manpower_obj
+              var new_options = JSON.parse(JSON.stringify(options));
+              new_options.nesting++;
+
+              var local_nested_employment_string = module.exports.getBuildingEmploymentLocalisation(local_building, local_subobj_value, new_options);
+
+              //Push local_nested_employment_string to employment_string
+              for (var y = 0; y < local_nested_employment_string.length; y++)
+                employment_string.push(local_nested_employment_string[y]);
+            }
+          }
+        }
+      } else {
+        if (config.pops[all_manpower_keys[i]]) {
+          var local_pop = config.pops[all_manpower_keys[i]];
+
+          employment_string.push(`${bulletPoint(options.nesting)}${parsePop(all_manpower_keys[i])}: ${returnSafeNumber(local_building.employment[all_manpower_keys[i]])}/${returnSafeNumber(local_subobj)}`);
+        }
+      }
+    }
+
+    //Return statement
+    return employment_string;
   },
 
   getPeaceDemandsLocalisation: function (arg0_cb_name) {
