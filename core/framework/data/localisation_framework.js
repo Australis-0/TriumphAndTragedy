@@ -121,6 +121,23 @@ module.exports = {
     var any_pop_string = [];
     var employment_string = [];
 
+    //Determine options.amny_pop_total if applicable
+    if (any_pop_scope) {
+      var total_pop_count = 0;
+      var total_pop_numbers = 0;
+
+      for (var i = 0; i < all_manpower_keys.length; i++) {
+        var local_subobj = manpower_obj[all_manpower_keys[i]];
+
+        if (typeof local_subobj == "number") {
+          total_pop_count += local_subobj;
+          total_pop_numbers++;
+        }
+      }
+
+      options.any_pop_total += Math.ceil(total_pop_count/total_pop_numbers);
+    }
+
     //Iterate over all_manpower_keys
     for (var i = 0; i < all_manpower_keys.length; i++) {
       var change_remaining;
@@ -155,7 +172,14 @@ module.exports = {
       } else {
         //Recursively call function
         if (all_manpower_keys[i] == "any_pop" || all_manpower_keys[i].startsWith("any_pop_")) {
+          var new_options = JSON.parse(JSON.stringify(options));
+          new_options.nested = true;
+          new_options.parent = "any_pop";
 
+          var subobj_employment = module.exports.getBuildingEmploymentStringLocalisation(local_building, local_subobj, new_options);
+
+          employment_string.push(`(${subobj_employment.string})`);
+          options.employment = subobj_employment.employment;
         }
       }
     }
@@ -165,7 +189,10 @@ module.exports = {
       employment_string.push(`(${any_pop_string.join("/")}: ${parseNumber(options.any_pop_fulfilment)}/${parseNumber(options.any_pop_total)})`);
 
     //Return something different if not nested
-    return `(${employment_string.join(", ")})`;
+    return (!options.nested) ? `(${employment_string.join(", ")})` : {
+      string: `(${employment_string.join(", ")})`,
+      employment: options.employment
+    };
   },
 
   getPeaceDemandsLocalisation: function (arg0_cb_name) {
