@@ -104,13 +104,19 @@ module.exports = {
             if (!province_obj.buildings)
               province_obj.buildings = [];
 
-            for (var i = 0; i < amount; i++)
-              province_obj.buildings.push({
+            for (var i = 0; i < amount; i++) {
+              var local_object = {
                 id: module.exports.generateBuildingID(province_id),
-                building_type: raw_building_name,
+                building_type: raw_building_name
+              };
 
-                employment: {}
-              });
+              if (building_obj.manpower_cost) local_object.employment = {};
+              if (building_obj.manpower_cost) local_object.stockpile = {
+                money: module.exports.getStartingStockpile(building_obj)
+              };
+
+              province_obj.buildings.push(local_object);
+            }
           }
   },
 
@@ -926,6 +932,24 @@ module.exports = {
 
         break;
     }
+  },
+
+  getStartingStockpile: function (arg0_building) {
+    //Convert from parameters
+    var building_name = arg0_building;
+
+    //Declare local instance variables
+    var building_obj = (typeof building_name != "object") ? getBuilding(building_name.trim().toLowerCase()) : building_name;
+    var starting_money_stockpile = config.defines.economy.starting_money_stockpile;
+
+    //Check money cost
+    if (building_obj.cost)
+      if (building_obj.cost.money)
+        if (config.defines.economy.starting_money_multiplier != 0)
+          starting_money_stockpile = building_obj.cost.money*config.defines.economy.starting_money_multiplier;
+
+    //Return statement
+    return starting_money_stockpile;
   },
 
   /*

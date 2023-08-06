@@ -55,6 +55,8 @@ config.defines.economy = {
   rgo_modifier: 0.15, //What should the base RGO modifier be?
   rural_pop_cap: [120000, 140000], //What should the soft cap for population growth in rural provinces be?
   shipment_speed: 50, //How many provinces should a shipment travel per turn as base?
+  starting_money_multiplier: 2, //How many times the money cost of a building should the initial stockpile be worth? Set to 0 to use the fixed amount in config.defines.economy.starting_money_stockpile
+  starting_money_stockpile: 1000, //The starting monetary stockpile for a building whose money cost isn't defined
   supply_limit_rgo_modifier: 100, //How much extra supply limit should it take for an extra +1% boost to RGO throughput in the province?
   urbanisation_cost: 25, //Initial Political Capital cost for urbanisation
   urbanisation_cost_percentile_growth: 1.2, //How fast should the cost grow exponentially?
