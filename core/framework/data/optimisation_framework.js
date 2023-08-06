@@ -9,6 +9,7 @@ module.exports = {
     };
     global.lookup = {
       all_buildings: getBuildings({ return_object: true }),
+      all_buildings_categories: getBuildingsToCategoryMap(),
       all_event_names: getEvents({ return_names: true }),
       all_events: getEvents(),
       all_good_names: getGoods({ return_names: true }),

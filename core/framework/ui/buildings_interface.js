@@ -234,11 +234,18 @@ module.exports = {
     }
   },
 
-  printProvinceBuildings: function (arg0_user, arg1_province_id, arg2_page) {
+  /*
+    printProvinceBuildings() - Prints a list of a player's province buildings depending on the current sorting mode
+    options: {
+      do_not_display: true/false - Whether to display the UI in the first place
+    }
+  */
+  printProvinceBuildings: function (arg0_user, arg1_province_id, arg2_page, arg3_options) {
     //Convert from parameters
     var user_id = arg0_user;
     var province_id = arg1_province_id;
     var page = (arg2_page) ? parseInt(arg2_page) : 0;
+    var options = (arg3_options) ? arg3_options : {};
 
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
@@ -251,16 +258,34 @@ module.exports = {
 
     //Iterate over all buildings in province
     if (province_obj) {
-      buildings_string.push(`**[Back]** | **[Jump To Page]**`);
+      buildings_string.push(`Sort by: **[Alphabetical]** | **[Category]** | **[Chronology]** | **[Numeric]** | **[Cash Reserves]** | **[Employment]**`);
+      buildings_string.push("");
+      buildings_string.push(`_Displaying local_ **Buildings** _in_ **${config.localisation[`sort_${game_obj.building_sort}`]}**:`);
+      buildings_string.push("");
+      buildings_string.push(`> **Key:**`);
+      buildings_string.push(`> __Building Name:__ | Cash Reserves - Employment`);
       buildings_string.push("");
 
       if (province_obj.buildings) {
-        for (var i = 0; i < province_obj.buildings.length; i++) {
-          var building_obj = getBuilding(province_obj.buildings[i].building_type);
-          var employment_string = [];
-          var local_building = province_obj.buildings[i];
+        var new_buildings = JSON.parse(JSON.stringify(province_obj.buildings));
 
-          
+        new_buildings = sortBuildings(province_obj.id, game_obj.building_sort);
+
+        for (var i = 0; i < new_buildings.length; i++) {
+          var building_obj = getBuilding(new_buildings[i].building_type);
+          var employment_string = "";
+          var money_stockpile_string = "";
+          var local_building = new_buildings[i];
+
+          if (building_obj.manpower_cost)
+            employment_string = `- ${getBuildingEmploymentStringLocalisation(local_building, building_obj.manpower_cost)}`;
+          if (building_obj.stockpile)
+            if (building_obj.stockpile.money)
+              money_stockpile_string = ` | ${config.icons.money} ${parseNumber(building_obj.stockpile.money)}`;
+
+          //Print string
+          buildings_string.push(`__${(local_building.name) ? local_building.name : building_obj.name}__${money_stockpile_string}${employment_string}`);
+          buildings_string.push(`- **[View ${(local_building.name) ? local_building.name : local_building.id}]**`);
         }
 
       } else {
@@ -270,6 +295,23 @@ module.exports = {
       printError(game_obj.id, `The specified province, **${province_id}** doesn't exist!`);
     }
 
+    //Create embed and edit to message
+    var building_embeds = splitEmbed(buildings_string, {
+      title: `[Back] | [Jump To Page] | Buildings in ${(province_obj.name) ? province_obj.name : `Province ${province_obj.id}`}:`,
+      title_pages: true,
+      fixed_width: true
+    });
+
+    if (!options.do_not_display) {
+      game_obj.main_embed = createPageMenu(game_obj.middle_embed, {
+        embed_pages: building_embeds,
+        user: game_obj.user,
+        page: page
+      });
+      game_obj.main_change = true;
+    }
+
     //Return statement
+    return building_embeds;
   }
 };

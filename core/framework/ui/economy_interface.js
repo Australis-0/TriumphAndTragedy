@@ -240,7 +240,8 @@ module.exports = {
     printInventory() - Prints a player's inventory depending on what they want
     options: {
       display_goods: [], - The list of goods to display, undefined by default, overridden by search_query
-      display_relevant_goods: true/false - Whether or not to display relevant goods only. True by default, overridden by display_goods
+      display_relevant_goods: true/false, - Whether or not to display relevant goods only. True by default, overridden by display_goods
+      do_not_display: true/false, - Whether to display the UI in the first place
       search_query: "acanth" - Whatever substring the player wants to search up
     }
   */
