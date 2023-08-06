@@ -1431,9 +1431,9 @@ module.exports = {
   /*
     sortBuildings() - Sorts a province array of buildings by mode: "alphabetical", "numeric", "cash_reserves", "category", "employment"
   */
-  sortBuildings: function (arg0_province_id, arg1_mode) { //[WIP] - Finish function body
+  sortBuildings: function (arg0_building_array, arg1_mode) { //[WIP] - Finish function body
     //Convert from parameters
-    var province_id = arg0_province_id;
+    var building_array = arg0_building_array;
     var mode = (arg1_mode) ? arg1_mode.trim().toLowerCase() : "category";
 
     //Declare local instance variables
@@ -1441,83 +1441,80 @@ module.exports = {
     var building_count = {};
     var province_obj = main.provinces[province_id];
 
-    if (province_obj)
-      if (province_obj.buildings) {
-        building_array = province_obj.buildings;
+    if (building_array) {
+      //Initialise building_count
+      for (var i = 0; i < building_array.length; i++)
+        modifyValue(building_count, building_array[i].building_type, 1);
 
-        //Initialise building_count
-        for (var i = 0; i < building_array.length; i++)
-          modifyValue(building_count, building_array[i].building_type, 1);
+      for (var i = 0; i < building_array.length; i++) {
+        var total_employees = 0;
 
-        for (var i = 0; i < building_array.length; i++) {
-          var total_employees = 0;
+        if (building_array[i].employment) {
+          var all_employment_keys = Object.keys(building_array[i].employment);
 
-          if (building_array[i].employment) {
-            var all_employment_keys = Object.keys(building_array[i].employment);
+          //Cash reserves
+          if (building_array[i].stockpile)
+            building_array[i].cash_reserves = returnSafeNumber(building_array[i].cash_reserves);
+          if (!building_array[i].cash_reserves) building_array[i].cash_reserves = 0;
 
-            //Cash reserves
-            if (building_array[i].stockpile)
-              building_array[i].cash_reserves = returnSafeNumber(building_array[i].cash_reserves);
-            if (!building_array[i].cash_reserves) building_array[i].cash_reserves = 0;
+          //Category
+          building_array[i].category = lookup.all_buildings_categories[building_array[i].building_type];
 
-            //Category
-            building_array[i].category = lookup.all_buildings_categories[building_array[i].building_type];
+          //Employment
+          for (var x = 0; x < all_employment_keys.length; x++)
+            total_employees += returnSafeNumber(building_array[i].employment[all_employment_keys[x]]);
+          building_array[i].total_employees = total_employees;
 
-            //Employment
-            for (var x = 0; x < all_employment_keys.length; x++)
-              total_employees += returnSafeNumber(building_array[i].employment[all_employment_keys[x]]);
-            building_array[i].total_employees = total_employees;
-
-            //Number
-            building_array[i].building_count = building_count[building_array[i].building_type];
-          }
-        }
-
-        //Sort object
-        if (mode == "alphabetical") {
-          building_array.sort((a, b) => {
-            var building_name_a = (a.name) ? a.name.toLowerCase() : a.id;
-            var building_name_b = (b.name) ? b.name.toLowerCase() : b.id;
-
-            if (building_name_a < building_name_b) return -1;
-            if (building_name_a > building_name_b) return 1;
-            return 0;
-          });
-        } else if (mode == "numeric") {
-          building_array.sort((a, b) => {
-            return b.building_count - a.building_count;
-          });
-        } else if (mode == "cash_reserves") {
-          building_array.sort((a, b) => {
-            return b.cash_reserves - a.cash_reserves;
-          });
-        } else if (mode == "category") {
-          building_array.sort((a, b) => {
-            var building_category_a = a.category;
-            var building_category_b = b.category;
-
-            if (building_category_a < building_category_b) return -1;
-            if (building_category_a > building_category_b) return 1;
-            return 0;
-          });
-        } else if (mode == "chronological") {
-          building_array.sort((a, b) => {
-            return a.order - b.order;
-          });
-        } else if (mode == "employment") {
-          building_array.sort((a, b) => {
-            return b.total_employees - a.total_employees;
-          });
-        }
-
-        //Remove attributes you just sorted by
-        for (var i = 0; i < building_array.length; i++) {
-          delete building_array[i].building_count;
-          delete building_array[i].cash_reserves;
-          delete building_array[i].category;
-          delete building_array[i].total_employees;
+          //Number
+          building_array[i].building_count = building_count[building_array[i].building_type];
         }
       }
+
+      //Sort object
+      if (mode == "alphabetical") {
+        building_array.sort((a, b) => {
+          var building_name_a = (a.name) ? a.name.toLowerCase() : a.id;
+          var building_name_b = (b.name) ? b.name.toLowerCase() : b.id;
+
+          if (building_name_a < building_name_b) return -1;
+          if (building_name_a > building_name_b) return 1;
+          return 0;
+        });
+      } else if (mode == "numeric") {
+        building_array.sort((a, b) => {
+          return b.building_count - a.building_count;
+        });
+      } else if (mode == "cash_reserves") {
+        building_array.sort((a, b) => {
+          return b.cash_reserves - a.cash_reserves;
+        });
+      } else if (mode == "category") {
+        building_array.sort((a, b) => {
+          var building_category_a = a.category;
+          var building_category_b = b.category;
+
+          if (building_category_a < building_category_b) return -1;
+          if (building_category_a > building_category_b) return 1;
+          return 0;
+        });
+      } else if (mode == "chronological") {
+        building_array.sort((a, b) => {
+          return a.order - b.order;
+        });
+      } else if (mode == "employment") {
+        building_array.sort((a, b) => {
+          return b.total_employees - a.total_employees;
+        });
+      }
+
+      //Remove attributes you just sorted by
+      for (var i = 0; i < building_array.length; i++) {
+        delete building_array[i].building_count;
+        delete building_array[i].cash_reserves;
+        delete building_array[i].category;
+        delete building_array[i].total_employees;
+      }
+    }
 
     //Return statement
     return building_array;

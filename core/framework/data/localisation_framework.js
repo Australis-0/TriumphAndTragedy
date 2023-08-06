@@ -1,7 +1,8 @@
 module.exports = {
-  getBuildingLocalisation: function (arg0_building_id) {
+  getBuildingLocalisation: function (arg0_building_id, arg1_nesting) {
     //Convert from parameters
     var building_id = arg0_building_id;
+    var nesting = returnSafeNumber(arg1_nesting);
 
     //Declare local instance variables
     var building_string = [];
@@ -27,8 +28,8 @@ module.exports = {
             money_stockpile_string = ` | ${config.icons.money} ${parseNumber(building_obj.stockpile.money)}`;
 
         //Print string
-        building_string.push(`__${(local_building.name) ? local_building.name : building_obj.name}__${money_stockpile_string}${employment_string}`);
-        building_string.push(`- **[View ${(local_building.name) ? local_building.name : local_building.id}]**`);
+        building_string.push(`${bulletPoint(nesting)}__${(local_building.name) ? local_building.name : building_obj.name}__${money_stockpile_string}${employment_string}`);
+        building_string.push(`${bulletPoint(nesting + 1)}**[View ${(local_building.name) ? local_building.name : local_building.id}]**`);
       }
     }
 

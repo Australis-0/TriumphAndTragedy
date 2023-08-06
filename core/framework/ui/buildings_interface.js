@@ -166,7 +166,7 @@ module.exports = {
     return all_embeds;
   },
 
-  printBuilding: function (arg0_user, arg1_building_id, arg2_page) { //[WIP] - Finish function body
+  printBuilding: function (arg0_user, arg1_building_id, arg2_page) {
     //Convert from parameters
     var user_id = arg0_user;
     var building_id = arg1_building_id;
@@ -191,7 +191,7 @@ module.exports = {
         //Push building name and display ID; current national owner
         building_string.push(`${(local_building.custom_name) ? `${config.icons.old_scroll} ` : ""}__**${local_building.name}:**__ (ID: ${local_building.id})`);
         building_string.push("");
-        building_string.push(`**[Rename Building]**`);
+        building_string.push(`**[Rename Building]** | **[Demolish]**`);
         building_string.push("");
         building_string.push(`- Province: **${(province_obj.name) ? province_obj.name : province_id}**`);
         building_string.push(`- Nationality: __${usr.name}__`);
@@ -298,8 +298,109 @@ module.exports = {
     }
   },
 
-  printIndustry: function (arg0_user) { //[WIP] - Finish function body
+  printIndustry: function (arg0_user) {
+    //Convert from parameters
+    var user_id = arg0_user;
 
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var building_totals = {};
+    var game_obj = getGameObject(user_id);
+    var has_buildings = false;
+    var provinces = sortProvinces(user_id, "population_descending");
+    var usr = main.users[actual_id];
+
+    //Format buildings_string
+    var buildings_string = [];
+
+    buildings_string.push(`Sort by: **[Alphabetical]** | **[Category]** | **[Chronology]** | **[Numeric]** | **[Cash Reserves]** | **[Employment]**`);
+    buildings_string.push("");
+    buildings_string.push(`_Displaying all_ **Buildings** _in_ **${config.localisation[`sort_${game_obj.building_sort}`]}**:`);
+    buildings_string.push("");
+
+    //Display building totals first
+    {
+      for (var i = 0; i < provinces.length; i++)
+        if (provinces[i].buildings)
+          for (var x = 0; x < provinces[i].buildings[x]) {
+            var local_building = provinces[i].buildings[x];
+
+            modifyValue(building_totals, local_building.building_type, 1);
+          }
+      building_totals = sortObject(building_totals);
+
+      var all_building_keys = Object.keys(building_totals);
+
+      if (all_building_keys.length > 0) {
+        var total_buildings = 0;
+
+        buildings_string.push(`Our total domestic industries and infrastructure are comprised of the following buildings:`);
+        buildings_string.push("");
+
+        for (var i = 0; i < all_building_keys.length; i++) {
+          var building_obj = lookup.all_buildings[all_building_keys[i]];
+          var local_value = building_totals[all_building_keys[i]];
+
+          total_buildings += local_value;
+
+          buildings_string.push(`- **${parseNumber(local_value)}** ${(building_obj.name) ? building_obj.name : all_building_keys[i]}`);
+        }
+
+        buildings_string.push("");
+        buildings_string.push(`For a sum total of **${parseNumber(total_buildings)}** building(s) scattered throughout our realm.`);
+        buildings_string.push("");
+      }
+    }
+
+    {
+      //City by city view
+      buildings_string.push(`> **City Name:**`);
+      buildings_string.push(`> - __Building Name:__ | Cash Reserves - Employment`);
+      buildings_string.push("");
+
+      //Iterate over provinces and the buildings inside them
+      for (var i = 0; i < provinces.length; i++)
+        if (provinces[i].buildings) {
+          var new_buildings = JSON.parse(JSON.stringify(province_obj.buildings));
+
+          new_buildings = sortBuildings(new_buildings, game_obj.building_sort);
+          if (province_obj.buildings.length > 0) has_buildings = true;
+
+          buildings_string.push(`**${(provinces[i].name) ? provinces[i].name : `Province ${provinces[i].id}`}:** ${config.icons.population} ${parseNumber(provinces[i].pops.population)}`);
+
+          for (var x = 0; x < new_buildings.length; x++) {
+            var local_building_string = getBuildingLocalisation(new_buildings[x]);
+
+            if (local_building_string)
+              for (var y = 0; y < local_building_string.length; y++)
+                buildings_string.push(local_building_string[y]);
+          }
+
+          buildings_string.push("");
+        }
+    }
+
+    if (!has_buildings)
+      buildings_string.push(`_You currently have no active buildings in your country. Construct some by typing_ **[Build]**.`);
+
+    //Create embed and edit to message
+    var building_embeds = splitEmbed(buildings_string, {
+      title: `[Back] | [Jump To Page] | Buildings in ${(province_obj.name) ? province_obj.name : `Province ${province_obj.id}`}:`,
+      title_pages: true,
+      fixed_width: true
+    });
+
+    if (!options.do_not_display) {
+      game_obj.main_embed = createPageMenu(game_obj.middle_embed, {
+        embed_pages: building_embeds,
+        user: game_obj.user,
+        page: page
+      });
+      game_obj.main_change = true;
+    }
+
+    //Return statement
+    return building_embeds;
   },
 
   /*
@@ -337,7 +438,7 @@ module.exports = {
       if (province_obj.buildings) {
         var new_buildings = JSON.parse(JSON.stringify(province_obj.buildings));
 
-        new_buildings = sortBuildings(province_obj.id, game_obj.building_sort);
+        new_buildings = sortBuildings(new_buildings, game_obj.building_sort);
 
         for (var i = 0; i < new_buildings.length; i++) {
           var local_building_string = getBuildingLocalisation(new_buildings[i]);
