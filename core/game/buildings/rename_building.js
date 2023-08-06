@@ -1,5 +1,5 @@
 module.exports = {
-  initialiseRenameBuilding: function (arg0_user, arg1_building_obj) { //Add View Industry ability later
+  initialiseRenameBuilding: function (arg0_user, arg1_building_obj) { //Add [View Industry] ability later
     //Convert from parameters
     var user_id = arg0_user;
     var building_obj = arg1_building_obj;
@@ -53,7 +53,7 @@ module.exports = {
         if (province_obj.controller == actual_id) {
           //Rename building and print alert
           var old_building_name = JSON.parse(JSON.stringify(building_obj.name));
-          building_obj.name = new_building_name;
+          building_obj.name = truncateString(new_building_name, 80);
 
           printAlert(game_obj.id, `You have renamed **${old_building_name}** to **${building_obj.name}**.`);
 

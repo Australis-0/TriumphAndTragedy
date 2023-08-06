@@ -222,6 +222,9 @@ module.exports = {
           page: page
         });
         game_obj.main_change = true;
+
+        //Return statement
+        return { id: building_id, embeds: building_embeds };
       } else {
         printError(game_obj.id, `The building was located in an invalid province. Please contact an administrator.`);
       }
@@ -298,9 +301,11 @@ module.exports = {
     }
   },
 
-  printIndustry: function (arg0_user) {
+  printIndustry: function (arg0_user, arg1_page, arg2_options) {
     //Convert from parameters
     var user_id = arg0_user;
+    var page = (arg1_page) ? arg1_page : 0;
+    var options = (arg2_options) ? arg2_options : {};
 
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
@@ -427,6 +432,8 @@ module.exports = {
 
     //Iterate over all buildings in province
     if (province_obj) {
+      buildings_string.push(`**[Build]** | **[Demolish]** | **[Rename Building]**`);
+      buildings_string.push("");
       buildings_string.push(`Sort by: **[Alphabetical]** | **[Category]** | **[Chronology]** | **[Numeric]** | **[Cash Reserves]** | **[Employment]**`);
       buildings_string.push("");
       buildings_string.push(`_Displaying local_ **Buildings** _in_ **${config.localisation[`sort_${game_obj.building_sort}`]}**:`);

@@ -210,6 +210,7 @@ module.exports = {
     }
 
     footer_string.push(`- **[Constructions]** View a complete list of current constructions.`);
+    footer_string.push(`- **[Industry]** View a roster of all domestic buildings.`);
     footer_string.push(`- **[Inventory]** View your **current resources**.`);
 
     //Remove control panel if one exists

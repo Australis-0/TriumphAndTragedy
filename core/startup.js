@@ -115,6 +115,7 @@ module.exports = {
       FileManager.import("./game/buildings/build");
       FileManager.import("./game/buildings/demolish");
       FileManager.import("./game/buildings/rename_building");
+      FileManager.import("./game/buildings/view_building");
 
       FileManager.import("./game/colonisation/cancel_charter");
       FileManager.import("./game/colonisation/settle");

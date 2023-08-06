@@ -139,6 +139,10 @@ module.exports = {
         if (["craft", "recruit", "train", "train units"].includes(input))
           initialiseCraft(user_id);
 
+        //[Demolish]
+        if (input == "demolish")
+          initialiseDemolish(user_id);
+
         //[Inventory]
         if (["inv", "inventory"].includes(input)) {
           game_obj.page = "inventory";
@@ -223,7 +227,7 @@ module.exports = {
           //[Econ/Economy]
           if (["econ", "economic statistics", "economy"].includes(input))
             if (game_obj.page != "economy") {
-              game_obj.page = "budget";
+              game_obj.page = "economy";
               printEconomy(user_id);
               initialiseTopbar(user_id);
             }
@@ -247,7 +251,7 @@ module.exports = {
           //[Politics]
           if (input == "politics")
             if (game_obj.page != "politics") {
-              game_obj.page = "budget";
+              game_obj.page = "politics";
               printPolitics(user_id);
               initialiseTopbar(user_id);
             }
@@ -656,8 +660,89 @@ module.exports = {
         }
       }
 
-      //Cities page handler
+      //Buildings/Cities page handler
       {
+        if (game_obj.page.startsWith("view_building_")) {
+          var building_id = game_obj.page.replace("view_building_", "");
+
+          //[Demolish]
+          //[Rename Building]
+        }
+
+        if (game_obj.page.startsWith("view_buildings_")) {
+          var province_id = game_obj.page.replace("view_buildings_", "");
+
+          //[Alphabetical]
+          if (input == "alphabetical") {
+            game_obj.building_sort = "alphabetical";
+            printProvinceBuildings(user_id, province_id, main.interfaces[game_obj.middle_embed.id].page);
+          }
+
+          //[Back]
+          if (input == "back") {
+            game_obj.page = `view_city_${province_id}`;
+            printProvince(user_id, province_id);
+          }
+
+          //[Cash Reserves]
+          if (input == "cash reserves") {
+            game_obj.building_sort = "cash_reserves";
+            printProvinceBuildings(user_id, province_id, main.interfaces[game_obj.middle_embed.id].page);
+          }
+
+          //[Category]
+          if (input == "category") {
+            game_obj.building_sort = "category";
+            printProvinceBuildings(user_id, province_id, main.interfaces[game_obj.middle_embed.id].page);
+          }
+
+          //[Chronology]
+          if (input == "chronology") {
+            game_obj.building_sort = "chronology";
+            printProvinceBuildings(user_id, province_id, main.interfaces[game_obj.middle_embed.id].page);
+          }
+
+          //[Employment]
+          if (input == "employment") {
+            game_obj.building_sort = "employment";
+            printProvinceBuildings(user_id, province_id, main.interfaces[game_obj.middle_embed.id].page);
+          }
+
+          //[Jump To Page]
+          if (input == "jump to page")
+            visualPrompt(game_obj.alert_embed, user_id, {
+              title: `Jump To Page:`,
+              prompts: [
+                [`Which page would you like to jump to?`, "number", { min: 1, max: printProvinceBuildings(user_id, province_id, undefined, { do_not_display: true }).length }]
+              ]
+            },
+            function (arg) {
+              printProvinceBuildings(game_obj.user, province_id, arg[0] - 1);
+            });
+
+          //[Numeric]
+          if (input == "numeric") {
+            game_obj.building_sort = "numeric";
+            printProvinceBuildings(user_id, province_id, main.interfaces[game_obj.middle_embed.id].page);
+          }
+
+          //[Rename Building]
+          if (input == "rename building")
+            initialiseRenameBuilding(user_id);
+
+          //[View Building]
+          if (input == "view building")
+            initialiseViewBuilding(user_id);
+
+          //[View (Building Name)]
+          if (input.startsWith("view building ")) {
+            var building_name = input.replace("view building ", "");
+            var building_view = viewBuilding(user_id, building_name);
+
+            game_obj.page = `view_building_${building_view.id}`;
+          }
+        }
+
         if (game_obj.page.startsWith("view_city")) {
           var city_name = game_obj.page.replace("view_city_", "");
           var city_obj = getCity(city_name);
@@ -702,16 +787,7 @@ module.exports = {
 
               break;
             case "demolish":
-              visualPrompt(game_obj.alert_embed, user_id, {
-                title: `Demolishing Building(s) in ${city_obj.name}:`,
-                prompts: [
-                  [`How many buildings of this type would you like to get rid of?`, "number", { min: 1 }],
-                  [`What sort of building would you like to demolish in **${city_obj.name}**?`, "string"]
-                ]
-              },
-              function (arg) {
-                demolish(user_id, arg[0], arg[1], city_obj.name);
-              });
+              initialiseDemolish(user_id, city_obj.id);
 
               break;
             case "develop":
@@ -775,6 +851,11 @@ module.exports = {
                 page: main.interfaces[game_obj.middle_embed.id].page,
                 user: game_obj.user
               });
+
+              break;
+            case "view buildings":
+              printProvinceBuildings(user_id, city_obj.id);
+              game_obj.page = `view_buildings_${city_obj.id}`;
 
               break;
           }
@@ -1687,6 +1768,11 @@ module.exports = {
                 printError(game_obj.id, `You don't have enough city slots remaining to found a new city!`);
 
               break;
+            case "industry":
+              printIndustry(user_id);
+              game_obj.page = "view_industry";
+
+              break;
           }
         }
 
@@ -1761,6 +1847,80 @@ module.exports = {
               });
 
               break;
+          }
+        }
+
+        if (game_obj.page == "view_industry") {
+          //[Alphabetical]
+          if (input == "alphabetical") {
+            game_obj.building_sort = "alphabetical";
+            printIndustry(user_id, province_id, main.interfaces[game_obj.middle_embed.id].page);
+          }
+
+          //[Back]
+          if (input == "back") {
+            game_obj.page = "economy";
+            printEconomy(user_id);
+            initialiseTopbar(user_id);
+          }
+
+          //[Cash Reserves]
+          if (input == "cash reserves") {
+            game_obj.building_sort = "cash_reserves";
+            printIndustry(user_id, province_id, main.interfaces[game_obj.middle_embed.id].page);
+          }
+
+          //[Category]
+          if (input == "category") {
+            game_obj.building_sort = "category";
+            printIndustry(user_id, province_id, main.interfaces[game_obj.middle_embed.id].page);
+          }
+
+          //[Chronology]
+          if (input == "chronology") {
+            game_obj.building_sort = "chronology";
+            printIndustry(user_id, province_id, main.interfaces[game_obj.middle_embed.id].page);
+          }
+
+          //[Employment]
+          if (input == "employment") {
+            game_obj.building_sort = "employment";
+            printIndustry(user_id, province_id, main.interfaces[game_obj.middle_embed.id].page);
+          }
+
+          //[Numeric]
+          if (input == "numeric") {
+            game_obj.building_sort = "numeric";
+            printIndustry(user_id, province_id, main.interfaces[game_obj.middle_embed.id].page);
+          }
+
+          //[Jump To Page]
+          if (input == "jump to page") {
+            visualPrompt(game_obj.alert_embed, user_id, {
+              title: `Jump To Page:`,
+              prompts: [
+                [`Which page would you like to jump to?`, "number", { min: 1, max: printIndustry(game_obj.user, 0, { do_not_display: true }).length }]
+              ]
+            },
+            function (arg) {
+              printIndustry(user_id, arg[0]);
+            });
+          }
+
+          //[Rename Building]
+          if (input == "rename building")
+            initialiseRenameBuilding(user_id);
+
+          //[View Building]
+          if (input == "view building")
+            initialiseViewBuilding(user_id);
+
+          //[View (Building Name)]
+          if (input.startsWith("view building ")) {
+            var building_name = input.replace("view building ", "");
+            var building_view = viewBuilding(user_id, building_name);
+
+            game_obj.page = `view_building_${building_view.id}`;
           }
         }
       }

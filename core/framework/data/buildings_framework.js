@@ -245,7 +245,7 @@ module.exports = {
         if (!options.exclude_number)
           total_building_count = module.exports.getTotalBuildings(province_obj.id, building_key);
 
-        building_name = `${building_name} ${(building_obj.name) ? building_obj.name : building_key}${(!options.exclude_number) ? ` #${total_building_count + 1}` : ""}`;
+        building_name = truncateString(`${building_name} ${(building_obj.name) ? building_obj.name : building_key}${(!options.exclude_number) ? ` #${total_building_count + 1}` : ""}`, 80);
       }
     }
 

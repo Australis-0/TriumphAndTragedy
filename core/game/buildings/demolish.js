@@ -3,12 +3,12 @@ module.exports = {
     //Convert from parameters
     var user_id = arg0_user;
     var amount = Math.ceil(parseInt(arg1_amount));
-    var building_name = arg2_building_name.trim().toLowerCase();
+    var building_name = arg2_building_name;
     var city_name = arg3_city_name.trim().toLowerCase();
 
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
-    var building_obj = getBuilding(building_name);
+    var building_obj = (typeof building_name != "object") ? getBuilding(building_name.trim().toLowerCase()) : lookup.all_buildings[building_name.building_type];
     var city_obj = getCity(city_name, { users: [user_id] });
     var game_obj = getGameObject(user_id);
     var usr = main.users[actual_id];
@@ -19,7 +19,6 @@ module.exports = {
         if (building_obj) {
           if (city_obj) {
             if (city_obj.controller == actual_id) {
-
               //Check if the city even has that many buildings of that type to demolish in the first place
               var raw_building_name = getBuilding(building_name, { return_key: true });
               var total_buildings = 0;
@@ -77,5 +76,41 @@ module.exports = {
     } else {
       printError(game_obj.id, `You can't demolish buildings whilst being justified on!`);
     }
+  },
+
+  initialiseDemolish: function (arg0_user, arg1_province_id) {
+    //Convert from parameters
+    var user_id = arg0_user;
+    var province_id = arg1_province_id;
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var game_obj = getGameObject(user_id);
+    var province_obj = main.provinces[province_id];
+    var usr = main.users[actual_id];
+
+    //Initialise visual prompt
+    (province_id) ?
+      visualPrompt(game_obj.alert_embed, user_id, {
+        title: `Demolishing Building(s) in ${(province_obj.name) ? province_obj.name : `Province ${province_id}`}:`,
+        prompts: [
+          [`How many buildings of this type would you like to get rid of?`, "number", { min: 1 }],
+          [`What sort of building would you like to demolish in **${(province_obj.name) ? province_obj.name : province_id}**?`, "string"]
+        ]
+      },
+      function (arg) {
+        demolish(user_id, arg[0], arg[1], province_obj.name);
+      }) :
+      visualPrompt(game_obj.alert_embed, user_id, {
+        title: `Demolish Building(s):`,
+        prompts: [
+          [`How many building of this type would you like to get rid of?`, "number", { min: 1 }],
+          [`What sort of building would you like to demolish?`, "string"],
+          [`Which city/province are these buildings currently located?`, "string"]
+        ]
+      },
+      function (arg) {
+        demolish(user_id, arg[0], arg[1], arg[2]);
+      });
   }
 };
