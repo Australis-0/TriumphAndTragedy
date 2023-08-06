@@ -13,29 +13,22 @@ module.exports = {
 
       if (province_obj) {
         var actual_id = main.global.user_map[user_id];
-        var building_obj = getBuilding(local_building.building_type);
+        var building_obj = lookup.all_buildings[local_building.building_type];
         var usr = main.users[actual_id];
 
         //Push building name and display ID; current national owner
-        building_string.push(`${(local_building.custom_name) ? `${config.icons.old_scroll} ` : ""}__**${local_building.name}:**__ (ID: ${local_building.id})`);
-        building_string.push("");
-        building_string.push(`**[Rename Building]**`);
-        building_string.push("");
-        building_string.push(`- Province: **${(province_obj.name) ? province_obj.name : province_id}**`);
-        building_string.push(`- Nationality: __${usr.name}__`);
+        var employment_string = "";
+        var money_stockpile_string = "";
 
-        //Display building employment
-        if (building_obj.manpower_cost) {
-          var employment_string = module.exports.getBuildingEmploymentLocalisation(local_building, building_obj.manpower_cost);
+        if (building_obj.manpower_cost)
+          employment_string = `- ${getBuildingEmploymentStringLocalisation(local_building, building_obj.manpower_cost)}`;
+        if (local_building.stockpile)
+          if (local_building.stockpile.money)
+            money_stockpile_string = ` | ${config.icons.money} ${parseNumber(building_obj.stockpile.money)}`;
 
-          //Push to building_string
-          building_string.push("");
-          building_string.push(`**Employment:**`);
-          building_string.push("");
-
-          for (var i = 0; i < employment_string.length; i++)
-            building_string.push(employment_string[i]);
-        }
+        //Print string
+        building_string.push(`__${(local_building.name) ? local_building.name : building_obj.name}__${money_stockpile_string}${employment_string}`);
+        building_string.push(`- **[View ${(local_building.name) ? local_building.name : local_building.id}]**`);
       }
     }
 

@@ -166,6 +166,70 @@ module.exports = {
     return all_embeds;
   },
 
+  printBuilding: function (arg0_user, arg1_building_id, arg2_page) { //[WIP] - Finish function body
+    //Convert from parameters
+    var user_id = arg0_user;
+    var building_id = arg1_building_id;
+    var page = (arg2_page) ? parseInt(arg2_page) : 0;
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var building_string = [];
+    var game_obj = getGameObject(user_id);
+    var local_building = (typeof building_id != "object") ? getBuildingByID(building_id) : building_id;
+    var usr = main.users[actual_id];
+
+    if (local_building) {
+      var province_id = local_building.id.split("-")[0];
+      var province_obj = main.provinces[province_id];
+
+      if (province_obj) {
+        var actual_id = main.global.user_map[user_id];
+        var building_obj = getBuilding(local_building.building_type);
+        var usr = main.users[actual_id];
+
+        //Push building name and display ID; current national owner
+        building_string.push(`${(local_building.custom_name) ? `${config.icons.old_scroll} ` : ""}__**${local_building.name}:**__ (ID: ${local_building.id})`);
+        building_string.push("");
+        building_string.push(`**[Rename Building]**`);
+        building_string.push("");
+        building_string.push(`- Province: **${(province_obj.name) ? province_obj.name : province_id}**`);
+        building_string.push(`- Nationality: __${usr.name}__`);
+
+        //Display building employment
+        if (building_obj.manpower_cost) {
+          var employment_string = getBuildingEmploymentLocalisation(local_building, building_obj.manpower_cost);
+
+          //Push to building_string
+          building_string.push("");
+          building_string.push(`**Employment:**`);
+          building_string.push("");
+
+          for (var i = 0; i < employment_string.length; i++)
+            building_string.push(employment_string[i]);
+        }
+
+        //Create embed and edit to message
+        var building_embeds = splitEmbed(buildings_string, {
+          title: `[Back] | [Jump To Page] | Viewing Building:`,
+          title_pages: true,
+          fixed_width: true
+        });
+
+        game_obj.main_embed = createPageMenu(game_obj.middle_embed, {
+          embed_pages: building_embeds,
+          user: game_obj.user,
+          page: page
+        });
+        game_obj.main_change = true;
+      } else {
+        printError(game_obj.id, `The building was located in an invalid province. Please contact an administrator.`);
+      }
+    } else {
+      printError(game_obj.id, `The building you have specified does not exist!`);
+    }
+  },
+
   printConstructions: function (arg0_user) {
     //Convert from parameters
     var user_id = arg0_user;
@@ -234,6 +298,10 @@ module.exports = {
     }
   },
 
+  printIndustry: function (arg0_user) { //[WIP] - Finish function body
+
+  },
+
   /*
     printProvinceBuildings() - Prints a list of a player's province buildings depending on the current sorting mode
     options: {
@@ -272,22 +340,12 @@ module.exports = {
         new_buildings = sortBuildings(province_obj.id, game_obj.building_sort);
 
         for (var i = 0; i < new_buildings.length; i++) {
-          var building_obj = getBuilding(new_buildings[i].building_type);
-          var employment_string = "";
-          var money_stockpile_string = "";
-          var local_building = new_buildings[i];
+          var local_building_string = getBuildingLocalisation(new_buildings[i]);
 
-          if (building_obj.manpower_cost)
-            employment_string = `- ${getBuildingEmploymentStringLocalisation(local_building, building_obj.manpower_cost)}`;
-          if (building_obj.stockpile)
-            if (building_obj.stockpile.money)
-              money_stockpile_string = ` | ${config.icons.money} ${parseNumber(building_obj.stockpile.money)}`;
-
-          //Print string
-          buildings_string.push(`__${(local_building.name) ? local_building.name : building_obj.name}__${money_stockpile_string}${employment_string}`);
-          buildings_string.push(`- **[View ${(local_building.name) ? local_building.name : local_building.id}]**`);
+          if (local_building_string)
+            for (var x = 0; x < local_building_string.length; x++)
+              buildings_string.push(local_building_string[x]);
         }
-
       } else {
         buildings_string.push(`_This province currently has no buildings. Type_ **[Build]** _to construct some buildings in this province._`);
       }
