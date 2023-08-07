@@ -96,6 +96,8 @@ module.exports = {
           province_string.push(`**Buildings:**`);
           province_string.push(config.localisation.divider);
           province_string.push("");
+          province_string.push(`**[View Buildings]** - View a detailed list of all buildings in this Province.`);
+          province_string.push("");
 
           //Display buildings in building categories!
           var all_building_categories = getBuildingCategories();

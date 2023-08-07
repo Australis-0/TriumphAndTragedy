@@ -166,11 +166,12 @@ module.exports = {
     return all_embeds;
   },
 
-  printBuilding: function (arg0_user, arg1_building_id, arg2_page) {
+  printBuilding: function (arg0_user, arg1_building_id, arg2_page, arg3_options) {
     //Convert from parameters
     var user_id = arg0_user;
     var building_id = arg1_building_id;
     var page = (arg2_page) ? parseInt(arg2_page) : 0;
+    var options = (arg3_options) ? arg3_options : {};
 
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
@@ -216,12 +217,14 @@ module.exports = {
           fixed_width: true
         });
 
-        game_obj.main_embed = createPageMenu(game_obj.middle_embed, {
-          embed_pages: building_embeds,
-          user: game_obj.user,
-          page: page
-        });
-        game_obj.main_change = true;
+        if (!options.do_not_display) {
+          game_obj.main_embed = createPageMenu(game_obj.middle_embed, {
+            embed_pages: building_embeds,
+            user: game_obj.user,
+            page: page
+          });
+          game_obj.main_change = true;
+        }
 
         //Return statement
         return { id: building_id, embeds: building_embeds };
@@ -327,7 +330,7 @@ module.exports = {
     {
       for (var i = 0; i < provinces.length; i++)
         if (provinces[i].buildings)
-          for (var x = 0; x < provinces[i].buildings[x]) {
+          for (var x = 0; x < provinces[i].buildings.length; x++) {
             var local_building = provinces[i].buildings[x];
 
             modifyValue(building_totals, local_building.building_type, 1);

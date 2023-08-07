@@ -664,9 +664,33 @@ module.exports = {
       {
         if (game_obj.page.startsWith("view_building_")) {
           var building_id = game_obj.page.replace("view_building_", "");
+          var local_building = getBuildingByID(building_id);
+          var province_id = building_id.split("-")[0];
+
+          //[Back]
+          if (input == "back") {
+            printProvinceBuildings(user_id, province_id);
+            game_obj.page = `view_buildings_${province_id}`;
+          }
 
           //[Demolish]
+          if (input == "demolish")
+            demolish(user_id, 1, local_building, province_id);
+
+          //[Jump To Page]
+          visualPrompt(game_obj.alert_embed, user_id, {
+            title: `Jump To Page:`,
+            prompts: [
+              [`Which page would you like to jump to?`, "number", { min: 1, max: printBuilding(game_obj.user, province_id, undefined, { do_not_display: true }).length }]
+            ]
+          },
+          function (arg) {
+            printBuilding(user_id, province_id, arg[0]);
+          });
+
           //[Rename Building]
+          if (input == "rename building")
+            initialiseRenameBuilding(user_id, local_building);
         }
 
         if (game_obj.page.startsWith("view_buildings_")) {

@@ -20,7 +20,7 @@ module.exports = {
           if (city_obj) {
             if (city_obj.controller == actual_id) {
               //Check if the city even has that many buildings of that type to demolish in the first place
-              var raw_building_name = getBuilding(building_name, { return_key: true });
+              var raw_building_name = (typeof building_name != "object") ? getBuilding(building_name, { return_key: true }) : building_name;
               var total_buildings = 0;
 
               for (var i = 0; i < city_obj.buildings.length; i++)
@@ -48,6 +48,9 @@ module.exports = {
                       page: interfaces[game_obj.middle_embed.id].page,
                       user: game_obj.user
                     });
+
+                  if (typeof raw_building_name == "object")
+                    raw_building_name = raw_building_name.building_type;
 
                   //Print user feedback
                   (all_freed_pops.length > 0) ?

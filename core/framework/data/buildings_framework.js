@@ -124,14 +124,14 @@ module.exports = {
   destroyBuilding: function (arg0_amount, arg1_building_name, arg2_province) {
     //Convert from parameters
     var amount = Math.ceil(parseInt(arg0_amount));
-    var building_name = arg1_building_name.trim();
+    var building_name = (typeof arg1_building_name != "object") ? arg1_building_name.trim() : arg1_building_name;
     var province_id = arg2_province;
 
     //Declare local instance variables
-    var building_obj = module.exports.getBuilding(building_name);
+    var building_obj = (typeof building_name != "object") ? module.exports.getBuilding(building_name) : lookup.all_buildings[building_name.building_type];
     var freed_manpower = {};
     var province_obj = main.provinces[province_id];
-    var raw_building_name = module.exports.getBuilding(building_name, { return_key: true });
+    var raw_building_name = (typeof building_name != "object") ? module.exports.getBuilding(building_name, { return_key: true }) : building_name.building_type;
     var remaining_amount = JSON.parse(JSON.stringify(amount));
 
     //Remove buildings from local province
@@ -157,11 +157,22 @@ module.exports = {
 
             //Splice from buildings array
             for (var i = province_obj.buildings.length - 1; i >= 0; i--)
-              if (remaining_amount > 0)
-                if (province_obj.buildings[i].building_type == raw_building_name) {
-                  province_obj.buildings.splice(i, 1);
-                  remaining_amount--;
+              if (remaining_amount > 0) {
+                var has_building_obj = false;
+
+                if (typeof building_name != "object") {
+                  has_building_obj = true;
+                } else {
+                  if (building_name.id == province_obj.buildings[i].id)
+                    has_building_obj = true;
                 }
+
+                if (has_building_obj)
+                  if (province_obj.buildings[i].building_type == raw_building_name) {
+                    province_obj.buildings.splice(i, 1);
+                    remaining_amount--;
+                  }
+              }
 
             //Free up manpower
             if (building_obj.manpower_cost) {
