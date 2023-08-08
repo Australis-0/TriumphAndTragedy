@@ -1,35 +1,67 @@
 module.exports = {
-  demolish: function (arg0_user, arg1_amount, arg2_building_name, arg3_city_name) {
+  /*
+    demolish() - Demolishes a set of buildings and prints an output to a user's game_obj.
+    options: {
+      province_id: "4407", - The province ID in which to demolish the building
+      building_count
+      building_count: 2, - Optional. 1 by default. The number of buildings to demolish
+      building_type: "lumberjacks", - Optional. building_object will be used if not specified
+
+      building_object: {} - Overrides building_count/building_type
+    }
+  */
+  demolish: function (arg0_user, arg1_options) {
     //Convert from parameters
     var user_id = arg0_user;
-    var amount = Math.ceil(parseInt(arg1_amount));
-    var building_name = arg2_building_name;
-    var city_name = arg3_city_name.trim().toLowerCase();
+    var options = (arg1_options) ? arg1_options : {};
 
     //Declare local instance variables
+    var individual_id = false;
+
     var actual_id = main.global.user_map[user_id];
-    var building_obj = (typeof building_name != "object") ? getBuilding(building_name.trim().toLowerCase()) : lookup.all_buildings[building_name.building_type];
-    var city_obj = getCity(city_name, { users: [user_id] });
+    var amount = options.building_count;
+    var building_obj;
     var game_obj = getGameObject(user_id);
+    var province_id = options.province_id;
+    var raw_building_name;
     var usr = main.users[actual_id];
+
+    var province_obj = main.provinces[province_id];
+
+    if (!options.amount) {
+      individual_id = true;
+
+      amount = 1;
+      building_obj = lookup.all_buildings[options.building_object.building_type];
+      raw_building_name = options.building_object.building_type;
+    } else {
+      building_obj = module.exports.getBuilding(options.building_type);
+      raw_building_name = module.exports.getBuilding(options.building_type, { return_key: true });
+    }
 
     //Check for any errors
     if (!isBeingJustifiedOn(user_id)) {
       if (!atWar(user_id)) {
         if (building_obj) {
-          if (city_obj) {
-            if (city_obj.controller == actual_id) {
+          if (province_obj) {
+            if (province_obj.controller == actual_id) {
               //Check if the city even has that many buildings of that type to demolish in the first place
-              var raw_building_name = (typeof building_name != "object") ? getBuilding(building_name, { return_key: true }) : building_name;
               var total_buildings = 0;
 
-              for (var i = 0; i < city_obj.buildings.length; i++)
-                if (city_obj.buildings[i].building_type == raw_building_name)
+              for (var i = 0; i < province_obj.buildings.length; i++)
+                if (province_obj.buildings[i].building_type == raw_building_name)
                   total_buildings++;
 
               if (total_buildings >= amount) {
                 if (amount > 0) {
-                  var demolished_buildings = destroyBuilding(amount, raw_building_name, city_obj.id);
+                  var demolished_buildings = (individual_id) ? destroyBuildings({
+                      province_id: province_obj.id,
+                      building_count: amount,
+                      building_type: raw_building_name
+                    }) : destroyBuildings({
+                      province_id: province_obj.id,
+                      building_object: options.building_object
+                    });
 
                   //Convert to array
                   var all_freed_pops = Object.keys(demolished_buildings);
@@ -42,15 +74,12 @@ module.exports = {
                   }
 
                   //Update UI
-                  if (game_obj.page == `view_city_${city_obj.name}`)
+                  if (game_obj.page == `view_city_${province_obj.name}`)
                     createPageMenu(game_obj.middle_embed, {
-                      embed_pages: printProvince(game_obj.user, city_obj.name),
+                      embed_pages: printProvince(game_obj.user, province_obj.name),
                       page: interfaces[game_obj.middle_embed.id].page,
                       user: game_obj.user
                     });
-
-                  if (typeof raw_building_name == "object")
-                    raw_building_name = raw_building_name.building_type;
 
                   //Print user feedback
                   (all_freed_pops.length > 0) ?
@@ -102,7 +131,12 @@ module.exports = {
         ]
       },
       function (arg) {
-        demolish(user_id, arg[0], arg[1], province_obj.name);
+        demolish(user_id, {
+          province_id: province_obj.id,
+
+          building_count: arg[0],
+          building_type: arg[1]
+        });
       }) :
       visualPrompt(game_obj.alert_embed, user_id, {
         title: `Demolish Building(s):`,
@@ -113,7 +147,14 @@ module.exports = {
         ]
       },
       function (arg) {
-        demolish(user_id, arg[0], arg[1], arg[2]);
+        var city_obj = getCity(arg[2]);
+
+        demolish(user_id, {
+          province_id: city_obj.id,
+
+          building_count: arg[0],
+          building_type: arg[1]
+        });
       });
   }
 };

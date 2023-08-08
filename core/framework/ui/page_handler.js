@@ -675,7 +675,11 @@ module.exports = {
 
           //[Demolish]
           if (input == "demolish")
-            demolish(user_id, 1, local_building, province_id);
+            demolish(user_id, {
+              province_id: province_id,
+              
+              building_object: local_building
+            });
 
           //[Jump To Page]
           visualPrompt(game_obj.alert_embed, user_id, {

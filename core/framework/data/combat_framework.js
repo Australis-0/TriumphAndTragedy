@@ -269,7 +269,11 @@ module.exports = {
 
               //20% destruction cap, population killed = percentage of deducted buildings, soft cap at 120k
               for (var i = 0; i < deducted_buildings; i++)
-                destroyBuilding(1, randomElement(city_obj.buildings).building_type, city_obj.id);
+                destroyBuildings({
+                  province_id: city_obj.id,
+                  building_count: 1,
+                  building_type: randomElement(city_obj.buildings).building_type
+                });
 
               for (var i = 0; i < all_pops.length; i++)
                 total_casualties += city_obj.pops[all_pops[i]] - Math.ceil(city_obj.pops[all_pops[i]])*(deducted_buildings/total_buildings);

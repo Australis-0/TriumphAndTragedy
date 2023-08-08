@@ -121,18 +121,43 @@ module.exports = {
           }
   },
 
-  destroyBuilding: function (arg0_amount, arg1_building_name, arg2_province) {
+  /*
+    destroyBuildings() - Demolishes a set of buildings and returns the freed manpower.
+    options: {
+      province_id: "4406", - The province ID to demolish in
+      building_count: 2, - Optional. 1 by default
+      building_type: "lumberjacks", - Optional. The building type to demolish. If not defined, building_object must be provided
+
+      building_object: {} - The building object to demolish
+    }
+  */
+  destroyBuildings: function (arg0_options) {
     //Convert from parameters
-    var amount = Math.ceil(parseInt(arg0_amount));
-    var building_name = (typeof arg1_building_name != "object") ? arg1_building_name.trim() : arg1_building_name;
-    var province_id = arg2_province;
+    var options = (arg0_options) ? arg0_options : {};
 
     //Declare local instance variables
-    var building_obj = (typeof building_name != "object") ? module.exports.getBuilding(building_name) : lookup.all_buildings[building_name.building_type];
+    var individual_id = false;
+
+    var amount = options.building_count;
+    var building_obj;
     var freed_manpower = {};
+    var province_id = options.province_id;
     var province_obj = main.provinces[province_id];
-    var raw_building_name = (typeof building_name != "object") ? module.exports.getBuilding(building_name, { return_key: true }) : building_name.building_type;
-    var remaining_amount = JSON.parse(JSON.stringify(amount));
+    var raw_building_name;
+    var remaining_amount;
+
+    if (!options.amount) {
+      individual_id = true;
+
+      amount = 1;
+      building_obj = lookup.all_buildings[options.building_object.building_type];
+      raw_building_name = options.building_object.building_type;
+    } else {
+      building_obj = module.exports.getBuilding(options.building_type);
+      raw_building_name = module.exports.getBuilding(options.building_type, { return_key: true });
+    }
+
+    remaining_amount = JSON.parse(JSON.stringify(amount));
 
     //Remove buildings from local province
     if (province_obj)
@@ -160,10 +185,10 @@ module.exports = {
               if (remaining_amount > 0) {
                 var has_building_obj = false;
 
-                if (typeof building_name != "object") {
+                if (!individual_id) {
                   has_building_obj = true;
                 } else {
-                  if (building_name.id == province_obj.buildings[i].id)
+                  if (options.building_object.id == province_obj.buildings[i].id)
                     has_building_obj = true;
                 }
 
