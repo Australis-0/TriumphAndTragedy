@@ -1422,7 +1422,7 @@ module.exports = {
 
             //Account for maintenance
             if (!options.no_maintenance)
-              produces_obj = mergeObject(produces_obj, maintenance_obj);
+              produces_obj = mergeObjects(produces_obj, maintenance_obj);
           }
         }
     }
