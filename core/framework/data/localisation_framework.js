@@ -340,7 +340,8 @@ module.exports = {
           if (all_buildings.length > 0 || good_obj.type == "category") {
             var f = (good_obj.type == "category") ? `**` : "";
 
-            production_chain_string.push("");
+            if (good_obj.type == "category")
+              production_chain_string.push("");
             production_chain_string.push(`${bulletPoint(options.nesting)}${f}${parseGood(all_goods[i], "**", !options.display_icons)}${f}`);
           }
 

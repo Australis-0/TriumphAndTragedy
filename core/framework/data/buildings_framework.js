@@ -111,12 +111,12 @@ module.exports = {
       var local_good_value = production_obj[good_key];
 
       if (min_max_argument == "minimum")
-        local_good_value[0] += local_value;
+        local_good_value[0] += value;
       if (min_max_argument == "maximum")
-        local_good_value[1] += local_value;
+        local_good_value[1] += value;
       if (min_max_argument == "both") {
-        local_good_value[0] += local_value;
-        local_good_value[1] += local_value;
+        local_good_value[0] += value;
+        local_good_value[1] += value;
       }
     } else {
       if (min_max_argument == "minimum")
