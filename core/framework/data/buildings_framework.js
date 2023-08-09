@@ -1314,8 +1314,8 @@ module.exports = {
 
           for (var y = 0; y < all_production_keys.length; y++) {
             if (lookup.all_goods[all_production_keys[y]] || all_production_keys[y] == "money")
-              if (!dependent_goods.includes(all_production_keys[i]))
-                dependent_goods.push(all_production_keys[i]);
+              if (!dependent_goods.includes(all_production_keys[y]))
+                dependent_goods.push(all_production_keys[y]);
           }
         }
       }
