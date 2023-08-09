@@ -394,8 +394,18 @@ config.buildings.refineries = {
       lamps: 2,
       money: 6000
     },
+    maintenance: {
+      acetic_acid: 1,
+      butadiene: 1,
+      ethylene: 1,
+      olive_oil: 1,
+      sugar: 1
+    },
     manpower_cost: {
       labourers: 2000
+    },
+    produces: {
+      chewing_gum: 10
     }
   },
   iron_refineries: {
@@ -411,11 +421,7 @@ config.buildings.refineries = {
       money: 1000
     },
     maintenance: {
-      acetic_acid: 1,
-      butadiene: 1,
-      ethylene: 1,
-      olive_oil: 1,
-      sugar: 1
+      iron: 5
     },
     manpower_cost: {
       any_pop: {
@@ -424,7 +430,7 @@ config.buildings.refineries = {
       }
     },
     produces: {
-      chewing_gum: 10
+      pig_iron: 5
     }
   },
   ironworks: {
