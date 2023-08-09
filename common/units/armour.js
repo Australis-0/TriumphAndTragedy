@@ -17,7 +17,7 @@ config.units.armour = {
     initiative: 1,
 
     cost: {
-      steel: 3,
+      regular_steel: 3,
       iron: 2,
       refined_petroil: 5,
       small_arms: 5,
@@ -29,7 +29,7 @@ config.units.armour = {
     },
     maintenance: {
       refined_petroil: 2,
-      steel: 2,
+      regular_steel: 2,
       ammunition: 1,
       machine_parts: 1,
 
@@ -53,7 +53,7 @@ config.units.armour = {
     initiative: 2,
 
     cost: {
-      steel: 5,
+      regular_steel: 5,
       refined_petroil: 3,
       small_arms: 3,
       ammunition: 5,
@@ -64,7 +64,7 @@ config.units.armour = {
     },
     maintenance: {
       refined_petroil: 2,
-      steel: 1,
+      regular_steel: 1,
       ammunition: 1,
       machine_parts: 1,
 
@@ -87,7 +87,7 @@ config.units.armour = {
     initiative: 3,
 
     cost: {
-      steel: 4,
+      regular_steel: 4,
       small_arms: 2,
       refined_petroil: 3,
       ammunition: 5,
@@ -99,7 +99,7 @@ config.units.armour = {
     maintenance: {
       ammunition: 2,
       refined_petroil: 2,
-      steel: 1,
+      regular_steel: 1,
       small_arms: 1,
 
       ground_vehicles_cp: 3,
@@ -121,7 +121,7 @@ config.units.armour = {
     initiative: 3,
 
     cost: {
-      steel: 10,
+      regular_steel: 10,
       small_arms: 3,
       ammunition: 5,
       refined_petroil: 5,
@@ -154,7 +154,7 @@ config.units.armour = {
     initiative: 3,
 
     cost: {
-      steel: 10,
+      regular_steel: 10,
       artillery: 1,
       small_arms: 3,
       ammunition: 5,
@@ -166,7 +166,7 @@ config.units.armour = {
     },
     maintenance: {
       refined_petroil: 3,
-      steel: 2,
+      regular_steel: 2,
       ammunition: 2,
       machine_parts: 2,
       small_arms: 1,
@@ -190,7 +190,7 @@ config.units.armour = {
     initiative: 5,
 
     cost: {
-      steel: 10,
+      regular_steel: 10,
       machine_parts: 5,
       small_arms: 2,
       refined_petroil: 5,
@@ -204,7 +204,7 @@ config.units.armour = {
       refined_petroil: 3,
       machine_parts: 2,
       small_arms: 2,
-      steel: 1,
+      regular_steel: 1,
 
       ground_vehicles_cp: 6,
       money: 1800
@@ -226,7 +226,7 @@ config.units.armour = {
     initiative: 1,
 
     cost: {
-      steel: 7,
+      regular_steel: 7,
       artillery: 1,
       small_arms: 5,
       machine_parts: 5,
@@ -241,7 +241,7 @@ config.units.armour = {
       refined_petroil: 6,
       machine_parts: 4,
       ammunition: 2,
-      steel: 2,
+      regular_steel: 2,
       artillery: 1,
 
       ground_vehicles_cp: 10,
@@ -263,7 +263,7 @@ config.units.armour = {
     initiative: 4,
 
     cost: {
-      steel: 5,
+      regular_steel: 5,
       small_arms: 5,
       ammunition: 5,
       machine_parts: 3,
@@ -298,7 +298,7 @@ config.units.armour = {
     initiative: 3,
 
     cost: {
-      steel: 5,
+      regular_steel: 5,
       artillery: 1,
       small_arms: 5,
       machine_parts: 5,
@@ -314,7 +314,7 @@ config.units.armour = {
       ammunition: 2,
       machine_parts: 2,
       small_arms: 1,
-      steel: 1,
+      regular_steel: 1,
 
       ground_vehicles_cp: 6,
       money: 1200
@@ -335,7 +335,7 @@ config.units.armour = {
     initiative: 5,
 
     cost: {
-      steel: 7,
+      regular_steel: 7,
       artillery: 1,
       small_arms: 2,
       machine_parts: 10,
@@ -352,7 +352,7 @@ config.units.armour = {
       ammunition: 2,
       artillery: 1,
       small_arms: 1,
-      steel: 1,
+      regular_steel: 1,
 
       ground_vehicles_cp: 8,
       money: 1800
@@ -373,7 +373,7 @@ config.units.armour = {
     initiative: 1,
 
     cost: {
-      steel: 12,
+      regular_steel: 12,
       artillery: 3,
       small_arms: 5,
       machine_parts: 12,
@@ -390,7 +390,7 @@ config.units.armour = {
       ammunition: 3,
       artillery: 2,
       small_arms: 2,
-      steel: 2,
+      regular_steel: 2,
 
       ground_vehicles_cp: 15,
       money: 2500
@@ -411,7 +411,7 @@ config.units.armour = {
     initiative: 2,
 
     cost: {
-      steel: 5,
+      regular_steel: 5,
       artillery: 1,
       machine_parts: 5,
       ammunition: 5,
@@ -447,7 +447,7 @@ config.units.armour = {
     initiative: 3,
 
     cost: {
-      steel: 10,
+      regular_steel: 10,
       artillery: 2,
       machine_parts: 10,
       small_arms: 5,
@@ -461,7 +461,7 @@ config.units.armour = {
     maintenance: {
       refined_petroil: 4,
       machine_parts: 4,
-      steel: 3,
+      regular_steel: 3,
       ammunition: 2,
       small_arms: 1,
 
@@ -484,7 +484,7 @@ config.units.armour = {
     intiiative: 4,
 
     cost: {
-      steel: 15,
+      regular_steel: 15,
       artillery: 3,
       small_arms: 5,
       machine_parts: 15,
@@ -523,7 +523,7 @@ config.units.armour = {
     initiative: 5,
 
     cost: {
-      steel: 15,
+      regular_steel: 15,
       artillery: 3,
       small_arms: 5,
       machine_parts: 15,
@@ -541,7 +541,7 @@ config.units.armour = {
       ammunition: 4,
       small_arms: 2,
       artillery: 1,
-      steel: 2,
+      regular_steel: 2,
       gold: 1,
 
       ground_vehicles_cp: 20,
@@ -563,7 +563,7 @@ config.units.armour = {
     initiative: 4,
 
     cost: {
-      steel: 15,
+      regular_steel: 15,
       artillery: 3,
       small_arms: 5,
       machine_parts: 15,
@@ -602,7 +602,7 @@ config.units.armour = {
     initiative: 4,
 
     cost: {
-      steel: 20,
+      regular_steel: 20,
       artillery: 3,
       small_arms: 10,
       copper: 10,

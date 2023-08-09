@@ -49,7 +49,7 @@ config.units.cavalry = {
 
     cost: {
       lumber: 2,
-      steel: 2,
+      regular_steel: 2,
       food: 4,
       money: 1000,
 
@@ -143,7 +143,7 @@ config.units.cavalry = {
 
     cost: {
       lumber: 5,
-      steel: 2,
+      regular_steel: 2,
       lead: 3,
       food: 6,
       money: 2000,
@@ -154,7 +154,7 @@ config.units.cavalry = {
       lumber: 2,
       food: 1,
       lead: 1,
-      steel: 1,
+      regular_steel: 1,
 
       ground_units_cp: 8,
       money: 1500
@@ -188,7 +188,7 @@ config.units.cavalry = {
       iron: 2,
       food: 1,
       lead: 1,
-      steel: 1,
+      regular_steel: 1,
 
       ground_units_cp: 6,
       money: 1250
@@ -211,7 +211,7 @@ config.units.cavalry = {
     cost: {
       lumber: 2,
       ammunition: 5,
-      steel: 1,
+      regular_steel: 1,
       food: 3,
       money: 800,
 
@@ -277,7 +277,7 @@ config.units.cavalry = {
     initiative: 1,
 
     cost: {
-      steel: 5,
+      regular_steel: 5,
       artillery: 5,
       ammunition: 10,
       refined_petroil: 2,
@@ -289,7 +289,7 @@ config.units.cavalry = {
     maintenance: {
       machine_parts: 4,
       refined_petroil: 4,
-      steel: 2,
+      regular_steel: 2,
       small_arms: 2,
       uniforms: 1,
       ammunition: 1,

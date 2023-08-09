@@ -93,7 +93,7 @@ config.buildings.military_buildings = { //[WIP] - Add £ maintenance
     construction_turns: 4,
     cost: {
       bricks: 14,
-      steel: 10,
+      regular_steel: 10,
       rubber: 8,
       machine_parts: 8,
       chassis: 4,
@@ -101,7 +101,7 @@ config.buildings.military_buildings = { //[WIP] - Add £ maintenance
       money: 15000
     },
     maintenance: {
-      steel: 2,
+      regular_steel: 2,
       engines: 1,
       heavy_weaponry: 1,
       rubber: 1
@@ -299,7 +299,7 @@ config.buildings.military_buildings = { //[WIP] - Add £ maintenance
     construction_turns: 5,
     cost: {
       lumber: 12,
-      steel: 8,
+      regular_steel: 8,
       naval_supplies: 5,
       wood: 4,
       copper: 2,
@@ -338,7 +338,7 @@ config.buildings.military_buildings = { //[WIP] - Add £ maintenance
       common_furniture: 3,
       explosives: 2,
       glass: 2,
-      steel: 1,
+      regular_steel: 1,
       money: 15000
     },
     maintenance: {
@@ -377,7 +377,7 @@ config.buildings.military_buildings = { //[WIP] - Add £ maintenance
       common_furniture: 2,
       ammunition: 1,
       glass: 1,
-      steel: 1,
+      regular_steel: 1,
       money: 10000
     },
     maintenance: {
@@ -487,7 +487,7 @@ config.buildings.military_buildings = { //[WIP] - Add £ maintenance
       lumber: 14,
       bricks: 12,
       glass: 10,
-      steel: 8,
+      regular_steel: 8,
       common_furniture: 5,
       electric_gear: 4,
       stainless_steel: 4,

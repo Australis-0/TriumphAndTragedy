@@ -8,7 +8,7 @@ config.buildings.refineries = {
 
     construction_turns: 4,
     cost: {
-      steel: 10,
+      regular_steel: 10,
       reinforced_concrete: 8,
       machine_parts: 8,
       cement: 6,
@@ -63,7 +63,7 @@ config.buildings.refineries = {
     construction_turns: 4,
     cost: {
       bricks: 12,
-      steel: 8,
+      regular_steel: 8,
       cement: 6,
       concrete: 6,
       limestone: 5,
@@ -89,7 +89,7 @@ config.buildings.refineries = {
     construction_turns: 4,
     cost: {
       bricks: 10,
-      steel: 6,
+      regular_steel: 6,
       cement: 5,
       tools: 5,
       stone: 4,
@@ -246,7 +246,7 @@ config.buildings.refineries = {
     construction_turns: 2,
     cost: {
       iron: 10,
-      steel: 6,
+      regular_steel: 6,
       lumber: 4,
       tools: 2,
       money: 2000
@@ -298,7 +298,7 @@ config.buildings.refineries = {
 
     construction_turns: 4,
     cost: {
-      steel: 5,
+      regular_steel: 5,
       lumber: 4,
       tools: 4,
       money: 2500
@@ -788,7 +788,7 @@ config.buildings.refineries = {
     cost: {
       iron: 12,
       stone: 10,
-      steel: 6,
+      regular_steel: 6,
       tools: 4,
       leather: 3,
       money: 3500
@@ -816,7 +816,7 @@ config.buildings.refineries = {
       stone: 10,
       cement: 6,
       iron: 6,
-      steel: 5,
+      regular_steel: 5,
       tools: 5,
       lamps: 4,
       glass: 2,
@@ -852,7 +852,7 @@ config.buildings.refineries = {
       money: 5000
     },
     maintenance: {
-      steel: 5,
+      regular_steel: 5,
       coals: 3
     },
     manpower_cost: {
@@ -905,10 +905,10 @@ config.buildings.refineries = {
     },
     produces: {
       production_choice_one: {
-        steel: 10
+        regular_steel: 10
       },
       production_choice_two: {
-        steel: 5
+        regular_steel: 5
       }
     }
   },
@@ -921,7 +921,7 @@ config.buildings.refineries = {
       concrete: 12,
       iron: 8,
       lumber: 6,
-      steel: 6,
+      regular_steel: 6,
       stone: 4,
       tools: 4,
       lamps: 2,

@@ -612,7 +612,7 @@ config.units.infantry = {
       ammunition: 1,
       food: 1,
       lead: 1,
-      steel: 1,
+      regular_steel: 1,
       uniforms: 1,
 
       ground_units_cp: 4,
@@ -645,7 +645,7 @@ config.units.infantry = {
     },
     maintenance: {
       lumber: 2,
-      steel: 2,
+      regular_steel: 2,
       ammunition: 1,
       food: 1,
       lead: 1,
@@ -679,7 +679,7 @@ config.units.infantry = {
     },
     maintenance: {
       lumber: 2,
-      steel: 2,
+      regular_steel: 2,
       ammunition: 1,
       food: 1,
       lead: 1,
@@ -714,7 +714,7 @@ config.units.infantry = {
       ground_units_cp: 10
     },
     maintenance: {
-      steel: 2,
+      regular_steel: 2,
       uniforms: 2,
       ammunition: 1,
       food: 1,
@@ -754,7 +754,7 @@ config.units.infantry = {
       food: 1,
       lumber: 1,
       small_arms: 1,
-      steel: 1,
+      regular_steel: 1,
       uniforms: 1,
 
       ground_units_cp: 8,
@@ -790,7 +790,7 @@ config.units.infantry = {
       food: 2,
       small_arms: 2,
       uniforms: 2,
-      steel: 1,
+      regular_steel: 1,
 
       ground_units_cp: 10,
       money: 2500
@@ -812,7 +812,7 @@ config.units.infantry = {
     cost: {
       lumber: 5,
       uniforms: 5,
-      steel: 5,
+      regular_steel: 5,
       ammunition: 5,
       food: 3,
       money: 3000,
@@ -823,7 +823,7 @@ config.units.infantry = {
       ammunition: 2,
       food: 1,
       small_arms: 1,
-      steel: 1,
+      regular_steel: 1,
       uniforms: 1,
 
       ground_units_cp: 8,
@@ -868,7 +868,7 @@ config.units.infantry = {
 
     cost: {
       small_arms: 10,
-      steel: 2,
+      regular_steel: 2,
       ammunition: 5,
       food: 2,
       money: 2500,
@@ -878,7 +878,7 @@ config.units.infantry = {
     maintenance: {
       ammunition: 2,
       food: 2,
-      steel: 2,
+      regular_steel: 2,
       uniforms: 2,
       small_arms: 1,
       wood: 1,
@@ -945,7 +945,7 @@ config.units.infantry = {
       ground_units_cp: 5
     },
     maintenance: {
-      steel: 2,
+      regular_steel: 2,
       uniforms: 2,
       ammunition: 1,
       food: 1,
@@ -973,7 +973,7 @@ config.units.infantry = {
     cost: {
       small_arms: 10,
       lumber: 10,
-      steel: 5,
+      regular_steel: 5,
       ammunition: 10,
       food: 6,
       money: 5000,
@@ -983,7 +983,7 @@ config.units.infantry = {
     maintenance: {
       food: 2,
       small_arms: 2,
-      steel: 2,
+      regular_steel: 2,
       ammunition: 1,
       lumber: 1,
       machine_parts: 1,
@@ -1012,7 +1012,7 @@ config.units.infantry = {
     cost: {
       small_arms: 5,
       wood: 5,
-      steel: 2,
+      regular_steel: 2,
       refined_petroil: 1,
       food: 2,
       money: 1500,
@@ -1042,7 +1042,7 @@ config.units.infantry = {
 
     cost: {
       small_arms: 10,
-      steel: 10,
+      regular_steel: 10,
       refined_petroil: 5,
       food: 4,
       money: 2500,
@@ -1055,7 +1055,7 @@ config.units.infantry = {
       food: 1,
       machine_parts: 1,
       small_arms: 1,
-      steel: 1,
+      regular_steel: 1,
       uniforms: 1,
 
       ground_units_cp: 9,
@@ -1092,7 +1092,7 @@ config.units.infantry = {
       refined_petroil: 4,
       food: 2,
       machine_parts: 2,
-      steel: 1,
+      regular_steel: 1,
       uniforms: 1,
 
       ground_units_cp: 15,
@@ -1115,7 +1115,7 @@ config.units.infantry = {
     cost: {
       small_arms: 10,
       artillery: 1,
-      steel: 5,
+      regular_steel: 5,
       ammunition: 15,
       refined_petroil: 5,
       food: 10,
@@ -1129,7 +1129,7 @@ config.units.infantry = {
       small_arms: 4,
       machine_parts: 4,
       food: 2,
-      steel: 2,
+      regular_steel: 2,
       uniforms: 2,
       copper: 1,
       lumber: 1,
@@ -1155,7 +1155,7 @@ config.units.infantry = {
       small_arms: 5,
       ammunition: 10,
       uniforms: 5,
-      steel: 5,
+      regular_steel: 5,
       food: 3,
       money: 3500,
 
@@ -1168,7 +1168,7 @@ config.units.infantry = {
       food: 1,
       lumber: 1,
       machine_parts: 1,
-      steel: 1,
+      regular_steel: 1,
 
       ground_units_cp: 2,
       money: 8000
@@ -1192,7 +1192,7 @@ config.units.infantry = {
       ammunition: 10,
       uniforms: 5,
       artillery: 1,
-      steel: 8,
+      regular_steel: 8,
       refined_petroil: 5,
       food: 3,
       money: 5000,
@@ -1207,7 +1207,7 @@ config.units.infantry = {
       uniforms: 2,
       lumber: 1,
       machine_parts: 1,
-      steel: 1,
+      regular_steel: 1,
 
       ground_units_cp: 6,
       money: 3500
@@ -1245,7 +1245,7 @@ config.units.infantry = {
       uniforms: 2,
       lumber: 1,
       machine_parts: 1,
-      steel: 1,
+      regular_steel: 1,
 
       ground_units_cp: 8,
       money: 5000
@@ -1283,7 +1283,7 @@ config.units.infantry = {
       refined_petroil: 2,
       uniforms: 2,
       lumber: 1,
-      steel: 1,
+      regular_steel: 1,
 
       ground_units_cp: 6,
       money: 5500

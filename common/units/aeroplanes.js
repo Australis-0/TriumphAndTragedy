@@ -78,7 +78,7 @@ config.units.aeroplanes = {
     range: 60,
 
     cost: {
-      steel: 5,
+      regular_steel: 5,
       lumber: 2,
       coal: 3,
       food: 3,
@@ -114,7 +114,7 @@ config.units.aeroplanes = {
     range: 12,
 
     cost: {
-      steel: 5,
+      regular_steel: 5,
       lumber: 2,
       coal: 3,
       food: 3,
@@ -146,7 +146,7 @@ config.units.aeroplanes = {
     range: 16,
 
     cost: {
-      steel: 5,
+      regular_steel: 5,
       lumber: 5,
       small_arms: 2,
       machine_parts: 2,
@@ -159,7 +159,7 @@ config.units.aeroplanes = {
     maintenance: {
       ammunition: 1,
       refined_petroil: 1,
-      steel: 1,
+      regular_steel: 1,
 
       aeroplanes_cp: 6,
       money: 600
@@ -181,7 +181,7 @@ config.units.aeroplanes = {
     range: 18,
 
     cost: {
-      steel: 7,
+      regular_steel: 7,
       lumber: 3,
       small_arms: 3,
       machine_parts: 4,
@@ -195,7 +195,7 @@ config.units.aeroplanes = {
       ammunition: 2,
       refined_petroil: 2,
       small_arms: 1,
-      steel: 1,
+      regular_steel: 1,
 
       aeroplanes_cp: 5,
       money: 850
@@ -217,7 +217,7 @@ config.units.aeroplanes = {
     range: 20,
 
     cost: {
-      steel: 5,
+      regular_steel: 5,
       lumber: 2,
       small_arms: 3,
       machine_parts: 5,
@@ -233,7 +233,7 @@ config.units.aeroplanes = {
       refined_petroil: 2,
       machine_parts: 1,
       small_arms: 1,
-      steel: 1,
+      regular_steel: 1,
 
       aeroplanes_cp: 7
     },
@@ -273,7 +273,7 @@ config.units.aeroplanes = {
       refined_petroil: 2,
       machine_parts: 2,
       small_arms: 1,
-      steel: 1,
+      regular_steel: 1,
 
       aeroplanes_cp: 7,
       money: 1000
@@ -311,7 +311,7 @@ config.units.aeroplanes = {
       small_arms: 2,
       aluminium: 1,
       machine_parts: 1,
-      steel: 1,
+      regular_steel: 1,
       money: 1350,
 
       aeroplanes_cp: 8
@@ -451,7 +451,7 @@ config.units.aeroplanes = {
 
     cost: {
       aluminium: 5,
-      steel: 5,
+      regular_steel: 5,
       ammunition: 10,
       gold: 4,
       refined_petroil: 2,
@@ -526,7 +526,7 @@ config.units.aeroplanes = {
     range: 6,
 
     cost: {
-      steel: 10,
+      regular_steel: 10,
       lumber: 8,
       small_arms: 3,
       machine_parts: 6,
@@ -540,7 +540,7 @@ config.units.aeroplanes = {
       ammunition: 2,
       refined_petroil: 2,
       machine_parts: 1,
-      steel: 1,
+      regular_steel: 1,
 
       aeroplanes_cp: 4,
       money: 800
@@ -564,7 +564,7 @@ config.units.aeroplanes = {
 
     cost: {
       aluminium: 12,
-      steel: 2,
+      regular_steel: 2,
       small_arms: 6,
       machine_parts: 8,
       lumber: 5,
@@ -578,7 +578,7 @@ config.units.aeroplanes = {
       ammunition: 2,
       refined_petroil: 2,
       machine_parts: 2,
-      steel: 1,
+      regular_steel: 1,
 
       aeroplanes_cp: 6,
       money: 1200
@@ -602,7 +602,7 @@ config.units.aeroplanes = {
 
     cost: {
       aluminium: 15,
-      steel: 3,
+      regular_steel: 3,
       small_arms: 8,
       machine_parts: 8,
       ammunition: 15,
@@ -615,7 +615,7 @@ config.units.aeroplanes = {
       ammunition: 4,
       refined_petroil: 3,
       machine_parts: 3,
-      steel: 1,
+      regular_steel: 1,
 
       aeroplanes_cp: 8,
       money: 1800
@@ -639,7 +639,7 @@ config.units.aeroplanes = {
 
     cost: {
       aluminium: 25,
-      steel: 5,
+      regular_steel: 5,
       machine_parts: 15,
       copper: 10,
       gold: 10,
@@ -653,7 +653,7 @@ config.units.aeroplanes = {
       refined_petroil: 5,
       ammunition: 4,
       machine_parts: 4,
-      steel: 1,
+      regular_steel: 1,
 
       aeroplanes_cp: 12,
       money: 2500
@@ -677,7 +677,7 @@ config.units.aeroplanes = {
 
     cost: {
       aluminium: 25,
-      steel: 5,
+      regular_steel: 5,
       machine_parts: 15,
       copper: 10,
       gold: 10,
@@ -716,7 +716,7 @@ config.units.aeroplanes = {
 
     cost: {
       aluminium: 20,
-      steel: 7,
+      regular_steel: 7,
       machine_parts: 18,
       copper: 12,
       gold: 5,
@@ -757,7 +757,7 @@ config.units.aeroplanes = {
 
     cost: {
       aluminium: 3,
-      steel: 1,
+      regular_steel: 1,
       small_arms: 1,
       machine_parts: 3,
       refined_petroil: 1,
@@ -791,7 +791,7 @@ config.units.aeroplanes = {
 
     cost: {
       aluminium: 5,
-      steel: 3,
+      regular_steel: 3,
       small_arms: 5,
       machine_parts: 5,
       ammunition: 8,
@@ -828,7 +828,7 @@ config.units.aeroplanes = {
 
     cost: {
       aluminium: 7,
-      steel: 2,
+      regular_steel: 2,
       small_arms: 6,
       machine_parts: 8,
       ammunition: 8,

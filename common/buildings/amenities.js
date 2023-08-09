@@ -681,7 +681,7 @@ config.buildings.amenities = {
       common_furniture: 15,
       machine_parts: 15,
       glass: 12,
-      steel: 12,
+      regular_steel: 12,
       explosives: 10,
       televisions: 10,
       iron: 10,

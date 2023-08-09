@@ -178,7 +178,7 @@ config.buildings.industry = {
       steel_beams: 10,
       reinforced_concrete: 10,
       cement: 8,
-      steel: 8,
+      regular_steel: 8,
       machine_parts: 5,
       glass: 5,
       common_furniture: 3,

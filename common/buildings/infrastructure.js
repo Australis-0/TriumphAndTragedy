@@ -292,7 +292,7 @@ config.buildings.infrastructure = {
     maintenance: {
       money: 2000,
       lumber: 3,
-      steel: 2
+      regular_steel: 2
     },
     manpower_cost: {
       any_pop_labourers_peasants: {
@@ -319,7 +319,7 @@ config.buildings.infrastructure = {
 
     construction_turns: 2,
     cost: {
-      steel: 4,
+      regular_steel: 4,
       iron: 3,
       asphalt: 2,
       bricks: 2,
@@ -347,7 +347,7 @@ config.buildings.infrastructure = {
 
     construction_turns: 3,
     cost: {
-      steel: 8,
+      regular_steel: 8,
       machine_parts: 4,
       money: 8500
     },
@@ -409,7 +409,7 @@ config.buildings.infrastructure = {
       stone: 15,
       wood: 8,
       naval_supplies: 5,
-      steel: 3,
+      regular_steel: 3,
       copper: 2,
       textiles: 1,
       money: 6500
@@ -444,7 +444,7 @@ config.buildings.infrastructure = {
 
     construction_turns: 6,
     cost: {
-      steel: 10,
+      regular_steel: 10,
       electric_gear: 6,
       lead: 4,
       copper_wire: 4,
@@ -454,7 +454,7 @@ config.buildings.infrastructure = {
     },
     maintenance: {
       money: 6000,
-      steel: 2,
+      regular_steel: 2,
       electric_gear: 1,
       lead: 1
     },
@@ -475,7 +475,7 @@ config.buildings.infrastructure = {
     construction_turns: 6,
     cost: {
       steel_beams: 12,
-      steel: 10,
+      regular_steel: 10,
       reinforced_concrete: 10,
       bricks: 8,
       machine_parts: 6,
@@ -573,7 +573,7 @@ config.buildings.infrastructure = {
       steel_beams: 15,
       coal_tar: 12,
       cement: 10,
-      steel: 10,
+      regular_steel: 10,
       concrete: 8,
       lightbulbs: 8,
       common_furniture: 6,
@@ -616,7 +616,7 @@ config.buildings.infrastructure = {
     construction_turns: 6,
     cost: {
       bricks: 10,
-      steel: 8,
+      regular_steel: 8,
       stone: 8,
       lumber: 8,
       cement: 6,
@@ -655,7 +655,7 @@ config.buildings.infrastructure = {
     construction_turns: 8,
     cost: {
       bricks: 10,
-      steel: 8,
+      regular_steel: 8,
       stone: 8,
       lumber: 8,
       cement: 6,
@@ -726,7 +726,7 @@ config.buildings.infrastructure = {
     construction_turns: 3,
     cost: {
       steel_beams: 10,
-      steel: 8,
+      regular_steel: 8,
       stone: 5,
       wood: 5,
       machine_parts: 5,
@@ -929,7 +929,7 @@ config.buildings.infrastructure = {
     construction_turns: 2,
     cost: {
       bricks: 8,
-      steel: 4,
+      regular_steel: 4,
       tractors: 2,
       asphalt: 2,
       money: 2000
@@ -961,7 +961,7 @@ config.buildings.infrastructure = {
       concrete: 10,
       steel_beams: 10,
       cement: 8,
-      steel: 8,
+      regular_steel: 8,
       iron: 8,
       machine_parts: 6,
       lamps: 5,

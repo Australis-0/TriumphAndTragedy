@@ -293,7 +293,7 @@ config.units.naval = {
       naval_units_cp: 10
     },
     maintenance: {
-      steel: 4,
+      regular_steel: 4,
       ammunition: 2,
       coal: 2,
       food: 2,
@@ -402,7 +402,7 @@ config.units.naval = {
     initiative: 4,
 
     cost: {
-      steel: 8,
+      regular_steel: 8,
       artillery: 4,
       uniforms: 10,
       ammunition: 10,
@@ -414,7 +414,7 @@ config.units.naval = {
     },
     maintenance: {
       coal: 3,
-      steel: 3,
+      regular_steel: 3,
       ammunition: 2,
       food: 2,
       lead: 2,
@@ -442,7 +442,7 @@ config.units.naval = {
     initiative: 5,
 
     cost: {
-      steel: 12,
+      regular_steel: 12,
       artillery: 5,
       uniforms: 10,
       ammunition: 15,
@@ -453,7 +453,7 @@ config.units.naval = {
     },
     maintenance: {
       refined_petroil: 4,
-      steel: 4,
+      regular_steel: 4,
       ammunition: 3,
       artillery: 2,
       food: 2,
@@ -480,7 +480,7 @@ config.units.naval = {
     initiative: 6,
 
     cost: {
-      steel: 15,
+      regular_steel: 15,
       machine_parts: 5,
       ammunition: 16,
       refined_petroil: 5,
@@ -491,7 +491,7 @@ config.units.naval = {
     },
     maintenance: {
       refined_petroil: 6,
-      steel: 5,
+      regular_steel: 5,
       ammunition: 4,
       artillery: 2,
       food: 2,
@@ -518,7 +518,7 @@ config.units.naval = {
     initiative: 5,
 
     cost: {
-      steel: 18,
+      regular_steel: 18,
       machine_parts: 10,
       ammunition: 20,
       iron: 5,
@@ -530,7 +530,7 @@ config.units.naval = {
     },
     maintenance: {
       refined_petroil: 6,
-      steel: 6,
+      regular_steel: 6,
       ammunition: 4,
       artillery: 4,
       lead: 4,
@@ -557,7 +557,7 @@ config.units.naval = {
     initiative: 5,
 
     cost: {
-      steel: 3,
+      regular_steel: 3,
       iron: 2,
       ammunition: 5,
       refined_petroil: 3,
@@ -593,7 +593,7 @@ config.units.naval = {
     initiative: 6,
 
     cost: {
-      steel: 5,
+      regular_steel: 5,
       artillery: 5,
       machine_parts: 10,
       ammunition: 10,
@@ -607,7 +607,7 @@ config.units.naval = {
     },
     maintenance: {
       ammunition: 4,
-      steel: 4,
+      regular_steel: 4,
       lead: 4,
       refined_petroil: 4,
       artillery: 3,
@@ -635,7 +635,7 @@ config.units.naval = {
     initiative: 4,
 
     cost: {
-      steel: 3,
+      regular_steel: 3,
       machine_parts: 5,
       artillery: 1,
       small_arms: 2,
@@ -648,7 +648,7 @@ config.units.naval = {
     },
     maintenance: {
       machine_parts: 4,
-      steel: 4,
+      regular_steel: 4,
       ammunition: 2,
       food: 2,
       refined_petroil: 2,
@@ -676,7 +676,7 @@ config.units.naval = {
     initiative: 1,
 
     cost: {
-      steel: 12,
+      regular_steel: 12,
       small_arms: 5,
       lumber: 10,
       ammunition: 10,
@@ -688,7 +688,7 @@ config.units.naval = {
     },
     maintenance: {
       machine_parts: 6,
-      steel: 4,
+      regular_steel: 4,
       ammunition: 4,
       food: 4,
       refined_petroil: 4,
@@ -715,7 +715,7 @@ config.units.naval = {
     initiative: 5,
 
     cost: {
-      steel: 15,
+      regular_steel: 15,
       machine_parts: 7,
       artillery: 8,
       small_arms: 10,
@@ -733,7 +733,7 @@ config.units.naval = {
       machine_parts: 6,
       artillery: 4,
       food: 4,
-      steel: 4,
+      regular_steel: 4,
       uniforms: 4,
       lead: 2,
 
@@ -758,7 +758,7 @@ config.units.naval = {
     initiative: 1,
 
     cost: {
-      steel: 20,
+      regular_steel: 20,
       lumber: 15,
       machine_parts: 10,
       artillery: 5,
@@ -779,7 +779,7 @@ config.units.naval = {
       machine_parts: 4,
       uniforms: 4,
       artillery: 2,
-      steel: 2,
+      regular_steel: 2,
 
       money: 9000,
       naval_units_cp: 20
@@ -801,7 +801,7 @@ config.units.naval = {
     initiative: 2,
 
     cost: {
-      steel: 15,
+      regular_steel: 15,
       artillery: 5,
       machine_parts: 15,
       ammunition: 10,
@@ -820,7 +820,7 @@ config.units.naval = {
       food: 2,
       gold: 2,
       refined_petroil: 2,
-      steel: 2,
+      regular_steel: 2,
       uniforms: 2,
 
       money: 9000,
@@ -844,7 +844,7 @@ config.units.naval = {
     initiative: 1,
 
     cost: {
-      steel: 25,
+      regular_steel: 25,
       artillery: 5,
       machine_parts: 10,
       ammunition: 25,
@@ -864,7 +864,7 @@ config.units.naval = {
       lead: 4,
       artillery: 2,
       gold: 2,
-      steel: 2,
+      regular_steel: 2,
 
       money: 10000,
       naval_units_cp: 20
@@ -886,7 +886,7 @@ config.units.naval = {
     initiative: 5,
 
     cost: {
-      steel: 20,
+      regular_steel: 20,
       artillery: 4,
       machine_parts: 10,
       ammunition: 20,
@@ -907,7 +907,7 @@ config.units.naval = {
       food: 3,
       lead: 2,
       gold: 1,
-      steel: 1,
+      regular_steel: 1,
 
       money: 8500,
       naval_units_cp: 10
@@ -929,7 +929,7 @@ config.units.naval = {
     initiative: 4,
 
     cost: {
-      steel: 15,
+      regular_steel: 15,
       machine_parts: 15,
       ammunition: 10,
       gold: 3,
@@ -948,7 +948,7 @@ config.units.naval = {
       artillery: 2,
       lead: 2,
       uniforms: 2,
-      steel: 1,
+      regular_steel: 1,
 
       money: 7500,
       naval_units_cp: 8
@@ -970,7 +970,7 @@ config.units.naval = {
     initiative: 4,
 
     cost: {
-      steel: 25,
+      regular_steel: 25,
       machine_parts: 25,
       ammunition: 5,
       gold: 15,
@@ -989,7 +989,7 @@ config.units.naval = {
       refined_petroil: 6,
       artillery: 4,
       food: 4,
-      steel: 4,
+      regular_steel: 4,
       lead: 3,
       uniforms: 3,
 

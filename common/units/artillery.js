@@ -175,7 +175,7 @@ config.units.artillery = {
     initiative: 5,
 
     cost: {
-      steel: 5,
+      regular_steel: 5,
       lumber: 3,
       lead: 5,
       sulphur: 5,
@@ -209,7 +209,7 @@ config.units.artillery = {
     initiative: 4,
 
     cost: {
-      steel: 5,
+      regular_steel: 5,
       lumber: 3,
       lead: 5,
       sulphur: 5,
@@ -243,7 +243,7 @@ config.units.artillery = {
     initiative: 5,
 
     cost: {
-      steel: 2,
+      regular_steel: 2,
       lumber: 2,
       lead: 5,
       sulphur: 2,
@@ -277,7 +277,7 @@ config.units.artillery = {
     initiative: 2,
 
     cost: {
-      steel: 8,
+      regular_steel: 8,
       lead: 5,
       sulphur: 10,
       food: 7,
@@ -311,7 +311,7 @@ config.units.artillery = {
     initiative: 2,
 
     cost: {
-      steel: 2,
+      regular_steel: 2,
       lead: 1,
       lumber: 1,
       food: 1,
@@ -378,7 +378,7 @@ config.units.artillery = {
 
     cost: {
       lumber: 2,
-      steel: 4,
+      regular_steel: 4,
       lead: 2,
       food: 2,
       money: 3000,
@@ -458,7 +458,7 @@ config.units.artillery = {
       lead: 2,
       ammunition: 2,
       food: 2,
-      steel: 1,
+      regular_steel: 1,
       uniforms: 1,
 
       ground_artillery_cp: 12,
@@ -494,7 +494,7 @@ config.units.artillery = {
       ammunition: 4,
       refined_petroil: 2,
       machine_parts: 2,
-      steel: 2,
+      regular_steel: 2,
       sulphur: 1,
       uniforms: 1,
 
@@ -525,7 +525,7 @@ config.units.artillery = {
       ground_artillery_cp: 10
     },
     maintenance: {
-      steel: 3,
+      regular_steel: 3,
       ammunition: 2,
       machine_parts: 1,
       sulphur: 1,
@@ -559,7 +559,7 @@ config.units.artillery = {
       ground_artillery_cp: 10
     },
     maintenance: {
-      steel: 3,
+      regular_steel: 3,
       ammunition: 3,
       machine_parts: 2,
       copper: 1,
@@ -593,7 +593,7 @@ config.units.artillery = {
       ground_artillery_cp: 20
     },
     maintenance: {
-      steel: 4,
+      regular_steel: 4,
       machine_parts: 4,
       ammunition: 4,
       refined_petroil: 2,
@@ -701,7 +701,7 @@ config.units.artillery = {
       ammunition: 3,
       machine_parts: 2,
       refined_petroil: 2,
-      steel: 2,
+      regular_steel: 2,
       uniforms: 1,
 
       ground_artillery_cp: 12,
@@ -734,7 +734,7 @@ config.units.artillery = {
       ammunition: 8,
       machine_parts: 4,
       refined_petroil: 2,
-      steel: 2,
+      regular_steel: 2,
       uniforms: 1,
 
       ground_artillery_cp: 14,
@@ -769,7 +769,7 @@ config.units.artillery = {
       ammunition: 6,
       machine_parts: 6,
       refined_petroil: 4,
-      steel: 4,
+      regular_steel: 4,
       copper: 2,
       uniforms: 1,
 
@@ -795,7 +795,7 @@ config.units.artillery = {
       artillery: 6,
       machine_parts: 25,
       ammunition: 5,
-      steel: 10,
+      regular_steel: 10,
       refined_petroil: 5,
       food: 3,
       money: 10000,
@@ -808,7 +808,7 @@ config.units.artillery = {
       machine_parts: 4,
       refined_petroil: 2,
       copper: 3,
-      steel: 2,
+      regular_steel: 2,
       uniforms: 1,
 
       ground_artillery_cp: 10,

@@ -52,7 +52,7 @@ config.buildings.emergency_services = {
       glass: 5,
       tools: 5,
       uniforms: 4,
-      steel: 2,
+      regular_steel: 2,
       money: 5000
     },
     maintenance: {

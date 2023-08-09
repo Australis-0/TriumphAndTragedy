@@ -44,11 +44,11 @@ config.buildings.processing_facilities = { //[WIP] - Add Synthetic Ruby Factory
       cement: 8,
       lumber: 8,
       tools: 5,
-      steel: 5,
+      regular_steel: 5,
       money: 8000
     },
     maintenance: {
-      steel: 3,
+      regular_steel: 3,
       lumber: 2,
       brass: 1,
       machine_parts: 1
@@ -135,7 +135,7 @@ config.buildings.processing_facilities = { //[WIP] - Add Synthetic Ruby Factory
     },
     maintenance: {
       production_choice_cars: {
-        steel: 8,
+        regular_steel: 8,
         batteries: 5,
         machine_parts: 5,
         rubber: 4,
@@ -146,7 +146,7 @@ config.buildings.processing_facilities = { //[WIP] - Add Synthetic Ruby Factory
         leather: 1
       },
       production_choice_humvees: {
-        steel: 10,
+        regular_steel: 10,
         batteries: 6,
         machine_parts: 6,
         rubber: 5,
@@ -157,7 +157,7 @@ config.buildings.processing_facilities = { //[WIP] - Add Synthetic Ruby Factory
         filaments: 1
       },
       production_choice_jeeps: {
-        steel: 5,
+        regular_steel: 5,
         rubber: 4,
         tyres: 4,
         machine_parts: 3,
@@ -167,7 +167,7 @@ config.buildings.processing_facilities = { //[WIP] - Add Synthetic Ruby Factory
         filaments: 1
       },
       production_choice_lorries: {
-        steel: 12,
+        regular_steel: 12,
         rubber: 8,
         tyres: 8,
         batteries: 6,
@@ -177,7 +177,7 @@ config.buildings.processing_facilities = { //[WIP] - Add Synthetic Ruby Factory
         filaments: 2
       },
       production_choice_luxury_cars: {
-        steel: 15,
+        regular_steel: 15,
         batteries: 8,
         electric_gear: 8,
         rubber: 6,
@@ -192,7 +192,7 @@ config.buildings.processing_facilities = { //[WIP] - Add Synthetic Ruby Factory
         luxury_furniture: 1
       },
       production_choice_motorbikes: {
-        steel: 3,
+        regular_steel: 3,
         machine_parts: 3,
         batteries: 2,
         filaments: 2,
@@ -204,14 +204,14 @@ config.buildings.processing_facilities = { //[WIP] - Add Synthetic Ruby Factory
       },
       production_choice_steam_carriages: {
         machine_parts: 8,
-        steel: 5,
+        regular_steel: 5,
         rubber: 4,
         tyres: 3,
         filaments: 2,
         tungsten: 1
       },
       production_choice_tractors: {
-        steel: 10,
+        regular_steel: 10,
         machine_parts: 8,
         rubber: 6,
         tyres: 4,
@@ -220,7 +220,7 @@ config.buildings.processing_facilities = { //[WIP] - Add Synthetic Ruby Factory
         lead: 1
       },
       production_choice_vans: {
-        steel: 9,
+        regular_steel: 9,
         batteries: 5,
         machine_parts: 5,
         electric_gear: 4,
@@ -310,7 +310,7 @@ config.buildings.processing_facilities = { //[WIP] - Add Synthetic Ruby Factory
     },
     maintenance: {
       rubber: 3,
-      steel: 2,
+      regular_steel: 2,
       leather: 1
     },
     manpower_cost: {
@@ -419,7 +419,7 @@ config.buildings.processing_facilities = { //[WIP] - Add Synthetic Ruby Factory
       machine_parts: 3,
       glass: 3,
       leather: 2,
-      steel: 1,
+      regular_steel: 1,
       aluminium: 1
     },
     manpower_cost: {
@@ -502,7 +502,7 @@ config.buildings.processing_facilities = { //[WIP] - Add Synthetic Ruby Factory
       bricks: 13,
       ceramics: 10,
       lumber: 8,
-      steel: 8,
+      regular_steel: 8,
       glass: 5,
       tools: 5,
       money: 5000
@@ -1125,7 +1125,7 @@ config.buildings.processing_facilities = { //[WIP] - Add Synthetic Ruby Factory
     maintenance: {
       copper_wire: 5,
       machine_parts: 5,
-      steel: 3,
+      regular_steel: 3,
       filaments: 2
     },
     manpower_cost: {
@@ -1155,7 +1155,7 @@ config.buildings.processing_facilities = { //[WIP] - Add Synthetic Ruby Factory
       money: 8500
     },
     maintenance: {
-      steel: 5,
+      regular_steel: 5,
       aluminium: 3,
       turbines: 3,
       electric_gear: 2,
@@ -1218,7 +1218,7 @@ config.buildings.processing_facilities = { //[WIP] - Add Synthetic Ruby Factory
       },
       production_choice_ap_rounds_one: {
         gunpowder: 5,
-        steel: 3,
+        regular_steel: 3,
         tungsten: 3,
         aluminium: 1,
         nickel: 1,
@@ -1227,7 +1227,7 @@ config.buildings.processing_facilities = { //[WIP] - Add Synthetic Ruby Factory
       },
       production_choice_ap_rounds_two: {
         gunpowder: 5,
-        steel: 3,
+        regular_steel: 3,
         tungsten: 3,
         aluminium: 1,
         silicon: 1,
@@ -1238,13 +1238,13 @@ config.buildings.processing_facilities = { //[WIP] - Add Synthetic Ruby Factory
         gunpowder: 5,
         brass: 4,
         paper: 2,
-        steel: 1,
+        regular_steel: 1,
         machine_parts: 1
       },
       production_choice_regular_shells: {
         gunpowder: 5,
         iron: 3,
-        steel: 1
+        regular_steel: 1
       },
       production_choice_high_calibre_ammunition: {
         gunpowder: 2,
@@ -1262,19 +1262,19 @@ config.buildings.processing_facilities = { //[WIP] - Add Synthetic Ruby Factory
       production_choice_sabot_rounds_one: {
         gunpowder: 10,
         tungsten: 5,
-        steel: 2,
+        regular_steel: 2,
         plastics: 1
       },
       production_choice_sabot_rounds_two: {
         gunpowder: 10,
         tungsten: 5,
-        steel: 2,
+        regular_steel: 2,
         plastics: 1,
         depleted_uranium: 1
       },
       production_choice_torpedoes: {
         machine_parts: 8,
-        steel: 5,
+        regular_steel: 5,
         explosives: 5,
         electric_gear: 2,
         brass: 2,
@@ -1602,7 +1602,7 @@ config.buildings.processing_facilities = { //[WIP] - Add Synthetic Ruby Factory
       artisans: 200
     },
     produces: {
-      steel: 4
+      regular_steel: 4
     }
   },
   furniture_factories: {
@@ -1643,7 +1643,7 @@ config.buildings.processing_facilities = { //[WIP] - Add Synthetic Ruby Factory
       bricks: 8,
       tools: 6,
       stainless_steel: 4,
-      steel: 4,
+      regular_steel: 4,
       lamps: 3,
       money: 5000
     },
@@ -1952,7 +1952,7 @@ config.buildings.processing_facilities = { //[WIP] - Add Synthetic Ruby Factory
     },
     maintenance: {
       glass: 3,
-      steel: 1,
+      regular_steel: 1,
       gas: 1
     },
     manpower_cost: {
@@ -2171,7 +2171,7 @@ config.buildings.processing_facilities = { //[WIP] - Add Synthetic Ruby Factory
       iron: 10,
       cement: 8,
       ceramics: 8,
-      steel: 5,
+      regular_steel: 5,
       copper: 5,
       common_furniture: 3,
       money: 20000
@@ -2258,7 +2258,7 @@ config.buildings.processing_facilities = { //[WIP] - Add Synthetic Ruby Factory
       lumber: 8,
       tin: 6,
       tools: 5,
-      steel: 5,
+      regular_steel: 5,
       lamps: 2,
       money: 5000
     },
@@ -2383,7 +2383,7 @@ config.buildings.processing_facilities = { //[WIP] - Add Synthetic Ruby Factory
       meat: 10,
       teff: 10,
       linen: 6,
-      steel: 5,
+      regular_steel: 5,
       bronze: 3,
       brass: 2,
       steel_beams: 2,
@@ -2613,7 +2613,7 @@ config.buildings.processing_facilities = { //[WIP] - Add Synthetic Ruby Factory
     },
     maintenance: {
       concrete: 10,
-      steel: 5
+      regular_steel: 5
     },
     manpower_cost: {
       labourers: 4500
@@ -2630,7 +2630,7 @@ config.buildings.processing_facilities = { //[WIP] - Add Synthetic Ruby Factory
     cost: {
       bricks: 5,
       lumber: 4,
-      steel: 4,
+      regular_steel: 4,
       tools: 2,
       money: 4000
     },
@@ -2874,7 +2874,7 @@ config.buildings.processing_facilities = { //[WIP] - Add Synthetic Ruby Factory
     construction_turns: 2,
     cost: {
       bricks: 5,
-      steel: 4,
+      regular_steel: 4,
       lumber: 4,
       wood: 2,
       money: 2000
@@ -3214,7 +3214,7 @@ config.buildings.processing_facilities = { //[WIP] - Add Synthetic Ruby Factory
     },
     maintenance: {
       wood: 5,
-      steel: 3
+      regular_steel: 3
     },
     manpower_cost: {
       any_pop: {
@@ -3247,7 +3247,7 @@ config.buildings.processing_facilities = { //[WIP] - Add Synthetic Ruby Factory
     },
     maintenance: {
       production_choice_cabins: {
-        steel: 15,
+        regular_steel: 15,
         wood: 10,
         furniture: 5,
         machine_parts: 5,
@@ -3263,7 +3263,7 @@ config.buildings.processing_facilities = { //[WIP] - Add Synthetic Ruby Factory
         stainless_steel: 1
       },
       production_choice_locomotives_two: {
-        steel: 15,
+        regular_steel: 15,
         glass: 5,
         machine_parts: 5,
         engines: 3,

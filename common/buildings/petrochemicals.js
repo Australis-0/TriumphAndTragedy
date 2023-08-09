@@ -11,7 +11,7 @@ config.buildings.petrochemicals = {
       steel_beams: 6,
       copper: 5,
       electric_gear: 4,
-      steel: 4,
+      regular_steel: 4,
       reinforced_concrete: 4,
       stainless_steel: 3,
       money: 30000
@@ -45,7 +45,7 @@ config.buildings.petrochemicals = {
 
     construction_turns: 4,
     cost: {
-      steel: 5,
+      regular_steel: 5,
       stainless_steel: 3,
       glass: 2,
       machine_parts: 2,
@@ -277,7 +277,7 @@ config.buildings.petrochemicals = {
 
     construction_turns: 5,
     cost: {
-      steel: 8,
+      regular_steel: 8,
       machine_parts: 6,
       steel_beams: 4,
       money: 12500
@@ -390,7 +390,7 @@ config.buildings.petrochemicals = {
       concrete: 5,
       lightbulbs: 5,
       electric_gear: 5,
-      steel: 4,
+      regular_steel: 4,
       money: 25000
     },
     maintenance: {
@@ -418,7 +418,7 @@ config.buildings.petrochemicals = {
       concrete: 5,
       lightbulbs: 5,
       electric_gear: 5,
-      steel: 4,
+      regular_steel: 4,
       money: 25000
     },
     maintenance: {
@@ -454,7 +454,7 @@ config.buildings.petrochemicals = {
     construction_turns: 5,
     cost: {
       stainless_steel: 6,
-      steel: 5,
+      regular_steel: 5,
       copper: 4,
       machine_parts: 4,
       electric_gear: 4,
@@ -481,7 +481,7 @@ config.buildings.petrochemicals = {
     cost: {
       steel_beams: 5,
       stainless_steel: 5,
-      steel: 5,
+      regular_steel: 5,
       copper: 5,
       money: 20000
     },
@@ -506,7 +506,7 @@ config.buildings.petrochemicals = {
     cost: {
       machine_parts: 8,
       stainless_steel: 6,
-      steel: 6,
+      regular_steel: 6,
       reinforced_concrete: 5,
       lightbulbs: 3,
       copper_wire: 3,
@@ -582,7 +582,7 @@ config.buildings.petrochemicals = {
     cost: {
       machine_parts: 8,
       stainless_steel: 6,
-      steel: 6,
+      regular_steel: 6,
       reinforced_concrete: 5,
       lightbulbs: 3,
       copper_wire: 3,
@@ -607,7 +607,7 @@ config.buildings.petrochemicals = {
     cost: {
       machine_parts: 8,
       stainless_steel: 5,
-      steel: 6,
+      regular_steel: 6,
       reinforced_concrete: 5,
       lamps: 3,
       copper_wire: 3,
@@ -701,7 +701,7 @@ config.buildings.petrochemicals = {
     cost: {
       steel_beams: 8,
       machine_parts: 6,
-      steel: 6,
+      regular_steel: 6,
       reinforced_concrete: 4,
       lamps: 2,
       money: 20000
@@ -725,7 +725,7 @@ config.buildings.petrochemicals = {
     construction_turns: 3,
     cost: {
       bricks: 6,
-      steel: 4,
+      regular_steel: 4,
       cement: 3,
       machine_parts: 3,
       lumber: 2,
@@ -752,7 +752,7 @@ config.buildings.petrochemicals = {
     construction_turns: 4,
     cost: {
       stainless_steel: 6,
-      steel: 6,
+      regular_steel: 6,
       machine_parts: 5,
       reinforced_concrete: 4,
       lamps: 3,
@@ -782,7 +782,7 @@ config.buildings.petrochemicals = {
     cost: {
       steel_beams: 8,
       stainless_steel: 5,
-      steel: 5,
+      regular_steel: 5,
       reinforced_concrete: 4,
       lamps: 3,
       copper_wire: 3,
@@ -851,7 +851,7 @@ config.buildings.petrochemicals = {
     cost: {
       machine_parts: 7,
       reinforced_concrete: 6,
-      steel: 6,
+      regular_steel: 6,
       aluminium: 4,
       electric_gear: 3,
       money: 15000
@@ -1172,7 +1172,7 @@ config.buildings.petrochemicals = {
 
     construction_turns: 4,
     cost: {
-      steel: 9,
+      regular_steel: 9,
       steel_beams: 8,
       machine_parts: 8,
       lumber: 5,

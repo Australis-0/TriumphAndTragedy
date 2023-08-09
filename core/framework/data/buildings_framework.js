@@ -1222,7 +1222,7 @@ module.exports = {
        base: { //production choice
         iron: -5,
         coal: -5,
-        steel: 5
+        regular_steel: 5
        }
       }
       ..
@@ -1266,10 +1266,12 @@ module.exports = {
             if (all_production_keys[x].startsWith("production_choice_")) {
               //Production choice handling
               if (local_subobj[good_key])
-                valid_production_choices.push(all_production_keys[x].replace("production_choice_", ""));
+                if (local_subobj[good_key] > 0)
+                  valid_production_choices.push(all_production_keys[x].replace("production_choice_", ""));
             } else {
               if (all_production_keys[x] == good_key)
-                base_has_good = true;
+                if (local_subobj > 0)
+                  base_has_good = true;
             }
           }
 

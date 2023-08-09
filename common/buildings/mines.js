@@ -243,7 +243,7 @@ config.buildings.mines = {
 
     construction_turns: 5,
     cost: {
-      steel: 5,
+      regular_steel: 5,
       lumber: 5,
       lamps: 4,
       tools: 3,
