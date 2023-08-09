@@ -1214,6 +1214,75 @@ module.exports = {
   },
 
   /*
+    getProductionChain() - Returns a special object mapping various stages of a good's production chain. Used recursively. Base production methods are referred to with the "base" key.
+
+    Returns {
+     steel: { //good
+      building_1: { //building type
+       base: { //production choice
+        iron: 5,
+        coal: 5,
+        produces: 5
+       }
+      }
+      ..
+    }
+  */
+  getProductionChain: function (arg0_user, arg1_good, arg2_used_goods) { //[WIP] - Finish function body
+    //Convert from parameters
+    var user_id = arg0_user;
+    var good_key = arg1_good;
+    var used_goods = (arg2_used_goods) ? arg2_used_goods : []; //Used for tracking which goods have already been appended to avoid infinite loops if they exist
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var all_building_keys = Object.keys(lookup.all_buildings);
+    var production_chain_obj = {};
+    var usr = main.users[actual_id];
+
+    var capital_obj = getCapital(user_id);
+
+    //Iterate over all buildings
+    if (!used_goods.includes(good_key)) {
+      for (var i = 0; i < all_building_keys.length; i++) {
+        var building_obj = lookup.all_buildings[all_building_keys[i]];
+        var local_production_obj = {};
+
+        //Check if building_obj.produces has good_key, if so append an object with all production methods
+        if (building_obj.produces) {
+          var all_production_keys = Object.keys(building_obj.produces);
+          var base_has_good = false;
+          var valid_production_choices = [];
+
+          for (var x = 0; x < all_production_keys.length; x++) {
+            var local_subobj = building_obj.produces[all_production_keys[x]];
+
+            if (all_production_keys[x].startsWith("production_choice_")) {
+              //Production choice handling
+              if (local_subobj[good_key])
+                valid_production_choices.push(all_production_keys[x].replace("production_choice_", ""));
+            } else {
+              if (all_production_keys[x] == good_key)
+                base_has_good = true;
+            }
+          }
+
+          //Append base if applicable
+          if (base_has_good) {
+
+          }
+
+          //Iterate over valid_production_choices and use getProductionChoiceOutput() with capital_obj to get proper produces output
+
+        }
+      }
+    }
+
+    //Return statement
+    return production_chain_obj;
+  },
+
+  /*
     getProductionChoiceOutput() - Returns a flattened good scope of produced goods.
     options: {
       province_id: "4407", - The province ID in which the building is located. Player modifiers are taken from the controller of the province if applicable, all production is negated if province is occupied
