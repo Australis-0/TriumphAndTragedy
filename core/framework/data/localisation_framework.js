@@ -298,11 +298,13 @@ module.exports = {
     options: {
       display_icons: true/false - Whether to display good/building icons. False by default.
       nesting: 0, - The current nesting to display
+      original_good: "", - The original good that the function was invoked for
       production_chain_obj: {}, - Optimisation parameter. Passes current production_chain_obj
+      parents: [], - The current parent categories of the current good
       used_goods: [] - The goods already used
     }
   */
-  getProductionChainLocalisation: function (arg0_user, arg1_good, arg2_options) { //[WIP] - Fix nesting later by determining whether current good_type is subgood of original scope
+  getProductionChainLocalisation: function (arg0_user, arg1_good, arg2_options) {
     //Convert from parameters
     var user_id = arg0_user;
     var good_type = arg1_good;
@@ -310,6 +312,8 @@ module.exports = {
 
     //Initialise options
     if (!options.nesting) options.nesting = 0;
+    if (!options.original_good) options.original_good = good_type;
+    if (!options.parents) options.parents = 0;
     if (!options.used_goods) options.used_goods = [];
 
     //Declare local instance variables
@@ -330,68 +334,78 @@ module.exports = {
       for (var i = 0; i < all_goods.length; i++) {
         var good_obj = lookup.all_goods[all_goods[i]];
         var local_good = production_chain_obj[all_goods[i]];
+        var n = (all_goods[i] != options.original_good) ? 1 : 0;
 
-        //options.nesting = old_nesting;
+        //Display header
+        if (all_goods[i] == options.original_good) {
+          production_chain_string.push(`Buildings __underlined__. Base production choices marked as Base (Prod. Choice).`);
+          production_chain_string.push("");
+        }
+
+        options.nesting = old_nesting;
 
         //Display good_type first
-        if (all_goods[i] == good_type) {
-          var all_buildings = Object.keys(local_good);
-
-          if (all_buildings.length > 0 || good_obj.type == "category") {
-            var f = (good_obj.type == "category") ? `**` : "";
-
-            if (good_obj.type == "category")
-              production_chain_string.push("");
-            production_chain_string.push(`${bulletPoint(options.nesting)}${f}${parseGood(all_goods[i], "**", !options.display_icons)}${f}`);
-          }
-
-          for (var x = 0; x < all_buildings.length; x++) {
-            var building_obj = lookup.all_buildings[all_buildings[x]];
-            var local_building = local_good[all_buildings[x]];
-
-            production_chain_string.push(`${bulletPoint(options.nesting + 1)}${(building_obj.icon) ? config.icons[building_obj.icon] + " " : ""}${(building_obj.name) ? building_obj.name : all_buildings[x]}`);
-
-            //Push production choices
-            var all_production_choices = Object.keys(local_building);
-
-            for (var y = 0; y < all_production_choices.length; y++) {
-              var local_production_choice = local_building[all_production_choices[y]];
-              var maintenance = [];
-              var production = [];
-              var production_choice_name = parseString(all_production_choices[y]);
-
-              var local_goods = Object.keys(local_production_choice);
-
-              //Push goods to maintenance/production array
-              for (var z = 0; z < local_goods.length; z++) {
-                var local_value = local_production_choice[local_goods[z]];
-
-                if (local_value < 0) {
-                  maintenance.push(`${parseGood(local_goods[z], "", !options.display_icons, `${parseNumber(local_value*-1)} `)}`);
-                } else if (local_value > 0) {
-                  production.push(`${parseGood(local_goods[z], "", !options.display_icons, `${parseNumber(local_value)} `)}`);
-                }
-              }
-
-              //Push maintenance/production to production_chain_string
-              var production_choice_string = (maintenance.length > 0 && production.length > 0) ?
-                `${maintenance.join(", ")} ➛ ${production.join(", ")}` :
-                `${production.join(", ")}`;
-
-              production_chain_string.push(`${bulletPoint(options.nesting + 2)}${production_choice_name} (Prod. Choice) - ${production_choice_string}`);
-            }
-          }
-
+        if (!options.used_goods.includes(all_goods[i])) {
           options.used_goods.push(good_type);
-          delete options.production_chain_obj[good_type];
-        } else {
-          //Push nested recursive strings to production_chain_string
-          options.nesting = 1;
 
-          var subgood_production_chain_string = module.exports.getProductionChainLocalisation(user_id, all_goods[i], options);
+          if (good_obj.type != "category") {
+            var all_buildings = Object.keys(local_good);
 
-          for (var x = 0; x < subgood_production_chain_string.length; x++)
-            production_chain_string.push(subgood_production_chain_string[x]);
+            if (all_buildings.length > 0 || good_obj.type == "category") {
+              var f = (good_obj.type == "category") ? `**` : "";
+
+              if (good_obj.type == "category")
+                production_chain_string.push("");
+              production_chain_string.push(`${bulletPoint(options.nesting + n)}${f}${parseGood(all_goods[i], "**", !options.display_icons)}${f}`);
+            }
+
+            for (var x = 0; x < all_buildings.length; x++) {
+              var building_obj = lookup.all_buildings[all_buildings[x]];
+              var local_building = local_good[all_buildings[x]];
+
+              production_chain_string.push(`${bulletPoint(options.nesting + 1 + n)}${(building_obj.icon) ? config.icons[building_obj.icon] + " " : ""}__${(building_obj.name) ? building_obj.name : all_buildings[x]}__`);
+
+              //Push production choices
+              var all_production_choices = Object.keys(local_building);
+
+              for (var y = 0; y < all_production_choices.length; y++) {
+                var local_production_choice = local_building[all_production_choices[y]];
+                var maintenance = [];
+                var production = [];
+                var production_choice_name = parseString(all_production_choices[y]);
+
+                var local_goods = Object.keys(local_production_choice);
+
+                //Push goods to maintenance/production array
+                for (var z = 0; z < local_goods.length; z++) {
+                  var local_value = local_production_choice[local_goods[z]];
+
+                  if (local_value < 0) {
+                    maintenance.push(`${parseGood(local_goods[z], "", !options.display_icons, `${parseNumber(local_value*-1)} `)}`);
+                  } else if (local_value > 0) {
+                    production.push(`${parseGood(local_goods[z], "", !options.display_icons, `${parseNumber(local_value)} `)}`);
+                  }
+                }
+
+                //Push maintenance/production to production_chain_string
+                var production_choice_string = (maintenance.length > 0 && production.length > 0) ?
+                  `${maintenance.join(", ")} ➛ ${production.join(", ")}` :
+                  `${production.join(", ")}`;
+
+                production_chain_string.push(`${bulletPoint(options.nesting + 2 + n)}${production_choice_name} (Prod. Choice) - ${production_choice_string}`);
+              }
+            }
+
+            delete options.production_chain_obj[good_type];
+          } else {
+            //Push nested recursive strings to production_chain_string
+            options.nesting++;
+
+            var subgood_production_chain_string = module.exports.getProductionChainLocalisation(user_id, all_goods[i], options);
+
+            for (var x = 0; x < subgood_production_chain_string.length; x++)
+              production_chain_string.push(` ${subgood_production_chain_string[x]}`);
+          }
         }
       }
     }
