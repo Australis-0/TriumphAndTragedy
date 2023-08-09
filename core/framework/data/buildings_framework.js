@@ -432,7 +432,7 @@ module.exports = {
 
     //Guard clause for verbatim key
     if (lookup.all_buildings[building_name])
-      return lookup.all_buildings[building_name];
+      return (!options.return_key) ? lookup.all_buildings[building_name] : building_name;
 
     //Iterate over all building categories and their respective buildings - debug key
     for (var i = 0; i < all_building_categories.length; i++) {
@@ -1358,10 +1358,11 @@ module.exports = {
     var maintenance_obj = {};
     var produces_obj = {};
     var production_choice = (options.production_choice) ? options.production_choice : "";
+    var raw_building_name = (options.building_object) ? options.building_object.building_type : getBuilding(options.building_type, { return_key: true });
 
     //Initialise local instance variables
-    maintenance_obj = module.exports.getProductionChoice(local_building.building_type, production_choice, "maintenance");
-    produces_obj = module.exports.getProductionChoice(local_building.building_type, production_choice);
+    maintenance_obj = module.exports.getProductionChoice(raw_building_name, production_choice, "maintenance");
+    produces_obj = module.exports.getProductionChoice(raw_building_name, production_choice);
 
     //Check if province exists
     if (options.province_id) {
@@ -1371,6 +1372,8 @@ module.exports = {
       //Make sure province isn't currently occupied
       if (province_obj.controller)
         if (province_obj.controller == province_obj.owner) {
+          var usr = main.users[province_obj.controller];
+
           var building_obj;
           var is_individual = (options.building_object);
           var modifiers = JSON.parse(JSON.stringify(usr.modifiers));
@@ -1418,7 +1421,7 @@ module.exports = {
             });
 
             //Account for maintenance
-            if (!do_not_display)
+            if (!options.no_maintenance)
               produces_obj = mergeObject(produces_obj, maintenance_obj);
           }
         }
