@@ -1314,8 +1314,21 @@ module.exports = {
 
           for (var y = 0; y < all_production_keys.length; y++) {
             if (lookup.all_goods[all_production_keys[y]] || all_production_keys[y] == "money")
-              if (!dependent_goods.includes(all_production_keys[y]))
+              if (!dependent_goods.includes(all_production_keys[y])) {
+                var local_good = lookup.all_goods[all_production_keys[y]];
+
                 dependent_goods.push(all_production_keys[y]);
+
+                //Category handling
+                if (local_good)
+                  if (local_good.type == "category") {
+                    var all_subgoods = lookup.all_subgoods[all_production_keys[y]];
+
+                    for (var z = 0; z < all_subgoods.length; z++)
+                      if (!dependent_goods.includes(all_subgoods[z]))
+                        dependent_goods.push(all_subgoods[z]);
+                  }
+              }
           }
         }
       }

@@ -245,6 +245,29 @@ module.exports = {
     return (!options.return_object) ? goods_array : goods_object;
   },
 
+  //getGoodsSubgoods() - Returns an object of goods categories to their respective non-category subgoods
+  getGoodsSubgoods: function () {
+    //Declare local instance variables
+    var goods_obj = module.exports.getGoods({ return_object: true });
+
+    var all_goods = Object.keys(goods_obj);
+    var subgoods_obj = {};
+
+    //Iterate over all_goods and append getSubgoods()
+    for (var i = 0; i < all_goods.length; i++) {
+      var local_good = goods_obj[all_goods[i]];
+
+      if (local_good.type == "category") {
+        var subgood_array = module.exports.getSubgoods(local_good, { return_names: true });
+
+        subgoods_obj[all_goods[i]] = subgood_array;
+      }
+    }
+
+    //Return statement
+    return subgoods_obj;
+  },
+
   //getRelevantGoods() - Returns an array of good keys considered relevant to a user
   getRelevantGoods: function (arg0_user) {
     //Convert from parameters
@@ -307,6 +330,14 @@ module.exports = {
     return raw_goods;
   },
 
+  /*
+    getSubgoods() - Returns a list of subgoods under a single good as either an object or array
+    options: {
+      exclude_categories: true/false, - Whether to exclude categories. False by default
+      return_names: true/false, - Whether to return good keys instead of good objects. False by default
+      return_object: true/false - Whether to return a master object instead of master array. False by default
+    }
+  */
   getSubgoods: function (arg0_object, arg1_options) {
     //Convert from parameters
     var good_obj = arg0_object;

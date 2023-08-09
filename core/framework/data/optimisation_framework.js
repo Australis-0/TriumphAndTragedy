@@ -23,6 +23,7 @@ module.exports = {
       all_national_modifier_names: getNationalModifiers({ return_names: true }),
       all_pop_needs: getAllPopNeeds(),
       all_pop_needs_categories: getAllPopNeedCategories(),
+      all_subgoods: getGoodsSubgoods(),
       all_units: getAllUnits({ return_object: true }),
       all_unit_names: getAllUnits({ return_names: true }),
       goods_depth: getDepth(config.goods) - 1,
