@@ -1,5 +1,36 @@
 //Objects framework
 module.exports = {
+  changeObjectRange: function (arg0_scope, arg1_key, arg2_min_max_argument, arg3_value) {
+    //Convert from parameters
+    var scope = arg0_scope;
+    var key = arg1_key;
+    var min_max_argument = arg2_min_max_argument;
+    var value = Math.round(returnSafeNumber(arg3_value));
+
+    //Add to scope
+    if (scope[key]) {
+      if (min_max_argument == "minimum") {
+        scope[key][0] += value;
+      } else if (min_max_argument == "maximum") {
+        scope[key][1] += value;
+      } else {
+        scope[key][0] += value;
+        scope[key][1] += value;
+      }
+    } else {
+      if (min_max_argument == "minimum") {
+        scope[key] = [value, 0];
+      } else if (min_max_argument == "maximum") {
+        scope[key] = [0, value];
+      } else {
+        scope[key] = [value, value];
+      }
+    }
+
+    //Return statement
+    return scope;
+  },
+
   divideObject: function (arg0_scope, arg1_amount, arg2_not_recursive, arg3_round) {
     //Convert from parameters
     var scope = JSON.parse(JSON.stringify(arg0_scope));
