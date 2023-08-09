@@ -1348,8 +1348,8 @@ config.buildings.processing_facilities = { //[WIP] - Add Synthetic Ruby Factory
     },
     maintenance: {
       transistors: 3,
-      resistor_factories: 1,
-      capacity: 1,
+      resistors: 1,
+      capacitors: 1,
       copper_wire: 1,
       plastics: 1,
       electric_gear: 1
