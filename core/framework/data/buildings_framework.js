@@ -1361,7 +1361,7 @@ module.exports = {
     var raw_building_name = (options.building_object) ? options.building_object.building_type : getBuilding(options.building_type, { return_key: true });
 
     //Initialise local instance variables
-    maintenance_obj = module.exports.getProductionChoice(raw_building_name, production_choice, "maintenance");
+    maintenance_obj = multiplyObject(module.exports.getProductionChoice(raw_building_name, production_choice, "maintenance"), -1);
     produces_obj = module.exports.getProductionChoice(raw_building_name, production_choice);
 
     //Check if province exists
