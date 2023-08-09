@@ -269,6 +269,11 @@ module.exports = {
 
         //Return statement
         return all_cities[i];
+
+    //Otherwise return the first province a user has
+    var all_provinces = module.exports.getProvinces(user_id);
+
+    if (all_provinces.length > 0) return all_provinces[0];
   },
 
   /*
