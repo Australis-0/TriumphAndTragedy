@@ -677,7 +677,7 @@ module.exports = {
           if (input == "demolish")
             demolish(user_id, {
               province_id: province_id,
-              
+
               building_object: local_building
             });
 
@@ -1805,6 +1805,8 @@ module.exports = {
         }
 
         if (game_obj.page == "inventory") {
+          var all_good_names = getAllGoodNamesLowercase();
+
           //[Back]
           if (input == "back") {
             printEconomy(user_id);
@@ -1814,6 +1816,18 @@ module.exports = {
           //[Clear]
           if (["clear", "clear search"].includes(input))
             printInventory(user_id, main.interfaces[game_obj.middle_embed.id].page);
+
+          //[(Good Name)] - Tooltip
+          if (all_good_names.includes(input.trim().toLowerCase())) {
+            var good_key = getGood(input.trim().toLowerCase(), { return_key: true });
+            var localisation_string = getProductionChainLocalisation(user_id, good_key, { display_icons: true }).join("\n");
+
+            if (localisation_string.length > 0) {
+              printAlert(game_obj.id, truncateString(localisation_string, 3800));
+            } else {
+              printError(game_obj.id, `No production chain(s) for ${parseGood(good_key)} could be found!`);
+            }
+          }
 
           //[Hide All Goods]
           if (["hide goods", "hide all goods"].includes(input)) {

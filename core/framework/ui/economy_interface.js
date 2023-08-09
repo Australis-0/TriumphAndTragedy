@@ -71,7 +71,7 @@ module.exports = {
               if (options.search_query)
                 category_string = formatSubstring(category_string, options.search_query, "underline");
 
-              category_string = `${bulletPoint(nesting)}${significance_string}${(local_obj.icon) ? config.icons[local_obj.icon] + " " : ""}${category_string} ${parseNumber(getGoodAmount(user_id, local_key))}`;
+              category_string = `${bulletPoint(nesting)}${significance_string}${(local_obj.icon) ? config.icons[local_obj.icon] + " " : ""}${category_string} __${parseNumber(getGoodAmount(user_id, local_key))}__`;
 
               inventory_string.push(category_string);
             }
@@ -95,7 +95,7 @@ module.exports = {
                   significance_string = `(:star: ${parseNumber(local_significance, { display_float: true })}) `;
                 }
 
-              var good_string = `**${(local_obj.name) ? local_obj.name : local_key}**: ${parseNumber(getGoodAmount(user_id, local_key))}`;
+              var good_string = `[${(local_obj.name) ? local_obj.name : local_key}]: **${parseNumber(getGoodAmount(user_id, local_key))}**`;
 
               //Highlight search query if applicable
               if (options.search_query)

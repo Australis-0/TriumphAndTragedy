@@ -1110,6 +1110,32 @@ config.buildings.processing_facilities = { //[WIP] - Add Synthetic Ruby Factory
       dyes: 5
     }
   },
+  electric_gear_factories: {
+    name: "Electric Gear Factories",
+    singular: "Electric Gear Factory",
+
+    construction_turns: 8,
+    cost: {
+      reinforced_concrete: 15,
+      machine_parts: 12,
+      copper_wire: 8,
+      filaments: 6,
+      money: 9000
+    },
+    maintenance: {
+      copper_wire: 5,
+      machine_parts: 5,
+      steel: 3,
+      filaments: 2
+    },
+    manpower_cost: {
+      labourers: 8000,
+      engineers: 1000
+    },
+    produces: {
+      electric_gear: 3
+    }
+  },
   engine_factories: {
     name: "Engine Factories",
     singular: "Engine Factory",

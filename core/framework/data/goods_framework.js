@@ -1,4 +1,21 @@
 module.exports = {
+  getAllGoodNamesLowercase: function () {
+    //Declare local instance variables
+    var all_goods = Object.keys(lookup.all_goods);
+    var good_names = [];
+
+    //Iterate over all_goods
+    for (var i = 0; i < all_goods.length; i++) {
+      var local_good = lookup.all_goods[all_goods[i]];
+
+      if (local_good)
+        good_names.push((local_good.name) ? local_good.name.toLowerCase() : all_goods[i]);
+    }
+
+    //Return statement
+    return good_names;
+  },
+
   //getAllSubgoods() - Returns an array of subgood keys
   getAllSubgoods: function (arg0_object) {
     //Convert from parameters
