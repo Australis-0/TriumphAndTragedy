@@ -372,19 +372,11 @@ config.buildings.petrochemicals = {
       machine_parts: 3,
       money: 8000
     },
-    maintenance: {
-      production_choice_one: {
-        salt: 3,
-        machine_parts: 1
-      },
-      production_choice_two: {
-        hydrogen: 4,
-        copper: 1,
-        gas: 2
-      }
-    },
     manpower_cost: {
       labourers: 10000
+    },
+    produces: {
+      petroil: 5
     }
   },
   ethylene_glycol_boiling_plants: {
