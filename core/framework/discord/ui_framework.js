@@ -687,6 +687,11 @@ module.exports = {
     if (in_visual_prompt)
       in_visual_prompt = (in_visual_prompt.type == "visual_prompt");
 
+    //Make sure alert embed UI object exists
+    if (!main.interfaces[game_obj.alert_embed.id])
+      main.interfaces[game_obj.alert_embed.id] = {};
+    var current_ui = main.interfaces[game_obj.alert_embed.id];
+
     if (game_obj && !in_visual_prompt) {
       if (game_obj.alert_array.length == 0) {
         const new_alert_embed = new Discord.MessageEmbed()
@@ -699,6 +704,8 @@ module.exports = {
 
           //Remove page embed arrows since there's nothing left
           removeAllReactions(game_obj.alert_embed);
+
+          current_ui.page = 0;
         }
       } else {
         var alert_embeds = [];
@@ -734,14 +741,9 @@ module.exports = {
             }
 
           //Display alert_embeds as a page menu
-          if (!main.interfaces[game_obj.alert_embed.id])
-            main.interfaces[game_obj.alert_embed.id] = {};
-
-          var current_page = main.interfaces[game_obj.alert_embed.id].page;
-
           createPageMenu(game_obj.alert_embed, {
             embed_pages: alert_embeds,
-            page: current_page,
+            page: current_ui.page,
             user: user_id
           });
         } else {
@@ -752,6 +754,8 @@ module.exports = {
 
           game_obj.alert_embed.edit({ embeds: [new_alert_embed] });
           removeAllReactions(game_obj.alert_embed);
+
+          current_ui.page = 0;
         }
       }
 
