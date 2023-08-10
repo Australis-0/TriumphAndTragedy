@@ -1422,7 +1422,7 @@ module.exports = {
 
             //Account for maintenance
             if (!do_not_display)
-              produces_obj = mergeObject(produces_obj, maintenance_obj);
+              produces_obj = mergeObjects(produces_obj, maintenance_obj);
           } else {
             //This is a generic building; assume full employment
             building_obj = module.exports.getBuilding(options.building_type);

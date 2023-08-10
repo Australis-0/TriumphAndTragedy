@@ -101,6 +101,7 @@ module.exports = {
     FileManager.import("./framework/ui/provinces_interface");
     FileManager.import("./framework/ui/queue_interface");
     FileManager.import("./framework/ui/tech_interface");
+    FileManager.import("./framework/ui/tooltip_interface");
     FileManager.import("./framework/ui/topbar_interface");
     FileManager.import("./framework/ui/trade_interface");
     FileManager.import("./framework/ui/unit_interface");

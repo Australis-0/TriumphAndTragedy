@@ -1818,16 +1818,7 @@ module.exports = {
             printInventory(user_id, main.interfaces[game_obj.middle_embed.id].page);
 
           //[(Good Name)] - Tooltip
-          if (all_good_names.includes(input.trim().toLowerCase())) {
-            var good_key = getGood(input.trim().toLowerCase(), { return_key: true });
-            var localisation_string = getProductionChainLocalisation(user_id, good_key, { display_icons: true }).join("\n");
-
-            if (localisation_string.length > 0) {
-              printAlert(game_obj.id, truncateString(localisation_string, 3800));
-            } else {
-              printError(game_obj.id, `No production chain(s) for ${parseGood(good_key)} could be found!`);
-            }
-          }
+          goodTooltip(user_id, input);
 
           //[Hide All Goods]
           if (["hide goods", "hide all goods"].includes(input)) {

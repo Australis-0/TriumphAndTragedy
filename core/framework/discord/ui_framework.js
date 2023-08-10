@@ -120,6 +120,7 @@ module.exports = {
 
     starting_page = (options.page) ? options.page : starting_page;
     starting_page = (options.starting_page) ? options.starting_page : starting_page;
+    starting_page = returnSafeNumber(starting_page);
 
     if (options.embed_pages) {
       if (starting_page >= options.embed_pages.length)
@@ -618,7 +619,6 @@ module.exports = {
       }
 
       array_string = new_array_string;
-      log.debug(`Array String: `, array_string);
 
       if (!options.maximum_lines) {
         //Split embeds based on characters
@@ -694,16 +694,67 @@ module.exports = {
           .setDescription("No new alerts.")
           .setImage("https://cdn.discordapp.com/attachments/722997700391338046/736141424315203634/margin.png");
 
-        if (!options.freeze_alerts && !game_obj.freeze_alerts)
+        if (!options.freeze_alerts && !game_obj.freeze_alerts) {
           game_obj.alert_embed.edit({ embeds: [new_alert_embed] });
-      } else {
-        const new_alert_embed = new Discord.MessageEmbed()
-          .setColor(settings.bot_colour)
-          .setDescription(game_obj.alert_array.join("\n"))
-          .setImage("https://cdn.discordapp.com/attachments/722997700391338046/736141424315203634/margin.png");
 
-        game_obj.alert_embed.edit({ embeds: [new_alert_embed] });
+          //Remove page embed arrows since there's nothing left
+          removeAllReactions(game_obj.alert_embed);
+        }
+      } else {
+        var alert_embeds = [];
+        var alert_length = 0;
+
+        for (var i = 0; i < game_obj.alert_array.length; i++)
+          alert_length += game_obj.alert_array[i].length;
+
+        if (alert_length >= 3000) {
+          var split_alert_array = [];
+
+          //Check game_obj.alert_array length
+          for (var i = 0; i < game_obj.alert_array.length; i++) {
+            var local_array = game_obj.alert_array[i].split("\n");
+
+            for (var x = 0; x < local_array.length; x++)
+              split_alert_array.push(local_array[x]);
+          }
+
+          //Split text and push multiple embeds to alert_embeds
+          var split_text_array = module.exports.splitText(split_alert_array, {
+            maximum_characters: 3800
+          });
+
+          for (var i = 0; i < split_text_array.length; i++)
+            if (split_text_array[i].length > 0) {
+              const local_embed = new Discord.MessageEmbed()
+                .setColor(settings.bot_colour)
+                .setDescription(split_text_array[i])
+                .setImage("https://cdn.discordapp.com/attachments/722997700391338046/736141424315203634/margin.png");
+
+              alert_embeds.push(local_embed);
+            }
+
+          //Display alert_embeds as a page menu
+          if (!main.interfaces[game_obj.alert_embed.id])
+            main.interfaces[game_obj.alert_embed.id] = {};
+
+          var current_page = main.interfaces[game_obj.alert_embed.id].page;
+
+          createPageMenu(game_obj.alert_embed, {
+            embed_pages: alert_embeds,
+            page: current_page,
+            user: user_id
+          });
+        } else {
+          const new_alert_embed = new Discord.MessageEmbed()
+            .setColor(settings.bot_colour)
+            .setDescription(game_obj.alert_array.join("\n"))
+            .setImage("https://cdn.discordapp.com/attachments/722997700391338046/736141424315203634/margin.png");
+
+          game_obj.alert_embed.edit({ embeds: [new_alert_embed] });
+          removeAllReactions(game_obj.alert_embed);
+        }
       }
+
       game_obj.alert_change = false;
     }
   }
