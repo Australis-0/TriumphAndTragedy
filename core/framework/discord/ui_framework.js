@@ -564,7 +564,6 @@ module.exports = {
     //Error trapping
     try {
       //Join all bullet point blocks together
-      var exclude_indices = [];
       var new_array_string = [];
 
       if (!options.split_bullet_points) {
@@ -609,11 +608,7 @@ module.exports = {
             if (first_character == "-")
               nesting = Math.ceil(spaces_until_first_character/2);
 
-            //If nesting >= 1, push to local_indices_to_remove and local_joined_string
-            if (nesting >= 1) {
-              local_joined_string.push(array_string[i]);
-              exclude_indices.push(i);
-            }
+            local_joined_string.push(array_string[i]);
           }
         }
       }
