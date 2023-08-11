@@ -681,6 +681,12 @@ module.exports = {
               building_object: local_building
             });
 
+          //[Hide Production Choices]
+          if (["hide production choice", "hide production choices"].includes(input)) {
+            game_obj.hide_production_choices = true;
+            printBuilding(user_id, building_id, main.interfaces[game_obj.middle_embed.id].page);
+          }
+
           //[Jump To Page]
           visualPrompt(game_obj.alert_embed, user_id, {
             title: `Jump To Page:`,
@@ -695,6 +701,12 @@ module.exports = {
           //[Rename Building]
           if (input == "rename building")
             initialiseRenameBuilding(user_id, local_building);
+
+          //[Show Production Choices]
+          if (["show production choice", "show production choices"].includes(input)) {
+            delete game_obj.hide_production_choices;
+            printBuilding(user_id, building_id, main.interfaces[game_obj.middle_embed.id].page);
+          }
         }
 
         if (game_obj.page.startsWith("view_buildings_")) {

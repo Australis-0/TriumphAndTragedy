@@ -166,6 +166,12 @@ module.exports = {
     return all_embeds;
   },
 
+  /*
+    printBuilding() - Displays the UI for an individual building
+    options: {
+      do_not_display: true/false - Whether to display the UI
+    }
+  */
   printBuilding: function (arg0_user, arg1_building_id, arg2_page, arg3_options) {
     //Convert from parameters
     var user_id = arg0_user;
@@ -313,6 +319,12 @@ module.exports = {
     }
   },
 
+  /*
+    printIndustry() - Prints a country's overall industry
+    options: {
+      do_not_display: true/false - Whether to display the UI
+    }
+  */
   printIndustry: function (arg0_user, arg1_page, arg2_options) {
     //Convert from parameters
     var user_id = arg0_user;
