@@ -842,6 +842,31 @@ module.exports = {
     return production_obj;
   },
 
+  getBuildingProductionChoice: function (arg0_building_obj) {
+    //Convert from parameters
+    var building_obj = arg0_building_obj;
+
+    //Declare local instance variables
+    var config_obj = lookup.all_buildings[building_obj.building_type];
+
+    if (config_obj.produces) {
+      var all_production_keys = Object.keys(config_obj.produces);
+      var production_choice_amount = 0;
+
+      //Check how many keys start with production_choice_
+      for (var i = 0; i < config_obj.produces.length; i++)
+        if (config_obj.produces[i].startsWith("production_choice_"))
+          production_choice_amount++;
+
+      //Return statement
+      if (!building_obj.production_choice && production_choice_amount < all_production_keys.length) {
+        return "base";
+      } else if (building_obj.production_choice) {
+        return building_obj.production_choice;
+      }
+    }
+  },
+
   /*
     getBuildings() - Returns an array of all valid building objects/keys.
     options: {
