@@ -1511,6 +1511,65 @@ module.exports = {
     return production_choice_obj;
   },
 
+  getProductionChoiceKey: function (arg0_building, arg1_production_choice) {
+    //Convert from parameters
+    var building_type = arg0_building;
+    var production_choice_name = arg1_production_choice;
+
+    //Declare local instance variables
+    var config_obj = lookup.all_buildings[building_type];
+    var production_choice_key = [false, ""]; //[key_exists, key_name];
+
+    if (typeof production_choice_name == "object") return production_choice_name; //Object guard clause
+
+    //Iterate over all produces keys if they exist
+    if (config_obj)
+      if (config_obj.produces) {
+        var all_production_keys = Object.keys(config_obj.produces);
+        production_choice_name = production_choice_name.toLowerCase().trim();
+
+        //Key search - Soft
+        for (var i = 0; i < all_production_keys.length; i++)
+          if (all_production_keys[i].startsWith("production_choice_"))
+            if (all_production_keys[i].replace("production_choice_", "").toLowerCase().trim().indexOf(production_choice_name) != -1)
+              production_choice_key = [true, all_production_keys[i].replace("production_choice_", "")];
+        //Key search - Hard
+        for (var i = 0; i < all_production_keys.length; i++)
+          if (all_production_keys[i].startsWith("production_choice_"))
+            if (all_production_keys[i].replace("production_choice_", "").toLowerCase().trim() == production_choice_name)
+              production_choice_key = [true, all_production_keys[i].replace("production_choice_", "")];
+
+        //Name search - Soft
+        for (var i = 0; i < all_production_keys.length; i++)
+          if (all_production_keys[i].startsWith("production_choice_")) {
+            var local_production_choice = config_obj.produces[all_production_keys[i]];
+            var trimmed_string = all_production_keys[i].replace("production_choice_", "");
+
+            var local_name = (!local_production_choice.name) ?
+              parseString(trimmed_string) : local_production_choice.name;
+
+            if (local_name.toLowerCase().trim().indexOf(production_choice_name) != -1)
+              production_choice_key = [true, trimmed_string];
+          }
+
+        //Name search - Hard
+        for (var i = 0; i < all_production_keys.length; i++)
+          if (all_production_keys[i].startsWith("production_choice_")) {
+            var local_production_choice = config_obj.produces[all_production_keys[i]];
+            var trimmed_string = all_production_keys[i].replace("production_choice_", "");
+
+            var local_name = (!local_production_choice.name) ?
+              parseString(trimmed_string) : local_production_choice.name;
+
+            if (local_name.toLowerCase().trim() == production_choice_name)
+              production_choice_key = [true, trimmed_string];
+          }
+
+        //Return statement
+        return (production_choice_key[0]) ? production_choice_key[1] : undefined;
+      }
+  },
+
   getProductionObject: function (arg0_user) {
     //Convert from parameters
     var user_id = arg0_user;
@@ -1612,6 +1671,22 @@ module.exports = {
 
     //Return statement
     return total;
+  },
+
+  hasProductionChoice: function (arg0_building_obj) {
+    //Convert from parameters
+    var building_obj = arg0_building_obj;
+
+    //Declare local instance variables
+    var config_obj = lookup.all_buildings[building_obj.building_type];
+
+    if (config_obj.produces) {
+      var all_production_keys = Object.keys(config_obj.produces);
+
+      for (var i = 0; i < all_production_keys.length; i++)
+        if (all_production_keys[i].startsWith("production_choice_"))
+          return true;
+    }
   },
 
   parseProduction: function (arg0_user) {

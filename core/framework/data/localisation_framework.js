@@ -20,15 +20,18 @@ module.exports = {
         //Push building name and display ID; current national owner
         var employment_string = "";
         var money_stockpile_string = "";
+        var production_choice_string = "";
 
         if (building_obj.manpower_cost)
           employment_string = `- ${getBuildingEmploymentStringLocalisation(local_building, building_obj.manpower_cost)}`;
         if (local_building.stockpile)
           if (local_building.stockpile.money)
             money_stockpile_string = ` | ${config.icons.money} ${parseNumber(building_obj.stockpile.money)}`;
+        if (building_obj.produces)
+          production_choice_string = ` - ${module.exports.parseProductionChoice(local_building.building_type, local_building.production_choice)}`;
 
         //Print string
-        building_string.push(`${bulletPoint(nesting)}__${(local_building.name) ? local_building.name : building_obj.name}__${money_stockpile_string}${employment_string}`);
+        building_string.push(`${bulletPoint(nesting)}__${(local_building.name) ? local_building.name : building_obj.name}__${money_stockpile_string}${employment_string}${production_choice_string}`);
         building_string.push(`${bulletPoint(nesting + 1)}**[View ${(local_building.name) ? local_building.name : local_building.id}]**`);
       }
     }
@@ -1155,6 +1158,35 @@ module.exports = {
 
     //Return statement
     return `${(pop_obj.icon) ? pop_obj.icon + " " : ""}${(pop_obj.name) ? pop_obj.name : pop_type}`;
+  },
+
+  parseProductionChoice: function (arg0_building_type, arg1_production_choice) {
+    //Convert from parameters
+    var building_type = arg0_building_type;
+    var production_choice_name = arg1_production_choice;
+
+    //Declare local instance variables
+    var config_obj = lookup.all_buildings[building_type];
+    var production_choice_string = "";
+
+    if (config_obj)
+      if (config_obj.produces) {
+        if (production_choice_name) {
+          var local_production_choice_key = getProductionChoice(building_type, production_choice_name);
+          var local_production_choice = config_obj.produces[local_production_choice_key];
+
+          production_choice_string = (local_production_choice) ?
+            `${(local_production_choice.icon) ? local_production_choice.icon + " " : ""}${(local_production_choice.name) ? local_production_choice.name : local_production_choice_key}` :
+            `Base (Prod. Method)`;
+        } else {
+          production_choice_string = `Base (Prod. Method)`;
+        }
+      } else {
+        production_choice_string = `No Production`;
+      }
+
+    //Return statement
+    return production_choice_string;
   },
 
   parseProvince: function (arg0_province) {

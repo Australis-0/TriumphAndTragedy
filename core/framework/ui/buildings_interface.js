@@ -210,6 +210,15 @@ module.exports = {
             building_string.push(employment_string[i]);
         }
 
+        if (hasProductionChoice(local_building)) {
+          building_string.push("");
+          building_string.push(config.localisation.divider);
+          building_string.push("");
+          building_string.push(`${(!game_obj.hide_production_choices) ? `**[Show Production Choices]**` : `**[Hide Production Choices]**`} | **[Change Production Choice]**`);
+          building_string.push("");
+          building_string.push(`- Production Choice: ${parseProductionChoice(local_building.building_type, local_building.production_choice)}`);
+        }
+
         //Create embed and edit to message
         var building_embeds = splitEmbed(buildings_string, {
           title: `[Back] | [Jump To Page] | Viewing Building:`,
