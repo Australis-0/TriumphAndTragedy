@@ -1497,13 +1497,16 @@ module.exports = {
           }
         }
 
-      //If found_production_choice_obj could not be found, reduce to base scope and strip production_choice_ keys
+      //If found_production_choice_obj could not be found, reduce to base scope and strip production_choice_ and reserved.production_choice keys
       if (!found_production_choice_obj) {
         production_choice_obj = JSON.parse(JSON.stringify(building_obj[maintenance_production]));
 
-        for (var i = 0; i < all_production_keys.length; i++)
+        for (var i = 0; i < all_production_keys.length; i++) {
           if (all_production_keys[i].startsWith("production_choice_"))
             delete production_choice_obj[all_production_keys[i]];
+          if (reserved.production_choice.includes(all_production_keys[i]))
+            delete production_choice_obj[all_production_keys[i]];
+        }
       }
     }
 

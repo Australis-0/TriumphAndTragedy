@@ -125,36 +125,47 @@ config.buildings.agriculture = {
     },
     produces: {
       production_choice_corn: {
+        name: "Corn",
         corn: 7
       },
       production_choice_potatoes: {
+        name: "Potatoes",
         potatoes: 8
       },
       production_choice_teff: {
+        name: "Teff",
         teff: 2
       },
       production_choice_wheat: {
+        name: "Wheat",
         wheat: 5
       },
       production_choice_blue_agaves: {
+        name: "Blue Agaves",
         blue_agaves: 4
       },
       production_choice_hops: {
+        name: "Hops",
         hops: 3
       },
       production_choice_bell_peppers: {
+        name: "Bell Peppers",
         bell_peppers: 4
       },
       production_choice_garlic: {
+        name: "Garlic",
         garlic: 5
       },
       production_choice_ginger: {
+        name: "Ginger",
         ginger: 4
       },
       production_choice_linseed: {
+        name: "Linseed",
         linseed: 4
       },
       production_choice_rapeseed: {
+        name: "Rapeseed",
         rapeseed: 3
       }
     }
@@ -178,24 +189,31 @@ config.buildings.agriculture = {
     },
     produces: {
       production_choice_apples: {
+        name: "Apples",
         apples: 6
       },
       production_choice_grapes: {
+        name: "Grapes",
         grapes: 5
       },
       production_choice_olives: {
+        name: "Olives",
         olives: 4
       },
       production_choice_pumpkins: {
+        name: "Pumpkins",
         pumpkins: 2
       },
       production_choice_strawberries: {
+        name: "Strawberries",
         strawberries: 5
       },
       production_choice_sunflowers: {
+        name: "Sunflowers",
         sunflowers: 3
       },
       production_choice_watermelons: {
+        name: "Watermelons",
         watermelons: 5
       }
     }

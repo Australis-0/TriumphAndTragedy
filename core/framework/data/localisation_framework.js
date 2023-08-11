@@ -1189,6 +1189,54 @@ module.exports = {
     return production_choice_string;
   },
 
+  parseProductionChoiceOutputs: function (arg0_goods, arg1_exclude_icons) {
+    //Convert from parameters
+    var goods_obj = arg0_goods;
+    var exclude_icons = arg1_exclude_icons;
+
+    //Declare local instance variables
+    var all_goods = Object.keys(goods_obj);
+    var maintenance_array = [];
+    var production_array = [];
+    var production_choice_string = "";
+
+    //Iterate over all_goods
+    for (var i = 0; i < all_goods.length; i++) {
+      var local_value = production_chain_obj[all_good_keys[x]];
+
+      //Check if this is a good
+      if (lookup.all_goods[all_good_keys[x]]) {
+        if (local_value < 0) {
+          maintenance_array.push(`${parseGood(all_good_keys[x], "", exclude_icons, `${parseNumber(local_value*-1)} `)}`);
+        } else if (local_value > 0) {
+          production_array.push(`${parseGood(all_good_keys[x], "", exclude_icons, `${parseNumber(local_value)} `)}`);
+        }
+      } else {
+        //Money handler
+        if (all_good_keys[x] == "money")
+          if (local_value < 0) {
+            maintenance_array.push(`${config.icons.money} ${parseNumber(local_value*-1)}`);
+          } else if (local_value > 0) {
+            production_array.push(`${config.icons.money} ${parseNumber(local_value)}`);
+          }
+      }
+    }
+
+    //Format inputs/outputs
+    if (maintenance.length > 0 && production.length > 0) {
+      production_choice_string = `${maintenance.join(", ")} ➛ ${production.join(", ")}`;
+    } else if (production.length > 0) {
+      production_choice_string = `${production.join(", ")}`;
+    } else if (maintenance.length > 0) {
+      production_choice_string = `${maintenance.join(", ")} ➛ _Nothing_`;
+    }
+
+    if ()
+
+    //Return statement
+    return production_choice_string;
+  },
+
   parseProvince: function (arg0_province) {
     //Convert from parameters
     var province_name = arg0_province;

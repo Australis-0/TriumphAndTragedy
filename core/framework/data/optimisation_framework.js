@@ -5,6 +5,7 @@ module.exports = {
       building_good_keys: ["cost", "maintenance", "production"],
       goods: ["aliases", "name", "icon", "id", "type"],
       pop_needs_order: ["staple_goods", "luxury_goods"],
+      production_choice: ["aliases", "name", "icon"],
       unit_good_keys: ["cost", "maintenance"]
     };
     global.lookup = {
