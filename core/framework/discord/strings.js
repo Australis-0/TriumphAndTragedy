@@ -71,6 +71,33 @@ module.exports = {
     return `${module.exports.ordinalise(date_obj.day)} ${module.exports.months[date_obj.month - 1]} ${date_obj.year}, ${Math.round(date_obj.hour).toString().padStart(2, "0")}:00`;
   },
 
+  getNesting: function (arg0_string) {
+    //Convert from parameters
+    var string = arg0_string;
+
+    //Declare local instance variables
+    var first_character = "";
+    var nesting = 0;
+    var spaces_until_first_character = 0;
+
+    for (var i = 0; i < string.length; i++) {
+      if (string[i] == " ") {
+        spaces_until_first_character++;
+      } else {
+        if (first_character == "")
+          first_character = string[i];
+      }
+
+      if (first_character != "") break;
+    }
+
+    if (first_character == "-")
+      nesting = Math.ceil(spaces_until_first_character/2);
+
+    //Return statement
+    return nesting;
+  },
+
   isImage: function (arg0_link) {
     //Convert from parameters
     var image_link = arg0_link;

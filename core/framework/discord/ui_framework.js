@@ -589,37 +589,25 @@ module.exports = {
 
             //1st bullet point, mark as local_starting_element
             local_joined_string = [];
-            local_joined_string.push(array_string[i]);
             local_starting_element = i;
-          } else {
-            //Check how many spaces are remaining until the first character, which should be a -
-            var first_character = "";
-            var nesting = 0;
-            var spaces_until_first_character = 0;
-
-            for (var x = 0; x < array_string[i].length; x++)
-              if (array_string[i][x] == " ") {
-                spaces_until_first_character++;
-              } else {
-                if (first_character == "")
-                  first_character = array_string[i][x];
-              }
-
-            if (first_character == "-")
-              nesting = Math.ceil(spaces_until_first_character/2);
-
-            local_joined_string.push(array_string[i]);
           }
+
+          local_joined_string.push(array_string[i]);
         }
       }
 
       array_string = new_array_string;
 
       if (!options.maximum_lines) {
-        //Split embeds based on characters
+        //Split text based on characters
         for (var i = 0; i < array_string.length; i++) {
           var added_line = false;
+          var bullets = "";
           var hit_maximum = false;
+          var nesting = getNesting(array_string[i]);
+
+          log.debug(`Array String: `, array_string[i]);
+          console.log(`Nesting:`, nesting);
 
           if (
             local_array_string.join("\n").length + array_string[i].length <= maximum_characters_per_array
@@ -628,6 +616,21 @@ module.exports = {
             added_line = true;
           } else {
             hit_maximum = true;
+          }
+
+          //Adjust bullet points if off
+          if (nesting == 1)
+            bullets = "- "
+          if (nesting >= 1) {
+            for (var x = 0; x < nesting; x++)
+              bullets += " - ";
+
+            array_string[i] = array_string[i].split(" - ");
+
+            if (array_string[i].length > 1)
+              array_string[i].shift();
+
+            array_string[i] = `${bullets} ${array_string[i].join(" - ")}`;
           }
 
           if (i != 0 || array_string.length == 1)
