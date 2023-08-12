@@ -188,10 +188,12 @@ config.buildings.refineries = {
     },
     produces: {
       production_choice_heu: {
+        name: "Highly-Enriched Uranium",
         highly_enriched_uranium: 1,
         depleted_uranium: 1
       },
       production_choice_wgeu: {
+        name: "Weapons-Grade Enriched Uranium",
         weapons_grade_enriched_uranium: 1
       }
     }
@@ -372,9 +374,11 @@ config.buildings.refineries = {
     },
     produces: {
       production_choice_one: {
+        name: "Placer Gold Refinement",
         gold: 1
       },
       production_choice_two: {
+        name: "Quartz Gold Refinement",
         gold: 3
       }
     }
@@ -474,18 +478,23 @@ config.buildings.refineries = {
     },
     produces: {
       production_choice_one: {
+        name: "Iron II Refining",
         iron: 7
       },
       production_choice_two: {
+        name: "Iron III Refining",
         iron: 8
       },
       production_choice_three: {
+        name: "Pentlandite-Iron Refining",
         iron: 1
       },
       production_choice_four: {
+        name: "Sphalerite-Iron Refining",
         iron: 1
       },
       production_choice_five: {
+        name: "Wolframite-Iron Refining",
         iron: 1
       }
     }
@@ -546,9 +555,11 @@ config.buildings.refineries = {
     },
     produces: {
       production_choice_one: {
+        name: "Pyrolusite Refining",
         manganese: 3
       },
       production_choice_two: {
+        name: "Wolframite Refining",
         manganese: 1
       }
     }
@@ -905,9 +916,11 @@ config.buildings.refineries = {
     },
     produces: {
       production_choice_one: {
+        name: "Open Hearth Process",
         regular_steel: 10
       },
       production_choice_two: {
+        name: "Bessemer Process",
         regular_steel: 5
       }
     }
@@ -1020,9 +1033,11 @@ config.buildings.refineries = {
     },
     produces: {
       production_choice_one: {
+        name: "Scheelite-Tungsten Refining",
         tungsten: 3
       },
       production_choice_two: {
+        name: "Scheelite-Wolframite Refining",
         tungsten: 3
       }
     }

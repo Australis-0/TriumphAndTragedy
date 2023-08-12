@@ -3854,45 +3854,59 @@ config.buildings.processing_facilities = { //[WIP] - Add Synthetic Ruby Factory
       },
 
       production_choice_chardonnay: {
+        name: "Chardonnay",
         chardonnay: 6
       },
       production_choice_gewurztraminer: {
+        name: "Gewürztraminer",
         gewurztraminer: 3
       },
       production_choice_gruner_veltliner: {
+        name: "Grüner Veltliner",
         gruner_veltliner: 4
       },
       production_choice_malvasia: {
+        name: "Malvasia",
         malvasia: 4
       },
       production_choice_marsanne: {
+        name: "Marsanne",
         marsanne: 3
       },
       production_choice_muscat: {
+        name: "Muscat",
         muscat: 4
       },
       production_choice_pinot_blanc: {
+        name: "Pinot Blanc",
         pinot_blanc: 3
       },
       production_choice_prosecco: {
+        name: "Prosecco",
         prosecco: 4
       },
       production_choice_riesling: {
+        name: "Riesling",
         riesling: 4
       },
       production_choice_sauvignon_blanc: {
+        name: "Sauvignon Blanc",
         sauvignon_blanc: 5
       },
       production_choice_semillon: {
+        name: "Sémillon",
         semillon: 4
       },
       production_choice_vernaccia: {
+        name: "Vernaccia",
         vernaccia: 2
       },
       production_choice_viognier: {
+        name: "Viognier",
         viognier: 4
       },
       production_choice_white_bordeaux: {
+        name: "White Bordeaux",
         white_bordeaux: 5
       }
     }
@@ -3931,12 +3945,15 @@ config.buildings.processing_facilities = { //[WIP] - Add Synthetic Ruby Factory
     },
     produces: {
       production_choice_one: {
+        name: "Copper Wire",
         copper_wire: 2
       },
       production_choice_two: {
+        name: "Leaded Wire",
         copper_wire: 3
       },
       production_choice_three: {
+        name: "Plastic Coated Wire",
         copper_wire: 5
       }
     }
