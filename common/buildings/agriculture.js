@@ -242,9 +242,11 @@ config.buildings.agriculture = {
     },
     produces: {
       production_choice_hemp: {
+        name: "Hemp",
         hemp: 2
       },
       production_choice_poppies: {
+        name: "Poppies",
         poppies: 3
       }
     }
@@ -294,39 +296,51 @@ config.buildings.agriculture = {
     },
     produces: {
       production_choice_eggs: {
+        name: "Eggs",
         eggs: 5
       },
       production_choice_leather: {
+        name: "Leather",
         leather: 1
       },
       production_choice_milk: {
+        name: "Milk",
         milk: 5
       },
       production_choice_feathers: {
+        name: "Feathers",
         feathers: 1
       },
       production_choice_beef: {
+        name: "Beef",
         beef: 4
       },
       production_choice_chicken: {
+        name: "Chicken",
         chicken: 4
       },
       production_choice_cuy: {
+        name: "Cuy",
         cuy: 1
       },
       production_choice_duck: {
+        name: "Duck",
         duck: 3
       },
       production_choice_goat_meat: {
+        name: "Goat Meat",
         goat_meat: 2
       },
       production_choice_mutton: {
+        name: "Mutton",
         mutton: 3
       },
       production_choice_pork: {
+        name: "Pork",
         pork: 5
       },
       production_choice_rabbit_meat: {
+        name: "Rabbit Meat",
         rabbit_meat: 2
       }
     }
@@ -379,9 +393,11 @@ config.buildings.agriculture = {
     },
     produces: {
       production_choice_peanuts: {
+        name: "Peanuts",
         peanuts: 4
       },
       production_choice_walnuts: {
+        name: "Walnuts",
         walnuts: 2
       }
     }
@@ -427,30 +443,39 @@ config.buildings.agriculture = {
     },
     produces: {
       production_choice_goat_milk: {
+        name: "Goat Milk",
         goat_milk: 3
       },
       production_choice_milk: {
+        name: "Milk",
         milk: 5
       },
       production_choice_camel_meat: {
+        name: "Camel Meat",
         camel_meat: 1
       },
       production_choice_reindeer: {
+        name: "Reindeer",
         reindeer: 1
       },
       production_choice_venison: {
+        name: "Venison",
         venison: 2
       },
       production_choice_yak: {
+        name: "Yak",
         yak: 3
       },
       production_choice_alpaca_wool: {
+        name: "Alpaca Wool",
         alpaca_wool: 3
       },
       production_choice_goat_wool: {
+        name: "Goat Wool",
         goat_wool: 2
       },
       production_choice_sheep_wool: {
+        name: "Sheep Wool",
         sheep_wool: 5
       }
     }
@@ -476,27 +501,35 @@ config.buildings.agriculture = {
     },
     produces: {
       production_choice_cardamom: {
+        name: "Cardamom",
         cardamom: 2
       },
       production_choice_cayenne: {
+        name: "Cayenne",
         cayenne: 2
       },
       production_choice_chilli: {
+        name: "Chilli",
         chilli: 2
       },
       production_choice_fennel: {
+        name: "Fennel",
         fennel: 2
       },
       production_choice_fenugreek: {
+        name: "Fenugreek",
         fenugreek: 3
       },
       production_choice_nutmeg: {
+        name: "Nutmeg",
         nutmeg: 2
       },
       production_choice_paprika: {
+        name: "Paprika",
         paprika: 4
       },
       production_choice_pepper: {
+        name: "Pepper",
         pepper: 5
       }
     }
@@ -524,39 +557,51 @@ config.buildings.agriculture = {
     },
     produces: {
       production_choice_cacao: {
+        name: "Cacao",
         cacao: 4
       },
       production_choice_coffee: {
+        name: "Coffee",
         coffee_beans: 3
       },
       production_choice_quina: {
+        name: "Quina",
         quina: 3
       },
       production_choice_tobacco: {
+        name: "Tobacco",
         tobacco: 5
       },
       production_choice_bananas: {
+        name: "Bananas",
         bananas: 4
       },
       production_choice_citrus: {
+        name: "Citrus",
         citrus: 3
       },
       production_choice_dates: {
+        name: "Dates",
         dates: 2
       },
       production_choice_guavas: {
+        name: "Guavas",
         guavas: 2
       },
       production_choice_mangoes: {
+        name: "Mangoes",
         mangoes: 3
       },
       production_choice_mangosteens: {
+        name: "Mangosteens",
         mangosteens: 2
       },
       production_choice_sweet_potatoes: {
+        name: "Sweet Potatoes",
         sweet_potatoes: 4
       },
       production_choice_yam: {
+        name: "Yam",
         yam: 5
       }
     }
@@ -580,39 +625,51 @@ config.buildings.agriculture = {
     },
     produces: {
       production_choice_cabbage: {
+        name: "Cabbage",
         cabbage: 5
       },
       production_choice_carrot: {
+        name: "Carrot",
         carrot: 4
       },
       production_choice_chicory: {
+        name: "Chicory",
         chicory: 2
       },
       production_choice_cucumbers: {
+        name: "Cucumbers",
         cucumbers: 3
       },
       production_choice_eggplants: {
+        name: "Eggplants",
         eggplants: 3
       },
       production_choice_lettuce: {
+        name: "Lettuce",
         lettuce: 5
       },
       production_choice_onions: {
+        name: "Onions",
         onions: 5
       },
       production_choice_peas: {
+        name: "Peas",
         peas: 4
       },
       production_choice_soybeans: {
+        name: "Soybeans",
         soybeans: 3
       },
       production_choice_spinach: {
+        name: "Spinach",
         spinach: 4
       },
       production_choice_tomatoes: {
+        name: "Tomatoes",
         tomatoes: 6
       },
       production_choice_turnips: {
+        name: "Turnips",
         turnips: 7
       }
     }

@@ -1471,11 +1471,18 @@ module.exports = {
     return produces_obj;
   },
 
-  getProductionChoice: function (arg0_building, arg1_production_choice, arg2_maintenance_production) {
+  /*
+    getProductionChoice() - Fetches a production choice object for either the .produces/.maintenance field
+    options: {
+      include_reserved: true/false - Whether to include reserved words in the production choice fetched
+    }
+  */
+  getProductionChoice: function (arg0_building, arg1_production_choice, arg2_maintenance_production, arg3_options) {
     //Convert from parameters
     var building_name = arg0_building;
     var production_choice = arg1_production_choice.trim().toLowerCase();
     var maintenance_production = (arg2_maintenance_production) ? arg2_maintenance_production : "produces";
+    var options = (arg3_options) ? arg3_options : {};
 
     //Declare local instance variables
     var building_obj = module.exports.getBuilding(building_name);
@@ -1504,8 +1511,10 @@ module.exports = {
         for (var i = 0; i < all_production_keys.length; i++) {
           if (all_production_keys[i].startsWith("production_choice_"))
             delete production_choice_obj[all_production_keys[i]];
-          if (reserved.production_choice.includes(all_production_keys[i]))
-            delete production_choice_obj[all_production_keys[i]];
+
+          if (!options.include_reserved)
+            if (reserved.production_choice.includes(all_production_keys[i]))
+              delete production_choice_obj[all_production_keys[i]];
         }
       }
     }

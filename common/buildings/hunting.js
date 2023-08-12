@@ -43,18 +43,23 @@ config.buildings.hunting = {
     },
     produces: {
       production_choice_crab: {
+        name: "Crab",
         crab: 3
       },
       production_choice_fish: {
+        name: "Fish",
         fish: 6
       },
       production_choice_lobster: {
+        name: "Lobster",
         lobster: 2
       },
       production_choice_oyster: {
+        name: "Oyster",
         oyster: 4
       },
       production_choice_shrimp: {
+        name: "Shrimp",
         shrimp: 3
       }
     }

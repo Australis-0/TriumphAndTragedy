@@ -32,9 +32,11 @@ config.buildings.petrochemicals = {
     },
     produces: {
       production_choice_one: {
+        name: "Metahnol Carbonylation",
         acetic_acid: 4
       },
       production_choice_two: {
+        name: "Wacker Process",
         acetic_acid: 5
       }
     }
@@ -67,9 +69,11 @@ config.buildings.petrochemicals = {
     },
     produces: {
       production_choice_one: {
+        name: "Acetate Dry Distillation",
         acetone: 3
       },
       production_choice_two: {
+        name: "Cumene Process",
         acetone: 2,
         phenol: 2
       }
@@ -115,15 +119,19 @@ config.buildings.petrochemicals = {
     },
     produces: {
       production_choice_phosphoric_acid_one: {
+        name: "Wet Process",
         phosphoric_acid: 3
       },
       production_choice_phosphoric_acid_two: {
+        name: "Dry Process",
         phosphoric_acid: 2
       },
       production_choice_sulphuric_acid_one: {
+        name: "Contact Process",
         sulphuric_acid: 4
       },
       production_choice_sulphuric_acid_two: {
+        name: "Wet Sulphuric Acid Process",
         sulphuric_acid: 2
       }
     }
@@ -194,12 +202,15 @@ config.buildings.petrochemicals = {
     },
     produces: {
       production_choice_one: {
+        name: "Toluene Hydrodealkylation I",
         benzene: 10
       },
       production_choice_two: {
+        name: "Toluene Hydrodealkylation II",
         benzene: 10
       },
       production_choice_three: {
+        name: "Catalytic Reforming",
         benzene: 15
       }
     }
@@ -236,12 +247,15 @@ config.buildings.petrochemicals = {
     },
     produces: {
       production_choice_one: {
+        name: "Sugarcane Biofuel",
         ethanol: 5
       },
       production_choice_two: {
+        name: "Corn Biofuel",
         ethanol: 5
       },
       production_choice_three: {
+        name: "Petroil-Ethanol Blending",
         ethanol: 4
       }
     }
@@ -295,9 +309,11 @@ config.buildings.petrochemicals = {
     },
     produces: {
       production_choice_calcium: {
+        name: "Calcium",
         calcium: 5
       },
       production_choice_calcium_carbonate: {
+        name: "Calcium Carbonate",
         calcium_carbonate: 5
       }
     }
@@ -342,12 +358,13 @@ config.buildings.petrochemicals = {
     maintenance: {
       production_choice_one: {
         salt: 3,
-        machine_parts: 1
+        machine_parts: 1,
+        gas: 2
       },
       production_choice_two: {
         hydrogen: 4,
         copper: 1,
-        gas: 2
+        mercury: 2
       }
     },
     manpower_cost: {
@@ -355,10 +372,12 @@ config.buildings.petrochemicals = {
     },
     produces: {
       production_choice_one: {
+        name: "Membrane Cell",
         chlorine: 8
       },
       production_choice_two: {
-        chlorine: 2
+        name: "Castner-Kellner Process",
+        chlorine: 4
       }
     }
   },
@@ -440,9 +459,11 @@ config.buildings.petrochemicals = {
     },
     produces: {
       production_choice_one: {
+        name: "Chlorohydrin Process",
         epoxyethane: 3
       },
       production_choice_two: {
+        name: "Ethylene Direct Oxidation",
         epoxyethane: 5
       }
     }
@@ -535,17 +556,21 @@ config.buildings.petrochemicals = {
     },
     produces: {
       production_choice_argon_nitrogen_oxygen: {
+        name: "Argon-Nitrogen-Oxygen",
         argon: 3,
         nitrogen: 2,
         oxygen: 2
       },
       production_choice_krypton: {
+        name: "Krypton",
         krypton: 3
       },
       production_choice_neon: {
+        name: "Neon",
         neon: 4
       },
       production_choice_xenon: {
+        name: "Xenon",
         xenon: 5
       }
     }
@@ -648,11 +673,12 @@ config.buildings.petrochemicals = {
       },
       production_choice_hydrogen_peroxide_one: {
         ammonium: 4,
-        sulphuric_acid: 2
+        palladium: 1
       },
       production_choice_hydrogen_peroxide_two: {
         hydrogen: 2,
-        oxygen: 2
+        oxygen: 2,
+        sulphuric_acid: 2
       }
     },
     manpower_cost: {
@@ -660,35 +686,48 @@ config.buildings.petrochemicals = {
     },
     produces: {
       production_choice_hydrochloric_acid: {
-        hydrochloric_acid: 4
+        name: "Chloralkali Process",
+        hydrochloric_acid: 4,
+        hydrogen: 2,
+        chloride: 1
       },
       production_choice_hydrogen_one: {
+        name: "Metal-Acid",
         hydrogen: 5
       },
       production_choice_hydrogen_two: {
+        name: "Water Electrolysis",
         hydrogen: 5,
         oxygen: 5
       },
       production_choice_hydrogen_three: {
+        name: "Water Gas Shift Reaction",
         hydrogen: 12
       },
       production_choice_hydrogen_chloride_one: {
+        name: "Direct Synthesis",
         hydrogen_chloride: 2
       },
       production_choice_hydrogen_chloride_two: {
+        name: "Mannheim Process",
         hydrogen_chloride: 1,
         hydrogen: 2
       },
       production_choice_hydrogen_chloride_three: {
+        name: "Organic Synthesis",
+        hydrogen_chloride: 1,
         hydrogen: 1
       },
       production_choice_hydrogen_fluoride: {
+        name: "Hydrogen Fluoride",
         hydrogen_fluoride: 4
       },
       production_choice_hydrogen_peroxide_one: {
+        name: "Anthraquinone Process",
         hydrogen_peroxide: 4
       },
       production_choice_hydrogen_peroxide_two: {
+        name: "Ammonium Perfulsate Hydrolysis",
         hydrogen_peroxide: 2
       }
     }
@@ -906,17 +945,21 @@ config.buildings.petrochemicals = {
     },
     produces: {
       production_choice_one: {
+        name: "Coal Pyrolysis",
         phenol: 3
       },
       production_choice_two: {
-        phenol: 5
+        name: "Benzene Hydrolysis",
+        phenol: 4
       },
       production_choice_three: {
-        acetone: 2,
-        phenol: 2
+        name: "Cumene Process",
+        phenol: 3,
+        acetone: 2
       },
       production_choice_four: {
-        phenol: 8
+        name: "Catalytic Oxidation",
+        phenol: 4
       }
     }
   },
@@ -1035,13 +1078,16 @@ config.buildings.petrochemicals = {
     },
     produces: {
       production_choice_one: {
+        name: "Solvay Process",
         sodium_carbonate: 5
       },
       production_choice_two: {
+        name: "Leblanc Process",
         ammonia: 3,
         sodium_carbonate: 2
       },
       production_choice_three: {
+        name: "Hou's Process",
         sodium_carbonate: 1,
         fertiliser: 1
       }
@@ -1083,16 +1129,19 @@ config.buildings.petrochemicals = {
     },
     produces: {
       production_choice_butadiene: {
+        name: "Butadiene",
         butadiene: 2,
         ethylene: 3,
         propylene: 1
       },
       production_choice_ethylene: {
+        name: "Ethylene",
         butadiene: 2,
         ethylene: 3,
         propylene: 1
       },
       production_choice_propylene: {
+        name: "Propylene",
         butadiene: 2,
         ethylene: 3,
         propylene: 1
@@ -1148,6 +1197,7 @@ config.buildings.petrochemicals = {
       },
       production_choice_three: {
         benzene: 2,
+        methanol: 2,
         alumina: 1
       }
     },
@@ -1156,12 +1206,15 @@ config.buildings.petrochemicals = {
     },
     produces: {
       production_choice_one: {
+        name: "Catalytic Reformation",
         methylbenzene: 1
       },
       production_choice_two: {
+        name: "Ethylene Cracker",
         methylbenzene: 1
       },
       production_choice_three: {
+        name: "Benzene-Methanol Process",
         methylbenzene: 3
       }
     }

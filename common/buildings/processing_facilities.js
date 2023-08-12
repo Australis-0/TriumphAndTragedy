@@ -26,9 +26,11 @@ config.buildings.processing_facilities = { //[WIP] - Add Synthetic Ruby Factory
     },
     produces: {
       production_choice_one: {
+        name: "Tropical Herbs",
         traditional_medicines: 5
       },
       production_choice_two: {
+        name: "Other Herbs",
         traditional_medicines: 5
       }
     }
@@ -104,12 +106,15 @@ config.buildings.processing_facilities = { //[WIP] - Add Synthetic Ruby Factory
     },
     produces: {
       production_choice_gramophones: {
+        name: "Gramophones",
         gramophones: 5
       },
       production_choice_radios: {
+        name: "Radios",
         radios: 15
       },
       production_choice_recording_devices: {
+        name: "Recording Devices",
         recording_devices: 10
       }
     }
@@ -237,30 +242,39 @@ config.buildings.processing_facilities = { //[WIP] - Add Synthetic Ruby Factory
     },
     produces: {
       production_choice_cars: {
+        name: "Car Production",
         cars: 5
       },
       production_choice_humvees: {
+        name: "Humvee Production",
         humvees: 1
       },
       production_choice_jeeps: {
+        name: "Jeep Production",
         jeeps: 3
       },
       production_choice_lorries: {
+        name: "Lorry Production",
         lorries: 4
       },
       production_choice_luxury_cars: {
+        name: "Luxury Car Production",
         luxury_cars: 1
       },
       production_choice_motorbikes: {
+        name: "Motorbike Production",
         motorbikes: 6
       },
       production_choice_steam_carriages: {
+        name: "Steam Carriage Production",
         steam_carriages: 3
       },
       production_choice_tractors: {
+        name: "Tractor Production",
         tractors: 5
       },
       production_choice_vans: {
+        name: "Van Production",
         vans: 4
       }
     }
@@ -371,9 +385,11 @@ config.buildings.processing_facilities = { //[WIP] - Add Synthetic Ruby Factory
     },
     produces: {
       production_choice_beer: {
+        name: "Beer",
         beer: 5
       },
       production_choice_tonics: {
+        name: "Tonics",
         tonics: 5
       }
     }
@@ -486,9 +502,11 @@ config.buildings.processing_facilities = { //[WIP] - Add Synthetic Ruby Factory
     },
     produces: {
       production_choice_canned_food: {
+        name: "Canning",
         canned_food: 5
       },
       production_choice_jam: {
+        name: "Jam Packing",
         jam: 5
       }
     }
@@ -621,81 +639,107 @@ config.buildings.processing_facilities = { //[WIP] - Add Synthetic Ruby Factory
     },
     produces: {
       production_choice_american: {
+        name: "American Cheese",
         american: 10
       },
       production_choice_gorgonzola: {
+        name: "Gorgonzola",
         gorgonzola: 4
       },
       production_choice_roquefort: {
+        name: "Roquefort",
         roquefort: 3
       },
       production_choice_stilton: {
+        name: "Stilton",
         stilton: 5
       },
       production_choice_brie: {
+        name: "Brie",
         brie: 5
       },
       production_choice_butterkase: {
+        name: "Butterkäse",
         butterkase: 5
       },
       production_choice_cantal: {
+        name: "Cantal",
         cantal: 2
       },
       production_choice_cascaval: {
+        name: "Cascaval",
         cascaval: 3
       },
       production_choice_cheddar: {
+        name: "Cheddar",
         cheddar: 5
       },
       production_choice_cheshire: {
+        name: "Cheshire",
         cheshire: 4
       },
       production_choice_coulommiers: {
+        name: "Coulommiers",
         coulommiers: 5
       },
       production_choice_cream_cheese: {
+        name: "Cream Cheese",
         cream_cheese: 5
       },
       production_choice_edam: {
+        name: "Edam",
         edam: 2
       },
       production_choice_feta: {
+        name: "Feta",
         feta: 3
       },
       production_choice_gloucester: {
+        name: "Gloucester",
         gloucester: 1
       },
       production_choice_gouda: {
+        name: "Gouda",
         gouda: 2
       },
       production_choice_grana_padano: {
+        name: "Grana Padano",
         grana_padano: 1
       },
       production_choice_havarti: {
+        name: "Havarti",
         havarti: 3
       },
       production_choice_jarlsberg: {
+        name: "Jarlsberg",
         jarlsberg: 2
       },
       production_choice_munster: {
+        name: "Munster",
         munster: 4
       },
       production_choice_neufchatel: {
+        name: "Neufchatel",
         neufchatel: 4
       },
       production_choice_parmesan: {
+        name: "Parmesan",
         parmesan: 3
       },
       production_choice_pecorino: {
+        name: "Pecorino",
         pecorino: 2
       },
       production_choice_port_salut: {
+        name: "Port Salut",
         port_salut: 2
       },
       production_choice_ricotta: {
+        name: "Ricotta",
         ricotta: 5
       },
       production_choice_swiss: {
+        name: "Swiss",
         swiss: 4
       }
     }
@@ -898,12 +942,15 @@ config.buildings.processing_facilities = { //[WIP] - Add Synthetic Ruby Factory
     },
     produces: {
       production_choice_cannabis: {
+        name: "Cannabis",
         cannabis: 3
       },
       production_choice_hashish: {
+        name: "Hashish",
         hashish: 3
       },
       production_choice_opium: {
+        name: "Opium",
         opium: 2
       }
     }
@@ -991,24 +1038,31 @@ config.buildings.processing_facilities = { //[WIP] - Add Synthetic Ruby Factory
     },
     produces: {
       production_choice_gin: {
+        name: "Gin",
         gin: 7
       },
       production_choice_schnapps: {
+        name: "Schnapps",
         schnapps: 5
       },
       production_choice_rum: {
+        name: "Rum",
         rum: 3
       },
       production_choice_tequila: {
+        name: "Tequila",
         tequila: 5
       },
       production_choice_tonics: {
+        name: "Tonics",
         tonics: 5
       },
       production_choice_vodka: {
+        name: "Vodka",
         vodka: 3
       },
       production_choice_whiskey: {
+        name: "Whiskey",
         whiskey: 3
       }
     }
@@ -1060,27 +1114,35 @@ config.buildings.processing_facilities = { //[WIP] - Add Synthetic Ruby Factory
     },
     produces: {
       production_choice_carfentanil: {
+        name: "Carfentanil",
         carfentanil: 2
       },
       production_choice_cocaine: {
+        name: "Cocaine",
         cocaine: 2
       },
       production_choice_crack_cocaine: {
+        name: "Crack Cocaine",
         crack_cocaine: 5
       },
       production_choice_fentanyl: {
+        name: "Fentanyl",
         fentanyl: 4
       },
       production_choice_hashish: {
+        name: "Hashish",
         hashish: 3
       },
       production_choice_heroin: {
+        name: "Heroin",
         heroin: 3
       },
       production_choice_methamphetamine: {
+        name: "Methamphetamine",
         methamphetamine: 5
       },
       production_choice_psychedelics: {
+        name: "Psychedelics",
         psychedelics: 2
       }
     }
@@ -1287,42 +1349,55 @@ config.buildings.processing_facilities = { //[WIP] - Add Synthetic Ruby Factory
     },
     produces: {
       production_choice_anfo: {
+        name: "ANFO",
         anfo: 5
       },
       production_choice_dynamite: {
+        name: "Dynamite",
         dynamite: 3
       },
       production_choice_plastic_explosives: {
+        name: "Plastic Explosives",
         plastic_explosives: 3
       },
       production_choice_tnt: {
+        name: "TNT",
         tnt: 5
       },
       production_choice_gunpowder: {
+        name: "Gunpowder",
         gunpowder: 5
       },
       production_choice_ap_rounds_one: {
+        name: "AP Rounds I",
         ap_rounds: 10
       },
       production_choice_ap_rounds_two: {
+        name: "AP Rounds II",
         ap_rounds: 10
       },
       production_choice_delayed_fuse_shells: {
+        name: "Delayed-Fuse Shells",
         delayed_fuse_shells: 5
       },
       production_choice_regular_shells: {
+        name: "Regular Shells",
         regular_shells: 15
       },
       production_choice_high_calibre_ammunition: {
+        name: "High-Calibre Ammunition",
         high_calibre_ammunition: 25
       },
       production_choice_low_calibre_ammunition: {
+        name: "Low-Calibre Ammunition",
         low_calibre_ammunition: 50
       },
       production_choice_sabot_rounds_one: {
+        name: "Depleted Uranium Sabot Rounds",
         sabot_rounds: 3
       },
       production_choice_sabot_rounds_two: {
+        name: "Conventional Sabot Rounds",
         sabot_rounds: 10
       }
     }
@@ -1436,9 +1511,11 @@ config.buildings.processing_facilities = { //[WIP] - Add Synthetic Ruby Factory
     },
     produces: {
       production_choice_one: {
+        name: "Paper Filaments",
         filaments: 1
       },
       production_choice_two: {
+        name: "Copper Filaments",
         filaments: 5
       }
     }
@@ -1503,15 +1580,19 @@ config.buildings.processing_facilities = { //[WIP] - Add Synthetic Ruby Factory
     },
     produces: {
       production_choice_one: {
+        name: "Corn Flour",
         flour: 5
       },
       production_choice_two: {
+        name: "Wheat Flour",
         flour: 10
       },
       production_choice_three: {
+        name: "Potato Flour",
         flour: 3
       },
       production_choice_four: {
+        name: "Teff Flour",
         flour: 3
       }
     }
@@ -1565,15 +1646,23 @@ config.buildings.processing_facilities = { //[WIP] - Add Synthetic Ruby Factory
     },
     produces: {
       production_choice_lemonade: {
+        name: "Lemonade",
         lemonade: 8
       },
       production_choice_soup: {
+        name: "Soup",
         soup: 5
       },
       production_choice_stew: {
+        name: "Stew",
         stew: 5
       },
+      production_choice_syrup: {
+        name: "Syrup",
+        syrup: 4
+      },
       production_choice_tortillas: {
+        name: "Tortillas",
         tortillas: 7
       }
     }
@@ -1687,12 +1776,15 @@ config.buildings.processing_facilities = { //[WIP] - Add Synthetic Ruby Factory
     },
     produces: {
       production_choice_one: {
+        name: "Coal Heating",
         glass: 5
       },
       production_choice_two: {
+        name: "Gas Heating",
         glass: 5
       },
       production_choice_three: {
+        name: "Wood Heating",
         glass: 5
       }
     }
@@ -1724,12 +1816,15 @@ config.buildings.processing_facilities = { //[WIP] - Add Synthetic Ruby Factory
     },
     produces: {
       production_choice_one: {
+        name: "Räucherkerzen",
         incense: 3
       },
       production_choice_two: {
+        name: "Camphor Incense",
         incense: 5
       },
       production_choice_three: {
+        name: "Sandalwood Incense",
         incense: 6
       }
     }
@@ -1801,24 +1896,31 @@ config.buildings.processing_facilities = { //[WIP] - Add Synthetic Ruby Factory
     },
     produces: {
       production_choice_one: {
+        name: "Diamond Jewellery",
         jewellery: 1
       },
       production_choice_two: {
+        name: "Gold Rings",
         jewellery: 1
       },
       production_choice_three: {
+        name: "Silver Products",
         jewellery: 1
       },
       production_choice_four: {
+        name: "Platinum Products",
         jewellery: 1
       },
       production_choice_five: {
+        name: "Palladium Rings",
         jewellery: 1
       },
       production_choice_six: {
+        name: "Rubies",
         jewellery: 1
       },
       production_choice_seven: {
+        name: "Pearl Necklaces",
         jewellery: 1
       }
     }
@@ -1887,21 +1989,27 @@ config.buildings.processing_facilities = { //[WIP] - Add Synthetic Ruby Factory
     },
     produces: {
       production_choice_ceramics: {
+        name: "Ceramics",
         ceramics: 3
       },
       production_choice_bone_china: {
+        name: "Bone China",
         bone_china: 2
       },
       production_choice_china: {
+        name: "China",
         china: 5
       },
       production_choice_doccia_porcelain: {
+        name: "Doccia Porcelain",
         doccia_porcelain: 3
       },
       production_choice_lacquerware: {
+        name: "Lacquerware",
         lacquerware: 3
       },
       production_choice_porcelain: {
+        name: "Porcelain",
         porcelain: 6
       }
     }
@@ -2026,15 +2134,19 @@ config.buildings.processing_facilities = { //[WIP] - Add Synthetic Ruby Factory
     },
     produces: {
       production_choice_electric_lamps: {
+        name: "Electric Lamps",
         electric_lamps: 5
       },
       production_choice_lanterns: {
+        name: "Lanterns",
         lanterns: 5
       },
       production_choice_oil_lamps: {
+        name: "Oil Lamps",
         oil_lamps: 6
       },
       production_choice_lightbulbs: {
+        name: "Lightbulbs",
         lightbulbs: 5
       }
     }
@@ -2135,27 +2247,35 @@ config.buildings.processing_facilities = { //[WIP] - Add Synthetic Ruby Factory
     },
     produces: {
       production_choice_bowler_hats: {
+        name: "Bowler Hats",
         bowler_hats: 4
       },
       production_choice_finery: {
+        name: "Finery",
         finery: 5
       },
       production_choice_fur_coats: {
+        name: "Fur Coats",
         fur_coats: 1
       },
       production_choice_fur_hats: {
+        name: "Fur Hats",
         fur_hats: 1
       },
       production_choice_leather_boots: {
+        name: "Leather Boots",
         leather_boots: 6
       },
       production_choice_pocketwatches: {
+        name: "Pocketwatches",
         pocketwatches: 8
       },
       production_choice_tailored_suits: {
+        name: "Tailored Suits",
         tailored_suits: 5
       },
       production_choice_wristwatches: {
+        name: "Wristwatches",
         wristwatches: 8
       }
     }
@@ -2280,9 +2400,11 @@ config.buildings.processing_facilities = { //[WIP] - Add Synthetic Ruby Factory
     },
     produces: {
       production_choice_pemmican: {
+        name: "Pemmican",
         pemmican: 5
       },
       production_choice_sausages: {
+        name: "Sausages",
         sausages: 3
       }
     }
@@ -2526,42 +2648,55 @@ config.buildings.processing_facilities = { //[WIP] - Add Synthetic Ruby Factory
     },
     produces: {
       production_choice_antipyretics: {
+        name: "Antipyretic Production",
         antipyretics: 5
       },
       production_choice_analgesics: {
+        name: "Analgesic Production",
         analgesics: 1
       },
       production_choice_antimalarial_drugs: {
+        name: "Antimalarial Drug Production",
         antimalarial_drugs: 3
       },
       production_choice_antibiotics: {
+        name: "Antibiotic Production",
         antibiotics: 5
       },
       production_choice_antiseptics_one: {
+        name: "Iodine Antiseptics",
         antiseptics: 4
       },
       production_choice_antiseptics_two: {
+        name: "Coal Tar Antiseptics",
         antiseptics: 5
       },
       production_choice_contraceptives: {
+        name: "Contraceptive Production",
         contraceptives: 3
       },
       production_choice_hormone_medications: {
+        name: "Hormone Medication Production",
         hormone_medications: 2
       },
       production_choice_mood_stabilisers: {
+        name: "Mood Stabiliser Production",
         mood_stabilisers: 5
       },
       production_choice_statins: {
+        name: "Statin Production",
         statins: 1
       },
       production_choice_stimulants: {
+        name: "Stimulants Production",
         stimulants: 4
       },
       production_choice_tranquilisers: {
+        name: "Tranquiliser Production",
         tranquilisers: 1
       },
       production_choice_vaccines: {
+        name: "Vaccine Production",
         vaccines: 10
       }
     }
@@ -2686,12 +2821,15 @@ config.buildings.processing_facilities = { //[WIP] - Add Synthetic Ruby Factory
     },
     produces: {
       production_choice_one: {
+        name: "Chromium Resistors",
         resistors: 5
       },
       production_choice_two: {
+        name: "Glass Resistors",
         resistors: 5
       },
       production_choice_three: {
+        name: "Copper Resistors",
         resistors: 5
       }
     }
@@ -2747,27 +2885,35 @@ config.buildings.processing_facilities = { //[WIP] - Add Synthetic Ruby Factory
     },
     produces: {
       production_choice_cheongju: {
+        name: "Cheongju",
         cheongju: 3
       },
       production_choice_chhaang: {
+        name: "Chhaang",
         chhaang: 2
       },
       production_choice_gwahaju: {
+        name: "Gwaha-ju",
         gwahaju: 2
       },
       production_choice_huangjiu: {
+        name: "Huangjiu",
         huangjiu: 5
       },
       production_choice_mirin: {
+        name: "Mirin",
         mirin: 5
       },
       production_choice_sake: {
+        name: "Sake",
         sake: 5
       },
       production_choice_shaoxing: {
+        name: "Shaoxing",
         production_choice_shaoxing: 6
       },
       production_choice_tapuy: {
+        name: "Tapuy",
         tapuy: 3
       }
     }
@@ -2895,7 +3041,7 @@ config.buildings.processing_facilities = { //[WIP] - Add Synthetic Ruby Factory
       bricks: 12,
       glass: 10,
       lumber: 8,
-      mahogany_wo : 5,
+      mahogany_wood: 5,
       lamps: 4,
       tools: 3,
       textiles: 2,
@@ -2975,15 +3121,19 @@ config.buildings.processing_facilities = { //[WIP] - Add Synthetic Ruby Factory
     },
     produces: {
       production_choice_boots: {
+        name: "Boots",
         boots: 10
       },
       production_choice_parkas: {
+        name: "Parkas",
         parkas: 3
       },
       production_choice_ponchos: {
+        name: "Ponchos",
         ponchos: 5
       },
       production_choice_work_clothes: {
+        name: "Work Clothes",
         work_clothes: 20
       }
     }
@@ -3069,27 +3219,35 @@ config.buildings.processing_facilities = { //[WIP] - Add Synthetic Ruby Factory
     },
     produces: {
       production_choice_black_tea: {
+        name: "Black Tea",
         black_tea: 4
       },
       production_choice_chai_tea: {
+        name: "Chai Tea",
         chai_tea: 3
       },
       production_choice_green_tea: {
+        name: "Green Tea",
         green_tea: 5
       },
       production_choice_herbal_tea: {
+        name: "Herbal Tea",
         herbal_tea: 3
       },
       production_choice_hibiscus_tea: {
+        name: "Hibiscus Tea",
         hibiscus_tea: 3
       },
       production_choice_oolong_tea: {
+        name: "Oolong Tea",
         oolong_tea: 4
       },
       production_choice_puerh_tea: {
+        name: "Pu-erh Tea",
         puerh_tea: 3
       },
       production_choice_white_tea: {
+        name: "White Tea",
         white_tea: 3
       }
     }
@@ -3185,15 +3343,19 @@ config.buildings.processing_facilities = { //[WIP] - Add Synthetic Ruby Factory
     },
     produces: {
       production_choice_cloth_one: {
+        name: "Cotton Cloth",
         cloth: 5
       },
       production_choice_cloth_two: {
+        name: "Woolen Cloth",
         cloth: 5
       },
       production_choice_linen: {
+        name: "Linen",
         linen: 5
       },
       production_choice_synthetic_fabric: {
+        name: "Synthetic Fabrics",
         synthetic_fabric: 3
       }
     }
@@ -3281,15 +3443,19 @@ config.buildings.processing_facilities = { //[WIP] - Add Synthetic Ruby Factory
     },
     produces: {
       production_choice_cabins: {
+        name: "Cabins",
         cabins: 5
       },
       production_choice_locomotives_one: {
+        name: "Steam Locomotives",
         locomotives: 5
       },
       production_choice_locomotives_two: {
+        name: "Electric Locomotives",
         locomotives: 10
       },
       production_choice_trains: {
+        name: "Trains",
         trains: 1
       }
     }
@@ -3322,9 +3488,11 @@ config.buildings.processing_facilities = { //[WIP] - Add Synthetic Ruby Factory
     },
     produces: {
       production_choice_one: {
+        name: "Silicon Transistors",
         transistors: 4
       },
       production_choice_two: {
+        name: "Vacuum Tubes",
         transistors: 20
       }
     }
@@ -3605,63 +3773,83 @@ config.buildings.processing_facilities = { //[WIP] - Add Synthetic Ruby Factory
     },
     produces: {
       production_choice_champagne: {
+        name: "Champagne",
         champagne: 3
       },
       production_choice_barbera: {
+        name: "Barbera",
         barbera: 4
       },
       production_choice_cabernet_franc: {
+        name: "Cabernet Franc",
         cabernet_franc: 4
       },
       production_choice_cabernet_sauvignon: {
+        name: "Cabernet Sauvignon",
         cabernet_sauvignon: 5
       },
       production_choice_charbono: {
+        name: "Charbono",
         charbono: 2
       },
       production_choice_dolcetto: {
+        name: "Dolcetto",
         dolcetto: 3
       },
       production_choice_gamay: {
+        name: "Gamay",
         gamay: 4
       },
       production_choice_grenache: {
+        name: "Grenache",
         grenache: 5
       },
       production_choice_malbec: {
+        name: "Malbec",
         malbec: 3
       },
       production_choice_merlot: {
+        name: "Merlot",
         merlot: 4
       },
       production_choice_mourvedre: {
+        name: "Mourvedre",
         mourvedre: 4
       },
       production_choice_nehbyehlas: {
+        name: "Nehbyehlas",
         nehbyehlas: 1
       },
       production_choice_petite_sirah: {
+        name: "Petite Sirah",
         petite_sirah: 3
       },
       production_choice_pinot_gris: {
+        name: "Pinot Gris",
         pinot_gris: 2
       },
       production_choice_pinot_noir: {
+        name: "Pinot Noir",
         pinot_noir: 2
       },
       production_choice_port: {
+        name: "Port",
         port: 4
       },
       production_choice_red_bordeaux: {
+        name: "Red Bordeaux",
         red_bordeaux: 5
       },
       production_choice_sangiovese: {
+        name: "Sangiovese",
         sangiovese: 3
       },
       production_choice_syrah: {
+        name: "Syrah",
         syrah: 2
       },
       production_choice_zinfandel: {
+        name: "Zinfandel",
         zinfandel: 3
       },
 
