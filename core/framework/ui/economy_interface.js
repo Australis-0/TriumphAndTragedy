@@ -86,6 +86,9 @@ module.exports = {
               inventory_string.push(recursive_inventory_string[x]);
           } else {
             if (display_goods.includes(all_good_keys[i])) {
+              var has_production_chain = hasProductionChain(all_good_keys[i]);
+              var f_1 = (has_production_chain) ? `[` : "",
+                f_2 = (has_production_chain) ? `]` : "";
               var significance_string = "";
 
               if (options.search_significance)
@@ -95,7 +98,7 @@ module.exports = {
                   significance_string = `(:star: ${parseNumber(local_significance, { display_float: true })}) `;
                 }
 
-              var good_string = `[${(local_obj.name) ? local_obj.name : local_key}]: **${parseNumber(getGoodAmount(user_id, local_key))}**`;
+              var good_string = `${f_1}${(local_obj.name) ? local_obj.name : local_key}${f_2}: **${parseNumber(getGoodAmount(user_id, local_key))}**`;
 
               //Highlight search query if applicable
               if (options.search_query)
