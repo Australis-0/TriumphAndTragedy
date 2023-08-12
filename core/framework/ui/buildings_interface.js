@@ -238,7 +238,7 @@ module.exports = {
                 var production_choice_obj = getProductionChoiceOutput({
                   province_id: province_id,
                   building_object: local_building,
-                  production_choice: all_production_keys[i];
+                  production_choice: all_production_keys[i]
                 });
                 var production_choice_name = all_production_keys[i].replace("production_choice_", "");
 

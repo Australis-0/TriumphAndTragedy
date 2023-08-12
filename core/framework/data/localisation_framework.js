@@ -1231,8 +1231,6 @@ module.exports = {
       production_choice_string = `${maintenance.join(", ")} ➛ _Nothing_`;
     }
 
-    if ()
-
     //Return statement
     return production_choice_string;
   },
