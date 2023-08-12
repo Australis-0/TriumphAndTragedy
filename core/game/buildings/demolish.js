@@ -73,13 +73,27 @@ module.exports = {
                     freed_pops.push(`${(local_pop.icon) ? local_pop.icon + " " : ""}**${parseNumber(demolished_buildings[all_freed_pops[i]])}** ${(local_pop.name) ? local_pop.name : all_freed_pops[i]}`);
                   }
 
-                  //Update UI
+                  //Update UI/Refresh UI
                   if (game_obj.page == `view_city_${province_obj.name}`)
                     createPageMenu(game_obj.middle_embed, {
                       embed_pages: printProvince(game_obj.user, province_obj.name),
                       page: interfaces[game_obj.middle_embed.id].page,
                       user: game_obj.user
                     });
+                  if (game_obj.page.startsWith("view_building_")) {
+                    var building_id = game_obj.page.replace("view_building_");
+                    var page_province_id = building_id.split("-")[0];
+
+                    game_obj.page = `view_province_${page_province_id}`;
+                    createPageMenu(game_obj.middle_embed, {
+                      embed_pages: printProvince(game_obj.user, page_province_id),
+                      user: game_obj.use
+                    });
+                  }
+                  if (game_obj.page.startsWith("view_buildings_"))
+                    printProvinceBuildings(user_id, building_obj, main.interfaces[game_obj.middle_embed.id].page);
+                  if (game_obj.page == "view_industry")
+                    printIndustry(user_id, main.interfaces[game_obj.middle_embed.id].page);
 
                   //Print user feedback
                   (all_freed_pops.length > 0) ?
