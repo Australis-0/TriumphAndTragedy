@@ -404,6 +404,26 @@ module.exports = {
     return (!options.return_object) ? goods_array : goods_object;
   },
 
+  hasProductionChain: function (arg0_good) {
+    //Convert from parameters
+    var good_name = arg0_good;
+
+    //Declare local instance variables
+    var all_buildings = Object.keys(lookup.all_buildings);
+    var good_key = getGood(good_name, { return_key: true });
+
+    //Iterate over all_buildings to see if good_key is in .produces
+    for (var i = 0; i < all_buildings.length; i++) {
+      var local_config = lookup.all_buildings[all_buildings[i]];
+
+      if (local_config.produces) {
+        var flattened_production = flattenObject(local_config.produces);
+
+        if (flattened_production[good_key]) return true;
+      }
+    }
+  },
+
   hasRelevantSubgood: function (arg0_object, arg1_relevant_goods) {
     //Convert from parameters
     var goods_obj = arg0_object;

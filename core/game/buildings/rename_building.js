@@ -58,7 +58,12 @@ module.exports = {
           printAlert(game_obj.id, `You have renamed **${old_building_name}** to **${building_obj.name}**.`);
 
           //Refresh UI
-          printBuilding(user_id, building_obj, main.interfaces[game_obj.middle_embed.id].page);
+          if (game_obj.page.startsWith("view_building_"))
+            printBuilding(user_id, building_obj, main.interfaces[game_obj.middle_embed.id].page);
+          if (game_obj.page.startsWith("view_buildings_"))
+            printProvinceBuildings(user_id, building_obj, main.interfaces[game_obj.middle_embed.id].page);
+          if (game_obj.page == "view_industry")
+            printIndustry(user_id, main.interfaces[game_obj.middle_embed.id].page);
         } else {
           printError(game_obj.id, `**${building_obj.name}**, located in **${(province_obj.name) ? province_obj.name : `Province ${province_obj.id}`}**, is not currently controlled by you! The building is currently administered by **${main.users[province_obj.controller].name}**.`);
         }

@@ -673,6 +673,10 @@ module.exports = {
             game_obj.page = `view_buildings_${province_id}`;
           }
 
+          //[Change Production Choice]
+          if (input == "change production choice")
+            initialiseChangeProductionChoice(user_id, local_building);
+
           //[Demolish]
           if (input == "demolish")
             demolish(user_id, {
@@ -706,6 +710,16 @@ module.exports = {
           if (["show production choice", "show production choices"].includes(input)) {
             delete game_obj.hide_production_choices;
             printBuilding(user_id, building_id, main.interfaces[game_obj.middle_embed.id].page);
+          }
+
+          //[Switch to (Production Choice)]
+          if (input.startsWith("switch to ")) {
+            var production_choice_name = input.replace("switch to ", "");
+            var change_production_choice = changeProductionChoice(user_id, local_building, production_choice_name);
+
+            (change_production_choice[0]) ?
+              printAlert(game_obj.id, change_production_choice[1]) :
+              printError(game_obj.id, change_production_choice[1]);
           }
         }
 
@@ -759,6 +773,10 @@ module.exports = {
             function (arg) {
               printProvinceBuildings(game_obj.user, province_id, arg[0] - 1);
             });
+
+          //[Mass Change Production Choice]
+          if (input == "mass change production choice")
+            initialiseMassChangeProductionChoice(user_id, province_id);
 
           //[Numeric]
           if (input == "numeric") {
@@ -1899,7 +1917,7 @@ module.exports = {
           //[Alphabetical]
           if (input == "alphabetical") {
             game_obj.building_sort = "alphabetical";
-            printIndustry(user_id, province_id, main.interfaces[game_obj.middle_embed.id].page);
+            printIndustry(user_id, main.interfaces[game_obj.middle_embed.id].page);
           }
 
           //[Back]
@@ -1912,31 +1930,31 @@ module.exports = {
           //[Cash Reserves]
           if (input == "cash reserves") {
             game_obj.building_sort = "cash_reserves";
-            printIndustry(user_id, province_id, main.interfaces[game_obj.middle_embed.id].page);
+            printIndustry(user_id, main.interfaces[game_obj.middle_embed.id].page);
           }
 
           //[Category]
           if (input == "category") {
             game_obj.building_sort = "category";
-            printIndustry(user_id, province_id, main.interfaces[game_obj.middle_embed.id].page);
+            printIndustry(user_id, main.interfaces[game_obj.middle_embed.id].page);
           }
 
           //[Chronology]
           if (input == "chronology") {
             game_obj.building_sort = "chronology";
-            printIndustry(user_id, province_id, main.interfaces[game_obj.middle_embed.id].page);
+            printIndustry(user_id, main.interfaces[game_obj.middle_embed.id].page);
           }
 
           //[Employment]
           if (input == "employment") {
             game_obj.building_sort = "employment";
-            printIndustry(user_id, province_id, main.interfaces[game_obj.middle_embed.id].page);
+            printIndustry(user_id, main.interfaces[game_obj.middle_embed.id].page);
           }
 
           //[Numeric]
           if (input == "numeric") {
             game_obj.building_sort = "numeric";
-            printIndustry(user_id, province_id, main.interfaces[game_obj.middle_embed.id].page);
+            printIndustry(user_id, main.interfaces[game_obj.middle_embed.id].page);
           }
 
           //[Jump To Page]
@@ -1951,6 +1969,10 @@ module.exports = {
               printIndustry(user_id, arg[0]);
             });
           }
+
+          //[Mass Change Production Choice]
+          if (input == "mass change production choice")
+            initialiseMassChangeProductionChoice(user_id);
 
           //[Rename Building]
           if (input == "rename building")

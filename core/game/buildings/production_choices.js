@@ -39,6 +39,14 @@ module.exports = {
 
           return [true, `You have set the Production Choice for **${(building_obj.name) ? building_obj.name : building_obj.id}** to **${parseProductionChoice(building_obj.building_type, production_choice_key)}**.`];
         }
+
+        //Refresh UI
+        if (game_obj.page.startsWith("view_building_"))
+          printBuilding(user_id, building_obj, main.interfaces[game_obj.middle_embed.id].page);
+        if (game_obj.page.startsWith("view_buildings_"))
+          printProvinceBuildings(user_id, building_obj, main.interfaces[game_obj.middle_embed.id].page);
+        if (game_obj.page == "view_industry")
+          printIndustry(user_id, main.interfaces[game_obj.middle_embed.id].page);
       } else {
         return [false, `The production choice **${production_choice_name}** doesn't exist for **${(config_obj.name) ? config_obj.name : building_obj.building_type}!**!`];
       }
@@ -166,6 +174,14 @@ module.exports = {
           } else {
             return [true, `**${parseNumber(switched_buildings)}**/${parseNumber(options.amount)} ${(config_obj.name) ? config_obj.name : options.building_type} were successfully switched over to **${parseProductionChoice(options.building_type, production_choice_key)}** nationwide.`];
           }
+
+          //Refresh UI
+          if (game_obj.page.startsWith("view_building_"))
+            printBuilding(user_id, building_obj, main.interfaces[game_obj.middle_embed.id].page);
+          if (game_obj.page.startsWith("view_buildings_"))
+            printProvinceBuildings(user_id, building_obj, main.interfaces[game_obj.middle_embed.id].page);
+          if (game_obj.page == "view_industry")
+            printIndustry(user_id, main.interfaces[game_obj.middle_embed.id].page);
         }
       } else {
         return [false, `The production choice specified for ${(config_obj.name) ? config_obj.name : options.building_type}, **${production_choice_name}**, isn't valid!`];

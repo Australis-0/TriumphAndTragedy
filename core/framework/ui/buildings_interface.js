@@ -378,6 +378,8 @@ module.exports = {
     //Format buildings_string
     var buildings_string = [];
 
+    buildings_string.push(`**[Build]** | **[Demolish]** | **[Mass Change Production Choice]** | **[Rename Building]**`);
+    buildings_string.push("");
     buildings_string.push(`Sort by: **[Alphabetical]** | **[Category]** | **[Chronology]** | **[Numeric]** | **[Cash Reserves]** | **[Employment]**`);
     buildings_string.push("");
     buildings_string.push(`_Displaying all_ **Buildings** _in_ **${config.localisation[`sort_${game_obj.building_sort}`]}**:`);
@@ -492,7 +494,7 @@ module.exports = {
 
     //Iterate over all buildings in province
     if (province_obj) {
-      buildings_string.push(`**[Build]** | **[Demolish]** | **[Rename Building]**`);
+      buildings_string.push(`**[Build]** | **[Demolish]** | **[Mass Change Production Choice]** | **[Rename Building]**`);
       buildings_string.push("");
       buildings_string.push(`Sort by: **[Alphabetical]** | **[Category]** | **[Chronology]** | **[Numeric]** | **[Cash Reserves]** | **[Employment]**`);
       buildings_string.push("");
