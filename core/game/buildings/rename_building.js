@@ -32,7 +32,7 @@ module.exports = {
       });
   },
 
-  renameBuilding: function (arg0_user, arg1_building_name, arg2_building_name) { //[WIP] - Add refresh UI ability later
+  renameBuilding: function (arg0_user, arg1_building_name, arg2_building_name) {
     //Convert from parameters
     var user_id = arg0_user;
     var building_name = arg1_building_name;
@@ -40,7 +40,7 @@ module.exports = {
 
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
-    var building_obj = getBuildingByName(building_name);
+    var building_obj = getBuildingByName(user_id, building_name);
     var game_obj = getGameObject(user_id);
     var usr = main.users[actual_id];
 
@@ -58,6 +58,7 @@ module.exports = {
           printAlert(game_obj.id, `You have renamed **${old_building_name}** to **${building_obj.name}**.`);
 
           //Refresh UI
+          printBuilding(user_id, building_obj, main.interfaces[game_obj.middle_embed.id].page);
         } else {
           printError(game_obj.id, `**${building_obj.name}**, located in **${(province_obj.name) ? province_obj.name : `Province ${province_obj.id}`}**, is not currently controlled by you! The building is currently administered by **${main.users[province_obj.controller].name}**.`);
         }

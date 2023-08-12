@@ -842,29 +842,68 @@ module.exports = {
     return production_obj;
   },
 
-  getBuildingProductionChoice: function (arg0_building_obj) {
+  //getBuildingProductionChoice() - Returns a production choice key for a given building by string smart search
+  getBuildingProductionChoice: function (arg0_building, arg1_production_choice) {
     //Convert from parameters
-    var building_obj = arg0_building_obj;
+    var building_type = arg0_building;
+    var production_choice_name = arg1_production_choice;
 
     //Declare local instance variables
-    var config_obj = lookup.all_buildings[building_obj.building_type];
+    var config_obj = lookup.all_buildings[building_type];
+    var production_choice_key = [false, ""]; //[key_exists, key_name];
 
-    if (config_obj.produces) {
-      var all_production_keys = Object.keys(config_obj.produces);
-      var production_choice_amount = 0;
+    if (typeof production_choice_name == "object") return production_choice_name; //Object guard clause
+    production_choice_name = production_choice_name.trim().toLowerCase();
 
-      //Check how many keys start with production_choice_
-      for (var i = 0; i < config_obj.produces.length; i++)
-        if (config_obj.produces[i].startsWith("production_choice_"))
-          production_choice_amount++;
+    //Iterate over all produces keys if they exist
+    if (config_obj)
+      if (config_obj.produces) {
+        if (config_obj.produces[`production_choice_${production_choice_name}`])
+          return production_choice_name; //Verbatim string guard clause
 
-      //Return statement
-      if (!building_obj.production_choice && production_choice_amount < all_production_keys.length) {
-        return "base";
-      } else if (building_obj.production_choice) {
-        return building_obj.production_choice;
+        var all_production_keys = Object.keys(config_obj.produces);
+        production_choice_name = production_choice_name.toLowerCase().trim();
+
+        //Key search - Soft
+        for (var i = 0; i < all_production_keys.length; i++)
+          if (all_production_keys[i].startsWith("production_choice_"))
+            if (all_production_keys[i].replace("production_choice_", "").toLowerCase().trim().indexOf(production_choice_name) != -1)
+              production_choice_key = [true, all_production_keys[i].replace("production_choice_", "")];
+        //Key search - Hard
+        for (var i = 0; i < all_production_keys.length; i++)
+          if (all_production_keys[i].startsWith("production_choice_"))
+            if (all_production_keys[i].replace("production_choice_", "").toLowerCase().trim() == production_choice_name)
+              production_choice_key = [true, all_production_keys[i].replace("production_choice_", "")];
+
+        //Name search - Soft
+        for (var i = 0; i < all_production_keys.length; i++)
+          if (all_production_keys[i].startsWith("production_choice_")) {
+            var local_production_choice = config_obj.produces[all_production_keys[i]];
+            var trimmed_string = all_production_keys[i].replace("production_choice_", "");
+
+            var local_name = (!local_production_choice.name) ?
+              parseString(trimmed_string) : local_production_choice.name;
+
+            if (local_name.toLowerCase().trim().indexOf(production_choice_name) != -1)
+              production_choice_key = [true, trimmed_string];
+          }
+
+        //Name search - Hard
+        for (var i = 0; i < all_production_keys.length; i++)
+          if (all_production_keys[i].startsWith("production_choice_")) {
+            var local_production_choice = config_obj.produces[all_production_keys[i]];
+            var trimmed_string = all_production_keys[i].replace("production_choice_", "");
+
+            var local_name = (!local_production_choice.name) ?
+              parseString(trimmed_string) : local_production_choice.name;
+
+            if (local_name.toLowerCase().trim() == production_choice_name)
+              production_choice_key = [true, trimmed_string];
+          }
+
+        //Return statement
+        return (production_choice_key[0]) ? production_choice_key[1] : undefined;
       }
-    }
   },
 
   /*
@@ -1523,65 +1562,6 @@ module.exports = {
     return production_choice_obj;
   },
 
-  getProductionChoiceKey: function (arg0_building, arg1_production_choice) {
-    //Convert from parameters
-    var building_type = arg0_building;
-    var production_choice_name = arg1_production_choice;
-
-    //Declare local instance variables
-    var config_obj = lookup.all_buildings[building_type];
-    var production_choice_key = [false, ""]; //[key_exists, key_name];
-
-    if (typeof production_choice_name == "object") return production_choice_name; //Object guard clause
-
-    //Iterate over all produces keys if they exist
-    if (config_obj)
-      if (config_obj.produces) {
-        var all_production_keys = Object.keys(config_obj.produces);
-        production_choice_name = production_choice_name.toLowerCase().trim();
-
-        //Key search - Soft
-        for (var i = 0; i < all_production_keys.length; i++)
-          if (all_production_keys[i].startsWith("production_choice_"))
-            if (all_production_keys[i].replace("production_choice_", "").toLowerCase().trim().indexOf(production_choice_name) != -1)
-              production_choice_key = [true, all_production_keys[i].replace("production_choice_", "")];
-        //Key search - Hard
-        for (var i = 0; i < all_production_keys.length; i++)
-          if (all_production_keys[i].startsWith("production_choice_"))
-            if (all_production_keys[i].replace("production_choice_", "").toLowerCase().trim() == production_choice_name)
-              production_choice_key = [true, all_production_keys[i].replace("production_choice_", "")];
-
-        //Name search - Soft
-        for (var i = 0; i < all_production_keys.length; i++)
-          if (all_production_keys[i].startsWith("production_choice_")) {
-            var local_production_choice = config_obj.produces[all_production_keys[i]];
-            var trimmed_string = all_production_keys[i].replace("production_choice_", "");
-
-            var local_name = (!local_production_choice.name) ?
-              parseString(trimmed_string) : local_production_choice.name;
-
-            if (local_name.toLowerCase().trim().indexOf(production_choice_name) != -1)
-              production_choice_key = [true, trimmed_string];
-          }
-
-        //Name search - Hard
-        for (var i = 0; i < all_production_keys.length; i++)
-          if (all_production_keys[i].startsWith("production_choice_")) {
-            var local_production_choice = config_obj.produces[all_production_keys[i]];
-            var trimmed_string = all_production_keys[i].replace("production_choice_", "");
-
-            var local_name = (!local_production_choice.name) ?
-              parseString(trimmed_string) : local_production_choice.name;
-
-            if (local_name.toLowerCase().trim() == production_choice_name)
-              production_choice_key = [true, trimmed_string];
-          }
-
-        //Return statement
-        return (production_choice_key[0]) ? production_choice_key[1] : undefined;
-      }
-  },
-
   getProductionObject: function (arg0_user) {
     //Convert from parameters
     var user_id = arg0_user;
@@ -1683,6 +1663,28 @@ module.exports = {
 
     //Return statement
     return total;
+  },
+
+  hasBaseProductionChoice: function (arg0_building) {
+    //Convert from parameters
+    var building_name = arg0_building;
+
+    //Declare local instance variables
+    var building_obj = lookup.all_buildings[building_name];
+
+    //Check both produces and maintenance fields
+    if (building_obj.produces) {
+      var all_production_keys = Object.keys(building_obj.produces);
+
+      for (var i = 0; i < all_production_keys.length; i++)
+        if (!all_production_keys[i].startsWith("production_choice_")) return true;
+    }
+    if (building_obj.maintenance) {
+      var all_maintenance_costs = Object.keys(building_obj.maintenance);
+
+      for (var i = 0; i < all_maintenance_costs.length; i++)
+        if (!all_maintenance_costs[i].startsWith("production_choice_")) return true;
+    }
   },
 
   hasProductionChoice: function (arg0_building_obj) {

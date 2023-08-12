@@ -10,7 +10,7 @@ module.exports = {
       building_object: {} - Overrides building_count/building_type
     }
   */
-  demolish: function (arg0_user, arg1_options) {
+  demolish: function (arg0_user, arg1_options) { //[WIP] - Kick out of building UI if currently in it and options.building_object is defined
     //Convert from parameters
     var user_id = arg0_user;
     var options = (arg1_options) ? arg1_options : {};
