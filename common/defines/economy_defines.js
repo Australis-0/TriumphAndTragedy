@@ -50,6 +50,7 @@ config.defines.economy = {
   construction_turns: 3, //Default number of construction turns per city
   occupation_pop_growth_penalty: 0.50, //Pop growth is halved during occupation
   food_required_per_million: 1, //Note that food requirements in goods/goods.js should also be changed to reflect this number when modding
+  minimum_liquidity: 100, //The absolute lowest minimum liquidity a building should have, regardless of circumstance
   money_per_action: 2500, //Assuming taxes were 100%, this is how much a country would earn per action
   resource_base_stock: 100, //How much stock should be set as the default amount in the world market
   rgo_modifier: 0.15, //What should the base RGO modifier be?

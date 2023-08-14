@@ -173,6 +173,24 @@ module.exports = {
     );
   },
 
+  //getZipfTerm() - Fetches the Zipf term for a given value
+  getZipfTerm: function (arg0_number) {
+    //Convert from parameters
+    var number = arg0_number;
+
+    //Declare local instance variables
+    var current_sum = 0;
+
+    //Iterate to 1000 to prevent crashes
+    for (var i = 0; i < 1000; i++) {
+      current_sum += 1/(i + 2);
+
+      if (current_sum > number) return i + 1;
+    }
+
+    return 1000; //It was just exceedingly rare
+  },
+
   modifyValue: function (arg0_object, arg1_key, arg2_number) {
     //Convert from parameters
     var object = arg0_object;

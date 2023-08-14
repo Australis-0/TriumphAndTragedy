@@ -198,7 +198,10 @@ module.exports = {
               var local_object = {
                 id: module.exports.generateBuildingID(province_id),
                 building_type: raw_building_name,
-                order: province_obj.buildings.length
+                order: province_obj.buildings.length,
+
+                //Random seeds
+                zipf_seed: getZipfTerm(Math.random()*2)
               };
 
               if (building_obj.manpower_cost) local_object.employment = {};
@@ -790,53 +793,174 @@ module.exports = {
     return (options.type != "money") ? costs_obj : returnSafeNumber(costs_obj.money, 0);
   },
 
-  //This method only gets building production, not maintenance. See getBuildingConsumption() for maintenance costs instead.
-  getBuildingProduction: function (arg0_user, arg1_building, arg2_city_name) {
+  /*
+    getBuildingEmploymentLevel() - Returns percentage of employment fulfilment for a building
+    options: {
+      return_employment_object: true/false - Returns both the employment object and percentage in { employment: {}, percentage: 0.67 } format.
+    }
+  */
+  getBuildingEmploymentLevel: function (arg0_building_obj, arg1_employment_obj, arg2_options) {
     //Convert from parameters
-    var user_id = arg0_user;
-    var building_name = arg1_building;
-    var city_name = arg2_city_name;
+    var building_obj = arg0_building_obj;
+    var employment_obj = arg1_employment_obj;
+    var options = (arg2_options) ? arg2_options : {};
 
-    //Declare local instance variables
-    var actual_id = main.global.user_map[user_id];
-    var building_obj = (typeof building_name != "object") ?
-      module.exports.getBuilding(building_name) :
-      building_name;
-    var city_obj = (typeof city_name != "object") ?
-      (city_name) ?
-        getCity(city_name, { users: user_id }) :
-        { name: "No city provided." } :
-      city_name;
-    var production_obj = {};
-    var usr = main.users[actual_id];
+    if (building_obj.employment) {
+      //Declare local instance variables
+      var config_obj = lookup.all_buildings[building_obj.building_type];
+      var fulfilment_percentages = [];
+      var employment_obj = (employment_obj) ? employment_obj : building_obj.employment;
 
-    //Only start appending if the user and building_obj.produces is actually defined
-    if (usr)
-      try {
-        if (building_obj.produces) {
-          var all_produced_goods = Object.keys(building_obj.produces);
-          var city_rgo_throughput = getCityRGOThroughput(city_obj);
+      if (config_obj)
+        if (config_obj.manpower_cost) {
+          var all_manpower_keys = Object.keys(config_obj.manpower_cost);
 
-          production_obj = module.exports.applyProduction(
-            JSON.parse(JSON.stringify(building_obj.produces)),
-            {
-              config_object: building_obj,
-              current_scope: { name: "produces" },
-              province_id: city_obj.id,
+          //Iterate over all_manpower_keys
+          for (var i = 0; i < all_manpower_keys.length; i++) {
+            var local_subobj = manpower_obj[all_manpower_keys[i]];
 
-              modifiers: {
-                [`${city_obj.resource}_gain`]:
-                  (city_obj.resource && city_rgo_throughput) ? city_rgo_throughput : 1, //This serves as the RGO throughput modifier
-                production_efficiency: usr.modifiers.production_efficiency,
-                research_efficiency: usr.modifiers.research_efficiency
+            if (all_manpower_keys[i] == "any_pop" || all_manpower_keys[i].startsWith("any_pop_")) {
+              var subobj_fulfilment = module.exports.getBuildingEmploymentLevel(building_obj, employment_obj, { return_employment_object: true });
+
+              employment_obj = subobj_fulfilment.employment;
+              fulfilment_percentages.push(subobj_fulfilment.percentage);
+            } else {
+              if (config.pops[all_manpower_keys[i]]) {
+                var employment_value = returnSafeNumber(employment_obj[all_manpower_keys[i]]);
+
+                if (employment_value >= local_subobj) {
+                  modifyValue(employment_value, all_manpower_keys[i], local_subobj*-1);
+                  fulfilment_percentages.push(1);
+                } else {
+                  fulfilment_percentages.push(employment_value/local_subobj);
+                  employment_value[all_manpower_keys[i]] = 0;
+                }
               }
             }
-          );
+          }
+
+          //Return statement
+          return (!options.return_employment_object) ?
+            getAverage(fulfilment_percentages) : {
+              employment: employment_obj,
+              percentage: getAverage(fulfilment_percentages)
+            }
         }
-      } catch (e) {
-        log.error(`getBuildingProduction() encountered an error whilst parsing for building type ${building_name}.`);
-        console.log(e);
+    }
+  },
+
+  getBuildingExpenditure: function (arg0_building_obj) {
+    //Convert from parameters
+    var building_obj = arg0_building_obj;
+
+    //Declare local instance variables
+    var config_obj = lookup.all_buildings[building_obj.building_type];
+    var current_expenditure = 0;
+
+    //See how much money are being spent on wages of each pop type
+    if (config_obj.flattened_manpower_cost &&
+      building_obj.employees && building_obj.wages
+    ) {
+      var all_pop_types = Object.keys(config_obj.flattened_manpower_cost);
+
+      for (var i = 0; i < all_pop_types.length; i++)
+        current_expenditure += returnSafeNumber(building_obj.employees[all_pop_types[i]])*returnSafeNumber(building_obj.wages[all_pop_types[i]]);
+    }
+
+    //Return statement
+    return current_expenditure;
+  },
+
+  getBuildingFullEmploymentProduction: function (arg0_building_obj) {
+    //Convert from parameters
+    var building_obj = arg0_building_obj;
+
+    //Declare local instance variables
+    var province_id = building_obj.id.split("-")[0];
+
+    //Return statement
+    return module.exports.getBuildingProduction({
+      building_type: building_obj.building_type,
+      province_id: province_id
+    });
+  },
+
+  /*
+    getBuildingMinLiquidity() - Fetches the minimum liquidity amount for a building.
+    options: {
+      expenditure: 10 - Optimisation parameter. Optional.
+    }
+  */
+  getBuildingMinLiquidity: function (arg0_building_obj, arg1_options) {
+    //Convert from parameters
+    var building_obj = arg0_building_obj;
+    var options = (arg1_options) ? arg1_options : {};
+
+    //Declare local instance variables
+    var building_expenditure = (options.expenditure) ? options.expenditure : module.exports.getBuildingExpenditure(building_obj);
+    var min_solvency_turns = module.exports.getBuildingMinSolvencyTurns(building_obj);
+
+    //Return statement
+    return Math.max(building_expenditure*min_solvency_turns, config.defines.economy.minimum_liquidity);
+  },
+
+  /*
+    This method only gets building production, not maintenance. See getBuildingConsumption() for maintenance costs instead.
+    options: {
+      building_object: {} - Optional. if not defined, defaults to full production for building_type
+      building_type: "lumberjacks", - Optional. If not defined, defaults to building_object and factors in total employment
+      province_id: "6607", - Required if building is drawn from building_type
+
+      employment_fulfilment: 0.67 - Optimisation parameter. Current employment fulfilment %,
+    }
+  */
+  getBuildingProduction: function (arg0_options) {
+    //Convert from parameters
+    var options = (arg0_options) ? arg0_options : {};
+
+    //Declare local instance variables
+    var building_obj = options.building_object;
+    var config_obj = (building_obj) ?
+      lookup.all_buildings[building_obj.building_type] :
+      lookup.all_buildings[options.building_type];
+    var production_obj = {};
+
+    if (config_obj.produces) {
+      var province_id = (options.building_object) ?
+        building_obj.id.split("-")[0] : options.province_id;
+      var province_obj = main.provinces[province_id];
+
+      var usr = main.users[province_obj.controller];
+
+      //Set production_obj
+      var province_rgo_throughput = getCityRGOThroughput(province_obj);
+
+      production_obj = module.exports.applyProduction(
+        JSON.parse(JSON.stringify(config_obj.produces)),
+        {
+          config_obect: config_obj,
+          current_scope: { name: "produces" },
+          province_id: province_obj.id,
+
+          modifiers: {
+            [`${province_obj.resource}_gain`]:
+              (province_obj.resource && province_rgo_throughput) ? province_rgo_throughput : 1, //This serves as the RGO throughput modifier
+            production_efficiency: usr.modifiers.production_efficiency,
+            research_efficiency: usr.modifiers.research_efficiency
+          }
+        }
+      );
+
+      //Employment handler if valid
+      if (options.building_object && config_obj.manpower_cost) {
+        //Multiply production_obj by employment_value
+        var employment_value = (options.employment_fulfilment) ?
+          options.employment_fulfilment :
+          module.exports.getBuildingEmploymentLevel(building_obj);
+
+        production_obj = multiplyObject(production_obj, employment_value);
       }
+    }
 
     //Return statement
     return production_obj;
@@ -907,6 +1031,73 @@ module.exports = {
   },
 
   /*
+    getBuildingProfit() - Fetches current building profit this turn
+    options: {
+      return_object: true/false - Returns { expenditure: 0, revenue: 0, profit: 0 }
+    }
+  */
+  getBuildingProfit: function (arg0_building_obj, arg1_options) {
+    //Convert from parameters
+    var building_obj = arg0_building_obj;
+    var options = (arg1_options) ? arg1_options : {};
+
+    //Declare local instance variables
+    var current_expenditure = module.exports.getBuildingExpenditure(building_obj);
+    var current_revenue = module.exports.getBuildingRevenue(building_obj);
+
+    var current_profit = current_revenue - current_expenditure;
+
+    //Return statement
+    return (!options.return_object) ? current_profit : {
+      expenditure: current_expenditure,
+      revenue: current_revenue,
+
+      profit: current_profit
+    };
+  },
+
+  /*
+    getBuildingRevenue() - Calculates total building revenue from produced goods.
+    options: {
+      goods: {} - Specifies a theoretical alternate amount of produced goods
+    }
+  */
+  getBuildingRevenue: function (arg0_building_obj, arg1_options) {
+    //Convert from parameters
+    var building_obj = arg0_building_obj;
+    var options = (arg1_options) ? arg1_options : {};
+
+    //Declare local instance variables
+    var current_revenue = 0;
+    var province_id = building_obj.id.split("-")[0];
+    var province_obj = main.provinces[province_id];
+
+    var goods_obj = (options.goods) ? options.goods : getBuildingProduction(user_id, building_obj, province_obj);
+
+    //Iterate over goods_obj and multiply by current market price, 0 if not sellable
+    var all_good_keys = Object.keys(goods_obj);
+
+    for (var i = 0; i < all_good_keys.length; i++) {
+      var local_market_good = main.market[all_good_keys[i]];
+      var local_value = goods_obj[all_good_keys[i]];
+
+      if (local_market_good)
+        current_revenue += local_value*local_market_good.buy_price;
+    }
+
+    //Return statement
+    return local_value;
+  },
+
+  getBuildingMinSolvencyTurns: function (arg0_building_obj) {
+    //Convert from parameters
+    var building_obj = arg0_building_obj;
+
+    //Return statement
+    return Math.min(returnSafeNumber(building_obj.zipf_seed), 1);
+  },
+
+  /*
     getBuildings() - Returns an array of all valid building objects/keys.
     options: {
       return_names: true/false - Whether to return back keys or not
@@ -929,6 +1120,11 @@ module.exports = {
 
       for (var x = 0; x < local_buildings.length; x++)
         if (!module.exports.ignore_building_keys.includes(local_buildings[x])) {
+          var local_building = local_category[local_buildings[x]];
+
+          if (local_building.manpower_cost)
+            local_building.flattened_manpower_cost = flattenObject(local_building.manpower_cost);
+
           all_buildings.push((options.return_names) ?
             local_buildings[x] :
             local_category[local_buildings[x]]
@@ -1126,6 +1322,26 @@ module.exports = {
 
         break;
     }
+  },
+
+  /*
+    getBuildingWage() - Returns the wage for a certain pop type a building is hiring by accounting for competition and staple goods price.
+    options: {
+      pop_type: "engineers", - The pop type the building is hiring
+
+      average_province_wage: 32.5, - The mean province wage for this pop type
+      staple_goods_price: 56.5 - How much it costs to buy available staple goods for this pop type
+    }
+  */
+  getBuildingWage: function (arg0_building_obj, arg1_options) { //[WIP] - Finish function body
+    //Convert from parameters
+    var building_obj = arg0_building_obj;
+
+    //Declare local instance variables
+    var province_id = building_obj.id.split("-");
+    var province_obj = main.provinces[province_id];
+
+
   },
 
   /*
