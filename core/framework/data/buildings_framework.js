@@ -886,6 +886,34 @@ module.exports = {
   },
 
   /*
+    getBuildingMinHiringLiquidity() - Fetches the minimum hiring liquidity for a building.
+    options: {
+      expenditure: 10, - Optimisation parameter. Optional.
+      return_object: true/false - If true, returns object in the format of {
+        minimum_hiring_liquidity: 0,
+        minimum_liquidity: 0
+      }
+    }
+  */
+  getBuildingMinHiringLiquidity: function (arg0_building_obj, arg1_options) {
+    //Convert from parameters
+    var building_obj = arg0_building_obj;
+    var options = (arg1_options) ? arg1_options : {};
+
+    //Declare local instance variables
+    var current_liquidity = building_obj.stockpile.money;
+    var minimum_liquidity = module.exports.getBuildingMinLiquidity(building_obj, { expenditure: options.expenditure });
+
+    var minimum_hiring_liquidity = current_liquidity - minimum_liquidity;
+
+    //Return statement
+    return (!options.return_object) ? minimum_hiring_liquidity : {
+      minimum_hiring_liquidity: minimum_hiring_liquidity,
+      minimum_liquidity: minimum_liquidity
+    };
+  },
+
+  /*
     getBuildingMinLiquidity() - Fetches the minimum liquidity amount for a building.
     options: {
       expenditure: 10 - Optimisation parameter. Optional.
@@ -902,6 +930,14 @@ module.exports = {
 
     //Return statement
     return Math.max(building_expenditure*min_solvency_turns, config.defines.economy.minimum_liquidity);
+  },
+
+  getBuildingMinSolvencyTurns: function (arg0_building_obj) {
+    //Convert from parameters
+    var building_obj = arg0_building_obj;
+
+    //Return statement
+    return Math.min(returnSafeNumber(building_obj.zipf_seed), 1);
   },
 
   /*
@@ -1087,14 +1123,6 @@ module.exports = {
 
     //Return statement
     return local_value;
-  },
-
-  getBuildingMinSolvencyTurns: function (arg0_building_obj) {
-    //Convert from parameters
-    var building_obj = arg0_building_obj;
-
-    //Return statement
-    return Math.min(returnSafeNumber(building_obj.zipf_seed), 1);
   },
 
   /*
