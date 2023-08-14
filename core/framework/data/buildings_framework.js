@@ -886,6 +886,67 @@ module.exports = {
   },
 
   /*
+    getBuildingHiringPositions() - Gets the number of positions for hire of a given pop type.
+    options: {
+      pop_type: "engineers", - The pop type for which to get the total number of ideal hires for.
+
+      employment_level: 0.50, - Optional. Optimisation parameter
+      profit_obj: {}, - Optional. Optimisation parameter.
+      remaining_positions: 0, - Optional. Optimisation parameter
+
+      return_object: true/false - Whether to return an object with all local instance variables instead of a single number
+    }
+  */
+  getBuildingHiringPositions: function (arg0_building_obj, arg1_options) {
+    //Convert from parameters
+    var building_obj = arg0_building_obj;
+    var options = (arg1_options) ? arg1_options : {};
+
+    //Declare local instance variables
+    var wage_obj = module.exports.getBuildingWage(building_obj, {
+      pop_type: options.pop_type,
+
+      employment_level: options.employment_level,
+      profit_obj: options.profit_obj,
+      remaining_positions: options.remaining_positions,
+
+      return_object: true
+    });
+
+    var has_deficit = (wage_obj.profit_obj.profit < 0);
+    var has_liquidity = (building_obj.stockpile.money >= config.defines.economy.minimum_liquidity);
+    var has_full_employment_profit = (wage_obj.full_employment_profit > wage_obj.profit_obj.profit);
+    var minimum_hiring_liquidity = module.exports.getBuildingMinHiringLiquidity(building_obj, {
+      expenditure: wage_obj.profit_obj.expenditure
+    });
+
+    var open_positions = 0;
+
+    //Get remaining positions in two hiring cases
+    if (has_liquidity && has_deficit && has_full_employment_profit) {
+      open_positions = minimum_hiring_liquidity/wage_obj.wage;
+    } else if (has_liquidity && !has_deficit) {
+      open_positions = wage_obj.profit_obj.profit/wage_obj.wage;
+    }
+
+    //Return statement
+    (!options.return_object) ? open_positions : {
+      hiring_positions: open_positions,
+
+      has_deficit: has_deficit,
+      has_liquidity: has_liquidity,
+      has_full_employment_profit: full_employment_profit,
+      minimum_hiring_liquidity: minimum_hiring_liquidity,
+
+      full_employment_profit: wage_obj.full_employment_profit,
+      profit_obj: wage_obj.profit_obj,
+      remaining_positions: wage_obj.remaining_positions,
+
+      wage: wage_obj.wage
+    };
+  },
+
+  /*
     getBuildingMinHiringLiquidity() - Fetches the minimum hiring liquidity for a building.
     options: {
       expenditure: 10, - Optimisation parameter. Optional.
@@ -1399,13 +1460,14 @@ module.exports = {
     getBuildingWage() - Returns the wage for a certain pop type a building is hiring by accounting for competition and staple goods price.
     options: {
       pop_type: "engineers", - The pop type the building is hiring
+      return_object: true/false, - Whether or not to return an object of all local instance variables and resultant employment. False by default
 
       employment_level: 0.50, - Optional. Optimisation parameter
       profit_obj: {}, - Optional. Optimisation parameter
       remaining_positions: 0 - Optional. Optimisation parameter
     }
   */
-  getBuildingWage: function (arg0_building_obj, arg1_options) { //[WIP] - Finish function body
+  getBuildingWage: function (arg0_building_obj, arg1_options) {
     //Convert from parameters
     var building_obj = arg0_building_obj;
     var options = (arg1_options) ? arg1_options : {};
@@ -1424,8 +1486,17 @@ module.exports = {
     var full_employment_goods_obj = module.exports.getBuildingFullEmploymentProduction(building_obj);
     full_employment_profit = module.exports.getBuildingRevenue(building_obj, { goods: full_employment_goods_obj });
 
+    //Fetch position_wage
+    var position_wage = returnSafeNumber(Math.abs(full_employment_profit - profit_obj.profit)/remaining_positions);
+
     //Return statement
-    return returnSafeNumber(Math.abs(full_employment_profit - profit_obj.profit)/remaining_positions);
+    return (!options.return_object) ? position_wage : {
+      full_employment_profit: full_employment_profit,
+      profit_obj: profit_obj,
+      remaining_positions: remaining_positions,
+
+      wage: position_wage
+    };
   },
 
   /*
