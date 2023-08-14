@@ -1093,6 +1093,46 @@ module.exports = {
   },
 
   /*
+    getBuildingRemainingPositions() - Returns the number of remaining employee positions available in a building.
+    options: {
+      employment_level: 0.60, - The current percentage of employment fulfilment
+      pop_type: "engineers" - Optional. The pop type for which to get remaining positions for. Uses all pops by default
+    }
+  */
+  getBuildingRemainingPositions: function (arg0_building_obj, arg1_options) {
+    //Convert from parameters
+    var building_obj = arg0_building_obj;
+    var options = (arg1_options) ? arg1_options : {};
+
+    //Declare local instance variables
+    var config_obj = lookup.all_buildings[building_obj.building_type];
+    var remaining_positions = 0;
+
+    if (config_obj.manpower_cost) {
+      var all_pops = (options.pop_type) ? getList(options.pop_type) : Object.keys(building_obj.flattened_manpower_cost);
+
+      var current_employees = getObjectSum(building_obj.employment);
+      var upper_bound_employees = config_obj.upper_bound_manpower;
+
+      if (current_employees < upper_bound_employees) {
+        var employment_level = (options.employment_level) ? options.employment_level : module.exports.getBuildingEmploymentLevel(building_obj);
+
+        for (var i = 0; i < all_pops.length; i++) {
+          var local_employees = returnSafeNumber(building_obj.employment[all_pops[i]]);
+          var local_value = building_obj.flattened_manpower_cost[all_pops[i]];
+
+          //If current employment of pop type is 0, then push local value to remaining positions to incentivise hiring this pop type
+          remaining_positions += (local_employees <= 0) ? local_value :
+            Math.min(local_value, local_employees*(1/employment_level));
+        }
+      }
+    }
+
+    //Return statement
+    return remaining_positions;
+  },
+
+  /*
     getBuildingRevenue() - Calculates total building revenue from produced goods.
     options: {
       goods: {} - Specifies a theoretical alternate amount of produced goods
@@ -1150,8 +1190,11 @@ module.exports = {
         if (!module.exports.ignore_building_keys.includes(local_buildings[x])) {
           var local_building = local_category[local_buildings[x]];
 
-          if (local_building.manpower_cost)
+          if (local_building.manpower_cost) {
             local_building.flattened_manpower_cost = flattenObject(local_building.manpower_cost);
+
+            local_building.upper_bound_manpower = getObjectSum(local_building.flattened_manpower_cost);
+          }
 
           all_buildings.push((options.return_names) ?
             local_buildings[x] :
@@ -1357,19 +1400,32 @@ module.exports = {
     options: {
       pop_type: "engineers", - The pop type the building is hiring
 
-      average_province_wage: 32.5, - The mean province wage for this pop type
-      staple_goods_price: 56.5 - How much it costs to buy available staple goods for this pop type
+      employment_level: 0.50, - Optional. Optimisation parameter
+      profit_obj: {}, - Optional. Optimisation parameter
+      remaining_positions: 0 - Optional. Optimisation parameter
     }
   */
   getBuildingWage: function (arg0_building_obj, arg1_options) { //[WIP] - Finish function body
     //Convert from parameters
     var building_obj = arg0_building_obj;
+    var options = (arg1_options) ? arg1_options : {};
 
     //Declare local instance variables
-    var province_id = building_obj.id.split("-");
-    var province_obj = main.provinces[province_id];
+    var full_employment_profit;
+    var profit_obj = (options.profit_obj) ? options.profit_obj :
+      module.exports.getBuildingProfit(building_obj, { return_object: true });
+    var remaining_positions = (options.remaining_positions) ?
+      options.remaining_positions :
+      module.exports.getBuildingRemainingPositions(building_obj, {
+        employment_level: options.employment_level, pop_type: options.pop_type
+      });
 
+    //Fetch full_employment_profit
+    var full_employment_goods_obj = module.exports.getBuildingFullEmploymentProduction(building_obj);
+    full_employment_profit = module.exports.getBuildingRevenue(building_obj, { goods: full_employment_goods_obj });
 
+    //Return statement
+    return returnSafeNumber(Math.abs(full_employment_profit - profit_obj.profit)/remaining_positions);
   },
 
   /*

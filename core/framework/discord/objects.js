@@ -110,6 +110,23 @@ module.exports = {
     return depth;
   },
 
+  getObjectSum: function (arg0_scope) {
+    //Convert from parameters
+    var scope = arg0_scope;
+
+    //Declare local instance variables
+    var all_scope_keys = Object.keys(scope);
+    var total_sum = 0;
+
+    //Iterate over all_scope_keys
+    for (var i = 0; i < all_scope_keys.length; i++)
+      if (typeof all_scope_keys[i] == "number")
+        total_sum += scope[all_scope_keys[i]];
+
+    //Return statement
+    return total_sum;
+  },
+
   getSubobject: function (arg0_scope, arg1_key, arg2_restrict_search) {
     //Convert from parameters
     var scope = arg0_scope;
