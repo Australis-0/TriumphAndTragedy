@@ -1109,7 +1109,7 @@ module.exports = {
       {
         building_production = module.exports.getProductionChoiceOutput({
           building_object: building_obj,
-          production_choice: building_obj.production_choice;
+          production_choice: building_obj.production_choice
         });
 
         var all_building_production_keys = Object.keys(building_production);
