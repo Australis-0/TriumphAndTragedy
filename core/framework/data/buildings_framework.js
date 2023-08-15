@@ -1602,6 +1602,7 @@ module.exports = {
     //Declare local instance variables, corresponding functions
     var actual_id = main.global.user_map[user_id];
     var all_goods = lookup.all_good_names;
+    var production_obj = {};
     var usr = main.users[actual_id];
 
     //Note that deep copies are made to make sure not to effect the actual user variable and to run a valid simulation to simply fetch values instead of alter them
@@ -1619,7 +1620,9 @@ module.exports = {
         };
         var maintenance_obj = {};
         var maintenance_shortfalls = {};
-        var production_obj = {};
+
+        var army_maintenance_obj = getArmyMaintenance(user_id);
+        var all_army_maintenance_costs = Object.keys(army_maintenance_obj);
 
         //Subtract army maintenance
         for (var i = 0; i < all_army_maintenance_costs.length; i++) {
@@ -1734,8 +1737,8 @@ module.exports = {
 
     //Return statement
     return (good_type == "all") ?
-      (Object.keys(goods_production).length > 0) ? goods_production : {} :
-      (goods_production[good_type]) ? goods_production[good_type] : [0, 0];
+      (Object.keys(production_obj).length > 0) ? production_obj : {} :
+      (production_obj[good_type]) ? production_obj[good_type] : [0, 0];
   },
 
   /*
