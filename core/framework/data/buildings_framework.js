@@ -690,28 +690,47 @@ module.exports = {
     return (building_category_exists[0]) ? building_category_exists[1] : undefined;
   },
 
-  getBuildingConsumption: function (arg0_user, arg1_building) {
+  /*
+    getBuildingConsumption() - Fetches building maintenance relevant to throughput capacity.
+    options: {
+      employment_level: 0.83 - Optimisation. The current level of employment as a percentage
+    }
+  */
+  getBuildingConsumption: function (arg0_user, arg1_building, arg2_options) {
     //Convert from parameters
     var user_id = arg0_user;
-    var building_name = arg1_building;
+    var building_obj = arg1_building;
 
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
-    var building_obj = module.exports.getBuilding(building_name);
+    var config_obj = module.exports.getBuilding(building_obj.building_type);
+    var employment_level;
     var maintenance_obj = {};
     var usr = main.users[actual_id];
 
     //Only start appending if the .maintenance object exists at all
-    if (building_obj.maintenance) {
-      var all_maintenance_costs = Object.keys(building_obj.maintenance);
+    if (config_obj.maintenance) {
+      var all_maintenance_costs = Object.keys(config_obj.maintenance);
 
+      //Initialise local instance variables
+      {
+        //Add employment_level parameter if applicable
+        if (config_obj.manpower_cost) {
+          employment_level = (options.employment_level) ? options.employment_level : module.exports.getBuildingEmploymentLevel(building_obj);
+        } else {
+          employment_level = 1;
+        }
+      }
+
+      //Pay maintenance costs
       maintenance_obj = module.exports.applyProduction(
-        JSON.parse(JSON.stringify(building_obj.maintenance)),
+        JSON.parse(JSON.stringify(config_obj.maintenance)),
         {
-          config_object: building_obj,
+          config_object: config_obj,
           current_scope: { name: "maintenance" }
         }
       );
+      maintenance_obj = multiplyObject(maintenance_obj, employment_level);
     }
 
     //Return statement
