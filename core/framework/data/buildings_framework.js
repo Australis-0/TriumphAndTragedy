@@ -703,6 +703,7 @@ module.exports = {
 
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
+    var building_maintenance = {};
     var config_obj = module.exports.getBuilding(building_obj.building_type);
     var employment_level;
     var maintenance_obj = {};
@@ -710,8 +711,6 @@ module.exports = {
 
     //Only start appending if the .maintenance object exists at all
     if (config_obj.maintenance) {
-      var all_maintenance_costs = Object.keys(config_obj.maintenance);
-
       //Initialise local instance variables
       {
         //Add employment_level parameter if applicable
@@ -720,11 +719,24 @@ module.exports = {
         } else {
           employment_level = 1;
         }
+
+        //Get building_maintenance from production choice
+        building_maintenance = module.exports.getProductionChoiceOutput({
+          building_object: building_obj,
+          production_choice: building_obj.production_choice
+        });
+        building_maintenance = multiplyObject(building_maintenance, -1);
+
+        var all_building_maintenance_keys = Object.keys(building_maintenance);
+
+        for (var i = 0; i < all_building_maintenance_keys.length; i++)
+          if (building_maintenance[all_building_maintenance_keys[i]] >= 0)
+            delete building_maintenance[all_building_maintenance_keys[i]];
       }
 
       //Pay maintenance costs
       maintenance_obj = module.exports.applyProduction(
-        JSON.parse(JSON.stringify(config_obj.maintenance)),
+        JSON.parse(JSON.stringify(building_maintenance)),
         {
           config_object: config_obj,
           current_scope: { name: "maintenance" }
@@ -1081,6 +1093,7 @@ module.exports = {
 
     //Declare local instance variables
     var building_obj = options.building_object;
+    var building_production = {};
     var config_obj = (building_obj) ?
       lookup.all_buildings[building_obj.building_type] :
       lookup.all_buildings[options.building_type];
@@ -1090,14 +1103,27 @@ module.exports = {
       var province_id = (options.building_object) ?
         building_obj.id.split("-")[0] : options.province_id;
       var province_obj = main.provinces[province_id];
-
       var usr = main.users[province_obj.controller];
+
+      //Get building_production from production choice
+      {
+        building_production = module.exports.getProductionChoiceOutput({
+          building_object: building_obj,
+          production_choice: building_obj.production_choice;
+        });
+
+        var all_building_production_keys = Object.keys(building_production);
+
+        for (var i = 0; i < all_building_production_keys.length; i++)
+          if (building_production[all_building_production_keys[i]] < 0)
+            delete building_production[all_building_production_keys[i]];
+      }
 
       //Set production_obj
       var province_rgo_throughput = getCityRGOThroughput(province_obj);
 
       production_obj = module.exports.applyProduction(
-        JSON.parse(JSON.stringify(config_obj.produces)),
+        JSON.parse(JSON.stringify(building_production)),
         {
           config_obect: config_obj,
           current_scope: { name: "produces" },
