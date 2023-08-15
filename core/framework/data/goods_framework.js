@@ -165,6 +165,9 @@ module.exports = {
       } else {
         good_amount += returnSafeNumber(usr.inventory[good_obj.id]);
       }
+    } else {
+      if (name == "money")
+        good_amount += returnSafeNumber(usr.money);
     }
 
     //Return statement

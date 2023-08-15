@@ -966,6 +966,51 @@ module.exports = {
   },
 
   /*
+    getBuildingInputFulfilment() - Fetches maintenance fulfilment from maintenance shortfall scope. Returns an array of potential building fulfilment
+    options: {
+      maintenance: {}, - Optional. Optimisation parameter. The current maintenance goods scope of the building
+      maintenance_shortfall: {}, - The current shortfall ranges of each good in a user's inventory
+    }
+  */
+  getBuildingInputFulfilment: function (arg0_building_obj, arg1_options) {
+    //Convert from parameters
+    var building_obj = arg0_building_obj;
+    var options = (arg1_options) ? arg1_options : {};
+
+    //Declare local instance variables
+    var input_fulfilment = [];
+    var input_fulfilments_high = [];
+    var input_fulfilments_low = [];
+    var maintenance_obj = (options.maintenance) ? options.maintenance : module.exports.getBuildingConsumption(user_id, building_obj);
+
+    //Iterate over all_maintenance_keys
+    var all_maintenance_keys = Object.keys(maintenance_obj);
+
+    for (var i = 0; i < all_maintenance_keys.length; i++) {
+      var local_shortfall = (options.maintenance_shortfall[all_maintenance_keys[i]]) ?
+        options.maintenance_shortfall[all_maintenance_keys[i]] : [0, 0];
+      var local_value = maintenance_obj[all_maintenance_keys[i]];
+
+      var local_fulfilment = (Array.isArray(local_value)) ? [
+        local_value[0]*local_shortfall[0],
+        local_value[1]*local_shortfall[1]
+      ] : [
+        local_value*local_shortfall[0],
+        local_value*local_shortfall[1]
+      ];
+
+      input_fulfilments_low.push(local_fulfilment[0]);
+      input_fulfilments_high.push(local_fulfilment[1]);
+    }
+
+    //Return statement
+    return [
+      getAverage(input_fulfilments_low),
+      getAverage(input_fulfilments_high)
+    ];
+  },
+
+  /*
     getBuildingMinHiringLiquidity() - Fetches the minimum hiring liquidity for a building.
     options: {
       expenditure: 10, - Optimisation parameter. Optional.
@@ -1531,11 +1576,9 @@ module.exports = {
     //Declare local instance variables, corresponding functions
     var actual_id = main.global.user_map[user_id];
     var all_goods = lookup.all_good_names;
-    var cities = getCities(user_id);
     var usr = main.users[actual_id];
 
     //Note that deep copies are made to make sure not to effect the actual user variable and to run a valid simulation to simply fetch values instead of alter them
-    var goods_production = {};
     var virtual_usr = JSON.parse(JSON.stringify(usr));
 
     var virtual_inventory = virtual_usr.inventory;
@@ -1543,120 +1586,122 @@ module.exports = {
     //Get all goods production by default, filter only if good_type is not set to "all"
     if (usr) {
       try {
-        var all_buildings = lookup.all_buildings;
-        var army_maintenance_obj = getArmyMaintenance(user_id);
-
-        var all_army_maintenance_costs = Object.keys(army_maintenance_obj);
-
-        for (var i = 0; i < cities.length; i++)
-          //Iterate over all buildings in city
-          for (var x = 0; x < cities[i].buildings.length; x++) {
-            var building_obj = all_buildings[cities[i].buildings[x].building_type];
-            var local_building = cities[i].buildings[x];
-            var production_valid = true;
-            var raw_building_name = cities[i].buildings[x].building_type;
-
-            if (building_obj.maintenance || building_obj.produces) {
-              if (building_obj.maintenance) {
-                var all_maintenance_costs = Object.keys(building_obj.maintenance);
-                var local_checks = 0;
-
-                for (var y = 0; y < all_maintenance_costs.length; y++) {
-                  var local_value = getList(building_obj.maintenance[all_maintenance_costs[y]]);
-
-                  //Check to make sure that material actually exists
-                  var current_amount = randomElement(local_value);
-                  var local_actual_material = all_goods.includes(all_maintenance_costs[y]);
-
-                  if (local_actual_material) {
-                    if (virtual_inventory[all_maintenance_costs[y]] >= current_amount) {
-                      local_checks++;
-                      virtual_inventory[all_maintenance_costs[y]] -= current_amount;
-                    }
-                  } else {
-                    if (virtual_usr[all_maintenance_costs[y]] >= current_amount) {
-                      local_checks++;
-                      virtual_usr[all_maintenance_costs[y]] -= current_amount;
-                    }
-                  }
-
-                  //Change production value for it
-                  if (good_type == "all") {
-                    changeProductionValue(goods_production, `${all_maintenance_costs[y]}_upkeep`, "minimum", current_amount);
-                    changeProductionValue(goods_production, `${all_maintenance_costs[y]}_upkeep`, "maximum", current_amount);
-                  }
-
-                  //Begin removing resources from virtual_inventory and virtual_user
-                  (local_actual_material) ?
-                    virtual_inventory[all_maintenance_costs[y]] -= current_amount :
-                    virtual_usr[all_maintenance_costs[y]] -= current_amount;
-                }
-
-                //Check if production is valid
-                production_valid = (local_checks >= all_maintenance_costs.length);
-              }
-
-              //Only produce if the building has the necessary resources to do so
-              if (production_valid) {
-                //Add building special_effect to total goods production array
-                goods_production[`${raw_building_name}_special_effect`] = (goods_production[`${raw_building_name}_special_effect`]) ?
-                  goods_production[`${raw_building_name}_special_effect`] + 1 :
-                  1;
-
-                var building_production = module.exports.getBuildingProduction(user_id, building_obj, cities[i]);
-
-                //Add all_building_production to goods_production
-                var all_building_production = Object.keys(building_production);
-
-                for (var y = 0; y < all_building_production.length; y++) {
-                  var current_amount = building_production[all_building_production[y]];
-
-                  changeProductionValue(goods_production, all_building_production[y], "minimum", current_amount[0]);
-                  changeProductionValue(goods_production, all_building_production[y], "maximum", current_amount[1]);
-                }
-              }
-            }
-          }
+        var all_provinces = getProvinces(user_id, { include_hostile_occupations: true });
+        var building_cache = {
+          employment: {}, //ID - Employment level key map
+          maintenance: {} //ID - Maintenance object map
+        };
+        var maintenance_obj = {};
+        var maintenance_shortfalls = {};
+        var production_obj = {};
 
         //Subtract army maintenance
         for (var i = 0; i < all_army_maintenance_costs.length; i++) {
           var local_amount = army_maintenance_obj[all_army_maintenance_costs[i]];
 
-          changeProductionValue(goods_production, `${all_army_maintenance_costs[i]}_upkeep`, "minimum", local_amount);
-          changeProductionValue(goods_production, `${all_army_maintenance_costs[i]}_upkeep`, "maximum", local_amount);
+          changeProductionValue(maintenance_obj, `${all_army_maintenance_costs[i]}_upkeep`, "minimum", local_amount);
+          changeProductionValue(maintenance_obj, `${all_army_maintenance_costs[i]}_upkeep`, "maximum", local_amount);
         }
 
-        //Check for special_effect
-        if (good_type == "all")
-          for (var i = 0; i < all_goods.length; i++) {
-            var local_good = lookup.all_goods[all_goods[i]];
+        //Fetch maintenance_obj from all buildings first
+        for (var i = 0; i < all_provinces.length; i++)
+          //Iterate over all_buildings in a province
+          if (all_provinces[i].buildings)
+            for (var x = 0; x < all_provinces[i].buildings.length; x++) {
+              var local_building = all_provinces[i].buildings[x];
+              var local_employment = module.exports.getBuildingEmploymentLevel(local_building, { return_employment_object: true });
+              var local_maintenance = module.exports.getBuildingConsumption(user_id, local_building, { employment_level: local_employment.level });
 
-            if (local_good.special_effect) {
-              changeProductionValue(goods_production, all_goods[i], "minimum", virtual_inventory[all_goods[i]] - getGoodAmount(user_id, all_goods[i]));
-              changeProductionValue(goods_production, all_goods[i], "maximum", virtual_inventory[all_goods[i]] - getGoodAmount(user_id, all_goods[i]));
+              //Initialise building_cache for building
+              {
+                building_cache.employment[local_building.id] = local_employment;
+                building_cache.maintenance[local_building.id] = local_maintenance;
+              }
+
+              //Iterate over all_local_maintenance to push to maintenance_shortfalls
+              var all_local_maintenance = Object.keys(local_maintenance);
+
+              for (var y = 0; y < all_local_maintenance.length; y++) {
+                var local_array = getList(local_maintenance[all_local_maintenance[y]]);
+                if (local_array.length == 1) local_array.push(local_array[0]);
+
+                changeProductionValue(maintenance_obj, `${all_local_maintenance[y]}_upkeep`, "minimum", local_array[0]);
+                changeProductionValue(maintenance_obj, `${all_local_maintenance[y]}_upkeep`, "maximum", local_array[1]);
+              }
             }
-          }
-        else
-          if (lookup.all_goods[good_type])
-            if (lookup.all_goods[good_type].special_effect) {
-              local_good.special_effect(virtual_usr);
 
-              changeProductionValue(goods_production, good_type, "minimum", virtual_inventory[good_type] - getGoodAmount(user_id, good_type));
-              changeProductionValue(goods_production, good_type, "maximum", virtual_inventory[good_type] - getGoodAmount(user_id, good_type));
+        //Fetch maintenance_shortfalls
+        var all_maintenance_keys = Object.keys(maintenance_obj);
+
+        for (var i = 0; i < all_maintenance_keys.length; i++) {
+          var local_good_amount = getGoodAmount(user_id, all_maintenance_keys[i]);
+          var local_value = maintenance_obj[all_maintenance_keys[i]];
+
+          maintenance_shortfalls[all_maintenance_keys[i]] = [
+            Math.max(Math.min(local_good_amount/local_value[0], 1), 0),
+            Math.max(Math.min(local_good_amount/local_value[1], 1), 0)
+          ];
+          maintenance_shortfalls[all_maintenance_keys[i]].sort();
+        }
+
+        //Process production_obj from all buildings next
+        for (var i = 0; i < all_provinces.length; i++)
+          //Iterate over all_buildings in a province
+          if (all_provinces[i].buildings)
+            for (var x = 0; x < all_provinces[i].buildings.length; x++) {
+              var local_building = all_provinces[i].buildings[x];
+              var local_employment = building_cache.employment[local_building.id];
+              var local_input_fulfilment = module.exports.getBuildingInputFulfilment(local_building, {
+                maintenance: building_cache.maintenance[local_building.id],
+                maintenance_shortfall: maintenance_shortfalls
+              });
+              var local_production = module.exports.getBuildingProduction({
+                building_object: local_building,
+                employment_fulfilment: local_employment.percentage
+              });
+
+              var config_obj = lookup.all_buildings[local_building.building_type];
+
+              //Iterate over all_local_production to push to production_obj; multiply production by maintenance shortfall
+              var all_local_production = Object.keys(local_production);
+
+              for (var y = 0; y < all_local_production.length; y++) {
+                var local_array = getList(local_production[all_local_production[y]]);
+                if (local_array.length == 1) local_array.push(local_array[0]);
+
+                changeProductionValue(production_obj, all_local_production[y], "minimum", local_array[0]*local_input_fulfilment[0]);
+                changeProductionValue(production_obj, all_local_production[y], "maximum", local_array[0]*local_input_fulfilment[1]);
+              }
+
+              //Special effect handler
+              if (config_obj.special_effect) {
+                var local_array = [
+                  (local_input_fulfilment[0] >= 1), //True is 1 by default
+                  (local_input_fulfilment[1] >= 1)
+                ];
+                var local_key = `${local_building.building_type}_special_effect`;
+
+                if (production_obj[local_key]) {
+                  production_obj[local_key][0] += local_array[0];
+                  production_obj[local_key][1] += local_array[1];
+                } else {
+                  production_obj[local_key] = local_array;
+                }
+              }
             }
 
-        //Sort goods_production so that each key is actually [min, max]
-        var all_good_keys = Object.keys(goods_production);
+        //Merge maintenance_obj into production_obj; sort so that it really is [min, max]
+        production_obj = mergeObjects(production_obj, maintenance_obj);
 
-        for (var i = 0; i < all_good_keys.length; i++)
-          if (Array.isArray(all_good_keys[i]))
-            goods_production[all_good_keys[i]].sort();
+        var all_production_keys = Object.keys(production_obj);
+
+        for (var i = 0; i < all_production_keys.length; i++)
+          if (Array.isArray(production_obj[all_production_keys[i]]))
+            production_obj[all_production_keys[i]].sort();
       } catch (e) {
         log.error(`getProduction() - ran into an error whilst trying to parse production for User ID: ${e}.`);
         console.error(e);
       }
-    } else {
-      log.error(`getProduction() - encountered an error when trying to parse production for User ID: ${user_id}.`);
     }
 
     console.timeEnd(`getProduction()`);
