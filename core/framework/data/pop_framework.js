@@ -598,6 +598,30 @@ module.exports = {
     return (!raw_modifier) ? Math.ceil(usr.pops[pop_type]*availability_modifier) : availability_modifier;
   },
 
+  //getUnemployedPops() - Returns the total unemployed pops of a given type in a province
+  getUnemployedPops: function (arg0_province_id, arg1_type) {
+    //Convert from parameters
+    var province_id = arg0_province_id;
+    var pop_type = arg1_type;
+
+    //Declare local instance variables
+    var employed_pops = 0;
+    var province_obj = main.provinces[province_id];
+
+    var all_pop_keys = Object.keys(province_obj.pops);
+
+    //Iterate over all_pop_keeps for wealth_ pools
+    for (var i = 0; i < all_pop_keys.length; i++)
+      if (all_pop_keys[i].startsWith("wealth_")) {
+        var local_wealth_pool = province_obj.pops[all_pop_keys[i]];
+
+        employed_pops += returnSafeNumber(local_wealth_pool.size);
+      }
+
+    //Return statement
+    return returnSafeNumber(province_obj.pops[all_pop_keys[i]] - employed_pops);
+  },
+
   parsePops: function () {
     //Declare local instance variables
     var all_pops = Object.keys(config.pops);
@@ -617,29 +641,59 @@ module.exports = {
       sorted_wage_obj: {} - Optimisation parameter. The sorted wage object for the province.
     }
   */
-  processEmployment: function (arg0_province_id, arg1_type, arg2_options) { //[WIP] - Finish function body
+  processEmployment: function (arg0_province_id, arg1_type, arg2_options) {
     //Convert from parameters
     var province_id = arg0_province_id;
     var pop_type = arg1_type;
 
     //Declare local instance variables
+    var building_map = getBuildingMap(province_id);
     var province_obj = main.provinces[province_id];
+    var unemployed_pops = module.exports.getUnemployedPops(province_id, pop_type);
 
+    //All unemployed pops are looking for a job
     if (province_obj)
       if (province_obj.buildings) {
         var building_wages = getBuildingWages(province_id, pop_type);
 
         //Iterate over all_building_wages and select the range from the top of the current number of keys
         var all_building_wages = Object.keys(building_wages);
+        var is_strict = config.defines.economy.strict_job_seeking;
         var job_seeking_range = config.defines.economy.job_seeking_range;
 
         var valid_building_range = [
           Math.floor(all_building_wages.length*job_seeking_range[0]),
-          Math.floor(all_building_wages.length*job_seeking_range[1])
+          Math.floor(all_building_wages.length*job_seeking_range[1]) - 1
         ];
         valid_building_range.sort(function (a, b) { return a - b });
 
-        //
+        for (var i = valid_building_range[1] - 1; i >= ((is_strict) ? valid_building_range[0] : 0); i++) {
+          var building_id = all_building_wages[i];
+          var local_building = province_obj.buildings[building_map[building_id]];
+          var local_key = `wealth_${building_id}_${pop_type}`;
+
+          //If they're currently hiring, take all the workers you can according to random_chance_roll. If positions max out, the unemployed_pops figure rolls over
+          if (building_obj[`${pop_type}_positions`]) {
+            var random_chance_roll = Math.random();
+            var random_hirees = Math.floor(unemployed_pops*random_chance_roll);
+
+            if (unemployed_pops > 0) {
+              var available_positions = building_obj[`${pop_type}_positions`];
+
+              if (available_positions > random_hirees) {
+                building_obj[`${pop_type}_positions`] -= random_hirees;
+                province_obj.pops[local_key].size += random_hirees;
+                unemployed_pops -= random_hirees;
+              } else {
+                province_obj.pops[local_key].size += available_positions;
+                unemployed_pops -= available_positions;
+
+                //Delete building_obj[`${pop_type}_positions`] since all the positions have been hired
+                delete building_obj[`${pop_type}_positions`];
+              }
+            }
+          }
+        }
       }
   },
 

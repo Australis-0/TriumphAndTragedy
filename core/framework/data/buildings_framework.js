@@ -1022,6 +1022,24 @@ module.exports = {
     ];
   },
 
+  //getBuildingMap() - Returns a map of building IDs to building array keys in a given province
+  getBuildingMap: function (arg0_province_id) {
+    //Convert from parameters
+    var province_id = arg0_province_id;
+
+    //Declare local instance variables
+    var building_map = {};
+    var province_obj = main.provinces[province_id];
+
+    if (province_obj.buildings)
+      //Iterate over all buildings in province_obj
+      for (var i = 0; i < province_obj.buildings.length; i++)
+        building_map[province_obj.buildings[i].id] = i;
+
+    //Return statement
+    return building_map;
+  },
+
   /*
     getBuildingMinHiringLiquidity() - Fetches the minimum hiring liquidity for a building.
     options: {
@@ -2332,7 +2350,7 @@ module.exports = {
 
         //Initialise/update pop wealth pool
         var local_employees = returnSafeNumber(building_obj.employment[pop_types[i]]);
-        var key_name = `${building_obj.id}_${pop_types[i]}`;
+        var key_name = `wealth_${building_obj.id}_${pop_types[i]}`;
 
         if (local_employees > 0) {
           if (!province_obj.pops[key_name])
