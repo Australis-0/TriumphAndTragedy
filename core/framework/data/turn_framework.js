@@ -1391,6 +1391,12 @@ module.exports = {
           usr.pops.assimilations.splice(assimilations_to_remove[i], 1);
       }
 
+      //Economic processing
+      {
+        for (var i = 0; i < owned_provinces.length; i++)
+          processPops(owned_provinces[i]);
+      }
+
       //Population growth
       {
         if (!usr.has_famine)

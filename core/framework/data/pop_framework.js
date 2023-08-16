@@ -206,6 +206,48 @@ module.exports = {
     return pop_obj;
   },
 
+  //getEmploymentPercentages() - Returns employment percentages for a pop type by building in a province
+  getEmploymentPercentages: function (arg0_province_id, arg1_type) {
+    //Convert from parameters
+    var province_id = arg0_province_id;
+    var pop_type = arg1_type;
+
+    //Declare local instance variables
+    var employment_obj = {};
+    var employed_pops = 0;
+    var province_obj = main.provinces[province_id];
+
+    if (province_obj.buildings) {
+      var all_pop_keys = Object.keys(province_obj.pops);
+
+      for (var i = 0; i < all_pop_keys.length; i++)
+        if (all_pop_keys[i].startsWith("wealth_")) {
+          var split_wealth_key = all_pop_keys[i].split("_");
+
+          var building_id = split_wealth_key[1];
+          var local_pop_type = split_wealth_key[2];
+          var local_wealth_pool = province_obj.pops[all_pop_keys[i]];
+
+          if (local_pop_type == pop_type) {
+            employment_obj[building_id] = local_wealth_pool.size;
+            employed_pops += local_wealth_pool.size;
+          }
+        }
+
+      //Adjust to percentage of employed_pops
+      var all_employment_keys = Object.keys(employment_obj);
+
+      for (var i = 0; i < all_employment_keys.length; i++) {
+        var local_value = employment_obj[all_employment_keys[i]];
+
+        employment_obj[all_employment_keys[i]] = local_value/employed_pops;
+      }
+    }
+
+    //Return statement
+    return sortObject(employment_obj);
+  },
+
   getFaminePenalty: function (arg0_user) {
     //Convert from parameters
     var user_id = arg0_user;
@@ -613,9 +655,15 @@ module.exports = {
     //Iterate over all_pop_keeps for wealth_ pools
     for (var i = 0; i < all_pop_keys.length; i++)
       if (all_pop_keys[i].startsWith("wealth_")) {
-        var local_wealth_pool = province_obj.pops[all_pop_keys[i]];
+        var split_wealth_key = all_pop_keys[i].split("_");
 
-        employed_pops += returnSafeNumber(local_wealth_pool.size);
+        var local_pop_type = split_wealth_key[2];
+
+        if (local_pop_type == pop_type) {
+          var local_wealth_pool = province_obj.pops[all_pop_keys[i]];
+
+          employed_pops += returnSafeNumber(local_wealth_pool.size);
+        }
       }
 
     //Return statement
@@ -654,7 +702,7 @@ module.exports = {
     //All unemployed pops are looking for a job
     if (province_obj)
       if (province_obj.buildings) {
-        var building_wages = getBuildingWages(province_id, pop_type);
+        var building_wages = (options.sorted_wage_obj) ? options.sorted_wage_obj : getBuildingWages(province_id, pop_type);
 
         //Iterate over all_building_wages and select the range from the top of the current number of keys
         var all_building_wages = Object.keys(building_wages);
@@ -698,12 +746,54 @@ module.exports = {
   },
 
   /*
+    processPop() - Processes pop type per province
+    options: {
+      sorted_wage_obj: {} - Optimisation parameter. The sorted wage object for the province.
+    }
+  */
+  processPop: function (arg0_province_id, arg1_type, arg2_options) { //[WIP] - Add pop growth/decline/needs/migration later
+    //Convert from parameters
+    var province_id = arg0_province_id;
+    var pop_type = arg1_type;
+    var options = (arg2_options) ? arg2_options : {};
+
+    //Declare local instance variables
+    var province_obj = main.provinces[province_id];
+
+    module.exports.processEmployment(province_id, pop_type, {
+      sorted_wage_obj: options.sorted_wage_obj
+    });
+  },
+
+  //processPops() - Processes all pops in a given province
+  processPops: function (arg0_province_id) {
+    //Convert from parameters
+    var province_id = arg0_province_id;
+
+    //Declare local instance variables
+    var all_pops = Object.keys(config.pops);
+    var province_obj = main.provinces[province_id];
+
+    //Iterate over all pops and process them
+    for (var i = 0; i < all_pops.length; i++) {
+      //Initialise local tracker variables
+      var local_sorted_wages = getBuildingWages(province_id, all_pops[i]);
+
+      processPop(province_id, all_pops[i], {
+        sorted_wage_obj: local_sorted_wages
+      });
+    }
+  },
+
+  /*
     removePop() - Removes pops from a province
     options: {
       province_id: "6709", - The province ID which to target pops from
-
       pop_type: "soldiers", - Which type of pop to kill off. Doesn't accept lists
       amount: 5000 - How much of the pop to kill off
+
+      building_key_map: {} - Optional. Optimisation parameter. Maps building IDs to building elements
+      employment_percentages: {} - Optional. Optimisation parameter breaking downt he shares of employment by building for this pop type
     }
   */
   removePop: function (arg0_user, arg1_options) {
@@ -720,12 +810,47 @@ module.exports = {
     //Subtract population
     if (province_obj)
       if (province_obj.pops[options.pop_type]) {
+        var building_key_map = (options.building_key_map) ? options.building_key_map : getBuildingMap(options.province_id);
+        var employment_percentages = (options.employment_percentages) ? options.employment_percentages : module.exports.getEmploymentPercentages(options.province_id, options.pop_type);
+
         if (province_obj.pops[options.pop_type] >= options.amount) {
           killed = JSON.parse(JSON.stringify(options.amount));
           province_obj.pops[options.pop_type] -= options.amount;
         } else {
           killed = JSON.parse(JSON.stringify(province_obj.pops[options.pop_type]));
           province_obj.pops[options.pop_type] = 0;
+        }
+
+        //Distribute killed over province_obj.pops wealth pools and subsequent building employment objects
+        var all_building_keys = Object.keys(employment_percentages);
+
+        for (var i = 0; i < all_building_keys.length; i++) {
+          var local_building = province_obj.buildings[building_key_map[all_building_keys[i]]];
+          var local_key = `wealth_${all_building_keys[i]}_${options.pop_type}`;
+          var local_percentage = employment_percentages[all_building_keys[i]];
+          var local_wealth_pool = province_obj.pops[local_key];
+
+          if (local_wealth_pool) {
+            var employees_killed = Math.ceil(local_wealth_pool.size*local_percentage);
+
+            //Subtract wealth; income proportionally from the pool
+            local_wealth_pool.income -= local_wealth_pool.income*local_percentage;
+            local_wealth_pool.wealth -= local_wealth_pool.wealth*local_percentage;
+
+            local_wealth_pool.size -= employees_killed;
+
+            //Delete pool if size is now zero
+            if (local_wealth_pool.size <= 0)
+              delete province_obj.pops[local_key];
+
+            //Remove from building employment
+            if (local_building.employment[local_key]) {
+              local_building.employment[local_key] -= employees_killed;
+
+              if (local_building.employment[local_key] <= 0)
+                delete local_building.employment[local_key];
+            }
+          }
         }
       }
 

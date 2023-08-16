@@ -50,8 +50,11 @@ config.defines.economy = {
   construction_turns: 3, //Default number of construction turns per city
   occupation_pop_growth_penalty: 0.50, //Pop growth is halved during occupation
   food_required_per_million: 1, //Note that food requirements in goods/goods.js should also be changed to reflect this number when modding
+  insolvency_amount: -1000, //At what fiscal liquidity level is a building considered unable to pay its obligations?
+  insolvency_turns: 2, //How many turns must a building be insolvent for before closing?
   minimum_liquidity: 100, //The absolute lowest minimum liquidity a building should have, regardless of circumstance
   money_per_action: 2500, //Assuming taxes were 100%, this is how much a country would earn per action
+  reopen_cost: 1000, //The base cost for reopening an insolvent building (i.e. debt costs + stockpile infusion)
   resource_base_stock: 100, //How much stock should be set as the default amount in the world market
   rgo_modifier: 0.15, //What should the base RGO modifier be?
   rural_pop_cap: [120000, 140000], //What should the soft cap for population growth in rural provinces be?
