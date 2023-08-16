@@ -1591,13 +1591,18 @@ module.exports = {
 
   /*
     getProduction() - Returns the production value of a specific good or all goods for a user. Note that "all" for arg1_good returns an object of all goods with their minimum and maximum production values being stored in a 2-element array.
+
+    options: {
+      is_real: true/false - Whether building effects should actually be applied to the user or not. False by default
+    }
   */
-  getProduction: function (arg0_user, arg1_good) {
+  getProduction: function (arg0_user, arg1_good, arg2_options) {
     console.time(`getProduction()`);
 
     //Convert from parameters
     var user_id = arg0_user;
     var good_type = (arg1_good) ? arg1_good : "all";
+    var options = (arg2_options) ? arg2_options : {};
 
     //Declare local instance variables, corresponding functions
     var actual_id = main.global.user_map[user_id];
@@ -1717,6 +1722,10 @@ module.exports = {
                   production_obj[local_key] = local_array;
                 }
               }
+
+              //Process building handler if this is real
+              if (options.is_real)
+                module.exports.processBuilding(local_building, local_production);
             }
 
         //Merge maintenance_obj into production_obj; sort so that it really is [min, max]
