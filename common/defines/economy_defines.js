@@ -73,6 +73,9 @@ config.defines.economy = {
   urban_pop_growth_penalty_threshold: 500000, //At what population should the urban population threshold kick in?
   urban_pop_growth_penalty_per_million: 0.03, //-3% growth per million
 
+  //Pop Behaviour
+  job_seeking_range: [0.75, 1], //The range of wages pops seek, where 1 is the building with the highest wage in a province
+
   //Trade and World Market
   resource_init_max_percentile: 0.80, //Maximum percentage of shipment capacity that new countries (for the first 10 turns) can use on buying/selling goods from the World Market
   resource_max_percentile: 0.20, //Maximum percentage of shipment capacity that you can use per turn on buying/selling goods from the World Market

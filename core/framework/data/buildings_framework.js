@@ -2257,6 +2257,103 @@ module.exports = {
     return virtual_inventory;
   },
 
+  processBuilding: function (arg0_building_obj, arg1_goods) { //[WIP] - Finish function body
+    //Convert from parameters
+    var building_obj = arg0_building_obj;
+    var goods_obj = (arg1_goods) ? arg1_goods : {}; //The goods produced from this building
+
+    //Declare local instance variables
+    var all_good_keys = Object.keys(goods_obj);
+    var cache = {};
+    var config_obj = lookup.all_buildings[building_obj.building_type];
+    var pop_types;
+    var province_id = building_obj.id.split("-")[0];
+    var province_obj = main.provinces[province_id];
+
+    //Initialise local instance variables
+    {
+      if (config_obj.flattened_manpower_cost)
+        pop_types = Object.keys(config_obj.flattened_manpower_cost);
+    }
+
+    if (province_obj) {
+      var building_employment_level = module.exports.getBuildingEmploymentLevel(building_obj);
+      var profit_obj = module.exports.getBuildingProfit(building_obj, { return_object: true });
+
+      //Iterate over pop_types and set wages for each pop type as well as offer sizes
+      for (var i = 0; i < pop_types.length; i++) {
+        var local_employment_stats = module.exports.getBuildingHiringPositions(building_obj, {
+          pop_type: pop_types[i],
+
+          employment_level: building_employment_level,
+          profit_obj: profit_obj,
+
+          return_object: true
+        });
+
+        //Set wage and offer size
+        building_obj[`${pop_types[i]}_positions`] = local_employment_stats.hiring_positions;
+        building_obj[`${pop_types[i]}_wage`] = local_employment_stats.wage;
+
+        //Initialise/update pop wealth pool
+        var local_employees = returnSafeNumber(building_obj.employment[pop_types[i]]);
+        var key_name = `${building_obj.id}_${pop_types[i]}`;
+
+        if (local_employees > 0) {
+          if (!province_obj.pops[key_name])
+            province_obj.pops[key_name] = {};
+          var local_building_pop = province_obj.pops[key_name];
+
+          //Set .size, .income, .wealth
+          local_building_pop.size = local_employees;
+          local_building_pop.income = local_employment_stats.wage*local_employees;
+          modifyValue(local_building_pop, "wealth", local_building_pop.income);
+
+          //Set cache
+          cache[`wages_${pop_types[i]}`] = local_building_pop.income;
+        }
+      }
+
+      //Building expenditures
+      {
+        var all_cache_keys = Object.keys(cache);
+        var wage_cost = 0;
+
+        //Wages
+        for (var i = 0; i < all_cache_keys.length; i++) {
+          var local_subobj = cache[all_cache_keys[i]];
+
+          if (all_cache_keys[i].startsWith("wages_")) {
+            wage_cost += returnSafeNumber(local_subobj);
+            modifyValue(building_obj.stockpile, "money", wage_cost*-1);
+          }
+        }
+
+        //Set building statistics to building_obj
+        building_obj.wage_cost = wage_cost;
+      }
+
+      //Building revenues
+      {
+        var goods_revenue = 0;
+
+        //Iterate over all_good_keys and sell to the government for World Market prices
+        for (var i = 0; i < all_good_keys.length; i++) {
+          var local_value = returnSafeNumber(goods_obj[all_good_keys[i]]);
+          var market_good = main.market[all_good_keys[i]];
+
+          if (market_good)
+            goods_revenue += local_value*market_good.sell_price;
+        }
+
+        //Add revenue to building stockpile; set building statistics to building_obj
+        modifyValue(building_obj.stockpile, "money", goods_revenue);
+
+        building_obj.goods_revenue = goods_revenue;
+      }
+    }
+  },
+
   refreshBuildingNames: function (arg0_province_id) {
     //Convert from parameters
     var province_id = arg0_province;
