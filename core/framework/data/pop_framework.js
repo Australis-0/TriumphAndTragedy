@@ -612,6 +612,38 @@ module.exports = {
   },
 
   /*
+    processEmployment() - Processes the job market for a given pop type in a province
+    options: {
+      sorted_wage_obj: {} - Optimisation parameter. The sorted wage object for the province.
+    }
+  */
+  processEmployment: function (arg0_province_id, arg1_type, arg2_options) { //[WIP] - Finish function body
+    //Convert from parameters
+    var province_id = arg0_province_id;
+    var pop_type = arg1_type;
+
+    //Declare local instance variables
+    var province_obj = main.provinces[province_id];
+
+    if (province_obj)
+      if (province_obj.buildings) {
+        var building_wages = getBuildingWages(province_id, pop_type);
+
+        //Iterate over all_building_wages and select the range from the top of the current number of keys
+        var all_building_wages = Object.keys(building_wages);
+        var job_seeking_range = config.defines.economy.job_seeking_range;
+
+        var valid_building_range = [
+          Math.floor(all_building_wages.length*job_seeking_range[0]),
+          Math.floor(all_building_wages.length*job_seeking_range[1])
+        ];
+        valid_building_range.sort(function (a, b) { return a - b });
+
+        //
+      }
+  },
+
+  /*
     removePop() - Removes pops from a province
     options: {
       province_id: "6709", - The province ID which to target pops from

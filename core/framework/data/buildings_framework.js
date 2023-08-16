@@ -1589,6 +1589,32 @@ module.exports = {
     };
   },
 
+  //getBuildingWages() - Returns a sorted object of building wages in a province for a given pop type
+  getBuildingWages: function (arg0_province_id, arg1_pop_type) { //[WIP] - Finish function body
+    //Convert from parameters
+    var province_id = arg0_province_id;
+    var pop_type = arg1_type;
+
+    //Declare local instance variables
+    var building_wages = {};
+    var province_obj = main.provinces[province_id];
+
+    if (province_obj)
+      if (province_obj.buildings)
+        //Iterate over all buildings
+        for (var i = 0; i < province_obj.buildings.length; i++) {
+          var local_building = province_obj.buildings[i];
+
+          if (local_building[`${pop_type}_wage`])
+            building_wages[local_building.id] = local_building[`${pop_type}_wage`];
+        }
+
+    building_wages = sortObject(building_wages);
+
+    //Return statement
+    return building_wages;
+  },
+
   /*
     getProduction() - Returns the production value of a specific good or all goods for a user. Note that "all" for arg1_good returns an object of all goods with their minimum and maximum production values being stored in a 2-element array.
 
@@ -2266,7 +2292,7 @@ module.exports = {
     return virtual_inventory;
   },
 
-  processBuilding: function (arg0_building_obj, arg1_goods) { //[WIP] - Finish function body
+  processBuilding: function (arg0_building_obj, arg1_goods) {
     //Convert from parameters
     var building_obj = arg0_building_obj;
     var goods_obj = (arg1_goods) ? arg1_goods : {}; //The goods produced from this building
