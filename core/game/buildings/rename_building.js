@@ -29,6 +29,15 @@ module.exports = {
       },
       function (arg) {
         module.exports.renameBuilding(user_id, arg[0], arg[1]);
+      },
+      function (arg) {
+        switch (arg) {
+          case "view industry":
+            printIndustry(user_id);
+            return true;
+
+            break;
+        }
       });
   },
 
