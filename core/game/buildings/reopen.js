@@ -1,5 +1,5 @@
 module.exports = {
-  initialiseReopenBuilding: function (arg0_user) { //[WIP] - Finish function body
+  initialiseReopenBuilding: function (arg0_user) {
     //Convert from parameters
     var user_id = arg0_user;
 
