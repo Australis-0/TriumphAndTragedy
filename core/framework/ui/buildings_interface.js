@@ -203,6 +203,17 @@ module.exports = {
         building_string.push(`- Province: **${(province_obj.name) ? province_obj.name : province_id}**`);
         building_string.push(`- Nationality: __${usr.name}__`);
 
+        if (!building_obj.insolvent) { //[WIP] - Add additional goods in the future
+          building_string.push("");
+          building_string.push(`- Liquidity: ${config.icons.money} ${parseNumber(building_obj.stockpile.money)}`);
+          
+          if (building_obj.insolvency_turns)
+            building_string.push(` - This building has been insolvent for **${parseNumber(building_obj.insolvency_turns)}** turn(s).`);
+        } else {
+          building_string.push("");
+          building_string.push(`- This building is currently __Insolvent__! We must manually **[Reopen]** this building for ${config.icons.money} ${parseNumber(getReopenCost(local_building))} instead.`);
+        }
+
         //Display building employment
         if (building_obj.manpower_cost) {
           var employment_string = getBuildingEmploymentLocalisation(local_building, building_obj.manpower_cost);
@@ -378,7 +389,7 @@ module.exports = {
     //Format buildings_string
     var buildings_string = [];
 
-    buildings_string.push(`**[Build]** | **[Demolish]** | **[Mass Change Production Choice]** | **[Rename Building]**`);
+    buildings_string.push(`**[Build]** | **[Demolish]** | **[Mass Change Production Choice]** | **[Rename Building]** | **[Reopen]**`);
     buildings_string.push("");
     buildings_string.push(`Sort by: **[Alphabetical]** | **[Category]** | **[Chronology]** | **[Numeric]** | **[Cash Reserves]** | **[Employment]**`);
     buildings_string.push("");
@@ -494,7 +505,7 @@ module.exports = {
 
     //Iterate over all buildings in province
     if (province_obj) {
-      buildings_string.push(`**[Build]** | **[Demolish]** | **[Mass Change Production Choice]** | **[Rename Building]**`);
+      buildings_string.push(`**[Build]** | **[Demolish]** | **[Mass Change Production Choice]** | **[Rename Building]** | **[Reopen]**`);
       buildings_string.push("");
       buildings_string.push(`Sort by: **[Alphabetical]** | **[Category]** | **[Chronology]** | **[Numeric]** | **[Cash Reserves]** | **[Employment]**`);
       buildings_string.push("");

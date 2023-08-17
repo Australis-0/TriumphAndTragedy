@@ -19,8 +19,12 @@ module.exports = {
 
         //Push building name and display ID; current national owner
         var employment_string = "";
+        var f = "__";
         var money_stockpile_string = "";
         var production_choice_string = "";
+
+        //Set formatter
+        if (building_obj.insolvent) f = `~~`;
 
         if (building_obj.manpower_cost)
           employment_string = `- ${getBuildingEmploymentStringLocalisation(local_building, building_obj.manpower_cost)}`;
@@ -31,7 +35,7 @@ module.exports = {
           production_choice_string = ` - ${module.exports.parseProductionChoice(local_building.building_type, local_building.production_choice)}`;
 
         //Print string
-        building_string.push(`${bulletPoint(nesting)}__${(local_building.name) ? local_building.name : building_obj.name}__${money_stockpile_string}${employment_string}${production_choice_string}`);
+        building_string.push(`${bulletPoint(nesting)}${f}${(local_building.name) ? local_building.name : building_obj.name}${f}${money_stockpile_string}${employment_string}${production_choice_string}`);
         building_string.push(`${bulletPoint(nesting + 1)}**[View ${(local_building.name) ? local_building.name : local_building.id}]**`);
       }
     }

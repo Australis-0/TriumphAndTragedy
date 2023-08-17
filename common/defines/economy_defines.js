@@ -51,7 +51,7 @@ config.defines.economy = {
   occupation_pop_growth_penalty: 0.50, //Pop growth is halved during occupation
   food_required_per_million: 1, //Note that food requirements in goods/goods.js should also be changed to reflect this number when modding
   insolvency_amount: -1000, //At what fiscal liquidity level is a building considered unable to pay its obligations?
-  insolvency_turns: 2, //How many turns must a building be insolvent for before closing?
+  insolvency_turns: 2, //How many turns must a building be insolvent for before closing? Type 0 to disable insolvency
   minimum_liquidity: 100, //The absolute lowest minimum liquidity a building should have, regardless of circumstance
   money_per_action: 2500, //Assuming taxes were 100%, this is how much a country would earn per action
   reopen_cost: 1000, //The base cost for reopening an insolvent building (i.e. debt costs + stockpile infusion)
@@ -61,6 +61,7 @@ config.defines.economy = {
   shipment_speed: 50, //How many provinces should a shipment travel per turn as base?
   starting_money_multiplier: 2, //How many times the money cost of a building should the initial stockpile be worth? Set to 0 to use the fixed amount in config.defines.economy.starting_money_stockpile
   starting_money_stockpile: 1000, //The starting monetary stockpile for a building whose money cost isn't defined
+  subsidy_infusion: 1000, //How much money should be infused into the stockpile of an insolvent building if enabled
   supply_limit_rgo_modifier: 100, //How much extra supply limit should it take for an extra +1% boost to RGO throughput in the province?
   urbanisation_cost: 25, //Initial Political Capital cost for urbanisation
   urbanisation_cost_percentile_growth: 1.2, //How fast should the cost grow exponentially?

@@ -833,23 +833,7 @@ module.exports = {
           if (local_wealth_pool) {
             var employees_killed = Math.ceil(local_wealth_pool.size*local_percentage);
 
-            //Subtract wealth; income proportionally from the pool
-            local_wealth_pool.income -= local_wealth_pool.income*local_percentage;
-            local_wealth_pool.wealth -= local_wealth_pool.wealth*local_percentage;
-
-            local_wealth_pool.size -= employees_killed;
-
-            //Delete pool if size is now zero
-            if (local_wealth_pool.size <= 0)
-              delete province_obj.pops[local_key];
-
-            //Remove from building employment
-            if (local_building.employment[local_key]) {
-              local_building.employment[local_key] -= employees_killed;
-
-              if (local_building.employment[local_key] <= 0)
-                delete local_building.employment[local_key];
-            }
+            layoffWorkers(local_building, options.pop_type, employees_killed);
           }
         }
       }

@@ -214,6 +214,41 @@ module.exports = {
           }
   },
 
+  declareBuildingInsolvency: function (arg0_building) {
+    //Convert from parameters
+    var building_obj = arg0_building;
+
+    //Declare local instance variables
+    var config_obj = lookup.all_buildings[building_obj.building_type];
+    var province_id = building_obj.id.split("-")[0];
+    var province_obj = main.provinces[province_id];
+
+    if (config_obj.manpower_cost) {
+      var all_flattened_keys = Object.keys(config_obj.flattened_manpower_cost);
+
+      //Declare insolvency, lay off all workers unless subsidised. If subsidised, give a cash infusion
+      if (!building_obj.subsidised || (province_obj.owner != province_obj.controller)) {
+        for (var i = 0; i < all_flattened_keys.length; i++) {
+          var total_value = config_obj.flattened_manpower_cost[all_flattened_keys[i]];
+
+          module.exports.layoffWorkers(building_obj, all_flattened_keys[i], total_value);
+        }
+
+        //Set as insolvent
+        delete building_obj.insolvency_turns;
+        building_obj.insolvent = true;
+      } else {
+        //Infuse as much money as needed and take it from the player's inventory
+        var subsidy_infusion = config.defines.economy.subsidy_infusion;
+        var usr = main.users[province_obj.controller];
+
+        usr.money -= building_obj.stockpile.money*-1;
+        usr.money -= subsidy_infusion;
+        building_obj.stockpile.money = subsidy_infusion;
+      }
+    }
+  },
+
   /*
     destroyBuildings() - Demolishes a set of buildings and returns the freed manpower.
     options: {
@@ -2144,6 +2179,17 @@ module.exports = {
     return all_production;
   },
 
+  getReopenCost: function (arg0_building) {
+    //Convert from parameters
+    var building_obj = arg0_building;
+
+    //Declare local instance variables
+    var reopen_cost = building_obj.stockpile.money*-1 + config.defines.economy.subsidy_infusion;
+
+    //Return statement
+    (building_obj.insolvent) ? reopen_cost : 0;
+  },
+
   getStartingStockpile: function (arg0_building) {
     //Convert from parameters
     var building_name = arg0_building;
@@ -2218,6 +2264,47 @@ module.exports = {
         if (all_production_keys[i].startsWith("production_choice_"))
           return true;
     }
+  },
+
+  layoffWorkers: function (arg0_building, arg1_pop_type, arg2_amount) {
+    //Convert from parameters
+    var building_obj = arg0_building;
+    var pop_type = arg1_pop_type;
+    var amount = parseInt(arg2_amount);
+
+    //Declare local instance variables
+    var key = `wealth_${all_building_keys[i]}_${options.pop_type}`;
+    var layoffs = 0;
+    var local_wealth_pool = province_obj.pops[local_key];
+    var province_id = building_obj.id.split("-")[0];
+    var province_obj = main.provinces[province_id];
+
+    if (local_wealth_pool) {
+      var local_percentage = amount/local_wealth_pool.size;
+
+      //Subtract wealth; income proportionally from the pool
+      local_wealth_pool.income -= local_wealth_pool.income*local_percentage;
+      local_wealth_pool.wealth -= local_wealth_pool.wealth*local_percentage;
+
+      //Set layoffs and reduce size
+      layoffs = (local_wealth_pool.size >= layoffs) ? layoffs : local_wealth_pool.size;
+      local_wealth_pool.size -= amount;
+
+      //Delete pool if size is now zero
+      if (local_wealth_pool.size <= 0)
+        delete province_obj.pops[pop_type];
+
+      //Remove from building employment
+      if (building_obj.employment[pop_type]) {
+        building_obj.employment[pop_type] -= amount;
+
+        if (building_obj.employment[pop_type] <= 0)
+          delete building_obj.employment[pop_type];
+      }
+    }
+
+    //Return statement
+    return layoffs;
   },
 
   parseProduction: function (arg0_user) {
@@ -2384,6 +2471,20 @@ module.exports = {
 
         //Set building statistics to building_obj
         building_obj.wage_cost = wage_cost;
+      }
+
+      //Building insolvency
+      {
+        if (config.defines.economy.insolvency_turns != 0) {
+          if (building_obj.stockpile.money <= config.defines.economy.insolvency_amount) {
+            modifyValue(building_obj, "insolvency_turns", 1);
+          } else {
+            delete building_obj.insolvency_turns;
+          }
+
+          if (returnSafeNumber(building_obj.insolvency_turns) > config.defines.economy.insolvency_turns)
+            module.exports.declareBuildingInsolvency(building_obj);
+        }
       }
 
       //Building revenues
