@@ -312,16 +312,18 @@ module.exports = {
             for (var i = province_obj.buildings.length - 1; i >= 0; i--)
               if (remaining_amount > 0) {
                 var has_building_obj = false;
+                var local_building = province_obj.buildings[i];
 
                 if (!individual_id) {
                   has_building_obj = true;
                 } else {
-                  if (options.building_object.id == province_obj.buildings[i].id)
+                  if (options.building_object.id == local_building.id)
                     has_building_obj = true;
                 }
 
                 if (has_building_obj)
-                  if (province_obj.buildings[i].building_type == raw_building_name) {
+                  if (local_building.building_type == raw_building_name) {
+                    module.exports.declareBuildingInsolvency(local_building);
                     province_obj.buildings.splice(i, 1);
                     remaining_amount--;
                   }

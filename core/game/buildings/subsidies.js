@@ -1,4 +1,41 @@
 module.exports = {
+  initialiseSubsidiseBuilding: function (arg0_user) {
+    //Convert from parameters
+    var user_id = arg0_user;
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var game_obj = getGameObject(user_id);
+    var usr = main.users[actual_id];
+
+    //Initialise visual prompt
+    visualPrompt(game_obj.alert_embed, user_id, {
+      title: `Subsidise/Defund Building:`,
+      prompts: [
+        [`What is the name of the building you would like to subsidise?\n\nType **[View Industry]** for a full list of all buildings under your control.`, "string"],
+        [`If this building is already subsidised, would you like to defund it? Please type either 'yes' or 'no'.`, "string"]
+      ]
+    },
+    function (arg) {
+      var building_obj = getBuildingByName(user_id, arg[0]);
+      var desubsidise = (arg[1].trim().toLowerCase() == "yes");
+
+      if (building_obj) {
+        module.exports.subsidiseBuilding(user_id, building_obj, { desubsidise: desubsidise });
+      } else {
+        printError(game_obj.id, `The building you have specified, **${arg[0]}**, could not be found anywhere in your country!`);
+      }
+    },
+    function (arg) {
+      switch (arg) {
+        case "view industry":
+          printIndustry(user_id);
+          return true;
+
+          break;
+    });
+  },
+
   /*
     subsidiseAllBuildings() - Subsidises all of a user's buildings. Fires once per turn if user has toggleAllSubsidies() enabled.
     options: {
@@ -53,15 +90,26 @@ module.exports = {
 
     //Set usr.all_subsidies to true/false so that this can be constantly updated in turn_framework
     if (!options.desubsidise) {
-      usr.all_subsidies = true;
+      if (!options.province_ids)
+        usr.all_subsidies = true;
 
       if (!options.do_not_display)
-        printAlert(game_obj.id, `We have enabled subsidies for all **${parseNumber(total_subsidised)}** building(s) across ${(options.province_ids) ? `**${parseNumber(all_provinces.length)}** province(s)` : `our country`}. This will continually update for new buildings.`);
+        printAlert(game_obj.id, `We have enabled subsidies for all **${parseNumber(total_subsidised)}** building(s) across ${(options.province_ids) ? `**${parseNumber(all_provinces.length)}** province(s).` : `our country. This will continually update for new buildings.`}`);
     } else {
       delete usr.all_subsidies;
 
       if (!options.do_not_display)
         printAlert(game_obj.id, `We have turned off subsidies for all **${parseNumber(total_subsidised)}** building(s) across ${(options.province_ids) ? `**${parseNumber(all_provinces.length)}** province(s)` : `our country`}. In order to allow for manual subsidies, this will not continually update, even for newly incorporated territories.`);
+    }
+
+    if (!options.do_not_display) {
+      //Refresh UI
+      if (game_obj.page.startsWith("view_building_"))
+        printBuilding(user_id, building_obj, main.interfaces[game_obj.middle_embed.id].page);
+      if (game_obj.page.startsWith("view_buildings_"))
+        printProvinceBuildings(user_id, building_obj, main.interfaces[game_obj.middle_embed.id].page);
+      if (game_obj.page == "view_industry")
+        printIndustry(user_id, main.interfaces[game_obj.middle_embed.id].page);
     }
 
     //Return statement
@@ -93,15 +141,36 @@ module.exports = {
     if (province_obj.controller == actual_id) {
       if (!building_obj.insolvent) {
         if (!options.desubsidised) {
-          delete building_obj.subsidised;
+          if (building_obj.subsidised) {
+            delete building_obj.subsidised;
+            delete usr.all_subsidies; //This is needed for obvious reasons
 
-          if (!options.do_not_display)
-            printAlert(game_obj.id, `We have stopped subsidies for **${(building_obj.name) ? building_obj.name : building_obj.id}**.`);
+            if (!options.do_not_display)
+              printAlert(game_obj.id, `We have stopped subsidies for **${(building_obj.name) ? building_obj.name : building_obj.id}**.`);
+          } else {
+            if (!options.do_not_display)
+              printError(game_obj.id, `**${(building_obj.name) ? building_obj.name : building_obj.id}** is already no longer receiving subsidies!`);
+          }
         } else {
-          building_obj.subsidised = true;
+          if (!building_obj.subsidised) {
+            building_obj.subsidised = true;
 
-          if (!options.do_not_display)
-            printAlert(game_obj.id, `We have subsidised the **${(building_obj.name) ? building_obj.name : building_obj.id}**.`);
+            if (!options.do_not_display)
+              printAlert(game_obj.id, `We have subsidised the **${(building_obj.name) ? building_obj.name : building_obj.id}**.`);
+          } else {
+            if (!options.do_not_display)
+              printError(game_obj.id, `**${(building_obj.name) ? building_obj.name : building_obj.id}** is already being subsidised!`);
+          }
+
+          if (!options.do_not_display) {
+            //Refresh UI
+            if (game_obj.page.startsWith("view_building_"))
+              printBuilding(user_id, building_obj, main.interfaces[game_obj.middle_embed.id].page);
+            if (game_obj.page.startsWith("view_buildings_"))
+              printProvinceBuildings(user_id, building_obj, main.interfaces[game_obj.middle_embed.id].page);
+            if (game_obj.page == "view_industry")
+              printIndustry(user_id, main.interfaces[game_obj.middle_embed.id].page);
+          }
         }
       } else {
         if (!options.do_not_display)

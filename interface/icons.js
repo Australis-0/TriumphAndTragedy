@@ -648,6 +648,7 @@ config.icons = {
   //Interface icons
   actions: "<:actions:716817688244256770>",
   building: "<:building:716827579650408538>",
+  coins: "<:coins:1142074557440720997>",
   construction_time: "<:building:716827579650408538>",
   development: "<:development:716811992421367869>",
   globe: "<:globe:716811246556545035>",
@@ -700,6 +701,7 @@ config.icons = {
 
   cancel: "<:cancel:725550245672517734>",
   checkmark: "<:checkmark:725550245051760671>",
+  cross: "<:cancel:725550245672517734>",
   zoom_in: "<:zoom_in:785931430215155754>",
   zoom_out: "<:zoom_out:785931430407700482>",
 

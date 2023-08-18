@@ -706,11 +706,23 @@ module.exports = {
           if (input == "rename building")
             initialiseRenameBuilding(user_id, local_building);
 
+          //[Reopen]
+          if (["reopen", "reopen building"].includes(input))
+            reopenBuilding(user_id, local_building);
+
           //[Show Production Choices]
           if (["show production choice", "show production choices"].includes(input)) {
             delete game_obj.hide_production_choices;
             printBuilding(user_id, building_id, main.interfaces[game_obj.middle_embed.id].page);
           }
+
+          //[Subsidise]
+          if (["subsidise", "subsidize"].includes(input))
+            subsidiseBuilding(user_id, local_building);
+
+          //[Turn Off Subsidies]
+          if (input == "turn off subsidies")
+            subsidiseBuilding(user_id, local_building, { desubsidise: true });
 
           //[Switch to (Production Choice)]
           if (input.startsWith("switch to ")) {
@@ -756,6 +768,13 @@ module.exports = {
             printProvinceBuildings(user_id, province_id, main.interfaces[game_obj.middle_embed.id].page);
           }
 
+          //[Defund All Buildings]
+          if (input == "defund all buildings")
+            subsidiseAllBuildings(user_id, {
+              province_ids: [province_id],
+              desubsidise: true
+            });
+
           //[Employment]
           if (input == "employment") {
             game_obj.building_sort = "employment";
@@ -787,6 +806,14 @@ module.exports = {
           //[Rename Building]
           if (input == "rename building")
             initialiseRenameBuilding(user_id);
+
+          //[Reopen]
+          if (input == "reopen")
+            initialiseReopenBuilding(user_id);
+
+          //[Subsidise All Buildings]
+          if (["subsidise all buildings", "subsidize all buildings"].includes(input))
+            subsidiseAllBuildings(user_id, { province_ids: [province_id] });
 
           //[View Building]
           if (input == "view building")
@@ -1945,6 +1972,10 @@ module.exports = {
             printIndustry(user_id, main.interfaces[game_obj.middle_embed.id].page);
           }
 
+          //[Disable All Subsidies]
+          if (input == "disable all subsidies")
+            subsidiseAllBuildings(user_id, { desubsidise: true });
+
           //[Employment]
           if (input == "employment") {
             game_obj.building_sort = "employment";
@@ -1977,6 +2008,14 @@ module.exports = {
           //[Rename Building]
           if (input == "rename building")
             initialiseRenameBuilding(user_id);
+
+          //[Reopen]
+          if (input == "reopen")
+            initialiseReopenBuilding(user_id);
+
+          //[Subsidise All Buildings]
+          if (["subsidise all buildings", "subsidize all buildings"].includes(input))
+            subsidiseAllBuildings(user_id);
 
           //[View Building]
           if (input == "view building")
