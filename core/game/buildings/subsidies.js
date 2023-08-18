@@ -3,7 +3,9 @@ module.exports = {
     subsidiseAllBuildings() - Subsidises all of a user's buildings. Fires once per turn if user has toggleAllSubsidies() enabled.
     options: {
       desubsidise: true/false, - Turn off subsidies for all buildings instead of subsidisng
-      province_ids: [] - The province IDs to target for subsidies instead of targeting a user's global provinces
+      province_ids: [], - The province IDs to target for subsidies instead of targeting a user's global provinces
+
+      do_not_display: true/false - Whether to display this action to a player's game UI
     }
   */
   subsidiseAllBuildings: function (arg0_user, arg1_options) {
@@ -48,6 +50,19 @@ module.exports = {
             }
           }
         }
+
+    //Set usr.all_subsidies to true/false so that this can be constantly updated in turn_framework
+    if (!options.desubsidise) {
+      usr.all_subsidies = true;
+
+      if (!options.do_not_display)
+        printAlert(game_obj.id, `We have enabled subsidies for all **${parseNumber(total_subsidised)}** building(s) across ${(options.province_ids) ? `**${parseNumber(all_provinces.length)}** province(s)` : `our country`}. This will continually update for new buildings.`);
+    } else {
+      delete usr.all_subsidies;
+
+      if (!options.do_not_display)
+        printAlert(game_obj.id, `We have turned off subsidies for all **${parseNumber(total_subsidised)}** building(s) across ${(options.province_ids) ? `**${parseNumber(all_provinces.length)}** province(s)` : `our country`}. In order to allow for manual subsidies, this will not continually update, even for newly incorporated territories.`);
+    }
 
     //Return statement
     return total_subsidised;
@@ -96,5 +111,26 @@ module.exports = {
       if (!options.do_not_display)
         printError(game_obj.id, `You must control **${(province_obj.name) ? province_obj.name : `Province ${province_obj.id}`} before being able to control subsidies there!`);
     }
+  },
+
+  toggleAllSubsidies: function (arg0_user, arg1_provinces) {
+    //Convert from parameters
+    var user_id = arg0_user;
+    var province_ids = (arg1_provinces) ? getList(arg1_provinces) : undefined;
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var game_obj = getGameObject(user_id);
+    var usr = main.users[actual_id];
+
+    //Toggle all subsidies
+    (usr.all_subsidies) ?
+      module.exports.subsidiseAllBuildings(user_id, {
+        desubsidise: true,
+        province_ids: province_ids
+      }) :
+      module.exports.subsidiseAllBuildings(user_id, {
+        province_ids: province_ids
+      });
   }
 };

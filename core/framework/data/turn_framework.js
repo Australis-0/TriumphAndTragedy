@@ -718,45 +718,54 @@ module.exports = {
     console.time(`Building processing!`);
     //Building processing
     try {
-      //Check goods that don't stack first
-      for (var i = 0; i < all_good_names.length; i++) {
-        var local_good = lookup.all_goods[all_good_names[i]];
+      //Building production
+      {
+        //Check goods that don't stack first
+        for (var i = 0; i < all_good_names.length; i++) {
+          var local_good = lookup.all_goods[all_good_names[i]];
 
-        //Reset local_good if it doesn't stack
-        if (local_good.doesnt_stack)
-          setGoodAmount(user_id, all_good_names[i], 0);
+          //Reset local_good if it doesn't stack
+          if (local_good.doesnt_stack)
+            setGoodAmount(user_id, all_good_names[i], 0);
+        }
+
+        var all_produced_goods = Object.keys(all_production);
+
+        for (var i = 0; i < all_produced_goods.length; i++) {
+          var local_value = all_production[all_produced_goods[i]];
+
+          //Process upkeep
+          if (all_produced_goods[i].includes("_upkeep")) {
+            if (!all_produced_goods[i].includes("money")) {
+              var upkeep_to_process = all_produced_goods[i].replace("_upkeep", "");
+
+              if (lookup.all_goods[upkeep_to_process] != undefined)
+                modifyGoodAmount(user_id, upkeep_to_process, randomNumber(local_value[0], local_value[1]));
+              else
+                usr[upkeep_to_process] -= randomNumber(local_value[0], local_value[1]);
+            }
+          } else if (all_produced_goods[i].includes("_special_effect")) {
+            //Process special effects
+            var special_effect_to_process = all_produced_goods[i].replace("_special_effect", "");
+
+            var building_obj = getBuilding(special_effect_to_process);
+
+            if (building_obj.special_effect)
+              building_obj.special_effect(usr);
+          } else {
+            //Process goods
+            if (lookup.all_goods[all_produced_goods[i]] != undefined)
+              modifyGoodAmount(user_id, all_produced_goods[i], randomNumber(local_value[0], local_value[1]));
+            else
+              usr[all_produced_goods[i]] += randomNumber(local_value[0], local_value[1]);
+          }
+        }
       }
 
-      var all_produced_goods = Object.keys(all_production);
-
-      for (var i = 0; i < all_produced_goods.length; i++) {
-        var local_value = all_production[all_produced_goods[i]];
-
-        //Process upkeep
-        if (all_produced_goods[i].includes("_upkeep")) {
-          if (!all_produced_goods[i].includes("money")) {
-            var upkeep_to_process = all_produced_goods[i].replace("_upkeep", "");
-
-            if (lookup.all_goods[upkeep_to_process] != undefined)
-              modifyGoodAmount(user_id, upkeep_to_process, randomNumber(local_value[0], local_value[1]));
-            else
-              usr[upkeep_to_process] -= randomNumber(local_value[0], local_value[1]);
-          }
-        } else if (all_produced_goods[i].includes("_special_effect")) {
-          //Process special effects
-          var special_effect_to_process = all_produced_goods[i].replace("_special_effect", "");
-
-          var building_obj = getBuilding(special_effect_to_process);
-
-          if (building_obj.special_effect)
-            building_obj.special_effect(usr);
-        } else {
-          //Process goods
-          if (lookup.all_goods[all_produced_goods[i]] != undefined)
-            modifyGoodAmount(user_id, all_produced_goods[i], randomNumber(local_value[0], local_value[1]));
-          else
-            usr[all_produced_goods[i]] += randomNumber(local_value[0], local_value[1]);
-        }
+      //Building subsidies
+      {
+        if (usr.all_subsidies)
+          subsidiseAllBuildings(user_id, { do_not_display: true });
       }
     } catch (e) {
       console.log(e);
