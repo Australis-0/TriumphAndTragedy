@@ -48,18 +48,14 @@ module.exports = {
                       var local_cost = building_costs[all_building_costs[i]];
 
                       //Check if resource cost is good, pop, or other
-                      if (all_goods.includes(all_building_costs[i])) {
-                        if (getGoodAmount(user_id, all_building_costs[i]) < local_cost)
-                          resource_shortages[all_building_costs[i]] = local_cost - getGoodAmount(user_id, all_building_costs[i]);
-                      } else if (all_pops.includes(all_building_costs[i])) {
-                        var available_pops = usr.pops[all_building_costs[i]] - usr.pops[`used_${all_building_costs[i]}`];
-
-                        if (available_pops < local_cost)
-                          resource_shortages[all_building_costs[i]] = local_cost - available_pops;
-                      } else {
-                        if (usr[all_building_costs[i]] < local_cost)
-                          resource_shortages[all_building_costs[i]] = local_cost - usr[all_building_costs[i]];
-                      }
+                      if (!all_pops.includes(all_building_costs[i]))
+                        if (all_goods.includes(all_building_costs[i])) {
+                          if (getGoodAmount(user_id, all_building_costs[i]) < local_cost)
+                            resource_shortages[all_building_costs[i]] = local_cost - getGoodAmount(user_id, all_building_costs[i]);
+                        } else {
+                          if (usr[all_building_costs[i]] < local_cost)
+                            resource_shortages[all_building_costs[i]] = local_cost - usr[all_building_costs[i]];
+                        }
                     }
 
                     //Check to see if anything is in resource_shortages. If so, print it out and return an error
@@ -84,14 +80,13 @@ module.exports = {
                       for (var i = 0; i < all_building_costs.length; i++) {
                         var local_cost = building_costs[all_building_costs[i]];
 
-                        //Check if resource cost is good, pop, or other
-                        if (all_goods.includes(all_building_costs[i])) {
-                          modifyGoodAmount(user_id, all_building_costs[i], local_cost*-1);
-                        } else if (all_pops.includes(all_building_costs[i])) {
-                          usr.pops[`used_${all_building_costs[i]}`] += local_cost;
-                        } else {
-                          usr[all_building_costs[i]] -= local_cost;
-                        }
+                        //Check if resource cost is good or other
+                        if (!all_pops.includes(all_building_costs[i]))
+                          if (all_goods.includes(all_building_costs[i])) {
+                            modifyGoodAmount(user_id, all_building_costs[i], local_cost*-1);
+                          } else {
+                            usr[all_building_costs[i]] -= local_cost;
+                          }
                       }
 
                       printAlert(game_obj.id, `You have begun constructing **${parseNumber(building_amount)}** ${(building_amount == 1) ? (building_obj.singular) ? building_obj.singular : raw_building_name : (building_obj.name) ? building_obj.name : raw_building_name} in **${city_obj.name}**! Your advisors estimate that construction will complete in **${parseNumber(total_construction_time)}** turn(s).`);
@@ -122,11 +117,6 @@ module.exports = {
                           shortage_array.push(`- ${local_icon} ${parseNumber(local_shortage)} Money`);
                         if (local_good)
                           shortage_array.push(`- ${local_icon} ${parseNumber(local_shortage)} ${(local_good.name) ? local_good.name : all_resource_shortages[i]}`);
-                        if (config.pops[all_resource_shortages[i]]) {
-                          var local_pop = config.pops[all_resource_shortages[i]];
-
-                          shortage_array.push(`- ${(local_pop.icon) ? local_pop.icon : ""} ${parseNumber(local_shortage)} ${(local_pop.name) ? local_pop.name : all_resource_shortages[i]}`);
-                        }
                       }
 
                       printError(game_obj.id, `You don't have enough resources to construct **${parseNumber(building_amount)}** ${(building_obj.name) ? building_obj.name : raw_building_name}! You still require the following resources:\n\n${shortage_array.join("\n")}`);

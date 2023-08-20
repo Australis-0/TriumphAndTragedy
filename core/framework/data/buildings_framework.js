@@ -222,6 +222,7 @@ module.exports = {
     var config_obj = lookup.all_buildings[building_obj.building_type];
     var province_id = building_obj.id.split("-")[0];
     var province_obj = main.provinces[province_id];
+    var worker_layoffs = {};
 
     if (config_obj.manpower_cost) {
       var all_flattened_keys = Object.keys(config_obj.flattened_manpower_cost);
@@ -231,7 +232,7 @@ module.exports = {
         for (var i = 0; i < all_flattened_keys.length; i++) {
           var total_value = config_obj.flattened_manpower_cost[all_flattened_keys[i]];
 
-          module.exports.layoffWorkers(building_obj, all_flattened_keys[i], total_value);
+          modifyValue(worker_layoffs, all_flattened_keys[i], module.exports.layoffWorkers(building_obj, all_flattened_keys[i], total_value));
         }
 
         //Set as insolvent
@@ -247,6 +248,9 @@ module.exports = {
         building_obj.stockpile.money = subsidy_infusion;
       }
     }
+
+    //Return statement
+    return worker_layoffs;
   },
 
   /*
@@ -269,6 +273,7 @@ module.exports = {
     var amount = options.building_count;
     var building_obj;
     var freed_manpower = {};
+    var layoffs = {};
     var province_id = options.province_id;
     var province_obj = main.provinces[province_id];
     var raw_building_name;
@@ -323,7 +328,7 @@ module.exports = {
 
                 if (has_building_obj)
                   if (local_building.building_type == raw_building_name) {
-                    module.exports.declareBuildingInsolvency(local_building);
+                    layoffs = mergeObjects(layoffs, module.exports.declareBuildingInsolvency(local_building));
                     province_obj.buildings.splice(i, 1);
                     remaining_amount--;
                   }
@@ -331,17 +336,15 @@ module.exports = {
 
             //Free up manpower
             if (building_obj.manpower_cost) {
-              var all_manpower_costs = Object.keys(building_obj.manpower_cost);
+              var all_manpower_keys = Object.keys(building_obj.flattened_manpower_cost);
 
-              for (var i = 0; i < all_manpower_costs.length; i++) {
-                var local_manpower_cost = building_obj.manpower_cost[all_manpower_costs[i]];
+              for (var i = 0; i < all_manpower_keys.length; i++) {
+                var manpower_cost = returnSafeNumber(layoffs[all_manpower_keys[i]]);
 
-                usr.pops[`used_${all_manpower_costs[i]}`] -= local_manpower_cost*amount;
+                usr.pops[`used_${all_manpower_keys[i]}`] -= manpower_cost;
 
                 //Add to tracker variable
-                freed_manpower[all_manpower_costs[i]] = (freed_manpower[all_manpower_costs[i]]) ?
-                  freed_manpower[all_manpower_costs[i]] + local_manpower_cost*amount :
-                  local_manpower_cost*amount;
+                modifyValue(freed_manpower, all_manpower_costs[i], manpower_cost);
               }
             }
 
