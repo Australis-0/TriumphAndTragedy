@@ -275,6 +275,88 @@ module.exports = {
     return military_pop_types;
   },
 
+  //Updates config.pops with a new needs_importance object for buying order reference
+  getNeedsImportance: function () {
+    //Declare local instance variables
+    var all_pops = Object.keys(config.pops);
+    var defines_obj = config.defines.economy.good_categories;
+
+    //Iterate over all pops and subcategories
+    for (var i = 0; i < all_pops.length; i++) {
+      var local_pop = config.pops[all_pops[i]];
+
+      if (local_pop.per_100k)
+        if (local_pop.per_100k.needs) {
+          var local_needs = local_pop.per_100k.needs;
+          local_pop.needs_importance = {};
+
+          var all_local_needs_categories = Object.keys(local_needs);
+          var needs_importance = local_pop.needs_importance;
+
+          for (var x = 0; x < all_local_needs_categories.length; x++) {
+            var local_needs_category = local_needs[all_local_needs_categories[x]];
+            var local_needs_obj = {};
+
+            var all_local_needs_subcategories = Object.keys(local_needs_category);
+
+            for (var y = 0; y < all_local_needs_subcategories.length; y++) {
+              var local_needs = local_needs_category[all_local_needs_categories[y]];
+
+              var all_local_needs = Object.keys(local_needs);
+              var auto_priority = false;
+              var total_importance = 0;
+              var total_marginal_utility = 0;
+              var type_count = {}; //Counts the number of goods of each type for automatic_priority setting
+
+              for (var z = 0; z < all_local_needs.length; z++) {
+                var local_good = lookup.all_goods[all_local_needs[z]];
+
+                if (local_good)
+                  if (local_good.type) {
+                    var local_define = defines_obj[local_good.type];
+
+                    if (local_define) {
+                      //Add to total_importance and total_marginal_utility
+                      total_importance += (local_define.importance != "unlimited") ?
+                        returnSafeNumber(local_define.importance) : 99999;
+                      total_marginal_utility += returnSafeNumber(local_define.marginal_utility);
+
+                      modifyValue(type_count, local_good.type, 1);
+                    }
+                  }
+              }
+
+              //Average total_importance and total_marginal_utility, check for automatic_priority percentage
+              var all_types = Object.keys(type_count);
+              var average_importance = total_importance/all_local_needs.length;
+              var average_marginal_utility = total_marginal_utility/all_local_needs.length;
+
+              for (var z = 0; z < all_types.length; z++) {
+                var local_define = defines_obj[all_types[z]];
+                var local_value = type_count[all_types[z]];
+
+                if (local_define)
+                  if (local_value >= returnSafeNumber(local_define.automatic_priority))
+                    auto_priority = true;
+              }
+
+              //Format local_needs_obj[all_local_needs_subcategories[y]]
+              var local_needs_group = {
+                importance: average_importance,
+                marginal_utility: average_marginal_utility
+              };
+
+              if (auto_priority) local_needs_group.automatic_priority = true;
+              local_needs_obj[all_local_needs_subcategories[y]] = local_needs_group;
+            }
+
+            //Set needs_importance object for pop
+            local_pop.needs_importance[all_local_needs_categories[x]] = local_needs_obj;
+          }
+        }
+    }
+  },
+
   getPopModifier: function (arg0_user, arg1_type, arg2_modifier) {
     //Convert from parameters
     var user_id = arg0_user;

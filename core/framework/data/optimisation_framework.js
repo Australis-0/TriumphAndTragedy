@@ -37,25 +37,32 @@ module.exports = {
     //Process config
     {
       //Building processing
-      //Push lowercase singular to aliases
-      var all_building_categories = Object.keys(config.buildings);
+      {
+        //Push lowercase singular to aliases
+        var all_building_categories = Object.keys(config.buildings);
 
-      for (var i = 0; i < all_building_categories.length; i++) {
-        var local_building_category = config.buildings[all_building_categories[i]];
+        for (var i = 0; i < all_building_categories.length; i++) {
+          var local_building_category = config.buildings[all_building_categories[i]];
 
-        var all_buildings_in_category = Object.keys(local_building_category);
+          var all_buildings_in_category = Object.keys(local_building_category);
 
-        for (var x = 0; x < all_buildings_in_category.length; x++) {
-          var local_building = local_building_category[all_buildings_in_category[x]];
+          for (var x = 0; x < all_buildings_in_category.length; x++) {
+            var local_building = local_building_category[all_buildings_in_category[x]];
 
-          if (typeof local_building == "object")
-            if (local_building.singular)
-              if (!local_building.aliases) {
-                local_building.aliases = [local_building.singular.toLowerCase()];
-              } else {
-                local_building.aliases.push(local_building.singular.toLowerCase());
-              }
+            if (typeof local_building == "object")
+              if (local_building.singular)
+                if (!local_building.aliases) {
+                  local_building.aliases = [local_building.singular.toLowerCase()];
+                } else {
+                  local_building.aliases.push(local_building.singular.toLowerCase());
+                }
+          }
         }
+      }
+
+      //Pop processing
+      {
+        getNeedsImportance();
       }
     }
 
