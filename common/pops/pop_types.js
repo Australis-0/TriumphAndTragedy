@@ -184,6 +184,7 @@ config.pops = { //[WIP] - Rework chances, icons
       }
     },
 
+    buy_order: ["staple_goods", "luxury_goods"],
     specialised_pop: true
   },
 
@@ -495,6 +496,7 @@ config.pops = { //[WIP] - Rework chances, icons
       }
     },
 
+    buy_order: ["staple_goods", "luxury_goods"],
     specialised_pop: false
   },
 
@@ -730,6 +732,7 @@ config.pops = { //[WIP] - Rework chances, icons
       }
     },
 
+    buy_order: ["staple_goods", "luxury_goods"],
     specialised_pop: true
   },
 
@@ -959,6 +962,7 @@ config.pops = { //[WIP] - Rework chances, icons
       }
     },
 
+    buy_order: ["staple_goods", "luxury_goods"],
     specialised_pop: true
   },
 
@@ -1238,6 +1242,7 @@ config.pops = { //[WIP] - Rework chances, icons
       }
     },
 
+    buy_order: ["staple_goods", "luxury_goods"],
     specialised_pop: true
   },
 
@@ -1469,6 +1474,7 @@ config.pops = { //[WIP] - Rework chances, icons
       }
     },
 
+    buy_order: ["staple_goods", "luxury_goods"],
     specialised_pop: false
   },
 
@@ -1609,6 +1615,7 @@ config.pops = { //[WIP] - Rework chances, icons
       }
     },
 
+    buy_order: ["staple_goods", "luxury_goods"],
     specialised_pop: true
   },
 
@@ -1698,6 +1705,7 @@ config.pops = { //[WIP] - Rework chances, icons
       }
     },
 
+    buy_order: ["staple_goods", "luxury_goods"],
     specialised_pop: false
   },
 
@@ -1943,6 +1951,7 @@ config.pops = { //[WIP] - Rework chances, icons
       }
     },
 
+    buy_order: ["staple_goods", "luxury_goods"],
     specialised_pop: false,
     stats_display: true
   },
@@ -2104,6 +2113,7 @@ config.pops = { //[WIP] - Rework chances, icons
       }
     },
 
+    buy_order: ["staple_goods", "luxury_goods"],
     specialised_pop: true
   },
 
@@ -2251,6 +2261,7 @@ config.pops = { //[WIP] - Rework chances, icons
       }
     },
 
+    buy_order: ["staple_goods", "luxury_goods"],
     specialised_pop: false
   },
 
@@ -2442,6 +2453,7 @@ config.pops = { //[WIP] - Rework chances, icons
       }
     },
 
+    buy_order: ["staple_goods", "luxury_goods"],
     specialised_pop: true
   },
 
@@ -2560,6 +2572,7 @@ config.pops = { //[WIP] - Rework chances, icons
       }
     },
 
+    buy_order: ["staple_goods", "luxury_goods"],
     specialised_pop: false
   },
 
@@ -2755,6 +2768,7 @@ config.pops = { //[WIP] - Rework chances, icons
       }
     },
 
+    buy_order: ["staple_goods", "luxury_goods"],
     specialised_pop: false,
     stats_display: true
   },
@@ -2853,6 +2867,7 @@ config.pops = { //[WIP] - Rework chances, icons
       }
     },
 
+    buy_order: ["staple_goods", "luxury_goods"],
     military_pop: true,
     specialised_pop: false
   },
@@ -3012,6 +3027,7 @@ config.pops = { //[WIP] - Rework chances, icons
       }
     },
 
+    buy_order: ["staple_goods", "luxury_goods"],
     specialised_pop: true
   }
 };

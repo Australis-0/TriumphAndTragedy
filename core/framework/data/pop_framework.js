@@ -221,8 +221,8 @@ module.exports = {
       var all_pop_keys = Object.keys(province_obj.pops);
 
       for (var i = 0; i < all_pop_keys.length; i++)
-        if (all_pop_keys[i].startsWith("wealth_")) {
-          var split_wealth_key = all_pop_keys[i].split("_");
+        if (all_pop_keys[i].startsWith("wealth-")) {
+          var split_wealth_key = all_pop_keys[i].split("-");
 
           var building_id = split_wealth_key[1];
           var local_pop_type = split_wealth_key[2];
@@ -300,9 +300,9 @@ module.exports = {
             var all_local_needs_subcategories = Object.keys(local_needs_category);
 
             for (var y = 0; y < all_local_needs_subcategories.length; y++) {
-              var local_needs = local_needs_category[all_local_needs_categories[y]];
+              var local_needs_group = local_needs_category[all_local_needs_subcategories[y]];
 
-              var all_local_needs = Object.keys(local_needs);
+              var all_local_needs = Object.keys(local_needs_group);
               var auto_priority = false;
               var total_importance = 0;
               var total_marginal_utility = 0;
@@ -353,6 +353,51 @@ module.exports = {
             //Set needs_importance object for pop
             local_pop.needs_importance[all_local_needs_categories[x]] = local_needs_obj;
           }
+
+          //Iterate over all_local_needs_categories again to create a .buy_order array for categories
+          var category_importances = [];
+
+          for (var x = 0; x < all_local_needs_categories.length; x++) {
+            var actual_importances = [];
+            var local_needs_category = local_needs[all_local_needs_categories[x]];
+
+            var actual_importance_array = [];
+            var importance_array = []; //This will be sorted in descending order
+            var total_importance = 0;
+
+            var all_local_needs_subcategories = Object.keys(local_needs_category);
+
+            for (var y = 0; y < all_local_needs_subcategories.length; y++) {
+              var local_importance = local_pop.needs_importance[all_local_needs_categories[x]][all_local_needs_subcategories[y]];
+
+              var local_actual_importance = (local_importance.automatic_priority) ?
+                returnSafeNumber(local_importance.importance) : 99999;
+
+              importance_array.push({ name: all_local_needs_subcategories[y], importance: local_actual_importance });
+              total_importance += local_actual_importance;
+            }
+
+            //Sort importance_array
+            importance_array.sort((a, b) => { b.importance - a.importance });
+
+            for (var y = 0; y < importance_array.length; y++)
+              actual_importance_array.push(importance_array[y]);
+            local_pop[`${all_local_needs_categories[x]}-buy_order`] = actual_importance_array;
+
+            category_importances.push({
+              name: all_local_needs_categories[x],
+              importance: total_importance/all_local_needs_subcategories.length
+            });
+          }
+
+          //Sort category_importances
+          category_importances.sort((a, b) => { b.importance - a.importance });
+
+          for (var x = 0; x < category_importances.length; x++)
+            actual_importances.push(category_importances[x].name);
+
+          if (!local_pop.buy_order)
+            local_pop.buy_order = actual_importances;
         }
     }
   },
@@ -736,8 +781,8 @@ module.exports = {
 
     //Iterate over all_pop_keeps for wealth_ pools
     for (var i = 0; i < all_pop_keys.length; i++)
-      if (all_pop_keys[i].startsWith("wealth_")) {
-        var split_wealth_key = all_pop_keys[i].split("_");
+      if (all_pop_keys[i].startsWith("wealth-")) {
+        var split_wealth_key = all_pop_keys[i].split("-");
 
         var local_pop_type = split_wealth_key[2];
 
@@ -800,7 +845,7 @@ module.exports = {
         for (var i = valid_building_range[1] - 1; i >= ((is_strict) ? valid_building_range[0] : 0); i++) {
           var building_id = all_building_wages[i];
           var local_building = province_obj.buildings[building_map[building_id]];
-          var local_key = `wealth_${building_id}_${pop_type}`;
+          var local_key = `wealth-${building_id}-${pop_type}`;
 
           //If they're currently hiring, take all the workers you can according to random_chance_roll. If positions max out, the unemployed_pops figure rolls over
           if (building_obj[`${pop_type}_positions`]) {
@@ -845,6 +890,45 @@ module.exports = {
     module.exports.processEmployment(province_id, pop_type, {
       sorted_wage_obj: options.sorted_wage_obj
     });
+  },
+
+  processPurchases: function (arg0_province_id) { //[WIP] - Finish function body
+    //Convert from parameters
+    var province_id = arg0_province_id;
+
+    //Declare local instance variables
+    var province_obj = main.provinces[province_id];
+
+    if (province_obj)
+      if (province_obj.pops) {
+        var all_pop_keys = Object.keys(province_obj.pops);
+
+        //Iterate through all_pop_keys for wealth- starting keys
+        for (var i = 0; i < all_pop_keys.length; i++)
+          if (all_pop_keys[i].startsWith("wealth-")) {
+            var local_wealth_pool = province_obj.pops[all_pop_keys[i]];
+            var split_key = all_pop_keys[i].split("-");
+            var pop_type = split_key[2];
+
+            var pop_obj = config.pops[pop_type];
+
+            //Check pop_obj.per_100k.needs
+            if (pop_obj.per_100k)
+              if (pop_obj.per_100k.needs) {
+                var importance_obj = pop_obj.needs_importance;
+
+                var all_needs_categories = Object.keys(importance_obj);
+
+                for (var x = 0; x < all_needs_categories.length; x++) {
+                  var local_needs_category = importance_obj[all_needs_categories[x]];
+
+                  var all_needs_groups = Object.keys(local_needs_category);
+
+                  //Iterate over all_needs_groups
+                }
+              }
+          }
+      }
   },
 
   //processPops() - Processes all pops in a given province
@@ -908,7 +992,7 @@ module.exports = {
 
         for (var i = 0; i < all_building_keys.length; i++) {
           var local_building = province_obj.buildings[building_key_map[all_building_keys[i]]];
-          var local_key = `wealth_${all_building_keys[i]}_${options.pop_type}`;
+          var local_key = `wealth-${all_building_keys[i]}-${options.pop_type}`;
           var local_percentage = employment_percentages[all_building_keys[i]];
           var local_wealth_pool = province_obj.pops[local_key];
 

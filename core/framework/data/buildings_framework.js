@@ -2278,7 +2278,7 @@ module.exports = {
     var amount = parseInt(arg2_amount);
 
     //Declare local instance variables
-    var key = `wealth_${all_building_keys[i]}_${options.pop_type}`;
+    var key = `wealth-${all_building_keys[i]}-${options.pop_type}`;
     var layoffs = 0;
     var local_wealth_pool = province_obj.pops[local_key];
     var province_id = building_obj.id.split("-")[0];
@@ -2442,7 +2442,7 @@ module.exports = {
 
         //Initialise/update pop wealth pool
         var local_employees = returnSafeNumber(building_obj.employment[pop_types[i]]);
-        var key_name = `wealth_${building_obj.id}_${pop_types[i]}`;
+        var key_name = `wealth-${building_obj.id}-${pop_types[i]}`;
 
         if (local_employees > 0) {
           if (!province_obj.pops[key_name])
