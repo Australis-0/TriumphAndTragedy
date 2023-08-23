@@ -1,5 +1,29 @@
 //Objects framework
 module.exports = {
+  addObject: function (arg0_scope, arg1_amount, arg2_not_recursive) {
+    //Convert from parameters
+    var scope = JSON.parse(JSON.stringify(arg0_scope));
+    var amount = arg1_amount;
+    var not_recursive = arg2_not_recursive;
+
+    //Declare local instance variables
+    var all_scope_keys = Object.keys(scope);
+
+    //Iterate over all_scope_keys
+    for (var i = 0; i < all_scope_keys.length; i++) {
+      var local_subobj = scope[all_scope_keys[i]];
+
+      if (typeof local_subobj == "number")
+        scope[all_scope_keys[i]] += amount;
+      if (typeof local_subobj == "object")
+        if (!not_recursive)
+          scope[all_scope_keys[i]] = module.exports.addObject(local_subobj, amount, not_recursive);
+    }
+
+    //Return statement
+    return scope;
+  },
+
   changeObjectRange: function (arg0_scope, arg1_key, arg2_min_max_argument, arg3_value) {
     //Convert from parameters
     var scope = arg0_scope;

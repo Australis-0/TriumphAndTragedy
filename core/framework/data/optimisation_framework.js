@@ -28,6 +28,7 @@ module.exports = {
       all_units: getAllUnits({ return_object: true }),
       all_unit_names: getAllUnits({ return_names: true }),
       goods_depth: getDepth(config.goods) - 1,
+      good_types: getGoodTypes(),
 
       building_category: getBuildingsToCategoryMap(),
 

@@ -265,6 +265,26 @@ module.exports = {
     return (!options.return_object) ? goods_array : goods_object;
   },
 
+  getGoodTypes: function () {
+    //Declare local instance variables
+    var goods_obj = (lookup.all_goods) ? lookup.all_goods : module.exports.getGoods({ return_object: true });
+    var good_type_obj = {};
+
+    var all_goods = Object.keys(goods_obj);
+
+    for (var i = 0; i < all_goods.length; i++) {
+      var local_good = goods_obj[all_goods[i]];
+
+      if (local_good.type) {
+        if (!good_type_obj[local_good.type]) good_type_obj[local_good.type] = [];
+          good_type_obj[local_good.type].push(local_good.type);
+      }
+    }
+
+    //Return statement
+    return good_type_obj;
+  },
+
   //getGoodsSubgoods() - Returns an object of goods categories to their respective non-category subgoods
   getGoodsSubgoods: function () {
     //Declare local instance variables
@@ -281,6 +301,8 @@ module.exports = {
         var subgood_array = module.exports.getSubgoods(local_good, { return_names: true });
 
         subgoods_obj[all_goods[i]] = subgood_array;
+      } else {
+        subgoods_obj[all_goods[i]] = all_goods[i];
       }
     }
 

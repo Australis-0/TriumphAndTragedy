@@ -75,6 +75,100 @@ module.exports = {
     }
   },
 
+  /*
+    getActualPopFulfilment() - Gets actual pop fulfilment for the stated scope as a weighted average by wealth pool.
+    options: {
+      province_id: "4709", - The province ID which to target
+      pop_type: "soldiers", - The pop type for which to fetch fulfilment/variety for
+
+      good_scope: "staple_goods"/"chocolate" - Optional. Defaults to all. Individual goods are calculated with received_goods per category per wealth pool.
+    }
+  */
+  getActualPopFulfilment: function (arg0_options) { //[WIP] - Add subsidy and subsistence calculations later
+    //Convert from parameters
+    var options = (arg0_options) ? arg0_options : {};
+
+    //Declare local instance variables
+    var fulfilment = 0;
+    var province_id = options.province_id;
+    var province_obj = main.provinces[province_id];
+    var total_fulfilment = 0;
+    var total_variety = 0;
+    var variety = 0;
+
+    if (province_obj.pops) {
+      var all_pop_keys = Object.keys(province_obj.pops);
+      var is_good = (lookup.all_goods[options.good_scope]);
+      var local_population = returnSafeNumber(province_obj.pops[options.pop_type]);
+
+      for (var i = 0; i < all_pop_keys.length; i++)
+        if (all_pop_keys[i].startsWith("wealth-")) {
+          var local_wealth_pool = province_obj.pops[all_pop_keys[i]];
+          var split_key = all_pop_keys[i].split("-");
+
+          var pop_type = split_key[2];
+
+          if (pop_type == options.pop_type) {
+            var has_needs = false;
+            var pop_obj = config.pops[pop_type];
+            var total_goods = 0;
+            var total_subgoods_fulfilled = 0;
+
+            if (pop_obj.per_100k)
+              if (pop_obj.per_100k.needs) has_needs = true;
+
+            if (has_needs) {
+              if (is_good) {
+                var local_subgoods = lookup.all_subgoods[options.good_scope];
+                var per_100k_need = 0;
+
+                for (var x = 0; x < pop_obj.buy_order.length; x++) {
+                  var local_needs_category = pop_obj.per_100k.needs[pop_obj.buy_order[x]];
+                  var local_received_goods = local_wealth_pool.received_goods[pop_obj.buy_order[x]];
+
+                  for (var y = 0; y < local_subgoods.length; y++)
+                    if (local_received_goods[local_subgoods[y]]) {
+                      var local_value = local_received_goods[local_subgoods[y]];
+
+                      total_goods += returnSafeNumber(local_value);
+                      if (local_value > 0) total_subgoods_fulfilled++;
+
+                      per_100k_need += returnSafeNumber(local_needs_category[local_subgoods[y]]);
+                    }
+                }
+
+                var actual_need = per_100k_need*(local_wealth_pool.size/100000);
+
+                //Set total_fulfilment; total_variety
+                total_fulfilment += Math.min(local_wealth_pool.size*(total_goods/actual_need), local_wealth_pool.size);
+                total_variety += Math.min(local_wealth_pool.size*(total_subgoods_fulfilled/local_subgoods.length), local_wealth_pool.size);
+              } else if (pop_obj.buy_order.includes(options.good_scope)) {
+                total_fulfilment += local_wealth_pool.size*returnSafeNumber(local_wealth_pool[`${options.good_scope}-fulfilment`]);
+                total_variety += local_wealth_pool.size*returnSafeNumber(local_wealth_pool[`${options.good_scope}-variety`]);
+              } else {
+                //All handler
+                total_fulfilment += local_wealth_pool.size*returnSafeNumber(local_wealth_pool.fulfilment);
+                total_variety += local_wealth_pool.size*returnSafeNumber(local_wealth_pool.variety);
+              }
+            } else {
+              total_fulfilment += local_wealth_pool.size*config.defines.economy.default_fulfilment;
+              total_variety += local_wealth_pool.size*config.defines.economy.default_variety;
+            }
+          }
+        }
+
+      //Set fulfilment; variety
+      fulfilment = total_fulfilment/local_population;
+      variety = total_variety/local_population;
+
+      //Return statement
+      return {
+        fulfilment: fulfilment,
+        variety: variety
+      };
+    }
+  },
+
   //getAllPopGoods() - Returns an array of all good keys demanded or produced by pop types w/ more than 0 people
   getAllPopGoods: function (arg0_user) { //[WIP] - Finish function body
     //Convert from parameters
@@ -434,16 +528,24 @@ module.exports = {
     }
   },
 
-  getPopNeeds: function (arg0_type, arg1_amount, arg2_needs_category) {
+  /*
+    getPopNeeds() - Fetches generic pop needs for a given pop type
+    options: {
+      province_id: "4407" - Uses wealth pools to account for rounding issues
+    }
+  */
+  getPopNeeds: function (arg0_type, arg1_amount, arg2_needs_category, arg3_options) {
     //Convert from parameters
     var pop_type = arg0_type;
     var amount = (arg1_amount != undefined) ? parseInt(arg1_amount) : 100000; //per_100k is the default needs scope
     var needs_category = arg2_needs_category;
+    var options = (arg3_options) ? arg3_options : {};
 
     //Declare local instance variables
     var goods_obj = {};
     var needs_obj = (typeof needs_category != "object" && needs_category) ? needs_category.trim().toLowerCase() : undefined;
     var pop_obj = config.pops[pop_type];
+    var wealth_pools_amount = 0;
 
     //Fetch needs_obj recursively
     if (pop_obj)
@@ -453,12 +555,33 @@ module.exports = {
             needs_obj = (needs_category) ? JSON.parse(JSON.stringify(
               getSubobject(pop_obj.per_100k.needs, needs_category)
             )) : JSON.parse(JSON.stringify(pop_obj.per_100k.needs));
+
+            //Fetch wealth_pools_amount
+            if (options.province_id) {
+              var province_obj = main.provinces[options.province_id];
+
+              if (province_obj)
+                if (province_obj.pops) {
+                  var all_pop_keys = Object.keys(province_obj.pops);
+
+                  for (var i = 0; i < all_pop_keys.length; i++)
+                    if (all_pop_keys[i].startsWith("wealth-")) {
+                      var local_pop_type = all_pop_keys[i].split("-")[2];
+
+                      if (local_pop_type == pop_type)
+                        wealth_pools_amount++;
+                    }
+                }
+            }
           } catch {
             needs_obj = {};
           }
 
     //Multiply everything in needs_obj by a given amount
     needs_obj = removeZeroes(multiplyObject(needs_obj, amount/100000, false, "ceil"));
+
+    //Account for rounding errors
+    needs_obj = addObject(needs_obj, wealth_pools_amount);
 
     return needs_obj;
   },
@@ -892,7 +1015,7 @@ module.exports = {
     });
   },
 
-  processPurchases: function (arg0_province_id) { //[WIP] - Finish function body
+  processPurchases: function (arg0_province_id) {
     //Convert from parameters
     var province_id = arg0_province_id;
 
@@ -901,31 +1024,88 @@ module.exports = {
 
     if (province_obj)
       if (province_obj.pops) {
+        var all_good_categories = Object.keys(config.defines.economy.good_categories);
         var all_pop_keys = Object.keys(province_obj.pops);
 
         //Iterate through all_pop_keys for wealth- starting keys
         for (var i = 0; i < all_pop_keys.length; i++)
           if (all_pop_keys[i].startsWith("wealth-")) {
+            var current_allowance;
+            var current_allowance_percentage;
+            var local_percentage = local_wealth_pool.size/100000;
             var local_wealth_pool = province_obj.pops[all_pop_keys[i]];
+            var spent_wealth = 0;
             var split_key = all_pop_keys[i].split("-");
             var pop_type = split_key[2];
 
             var pop_obj = config.pops[pop_type];
 
+            //Initialise received_goods scope
+            local_wealth_pool.received_goods = {};
+
             //Check pop_obj.per_100k.needs
             if (pop_obj.per_100k)
               if (pop_obj.per_100k.needs) {
-                var importance_obj = pop_obj.needs_importance;
+                var category_buy_order = pop_obj.buy_order;
+                var total_fulfilment = 0;
+                var total_variety = 0;
 
-                var all_needs_categories = Object.keys(importance_obj);
+                for (var x = 0; x < category_buy_order.length; x++)
+                  local_wealth_pool.received_goods[category_buy_order[x]] = {};
 
-                for (var x = 0; x < all_needs_categories.length; x++) {
-                  var local_needs_category = importance_obj[all_needs_categories[x]];
+                for (var x = 0; x < all_good_categories.length; x++) {
+                  var local_good_category = config.defines.economy.good_categories[all_good_categories[x]];
+                  current_allowance_percentage = returnSafeNumber(local_good_category.importance, 1);
+                  current_allowance = local_wealth_pool.income*current_allowance_percentage;
 
-                  var all_needs_groups = Object.keys(local_needs_category);
+                  //Iterate over category_buy_order and local needs groups to buy everything in lookup.goods_type[all_good_categories[x]]
+                  for (var y = 0; y < category_buy_order.length; y++) {
+                    var local_buy_order = pop_obj[`${category_buy_order[y]}-buy_order`];
+                    var local_category = pop_obj.per_100k.needs[category_buy_order[y]];
+                    var local_received_goods = local_wealth_pool.received_goods[category_buy_order[y]];
 
-                  //Iterate over all_needs_groups
+                    for (var z = 0; z < local_buy_order.length; z++)
+                      if (spent_wealth < local_wealth_pool.income) {
+                        //Begin buying as many goods as needed for this wealth pool size
+                        var local_market_good = main.market[local_buy_order[z]]
+                        var local_value = local_category[local_buy_order[z]];
+
+                        //Spend money on good
+                        if (local_market_good) {
+                          var local_need = Math.ceil(local_value*local_percentage);
+
+                          var actual_consumption = Math.min(getGoodAmount(user_id, local_buy_order[z]), local_need);
+                          var local_worth = actual_consumption*local_market_good.buy_price;
+
+                          spent_wealth += local_worth;
+                          modifyValue(local_received_goods, local_buy_order[z], actual_consumption);
+                        }
+                      }
+                  }
                 }
+
+                //Subtract spent_wealth from wealth pool
+                local_wealth_pool.wealth -= spent_wealth;
+
+                //Update _fulfilment and _variety for each category
+                for (var x = 0; x < category_buy_order.length; x++) {
+                  var local_received_goods = local_wealth_pool.received_goods[category_buy_order[x]];
+
+                  var local_fulfilment_obj = module.exports.getPopNeedsFulfilment(local_received_goods, pop_type, local_wealth_pool.size, {
+                    needs_category: category_buy_order[x],
+                    return_object: true
+                  });
+                  total_fulfilment += local_fulfilment_obj.fulfilment;
+                  total_variety += local_fulfilment_obj.variety;
+
+                  //Set local fulfilment and variety
+                  local_wealth_pool[`${category_buy_order[x]}-fulfilment`] = local_fulfilment_obj.fulfilment;
+                  local_wealth_pool[`${category_buy_order[x]}-variety`] = local_fulfilment_obj.variety;
+                }
+
+                //Set general fulfilment and variety
+                local_wealth_pool.fulfilment = total_fulfilment/category_buy_order.length;
+                local_wealth_pool.variety = total_variety/category_buy_order.length;
               }
           }
       }

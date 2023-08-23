@@ -1378,10 +1378,12 @@ module.exports = {
       usr.pops.population += province_obj.pops.population;
       ot_user.pops.population -= province_obj.pops.population;
 
-      for (var i = 0; i < all_pops.length; i++) {
-        usr.pops[all_pops[i]] += province_obj.pops[all_pops[i]];
-        ot_user.pops[all_pops[i]] -= province_obj.pops[all_pops[i]];
-      }
+      for (var i = 0; i < all_pops.length; i++)
+        if (lookup.all_pops[all_pops[i]] || all_pops[i].startsWith("used_")) {
+          var local_value = province_obj.pops[all_pops[i]];
+          modifyValue(usr.pops, all_pops[i], local_value);
+          modifyValue(ot_user.pops, all_pops[i], local_value*-1);
+        }
 
       //Change other indicators
       if (province_obj.city_type == "capital")

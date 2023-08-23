@@ -19,7 +19,7 @@ module.exports = {
     });
   },
 
-  printProvince: function (arg0_user, arg1_name) { //[WIP] - Rename to printProvince() and merge with Province UI
+  printProvince: function (arg0_user, arg1_name) {
     //Convert from parameters
     var user_id = arg0_user;
     var province_name = arg1_name;

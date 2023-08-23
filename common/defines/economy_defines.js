@@ -48,6 +48,8 @@ config.defines.economy = {
     10000
   ], //Levels of provinces at which a new city is unlocked. Leave empty for unlimited cities
   construction_turns: 3, //Default number of construction turns per city
+  default_fulfilment: 0.25, //The default fulfilment for pops with no specified needs on automatic_priority categories
+  default_variety: 0.15, //The default variety for pops with no specified needs on automatic_priority categories
   food_required_per_million: 1, //Note that food requirements in goods/goods.js should also be changed to reflect this number when modding
   insolvency_amount: -1000, //At what fiscal liquidity level is a building considered unable to pay its obligations?
   insolvency_turns: 2, //How many turns must a building be insolvent for before closing? Type 0 to disable insolvency
