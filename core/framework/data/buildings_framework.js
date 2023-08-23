@@ -1674,6 +1674,39 @@ module.exports = {
   },
 
   /*
+    getMedianWage() - Returns the median wage for a given pop type in a province.
+    options: {
+      pop_type: "engineers", - The pop type to fetch the median wage for
+
+      building_wage_obj: {} - Optional. Optimisation parameter fed in from getBuildingWages()
+    }
+  */
+  getMedianWage: function (arg0_province_id, arg1_options) {
+    //Convert from parameters
+    var province_id = arg0_province_id;
+    var options = (arg1_options) ? arg1_options : {};
+
+    //Declare local instance variables
+    var building_wage_obj = (options.building_wage_obj) ? options.building_wage_obj : module.exports.getBuildingWages(province_id, options.pop_type);
+    var province_obj = main.provinces[province_id];
+
+    var all_building_wages = Object.keys(building_wage_obj);
+
+    if (all_building_wages.length % 2 == 0) {
+      var index_one = all_building_wages[all_building_wages.length/2];
+      var index_two = all_building_wages[all_building_wages.length/2 + 1];
+
+      //Return statement
+      return (building_wage_obj[index_one] + building_wage_obj[index_two])/2;
+    } else {
+      var index_one = all_building_wages[(all_building_wages.length + 1)/2];
+
+      //Return statement
+      return building_wage_obj[index_one];
+    }
+  },
+
+  /*
     getProduction() - Returns the production value of a specific good or all goods for a user. Note that "all" for arg1_good returns an object of all goods with their minimum and maximum production values being stored in a 2-element array.
 
     options: {

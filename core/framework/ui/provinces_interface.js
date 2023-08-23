@@ -160,6 +160,8 @@ module.exports = {
           province_string.push(`**Population:**`);
           province_string.push(config.localisation.divider);
           province_string.push("");
+          province_string.push(`- ${(options.display_irrelevant_pops) ? `**[Display Relevant Pops]**` : `**[Display All Pops]**`}`);
+          province_string.push("");
 
           if (province_obj.pops) {
             province_string.push(`- ${config.icons.population} Population: ${parseNumber(returnSafeNumber(province_obj.pops.population))}`);
@@ -249,12 +251,11 @@ module.exports = {
                   if (display_good) {
                     for (var y = 0; y < all_pops.length; y++) {
                       //Display next turn fulfilment
-                      var local_good_fulfilment = getPopNeedsFulfilment(JSON.parse(JSON.stringify(usr.inventory)),
-                      all_pops[y],
-                      returnSafeNumber(province_obj.pops[all_pops[y]]),
-                      {
-                        return_object: true,
-                        restrict_goods: [all_category_needs[x]]
+                      var local_good_fulfilment = getActualPopFulfilment({
+                        province_id: province_obj.id,
+                        pop_type: all_pops[y],
+
+                        good_scope: all_category_needs[x]
                       });
                       var local_pop = config.pops[all_pops[y]];
                       var local_value = returnSafeNumber(category_pop_needs[all_pops[y]][all_category_needs[x]]);

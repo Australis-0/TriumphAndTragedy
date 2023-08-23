@@ -267,8 +267,12 @@ module.exports = {
 
   getGoodTypes: function () {
     //Declare local instance variables
-    var goods_obj = (lookup.all_goods) ? lookup.all_goods : module.exports.getGoods({ return_object: true });
+    var goods_obj;
     var good_type_obj = {};
+
+    if (global.lookup)
+      if (global.lookup.all_goods) goods_obj = lookup.all_goods;
+    if (!goods_obj) goods_obj = module.exports.getGoods({ return_object: true });
 
     var all_goods = Object.keys(goods_obj);
 

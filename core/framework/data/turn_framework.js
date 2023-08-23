@@ -1402,8 +1402,10 @@ module.exports = {
 
       //Economic processing
       {
-        for (var i = 0; i < owned_provinces.length; i++)
+        for (var i = 0; i < owned_provinces.length; i++) {
           processPops(owned_provinces[i]);
+          processPurchases(owned_provinces[i]);
+        }
       }
 
       //Population growth

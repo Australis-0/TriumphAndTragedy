@@ -3081,6 +3081,28 @@ module.exports = {
               });
 
               break;
+            case "display all pops":
+              game_obj.display_irrelevant_pops = true;
+              game_obj.display_no_pops = true;
+
+              createPageMenu(game_obj.middle_embed, {
+                embed_pages: printProvince(game_obj.user, province_name),
+                page: main.interfaces[game_obj.middle_embed.id].page
+                user: game_obj.user
+              });
+
+              break;
+            case "display relevant pops":
+              delete game_obj.display_irrelevant_pops;
+              delete game_obj.display_no_pops;
+
+              createPageMenu(game_obj.middle_embed, {
+                embed_pages: printProvince(game_obj.user, province_name),
+                page: main.interfaces[game_obj.middle_embed.id].page
+                user: game_obj.user
+              });
+
+              break;
             case "jump to page":
               visualPrompt(game_obj.alert_embed, user_id, {
                 title: `Jump To Page:`,
