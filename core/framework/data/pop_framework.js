@@ -936,18 +936,20 @@ module.exports = {
   /*
     processEmployment() - Processes the job market for a given pop type in a province
     options: {
-      sorted_wage_obj: {} - Optimisation parameter. The sorted wage object for the province.
+      sorted_wage_obj: {}, - Optimisation parameter. The sorted wage object for the province.
+      unemployed_pops: 3194 - Optimisation parameter. The total number of unemployed pops sitting in this province
     }
   */
   processEmployment: function (arg0_province_id, arg1_type, arg2_options) {
     //Convert from parameters
     var province_id = arg0_province_id;
     var pop_type = arg1_type;
+    var options = (arg2_options) ? arg2_options : {};
 
     //Declare local instance variables
     var building_map = getBuildingMap(province_id);
     var province_obj = main.provinces[province_id];
-    var unemployed_pops = module.exports.getUnemployedPops(province_id, pop_type);
+    var unemployed_pops = (options.unemployed_pops) ? options.unemployed_pops : module.exports.getUnemployedPops(province_id, pop_type);
 
     //All unemployed pops are looking for a job
     if (province_obj)
@@ -1008,11 +1010,52 @@ module.exports = {
     var options = (arg2_options) ? arg2_options : {};
 
     //Declare local instance variables
+    var current_median = province_obj[`${pop_type}_median_wage`];
     var province_obj = main.provinces[province_id];
 
-    module.exports.processEmployment(province_id, pop_type, {
-      sorted_wage_obj: options.sorted_wage_obj
-    });
+    //Pop Job Seeking and Employment
+    {
+      if (province_obj.buildings) {
+        //Fetch remaining open positions
+        var open_positions = 0;
+        var total_job_seekers = 0;
+        var unemployed_pops = module.exports.getUnemployedPops(province_id, pop_type);
+
+        for (var i = 0; i < province_obj.buildings.length; i++) {
+          var local_building = province_obj.buildings[i];
+
+          open_positions += returnSafeNumber(local_building[`${pop_type}_positions`]);
+        }
+
+        //Remove unemployed_pops from open_positions
+        open_positions -= unemployed_pops;
+
+        //Iterate over province_obj.buildings and if the wages are now below current_median, pop types should seek new jobs if higher positions exist
+        if (open_positions > 0)
+          for (var i = 0; i < province_obj.buildings.length; i++) {
+            var local_building = province_obj.buildings[i];
+
+            if (local_building.employment)
+              if (local_building[`${pop_type}_wage`]) {
+                var current_wage = local_building[`${pop_type}_wage`];
+
+                if (current_wage < current_median) {
+                  var new_job_seekers = 1 - (current_wage/current_median);
+                  new_job_seekers = Math.min(new_job_seekers, open_positions);
+
+                  total_job_seekers += new_job_seekers;
+                  layoffWorkers(local_building, pop_type, new_job_seekers);
+                }
+              }
+          }
+
+        //Process final employment both for those unemployed and those seeking a better job
+        module.exports.processEmployment(province_id, pop_type, {
+          sorted_wage_obj: options.sorted_wage_obj,
+          unemployed_pops: unemployed_pops
+        });
+      }
+    }
   },
 
   processPurchases: function (arg0_province_id) {
@@ -1124,6 +1167,13 @@ module.exports = {
     for (var i = 0; i < all_pops.length; i++) {
       //Initialise local tracker variables
       var local_sorted_wages = getBuildingWages(province_id, all_pops[i]);
+      var median_wage = getMedianWage(province_id, {
+        pop_type: all_pops[i],
+        building_wage_obj: local_sorted_wages
+      });
+
+      //Set trackers
+      province_obj[`${all_pops[i]}_median_wage`] = median_wage;
 
       processPop(province_id, all_pops[i], {
         sorted_wage_obj: local_sorted_wages
