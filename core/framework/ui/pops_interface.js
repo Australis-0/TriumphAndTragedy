@@ -1,6 +1,56 @@
 module.exports = {
+  //printDemographics() - Prints a province's demographics where possible
+  printDemographics: function (arg0_user, arg1_province_id, arg2_page) { //[WIP] - Finish function body
+    //Convert from parameters
+    var user_id = arg0_user;
+    var province_id = arg1_province_id;
+    var page = (arg2_page) ? parseInt(arg2_page) : 0;
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var game_obj = getGameObject(user_id);
+    var usr = main.users[actual_id];
+
+    //Declare local instance variables
+    var all_embeds = [];
+    var all_pops = Object.keys(config.pops);
+    var pops_string = [];
+    var pops_to_display = [];
+    var province_obj = (main.provinces[province_id]) ? main.provinces[province_id] : getProvince(province_id);
+    var relevant_pops = getRelevantPops(user_id);
+
+    //Calculate pops_to_display
+    pops_to_display = JSON.parse(JSON.stringify(relevant_pops));
+
+    for (var i = 0; i < all_pops.length; i++)
+      if (!pops_to_display.includes(all_pops[i])) {
+        var display_pop = false;
+        var local_value = usr.pops[all_pops[i]];
+
+        if (game_obj.display_irrelevant_pops && local_value != 0)
+          display_pop = true;
+        if (game_obj.display_irrelevant_pops && game_obj.display_no_pops)
+          display_pop = true;
+
+        if (display_pop) pops_to_display.push(all_pops[i]);
+      }
+
+    //Format pops_string
+    if (province_obj) {
+      if (province_obj.pops) {
+        //[WIP] - Push view and sort buttons to pops_string
+
+        
+      } else {
+        pops_string.push(`_This province is currently uninhabited._`);
+      }
+    } else {
+      printError(game_obj.id, `The province you have specified, **${province_id}**, doesn't exist!`);
+    }
+  },
+
   /*
-    printPops() - Displays a user's pops countrywide
+    printPops() - Displays a user's pops countrywide pops
   */
   printPops: function (arg0_user, arg1_page) { //[WIP] - Finish function body
     //Convert from parameters

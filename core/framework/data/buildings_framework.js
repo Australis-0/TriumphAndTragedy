@@ -645,8 +645,8 @@ module.exports = {
 
       //Push to either no_order_cache or building_categories
       if (local_building_category.order) {
-        if (!building_categories[local_building_category.order-1]) {
-          building_categories[local_building_category.order-1] = all_building_categories[i];
+        if (!building_categories[local_building_category.order - 1]) {
+          building_categories[local_building_category.order - 1] = all_building_categories[i];
         } else {
           log.error(`${all_building_categories[i]} has an invalid order number! .order: ${local_building_category.order-1} is already occupied by ${building_categories[local_building_category.order-1]}!\n\nCheck common/buildings for more information on resolving this error.`);
         }

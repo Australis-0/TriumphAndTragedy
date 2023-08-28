@@ -46,6 +46,37 @@ module.exports = {
     return all_subgoods;
   },
 
+  getAverageCategoryPrice: function (arg0_category_name, arg1_buy_sell) {
+    //Convert from parameters
+    var category_name = arg0_category_name;
+    var buy_sell = (arg1_buy_sell) ? arg1_buy_sell : "buy";
+
+    //Declare local instance variables
+    var all_market_goods = Object.keys(main.market);
+    var total_category_goods = 0;
+    var total_price = 0;
+
+    //Iterate over lookup.all_good_names
+    for (var i = 0; i < lookup.all_good_names.length; i++) {
+      var local_good = lookup.all_goods[lookup.all_good_names[i]];
+
+      if (local_good.type)
+        if (local_good.type == category_name) {
+          var local_market_good = main.market[lookup.all_good_names[i]];
+          total_category_goods++;
+
+          if (buy_sell == "buy") {
+            total_price += returnSafeNumber(local_market_good.buy_price);
+          } else {
+            total_price += returnSafeNumber(local_market_good.sell_price);
+          }
+        }
+    }
+
+    //Return statement
+    return total_price/total_category_goods;
+  },
+
   /*
     getGood() - Fetches a good's key/object based on its options.
     options: {
