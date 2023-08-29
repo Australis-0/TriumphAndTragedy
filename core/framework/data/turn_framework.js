@@ -402,6 +402,10 @@ module.exports = {
         //amount_sold deteriorates each turn to simulate large market demand
         local_market_good.amount_sold = Math.ceil(local_market_good.amount_sold*0.5);
       }
+
+      //Set lookup tables for category_buy_prices and category_sell_prices
+      lookup.category_buy_prices = getCategoryPrices("buy");
+      lookup.category_sell_prices = getCategoryPrices("sell");
     }
 
     //Force render all maps
@@ -1403,6 +1407,9 @@ module.exports = {
       //Economic processing
       {
         for (var i = 0; i < owned_provinces.length; i++) {
+          processSubsistence(owned_provinces[i], {
+            category_prices: lookup.category_buy_prices
+          });
           processPops(owned_provinces[i]);
           processPurchases(owned_provinces[i]);
         }

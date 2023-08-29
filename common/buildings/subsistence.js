@@ -7,6 +7,7 @@ config.buildings.subsistence = {
     singular: "Informal Market",
     subsistence_building: true,
 
+    allowed_classes: ["lower", "middle"],
     limit: {
       terrain_category: "urban"
     },
@@ -20,6 +21,7 @@ config.buildings.subsistence = {
     name: "Subsistence Agriculture",
     singular: "Subsistence Farm",
 
+    allowed_classes: ["lower", "middle"],
     limit: {
       terrain_category: "rural"
     },

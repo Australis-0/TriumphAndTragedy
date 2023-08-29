@@ -31,6 +31,8 @@ module.exports = {
       good_types: getGoodTypes(),
 
       building_category: getBuildingsToCategoryMap(),
+      category_buy_prices: getCategoryPrices("buy"),
+      category_sell_prices: getCategoryPrices("sell"),
 
       province_troop_strengths: {}
     };

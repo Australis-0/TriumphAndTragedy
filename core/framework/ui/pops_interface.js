@@ -40,7 +40,15 @@ module.exports = {
       if (province_obj.pops) {
         //[WIP] - Push view and sort buttons to pops_string
 
-        
+        //Pop totals and percentage breakdown
+
+        //General pop stats (Birth rate, mortality, immigration, emigration)
+
+        //Economic pop stats
+
+        //Iterate over all wealth pools first
+
+        //Remainder pops
       } else {
         pops_string.push(`_This province is currently uninhabited._`);
       }

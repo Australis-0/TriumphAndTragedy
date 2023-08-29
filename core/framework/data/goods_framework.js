@@ -77,6 +77,25 @@ module.exports = {
     return total_price/total_category_goods;
   },
 
+  //getCategoryPrices() - Returns an object map of category prices
+  getCategoryPrices: function (arg0_buy_sell) {
+    //Convert from parameters
+    var buy_sell = (arg0_buy_sell) ? arg0_buy_sell : "buy";
+
+    //Declare local instance variables
+    var category_prices = {};
+    var config_obj = config.defines.economy.good_categories;
+
+    var all_categories = Object.keys(config_obj);
+
+    //Iterate over all_categories
+    for (var i = 0; i < all_categories.length; i++)
+      category_prices[all_categories[i]] = module.exports.getAverageCategoryPrice(all_categories[i], buy_sell);
+
+    //Return statement
+    return category_prices;
+  },
+
   /*
     getGood() - Fetches a good's key/object based on its options.
     options: {

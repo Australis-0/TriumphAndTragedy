@@ -2546,6 +2546,148 @@ module.exports = {
     }
   },
 
+  /*
+    processSubsistence() - Processes the subsistence tick for a province.
+    options: {
+      category_prices: {} - Optimisation parameter. Optional. Specifies mean category prices
+    }
+  */
+  processSubsistence: function (arg0_province_id, arg1_options) {
+    //Convert from parameters
+    var province_id = arg0_province_id;
+    var options = (arg1_options) ? arg1_options : {};
+
+    //Declare local instance variables
+    var all_buildings = Object.keys(lookup.all_buildings);
+    var all_pops = Object.keys(lookup.all_pops);
+    var province_obj = main.provinces[province_id];
+    var qualified_pops = [];
+    var local_subsistence_key;
+    var local_subsistence_obj;
+
+    var average_wage = 0;
+
+    //Iterate over all_building_categories to initialise .subsistence object for
+    if (!province_obj.subsistence && !province_obj.no_subsistence) {
+      var has_subsistence = false;
+
+      if (!province_obj.subsistence) {
+        for (var i = 0; i < all_buildings.length; i++) {
+          var local_building = lookup.all_buildings[all_buildings[i]];
+
+          if (local_building.subsistence_building) {
+            //Check if limit is fulfiled
+            var limit_fulfilled = true;
+
+            if (local_building.limit) {
+              var all_limit_keys = Object.keys(local_building.limit);
+
+              for (var x = 0; x < all_limit_keys.length; x++) {
+                var local_obj = local_building.limit[all_limit_keys[x]];
+
+                //Terrain handler
+                if (all_limit_keys[x] == "terrain_category" || all_limit_keys[x].startsWith("terrain_category_")) {
+                  var value_list = getList(local_obj);
+
+                  if (province_obj.type == "urban") {
+                    if (!value_list.includes("urban"))
+                      limit_fulfilled = false;
+                  } else if (province_obj.type == "rural") {
+                    if (!value_list.includes("rural"))
+                      limit_fulfilled = false;
+                  }
+                }
+              }
+
+              if (limit_fulfilled) {
+                local_subsistence_key = all_buildings[i];
+                local_subsistence_obj = local_building;
+              }
+            }
+          }
+        }
+
+        if (local_subsistence_obj.allowed_pops)
+          for (var i = 0; i < local_subsistence_obj.allowed_pops.length; i++)
+            if (!qualified_pops.includes(local_subsistence_obj.allowed_pops[i]))
+              qualified_pops.push(local_subsistence_obj.allowed_pops[i]);
+        if (local_subsistence_obj.allowed_classes)
+          for (var i = 0; i < all_pops.length; i++) {
+            var local_pop = config.pops[all_pops[i]];
+
+            if (local_pop.class) {
+              var local_classes = getList(local_pop.class);
+
+              for (var x = 0; x < local_subsistence_obj.allowed_classes.length; x++) {
+                var local_pop_key = local_subsistence_obj.allowed_classes[x];
+
+                if (local_classes.includes(local_pop_key))
+                  if (!qualified_pops.includes(local_pop_key))
+                    qualified_pops.push(local_pop_key);
+              }
+            }
+          }
+
+        //Set subsistence object
+        province_obj.subsistence = {
+          building_type: local_subsistence_key,
+          employment: {},
+          wage: 0,
+
+          qualified_pops: qualified_pops
+        };
+      }
+    }
+
+    //Initialise local_subsistence_key; local_subsistence_obj if possible
+    if (!local_subsistence_key)
+      if (province_obj.subsistence) {
+        local_subsistence_key = province_obj.subsistence.building_type;
+        local_subsistence_obj = lookup.all_buildings[local_subsistence_key];
+
+        qualified_pops = province_obj.subsistence.qualified_pops;
+      }
+
+    if (local_subsistence_obj) {
+      //Calculate average_wage by adding all applicable category needs
+      if (local_subsistence_obj.wages) {
+        var all_wage_keys = Object.keys(local_subsistence_obj.wages);
+
+        for (var i = 0; i < all_wage_keys.length; i++) {
+          var local_value = local_subsistence_obj.wages[all_wage_keys[i]];
+          var split_key = all_wage_keys.split("-"); //[good/category_name, statistic]
+
+          if (split_key.length >= 2)
+            if (split_key[1] == "mean") {
+              var category_price = (options.category_prices) ?
+                returnSafeNumber(getAverageCategoryPrice(split_key[0], "buy")) :
+                returnSafeNumber(options.category_prices[split_key[1]]);
+
+              //Add to average_wage
+              average_wage += category_price;
+            }
+        }
+      }
+
+      //Iterate over qualified_pops to establish wealth pools
+      for (var i = 0; i < qualified_pops.length; i++) {
+        var key_name = `wealth-${local_subsistence_key}-${qualified_pops[i]}`;
+        if (!province_obj.pops[key_name])
+          province_obj.pops[key_name] = {};
+        var local_building_pop = province_obj.pops[key_name];
+        var local_unemployed = getUnemployedPops(province_id, qualified_pops[i]);
+
+        //Set .size, .income, .wealth - all unemployed pops are the size
+        local_building_pop.size = local_unemployed;
+        local_building_pop.income = average_wage;
+        modifyValue(local_building_pop, "wealth", average_wage);
+      }
+    } else {
+      //Set .no_subsistence flag if applicable
+      province_obj.no_subsistence = true;
+    }
+  },
+
   refreshBuildingNames: function (arg0_province_id) {
     //Convert from parameters
     var province_id = arg0_province;
