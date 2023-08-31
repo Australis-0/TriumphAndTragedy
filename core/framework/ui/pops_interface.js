@@ -1,6 +1,6 @@
 module.exports = {
   //printDemographics() - Prints a province's demographics where possible
-  printDemographics: function (arg0_user, arg1_province_id, arg2_page) { //[WIP] - Finish function body
+  printDemographics: function (arg0_user, arg1_province_id, arg2_page) { //[WIP] - Finish function body; migration/education stats
     //Convert from parameters
     var user_id = arg0_user;
     var province_id = arg1_province_id;
@@ -41,10 +41,21 @@ module.exports = {
         //[WIP] - Push view and sort buttons to pops_string
 
         //Pop totals and percentage breakdown
+        pops_string.push(`${config.icons.population} Population: **${parseNumber(province_obj.pops.population)}**`);
+
+        for (var i = 0; i < pops_to_display.length; i++) {
+          var local_value = returnSafeNumber(province_obj.pops[pops_to_display[i]]);
+
+          var pop_obj = config.pops[pops_to_display[i]];
+          var local_percentage = local_value/returnSafeNumber(province_obj.pops.population);
+
+          //Print to pops_string
+          pops_string.push(`- ${(config.icons[pop_obj.icon]) ? config.icons[pop_obj.icon] + " " : ""}${(pop_obj.name) ? pop_obj.name : pops_to_display[i]}: ${parseNumber(local_value)} (**${printPercentage(local_percentage, { display_float: true })}**)`);
+        }
 
         //General pop stats (Birth rate, mortality, immigration, emigration)
 
-        //Economic pop stats
+        //Economic pop stats (GDP per capita, Median wage per pop, median wage for province; Unemployment)
 
         //Iterate over all wealth pools first
 

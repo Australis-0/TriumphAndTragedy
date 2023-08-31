@@ -249,6 +249,98 @@ module.exports = {
     return pop_categories;
   },
 
+  getCityPopGrowth: function (arg0_name, arg1_options) {
+    //Convert from parameters
+    var city_name = arg0_name;
+    var options = (arg1_options) ? arg1_options : { pop_type: "all" };
+
+    //Declare local instance variables
+    var all_pops = Object.keys(config.pops);
+    var city_obj = (typeof city_name != "object") ? getCity(city_name) : city_name;
+    var total_growth = 0;
+    var usr = main.users[city_obj.controller];
+
+    //Calcualte total growth
+    if (options.pop_type == "all") {
+      for (var i = 0; i < all_pops.length; i++)
+        total_growth += Math.ceil(
+          city_obj.pops[all_pops[i]]*
+          module.exports.getCityPopGrowthRate(city_obj, { pop_type: all_pops[i] })
+        );
+    } else {
+      total_growth = Math.ceil(
+        city_obj.pops[options.pop_type]*
+        module.exports.getCityPopGrowthRate(city_obj, { pop_type: options.pop_type })
+      );
+    }
+
+    //Return statement
+    return total_growth;
+  },
+
+  /*
+    getCityPopGrowthRate() - Returns the decimal percentage growth of a given city.
+    options: {
+      pop_type: "workers" - The pop type to calculate growth for. Defaults to 'all'
+    }
+  */
+  getCityPopGrowthRate: function (arg0_name, arg1_options) {
+    //Convert from parameters
+    var city_name = arg0_name;
+    var options = (arg1_options) ? arg1_options : { pop_type: "all" };
+
+    //Declare local instance variables
+    var city_obj = (typeof city_name != "object") ? getCity(city_name) : city_name;
+    var scalar = 1;
+    var usr = main.users[city_obj.controller];
+
+    var local_growth_modifier = (options.pop_type != "all") ?
+      usr.pops[`${options.pop_type}_growth_modifier`] : 1;
+
+    //Local pop growth logic
+    {
+      //Calculate scalar
+      if (city_obj.pops.population > config.defines.economy.urban_pop_growth_penalty_threshold) //-3% per million
+        scalar -= Math.ceil(
+          (city_obj.pops.population - config.defines.economy.urban_pop_growth_penalty_threshold)/1000000
+        )*config.defines.economy.urban_pop_growth_penalty_per_million;
+
+      //Calculate urban pop growth rate for chosen pop
+      var local_pop_growth_rate = (
+        local_growth_modifier*
+        scalar*
+        usr.modifiers.pop_growth_modifier
+      );
+
+      //Set local pop growth cap from economy defines
+      var urban_growth_cap;
+      for (var y = 0; y < config.defines.economy.urban_pop_growth_cap.length; y++) {
+        var local_element = config.defines.economy.urban_pop_growth_cap[y];
+
+        if (city_obj.pops.population >= local_element[0])
+          urban_growth_cap = local_element[1];
+      }
+
+      if (urban_growth_cap)
+        local_pop_growth_rate = Math.min(local_pop_growth_rate, urban_growth_cap);
+
+      //Cap to maximum
+      if (config.defines.economy.urban_pop_maximum_growth_rate)
+        local_pop_growth_rate = Math.min(local_pop_growth_rate, config.defines.economy.urban_pop_maximum_growth_rate);
+
+      //Occupation penalty
+      if (city_obj.controller != city_obj.owner)
+        local_pop_growth_rate = local_pop_growth_rate*config.defines.economy.occupation_pop_growth_penalty;
+
+      //Make sure population can't drop by more than 100%
+      if (local_pop_growth_rate < -1)
+        local_pop_growth_rate = local_pop_growth_rate % 1;
+    }
+
+    //Return statement
+    return local_pop_growth_rate;
+  },
+
   getDemographics: function (arg0_user) {
     //Convert from parameters
     var user_id = arg0_user;
@@ -785,6 +877,51 @@ module.exports = {
 
     //Return statement
     return pop_obj.population;
+  },
+
+  getProvinceBirths: function (arg0_user, arg1_province_id) {
+    //Convert from parameters
+    var user_id = arg0_user;
+    var province_id = arg1_province_id;
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var all_pops = Object.keys(config.pops);
+    var births = {}; //Split by pop type
+    var province_obj = main.provinces[province_id];
+    var usr = main.users[actual_id];
+
+    //Check if province exists and for urban/rural growth dichotomy
+    if (province_obj)
+      if (province_obj.type == "urban") {
+        //Calculate urban pop growth for all pops
+        for (var i = 0; i < all_pops.length; i++) {
+          var local_pop_growth = module.exports.getCityPopGrowth(province_obj, { pop_type: all_pops[i] });
+
+          if (province_obj.housing > province_obj.pops.population || local_pop_growth < 0) {
+            modifyValue(births, all_pops[i], local_pop_growth);
+            modifyValue(births, "total", local_pop_growth);
+          }
+        }
+      } else {
+        if (!province_obj.pop_cap)
+          province_obj.pop_cap = (config.defines.economy.rural_pop_cap) ?
+            randomNumber(config.defines.economy.rural_pop_cap[0], config.defines.economy.rural_pop_cap[1]) :
+            randomNumber(120000, 140000);
+
+        //Calculate rural pop growth for all pops
+        for (var i = 0; i < all_pops.length; i++) {
+          if (province_obj.pops.population < province_obj.pop_cap) {
+            var local_pop_growth = Math.ceil(province_obj.pops[all_pops[i]]*usr.pops[`${all_pops[i]}_growth_modifier`]*usr.modifiers.pop_growth_modifier) - province_obj.pops[all_pops[i]];
+
+            modifyValue(births, all_pops[i], local_pop_growth);
+            modifyValue(births, "total", local_pop_growth);
+          }
+        }
+      }
+
+    //Return statement
+    return births;
   },
 
   //getRelevantPops() - Returns an array of all pop keys with more than 0 population in a player country
