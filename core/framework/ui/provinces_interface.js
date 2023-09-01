@@ -194,7 +194,7 @@ module.exports = {
             province_string.push(config.localisation.divider);
             province_string.push("");
 
-            province_string.push(`_Displaying_ **Pop Needs** _for next turn._`);
+            province_string.push(`_Displaying current_ **Pop Needs**.`);
             province_string.push("");
             province_string.push(`> **Needs Category:**`);
             province_string.push(`>  - Total Good Amount - Good Name - [Pop Icon - Pop Consumption - Fulfilment %/Variety %]`);

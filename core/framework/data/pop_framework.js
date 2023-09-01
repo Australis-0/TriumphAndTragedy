@@ -893,32 +893,33 @@ module.exports = {
 
     //Check if province exists and for urban/rural growth dichotomy
     if (province_obj)
-      if (province_obj.type == "urban") {
-        //Calculate urban pop growth for all pops
-        for (var i = 0; i < all_pops.length; i++) {
-          var local_pop_growth = module.exports.getCityPopGrowth(province_obj, { pop_type: all_pops[i] });
+      if (province_obj.controller == province_obj.owner)
+        if (province_obj.type == "urban") {
+          //Calculate urban pop growth for all pops
+          for (var i = 0; i < all_pops.length; i++) {
+            var local_pop_growth = module.exports.getCityPopGrowth(province_obj, { pop_type: all_pops[i] });
 
-          if (province_obj.housing > province_obj.pops.population || local_pop_growth < 0) {
-            modifyValue(births, all_pops[i], local_pop_growth);
-            modifyValue(births, "total", local_pop_growth);
+            if (province_obj.housing > province_obj.pops.population || local_pop_growth < 0) {
+              modifyValue(births, all_pops[i], local_pop_growth);
+              modifyValue(births, "total", local_pop_growth);
+            }
+          }
+        } else {
+          if (!province_obj.pop_cap)
+            province_obj.pop_cap = (config.defines.economy.rural_pop_cap) ?
+              randomNumber(config.defines.economy.rural_pop_cap[0], config.defines.economy.rural_pop_cap[1]) :
+              randomNumber(120000, 140000);
+
+          //Calculate rural pop growth for all pops
+          for (var i = 0; i < all_pops.length; i++) {
+            if (province_obj.pops.population < province_obj.pop_cap) {
+              var local_pop_growth = Math.ceil(province_obj.pops[all_pops[i]]*usr.pops[`${all_pops[i]}_growth_modifier`]*usr.modifiers.pop_growth_modifier) - province_obj.pops[all_pops[i]];
+
+              modifyValue(births, all_pops[i], local_pop_growth);
+              modifyValue(births, "total", local_pop_growth);
+            }
           }
         }
-      } else {
-        if (!province_obj.pop_cap)
-          province_obj.pop_cap = (config.defines.economy.rural_pop_cap) ?
-            randomNumber(config.defines.economy.rural_pop_cap[0], config.defines.economy.rural_pop_cap[1]) :
-            randomNumber(120000, 140000);
-
-        //Calculate rural pop growth for all pops
-        for (var i = 0; i < all_pops.length; i++) {
-          if (province_obj.pops.population < province_obj.pop_cap) {
-            var local_pop_growth = Math.ceil(province_obj.pops[all_pops[i]]*usr.pops[`${all_pops[i]}_growth_modifier`]*usr.modifiers.pop_growth_modifier) - province_obj.pops[all_pops[i]];
-
-            modifyValue(births, all_pops[i], local_pop_growth);
-            modifyValue(births, "total", local_pop_growth);
-          }
-        }
-      }
 
     //Return statement
     return births;
@@ -1028,10 +1029,11 @@ module.exports = {
   },
 
   //getUnemployedPops() - Returns the total unemployed pops of a given type in a province
-  getUnemployedPops: function (arg0_province_id, arg1_type) {
+  getUnemployedPops: function (arg0_province_id, arg1_type, arg2_no_subsistence) {
     //Convert from parameters
     var province_id = arg0_province_id;
     var pop_type = arg1_type;
+    var no_subsistence = arg2_no_subsistence;
 
     //Declare local instance variables
     var employed_pops = 0;
@@ -1048,8 +1050,13 @@ module.exports = {
 
         if (local_pop_type == pop_type) {
           var local_wealth_pool = province_obj.pops[all_pop_keys[i]];
+          var meets_conditions = true;
 
-          employed_pops += returnSafeNumber(local_wealth_pool.size);
+          if (no_subsistence && local_wealth_pool.subsistence)
+            meets_conditions = false;
+
+          if (meets_conditions)
+            employed_pops += returnSafeNumber(local_wealth_pool.size);
         }
       }
 
@@ -1427,6 +1434,7 @@ module.exports = {
 
                 //Subtract spent_wealth from wealth pool
                 local_wealth_pool.wealth -= spent_wealth;
+                local_wealth_pool.spending = spent_wealth;
 
                 //Update _fulfilment and _variety for each category
                 for (var x = 0; x < category_buy_order.length; x++) {

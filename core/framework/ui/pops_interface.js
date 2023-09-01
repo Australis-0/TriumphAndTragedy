@@ -1,6 +1,6 @@
 module.exports = {
   //printDemographics() - Prints a province's demographics where possible
-  printDemographics: function (arg0_user, arg1_province_id, arg2_page) { //[WIP] - Finish function body; migration/education stats
+  printDemographics: function (arg0_user, arg1_province_id, arg2_page) { //[WIP] - Finish function body; deaths; migration/education stats
     //Convert from parameters
     var user_id = arg0_user;
     var province_id = arg1_province_id;
@@ -38,24 +38,120 @@ module.exports = {
     //Format pops_string
     if (province_obj) {
       if (province_obj.pops) {
+        var birth_obj = getProvinceBirths(user_id, province_id);
+
         //[WIP] - Push view and sort buttons to pops_string
 
         //Pop totals and percentage breakdown
-        pops_string.push(`${config.icons.population} Population: **${parseNumber(province_obj.pops.population)}**`);
+        {
+          pops_string.push(`**Population Breakdown:**`);
+          pops_string.push("");
+          pops_string.push(`${config.localisation.divider}`);
+          pops_string.push("");
+          pops_string.push(`${config.icons.population} Population: **${parseNumber(province_obj.pops.population)}**`);
 
-        for (var i = 0; i < pops_to_display.length; i++) {
-          var local_value = returnSafeNumber(province_obj.pops[pops_to_display[i]]);
+          for (var i = 0; i < pops_to_display.length; i++) {
+            var local_value = returnSafeNumber(province_obj.pops[pops_to_display[i]]);
 
-          var pop_obj = config.pops[pops_to_display[i]];
-          var local_percentage = local_value/returnSafeNumber(province_obj.pops.population);
+            var pop_obj = config.pops[pops_to_display[i]];
+            var local_percentage = local_value/returnSafeNumber(province_obj.pops.population);
 
-          //Print to pops_string
-          pops_string.push(`- ${(config.icons[pop_obj.icon]) ? config.icons[pop_obj.icon] + " " : ""}${(pop_obj.name) ? pop_obj.name : pops_to_display[i]}: ${parseNumber(local_value)} (**${printPercentage(local_percentage, { display_float: true })}**)`);
+            //Print to pops_string
+            pops_string.push(`- ${(config.icons[pop_obj.icon]) ? config.icons[pop_obj.icon] + " " : ""}${(pop_obj.name) ? pop_obj.name : pops_to_display[i]}: ${parseNumber(local_value)} (**${printPercentage(local_percentage, { display_float: true })}**)`);
+          }
+
+          //General pop stats (Birth rate, mortality, immigration, emigration) [WIP] - Add mortality/immigration/emigration
+          pops_string.push("");
+          pops_string.push(`**General Statistics:**`);
+          pops_string.push("");
+          pops_string.push(`${config.localisation.divider}`);
+          pops_string.push("");
+
+          if (province_obj.owner != province_obj.controller) {
+            pops_string.push(`> This province is currently occupied! Population growth is paused until it is liberated or transferred.`);
+            pops_string.push("");
+          }
+          pops_string.push(`- Births: ${parseNumber(birth_obj.total, { display_prefix: true })} (**${printPercentage(birth_obj.total/province_obj.pops.population)}**)`);
         }
 
-        //General pop stats (Birth rate, mortality, immigration, emigration)
-
         //Economic pop stats (GDP per capita, Median wage per pop, median wage for province; Unemployment)
+        {
+          var province_gdp = getProvinceGDP(province_id);
+          var province_gdp_per_capita = province_gdp/returnSafeNumber(province_obj.pops.population);
+          var province_homeless = returnSafeNumber(province_obj.pops.population) - province_obj.housing;
+
+          pops_string.push("");
+          pops_string.push(`**Economic Statistics:**`);
+          pops_string.push("");
+          pops_string.push(`${config.localisation.divider}`);
+          pops_string.push("");
+          pops_string.push(`**Average Needs Fulfilment By Category:**`);
+          pops_string.push("");
+          pops_string.push(`>  - Goods Category - [Pop Icon - Fulfilment %/Variety %]`);
+          pops_string.push("");
+
+          //Average needs fulfilment/variety per category for all pops
+          for (var i = 0; i < lookup.all_pop_needs_categories.length; i++) {
+            var local_fulfilment_string = [];
+
+            for (var x = 0; x < pops_to_display.length; x++) {
+              var local_pop = config.pops[pops_to_display[x]];
+              var pop_fulfilment = getActualPopFulfilment({
+                province_id: province_id,
+                pop_type: pops_to_display[x],
+
+                good_scope: lookup.all_pop_needs_categories[i]
+              });
+
+              //Push pop icon; fulfilment/variety percentages to local_fulfilment_string
+              local_fulfilment_string.push(`${(local_pop.icon) ? config.icons[local_pop.icon] + " " : ""} - ${printPercentage(pop_fulfilment.fulfilment)}/${printPercentage(pop_fulfilment.variety)}`);
+            }
+
+            pops_string.push(`- **${config.localisation[lookup.all_pop_needs_categories[i]]}** - ${local_fulfilment_string.join(", ")}`);
+          }
+
+          //GDP/GDP per capita
+          pops_string.push("");
+          pops_string.push(`- GDP (Local): ${config.icons.money} ${parseNumber(province_gdp)}`);
+          pops_string.push(` - Per capita: ${parseNumber(province_gdp_per_capita)}`);
+
+          //Housing/Homelessness
+          pops_string.push(`- ${config.icons.neighbourhoods} Housing: ${parseNumber(province_obj.housing)}`);
+          pops_string.push(` - Homelessness: ${parseNumber(province_homeless)} (**${printPercentage(province_homeless/province_obj.pops.population)}**)`);
+
+          //Median Wage per pop type
+          pops_string.push("");
+          pops_string.push(`**Median Wage by Profession:**`);
+          pops_string.push("");
+
+          for (var i = 0; i < pops_to_display.length; i++) {
+            var median_wage = getMedianWage(province_id, { pop_type: pops_to_display[i] });
+
+            //Push to pops_string
+            pops_string.push(`- ${parsePop(pops_to_display[i])}: **${parseNumber(median_wage)}**`);
+          }
+
+          pops_string.push("");
+          pops_string.push(`- ${config.icons.taxes} Median Wage (Total): **${printPercentage(getTotalMedianWage(province_id))}**`);
+          pops_string.push("");
+
+          //Unemployment Rates per pop type
+          pops_string.push("");
+          pops_string.push(`**Unemployment Rates by Profession:**`);
+          pops_string.push("");
+
+          var total_unemployed_pops = 0;
+          for (var i = 0; i < pops_to_display.length; i++) {
+            var unemployed_pops = getUnemployedPops(province_id, pops_to_display[i], true);
+
+            pops_string.push(`- ${parsePop(pops_to_display[i])}: ${printPercentage(unemployed_pops/returnSafeNumber(province_obj.pops[pops_to_display[i]]))}`);
+
+            total_unemployed_pops += unemployed_pops;
+          }
+
+          pops_string.push("");
+          pops_string.push(`- ${config.icons.workers} Total Unemployment Rate: **${printPercentage(total_unemployed_pops/province_obj.pops.population)}`);
+        }
 
         //Iterate over all wealth pools first
 

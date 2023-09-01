@@ -422,6 +422,22 @@ module.exports = {
     return building_name;
   },
 
+  getActualBuildingExpenditure: function (arg0_building_obj) {
+    //Convert from parameters
+    var building_obj = arg0_building_obj;
+
+    //Return statement
+    return returnSafeNumber(building_obj.wage_cost);
+  },
+
+  getActualBuildingRevenue: function (arg0_building_obj) {
+    //Convert from parameters
+    var building_obj = arg0_building_obj;
+
+    //Return statement
+    return returnSafeNumber(building_obj.goods_revenue);
+  },
+
   //getAllBuildingGoods() - Returns a key array of all goods relevant to the set of a user's available_buildings
   getAllBuildingGoods: function (arg0_user) {
     //Convert from parameters
@@ -1648,7 +1664,7 @@ module.exports = {
   },
 
   //getBuildingWages() - Returns a sorted object of building wages in a province for a given pop type
-  getBuildingWages: function (arg0_province_id, arg1_pop_type) { //[WIP] - Finish function body
+  getBuildingWages: function (arg0_province_id, arg1_pop_type) {
     //Convert from parameters
     var province_id = arg0_province_id;
     var pop_type = arg1_type;
@@ -2217,6 +2233,38 @@ module.exports = {
     return all_production;
   },
 
+  getProvinceGDP: function (arg0_province_id) {
+    //Convert from parameters
+    var province_id = arg0_province_id;
+
+    //Declare local instance variables
+    var gdp_e = 0;
+    var gdp_i = 0;
+    var gdp_p = 0;
+    var province_obj = main.provinces[province_id];
+
+    if (province_obj.buildings)
+      for (var i = 0; i < province_obj.buildings.length; i++) {
+        gdp_p += module.exports.getActualBuildingRevenue(province_obj.buildings[i]);
+        gdp_i += returnSafeNumber(province_obj.buildings[i].profit);
+        gdp_e += module.exports.getActualBuildingExpenditure(province_obj.buildings[i]);
+      }
+    if (province_obj.pops) {
+      var all_pop_keys = Object.keys(province_obj.pops);
+
+      for (var i = 0; i < all_pop_keys.length; i++)
+        if (all_pop_keys[i].startsWith("wealth-")) {
+          var local_wealth_pool = province_obj.pops[all_pop_keys[i]];
+
+          gdp_e += returnSafeNumber(local_wealth_pool.spending);
+          gdp_i += returnSafeNumber(local_wealth_pool.income);
+        }
+    }
+
+    //Return statement - GDP(A)
+    return (gdp_e + gdp_i + gdp_p)/3;
+  },
+
   getReopenCost: function (arg0_building) {
     //Convert from parameters
     var building_obj = arg0_building;
@@ -2264,6 +2312,24 @@ module.exports = {
 
     //Return statement
     return total;
+  },
+
+  getTotalMedianWage: function (arg0_province_id) {
+    //Convert from parameters
+    var province_id = arg0_province_id;
+
+    //Declare local instance variables
+    var all_pops = Object.keys(config.pops);
+    var total_median_wage = 0;
+
+    //Iterate over all_pops
+    for (var i = 0; i < all_pops.length; i++)
+      total_median_wage += returnSafeNumber(module.exports.getMedianWage(province_id, {
+        pop_type: all_pops[i]
+      }));
+
+    //Return statement
+    return total_median_wage/all_pops.length;
   },
 
   hasBaseProductionChoice: function (arg0_building) {
@@ -2444,6 +2510,7 @@ module.exports = {
     var all_good_keys = Object.keys(goods_obj);
     var cache = {};
     var config_obj = lookup.all_buildings[building_obj.building_type];
+    var original_stockpile = JSON.parse(JSON.stringify(building_obj.stockpile));
     var pop_types;
     var province_id = building_obj.id.split("-")[0];
     var province_obj = main.provinces[province_id];
@@ -2543,6 +2610,9 @@ module.exports = {
 
         building_obj.goods_revenue = goods_revenue;
       }
+
+      //Set profit
+      building_obj.profit = building_obj.stockpile.money - returnSafeNumber(original_stockpile.money);
     }
   },
 
@@ -2681,6 +2751,8 @@ module.exports = {
         local_building_pop.size = local_unemployed;
         local_building_pop.income = average_wage;
         modifyValue(local_building_pop, "wealth", average_wage);
+
+        local_building_pop.subsistence = true;
       }
     } else {
       //Set .no_subsistence flag if applicable
