@@ -6,6 +6,7 @@ module.exports = {
 
     //Declare local instance variables
     var actual_id = main.global.user_map[arg0_user];
+    var current_page = 0;
     var game_obj = getGameObject(arg0_user);
     var user_id = arg0_user;
     var usr = main.users[actual_id];
@@ -19,6 +20,11 @@ module.exports = {
 
     //Main Menu handler
     {
+      //Handle current_page
+      if (main.interfaces)
+        if (main.interfaces[game_obj.middle_embed.id])
+          current_page = returnSafeNumber(main.interfaces[game_obj.middle_embed.id].page);
+
       if (game_obj.main_menu_embed) {
         //[Resume Game]
         if (input == "resume game")
@@ -688,7 +694,7 @@ module.exports = {
           //[Hide Production Choices]
           if (["hide production choice", "hide production choices"].includes(input)) {
             game_obj.hide_production_choices = true;
-            printBuilding(user_id, building_id, main.interfaces[game_obj.middle_embed.id].page);
+            printBuilding(user_id, building_id, current_page);
           }
 
           //[Jump To Page]
@@ -713,7 +719,7 @@ module.exports = {
           //[Show Production Choices]
           if (["show production choice", "show production choices"].includes(input)) {
             delete game_obj.hide_production_choices;
-            printBuilding(user_id, building_id, main.interfaces[game_obj.middle_embed.id].page);
+            printBuilding(user_id, building_id, current_page);
           }
 
           //[Subsidise]
@@ -741,7 +747,7 @@ module.exports = {
           //[Alphabetical]
           if (input == "alphabetical") {
             game_obj.building_sort = "alphabetical";
-            printProvinceBuildings(user_id, province_id, main.interfaces[game_obj.middle_embed.id].page);
+            printProvinceBuildings(user_id, province_id, current_page);
           }
 
           //[Back]
@@ -753,19 +759,19 @@ module.exports = {
           //[Cash Reserves]
           if (input == "cash reserves") {
             game_obj.building_sort = "cash_reserves";
-            printProvinceBuildings(user_id, province_id, main.interfaces[game_obj.middle_embed.id].page);
+            printProvinceBuildings(user_id, province_id, current_page);
           }
 
           //[Category]
           if (input == "category") {
             game_obj.building_sort = "category";
-            printProvinceBuildings(user_id, province_id, main.interfaces[game_obj.middle_embed.id].page);
+            printProvinceBuildings(user_id, province_id, current_page);
           }
 
           //[Chronology]
           if (input == "chronology") {
             game_obj.building_sort = "chronology";
-            printProvinceBuildings(user_id, province_id, main.interfaces[game_obj.middle_embed.id].page);
+            printProvinceBuildings(user_id, province_id, current_page);
           }
 
           //[Defund All Buildings]
@@ -778,7 +784,7 @@ module.exports = {
           //[Employment]
           if (input == "employment") {
             game_obj.building_sort = "employment";
-            printProvinceBuildings(user_id, province_id, main.interfaces[game_obj.middle_embed.id].page);
+            printProvinceBuildings(user_id, province_id, current_page);
           }
 
           //[Jump To Page]
@@ -800,7 +806,7 @@ module.exports = {
           //[Numeric]
           if (input == "numeric") {
             game_obj.building_sort = "numeric";
-            printProvinceBuildings(user_id, province_id, main.interfaces[game_obj.middle_embed.id].page);
+            printProvinceBuildings(user_id, province_id, current_page);
           }
 
           //[Rename Building]
@@ -892,7 +898,7 @@ module.exports = {
               delete game_obj.show_pop_need_warnings;
               createPageMenu(game_obj.middle_embed, {
                 embed_pages: printProvince(game_obj.user, city_name),
-                page: main.interfaces[game_obj.middle_embed.id].page,
+                page: current_page,
                 user: game_obj.user
               });
 
@@ -933,7 +939,7 @@ module.exports = {
               game_obj.show_pop_need_warnings = true;
               createPageMenu(game_obj.middle_embed, {
                 embed_pages: printProvince(game_obj.user, city_name),
-                page: main.interfaces[game_obj.middle_embed.id].page,
+                page: current_page,
                 user: game_obj.user
               });
 
@@ -1872,7 +1878,7 @@ module.exports = {
 
           //[Clear]
           if (["clear", "clear search"].includes(input))
-            printInventory(user_id, main.interfaces[game_obj.middle_embed.id].page);
+            printInventory(user_id, current_page);
 
           //[(Good Name)] - Tooltip
           goodTooltip(user_id, input);
@@ -1880,7 +1886,7 @@ module.exports = {
           //[Hide All Goods]
           if (["hide goods", "hide all goods"].includes(input)) {
             delete game_obj.inventory_show_all_goods;
-            printInventory(user_id, main.interfaces[game_obj.middle_embed.id].page);
+            printInventory(user_id, current_page);
           }
 
           //[Jump To Page]
@@ -1910,7 +1916,7 @@ module.exports = {
           //[Show All Goods]
           if (input == "show all goods") {
             game_obj.inventory_show_all_goods = true;
-            printInventory(user_id, main.interfaces[game_obj.middle_embed.id].page);
+            printInventory(user_id, current_page);
           }
         }
 
@@ -1944,7 +1950,7 @@ module.exports = {
           //[Alphabetical]
           if (input == "alphabetical") {
             game_obj.building_sort = "alphabetical";
-            printIndustry(user_id, main.interfaces[game_obj.middle_embed.id].page);
+            printIndustry(user_id, current_page);
           }
 
           //[Back]
@@ -1957,19 +1963,19 @@ module.exports = {
           //[Cash Reserves]
           if (input == "cash reserves") {
             game_obj.building_sort = "cash_reserves";
-            printIndustry(user_id, main.interfaces[game_obj.middle_embed.id].page);
+            printIndustry(user_id, current_page);
           }
 
           //[Category]
           if (input == "category") {
             game_obj.building_sort = "category";
-            printIndustry(user_id, main.interfaces[game_obj.middle_embed.id].page);
+            printIndustry(user_id, current_page);
           }
 
           //[Chronology]
           if (input == "chronology") {
             game_obj.building_sort = "chronology";
-            printIndustry(user_id, main.interfaces[game_obj.middle_embed.id].page);
+            printIndustry(user_id, current_page);
           }
 
           //[Disable All Subsidies]
@@ -1979,13 +1985,13 @@ module.exports = {
           //[Employment]
           if (input == "employment") {
             game_obj.building_sort = "employment";
-            printIndustry(user_id, main.interfaces[game_obj.middle_embed.id].page);
+            printIndustry(user_id, current_page);
           }
 
           //[Numeric]
           if (input == "numeric") {
             game_obj.building_sort = "numeric";
-            printIndustry(user_id, main.interfaces[game_obj.middle_embed.id].page);
+            printIndustry(user_id, current_page);
           }
 
           //[Jump To Page]
@@ -2187,7 +2193,7 @@ module.exports = {
             game_obj.armies_sorting_mode = "attrition";
             createPageMenu(game_obj.middle_embed, {
               embed_pages: printArmyList(game_obj.user),
-              page: main.interfaces[game_obj.middle_embed.id].page,
+              page: current_page,
               user: game_obj.user
             });
           }
@@ -2197,7 +2203,7 @@ module.exports = {
             game_obj.armies_sorting_mode = "alphabetical";
             createPageMenu(game_obj.middle_embed, {
               embed_pages: printArmyList(game_obj.user),
-              page: main.interfaces[game_obj.middle_embed.id].page,
+              page: current_page,
               user: game_obj.user
             });
           }
@@ -2213,7 +2219,7 @@ module.exports = {
             game_obj.armies_sorting_mode = "chronological";
             createPageMenu(game_obj.middle_embed, {
               embed_pages: printArmyList(game_obj.user),
-              page: main.interfaces[game_obj.middle_embed.id].page,
+              page: current_page,
               user: game_obj.user
             });
           }
@@ -2230,7 +2236,7 @@ module.exports = {
               createPageMenu(game_obj.middle_embed, {
                 embed_pages: printArmyList(game_obj.user),
 
-                page: main.interfaces[game_obj.middle_embed.id].page,
+                page: current_page,
                 page: arg[0] - 1,
                 user: game_obj.user
               });
@@ -2241,7 +2247,7 @@ module.exports = {
             game_obj.armies_sorting_mode = "numerical";
             createPageMenu(game_obj.middle_embed, {
               embed_pages: printArmyList(game_obj.user),
-              page: main.interfaces[game_obj.middle_embed.id].page,
+              page: current_page,
               user: game_obj.user
             });
           }
@@ -2251,7 +2257,7 @@ module.exports = {
             game_obj.armies_sorting_mode = "roman_numerical";
             createPageMenu(game_obj.middle_embed, {
               embed_pages: printArmyList(game_obj.user),
-              page: main.interfaces[game_obj.middle_embed.id].page,
+              page: current_page,
               user: game_obj.user
             });
           }
@@ -2261,7 +2267,7 @@ module.exports = {
             game_obj.armies_sorting_mode = "size";
             createPageMenu(game_obj.middle_embed, {
               embed_pages: printArmyList(game_obj.user),
-              page: main.interfaces[game_obj.middle_embed.id].page,
+              page: current_page,
               user: game_obj.user
             });
           }
@@ -2271,7 +2277,7 @@ module.exports = {
             game_obj.armies_sorting_mode = "speed";
             createPageMenu(game_obj.middle_embed, {
               embed_pages: printArmyList(game_obj.user),
-              page: main.interfaces[game_obj.middle_embed.id].page,
+              page: current_page,
               user: game_obj.user
             });
           }
@@ -2281,7 +2287,7 @@ module.exports = {
             game_obj.armies_sorting_mode = "strength";
             createPageMenu(game_obj.middle_embed, {
               embed_pages: printArmyList(game_obj.user),
-              page: main.interfaces[game_obj.middle_embed.id].page,
+              page: current_page,
               user: game_obj.user
             });
           }
@@ -2291,7 +2297,7 @@ module.exports = {
             game_obj.armies_sorting_mode = "type";
             createPageMenu(game_obj.middle_embed, {
               embed_pages: printArmyList(game_obj.user),
-              page: main.interfaces[game_obj.middle_embed.id].page,
+              page: current_page,
               user: game_obj.user
             });
           }
@@ -2404,7 +2410,7 @@ module.exports = {
             delete game_obj.expanded_army_pathing;
             createPageMenu(game_obj.middle_embed, {
               embed_pages: printArmy(game_obj.user, viewed_army),
-              page: main.interfaces[game_obj.middle_embed.id].page,
+              page: current_page,
               user: game_obj.user
             });
           }
@@ -2426,7 +2432,7 @@ module.exports = {
             game_obj.expanded_army_pathing = true;
             createPageMenu(game_obj.middle_embed, {
               embed_pages: printArmy(game_obj.user, viewed_army),
-              page: main.interfaces[game_obj.middle_embed.id].page,
+              page: current_page,
               user: game_obj.user
             });
           }
@@ -2995,6 +3001,46 @@ module.exports = {
             printPops(user_id);
           }
         }
+
+        if (game_obj.page.startsWith("view_demographics_")) {
+          var province_id = game_obj.page.replace("view_demographics_", "");
+
+          //[Back]
+          if (input == "back")
+            printProvince(user_id, province_id);
+
+          //[Expand Economic Statistics]
+          if (input == "expand economic statistics") {
+            delete game_obj.minimise_economic_statistics;
+            printDemographics(user_id, province_id, current_page);
+          }
+
+          //[Expand Pop Breakdown]
+          if (input == "expand pop breakdown") {
+            delete game_obj.minimise_pop_breakdown;
+            printDemographics(user_id, province_id, current_page);
+          }
+
+          //[Expand Profession Breakdown]
+          if (input == "expand profession breakdown") {
+            delete game_obj.hide_profession_breakdown;
+            printDemographics(user_id, province_id, current_page);
+          }
+
+          //[Expand Wealth Pools]
+          //[Hide All Details]
+          //[Hide Employers]
+          //[Hide Needs Categories]
+          //[Hide Profession Breakdown]
+          //[Jump To Page]
+          //[Minimise Economic Statistics]
+          //[Minimise Pop Breakdown]
+          //[Minimise Wealth Pools]
+          //[Show All Details]
+          //[Show Employers]
+          //[Show Needs Categories]
+        }
+
         if (population_pages.includes(game_obj.page)) {
           switch (input) {
             case "culture":
@@ -3087,7 +3133,7 @@ module.exports = {
 
               createPageMenu(game_obj.middle_embed, {
                 embed_pages: printProvince(game_obj.user, province_name),
-                page: main.interfaces[game_obj.middle_embed.id].page
+                page: current_page
                 user: game_obj.user
               });
 
@@ -3098,7 +3144,7 @@ module.exports = {
 
               createPageMenu(game_obj.middle_embed, {
                 embed_pages: printProvince(game_obj.user, province_name),
-                page: main.interfaces[game_obj.middle_embed.id].page
+                page: current_page
                 user: game_obj.user
               });
 

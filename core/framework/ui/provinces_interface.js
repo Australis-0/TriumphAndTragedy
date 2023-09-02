@@ -43,7 +43,7 @@ module.exports = {
     var province_string = [];
 
     if (province_obj) {
-      province_string.push(`**[Back]** | **[Jump To Page]**`);
+      province_string.push(`**[Back]** | **[Jump To Page]** | **[View Demographics]**`);
       province_string.push("");
 
       if (province_obj.controller) {
