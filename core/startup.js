@@ -300,9 +300,10 @@ module.exports = {
     log.info(`Client logged in.`);
 
     //Load DB from JSON
-    initOptimisation();
     loadBackupArray();
     loadMostRecentSave();
+
+    initOptimisation();
 
     //Debug warnings for missing icons
     if (settings.debug_mode) {

@@ -3028,17 +3028,92 @@ module.exports = {
           }
 
           //[Expand Wealth Pools]
+          if (input == "expand wealth pools") {
+            delete game_obj.minimise_wealth_pools;
+            printDemographics(user_id, province_id, current_page);
+          }
+
           //[Hide All Details]
+          if (input == "hide all details") {
+            game_obj.hide_employers = true;
+            game_obj.hide_needs_categories = true;
+            game_obj.minimise_economic_statistics = true;
+            game_obj.minimise_pop_breakdown = true;
+            game_obj.minimise_wealth_pools = true;
+
+            printDemographics(user_id, province_id, current_page);
+          }
+
           //[Hide Employers]
+          if (input == "hide employers") {
+            game_obj.hide_employers = true;
+            printDemographics(user_id, province_id, current_page);
+          }
+
           //[Hide Needs Categories]
+          if (input == "hide needs categories") {
+            game_obj.hide_needs_categories = true;
+            printDemographics(user_id, province_id, current_page);
+          }
+
           //[Hide Profession Breakdown]
+          if (input == "hide profession breakdown") {
+            game_obj.hide_profession_breakdown = true;
+            printDemographics(user_id, province_id, current_page);
+          }
+
           //[Jump To Page]
+          if (input == "jump to page")
+            visualPrompt(game_obj.alert_embed, user_id, {
+              title: `Jump To Page:`,
+              prompts: [
+                [`Which page would you like to jump to?`, "number", { min: 1, max: printDemographics(user_id, province_id, undefined, true).length }]
+              ]
+            },
+            function (arg) {
+              printDemographics(game_obj.user, province_id, arg[0] - 1);
+            });
+
           //[Minimise Economic Statistics]
+          if (["minimise economic statistics", "minimize economic statistics"].includes(input)) {
+            game_obj.minimise_economic_statistics = true;
+            printDemographics(user_id, province_id, current_page);
+          }
+
           //[Minimise Pop Breakdown]
+          if (["minimise pop breakdown", "minimize pop breakdown", "minimise population breakdown", "minimize population breakdown"].includes(input)) {
+            game_obj.minimise_pop_breakdown = true;
+            printDemographics(user_id, province_id, current_page);
+          }
+
           //[Minimise Wealth Pools]
+          if (["minimise wealth pools", "minimize wealth pools", "minimise wealth pool", "minimize wealth pool"].includes(input)) {
+            game_obj.minimise_wealth_pools = true;
+            printDemographics(user_id, province_id, current_page);
+          }
+
           //[Show All Details]
+          if (input == "show all details") {
+            delete game_obj.hide_employers;
+            delete game_obj.hide_needs_categories;
+            delete game_obj.minimise_economic_statistics;
+            delete game_obj.minimise_pop_breakdown;
+            delete game_obj.minimise_wealth_pools;
+
+            printDemographics(user_id, province_id, current_page);
+          }
+
           //[Show Employers]
+          if (input == "show employers") {
+            delete game_obj.hide_employers;
+            printDemographics(user_id, province_id, current_page);
+          }
+
           //[Show Needs Categories]
+          if (input == "show needs categories") {
+            delete game_obj.hide_needs_categories;
+            printDemographics(user_id, province_id, current_page);
+          }
         }
 
         if (population_pages.includes(game_obj.page)) {
@@ -3133,7 +3208,7 @@ module.exports = {
 
               createPageMenu(game_obj.middle_embed, {
                 embed_pages: printProvince(game_obj.user, province_name),
-                page: current_page
+                page: current_page,
                 user: game_obj.user
               });
 
@@ -3144,7 +3219,7 @@ module.exports = {
 
               createPageMenu(game_obj.middle_embed, {
                 embed_pages: printProvince(game_obj.user, province_name),
-                page: current_page
+                page: current_page,
                 user: game_obj.user
               });
 

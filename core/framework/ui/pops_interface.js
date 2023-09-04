@@ -1,10 +1,11 @@
 module.exports = {
   //printDemographics() - Prints a province's demographics where possible
-  printDemographics: function (arg0_user, arg1_province_id, arg2_page) { //[WIP] - Finish function body; deaths; migration/education stats
+  printDemographics: function (arg0_user, arg1_province_id, arg2_page, arg3_do_not_display) { //[WIP] - Finish function body; deaths; migration/education stats
     //Convert from parameters
     var user_id = arg0_user;
     var province_id = arg1_province_id;
     var page = (arg2_page) ? parseInt(arg2_page) : 0;
+    var do_not_display = arg3_do_not_display;
 
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
@@ -225,12 +226,15 @@ module.exports = {
           title_pages: true,
           fixed_width: true
         });
-        game_obj.main_embed = createPageMenu(game_obj.middle_embed, {
-          embed_pages: all_embeds,
-          user: game_obj.user,
-          page: page
-        });
-        game_obj.main_change = true;
+
+        if (!do_not_display) {
+          game_obj.main_embed = createPageMenu(game_obj.middle_embed, {
+            embed_pages: all_embeds,
+            user: game_obj.user,
+            page: page
+          });
+          game_obj.main_change = true;
+        }
 
         //Return statement
         return all_embeds;
