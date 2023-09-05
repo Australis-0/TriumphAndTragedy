@@ -56,6 +56,13 @@ module.exports = {
     var total_category_goods = 0;
     var total_price = 0;
 
+    //Initialise defaults if undefined
+    if (!global.lookup) global.lookup = {};
+    if (!lookup.all_goods)
+      lookup.all_goods = getGoods({ return_object: true });
+    if (!lookup.all_good_names)
+      lookup.all_good_names = module.exports.getGoods({ return_names: true });
+
     //Iterate over lookup.all_good_names
     for (var i = 0; i < lookup.all_good_names.length; i++) {
       var local_good = lookup.all_goods[lookup.all_good_names[i]];
