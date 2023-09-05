@@ -111,6 +111,9 @@ module.exports = {
                 var province_obj = main.provinces[flags.province_id];
 
                 //Education modifiers
+                if (all_modifiers[i].startsWith("education_level_") || all_modifiers[i] == "education_level") {
+                  
+                }
               }
             }
           }

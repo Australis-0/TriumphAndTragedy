@@ -1225,6 +1225,72 @@ module.exports = {
     return current_scope;
   },
 
+  /*
+    modifyEducationLevel() - Changes the education level of selected pops in a given province. [REVISIT] - Add pop selector options in the future.
+    options: {
+      province_id: "4407", - Which province ID should be targeted by this function?
+
+      min: 0, - Optional. 0 by default. For which brackets should the education level be raised? (Lower bound)
+      max: 0, - Optional. 1 by default. For which brackets should the education level be raised?
+
+      capacity: 50000, - Optional. Entire province population by default. How many people should be raised in terms of education at a time?
+      value: 0.05 - How much should education levels within these brackets up to capacity be modified?
+    }
+  */
+  modifyEducationLevel: function (arg0_options) { //[WIP] - Finish function body
+    //Convert from parameters
+    var options = (arg0_options) ? arg0_options : {};
+
+    //Declare local instance variables
+    var province_obj = main.provinces[options.province_id];
+    var total_eligible = 0;
+
+    if (province_obj)
+      if (province_obj.pops) {
+        var all_pop_keys = Object.keys(province_obj.pops);
+
+        //Set defaults
+        var max = Math.min(returnSafeNumber(options.max), 1);
+        var min = Math.max(returnSafeNumber(options.min), 0);
+
+        var capacity = (options.capacity) ? options.capacity : province_obj.pops.population;
+        var value = returnSafeNumber(options.value);
+
+        //Fetch education_profile_obj - lists current education profile; then standardise to percentages so that they can be moved up by their respective steps proportionally
+        var education_profile_obj = {};
+        var education_percentage_obj = {};
+
+        //Iterate over all_pop_keys
+        for (var i = 0; i < all_pop_keys.length; i++) {
+          var local_value = province_obj.pops[all_pop_keys[i]];
+
+          if (all_pop_keys[i].startsWith("el_")) {
+            var local_key = all_pop_keys[i].replace("el_", "");
+            var local_education_level = parseInt(local_key);
+
+            if (local_education_level >= min && local_education_level <= max) {
+              education_profile_obj[local_education_level] = local_value;
+              total_eligible += local_value;
+            }
+          }
+        }
+
+        //Zero handler for total_eligible
+        var uneducated_population = province_obj.pops.population - total_eligible;
+
+        if (min <= 0)
+          education_profile_obj[0] = uneducated_population;
+
+        //Iterate over education_profile_obj to fetch education_percentage_obj
+        var all_education_keys = Object.keys(education_profile_obj);
+
+        for (var i = 0; i < all_education_keys.length; i++)
+          education_percentage_obj[all_education_keys[i]] = education_profile_obj[all_education_keys[i]]/total_eligible;
+
+        //Modify their actual education values now
+      }
+  },
+
   parsePops: function () {
     //Declare local instance variables
     var all_pops = Object.keys(config.pops);
