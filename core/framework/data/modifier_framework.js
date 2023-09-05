@@ -31,6 +31,12 @@ module.exports = {
     });
   },
 
+  /*
+    applyModifiers() - Applies a given scope object in terms of modifiers.
+    flags: {
+      province_id: "4407" - The Province ID the scope is currently targeting
+    }
+  */
   applyModifiers: function (arg0_user, arg1_scope, arg2_flags) {
     //Convert from parameters
     var user_id = arg0_user;
@@ -46,89 +52,68 @@ module.exports = {
       //Begin parsing
       for (var i = 0; i < all_modifiers.length; i++) {
         var effect_value = getList(modifiers[all_modifiers[i]]);
+        var local_value = modifiers[all_modifiers[i]];
 
-        switch (all_modifiers[i]) {
-          //Obsoletion
-          case "obsolete_building":
-            for (var x = 0; x < effect_value.length; x++)
-              usr.available_buildings = removeElement(usr.available_buildings, effect_value[x]);
-
-            break;
-          case "obsolete_government":
-            for (var x = 0; x < effect_value.length; x++)
-              usr.available_governments = removeElement(usr.available_governments, effect_value[x]);
-
-            break;
-          case "obsolete_reform":
-            for (var x = 0; x < effect_value.length; x++)
-              usr.available_reforms = removeElement(usr.available_reforms, effect_value[x]);
-
-            break;
-          case "obsolete_unit":
-            for (var x = 0; x < effect_value.length; x++)
-              usr.available_units = removeElement(usr.available_units, effect_value[x]);
-
-            break;
-
-          case "set_mobilisation_unit":
-            usr.mobilisation.unit_type = effect_value[0];
-
-            break;
-
-          //Unlocking
-          case "enable_blockades":
-            usr.modifiers.enable_blockades = true;
-
-            break;
-          case "enable_mobilisation":
-            usr.modifiers.enable_mobilisation = effect_value[0];
-
-            break;
-          case "unlock_building":
-            for (var x = 0; x < effect_value.length; x++)
-              usr.available_buildings.push(effect_value[x]);
-
-            break;
-          case "unlock_government":
-            for (var x = 0; x < effect_value.length; x++)
-              usr.available_governments.push(effect_value[x]);
-
-            break;
-          case "unlock_reform":
-            for (var x = 0; x < effect_value.length; x++)
-              unlockReform(user_id, effect_value[x]);
-
-            break;
-          case "unlock_unit":
-            for (var x = 0; x < effect_value.length; x++)
-              usr.available_units.push(effect_value[x]);
-
-            break;
-
+        if (all_modifiers[i] == "enable_blockades") {
+          usr.modifiers.enable_blockades = effect_value[0];
+        } else if (all_modifiers[i] == "enable_mobilisation") {
+          usr.modifiers.enable_mobilisation = effect_value[0];
+        } else if (all_modiifers[i] == "obsolete_building") {
+          for (var x = 0; x < effect_value.length; x++)
+            usr.available_buildings = removeElement(usr.available_buildings, effect_value[x]);
+        } else if (all_modifiers[i] == "obsolete_government") {
+          for (var x = 0; x < effect_value.length; x++)
+            usr.available_governments = removeElement(usr.available_governments, effect_value[x]);
+        } else if (all_modifiers[i] == "obsolete_reform") {
+          for (var x = 0; x < effect_value.length; x++)
+            usr.available_reforms = removeElement(usr.available_reforms, effect_value[x]);
+        } else if (all_modifiers[i] == "obsolete_unit") {
+          for (var x = 0; x < effect_value.length; x++)
+            usr.available_units = removeElement(usr.available_units, effect_value[x]);
+        } else if (all_modifiers[i] == "set_mobilisation_unit") {
+          usr.mobilisation.unit_type = effect_value[0];
+        } else if (all_modifiers[i] == "unlock_building") {
+          for (var x = 0; x < effect_value.length; x++)
+            usr.available_buildings.push(effect_value[x]);
+        } else if (all_modifiers[i] == "unlock_government") {
+          for (var x = 0; x < effect_value.length; x++)
+            usr.available_governments.push(effect_value[x]);
+        } else if (all_modifiers[i] == "unlock_reform") {
+          for (var x = 0; x < effect_value.length; x++)
+            unlockReform(user_id, effect_value[x]);
+        } else if (all_modifiers[i] == "unlock_unit") {
+          for (var x = 0; x < effect_value.length; x++)
+            usr.available_units.push(effect_value[x]);
+        } else {
           //Default case handling
-          default:
-            //Check if the modifier in question actually exists before incrementing
-            var modifier_value = modifiers[all_modifiers[i]];
+          var is_government = Object.keys(config.governments).includes(all_modifiers[i]);
 
-            if (usr.modifiers[all_modifiers[i]] != undefined) {
-              usr.modifiers[all_modifiers[i]] += modifier_value;
-            } else if (usr[all_modifiers[i]] != undefined) {
-              var is_government = Object.keys(config.governments).includes(all_modifiers[i]);
-
-              if (is_government) {
-                usr.politics[all_modifiers[i]].drift += modifier_value;
-              } else {
-                if (lookup.all_goods[all_modifiers[i]] != undefined)
-                  modifyGoodAmount(user_id, all_modifiers[i], modifier_value);
-                else
-                  usr[all_modifiers[i]] += modifier_value;
-              }
+          if (is_government) {
+            usr.politics[all_modifiers[i]].drift += local_value;
+          } else {
+            if (lookup.all_goods[all_modifiers[i]] != undefined) {
+              modifyGoodAmount(user_id, all_modifiers[i], local_value);
             } else {
-              if (usr.modifiers[`${all_modifiers[i]}_building_slots`] != undefined)
-                usr.modifiers[`${all_modifiers[i]}_building_slots`] += modifier_value;
-            }
+              if (!flags.province_id) { //Country scope
+                //Building slots
+                if (usr.modifiers[`${all_modifiers[i]}_building_slots`] != undefined) {
+                  usr.modifiers[`${all_modifiers[i]_building_slots}`] += local_value;
+                } else if (lookup.all_goods[all_modifiers[i]]) {
+                  (effect_value.length == 1) ?
+                    modifyGoodAmount(user_id, all_modifiers[i], effect_value[0]) :
+                    modifyGoodAmount(user_id, all_modifiers[i], randomNumber(effect_value[0], effect_value[1]));
+                } else if (usr.modifiers[all_modifiers[i]]) {
+                  //Default country handler
+                  usr.modifiers[all_modifiers[i]] += (effect_value.length == 1) ?
+                    effect_value[0] : randomNumber(effect_value[0], effect_value[1]);
+                }
+              } else if (flags.province_id) { //Province scope
+                var province_obj = main.provinces[flags.province_id];
 
-            break;
+                //Education modifiers
+              }
+            }
+          }
         }
       }
 
@@ -573,7 +558,7 @@ module.exports = {
         } else {
           modifier_string.push(`${prefix}${f}${parseNumber(local_value[0])} - ${parseNumber(local_value[1])}${f} ${(good_obj.name) ? good_obj.name : all_modifier_keys[i]}`);
         }
-      } else if (all_modifier_keys[i] == "money") {
+      } else if (all_modifier_keys[i] == "money") { //Money handler
         (local_value.length == 1) ?
           modifier_string.push(`${prefix}£${parseNumber(local_value[0])}`) :
           modifier_string.push(`${prefix}£${parseNumber(local_value[0])} - ${parseNumber(local_value[1])}`);
