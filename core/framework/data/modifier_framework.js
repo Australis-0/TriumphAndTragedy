@@ -97,7 +97,7 @@ module.exports = {
               if (!flags.province_id) { //Country scope
                 //Building slots
                 if (usr.modifiers[`${all_modifiers[i]}_building_slots`] != undefined) {
-                  usr.modifiers[`${all_modifiers[i]_building_slots}`] += local_value;
+                  usr.modifiers[`${all_modifiers[i]}_building_slots`] += local_value;
                 } else if (lookup.all_goods[all_modifiers[i]]) {
                   (effect_value.length == 1) ?
                     modifyGoodAmount(user_id, all_modifiers[i], effect_value[0]) :
@@ -111,9 +111,16 @@ module.exports = {
                 var province_obj = main.provinces[flags.province_id];
 
                 //Education modifiers
-                if (all_modifiers[i].startsWith("education_level_") || all_modifiers[i] == "education_level") {
-                  
-                }
+                if (!options.passive)
+                  if (all_modifiers[i].startsWith("education_level_") || all_modifiers[i] == "education_level")
+                    modifyEducationLevel({
+                      province_id: flags.province_id,
+
+                      min: local_value.min,
+                      max: local_value.max,
+                      capacity: local_value.capacity,
+                      value: local_value.value
+                    });
               }
             }
           }

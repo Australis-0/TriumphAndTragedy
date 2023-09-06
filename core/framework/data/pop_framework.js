@@ -1237,7 +1237,7 @@ module.exports = {
       value: 0.05 - How much should education levels within these brackets up to capacity be modified?
     }
   */
-  modifyEducationLevel: function (arg0_options) { //[WIP] - Finish function body
+  modifyEducationLevel: function (arg0_options) {
     //Convert from parameters
     var options = (arg0_options) ? arg0_options : {};
 
@@ -1288,6 +1288,42 @@ module.exports = {
           education_percentage_obj[all_education_keys[i]] = education_profile_obj[all_education_keys[i]]/total_eligible;
 
         //Modify their actual education values now
+        var new_keys = [];
+        var rounding_overflow = 0;
+
+        for (var i = 0; i < all_education_keys.length; i++) {
+          var local_change = Math.ceil(capacity*education_percentage_obj[all_education_keys[i]]);
+          var local_key = `el_${all_education_keys[i]}`;
+          var new_value = parseInt(all_education_keys[i]) + Math.min(Math.ceil(value*100), 100);
+
+          var new_key = `el_${new_value}`;
+
+          if (local_change % 1 != 0) rounding_overflow++;
+
+          modifyValue(province_obj.pops, local_key, local_change*-1);
+          modifyValue(province_obj.pops, new_key, local_change);
+
+          if (!new_keys.includes(new_key)) new_keys.push(new_key);
+
+          //Clear useless keys
+          if (province_obj.pops[local_key] <= 0)
+            delete province_obj.pops[local_key];
+          if (province_obj.pops[new_key] <= 0)
+            delete province_obj.pops[new_key];
+        }
+
+        //Subtract rounding_overflow as much as possible
+        for (var i = 0; i < new_keys.length; i++)
+          if (rounding_overflow > 0) {
+            var local_value = province_obj.pops[new_keys[i]];
+            var value_removed = Math.min(local_value, rounding_overflow);
+
+            modifyValue(province_obj.pops, new_keys[i], value_removed*-1);
+            rounding_overflow -= value_removed;
+
+            if (province_obj.pops[new_keys[i]] <= 0)
+              delete province_obj.pops[new_keys[i]];
+          }
       }
   },
 

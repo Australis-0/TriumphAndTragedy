@@ -2524,9 +2524,11 @@ module.exports = {
     if (province_obj) {
       var building_employment_level = module.exports.getBuildingEmploymentLevel(building_obj);
       var profit_obj = module.exports.getBuildingProfit(building_obj, { return_object: true });
+      var user_id = province_obj.controller;
 
       //Iterate over pop_types and set wages for each pop type as well as offer sizes
-      for (var i = 0; i < pop_types.length; i++) {
+      if (!building_obj.insolvent)
+        for (var i = 0; i < pop_types.length; i++) {
         var local_employment_stats = module.exports.getBuildingHiringPositions(building_obj, {
           pop_type: pop_types[i],
 
@@ -2560,7 +2562,7 @@ module.exports = {
       }
 
       //Building expenditures
-      {
+      if (!building_obj.insolvent) {
         var all_cache_keys = Object.keys(cache);
         var wage_cost = 0;
 
@@ -2592,8 +2594,23 @@ module.exports = {
         }
       }
 
+      //Building modifiers (only kicks in if building is not insolvent) [REVISIT] - Add .efficiency modifier to building based on input goods
+      if (!building_obj.insolvent)
+        if (config_obj.modifiers) {
+          var all_modifier_keys = Object.keys(config_obj.modifiers);
+
+          for (var i = 0; i < all_modifier_keys.length; i++) {
+            var local_value = config_obj.modifiers[all_modifier_keys[i]];
+
+            if (all_modifier_keys[i].startsWith("education_level_") || all_modifier_keys[i] == "education_level")
+              applyModifiers(user_id, local_value, {
+                province_id: province_id
+              });
+          }
+        }
+
       //Building revenues
-      {
+      if (!building_obj.insolvent) {
         var goods_revenue = 0;
 
         //Iterate over all_good_keys and sell to the government for World Market prices
