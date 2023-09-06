@@ -2770,7 +2770,11 @@ module.exports = {
         modifyValue(local_building_pop, "wealth", average_wage);
 
         local_building_pop.subsistence = true;
+
+        //Set this to province_obj.subsistence fields
+        province_obj.subsistence.employment[qualified_pops[i]] = local_unemployed;
       }
+      province_obj.subsistence.wage = average_wage;
     } else {
       //Set .no_subsistence flag if applicable
       province_obj.no_subsistence = true;

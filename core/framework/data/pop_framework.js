@@ -1065,167 +1065,6 @@ module.exports = {
   },
 
   /*
-    mergePops() - Merges pops based on a pop's characteristics and given frequency distributiosn according to proportionality.
-    options: {
-      province_id: "4707", - The province ID to merge pops from. Required
-
-      building_ids: [], - A given list of building ID's to merge
-      employed: true/false, - Whether the pop is employed or not. Undefined by default
-      pop_types: [], - A given list of pop types to return a single pop from. Returns all pops by default
-    }
-
-    Returns: {
-      size: 4407, - The size of the pop that meets the aforementioned categories
-      income: 0, - Their relative income last turn. All metrics given in weighted averages
-      wealth: 0, - Their current wealth
-
-      staple_goods-fulfilment: 0.86, - Category specific fulfilment and variety
-      staple_goods-variety: 0.60,
-      ..
-
-      fulfilment: 0.67, - General fulfilment and variety
-      variety: 0.15,
-      ..
-
-      //Key-value pairings that would be selected from this merge pop scope
-      tags: {
-        labourers: 4407,
-        engineers: 2202,
-        used_engineers: 1105,
-        ..
-
-        wealth-<building_id>-<pop_type>: 2505
-      }
-    }
-  */
-  mergePops: function (arg0_options) { //[WIP] - Finish function body
-    //Convert from parameters
-    var options = (arg0_options) ? arg0_options : {};
-
-    //Declare local instance variables
-    var current_scope = {
-      size: 0,
-      income: 0,
-      wealth: 0,
-
-      tags: {}
-    };
-    var province_id = options.province_id;
-    var province_obj = main.provinces[province_id];
-
-    //Initialise defaults for variables
-    var selected_pops = (options.pop_types) ? options.pop_type : Object.keys(config.pops);
-
-    if (province_obj.pops) {
-      var all_pop_keys = Object.keys(province_obj.pops);
-
-      for (var i = 0; i < all_pop_keys.length; i++) {
-        var local_subobj = province_obj.pops[all_pop_keys[i]];
-        var meets_conditions = true;
-
-        var building_id = "";
-        var is_employed = false;
-        var local_pop_type = "";
-
-        //Initialise tracker variables
-        {
-          if (lookup.all_pops[all_pop_keys[i]])
-            local_pop_type = all_pop_keys[i];
-          if (all_pop_keys[i].startsWith("used_")) {
-            is_employed = true;
-            local_pop_type = all_pop_keys[i].replace("used_", "");
-          }
-          if (all_pop_keys[i].startsWith("wealth_")) {
-            var split_wealth_key = all_pop_keys[i].split("-");
-
-            building_id = split_wealth_key[1];
-            is_employed = true;
-            local_pop_type = split_wealth_key[2];
-          }
-        }
-
-        //Check if local_subobj meets conditions
-        {
-          if (!selected_pops.includes(local_pop_type)) //Pop selector
-            meets_conditions = false;
-
-          if (options.building_ids) //Building selector
-            if (!options.building_ids.includes(building_id))
-              meets_conditions = false;
-          if (options.employed != undefined) //Employment selector
-            if (options.employed) {
-              if (!is_employed)
-                meets_conditions = false;
-            } else {
-              if (is_employed)
-                meets_conditions = false;
-            }
-        }
-
-        //Append to current_scope if meets_conditions
-        if (meets_conditions) {
-          //Normal key handler
-          {
-            if (lookup.all_pops[all_pop_keys[i]]) {
-              modifyValue(current_scope.tags, all_pop_keys[i], local_subobj);
-              current_scope.size += local_subobj;
-            }
-            if (all_pop_keys[i].startsWith("used_")) {
-              modifyValue(current_scope.tags, all_pop_keys[i], local_subobj);
-              current_scope.size += local_subobj;
-            }
-          }
-
-          //Wealth pool handler
-          {
-            //Subtract unapplicable stats from current_scope (e.g. Pop need fulfilment)
-            if (all_pop_keys[i].startsWith("wealth_")) {
-              var all_wealth_keys = Object.keys(local_subobj);
-
-              current_scope.size += local_subobj.size;
-              modifyValue(current_scope.tags, all_pop_keys[i], local_subobj.size);
-
-              //Income, wealth, and fulfilment/variety handlers
-              current_scope.income += local_subobj.income;
-              current_scope.wealth += local_subobj.wealth;
-
-              for (var i = 0; i < all_wealth_keys.length; i++) {
-                var local_obj = local_subobj[all_wealth_keys[i]];
-
-                if (
-                  all_wealth_keys[i].includes("-fulfilment") ||
-                  all_wealth_keys[i].includes("-variety")
-                )
-                  modifyValue(current_scope, all_wealth_keys[i], local_subobj.size*local_obj);
-                if (["fulfilment", "variety"].includes(all_wealth_keys[i]))
-                  modifyValue(current_scope, all_wealth_keys[i], local_subobj.size*local_obj);
-              }
-            }
-          }
-        }
-      }
-
-      //Normalise total fulfilment and variety keys in current_scope
-      var all_scope_keys = Object.keys(current_scope);
-
-      for (var i = 0; i < all_scope_keys.length; i++) {
-        var local_value = current_scope[all_scope_keys[i]];
-
-        if (
-          all_scope_keys[i].includes("-fulfilment") ||
-          all_scope_keys[i].includes("-variety")
-        )
-          current_scope[all_scope_keys[i]] = local_value/current_scope.size;
-        if (["fulfilment", "variety"].includes(all_scope_keys[i]))
-          current_scope[all_scope_keys[i]] = local_value/current_scope.size;
-      }
-    }
-
-    //Return statement
-    return current_scope;
-  },
-
-  /*
     modifyEducationLevel() - Changes the education level of selected pops in a given province. [REVISIT] - Add pop selector options in the future.
     options: {
       province_id: "4407", - Which province ID should be targeted by this function?
@@ -1724,5 +1563,166 @@ module.exports = {
 
     //Return statement
     return decimation_obj;
+  },
+
+  /*
+    selectPops() - Merges pops based on a pop's characteristics and given frequency distributions according to proportionality.
+    options: {
+      province_id: "4707", - The province ID to merge pops from. Required
+
+      building_ids: [], - A given list of building ID's to merge
+      employed: true/false, - Whether the pop is employed or not. Undefined by default
+      pop_types: [], - A given list of pop types to return a single pop from. Returns all pops by default
+    }
+
+    Returns: {
+      size: 4407, - The size of the pop that meets the aforementioned categories
+      income: 0, - Their relative income last turn. All metrics given in weighted averages
+      wealth: 0, - Their current wealth
+
+      staple_goods-fulfilment: 0.86, - Category specific fulfilment and variety
+      staple_goods-variety: 0.60,
+      ..
+
+      fulfilment: 0.67, - General fulfilment and variety
+      variety: 0.15,
+      ..
+
+      //Key-value pairings that would be selected from this merge pop scope
+      tags: {
+        labourers: 4407,
+        engineers: 2202,
+        used_engineers: 1105,
+        ..
+
+        wealth-<building_id>-<pop_type>: 2505
+      }
+    }
+  */
+  selectPops: function (arg0_options) {
+    //Convert from parameters
+    var options = (arg0_options) ? arg0_options : {};
+
+    //Declare local instance variables
+    var current_scope = {
+      size: 0,
+      income: 0,
+      wealth: 0,
+
+      tags: {}
+    };
+    var province_id = options.province_id;
+    var province_obj = main.provinces[province_id];
+
+    //Initialise defaults for variables
+    var selected_pops = (options.pop_types) ? options.pop_type : Object.keys(config.pops);
+
+    if (province_obj.pops) {
+      var all_pop_keys = Object.keys(province_obj.pops);
+
+      for (var i = 0; i < all_pop_keys.length; i++) {
+        var local_subobj = province_obj.pops[all_pop_keys[i]];
+        var meets_conditions = true;
+
+        var building_id = "";
+        var is_employed = false;
+        var local_pop_type = "";
+
+        //Initialise tracker variables
+        {
+          if (lookup.all_pops[all_pop_keys[i]])
+            local_pop_type = all_pop_keys[i];
+          if (all_pop_keys[i].startsWith("used_")) {
+            is_employed = true;
+            local_pop_type = all_pop_keys[i].replace("used_", "");
+          }
+          if (all_pop_keys[i].startsWith("wealth_")) {
+            var split_wealth_key = all_pop_keys[i].split("-");
+
+            building_id = split_wealth_key[1];
+            is_employed = true;
+            local_pop_type = split_wealth_key[2];
+          }
+        }
+
+        //Check if local_subobj meets conditions
+        {
+          if (!selected_pops.includes(local_pop_type)) //Pop selector
+            meets_conditions = false;
+
+          if (options.building_ids) //Building selector
+            if (!options.building_ids.includes(building_id))
+              meets_conditions = false;
+          if (options.employed != undefined) //Employment selector
+            if (options.employed) {
+              if (!is_employed)
+                meets_conditions = false;
+            } else {
+              if (is_employed)
+                meets_conditions = false;
+            }
+        }
+
+        //Append to current_scope if meets_conditions
+        if (meets_conditions) {
+          //Normal key handler
+          {
+            if (lookup.all_pops[all_pop_keys[i]]) {
+              modifyValue(current_scope.tags, all_pop_keys[i], local_subobj);
+              current_scope.size += local_subobj;
+            }
+            if (all_pop_keys[i].startsWith("used_")) {
+              modifyValue(current_scope.tags, all_pop_keys[i], local_subobj);
+              current_scope.size += local_subobj;
+            }
+          }
+
+          //Wealth pool handler
+          {
+            //Subtract unapplicable stats from current_scope (e.g. Pop need fulfilment)
+            if (all_pop_keys[i].startsWith("wealth_")) {
+              var all_wealth_keys = Object.keys(local_subobj);
+
+              current_scope.size += local_subobj.size;
+              modifyValue(current_scope.tags, all_pop_keys[i], local_subobj.size);
+
+              //Income, wealth, and fulfilment/variety handlers
+              current_scope.income += local_subobj.income;
+              current_scope.wealth += local_subobj.wealth;
+
+              for (var i = 0; i < all_wealth_keys.length; i++) {
+                var local_obj = local_subobj[all_wealth_keys[i]];
+
+                if (
+                  all_wealth_keys[i].includes("-fulfilment") ||
+                  all_wealth_keys[i].includes("-variety")
+                )
+                  modifyValue(current_scope, all_wealth_keys[i], local_subobj.size*local_obj);
+                if (["fulfilment", "variety"].includes(all_wealth_keys[i]))
+                  modifyValue(current_scope, all_wealth_keys[i], local_subobj.size*local_obj);
+              }
+            }
+          }
+        }
+      }
+
+      //Normalise total fulfilment and variety keys in current_scope
+      var all_scope_keys = Object.keys(current_scope);
+
+      for (var i = 0; i < all_scope_keys.length; i++) {
+        var local_value = current_scope[all_scope_keys[i]];
+
+        if (
+          all_scope_keys[i].includes("-fulfilment") ||
+          all_scope_keys[i].includes("-variety")
+        )
+          current_scope[all_scope_keys[i]] = local_value/current_scope.size;
+        if (["fulfilment", "variety"].includes(all_scope_keys[i]))
+          current_scope[all_scope_keys[i]] = local_value/current_scope.size;
+      }
+    }
+
+    //Return statement
+    return current_scope;
   }
 };
