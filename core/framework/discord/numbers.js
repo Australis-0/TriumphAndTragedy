@@ -78,20 +78,6 @@ module.exports = {
     return randomNumber(0, 100000000000).toString();
   },
 
-  getAverage: function (arg0_numbers) {
-    //Convert from parameters
-    var numbers = getList(arg0_numbers);
-
-    //Iterate over numbers array and return average
-    var total_sum = 0;
-
-    for (var i = 0; i < numbers.length; i++)
-      total_sum += numbers[i];
-
-    //Return statement
-    return total_sum/numbers.length;
-  },
-
   getSum: function (arg0_numbers) {
     //Convert from parameters
     var numbers = getList(arg0_numbers);
@@ -104,91 +90,6 @@ module.exports = {
 
     //Return statement
     return total_sum;
-  },
-
-  getLogarithmic: function (arg0_number, arg1_min, arg2_max, arg3_steepness) {
-    //Convert from parameters
-    var number = parseInt(arg0_number);
-    var min = Math.min(parseInt(arg1_min), 1);
-    var max = Math.max(parseInt(arg2_max), 1);
-    var steepness = (arg3_steepness) ? parseInt(arg3_steepness) : 1;
-
-    //Position will be between 0 and 100
-    var min_position = 0;
-    var max_position = 100;
-
-    //Calculate steepness - abs # > %
-    max = Math.max(Math.pow(max, steepness - (number/max)*(steepness - 1)), 1);
-
-    //The result should be between min and max
-    var min_value = Math.log(min);
-    var max_value = Math.log(max);
-
-    //Make sure number can't go lower than min
-    if (number < min)
-      number = min;
-
-    //Calculate adjustment factor
-    var scale = (max_value - min_value)/(max_position - min_position);
-
-    //Return statement
-    return Math.round(
-      (Math.log(number) - min_value)/scale + min_position
-    );
-  },
-
-  getLogarithmicScale: function (arg0_number, arg1_min, arg2_max, arg3_steepness) {
-    //Convert from parameters
-    var number = parseInt(arg0_number);
-    var min = Math.min(parseInt(arg1_min), 1);
-    var max = Math.max(parseInt(arg2_max), 1);
-    var steepness = (arg3_steepness) ? parseInt(arg3_steepness) : 1;
-
-    //Position will be between 0 and 100
-    var min_position = 0;
-    var max_position = 100;
-
-    //Calculate steepness - (number/max) is flawed - % > abs #
-    number = number*(1/(steepness - 1)); //Adjust to steepness first
-    number = number/Math.min(steepness - 1, 1);
-
-    max = Math.max(
-      Math.pow(max, steepness - (number/100)*(steepness - 1))
-    , 1);
-
-    //The result should be between min and max
-    var min_value = Math.log(min);
-    var max_value = Math.log(max);
-
-    //Make sure number can't go lower than min
-    if (number < min)
-      number = min;
-
-    //Calculate adjustment factor
-    var scale = (max_value - min_value)/(max_position - min_position);
-
-    //Return statement
-    return Math.round(
-      Math.exp(min_value + scale*(number - min_position))
-    );
-  },
-
-  //getZipfTerm() - Fetches the Zipf term for a given value
-  getZipfTerm: function (arg0_number) {
-    //Convert from parameters
-    var number = arg0_number;
-
-    //Declare local instance variables
-    var current_sum = 0;
-
-    //Iterate to 1000 to prevent crashes
-    for (var i = 0; i < 1000; i++) {
-      current_sum += 1/(i + 2);
-
-      if (current_sum > number) return i + 1;
-    }
-
-    return 1000; //It was just exceedingly rare
   },
 
   modifyValue: function (arg0_object, arg1_key, arg2_number) {

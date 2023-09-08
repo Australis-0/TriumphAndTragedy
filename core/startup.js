@@ -18,6 +18,7 @@ module.exports = {
     FileManager.import("./framework/discord/colours");
     FileManager.import("./framework/discord/log");
     FileManager.import("./framework/discord/numbers");
+    FileManager.import("./framework/discord/statistics");
     FileManager.import("./framework/discord/strings");
 
     //Discord.js QOL functions
