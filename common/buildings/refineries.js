@@ -925,6 +925,42 @@ config.buildings.refineries = {
       }
     }
   },
+  sulphuric_works: {
+    name: "Sulphuric Works",
+    singular: "Sulphuric Works",
+    aliases: ["sulfuric works", "sulfur works", "sulfuric factory", "sulfur factory"],
+
+    construction_turns: 3,
+    cost: {
+      iron: 5,
+      tools: 4,
+      bronze: 3,
+      lamps: 2,
+      money: 3500
+    },
+    maintenance: {
+      production_choice_galena: {
+        galena: 8
+      },
+      production_choice_pentlandite: {
+        pentlandite: 3
+      }
+    },
+    manpower_cost: {
+      any_pop: {
+        peasants: 4000,
+        labourers: 4000
+      }
+    },
+    produces: {
+      production_choice_galena: {
+        sulphur: 1
+      },
+      production_choice_pentlandite: {
+        sulphur: 1
+      }
+    }
+  },
   tantalum_factories: {
     name: "Tantalum Factories",
     singular: "Tantalum Factory",
@@ -1001,7 +1037,7 @@ config.buildings.refineries = {
       engineers: 200
     },
     produces: {
-      tin: 3
+      titanium: 3
     }
   },
   tungsten_refineries: {

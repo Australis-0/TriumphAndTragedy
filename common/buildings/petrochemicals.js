@@ -281,8 +281,7 @@ config.buildings.petrochemicals = {
       engineers: 10000
     },
     produces: {
-      salt: 3,
-      chlorine: 2
+      bromine: 4
     }
   },
   calcium_preparators: {

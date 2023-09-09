@@ -564,6 +564,10 @@ config.buildings.agriculture = {
         name: "Coffee",
         coffee_beans: 3
       },
+      production_choice_cotton: {
+        name: "Cotton",
+        cotton: 4
+      },
       production_choice_quina: {
         name: "Quina",
         quina: 3
@@ -604,6 +608,51 @@ config.buildings.agriculture = {
         name: "Yam",
         yam: 5
       }
+    }
+  },
+  rubber_plantations: {
+    name: "Rubber Plantations",
+    singular: "Rubber Plantation",
+
+    construction_turns: 4,
+    cost: {
+      wood: 10,
+      tools: 2,
+      money: 1500
+    },
+    manpower_cost: {
+      any_pop: {
+        peasants: 10000,
+        farmers: 10000,
+        serfs: 10000
+      }
+    },
+    produces: {
+      caoutchouc: 3
+    }
+  },
+  sugar_plantations: {
+    name: "Sugar Plantations",
+    singular: "Sugar Plantation",
+
+    construction_turns: 4,
+    cost: {
+      stone: 5,
+      lumber: 4,
+      wood: 3,
+      tools: 2,
+      common_furniture: 2,
+      lamps: 1,
+      money: 2000
+    },
+    manpower_cost: {
+      any_pop: {
+        peasants: 1500,
+        farmers: 1500
+      }
+    },
+    produces: {
+      sugarcane: 5
     }
   },
   vegetable_fields: {

@@ -368,14 +368,10 @@ config.buildings.processing_facilities = { //[WIP] - Add Synthetic Ruby Factory
       money: 2000
     },
     maintenance: {
-      production_choice_beer: {
-        processed_hops: 2,
-        malt: 2
-      },
-      production_choice_tonics: {
-        gin: 3,
-        citrus: 1
-      }
+      quartz_sand: 5,
+      clay: 3,
+      limestone: 2,
+      iron: 1
     },
     manpower_cost: {
       any_pop: {
@@ -384,14 +380,7 @@ config.buildings.processing_facilities = { //[WIP] - Add Synthetic Ruby Factory
       }
     },
     produces: {
-      production_choice_beer: {
-        name: "Beer",
-        beer: 5
-      },
-      production_choice_tonics: {
-        name: "Tonics",
-        tonics: 5
-      }
+      bricks: 12
     }
   },
   camera_factories: {
@@ -825,7 +814,7 @@ config.buildings.processing_facilities = { //[WIP] - Add Synthetic Ruby Factory
       labourers: 7000
     },
     produces: {
-      cigarette: 8
+      cigarettes: 8
     }
   },
   coffee_roasters: {
@@ -1855,6 +1844,28 @@ config.buildings.processing_facilities = { //[WIP] - Add Synthetic Ruby Factory
       ink: 5
     }
   },
+  jerky_dehydrators: {
+    name: "Jerky Dehydrators",
+    singular: "Jerky Dehydrator",
+
+    construction_turns: 2,
+    cost: {
+      wood: 2,
+      money: 500
+    },
+    maintenance: {
+      meat: 5
+    },
+    manpower_cost: {
+      any_pop: {
+        peasants: 500,
+        labourers: 500
+      }
+    },
+    produces: {
+      dried_meat: 5
+    }
+  },
   jewellers: {
     name: "Jewellers",
     singular: "Jeweller",
@@ -1943,7 +1954,7 @@ config.buildings.processing_facilities = { //[WIP] - Add Synthetic Ruby Factory
       production_choice_ceramics: {
         clay: 2,
         coals: 2,
-        lime: 1
+        limestone: 1
       },
       production_choice_bone_china: {
         calcium: 3,
@@ -1956,6 +1967,11 @@ config.buildings.processing_facilities = { //[WIP] - Add Synthetic Ruby Factory
         calcium: 2,
         quartz_sand: 1,
         dyes: 1,
+        coals: 1
+      },
+      production_choice_clay_pipes: {
+        clay: 2,
+        calcium: 1,
         coals: 1
       },
       production_choice_doccia_porcelain: {
@@ -1999,6 +2015,10 @@ config.buildings.processing_facilities = { //[WIP] - Add Synthetic Ruby Factory
       production_choice_china: {
         name: "China",
         china: 5
+      },
+      production_choice_clay_pipes: {
+        name: "Clay Pipes",
+        clay_pipes: 5
       },
       production_choice_doccia_porcelain: {
         name: "Doccia Porcelain",

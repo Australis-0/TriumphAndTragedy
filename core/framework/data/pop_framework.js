@@ -1571,6 +1571,11 @@ module.exports = {
       province_id: "4707", - The province ID to merge pops from. Required
 
       building_ids: [], - A given list of building ID's to merge
+      education_level: {
+        min: 0,
+        max: 1,
+        mean: 0.50 - Optional. Midpoint by default
+      },
       employed: true/false, - Whether the pop is employed or not. Undefined by default
       pop_types: [], - A given list of pop types to return a single pop from. Returns all pops by default
     }
@@ -1620,6 +1625,52 @@ module.exports = {
     if (province_obj.pops) {
       var all_pop_keys = Object.keys(province_obj.pops);
 
+      //Initial block processing for province-level characteristics
+      {
+        var education_obj = {};
+        var education_scalar = 1;
+        var education_total = 0;
+
+        if (options.education_level) { //Education selector
+          var max = returnSafeNumber(options.education_level.max, 1);
+          var min = returnSafeNumber(options.education_level.min, 0);
+
+          if (!options.education_level.mean) {
+            for (var i = 0; i < all_pop_keys.length; i++) {
+              var local_value = province_obj.pops[all_pop_keys[i]];
+
+              if (local_value.startsWith("el_")) {
+                var education_level = parseInt(local_value.replace("el_", ""));
+
+                if (education_level >= min && education_level <= max) {
+                  education_obj[`el_${education_level}`] = local_value;
+                  education_total += local_value;
+                }
+              }
+            }
+          } else {
+            var mean = returnSafeNumber(options.education_level.mean);
+
+            var education_distribution = pearsonVIIDistribution(100, mean, min, max, {
+              key_name: "el"
+            });
+            var all_education_distribution_keys = Object.keys(education_distribution);
+
+            for (var i = 0; i < all_education_distribution_keys.length; i++) {
+              var local_amount = education_distribution[all_education_distribution_keys[i]];
+              var local_education_amount = returnSafeNumber(province_obj.pops[all_education_distribution_keys[i]]);
+              var local_value = local_education_amount*local_amount;
+
+              education_obj[all_education_distribution_keys[i]] = local_value;
+              education_total += local_value;
+            }
+          }
+
+          education_scalar = education_total/province_obj.pops.population;
+        }
+      }
+
+      //Iterate over all_pop_keys
       for (var i = 0; i < all_pop_keys.length; i++) {
         var local_subobj = province_obj.pops[all_pop_keys[i]];
         var meets_conditions = true;
@@ -1708,6 +1759,26 @@ module.exports = {
 
       //Normalise total fulfilment and variety keys in current_scope
       var all_scope_keys = Object.keys(current_scope);
+      var all_tags = Object.keys(current_scope.tags);
+
+      //province_scalar handler
+      {
+        var province_scalar = education_scalar;
+
+        current_scope.size = current_scope*province_scalar;
+        current_scope.income = current_scope*province_scalar;
+        current_scope.wealth = current_scope*province_scalar;
+
+        for (var i = 0; i < all_tags.length; i++) {
+          var local_value = current_scope.tags[all_tags[i]];
+
+          current_scope.tags[all_tags[i]] = local_value*province_scalar;
+        }
+      }
+
+      //Iterate over various objects to add to tags
+      if (options.education_level)
+        current_scope.tags = mergeObjects(current_scope.tags, education_obj);
 
       for (var i = 0; i < all_scope_keys.length; i++) {
         var local_value = current_scope[all_scope_keys[i]];
