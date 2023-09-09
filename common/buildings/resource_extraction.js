@@ -69,19 +69,19 @@ config.buildings.resource_extraction = {
       },
       production_choice_balsa: {
         name: "Balsa Logging",
-        balsa: 3
+        balsa: 2
       },
       production_choice_basswood: {
         name: "Basswood Logging",
-        basswood: 3
+        basswood: 1
       },
       production_choice_blackwood: {
         name: "Blackwood Logging",
-        blackwood: 3
+        blackwood: 1
       },
       production_choice_bloodwood: {
         name: "Bloodwood Logging",
-        bloodwood: 3
+        bloodwood: 1
       },
       production_choice_cedar: {
         name: "Cedar Logging",
@@ -93,35 +93,35 @@ config.buildings.resource_extraction = {
       },
       production_choice_chestnut: {
         name: "Chestnut Logging",
-        chestnut: 3
+        chestnut: 4
       },
       production_choice_cottonwood: {
         name: "Cottonwood Logging",
-        cottonwood: 3
+        cottonwood: 1
       },
       production_choice_cypress: {
         name: "Cypress Logging",
-        cypress: 3
+        cypress: 4
       },
       production_choice_ebony: {
         name: "Ebony Logging",
-        ebony: 3
+        ebony: 1
       },
       production_choice_elm: {
         name: "Elm Logging",
-        elm: 3
+        elm: 4
       },
       production_choice_eucalyptus: {
         name: "Eucalyptus Logging",
-        eucalyptus: 3
+        eucalyptus: 6
       },
       production_choice_fir: {
         name: "Fir Logging",
-        fir: 3
+        fir: 5
       },
       production_choice_hickory: {
         name: "Hickory Logging",
-        hickory: 3
+        hickory: 5
       },
       production_choice_ironwood: {
         name: "Ironwood Logging",
@@ -129,7 +129,7 @@ config.buildings.resource_extraction = {
       },
       production_choice_lacewood: {
         name: "Lacewood Logging",
-        lacewood: 3
+        lacewood: 2
       },
       production_choice_mahogany: {
         name: "Mahogany Logging",
@@ -137,19 +137,19 @@ config.buildings.resource_extraction = {
       },
       production_choice_maple: {
         name: "Maple Logging",
-        maple: 3
+        maple: 4
       },
       production_choice_oak: {
         name: "Oak Logging",
-        oak: 3
+        oak: 6
       },
       production_choice_pine: {
         name: "Pine Logging",
-        pine: 3
+        pine: 5
       },
       production_choice_redwood: {
         name: "Redwood Logging",
-        redwood: 3
+        redwood: 4
       },
       production_choice_rosewood: {
         name: "Rosewood Logging",
@@ -157,23 +157,23 @@ config.buildings.resource_extraction = {
       },
       production_choice_sandalwood: {
         name: "Sandalwood Logging",
-        sandalwood: 3
+        sandalwood: 1
       },
       production_choice_spruce: {
         name: "Spruce Logging",
-        spruce: 3
+        spruce: 4
       },
       production_choice_turpentine: {
         name: "Turpentine Logging",
-        turpentine: 3
+        turpentine: 2
       },
       production_choice_walnut: {
         name: "Walnut Logging",
-        walnut: 3
+        walnut: 2
       },
       production_choice_willow: {
         name: "Willow Logging",
-        willow: 3
+        willow: 2
       }
     }
   },

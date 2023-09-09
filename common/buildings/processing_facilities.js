@@ -1388,6 +1388,10 @@ config.buildings.processing_facilities = { //[WIP] - Add Synthetic Ruby Factory
       production_choice_sabot_rounds_two: {
         name: "Conventional Sabot Rounds",
         sabot_rounds: 10
+      },
+      production_choice_torpedoes: {
+        name: "Torpedoes",
+        torpedoes: 8
       }
     }
   },
@@ -2108,9 +2112,20 @@ config.buildings.processing_facilities = { //[WIP] - Add Synthetic Ruby Factory
       tools: 5,
       money: 18000
     },
+    maintenance: {
+      electric_gear: 5,
+      steel: 5,
+      machine_parts: 3,
+      glass: 2,
+      lightbulbs: 2,
+      wood_veneers: 1
+    },
     manpower_cost: {
       labourers: 5000,
       engineers: 3500
+    },
+    produces: {
+      lifts: 1
     }
   },
   lighting_factories: {
@@ -2981,6 +2996,288 @@ config.buildings.processing_facilities = { //[WIP] - Add Synthetic Ruby Factory
     },
     produces: {
       salt: 5
+    }
+  },
+  sawmills: {
+    name: "Sawmills",
+    singular: "Sawmill",
+    icon: "sawmills",
+
+    cost: {
+      wood: 10,
+      tools: 2,
+      money: 3000
+    },
+    maintenance: {
+      production_choice_acacia: {
+        acacia: 3
+      },
+      production_choice_ash: {
+        ash: 3
+      },
+      production_choice_balsa: {
+        balsa: 2
+      },
+      production_choice_basswood: {
+        basswood: 1
+      },
+      production_choice_blackwood: {
+        blackwood: 1
+      },
+      production_choice_bloodwood: {
+        bloodwood: 1
+      },
+      production_choice_cedar: {
+        cedar: 3
+      },
+      production_choice_cherry: {
+        cherry: 3
+      },
+      production_choice_chestnut: {
+        chestnut: 4
+      },
+      production_choice_cottonwood: {
+        cottonwood: 1
+      },
+      production_choice_cypress: {
+        cypress: 4
+      },
+      production_choice_ebony: {
+        ebony: 1
+      },
+      production_choice_elm: {
+        elm: 4
+      },
+      production_choice_eucalyptus: {
+        eucalyptus: 6
+      },
+      production_choice_fir: {
+        fir: 5
+      },
+      production_choice_hickory: {
+        hickory: 5
+      },
+      production_choice_ironwood: {
+        ironwood: 3
+      },
+      production_choice_lacewood: {
+        lacewood: 2
+      },
+      production_choice_mahogany: {
+        mahogany: 3
+      },
+      production_choice_maple: {
+        maple: 4
+      },
+      production_choice_oak: {
+        oak: 6
+      },
+      production_choice_pine: {
+        pine: 5
+      },
+      production_choice_redwood: {
+        redwood: 4
+      },
+      production_choice_rosewood: {
+        rosewood: 3
+      },
+      production_choice_sandalwood: {
+        sandalwood: 1
+      },
+      production_choice_spruce: {
+        spruce: 4
+      },
+      production_choice_turpentine: {
+        turpentine: 2
+      },
+      production_choice_walnut: {
+        walnut: 3
+      },
+      production_choice_willow: {
+        willow: 2
+      }
+    },
+    manpower_cost: {
+      workers: 40000
+    },
+    produces: {
+      production_choice_acacia: {
+        name: "Acacia Lumber",
+        acacia: 3
+      },
+      production_choice_ash: {
+        name: "Ash Lumber",
+        ash: 3
+      },
+      production_choice_balsa: {
+        name: "Balsa Lumber",
+        balsa: 2
+      },
+      production_choice_basswood: {
+        name: "Basswood Lumber",
+        basswood: 1
+      },
+      production_choice_blackwood: {
+        name: "Blackwood Lumber",
+        blackwood: 1
+      },
+      production_choice_bloodwood: {
+        name: "Bloodwood Lumber",
+        bloodwood: 1
+      },
+      production_choice_cedar: {
+        name: "Cedar Lumber",
+        cedar: 3
+      },
+      production_choice_cherry: {
+        name: "Cherry Lumber",
+        cherry: 3
+      },
+      production_choice_chestnut: {
+        name: "Chestnut Lumber",
+        chestnut: 4
+      },
+      production_choice_cottonwood: {
+        name: "Cottonwood Lumber",
+        cottonwood: 1
+      },
+      production_choice_cypress: {
+        name: "Cypress Lumber",
+        cypress: 4
+      },
+      production_choice_ebony: {
+        name: "Ebony Lumber",
+        ebony: 1
+      },
+      production_choice_elm: {
+        name: "Elm Lumber",
+        elm: 4
+      },
+      production_choice_eucalyptus: {
+        name: "Eucalyptus Lumber",
+        eucalyptus: 6
+      },
+      production_choice_fir: {
+        name: "Fir Lumber",
+        fir: 5
+      },
+      production_choice_hickory: {
+        name: "Hickory Lumber",
+        hickory: 5
+      },
+      production_choice_ironwood: {
+        name: "Ironwood Lumber",
+        ironwood: 3
+      },
+      production_choice_lacewood: {
+        name: "Lacewood Lumber",
+        lacewood: 2
+      },
+      production_choice_mahogany: {
+        name: "Mahogany Lumber",
+        mahogany: 3
+      },
+      production_choice_maple: {
+        name: "Maple Lumber",
+        maple: 4
+      },
+      production_choice_oak: {
+        name: "Oak Lumber",
+        oak: 6
+      },
+      production_choice_pine: {
+        name: "Pine Lumber",
+        pine: 5
+      },
+      production_choice_redwood: {
+        name: "Redwood Lumber",
+        redwood: 4
+      },
+      production_choice_rosewood: {
+        name: "Rosewood Lumber",
+        rosewood: 3
+      },
+      production_choice_sandalwood: {
+        name: "Sandalwood Lumber",
+        sandalwood: 1
+      },
+      production_choice_spruce: {
+        name: "Spruce Lumber",
+        spruce: 4
+      },
+      production_choice_turpentine: {
+        name: "Turpentine Lumber",
+        turpentine: 2
+      },
+      production_choice_walnut: {
+        name: "Walnut Lumber",
+        walnut: 2
+      },
+      production_choice_willow: {
+        name: "Willow Lumber",
+        willow: 2
+      }
+    }
+  },
+  shampoo_factories: {
+    name: "Shampoo Factories",
+    singular: "Shampoo Factory",
+
+    construction_turns: 4,
+    cost: {
+      lumber: 12,
+      bricks: 8,
+      reinforced_concrete: 6,
+      glass: 6,
+      machine_parts: 4,
+      wood: 4,
+      money: 6600
+    },
+    maintenance: {
+      soap: 3,
+      incense: 2,
+      cinnamon: 1
+    },
+    manpower_cost: {
+      any_pop: {
+        peasants: 1500,
+        labourers: 1500
+      },
+      artisans: 500
+    },
+    produces: {
+      shampoo: 3
+    }
+  },
+  sewing_machine_factories: {
+    name: "Sewing Machine Factories",
+    singular: "Sewing Machine Factory",
+
+    construction_turns: 5,
+    cost: {
+      lumber: 12,
+      bricks: 8,
+      concrete: 6,
+      glass: 6,
+      machine_parts: 4,
+      wood: 4,
+      money: 6600
+    },
+    maintenance: {
+      steel: 4,
+      machine_parts: 2,
+      stainless_steel: 1,
+      lumber: 1
+    },
+    manpower_cost: {
+      any_pop: {
+        peasants: 2500,
+        labourers: 2500
+      },
+      artisans: 500
+    },
+    produces: {
+      sewing_machines: 2
     }
   },
   silk_mills: {
