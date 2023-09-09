@@ -1566,6 +1566,30 @@ module.exports = {
   },
 
   /*
+    selectMobilePops() - Selects socially mobile pops using selectPops().
+    options: {
+      province_id: "4407", - The province ID for which to return these pops from
+      
+      pop_type: "soldiers", - The pop type for which to return social mobility pop tags,
+      type: "promotion"/"demotion" - Whether to scan for pop promotion/demotion
+    },
+
+    Returns: (See selectPops() Returns)
+  */
+  selectMobilePops: function (arg0_options) {
+    //Convert from parameters
+    var options = (arg0_options) ? arg0_options : {};
+
+    //Declare local instance variables
+    var pop_obj = config_obj.pops[options.pop_type];
+
+    if (options.type == "promotion")
+      if (pop_obj.promotes_to) {
+        //Check
+      }
+  },
+
+  /*
     selectPops() - Merges pops based on a pop's characteristics and given frequency distributions according to proportionality.
     options: {
       province_id: "4707", - The province ID to merge pops from. Required
