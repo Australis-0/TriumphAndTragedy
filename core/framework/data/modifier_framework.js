@@ -447,10 +447,16 @@ module.exports = {
     options: {
       parent_obj: {}, - The object of the initial parent. Optional.
       parents: [], - An array of parent elements used for placing relevant flags. Defaults to []
-      pop_flags: {}, - The pop scope to target. Only applies to pop scope
+      pop_flags: {}, - The pop selector scope to target. Only applies to pop scope
+      pop_types: ["soldiers"], - Optional. The pop types to target as defined in config.pops
       province_id: "6709", - The province ID to target. Only applies to province scope
       scope: "country", "province", "pop", - The scope which to target for the limit. Defaults to "country",
       user_id: "801410420942" - The user ID to target. Only applies to country scope
+    }
+
+    Returns: {
+      boolean: true/false, - Whether the limit checks were met
+      value: 0.045 - Fuzzy logic percentage values for the given modifier
     }
   */
   parseLimit: function (arg0_scope, arg1_options) { //[WIP] - Finish function body
@@ -460,6 +466,7 @@ module.exports = {
 
     //Initialise options [WIP]
     if (!options.parents) options.parents = [];
+    if (!options.pop_flags) options.pop_flags = {};
     if (!options.scope) options.scope = "country";
 
     var province_obj = (options.scope == "province" && options.province_id) ?
@@ -468,8 +475,23 @@ module.exports = {
     //Declare local instance variables
     var all_keys = Object.keys(scope);
     var meets_conditions = true;
-    var pops_in_criteria
+    var pops_in_criteria = [];
     var value = 0;
+
+    //Push to pops_in_criteria
+    if (options.pop_types) {
+      var local_pop_types_one = getList(options.pop_types);
+
+      for (var i = 0; i < local_pop_types_one.length; i++)
+        pops_in_criteria.push(local_pop_types_one[i]);
+      if (options.pop_flags.pop_types) {
+        var local_pop_types_two = getList(options.pop_flags.pop_types);
+
+        for (var i = 0; i < local_pop_types_two.length; i++)
+          if (!pops_in_criteria.includes(local_pop_types_two[i]))
+            pops_in_criteria.push(local_pop_types_two[i]);
+      }
+    }
 
     //Iterate over all_keys
     for (var i = 0; i < all_keys.length; i++) {
@@ -480,8 +502,11 @@ module.exports = {
       //Conditions
       if (all_keys[i] == "base_chance") {
         value += local_value;
-      } else if (all_keys[i] == "fully_employed") { //[WIP]
-
+      } else if (all_keys[i] == "fully_employed") {
+        if (province_obj.pops)
+          for (var i = 0; i < pops_in_criteria.length; i++)
+            if (province_obj.pops[`used_${pops_in_criteria[i]}`] <= province_obj.pops[pops_in_criteria[i]])
+              meets_conditions = false;
       } else if (all_keys[i] == "has_no_building_category") {
         //Check if province scope (if applicable) has building categories
         if (province_obj) {
@@ -790,6 +815,86 @@ module.exports = {
 
     //Return statement
     return modifier_string.join("\n");
+  },
+
+  /*
+    parsePopLimit() - Returns pop tags and objects for a given province depending on the selector. Recursive.
+    options: {
+      parent_obj: {}, - The object of the initial parent. Optional.
+      parents: [], - An array of parent elements used for placing relevant flags. Defaults to [],
+
+      province_id: "4407", - The province ID to target.
+      pop_type: "soldiers", - Optional. The pop type to target as defined in config.pops
+      value: 0 - Used to pass a base value to the function
+    }
+
+    Returns: {
+      value: 0.045, - Fuzzy logic percentage values for the given modifier. 0 equals false
+      pop_obj: {} - The pop return object for which the boolean was fulfilled and value chance higher than 0
+    }
+  */
+  parsePopLimit: function (arg0_scope, arg1_options) { //[WIP] - Finish function body
+    //Convert from parameters
+    var scope = arg0_scope;
+    var options = (arg1_options) ? arg1_options : {};
+
+    //Initialise options [WIP]
+    if (!options.parents) options.parents = [];
+    if (!options.pop_flags) options.pop_flags = {};
+
+    //Declare local instance variables
+    var all_keys = Object.keys(scope);
+    var hard_scalar = 1;
+    var local_pop_obj = {};
+    var province_obj = (options.scope == "province" && options.province_id) ?
+      main.provinces[options.province_id] : undefined;
+    var value = (options.value) ? options.value : 0;
+
+    //Iterate over all_keys
+    for (var i = 0; i < all_keys.length; i++) {
+      var local_value = scope[all_keys[i]];
+
+      //Scope conditions
+      if (options.parents[options.parents.length - 1] == "add_chance") { //add_chance scope handler
+        if (scope.limit) {
+          var all_limit_keys = Object.keys(scope.limit);
+
+          for (var x = 0; x < all_limit_keys.length; x++) {
+            var local_subobj = scope.limit[all_limit_keys[x]];
+
+            if (all_limit_keys[x] == "homeless") {
+              var homeless_pops = selectPops({
+                province_id: options.province_id,
+                pop_types: options.pop_type,
+
+                homeless: true
+              });
+
+              var local_percentage = homeless_pops.size/province_obj.pops[options.pop_type];
+              value += returnSafeNumber(scope.value*local_percentage);
+            }
+          }
+        }
+      } else { //Hard limit handler
+        //Group scopes, any/or, not. AND is the default joiner
+        //Reset parents when passing to group subscopes since this is a hard limit
+        if (all_keys[i] == "not" || all_keys[i].startsWith("not_")) {
+          var new_options = JSON.parse(JSON.stringify(options));
+
+          new_options.parent_obj = scope;
+          new_options.parents = [];
+
+          var local_pop_limit = parsePopLimit(local_value, new_options);
+        }
+      }
+
+    }
+
+    //Return statement
+    return {
+      boolean: meets_conditions,
+      value: value
+    }
   },
 
   parseStabilityModifier: function (arg0_user) {

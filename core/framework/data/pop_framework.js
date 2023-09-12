@@ -1064,6 +1064,58 @@ module.exports = {
     return returnSafeNumber(province_obj.pops[all_pop_keys[i]] - employed_pops);
   },
 
+  mergePopScopes: function (arg0_pop_scope, arg1_pop_scope) {
+    //Convert from parameters
+    var pop_scope = arg0_pop_scope;
+    var ot_pop_scope = arg1_pop_scope;
+
+    //Declare local instance variables
+    var all_ot_pop_scope_keys = Object.keys(ot_pop_scope);
+    var all_ot_pop_scope_tags = Object.keys(ot_pop_scope.tags);
+    var all_pop_scope_keys = Object.keys(pop_scope);
+    var all_pop_scope_tags = Object.keys(pop_scope.tags);
+    var contributing_totals = {}; //{ pop_scope: 851903, ot_pop_scope: 481822 }. Tracks ALL tag totals for each pop_scope compared to ot_pop_scope
+    var new_pop_scope = {
+      tags: {}
+    };
+
+    //Fetch set intersection of all_ot_pop_scope_tags and all_pop_scope_tags and push it to new_pop_scope.tags
+    for (var i = 0; i < all_pop_scope_tags.length; i++) {
+      var local_ot_value = ot_pop_scope.tags[all_pop_scope_tags[i]]; //Intersect operation
+      var local_value = pop_scope.tags[all_pop_scope_tags[i]];
+
+      if (local_value && local_ot_value) {
+        var local_min_clamp = Math.min(local_ot_value, local_value);
+        var local_total = local_value + local_ot_value;
+        new_pop_scope.tags[all_pop_scope_tags[i]] = local_min_clamp;
+
+        modifyValue(contributing_totals, "pop_scope", (local_value/local_total)*local_min_clamp);
+        modifyValue(contributing_totals, "ot_pop_scope", (local_ot_value/local_total)*local_min_clamp);
+      }
+    }
+
+    //Based on contributing_totals; merge top level key-values via weighted average. If counterpart is undefined, assume 0
+    var contributing_total = contributing_totals.pop_scope + contributing_totals.ot_pop_scope;
+    contributing_totals.pop_percentage = contributing_totals.pop_scope/contributing_total;
+    contributing_totals.ot_pop_percentage = contributing_totals.ot_pop_scope/contributing_total;
+
+    for (var i = 0; i < all_pop_scope_keys.length; i++) {
+      var local_ot_value = returnSafeNumber(ot_pop_scope[all_pop_scope_keys[i]]);
+      var local_value = returnSafeNumber(pop_scope[all_pop_scope_keys[i]]);
+
+      new_pop_scope[all_pop_scope_keys[i]] = (local_value*contributing_totals.pop_percentage) + (local_ot_value*contributing_totals.ot_pop_percentage);
+    }
+    for (var i = 0; i < all_ot_pop_scope_keys.length; i++) {
+      var local_ot_value = returnSafeNumber(ot_pop_scope[all_pop_scope_keys[i]]);
+      var local_value = returnSafeNumber(pop_scope[all_pop_scope_keys[i]]);
+
+      new_pop_scope[all_pop_scope_keys[i]] = (local_value*contributing_totals.pop_percentage) + (local_ot_value*contributing_totals.ot_pop_percentage);
+    }
+
+    //Return statement
+    return new_pop_scope;
+  },
+
   /*
     modifyEducationLevel() - Changes the education level of selected pops in a given province. [REVISIT] - Add pop selector options in the future.
     options: {
@@ -1566,30 +1618,6 @@ module.exports = {
   },
 
   /*
-    selectMobilePops() - Selects socially mobile pops using selectPops().
-    options: {
-      province_id: "4407", - The province ID for which to return these pops from
-      
-      pop_type: "soldiers", - The pop type for which to return social mobility pop tags,
-      type: "promotion"/"demotion" - Whether to scan for pop promotion/demotion
-    },
-
-    Returns: (See selectPops() Returns)
-  */
-  selectMobilePops: function (arg0_options) {
-    //Convert from parameters
-    var options = (arg0_options) ? arg0_options : {};
-
-    //Declare local instance variables
-    var pop_obj = config_obj.pops[options.pop_type];
-
-    if (options.type == "promotion")
-      if (pop_obj.promotes_to) {
-        //Check
-      }
-  },
-
-  /*
     selectPops() - Merges pops based on a pop's characteristics and given frequency distributions according to proportionality.
     options: {
       province_id: "4707", - The province ID to merge pops from. Required
@@ -1601,7 +1629,10 @@ module.exports = {
         mean: 0.50 - Optional. Midpoint by default
       },
       employed: true/false, - Whether the pop is employed or not. Undefined by default
+      homeless: true/false, - Whether the pop is currently homeless
       pop_types: [], - A given list of pop types to return a single pop from. Returns all pops by default
+      wealth: 40000, - What their wealth should be above or equal to
+      wealth_less_than: 20000- What their wealth should be below or equal to
     }
 
     Returns: {
@@ -1654,6 +1685,7 @@ module.exports = {
         var education_obj = {};
         var education_scalar = 1;
         var education_total = 0;
+        var homeless_scalar = 1;
 
         if (options.education_level) { //Education selector
           var max = returnSafeNumber(options.education_level.max, 1);
@@ -1692,6 +1724,10 @@ module.exports = {
 
           education_scalar = education_total/province_obj.pops.population;
         }
+        if (options.homeless != undefined) //Homeless selector
+          homeless_scalar = (options.homeless) ?
+            returnSafeNumber(province_obj.housing)/province_obj.pops.population :
+            1 - returnSafeNumber(province_obj.housing)/province_obj.pops.population;
       }
 
       //Iterate over all_pop_keys
@@ -1736,6 +1772,14 @@ module.exports = {
               if (is_employed)
                 meets_conditions = false;
             }
+          if (all_pop_keys[i].startsWith("wealth-")) { //Wealth pool handler
+            if (options.wealth)
+              if (local_subobj.wealth < options.wealth)
+                meets_conditions = false;
+            if (options.wealth_less_than)
+              if (local_subobj.wealth >= options.wealth_less_than)
+                meets_conditions = false;
+          }
         }
 
         //Append to current_scope if meets_conditions
@@ -1755,7 +1799,7 @@ module.exports = {
           //Wealth pool handler
           {
             //Subtract unapplicable stats from current_scope (e.g. Pop need fulfilment)
-            if (all_pop_keys[i].startsWith("wealth_")) {
+            if (all_pop_keys[i].startsWith("wealth-")) {
               var all_wealth_keys = Object.keys(local_subobj);
 
               current_scope.size += local_subobj.size;
@@ -1787,7 +1831,7 @@ module.exports = {
 
       //province_scalar handler
       {
-        var province_scalar = education_scalar;
+        var province_scalar = education_scalar*homeless_scalar;
 
         current_scope.size = current_scope*province_scalar;
         current_scope.income = current_scope*province_scalar;
