@@ -250,7 +250,9 @@ module.exports = {
     //Declare local instance variables
     var all_merge_keys = Object.keys(merge_obj);
 
+    //Iterate over all_merge_keys
     for (var i = 0; i < all_merge_keys.length; i++) {
+      var current_value = merged_obj[all_merge_keys[i]];
       var local_value = merge_obj[all_merge_keys[i]];
 
       if (typeof local_value == "number") {
@@ -259,6 +261,8 @@ module.exports = {
         } else {
           merged_obj[all_merge_keys[i]] = local_value;
         }
+      } else if (typeof local_value == "object" && current_value && local_value) {
+        merged_obj[all_merge_keys[i]] = module.exports.mergeObjects(current_value, local_value); //Recursively merge objects if possible
       } else {
         merged_obj[all_merge_keys[i]] = local_value;
       }
@@ -314,5 +318,44 @@ module.exports = {
 
     //Return statement
     return scope;
+  },
+
+  /*
+    subtractObjects() - Recursively subtracts one object from another.
+    options: {
+      preserve_zeroes: true/false - Whether to preserve zeroes/negative values or not. False by default
+    }
+  */
+  subtractObjects: function (arg0_scope, arg1_scope, arg2_options) {
+    //Convert from parameters
+    var merged_obj = JSON.parse(JSON.stringify(arg0_scope));
+    var merge_obj = JSON.parse(JSON.stringify(arg1_scope));
+    var options = (arg2_options) ? arg2_options : {};
+
+    //Declare local instance variables
+    var all_merge_keys = Object.keys(merge_obj);
+
+    //Iterate over all_merge_keys
+    for (var i = 0; i < all_merge_keys.length; i++) {
+      var current_value = merged_obj[all_merge_keys[i]];
+      var local_value = merge_obj[all_merge_keys[i]];
+
+      if (typeof local_value == "number") {
+        if (current_value && local_value)
+          merged_obj[all_merge_keys[i]] = merged_obj[all_merge_keys[i]] - local_value; //Subtract numbers
+      } else if (typeof local_value == "object" && current_value && local_value) {
+        merged_obj[all_merge_keys[i]] = module.exports.subtractObjects(current_value, local_value, options); //Recursively subtract objects if possible
+      } else {
+        if (current_value && local_value)
+          merged_obj[all_merge_keys[i]] = local_value;
+      }
+
+      if (!options.preserve_zeroes)
+        if (merged_obj[all_merge_keys[i]] < 0)
+          delete merged_obj[all_merge_keys[i]];
+    }
+
+    //Return statement
+    return merged_obj;
   }
 };

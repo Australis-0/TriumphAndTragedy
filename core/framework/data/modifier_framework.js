@@ -822,6 +822,12 @@ module.exports = {
     options: {
       parent_obj: {}, - The object of the initial parent. Optional.
       parents: [], - An array of parent elements used for placing relevant flags. Defaults to [],
+       - and_hard
+       - any_hard
+       - not_hard
+
+       Other scopes:
+       - add_chance
 
       province_id: "4407", - The province ID to target.
       pop_type: "soldiers", - Optional. The pop type to target as defined in config.pops
@@ -844,8 +850,14 @@ module.exports = {
 
     //Declare local instance variables
     var all_keys = Object.keys(scope);
+    var conditions_met = true;
     var hard_scalar = 1;
     var local_pop_obj = {};
+    var parent = options.parents[options.parents.length - 1];
+    var pop_scope = (scope) ? scope : selectPops({
+      province_id: options.province_id,
+      pop_types: [options.pop_type]
+    });
     var province_obj = (options.scope == "province" && options.province_id) ?
       main.provinces[options.province_id] : undefined;
     var value = (options.value) ? options.value : 0;
@@ -855,7 +867,7 @@ module.exports = {
       var local_value = scope[all_keys[i]];
 
       //Scope conditions
-      if (options.parents[options.parents.length - 1] == "add_chance") { //add_chance scope handler
+      if (parent == "add_chance") { //add_chance scope handler
         if (scope.limit) {
           var all_limit_keys = Object.keys(scope.limit);
 
@@ -875,25 +887,76 @@ module.exports = {
             }
           }
         }
-      } else { //Hard limit handler
+      } else { //Hard limit handler. This defines the pop subscope that meets these conditions for which value is processed
         //Group scopes, any/or, not. AND is the default joiner
         //Reset parents when passing to group subscopes since this is a hard limit
-        if (all_keys[i] == "not" || all_keys[i].startsWith("not_")) {
-          var new_options = JSON.parse(JSON.stringify(options));
+        {
+          if (all_keys[i] == "and" || all_keys[i].startsWith("and_")) {
+            var new_options = JSON.parse(JSON.stringify(options));
 
-          new_options.parent_obj = scope;
-          new_options.parents = [];
+            new_options.parent_obj = scope;
+            new_options.parents.push("and_hard");
 
-          var local_pop_limit = parsePopLimit(local_value, new_options);
+            var local_pop_limit = parsePopLimit(local_value, new_options);
+
+            //Intersect with pop_scope
+            pop_scope = mergePopScopes(pop_scope, local_pop_limit.pop_scope);
+          }
+          if (all_keys[i] == "any" || all_keys[i].startsWith("any_")) {
+            var new_options = JSON.parse(JSON.stringify(options));
+
+            new_options.parent_obj = scope;
+            new_options.parents.push("and_hard");
+
+            var local_pop_limit = parsePopLimit(local_value, new_options);
+
+            //Intersect with pop_scope
+            pop_scope = mergePopScopes(pop_scope, local_pop_limit.pop_scope);
+          }
+          if (all_keys[i] == "not" || all_keys[i].startsWith("not_")) {
+            var new_options = JSON.parse(JSON.stringify(options));
+
+            new_options.parent_obj = scope;
+            new_options.parents.push("not_hard");
+
+            var local_pop_limit = parsePopLimit(local_value, new_options);
+
+            //Subtract from pop_scope
+            pop_scope = subtractObjects(pop_scope, local_pop_limit.pop_scope);
+          }
+        }
+
+        //Individual hard conditions
+        {
+          if (parent.startsWith("_hard")) {
+            if (all_keys[i] == "wealth") {
+              //Fetch wealth scope
+              var local_pop_scope = selectPops({
+                province_id: options.province_id,
+                pop_types: [options.pop_type],
+
+                wealth: local_value
+              });
+
+              if (parent.startsWith("any"))
+                pop_scope = mergeObjects(pop_scope, local_pop_scope);
+              if (parent.startsWith("and") || parent.startsWith("not"))
+                pop_scope = mergePopScopes(pop_scope, local_pop_scope);
+            }
+          }
         }
       }
-
     }
+
+    //Set value to 0 if conditions not met
+    if (!conditions_met) value = 0;
 
     //Return statement
     return {
-      boolean: meets_conditions,
-      value: value
+      boolean: conditions_met,
+      value: value,
+
+      pop_scope: pop_scope
     }
   },
 
