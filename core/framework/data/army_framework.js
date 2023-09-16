@@ -321,7 +321,7 @@ module.exports = {
               var receiving_unit_type = category_obj.type;
               var unit_types = module.exports.calculateArmyType(user_id, army_obj);
 
-              var culture_obj = getCulture(province_obj.culture);
+              var culture_obj = getMajorityCulture(province_obj.id);
 
               //Guard clauses to check for errors
               if (!options.spawn_units)

@@ -47,7 +47,7 @@ module.exports = {
 
       pop_chances = standardisePercentage(pop_chances);
       var all_pop_chances = Object.keys(pop_chances);
-      var culture_percentages = module.exports.getProvinceCulture(province_obj.id);
+      var culture_percentages = getProvinceCulture(province_obj.id);
 
       var all_cultures = Object.keys(culture_percentages);
 
@@ -461,40 +461,6 @@ module.exports = {
 
     //Return statement
     return Math.ceil(usr.population*famine_penalty);
-  },
-
-  /*
-    getMajorityCulture() - Fetches the majority culture of a province.
-    options: {
-      return_key: true/false - Optional. Whether to return the culture ID instead of object. False by default
-    }
-  */
-  getMajorityCulture: function (arg0_province_id, arg1_options) {
-    //Convert from parameters
-    var province_id = arg0_province_id;
-
-    //Declare local instance variables
-    var largest_culture = [0, undefined];
-    var province_obj = main.provinces[province_id];
-
-    //Check if province_obj.pops exists
-    if (province_obj)
-      if (province_obj.pops) {
-        var all_pop_keys = Object.keys(province_obj.pops);
-
-        //Iterate over all_pop_keys
-        for (var i = 0; i < all_pop_keys.length; i++)
-          if (all_pop_keys[i].startsWith("culture-")) {
-            var local_culture_id = all_pop_keys.replace("culture-", "");
-            var local_value = province_obj.pops[all_pop_keys[i]];
-
-            if (local_value > largest_culture[0])
-              largest_culture = [local_value, (!options.return_key) ? main.global.cultures[local_culture_id] : local_culture_id];
-          }
-      }
-
-    //Return statement
-    return largest_culture[1];
   },
 
   getMilitaryPops: function () {
@@ -972,42 +938,6 @@ module.exports = {
 
     //Return statement
     return births;
-  },
-
-  /*
-    getProvinceCulture() - Returns province culture object by percentage
-    options: {
-      return_sum: true/false - Optional. Whether to return sum totals for each culture instead of percentages. False by default
-    }
-  */
-  getProvinceCulture: function (arg0_province_id, arg1_options) {
-    //Convert from parameters
-    var province_id = arg0_province_id;
-    var options = (arg1_options) ? arg1_options : {};
-
-    //Declare local instance variables
-    var culture_obj = {};
-    var province_obj = main.provinces[province_id];
-
-    //Check if province_obj.pops exists; if so iterate over culture- tags
-    if (province_obj)
-      if (province_obj.pops) {
-        var all_pop_keys = Object.keys(province_obj.pops);
-
-        for (var i = 0; i < all_pop_keys.length; i++)
-          if (all_pop_keys[i].startsWith("culture-")) {
-            var local_culture_id = all_pop_keys[i].replace("culture-", "");
-
-            modifyValue(culture_obj, local_culture_id, province_obj.pops[all_pop_keys[i]]);
-          }
-      }
-
-    //Standardise to percentage
-    if (!options.return_sum)
-      culture_obj = standardisePercentage(culture_obj, province_obj.pops.population);
-
-    //Return statement
-    return sortObject(culture_obj);
   },
 
   /*
@@ -1627,7 +1557,7 @@ module.exports = {
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
     var killed = 0;
-    var province_culture_obj = module.exports.getProvinceCulture(options.province_id);
+    var province_culture_obj = getProvinceCulture(options.province_id);
     var province_education_obj = module.exports.getProvinceEducation(options.province_id);
     var province_obj = main.provinces[options.province_id];
     var usr = main.users[actual_id];

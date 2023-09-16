@@ -1258,6 +1258,41 @@ module.exports = {
     return province_string;
   },
 
+  //parseProvinceCulture() - Returns a header string displaying significant cultures in a province
+  parseProvinceCulture: function (arg0_province_id) {
+    //Convert from parameters
+    var province_id = arg0_province_id;
+
+    //Declare local instance variables
+    var culture_obj = getProvinceCulture(province_id);
+    var culture_string = [];
+    var other_percentage = 0;
+
+    if (culture_obj) {
+      var all_cultures = Object.keys(culture_obj);
+
+      //Iterate over all_cultures and print percentage if above defines
+      for (var i = 0; i < all_cultures.length; i++) {
+        var local_culture = main.global.cultures[all_cultures[i]];
+        var local_value = culture_obj[all_cultures[i]];
+
+        if (local_value >= config.defines.economy.cultural_minority_display) {
+          culture_string.push(`${local_culture.name} (${printPercentage(local_value)})`);
+        } else {
+          other_percentage += local_value;
+        }
+      }
+
+      if (other_percentage > 0)
+        culture_string.push(`Other (${printPercentage(other_percentage)})`);
+    } else {
+      culture_string.push("None");
+    }
+
+    //Return statement
+    return culture_string.join(", ");
+  },
+
   parseProvinces: function (arg0_provinces, arg1_options) {
     //Convert from parameters
     var provinces = getList(arg0_provinces);

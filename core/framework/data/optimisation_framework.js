@@ -66,6 +66,9 @@ module.exports = {
       //Pop processing
       {
         getNeedsImportance();
+
+        for (var i = 0; i < lookup.all_pop_needs_categories.length; i++)
+          lookup[lookup.all_pop_needs_categories[i]] = getNeedsCategory(lookup.all_pop_needs_categories[i]);
       }
     }
 

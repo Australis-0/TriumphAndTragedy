@@ -1,6 +1,6 @@
 module.exports = {
   //Generates a new rural province based on province ID and parsed owner tag
-  settleProvince: function (arg0_user_id, arg1_province) {
+  settleProvince: function (arg0_user_id, arg1_province) { //[WIP] - Change to use createPops()
     //Convert from parameters
     var user_id = arg0_user_id;
     var province_id = arg1_province;
@@ -12,12 +12,13 @@ module.exports = {
 
     try {
       if (!province_obj.type) {
+        var primary_culture = getPrimaryCultures(user_id)[0];
+
         //Set province type and culture
         province_obj.owner = actual_id;
         province_obj.controller = actual_id; //Used for occupations and other shenanigans
 
         province_obj.type = "rural";
-        province_obj.culture = usr.culture;
 
         //Generate pops
         var all_pop_types = Object.keys(config.pops);
@@ -39,7 +40,10 @@ module.exports = {
             var random_percentage = randomNumber((local_pop.chance*100)/2, (local_pop.chance*100)*2);
             var population_change = Math.ceil(population_cache*(random_percentage/100));
 
-            province_obj.pops[all_pop_types[i]] = population_change;
+            createPops(province_id, {
+              type: all_pop_types[i],
+              amount: population_change
+            });
 
             //Deduct from cache
             population_cache -= population_change;
@@ -49,7 +53,12 @@ module.exports = {
         for (var i = 0; i < all_pop_types.length; i++)
           if (!config.pops[all_pop_types[i]].specialised_pop)
             try {
-              province_obj.pops[all_pop_types[i]] = Math.ceil(population_cache*config.pops[all_pop_types[i]].chance);
+              var population_change = Math.ceil(population_cache*config.pops[all_pop_types[i]].chance);
+
+              createPops(province_id, {
+                type: all_pop_types[i],
+                amount: population_change
+              });
             } catch (e) {
               log.warn(`settleProvince() - ran into an error whilst generating pops of type ${all_pop_types[i]} in Province ID ${province_id}: ${e}.`);
               console.log(e);
@@ -64,7 +73,6 @@ module.exports = {
 
         //Set culture and other modifiers/trackers
         province_obj.pops.population = total_population;
-        province_obj.culture = getPrimaryCultures(user_id)[0];
         usr.population += total_population;
         usr.provinces++;
 

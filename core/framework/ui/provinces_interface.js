@@ -32,12 +32,8 @@ module.exports = {
 
     //Declare local tracker variables
     var province_obj = getProvince(province_name);
-    var culture_obj;
     var relevant_goods = getRelevantGoods(user_id);
     var relevant_pops = getRelevantPops(user_id);
-    try {
-      culture_obj = main.global.cultures[province_obj.culture];
-    } catch {}
 
     //Initialise province_string
     var province_string = [];
@@ -86,7 +82,7 @@ module.exports = {
         }
 
         province_string.push("");
-        province_string.push(`**Culture:** ${config.icons.culture} ${(culture_obj) ? culture_obj.name : "None"}`);
+        province_string.push(`**Culture:** ${config.icons.culture} ${parseProvinceCulture(province_obj.id)}`);
         province_string.push(`**Supply Limit:** ${config.icons.railways} ${parseNumber((province_obj.supply_limit) ? province_obj.supply_limit : config.defines.combat.base_supply_limit)}`);
 
         province_string.push("");
