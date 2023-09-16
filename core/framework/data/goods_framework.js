@@ -46,7 +46,7 @@ module.exports = {
     return all_subgoods;
   },
 
-  getAverageCategoryPrice: function (arg0_category_name, arg1_buy_sell) {
+  getAverageNeedsPrice: function (arg0_category_name, arg1_buy_sell) {
     //Convert from parameters
     var category_name = arg0_category_name;
     var buy_sell = (arg1_buy_sell) ? arg1_buy_sell : "buy";
@@ -97,7 +97,7 @@ module.exports = {
 
     //Iterate over all_categories
     for (var i = 0; i < all_categories.length; i++)
-      category_prices[all_categories[i]] = module.exports.getAverageCategoryPrice(all_categories[i], buy_sell);
+      category_prices[all_categories[i]] = module.exports.getAverageNeedsPrice(all_categories[i], buy_sell);
 
     //Return statement
     return category_prices;
@@ -244,7 +244,7 @@ module.exports = {
 
     //Declare local instance variables
     var all_good_categories = Object.keys(config.goods);
-    var good_key = getGood(good_name, { return_key : true });
+    var good_key = getGood(good_name, { return_key: true });
 
     //Iterate over all_good_categories
     for (var i = 0; i < all_good_categories.length; i++)
@@ -369,6 +369,97 @@ module.exports = {
 
     //Return statement
     return subgoods_obj;
+  },
+
+  /*
+    getNeedsCategory() - Returns an object of goods based on the needs category.
+    options: {
+      pop_type: "soldiers" - Optional. Undefined by default. The pop type to fetch needs objects for
+    }
+  */
+  getNeedsCategory: function (arg0_needs_category, arg1_options) {
+    //Convert from parameters
+    var needs_category = arg0_needs_category;
+    var options = (arg1_options) ? arg1_options : {};
+
+    //Declare local instance variables
+    var all_pops = (options.pop_type) ? getList(options.pop_type) : Object.keys(config.pops);
+    var goods_obj = {};
+
+    //Iterate over all_pops
+    for (var i = 0; i < all_pops.length; i++) {
+      var local_pop = config.pops[all_pops[i]];
+
+      if (local_pop.per_100k)
+        if (local_pop.per_100k.needs) {
+          var all_needs_categories = Object.keys(local_pop.per_100k.needs);
+
+          //luxury_goods, staple_goods, etc.
+          for (var x = 0; x < all_needs_categories.length; x++) {
+            var local_needs_category = local_pop.per_100k.needs[all_needs_categories[x]];
+
+            var all_needs_groups = Object.keys(local_needs_category);
+
+            for (var y = 0; y < all_needs_groups.length; y++) {
+              var local_needs_group = local_needs_category[all_needs_groups[y]];
+
+              var all_group_goods = Object.keys(local_needs_group);
+
+              //Iterate over all_group_goods and push to goods_obj
+              for (var z = 0; z < all_group_goods.length; z++)
+                goods_obj[all_group_goods[z]] = (lookup.all_goods) ?
+                  lookup.all_goods[all_group_goods[z]] :
+                  module.exports.getGood(all_group_goods[z]);
+            }
+          }
+        }
+    }
+
+    //Return statement
+    return goods_obj;
+  },
+
+  /*
+    getNeedsCategoryPrice() - Fetches the total price of a needs category of goods given a pop type.
+    options: {
+      sell_price: true/false - Optional. Whether to fetch the sell_price instead of buy_price. False by default
+    }
+  */
+  getNeedsCategoryPrice: function (arg0_pop_type, arg1_needs_category, arg2_options) {
+    //Convert from parameters
+    var pop_type = arg0_pop_type;
+    var needs_category = arg1_needs_category;
+    var options = (arg2_options) ? arg2_options : {};
+
+    //Declare local instance variables
+    var pop_obj = config.pops[pop_type];
+    var total_price = 0;
+
+    //Check that pop_obj exists and has needs
+    if (pop_obj)
+      if (pop_obj.per_100k)
+        if (pop_obj.per_100k.needs)
+          if (pop_obj.per_100k.needs[needs_category]) {
+            //Flatten current object into needs_obj
+            var local_obj = pop_obj.per_100k.needs[needs_category];
+            var needs_obj = flattenObject(local_obj);
+
+            var all_needs_keys = Object.keys(needs_obj);
+
+            //Iterate over all_needs_keys and sum total_price by market buy value
+            for (var i = 0; i < all_needs_keys.length; i++) {
+              var local_market_good = main.market[all_needs_keys[i]];
+              var local_value = needs_obj[all_needs_keys[i]];
+
+              if (local_market_good)
+                total_price += (!options.sell_price) ?
+                  local_market_good.buy_price*local_value :
+                  local_market_good.sell_price*local_value;
+            }
+          }
+
+    //Return statement
+    return total_price;
   },
 
   //getRelevantGoods() - Returns an array of good keys considered relevant to a user

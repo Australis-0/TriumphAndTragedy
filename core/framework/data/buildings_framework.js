@@ -2747,7 +2747,7 @@ module.exports = {
           if (split_key.length >= 2)
             if (split_key[1] == "mean") {
               var category_price = (options.category_prices) ?
-                returnSafeNumber(getAverageCategoryPrice(split_key[0], "buy")) :
+                returnSafeNumber(getAverageNeedsPrice(split_key[0], "buy")) :
                 returnSafeNumber(options.category_prices[split_key[1]]);
 
               //Add to average_wage

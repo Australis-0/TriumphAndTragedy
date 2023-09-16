@@ -967,7 +967,7 @@ module.exports = {
               mergeObjects(pop_scope, local_pop_scope) :
               mergePopScopes(pop_scope, local_pop_scope); //and, not, default
           } if (all_keys[i].startsWith("can_afford_")) {
-
+            
           } if (all_keys[i] == "education_level") {
           } if (all_keys[i] == "education_level_less_than") {
           } if (all_keys[i] == "has_accepted_culture") {
@@ -1073,6 +1073,8 @@ module.exports = {
         new_selectors.push(JSON.parse(all_selector_keys[i]), selectors[all_selector_keys[i]]);
 
       selectors = new_selectors;
+
+      pop_scope.size = Math.min(province_obj.pops[options.pop_type], pop_scope.size);
     }
 
     //Set value to 0 if conditions not met
