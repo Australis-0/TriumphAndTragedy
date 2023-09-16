@@ -1010,6 +1010,48 @@ module.exports = {
     return sortObject(culture_obj);
   },
 
+  /*
+    getProvinceEducation() - Returns province education level object by percentage.
+    options: {
+      return_sum: true/false - Optional. Whether to return sum totals for each education level instead of percentages. False by default
+    }
+  */
+  getProvinceEducation: function (arg0_province_id, arg1_options) {
+    //Convert from parameters
+    var province_id = arg0_province_id;
+    var options = (arg1_options) ? arg1_options : {};
+
+    //Declare local instance variables
+    var educated_total = 0;
+    var education_obj = {};
+    var province_obj = main.provinces[province_id];
+
+    if (province_obj)
+      if (province_obj.pops) {
+        var all_pop_keys = Object.keys(province_obj.pops);
+
+        for (var i = 0; i < all_pop_keys.length; i++)
+          if (all_pop_keys[i].startsWith("el_")) {
+            var local_education_level = parseInt(all_pop_keys[i].replace("el_", ""));
+            var local_value = province_obj.pops[all_pop_keys[i]];
+
+            if (!isNaN(local_education_level)) {
+              modifyValue(education_obj, local_education_level, local_value);
+              educated_total += local_value;
+            }
+          }
+
+        modifyValue(education_obj, "0", province_obj.pops.population - educated_total, true);
+      }
+
+    //Standardise to percentage
+    if (!options.return_sum)
+      education_obj = standardisePercentage(education_obj, province_obj.pops.population);
+
+    //Return statement
+    return education_obj;
+  },
+
   //getRelevantPops() - Returns an array of all pop keys with more than 0 population in a player country
   getRelevantPops: function (arg0_user) {
     //Convert from parameters
@@ -1586,6 +1628,7 @@ module.exports = {
     var actual_id = main.global.user_map[user_id];
     var killed = 0;
     var province_culture_obj = module.exports.getProvinceCulture(options.province_id);
+    var province_education_obj = module.exports.getProvinceEducation(options.province_id);
     var province_obj = main.provinces[options.province_id];
     var usr = main.users[actual_id];
 
@@ -1642,7 +1685,11 @@ module.exports = {
 
         //Education level handler
         {
-          
+          var all_education_levels = Object.keys(province_education_obj);
+
+          //Iterate over all_education_levels and get rid of killed proportionally
+          for (var i = 0; i < all_education_levels.length; i++)
+            modifyValue(province_obj.pops, `el_${all_education_levels[i]}`, Math.ceil((killed*province_education_obj[all_education_levels[i]])*-1), true);
         }
       }
 
