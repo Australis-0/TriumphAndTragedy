@@ -1659,10 +1659,26 @@ module.exports = {
           }
 
           var all_remaining_cultures = Object.keys(province_culture_obj);
+          var rounding_underflow = 0;
 
           //Iterate over all_remaining_cultures and get rid of killed proportionally
-          for (var i = 0; i < all_remaining_cultures.length; i++)
-            modifyValue(province_obj.pops, `culture-${all_remaining_cultures[i]}`, Math.ceil((killed*province_culture_obj[all_remaining_cultures[i]])*-1), true);
+          for (var i = 0; i < all_remaining_cultures.length; i++) {
+            var local_removed = (killed*province_culture_obj[all_remaining_cultures[i]])*-1;
+
+            if (local_removed % 1 > 0)
+              rounding_underflow++;
+
+            modifyValue(province_obj.pops, `culture-${all_remaining_cultures[i]}`, Math.floor(local_removed), true);
+          }
+
+          //Iterate over all_remaining_cultures backwards and remove from there
+          for (var i = all_remaining_cultures.length - 1; i >= 0; i--)
+            if (rounding_underflow > 0)
+              if (province_obj.pops[all_education_levels[i]]) {
+                var local_removed = Math.floor(rounding_underflow*province_culture_obj[all_remaining_cultures[i]]*-1);
+                modifyValue(province_obj.pops, `culture-${all_remaining_cultures[i]}`, local_removed, true);
+                rounding_underflow -= local_removed;
+              }
         }
 
         //Distribute killed over province_obj.pops wealth pools and subsequent building employment objects
@@ -1686,10 +1702,26 @@ module.exports = {
         //Education level handler
         {
           var all_education_levels = Object.keys(province_education_obj);
+          var rounding_underflow = 0;
 
           //Iterate over all_education_levels and get rid of killed proportionally
-          for (var i = 0; i < all_education_levels.length; i++)
-            modifyValue(province_obj.pops, `el_${all_education_levels[i]}`, Math.ceil((killed*province_education_obj[all_education_levels[i]])*-1), true);
+          for (var i = 0; i < all_education_levels.length; i++) {
+            var local_removed = (killed*province_education_obj[all_education_levels[i]])*-1;
+
+            if (local_removed % 1 > 0)
+              rounding_underflow++;
+
+            modifyValue(province_obj.pops, `el_${all_education_levels[i]}`, Math.floor(local_removed), true);
+          }
+
+          //Iterate over all_education_levels backwards and remove from there
+          for (var i = all_education_levels.length - 1; i >= 0; i--)
+            if (rounding_underflow > 0)
+              if (province_obj.pops[all_education_levels[i]]) {
+                var local_removed = Math.floor(rounding_underflow*province_education_obj[all_education_levels[i]]*-1);
+                modifyValue(province_obj.pops, `el_${all_education_levels[i]}`, local_removed, true);
+                rounding_underflow -= local_removed;
+              }
         }
       }
 
