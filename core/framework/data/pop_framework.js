@@ -1628,7 +1628,8 @@ module.exports = {
         max: 1,
         mean: 0.50 - Optional. Midpoint by default
       },
-      employed: true/false, - Whether the pop is employed or not. Undefined by default
+      employed: true/false, - Whether the pop is employed or not. False by default
+      empty: true/false, - Whether to return an empty pop scope. False by default
       homeless: true/false, - Whether the pop is currently homeless
       pop_types: [], - A given list of pop types to return a single pop from. Returns all pops by default
       wealth: 40000, - What their wealth should be above or equal to
@@ -1677,7 +1678,7 @@ module.exports = {
     //Initialise defaults for variables
     var selected_pops = (options.pop_types) ? options.pop_type : Object.keys(config.pops);
 
-    if (province_obj.pops) {
+    if (province_obj.pops && !options.empty) {
       var all_pop_keys = Object.keys(province_obj.pops);
 
       //Initial block processing for province-level characteristics

@@ -818,7 +818,7 @@ module.exports = {
   },
 
   /*
-    parsePopLimit() - Returns pop tags and objects for a given province depending on the selector. Recursive.
+    parsePopLimit() - Returns pop tags and objects for a given province depending on the selector. Recursive. May return more than the total pop type of a province, Math.min() bound in this case.
     options: {
       parent_obj: {}, - The object of the initial parent. Optional.
       parents: [], - An array of parent elements used for placing relevant flags. Defaults to [],
@@ -831,11 +831,15 @@ module.exports = {
 
       province_id: "4407", - The province ID to target.
       pop_type: "soldiers", - Optional. The pop type to target as defined in config.pops
+      pop_scope: {}, - Optional. Optimisation parameter. Current pop_scope to work with
       value: 0 - Used to pass a base value to the function
     }
 
     Returns: {
-      value: 0.045, - Fuzzy logic percentage values for the given modifier. 0 equals false
+      value: 0.045, - Base value for pop scope
+
+      boolean: true/false, - Used for hard non-fuzzy conditions such as has_industrialised
+      selectors: [], - [pop_scope, value] - A list of selectors for which values are added onto
       pop_obj: {} - The pop return object for which the boolean was fulfilled and value chance higher than 0
     }
   */
@@ -851,15 +855,15 @@ module.exports = {
     //Declare local instance variables
     var all_keys = Object.keys(scope);
     var conditions_met = true;
-    var hard_scalar = 1;
     var local_pop_obj = {};
     var parent = options.parents[options.parents.length - 1];
-    var pop_scope = (scope) ? scope : selectPops({
+    var pop_scope = (options.pop_scope) ? options.pop_scope : selectPops({
       province_id: options.province_id,
       pop_types: [options.pop_type]
     });
     var province_obj = (options.scope == "province" && options.province_id) ?
       main.provinces[options.province_id] : undefined;
+    var selectors = {};
     var value = (options.value) ? options.value : 0;
 
     //Iterate over all_keys
@@ -869,23 +873,18 @@ module.exports = {
       //Scope conditions
       if (parent == "add_chance") { //add_chance scope handler
         if (scope.limit) {
-          var all_limit_keys = Object.keys(scope.limit);
+          var new_options = JSON.parse(JSON.stringify(options));
+          var new_pop_scope = JSON.parse(JSON.stringify(pop_scope));
 
-          for (var x = 0; x < all_limit_keys.length; x++) {
-            var local_subobj = scope.limit[all_limit_keys[x]];
+          new_options.parent_obj = scope;
+          new_options.pop_scope = pop_scope;
+          new_options.parents.push("add_chance_limit");
 
-            if (all_limit_keys[x] == "homeless") {
-              var homeless_pops = selectPops({
-                province_id: options.province_id,
-                pop_types: options.pop_type,
+          var limit_pop_scope = module.exports.parsePopLimit(local_value, new_options);
+          var local_pop_scope = limit_pop_scope.pop_scope;
 
-                homeless: true
-              });
-
-              var local_percentage = homeless_pops.size/province_obj.pops[options.pop_type];
-              value += returnSafeNumber(scope.value*local_percentage);
-            }
-          }
+          var local_percentage = local_pop_scope.size/province_obj.pops[options.pop_type];
+          value += scope.value*local_percentage;
         }
       } else { //Hard limit handler. This defines the pop subscope that meets these conditions for which value is processed
         //Group scopes, any/or, not. AND is the default joiner
@@ -926,33 +925,162 @@ module.exports = {
           }
         }
 
-        //Individual hard conditions
+        //Other scopes
         {
-          if (parent.startsWith("_hard")) {
-            if (all_keys[i] == "wealth") {
-              //Fetch wealth scope
+          if (all_keys[i] == "add_chance" || all_keys[i].startsWith("add_chance_")) {
+            var new_options = JSON.parse(JSON.stringify(options));
+            var new_pop_scope = JSON.parse(JSON.stringify(pop_scope));
+
+            new_options.parent_obj = scope;
+            new_options.parents.push("add_chance");
+            new_options.pop_scope = pop_scope;
+
+            var local_pop_scope = module.exports.parsePopLimit(local_value, new_options);
+            modifyValue(selectors, JSON.stringify(local_pop_scope.pop_scope), returnSafeNumber(local_pop_scope.value));
+          } else if (all_keys[i] == "per" || all_keys[i].startsWith("per_")) {
+            var new_options = JSON.parse(JSON.stringify(options));
+            var new_pop_scope = JSON.parse(JSON.stringify(pop_scope));
+
+            new_options.parent_obj = scope;
+            new_options.parents.push("per");
+            new_options.pop_scope = pop_scope;
+
+            var local_pop_scope = module.exports.parsePopLimit(local_value, new_options);
+
+            //Merge selectors from per scope
+            modifyValue(selectors, JSON.stringify(local_pop_scope.pop_scope), returnSafeNumber(local_pop_scope.value));
+          }
+        }
+
+        //Individual conditions - not iterative scope
+        if (!(parent == "per" || parent.startsWith("per_"))) {
+          if (all_keys[i] == "homeless") {
+            //Fetch homeless scope
+            var local_pop_scope = selectPops({
+              province_id: options.province_id,
+              pop_types: [options.pop_type],
+
+              homeless: true
+            });
+
+            pop_scope = (parent.startsWith("any")) ?
+              mergeObjects(pop_scope, local_pop_scope) :
+              mergePopScopes(pop_scope, local_pop_scope); //and, not, default
+          } if (all_keys[i].startsWith("can_afford_")) {
+
+          } if (all_keys[i] == "education_level") {
+          } if (all_keys[i] == "education_level_less_than") {
+          } if (all_keys[i] == "has_accepted_culture") {
+          } if (all_keys[i].startsWith("has_")) { //has_<goods_category>
+            //Check to make sure this is a valid goods category
+          } if (all_keys[i].startsWith("has_") && all_keys[i].includes("_variety")) { //has_<goods_category>_variety
+          } if (all_keys[i] == "has_standing_army") {
+          } if (all_keys[i] == "income") {
+          } if (all_keys[i] == "income_less_than") {
+          } if (all_keys[i] == "is_employed") {
+          } if (all_keys[i] == "is_employed_at") {
+          } if (all_keys[i].startsWith("is_")) { //is_<government_type>
+            //Check to make sure this is a valid government type
+          } if (all_keys[i] == "is_mobilised") {
+          } if (all_keys[i] == "no_jobs") {
+            //Fetch no_jobs scope
+            var has_jobs = false;
+
+            if (province_obj.buildings)
+              for (var x = 0; x < province_obj.buildings.length; x++)
+                if (province_obj.buildings[x][`${options.pop_type}_positions`] > 0)
+                  has_jobs = true;
+
+            if (has_jobs) {
               var local_pop_scope = selectPops({
                 province_id: options.province_id,
-                pop_types: [options.pop_type],
-
-                wealth: local_value
+                pop_types: [options.pop_type]
               });
 
-              if (parent.startsWith("any"))
-                pop_scope = mergeObjects(pop_scope, local_pop_scope);
-              if (parent.startsWith("and") || parent.startsWith("not"))
-                pop_scope = mergePopScopes(pop_scope, local_pop_scope);
+              pop_scope = (parent.startsWith("any")) ?
+                mergeObjects(pop_scope, local_pop_scope) :
+                mergePopScopes(pop_scope, local_pop_scope); //and, not, default
             }
+          } if (all_keys[i] == "occupied") {
+            if (parent.startsWith("not")) {
+              if (local_value == true) { //Check if province is occupied
+                if (province_obj.controller != province_obj.owner)
+                  pop_scope = selectPops({
+                    province_id: options.province_id,
+                    pop_types: [options.pop_type],
+
+                    empty: true
+                  });
+              } else if (local_value == false) { //Check if province is not occupied
+                if (province_obj.controller == province_obj.owner)
+                  pop_scope = selectPops({
+                    province_id: options.province_id,
+                    pop_types: [options.pop_type],
+
+                    empty: true
+                  });
+              }
+            } else {
+              if (local_value == true)
+                if (province_obj.controller != province_obj.owner)
+                  pop_scope = [parent.startsWith("any") ? "mergeObjects" : "mergePopScopes"](pop_scopes, selectPops({
+                    province_id: options.province_id,
+                    pop_types: [options.pop_type]
+                  }));
+              if (local_value == false)
+                if (province_obj.controller == province_obj.owner)
+                  pop_scope = [parent.startsWith("any") ? "mergeObjects" : "mergePopScopes"](pop_scopes, selectPops({
+                    province_id: options.province_id,
+                    pop_types: [options.pop_type]
+                  }));
+            }
+          } if (all_keys[i].includes("_percentage")) { //<pop>_percentage
+          } if (all_keys[i].includes("_percentage_less_than")) { //<pop>_percentage_less_than
+          } if (all_keys[i].startsWith("province_has_")) { //province_has_<building>
+            //Check to make sure this is a valid building type
+          } if (all_keys[i].startsWith("province_has_")) { //province_has_<building_category>
+          } if (all_keys[i].startsWith("province_is_capital")) {
+          } if (all_keys[i].startsWith("province_is_rural")) {
+          } if (all_keys[i] == "soldiers_stationed_in_province") {
+
+          } if (all_keys[i] == "wealth") {
+            //Fetch wealth scope
+            var local_pop_scope = selectPops({
+              province_id: options.province_id,
+              pop_types: [options.pop_type],
+
+              wealth: local_value
+            });
+
+            pop_scope = (parent.startsWith("any")) ?
+              mergeObjects(pop_scope, local_pop_scope) :
+              mergePopScopes(pop_scope, local_pop_scope); //and, not, default
+          } if (all_keys[i] == "wealth_less_than") {
+
           }
+        } else {
+          //Individual conditions - iterative scope
         }
       }
     }
 
+    //Deserialise selectors if no parents
+    if (parents.length == 0) {
+      var all_selector_keys = Object.keys(selectors);
+      var new_selectors = [];
+
+      for (var i = 0; i < all_selector_keys.length; i++)
+        new_selectors.push(JSON.parse(all_selector_keys[i]), selectors[all_selector_keys[i]]);
+
+      selectors = new_selectors;
+    }
+
     //Set value to 0 if conditions not met
-    if (!conditions_met) value = 0;
+    if (pop_scope.size == 0) value = 0;
 
     //Return statement
     return {
+      selectors: selectors,
       boolean: conditions_met,
       value: value,
 
