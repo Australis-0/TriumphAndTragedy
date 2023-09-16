@@ -320,6 +320,27 @@ module.exports = {
     return scope;
   },
 
+  standardisePercentage: function (arg0_scope, arg1_total) {
+    //Convert from parameters
+    var scope = JSON.parse(JSON.stringify(arg0_scope));
+    var total = arg1_total;
+
+    //Declare local instance variables
+    var all_scope_keys = Object.keys(scope);
+    var scope_total = (total) ? total : 0;
+
+    //Fetch scope_total
+    if (!total)
+      for (var i = 0; i < all_scope_keys.length; i++)
+        scope_total += returnSafeNumber(scope[all_scope_keys[i]]);
+    //Standardise to scope_total
+    for (var i = 0; i < all_scope_keys.length; i++)
+      scope[all_scope_keys[i]] = scope[all_scope_keys[i]]/scope_total;
+
+    //Return statement
+    return scope;
+  }
+
   /*
     subtractObjects() - Recursively subtracts one object from another.
     options: {

@@ -92,14 +92,19 @@ module.exports = {
     return total_sum;
   },
 
-  modifyValue: function (arg0_object, arg1_key, arg2_number) {
+  modifyValue: function (arg0_object, arg1_key, arg2_number, arg3_delete_negative) {
     //Convert from parameters
     var object = arg0_object;
     var key = arg1_key;
     var number = parseInt(arg2_number);
+    var delete_negative = arg3_delete_negative;
 
     //Set value
     object[key] = (object[key]) ? object[key] + number : number;
+
+    if (delete_negative)
+      if (object[key] <= 0)
+        delete object[key];
 
     //Return statement
     return object[key];
@@ -223,28 +228,5 @@ module.exports = {
     }
 
     yield number - sum_parts;
-  },
-
-  standardiseObjectPercent: function (arg0_object) {
-    //Convert from parameters
-    var object = arg0_object;
-
-    //Declare local instance variables
-    var all_obj_keys = Object.keys(object);
-    var object_sum = 0;
-
-    //Fetch object_sum
-    for (var i = 0; i < all_obj_keys.length; i++)
-      object_sum += object[all_obj_keys[i]];
-
-    //Standardise to object_sum
-    for (var i = 0; i < all_obj_keys.length; i++) {
-      var local_value = object[all_obj_keys[i]];
-
-      local_value = local_value/object_sum;
-    }
-
-    //Return statement
-    return local_value;
   }
 };
