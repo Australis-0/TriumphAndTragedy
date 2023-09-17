@@ -1117,14 +1117,133 @@ module.exports = {
                   }));
             }
           } if (all_keys[i].includes("_percentage")) { //<pop>_percentage
-          } if (all_keys[i].includes("_percentage_less_than")) { //<pop>_percentage_less_than
-          } if (all_keys[i].startsWith("province_has_")) { //province_has_<building>
-            //Check to make sure this is a valid building type
-          } if (all_keys[i].startsWith("province_has_")) { //province_has_<building_category>
-          } if (all_keys[i].startsWith("province_is_capital")) {
-          } if (all_keys[i].startsWith("province_is_rural")) {
-          } if (all_keys[i] == "soldiers_stationed_in_province") {
+            var pop_name = all_keys[i].replace("_percentage", "");
 
+            if (config.pops[pop_name])
+              if (returnSafeNumber(province_obj.pops[pop_name])/province_obj.pops.population < local_value)
+                pop_scope = selectPops({
+                  province_id: options.province_id,
+                  pop_types: [options.pop_type],
+
+                  empty: true
+                });
+          } if (all_keys[i].includes("_percentage_less_than")) { //<pop>_percentage_less_than
+            var pop_name = all_keys[i].replace("_percentage_less_than", "");
+
+            if (config.pops[pop_name])
+              if (returnSafeNumber(province_obj.pops[pop_name])/province_obj.pops.population >= local_value)
+                pop_scope = selectPops({
+                  province_id: options.province_id,
+                  pop_types: [options.pop_type],
+
+                  empty: true
+                });
+          } if (all_keys[i].startsWith("province_has_")) { //province_has_<building>
+            var local_building_name = all_keys[i].replace("province_has_", "");
+            var pop_scope_empty = false;
+            var province_has_building = false;
+
+            //Check to make sure this is a valid building type
+            if (lookup.all_buildings[local_building_name]) {
+              if (province_obj.buildings)
+                for (var x = 0; x < province_obj.buildings.length; x++)
+                  if (province_obj.buildings[x].building_type == local_building_name)
+                    province_has_building = true;
+
+              if (local_value == true) {
+                if (!province_has_building)
+                  pop_scope_empty = true;
+              } else if (local_value == false) {
+                if (province_has_building)
+                  pop_scope_empty = true;
+              }
+
+              if (pop_scope_empty)
+                pop_scope = selectPops({
+                  province_id: options.province_id,
+                  pop_types: [options.pop_type],
+
+                  empty: true
+                });
+            }
+          } if (all_keys[i].startsWith("province_has_")) { //province_has_<building_category>
+            var local_building_category_name = all_keys[i].replace("province_has_", "");
+            var pop_scope_empty = false;
+            var province_has_building = false;
+
+            //Check to make sure this is a valid building category
+            if (config.buildings[local_building_category_name]) {
+              var local_building_category = config.buildings[local_building_category_name];
+
+              var all_local_building_category_keys = Object.keys(local_building_category);
+
+              if (province_obj.buildings)
+                for (var x = 0; x < province_obj.buildings.length; x++)
+                  if (all_local_building_category_keys.includes(province_obj.buildings[x]))
+                    province_has_building = true;
+
+              if (local_value == true) {
+                if (!province_has_building)
+                  pop_scope_empty = true;
+              } else if (local_value == false) {
+                if (province_has_building)
+                  pop_scope_empty = true;
+              }
+
+              if (pop_scope_empty)
+                pop_scope = selectPops({
+                  province_id: options.province_id,
+                  pop_types: [options.pop_type],
+
+                  empty: true
+                });
+            }
+          } if (all_keys[i].startsWith("province_is_capital")) {
+            var is_capital = (province_obj.city_type == "capital");
+            var pop_scope_empty = false;
+
+            if (local_value == true) {
+              if (!is_capital)
+                pop_scope_empty = true;
+            } else if (local_value == false) {
+              if (is_capital)
+                pop_scope_empty = true;
+            }
+
+            if (pop_scope_empty)
+              pop_scope = selectPops({
+                province_id: options.province_id,
+                pop_types: [options.pop_type],
+
+                empty: true
+              });
+          } if (all_keys[i].startsWith("province_is_rural")) {
+            var is_rural = (province_obj.type != "urban");
+            var pop_scope_empty = true;
+
+            if (local_value = true) {
+              if (!is_rural)
+                pop_scope_empty = true;
+            } else if (local_value == false) {
+              if (is_rural)
+                pop_scope_empty = true;
+            }
+
+            if (pop_scope_empty)
+              pop_scope = selectPops({
+                province_id: options.province_id,
+                pop_types: [options.pop_type],
+
+                empty: true
+              });
+          } if (all_keys[i] == "soldiers_stationed_in_province") {
+            if (lookup.province_troop_strengths[options.province_id] < local_value)
+              pop_scope = selectPops({
+                province_id: options.province_id,
+                pop_types: [options.pop_type],
+
+                empty: true
+              });
           } if (all_keys[i] == "wealth") {
             //Fetch wealth scope
             var local_pop_scope = selectPops({
@@ -1138,7 +1257,17 @@ module.exports = {
               mergeObjects(pop_scope, local_pop_scope) :
               mergePopScopes(pop_scope, local_pop_scope); //and, not, default
           } if (all_keys[i] == "wealth_less_than") {
+            //Fetch wealth_less_than scope
+            var local_pop_scope = selectPops({
+              province_id: options.province_id,
+              pop_types: [options.pop_type],
 
+              wealth_less_than: local_value
+            });
+
+            pop_scope = (parent.startsWith("any")) ?
+              mergeObjects(pop_scope, local_pop_scope) :
+              mergePopScopes(pop_scope, local_pop_scope); //and, not, default
           }
         } else {
           //Individual conditions - iterative scope
