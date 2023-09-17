@@ -1187,6 +1187,32 @@ module.exports = {
     return volunteered_wars;
   },
 
+  hasStandingArmy: function (arg0_user) {
+    //Convert from parameters
+    var user_id = arg0_user;
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var usr = main.users[actual_id];
+
+    var all_armies = Object.keys(usr.armies);
+    var all_reserves = Object.keys(usr.reserves);
+
+    //Iterate over all_reserves
+    for (var i = 0; i < all_reserves.length; i++)
+      if (usr.reserves[all_reserves[i]] > 0)
+        return true;
+    for (var i = 0; i < all_armies.length; i++) {
+      var local_army = usr.armies[all_armies[i]];
+
+      var all_local_units = Object.keys(local_army.units);
+
+      for (var x = 0; x < all_local_units.length; x++)
+        if (local_army.units[all_local_units[x]] > 0)
+          return true;
+    }
+  },
+
   hasVolunteers: function (arg0_user) {
     //Convert from parameters
     var user_id = arg0_user;

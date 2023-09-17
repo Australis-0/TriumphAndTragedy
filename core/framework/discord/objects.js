@@ -339,7 +339,7 @@ module.exports = {
 
     //Return statement
     return scope;
-  }
+  },
 
   /*
     subtractObjects() - Recursively subtracts one object from another.

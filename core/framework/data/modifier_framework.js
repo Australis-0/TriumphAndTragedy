@@ -967,14 +967,96 @@ module.exports = {
               mergeObjects(pop_scope, local_pop_scope) :
               mergePopScopes(pop_scope, local_pop_scope); //and, not, default
           } if (all_keys[i].startsWith("can_afford_")) {
-            
+            //Fetch can afford scope
+            var local_goods_category = all_keys[i].replace("can_afford_", "");
+            var needs_category_price = getNeedsCategoryPrice(options.pop_type, local_goods_category);
+
+            var local_pop_scope = selectPops({
+              province_id: options.province_id,
+              pop_types: [options.pop_type],
+
+              [(local_value == true) ? "income" : "income_less_than"]: needs_category_price/100000
+            });
+
+            pop_scope = (parent.startsWith("any")) ?
+              mergeObjects(pop_scope, local_pop_scope) :
+              mergePopScopes(pop_scope, local_pop_scope); //and, not, default
           } if (all_keys[i] == "education_level") {
+            //Fetch education level scope
+            var local_pop_scope = selectPops({
+              province_id: options.province_id,
+              pop_types: [options.pop_type],
+
+              education_level: local_value
+            });
+
+            pop_scope = (parent.startsWith("any")) ?
+              mergeObjects(pop_scope, local_pop_scope) :
+              mergePopScopes(pop_scope, local_pop_scope); //and, not, default
           } if (all_keys[i] == "education_level_less_than") {
+            //Fetch education level less than scope
+            var local_pop_scope = selectPops({
+              province_id: options.province_id,
+              pop_types: [options.pop_type],
+
+              education_level_less_than: local_value
+            });
+
+            pop_scope = (parent.startsWith("any")) ?
+              mergeObjects(pop_scope, local_pop_scope) :
+              mergePopScopes(pop_scope, local_pop_scope); //and, not, default
           } if (all_keys[i] == "has_accepted_culture") {
+            //Fetch has_accepted_culture scope
+            var local_pop_scope = selectPops({
+              province_id: options.province_id,
+              pop_types: [options.pop_type],
+
+              has_accepted_culture: local_value
+            });
+
+            pop_scope = (parent.startsWith("any")) ?
+              mergeObjects(pop_scope, local_pop_scope) :
+              mergePopScopes(pop_scope, local_pop_scope); //and, not, default
           } if (all_keys[i].startsWith("has_")) { //has_<goods_category>
-            //Check to make sure this is a valid goods category
+            var local_pop_scope = selectPops({
+              province_id: options.province_id,
+              pop_types: [options.pop_type],
+
+              [all_keys[i]]: local_value
+            });
+
+            pop_scope = (parent.startsWith("any")) ?
+              mergeObjects(pop_scope, local_pop_scope) :
+              mergePopScopes(pop_scope, local_pop_scope); //and, not, default
           } if (all_keys[i].startsWith("has_") && all_keys[i].includes("_variety")) { //has_<goods_category>_variety
+            var local_pop_scope = selectPops({
+              province_id: options.province_id,
+              pop_types: [options.pop_type],
+
+              [all_keys[i]]: local_value
+            });
+
+            pop_scope = (parent.startsWith("any")) ?
+              mergeObjects(pop_scope, local_pop_scope) :
+              mergePopScopes(pop_scope, local_pop_scope); //and, not, default
           } if (all_keys[i] == "has_standing_army") {
+            if (local_value == true) {
+              if (!hasStandingArmy(province_obj.controller))
+                pop_scope = selectPops({
+                  province_id: options.province_id,
+                  pop_types: [options.pop_type],
+
+                  empty: true
+                });
+            } else if (local_value == false) {
+              if (hasStandingArmy(province_obj.controller))
+                pop_scope = selectPops({
+                  province_id: options.province_id,
+                  pop_types: [options.pop_type],
+
+                  empty: true
+                });
+            }
           } if (all_keys[i] == "income") {
           } if (all_keys[i] == "income_less_than") {
           } if (all_keys[i] == "is_employed") {

@@ -1745,17 +1745,24 @@ module.exports = {
       province_id: "4707", - The province ID to merge pops from. Required
 
       building_ids: [], - A given list of building ID's to merge
-      education_level: {
+      education_level: { - Optional. Undefined by default
         min: 0,
         max: 1,
         mean: 0.50 - Optional. Midpoint by default
       },
-      employed: true/false, - Whether the pop is employed or not. False by default
-      empty: true/false, - Whether to return an empty pop scope. False by default
-      homeless: true/false, - Whether the pop is currently homeless
+      education_level_less_than: 0.50, - Optional. Undefined by default.
+      employed: true/false, - Optional. Whether the pop is employed or not. False by default
+      empty: true/false, - Optional. Whether to return an empty pop scope. False by default
+      has_accepted_culture: true/false, - Optional. Restricts pops to accepted cultures only
+      has_<goods_category>: true/false/0.50, - Optional. Either boolean or numeric value. Undefined by default
+      has_<goods_category>_variety: true/false/0.50, - Optional. Either boolean or numeric value. Undefined by default
+      homeless: true/false, - Optional. Whether the pop is currently homeless. Undefined by default
+      income: 500, - Optional. What income levels should be targeted in scope. Undefined by default
+      income_less_than: 250, - Optional. What income levels should be targeted in scope. Undefined by default
+      is_employed: true/false, - Optional. Whether the pop should be employed or not. Undefined by default
       pop_types: [], - A given list of pop types to return a single pop from. Returns all pops by default
-      wealth: 40000, - What their wealth should be above or equal to
-      wealth_less_than: 20000- What their wealth should be below or equal to
+      wealth: 40000, - Optional. What their wealth should be above or equal to
+      wealth_less_than: 20000 - Optional. What their wealth should be below or equal to
     }
 
     Returns: {
@@ -1794,6 +1801,8 @@ module.exports = {
 
       tags: {}
     };
+    var goods_fulfilment_selectors = {};
+    var goods_variety_selectors = {};
     var province_id = options.province_id;
     var province_obj = main.provinces[province_id];
 
@@ -1803,11 +1812,44 @@ module.exports = {
     if (province_obj.pops && !options.empty) {
       var all_pop_keys = Object.keys(province_obj.pops);
 
+      //Optimise dynamic selectors (has_<goods_category>, has_<goods_category>_variety, etc.)
+      {
+        var all_options = Object.keys(options);
+
+        if (options.is_employed)
+          options.employed = options.is_employed;
+        for (var i = 0; i < all_options.length; i++) {
+          var local_value = options[all_options[i]];
+
+          if (all_options[i].startsWith("has_")) { //has_<goods_category>
+            var goods_category_name = all_options[i].replace("has_", "");
+
+            if (lookup.all_pop_needs_categories.includes(goods_category_name))
+              goods_fulfilment_selectors[all_options[i]] = local_value;
+          }
+          if (all_options[i].startsWith("has_")) { //has_<goods_category>_variety
+            var goods_category_name = all_options[i].replace("has_", "").replace("_variety", "");
+
+            if (lookup.all_pop_needs_categories.includes(goods_category_name))
+              goods_variety_selectors[all_options[i]] = local_value;
+          }
+        }
+
+        var all_goods_fulfilment_keys = Object.keys(goods_fulfilment_selectors);
+        var all_goods_variety_keys = Object.keys(goods_variety_selectors);
+      }
+
       //Initial block processing for province-level characteristics
       {
-        var education_obj = {};
-        var education_scalar = 1;
-        var education_total = 0;
+        var accepted_culture_obj = {},
+          accepted_culture_scalar = 1,
+          accepted_culture_total = 0;
+        var education_obj = {},
+          education_scalar = 1,
+          education_total = 0;
+        var education_less_than_obj = {},
+          education_less_than_scalar = 1,
+          education_less_than_total = 0;
         var homeless_scalar = 1;
 
         if (options.education_level) { //Education selector
@@ -1818,10 +1860,10 @@ module.exports = {
             for (var i = 0; i < all_pop_keys.length; i++) {
               var local_value = province_obj.pops[all_pop_keys[i]];
 
-              if (local_value.startsWith("el_")) {
+              if (all_pop_keys[i].startsWith("el_")) {
                 var education_level = parseInt(local_value.replace("el_", ""));
 
-                if (education_level >= min && education_level <= max) {
+                if (education_level >= min*100 && education_level <= max*100) {
                   education_obj[`el_${education_level}`] = local_value;
                   education_total += local_value;
                 }
@@ -1846,6 +1888,42 @@ module.exports = {
           }
 
           education_scalar = education_total/province_obj.pops.population;
+        }
+        if (options.education_level_less_than) {
+          for (var i = 0; i < all_pop_keys.length; i++) {
+            var local_value = province_obj.pops[all_pop_keys[i]];
+
+            if (all_pop_keys[i].startsWith("el_")) {
+              var education_level = parseInt(local_value.replace("el_", ""));
+
+              if (education_level < options.education_level_less_than*100) {
+                education_less_than_obj[`el_${education_level}`] = local_value;
+                education_less_than_total += local_value;
+              }
+            }
+          }
+
+          education_less_than_scalar = education_less_than_total/province_obj.pops.population;
+        }
+        if (options.has_accepted_culture) {
+          for (var i = 0; i < all_pop_keys.length; i++) {
+            var local_value = province_obj.pops[all_pop_keys[i]];
+
+            if (all_pop_keys[i].startsWith("culture-")) {
+              var culture_id = all_pop_keys[i].replace("culture-", "");
+              var culture_obj = main.global.cultures[culture_id];
+
+              if (
+                culture_obj.primary_culture.includes(province_obj.controller) ||
+                culture_obj.accepted_culture.includes(province_obj.controller)
+              ) {
+                accepted_culture_obj[all_pop_keys[i]] = local_value;
+                accepted_culture_total += local_value;
+              }
+            }
+          }
+
+          accepted_culture_scalar = accepted_culture_total/province_obj.pops.population;
         }
         if (options.homeless != undefined) //Homeless selector
           homeless_scalar = (options.homeless) ?
@@ -1896,6 +1974,26 @@ module.exports = {
                 meets_conditions = false;
             }
           if (all_pop_keys[i].startsWith("wealth-")) { //Wealth pool handler
+            for (var i = 0; i < all_goods_fulfilment_keys.length; i++) {
+              var local_category_name = all_goods_fulfilment_keys[i].replace("has_", "");
+              var local_value = goods_fulfilment_selectors[all_goods_fulfilment_keys[i]];
+
+              if (local_subobj[`${local_category_name}-fulfilment`] < local_value)
+                meets_conditions = false;
+            }
+            for (var i = 0; i < all_goods_variety_keys.length; i++) {
+              var local_category_name = all_goods_variety_keys[i].replace("has_", "").replace("_variety", "");
+              var local_value = goods_variety_selectors[all_goods_variety_keys[i]];
+
+              if (local_subobj[`${local_category_name}-variety`] < local_value)
+                meets_conditions = false;
+            }
+            if (options.income)
+              if (local_subobj.income < options.income)
+                meets_conditions = false;
+            if (options.income_less_than)
+              if (local_subobj.income >= options.income_less_than)
+                meets_conditions = false;
             if (options.wealth)
               if (local_subobj.wealth < options.wealth)
                 meets_conditions = false;
@@ -1954,7 +2052,8 @@ module.exports = {
 
       //province_scalar handler
       {
-        var province_scalar = education_scalar*homeless_scalar;
+        var province_scalar =
+          accepted_culture_scalar*education_scalar*education_less_than_scalar*homeless_scalar;
 
         current_scope.size = current_scope*province_scalar;
         current_scope.income = current_scope*province_scalar;
@@ -1968,8 +2067,9 @@ module.exports = {
       }
 
       //Iterate over various objects to add to tags
-      if (options.education_level)
-        current_scope.tags = mergeObjects(current_scope.tags, education_obj);
+      current_scope.tags = mergeObjects(current_scope.tags, accepted_culture_obj);
+      current_scope.tags = mergeObjects(current_scope.tags, education_obj);
+      current_scope.tags = mergeObjects(current_scope.tags, education_less_than_obj);
 
       for (var i = 0; i < all_scope_keys.length; i++) {
         var local_value = current_scope[all_scope_keys[i]];
