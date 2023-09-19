@@ -470,7 +470,7 @@ module.exports = {
       living_wage: true/false - Whether this is enough for the pop to afford config.defines.economy.staple_goods_categories
     }
   */
-  getJobOpenings: function (arg0_province_id, arg1_pop_type, arg2_options) { //[WIP] - Finish function body
+  getJobOpenings: function (arg0_province_id, arg1_pop_type, arg2_options) {
     //Convert from parameters
     var province_id = arg0_province_id;
     var pop_type = arg1_pop_type;
