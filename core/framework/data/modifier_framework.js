@@ -1274,35 +1274,269 @@ module.exports = {
           var conditions_met = false;
 
           if (parent == "per_building" || parent.startsWith("per_building_")) {
-
-          } else if (parent == "per_education_level" || parent.startsWith("per_education_level_")) {
-
-          } else if (parent == "per_percent" || parent.startsWith("per_percent_")) {
-
-          } else {
             //Declare local scalars
-            var living_wage_job_openings_scalar;
+            var buildings_scalar = 1;
+            var building_category_scalar = 1;
 
             if (all_keys[i] == "has_building") {
+              var building_count = 0;
+
+              if (province_obj.buildings)
+                for (var x = 0; x < province_obj.buildings.length; x++)
+                  if (province_obj.buildings[x].building_type == local_value)
+                    building_count++;
+              buildings_scalar = building_count;
+
+              if (building_count > 0)
+                conditions_met = true;
             } if (all_keys[i] == "has_building_category") {
+              var local_building_category = config.buildings[local_value];
+              var local_category_count = 0;
+
+              if (local_building_category)
+                if (province_obj.buildings)
+                  for (var x = 0; x < province_obj.buildings.length; x++)
+                    if (local_building_category[province_obj.buildings[x].building_type])
+                      local_category_count++;
+              building_category_scalar = local_category_count;
+
+              if (local_category_count > 0)
+                conditions_met = true;
+            }
+
+            //Add value once last key in object is processed
+            if (i == all_keys.length - 1) {
+              var per_scalar = buildings_scalar*building_category_scalar;
+
+              if (scope.base && conditions_met) {
+                var base_scalar = Math.min(per_scalar, 1)
+                value += returnSafeNumber(scope.base)*base_scalar;
+              }
+              if (scope.value)
+                value += returnSafeNumber(scope.value)*per_scalar;
+            }
+          } else if (parent == "per_education_level" || parent.startsWith("per_education_level_")) {
+            //Only process scope once
+            if (i == all_keys.length - 1) {
+              var local_min = Math.max(scope.min, 0);
+              var local_max = Math.min(scope.max, 1);
+              var local_step = (scope.step) ? scope.step : 0.01;
+
+              for (var x = 0; x < 100; x++) { //Break iteration after 100 times (max step)
+                var current_level = local_min + (local_step*x)/100;
+
+                if (current_level <= local_max) {
+                  var local_pop_scope = selectPops({
+                    province_id: options.province_id,
+                    pop_types: [options.pop_type],
+
+                    education_level: current_level
+                  });
+
+                  //Add to selectors
+                  if (local_pop_scope.size > 0)
+                    conditions_met = true;
+                  modifyValue(selectors, JSON.stringify(local_pop_scope), options.value);
+
+                  //Break if no longer applicable
+                  if (local_pop_scope.size == 0)
+                    break;
+                  //Error handler
+                  if (x == 100)
+                    log.debug(`[ERROR] Handler within per_education_level scope - iterative broke.`);
+                }
+              }
+
+              //Add value since this is the last key
+              if (scope.base && conditions_met)
+                value += returnSafeNumber(scope.base);
+            }
+          } else if (parent == "per_percent" || parent.startsWith("per_percent_")) { //[WIP] - Finish iterative scope
+            //Declare local scalars and trackers
+            var local_max = Math.min(returnSafeNumber(scope.max), 1);
+            var local_min = Math.max(returnSafeNumber(scope.min), 0);
+            var target_pop_scope = [];
+
+            var demotion_scalar = 1;
+            var living_wage_job_openings_scalar = 1;
+            var promotion_scalar = 1;
+            var pop_percent_scalar = 1;
+
+            //Initial scope processing - KEEP AT TOP!
+            if (i == 0) {
+              var has_custom_pop_scope = (scope.any_pop || scope.pop_type);
+
+              if (has_custom_pop_scope) {
+                if (scope.any_pop)
+                  target_pop_scope = mergeArrays(target_pop_scope, getList(scope.any_pop));
+                if (scope.pop_type)
+                  target_pop_scope = mergeArrays(target_pop_scope, getList(scope.pop_type));
+              } else {
+                target_pop_scope = [options.pop_type];
+              }
+            }
+
+            //pop_percent_scalar processing
+            {
+              for (var x = 0; x < target_pop_scope.length; x++) {
+                var local_percentage = returnSafeNumber(province_obj.pops.population[target_pop_scope[x]]/province_obj.pops.population);
+
+                pop_percent_scalar += local_percentage;
+              }
+            }
+
+            //General set boolean processing
+            if (all_keys[i] == "demotion_chance") {
+              var total_demotion_chance = 0;
+
+              for (var x = 0; x < target_pop_scope.length; x++)
+                if (province_obj.pops[`${target_pop_scope[x]}-demotion`])
+                  total_demotion_chance += returnSafeNumber(province_obj.pops[`${target_pop_scope[x]}-demotion`]);
+
+              demotion_scalar = returnSafeNumber(total_demotion_chance/target_pop_scope.length, 1); //Average it out
+              demotion_scalar = demotion_scalar/local_value; //Local value amplification
+            } if (all_keys[i] == "education_level") {
+              for (var x = 0; x < 100; x++) { //Break iteration after 100 times (max step)
+                var current_level = local_min + x/100;
+
+                if (current_level <= local_max) {
+                  var local_pop_scope = selectPops({
+                    province_id: options.province_id,
+                    pop_types: target_pop_scope,
+
+                    education_level: current_level
+                  });
+
+                  //Add to selectors
+                  if (local_pop_scope.size > 0)
+                    conditions_met = true;
+                  modifyValue(selectors, JSON.stringify(local_pop_scope), options.value);
+
+                  //Break if no longer applicable
+                  if (local_pop_scope.size == 0)
+                    break;
+                  //Error handler
+                  if (x == 100)
+                    log.debug(`[ERROR] Handler within per_percent.education_level scope - iterative broke.`);
+                }
+              }
+            } if (all_keys[i].startsWith("has_")) { //has_<needs_category>
+              var target_category_name = all_keys[i].replace("has_", "");
+
+              var is_needs_category = (lookup.all_pop_needs_categories[target_category_name]);
+
+              if (is_needs_category)
+                for (var x = 0; x < target_pop_scope.length; x++) {
+                  for (var y = 0; y < 100; y++) { //Breka iteration after 100 times (max step)
+                    var current_level = local_min + (local_value*y);
+
+                    if (current_level <= local_max) {
+                      var local_pop_scope = selectPops({
+                        province_id: options.province_id,
+                        pop_types: [target_pop_scope[y]],
+
+                        [all_keys[i]]: current_level
+                      });
+
+                      //Add to selectors
+                      if (local_pop_scope.size > 0)
+                        conditions_met = true;
+                      modifyValue(selectors, JSON.stringify(local_pop_scope), options.value);
+
+                      //Break if no longer applicable
+                      if (local_pop_scope.size == 0)
+                        break;
+                      //Error handler
+                      if (y == 100)
+                        log.debug(`[ERROR] Handler within per_percent.has_<needs_category> scope - iterative broke.`);
+                    }
+                  }
+                }
             } if (all_keys[i] == "living_wage_job_openings") {
+              var total_living_wage_openings = 0;
+
+              for (var x = 0; x < target_pop_scope.length; x++) {
+                var living_wage_job_openings = getJobOpenings(options.province_id, target_pop_scope[x], { living_wage: true });
+
+                if (living_wage_job_openings >= local_value)
+                  conditions_met = true;
+                total_living_wage_openings += returnSafeNumber(living_wage_job_openings);
+              }
+
+              living_wage_job_openings_scalar = returnSafeNumber(total_living_wage_openings/local_value);
+            } if (all_keys[i] == "promotion_chance") {
+              var total_promotion_chance = 0;
+
+              for (var x = 0; x < target_pop_scope.length; x++)
+                if (province_obj.pops[`${target_pop_scope[x]}-promotion`])
+                  total_promotion_chance += returnSafeNumber(province_obj.pops[`${target_pop_scope[x]}-promotion`]);
+
+              promotion_scalar = returnSafeNumber(total_promotion_chance/target_pop_scope.length, 1); //Average it out
+              promotion_scalar = promotion_scalar/local_value; //Local value amplification
+            }
+
+            //Add value once last key in object is processed
+            if (i == all_keys.length - 1) {
+              //Because this is per percentage, multiply global per_percent scalar by 100
+              var percentage_scalar = (demotion_scalar*living_wage_job_openings_scalar*promotion_scalar*pop_percent_scalar)*100;
+
+              //Apply max to percentage_scalar
+              percentage_scalar = Math.min(percentage_scalar, local_max);
+
+              if (scope.base && conditions_met) {
+                var base_scalar = Math.min(per_scalar, 1);
+                value += returnSafeNumber(scope.base)*base_scalar;
+              }
+              if (scope.value)
+                value += returnSafeNumber(scope.value)*percentage_scalar;
+            }
+          } else {
+            //Declare local scalars
+            var living_wage_job_openings_scalar = 1;
+            var soldiers_in_province_scalar = 1;
+
+            if (all_keys[i] == "living_wage_job_openings") {
               var living_wage_job_openings = getJobOpenings(options.province_id, options.pop_type, { living_wage: true });
               living_wage_job_openings_scalar = living_wage_job_openings/local_value;
 
               if (living_wage_job_openings >= local_value)
                 conditions_met = true;
             } if (all_keys[i] == "soldiers_stationed_in_province") {
+              var soldiers_in_province = lookup.province_troop_strengths[options.province_id];
+              soldiers_in_province_scalar = soldiers_in_province/local_value;
 
+              if (soldiers_in_province >= local_value)
+                conditions_met = true;
             } if (all_keys[i] == "wealth") {
+              if (options.value)
+                for (var x = 0; x < 1000; x++) { //Break iteration after 1000 times
+                  var local_pop_scope = selectPops({
+                    province_id: options.province_id,
+                    pop_types: [options.pop_type],
 
+                    wealth: local_value*(x + 1)
+                  });
+
+                  //Add to selectors
+                  if (local_pop_scope.size > 0)
+                    conditions_met = true;
+                  modifyValue(selectors, JSON.stringify(local_pop_scope), options.value);
+
+                  //Break if no longer applicable
+                  if (local_pop_scope.size == 0)
+                    break;
+                  //Error handler
+                  if (x == 1000)
+                    log.debug(`[ERROR] wealth selector within general per scope - iterative broke.`);
+                }
             }
 
             //Add value once last key in object is processed
             if (i == all_keys.length - 1) {
-              var per_scalar = living_wage_job_openings_scalar;
+              var per_scalar = living_wage_job_openings_scalar*soldiers_in_province_scalar;
 
-              if (scope.base) {
-                var base_scalar = Math.min(per_scalar, 1)
+              if (scope.base && conditions_met) {
+                var base_scalar = Math.min(per_scalar, 1);
                 value += returnSafeNumber(scope.base)*base_scalar;
               }
               if (scope.value)
