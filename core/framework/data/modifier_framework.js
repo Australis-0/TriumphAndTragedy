@@ -942,7 +942,7 @@ module.exports = {
             var new_pop_scope = JSON.parse(JSON.stringify(pop_scope));
 
             new_options.parent_obj = scope;
-            new_options.parents.push("per");
+            new_options.parents.push(all_keys[i]);
             new_options.pop_scope = pop_scope;
 
             var local_pop_scope = module.exports.parsePopLimit(local_value, new_options);
@@ -1271,6 +1271,44 @@ module.exports = {
           }
         } else {
           //Individual conditions - iterative scope
+          var conditions_met = false;
+
+          if (parent == "per_building" || parent.startsWith("per_building_")) {
+
+          } else if (parent == "per_education_level" || parent.startsWith("per_education_level_")) {
+
+          } else if (parent == "per_percent" || parent.startsWith("per_percent_")) {
+
+          } else {
+            //Declare local scalars
+            var living_wage_job_openings_scalar;
+
+            if (all_keys[i] == "has_building") {
+            } if (all_keys[i] == "has_building_category") {
+            } if (all_keys[i] == "living_wage_job_openings") {
+              var living_wage_job_openings = getJobOpenings(options.province_id, options.pop_type, { living_wage: true });
+              living_wage_job_openings_scalar = living_wage_job_openings/local_value;
+
+              if (living_wage_job_openings >= local_value)
+                conditions_met = true;
+            } if (all_keys[i] == "soldiers_stationed_in_province") {
+
+            } if (all_keys[i] == "wealth") {
+
+            }
+
+            //Add value once last key in object is processed
+            if (i == all_keys.length - 1) {
+              var per_scalar = living_wage_job_openings_scalar;
+
+              if (scope.base) {
+                var base_scalar = Math.min(per_scalar, 1)
+                value += returnSafeNumber(scope.base)*base_scalar;
+              }
+              if (scope.value)
+                value += returnSafeNumber(scope.value)*per_scalar;
+            }
+          }
         }
       }
     }

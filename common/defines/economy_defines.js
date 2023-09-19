@@ -108,6 +108,7 @@ config.defines.economy = {
       marginal_utility: 7
     }
   },
+  staple_goods_categories: ["staple_goods"],
 
   //Pop Behaviour
   cultural_minority_display: 0.20, //The percentage a minority should comprise before being displayed in mainline headers

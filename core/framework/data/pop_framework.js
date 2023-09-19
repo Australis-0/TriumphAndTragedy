@@ -463,6 +463,48 @@ module.exports = {
     return Math.ceil(usr.population*famine_penalty);
   },
 
+  /*
+    getJobOpenings() - Fetches the total number of job openings for a pop type in a province based on specified criteria.
+    options: {
+      income: 15, - What the wage of this job should be >= to
+      living_wage: true/false - Whether this is enough for the pop to afford config.defines.economy.staple_goods_categories
+    }
+  */
+  getJobOpenings: function (arg0_province_id, arg1_pop_type, arg2_options) { //[WIP] - Finish function body
+    //Convert from parameters
+    var province_id = arg0_province_id;
+    var pop_type = arg1_pop_type;
+    var options = (arg2_options) ? arg2_options : {};
+
+    //Declare local instance variables
+    var province_obj = main.provinces[province_id];
+    var total_openings = 0;
+
+    if (province_obj)
+      if (province_obj.buildings)
+        for (var i = 0; i < province_obj.buildings.length; i++) {
+          var local_building = province_obj.buildings[i];
+          var local_positions = local_building[`${pop_type}_positions`];
+          var local_wage = local_building[`${pop_type}_wage`];
+          var meets_conditions = true;
+
+          if (local_wage < returnSafeNumber(options.income))
+            meets_conditions = false;
+          if (options.living_wage) {
+            var living_wage = getStapleGoodsPrice(pop_type);
+
+            if (local_wage < living_wage)
+              meets_conditions = false;
+          }
+
+          if (meets_conditions)
+            total_openings += returnSafeNumber(province_obj.buildings[i][`${pop_type}_positions`]);
+        }
+
+    //Return statement
+    return total_openings;
+  },
+
   getMilitaryPops: function () {
     //Declare local instance variables
     var all_pops = Object.keys(config.pops);

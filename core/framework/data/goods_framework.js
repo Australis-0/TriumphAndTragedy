@@ -525,6 +525,32 @@ module.exports = {
   },
 
   /*
+    getStapleGoodsPrice() - Fetches the total price of config.defines.economy.staple_goods_categories for a pop type
+    options: {
+      sell_price: true/false - Optional. Whether to fetch the sell_price instead of buy_price. False by default
+    }
+  */
+  getStapleGoodsPrice: function (arg0_pop_type, arg1_options) {
+    //Convert from parameters
+    var pop_type = arg0_pop_type;
+    var options = (arg1_options) ? arg1_options : {};
+
+    //Declare local instance variables
+    var staple_goods_categories = config.defines.economy.staple_goods_categories;
+    var total_price = 0;
+
+    //Iterate over staple_goods_categories
+    for (var i = 0; i < staple_goods_categories.length; i++) {
+      var local_price = module.exports.getNeedsCategoryPrice(pop_type, staple_goods_categories[i], options);
+
+      total_price += returnSafeNumber(local_price);
+    }
+
+    //Return statement
+    return total_price/100000;
+  },
+
+  /*
     getSubgoods() - Returns a list of subgoods under a single good as either an object or array
     options: {
       exclude_categories: true/false, - Whether to exclude categories. False by default
