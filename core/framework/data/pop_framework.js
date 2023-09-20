@@ -1581,14 +1581,8 @@ module.exports = {
 
   /*
     removePop() - Removes pops from a province
-    options: {
-      province_id: "6709", - The province ID which to target pops from
-      pop_type: "soldiers", - Which type of pop to kill off. Doesn't accept lists
-      amount: 5000 - How much of the pop to kill off
-
-      building_key_map: {} - Optional. Optimisation parameter. Maps building IDs to building elements
-      cultures: [], - Optional. The types of cultures to kill off. All cultures proportional by default
-      employment_percentages: {} - Optional. Optimisation parameter breaking downt he shares of employment by building for this pop type
+    options: See selectPops(), additional options: {
+      amount: 50000 - The amount of pops to remove
     }
   */
   removePop: function (arg0_user, arg1_options) {
@@ -1599,8 +1593,7 @@ module.exports = {
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
     var killed = 0;
-    var province_culture_obj = getProvinceCulture(options.province_id);
-    var province_education_obj = module.exports.getProvinceEducation(options.province_id);
+    var pop_scope = module.exports.selectPops(options);
     var province_obj = main.provinces[options.province_id];
     var usr = main.users[actual_id];
 
@@ -1608,93 +1601,41 @@ module.exports = {
     if (province_obj)
       if (province_obj.pops[options.pop_type]) {
         var building_key_map = (options.building_key_map) ? options.building_key_map : getBuildingMap(options.province_id);
-        var employment_percentages = (options.employment_percentages) ? options.employment_percentages : module.exports.getEmploymentPercentages(options.province_id, options.pop_type);
 
-        if (province_obj.pops[options.pop_type] >= options.amount) {
-          killed = JSON.parse(JSON.stringify(options.amount));
-          province_obj.pops[options.pop_type] -= options.amount;
-        } else {
-          killed = JSON.parse(JSON.stringify(province_obj.pops[options.pop_type]));
-          province_obj.pops[options.pop_type] = 0;
-        }
+        if (pop_scope.size > 0) {
+          var all_tags = Object.keys(pop_scope.tags);
+          var scalar = 1;
 
-        //Culture handler
-        {
-          var all_cultures = Object.keys(province_culture_obj);
+          if (options.amount < pop_scope.size)
+            scalar = options.amount/pop_scope.size;
 
-          if (options.cultures) {
-            for (var i = 0; i < all_cultures.length; i++)
-              if (!options.cultures.includes(all_cultures[i]))
-                delete province_culture_obj[all_cultures[i]];
+          //Remove all tags; lay off those in wealth pools
+          for (var i = 0; i < all_tags.length; i++) {
+            var local_value = Math.floor(pop_scope.tags[all_tags[i]]*scalar);
 
-            province_culture_obj = standardisePercentage(province_culture_obj);
-          }
+            if (all_tags[i].startsWith("wealth-")) {
+              var split_key = all_tags[i].split("-");
 
-          var all_remaining_cultures = Object.keys(province_culture_obj);
-          var rounding_underflow = 0;
+              var building_id = split_key[1];
+              var local_building = province_obj.buildings[building_key_map[building_id]];
+              var local_pop_type = split_key[2];
 
-          //Iterate over all_remaining_cultures and get rid of killed proportionally
-          for (var i = 0; i < all_remaining_cultures.length; i++) {
-            var local_removed = (killed*province_culture_obj[all_remaining_cultures[i]])*-1;
-
-            if (local_removed % 1 > 0)
-              rounding_underflow++;
-
-            modifyValue(province_obj.pops, `culture-${all_remaining_cultures[i]}`, Math.floor(local_removed), true);
-          }
-
-          //Iterate over all_remaining_cultures backwards and remove from there
-          for (var i = all_remaining_cultures.length - 1; i >= 0; i--)
-            if (rounding_underflow > 0)
-              if (province_obj.pops[all_education_levels[i]]) {
-                var local_removed = Math.floor(rounding_underflow*province_culture_obj[all_remaining_cultures[i]]*-1);
-                modifyValue(province_obj.pops, `culture-${all_remaining_cultures[i]}`, local_removed, true);
-                rounding_underflow -= local_removed;
-              }
-        }
-
-        //Distribute killed over province_obj.pops wealth pools and subsequent building employment objects
-        {
-          var all_building_keys = Object.keys(employment_percentages);
-
-          for (var i = 0; i < all_building_keys.length; i++) {
-            var local_building = province_obj.buildings[building_key_map[all_building_keys[i]]];
-            var local_key = `wealth-${all_building_keys[i]}-${options.pop_type}`;
-            var local_percentage = employment_percentages[all_building_keys[i]];
-            var local_wealth_pool = province_obj.pops[local_key];
-
-            if (local_wealth_pool) {
-              var employees_killed = Math.ceil(local_wealth_pool.size*local_percentage);
-
-              layoffWorkers(local_building, options.pop_type, employees_killed);
+              if (local_building)
+                layoffWorkers(local_building, local_pop_type, local_value);
+            } else {
+              modifyValue(province_obj.pops, all_tags[i], local_value*-1, true);
             }
           }
+
+          //Set killed
+          killed = Math.floor(scalar*pop_scope.size);
         }
 
-        //Education level handler
-        {
-          var all_education_levels = Object.keys(province_education_obj);
-          var rounding_underflow = 0;
-
-          //Iterate over all_education_levels and get rid of killed proportionally
-          for (var i = 0; i < all_education_levels.length; i++) {
-            var local_removed = (killed*province_education_obj[all_education_levels[i]])*-1;
-
-            if (local_removed % 1 > 0)
-              rounding_underflow++;
-
-            modifyValue(province_obj.pops, `el_${all_education_levels[i]}`, Math.floor(local_removed), true);
-          }
-
-          //Iterate over all_education_levels backwards and remove from there
-          for (var i = all_education_levels.length - 1; i >= 0; i--)
-            if (rounding_underflow > 0)
-              if (province_obj.pops[all_education_levels[i]]) {
-                var local_removed = Math.floor(rounding_underflow*province_education_obj[all_education_levels[i]]*-1);
-                modifyValue(province_obj.pops, `el_${all_education_levels[i]}`, local_removed, true);
-                rounding_underflow -= local_removed;
-              }
-        }
+        if (options.pop_type)
+          if (!province_obj.pops[options.pop_type])
+            province_obj.pops[options.pop_type] = 0;
+        if (!province_obj.pops.population)
+          province_obj.pops.population = 0;
       }
 
     //Return statement
@@ -1852,6 +1793,7 @@ module.exports = {
     var selected_pops = (options.pop_types) ? options.pop_type : Object.keys(config.pops);
 
     if (province_obj.pops && !options.empty) {
+      var all_cultures = getList(options.culture);
       var all_pop_keys = Object.keys(province_obj.pops);
 
       //Optimise dynamic selectors (has_<goods_category>, has_<goods_category>_variety, etc.)
@@ -1883,9 +1825,10 @@ module.exports = {
 
       //Initial block processing for province-level characteristics
       {
-        var accepted_culture_obj = {},
-          accepted_culture_scalar = 1,
+        var accepted_culture_scalar = 1,
           accepted_culture_total = 0;
+        var culture_scalar = 1,
+          culture_total = 0;
         var education_obj = {},
           education_scalar = 1,
           education_total = 0;
@@ -1894,6 +1837,23 @@ module.exports = {
           education_less_than_total = 0;
         var homeless_scalar = 1;
 
+        if (options.culture) {
+          for (var i = 0; i < all_pop_keys.length; i++) {
+            var local_value = province_obj.pops[all_pop_keys[i]];
+
+            if (all_pop_keys[i].startsWith("culture-")) {
+              var culture_id = all_pop_keys[i].replace("culture-", "");
+              var local_culture = main.global.cultures[culture_id];
+
+              if (all_cultures.includes(culture_id)) {
+                current_scope.tags[all_pop_keys[i]] = local_value;
+                culture_total += local_value;
+              }
+            }
+          }
+
+          culture_scalar = culture_total/province_obj.pops.population;
+        }
         if (options.education_level) { //Education selector
           var max = returnSafeNumber(options.education_level.max, 1);
           var min = returnSafeNumber(options.education_level.min, 0);
@@ -1953,13 +1913,13 @@ module.exports = {
 
             if (all_pop_keys[i].startsWith("culture-")) {
               var culture_id = all_pop_keys[i].replace("culture-", "");
-              var culture_obj = main.global.cultures[culture_id];
+              var local_culture = main.global.cultures[culture_id];
 
               if (
                 culture_obj.primary_culture.includes(province_obj.controller) ||
                 culture_obj.accepted_culture.includes(province_obj.controller)
               ) {
-                accepted_culture_obj[all_pop_keys[i]] = local_value;
+                current_scope.tags[all_pop_keys[i]] = local_value;
                 accepted_culture_total += local_value;
               }
             }
@@ -2007,6 +1967,17 @@ module.exports = {
           if (options.building_ids) //Building selector
             if (!options.building_ids.includes(building_id))
               meets_conditions = false;
+          if (all_pop_keys[i].startsWith("culture-")) //Culture selector
+            if (all_cultures.length > 0) {
+              var culture_id = all_pop_keys[i].replace("culture-", "");
+
+              if (!all_cultures.includes(culture_id))
+                meets_conditions = false;
+            }
+          if (options.education_level) //Education level selector, no new parsing since it was handled in initial block processing
+            if (all_pop_keys[i].startsWith("el_"))
+              meets_conditions = false;
+
           if (options.employed != undefined) //Employment selector
             if (options.employed) {
               if (!is_employed)
@@ -2051,11 +2022,11 @@ module.exports = {
           {
             if (lookup.all_pops[all_pop_keys[i]]) {
               modifyValue(current_scope.tags, all_pop_keys[i], local_subobj);
-              current_scope.size += local_subobj;
+              current_scope.size = Math.max(current_scope.size, local_subobj);
             }
             if (all_pop_keys[i].startsWith("used_")) {
               modifyValue(current_scope.tags, all_pop_keys[i], local_subobj);
-              current_scope.size += local_subobj;
+              current_scope.size = Math.max(current_scope.size, local_subobj);
             }
           }
 
@@ -2095,7 +2066,7 @@ module.exports = {
       //province_scalar handler
       {
         var province_scalar =
-          accepted_culture_scalar*education_scalar*education_less_than_scalar*homeless_scalar;
+          accepted_culture_scalar*culture_scalar*education_scalar*education_less_than_scalar*homeless_scalar;
 
         current_scope.size = current_scope*province_scalar;
         current_scope.income = current_scope*province_scalar;
@@ -2109,7 +2080,6 @@ module.exports = {
       }
 
       //Iterate over various objects to add to tags
-      current_scope.tags = mergeObjects(current_scope.tags, accepted_culture_obj);
       current_scope.tags = mergeObjects(current_scope.tags, education_obj);
       current_scope.tags = mergeObjects(current_scope.tags, education_less_than_obj);
 
@@ -2124,6 +2094,9 @@ module.exports = {
         if (["fulfilment", "variety"].includes(all_scope_keys[i]))
           current_scope[all_scope_keys[i]] = local_value/current_scope.size;
       }
+
+      //Override tags - KEEP AT BOTTOM!
+      current_scope.tags.population = current_scope.size;
     }
 
     //Return statement

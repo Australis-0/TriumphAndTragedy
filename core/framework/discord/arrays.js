@@ -31,7 +31,11 @@ module.exports = {
     var list = arg0_array;
 
     //Return statement
-    return (Array.isArray(list)) ? list : [list];
+    if (list) {
+      return (Array.isArray(list)) ? list : [list];
+    } else {
+      return [];
+    }
   },
 
   getSubstringInArray: function (arg0_array, arg1_substring) {
