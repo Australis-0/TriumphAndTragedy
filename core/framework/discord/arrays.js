@@ -31,10 +31,22 @@ module.exports = {
     var list = arg0_array;
 
     //Return statement
-    if (list) {
-      return (Array.isArray(list)) ? list : [list];
+    if (typeof list != "object") {
+      if (list) {
+        return (Array.isArray(list)) ? list : [list];
+      } else {
+        return [];
+      }
     } else {
-      return [];
+      var all_list_keys = Object.keys(list);
+      var object_array = [];
+
+      //Append everything in object as object_array
+      for (var i = 0; i < all_list_keys.length; i++)
+        object_array.push(list[all_list_keys[i]]);
+
+      //Return statement
+      return object_array;
     }
   },
 

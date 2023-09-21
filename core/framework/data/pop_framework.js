@@ -1795,6 +1795,7 @@ module.exports = {
     if (province_obj.pops && !options.empty) {
       var all_cultures = getList(options.culture);
       var all_pop_keys = Object.keys(province_obj.pops);
+      var max_selected = {};
 
       //Optimise dynamic selectors (has_<goods_category>, has_<goods_category>_variety, etc.)
       {
@@ -1935,9 +1936,11 @@ module.exports = {
 
       //Iterate over all_pop_keys
       for (var i = 0; i < all_pop_keys.length; i++) {
+        var explicitly_defined = false;
         var local_subobj = province_obj.pops[all_pop_keys[i]];
         var meets_conditions = true;
 
+        var attribute_type = "";
         var building_id = "";
         var is_employed = false;
         var local_pop_type = "";
@@ -1957,6 +1960,33 @@ module.exports = {
             is_employed = true;
             local_pop_type = split_wealth_key[2];
           }
+        }
+
+        //Check if this is explicitly defined
+        {
+          //culture
+          if (all_pop_keys[i].startsWith("culture-")) {
+            if (all_cultures.length > 0)
+              attribute_type = "culture";
+          }
+
+          //education_level - NO PARSING because already handled in block processing
+
+          //employed
+          if (all_pop_keys[i].startsWith("used_")) {
+            if (options.is_employed != undefined)
+              attribute_type = "employed";
+          }
+
+          //wealth_pool
+          if (all_pop_keys[i].startsWith("wealth-"))
+            if (
+              options.income != undefined ||
+              options.income_less_than != undefined ||
+              options.wealth != undefined ||
+              options.wealth_less_than != undefined
+            )
+              attribute_type = "wealth_pool";
         }
 
         //Check if local_subobj meets conditions
@@ -2018,6 +2048,15 @@ module.exports = {
 
         //Append to current_scope if meets_conditions
         if (meets_conditions) {
+          //Set max_selected pops for post-scalar later down the road
+          if (attribute_type != "")
+            if (typeof local_subobj == "number") {
+              modifyValue(max_selected, attribute_type, local_subobj);
+            } else if (typeof local_subobj == "object") {
+              if (attribute_type == "wealth")
+                modifyValue(max_selected, "wealth", local_subobj.size);
+            }
+
           //Normal key handler
           {
             if (lookup.all_pops[all_pop_keys[i]]) {
@@ -2060,13 +2099,26 @@ module.exports = {
       }
 
       //Normalise total fulfilment and variety keys in current_scope
+      var all_max_selected = Object.keys(max_selected);
       var all_scope_keys = Object.keys(current_scope);
       var all_tags = Object.keys(current_scope.tags);
+
+      //tag_scalar handler
+      {
+        var max_selected = 0;
+
+        for (var i = 0; i < all_max_selected.length; i++)
+          max_selected = Math.max(max_selected, max_selected[all_max_selected[i]]);
+
+        var tag_scalar = (max_selected < current_scope.size) ?
+          max_selected/current_scope.size : current_scope.size/max_selected; //[WIP] - Doubt this post-scalar treatment works but we'll see if it does
+      }
 
       //province_scalar handler
       {
         var province_scalar =
-          accepted_culture_scalar*culture_scalar*education_scalar*education_less_than_scalar*homeless_scalar;
+          accepted_culture_scalar*culture_scalar*education_scalar*education_less_than_scalar*homeless_scalar
+          *tag_scalar; //Tag scalar so that the selected tags can't be greater than current_scope.size
 
         current_scope.size = current_scope*province_scalar;
         current_scope.income = current_scope*province_scalar;
