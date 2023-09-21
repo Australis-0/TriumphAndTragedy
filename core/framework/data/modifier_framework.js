@@ -1058,12 +1058,98 @@ module.exports = {
                 });
             }
           } if (all_keys[i] == "income") {
+            //Fetch income scope
+            var local_pop_scope = selectPops({
+              province_id: options.province_id,
+              pop_types: [options.pop_type],
+
+              income: local_value
+            });
+
+            pop_scope = (parent.startsWith("any")) ?
+              mergeObjects(pop_scope, local_pop_scope) :
+              mergePopScopes(pop_scope, local_pop_scope); //and, not, default
           } if (all_keys[i] == "income_less_than") {
+            //Fetch income less than scope
+            var local_pop_scope = selectPops({
+              province_id: options.province_id,
+              pop_types: [options.pop_type],
+
+              income_less_than: local_value
+            });
+
+            pop_scope = (parent.startsWith("any")) ?
+              mergeObjects(pop_scope, local_pop_scope) :
+              mergePopScopes(pop_scope, local_pop_scope); //and, not, default
           } if (all_keys[i] == "is_employed") {
+            //Fetch is employed scope
+            var local_pop_scope = selectPops({
+              province_id: options.province_id,
+              pop_types: [options.pop_type],
+
+              employed: local_value
+            });
+
+            pop_scope = (parent.startsWith("any")) ?
+              mergeObjects(pop_scope, local_pop_scope) :
+              mergePopScopes(pop_scope, local_pop_scope); //and, not, default
           } if (all_keys[i] == "is_employed_at") {
+            //Fetch employment buildings scope
+            var local_pop_scope = selectPops({
+              province_id: options.province_id,
+              pop_types: [options.pop_type],
+
+              building_ids: local_value
+            });
+
+            pop_scope = (parent.startsWith("any")) ?
+              mergeObjects(pop_scope, local_pop_scope) :
+              mergePopScopes(pop_scope, local_pop_scope); //and, not, default
           } if (all_keys[i].startsWith("is_")) { //is_<government_type>
             //Check to make sure this is a valid government type
+            var government_type = all_keys[i].replace("is_", "");
+
+            if (config.governments[government_type]) {
+              var is_government_type == (usr.government == government_type);
+
+              if (local_value == true) {
+                if (!is_government_type)
+                  pop_scope = selectPops({
+                    province_id: options.province_id,
+                    pop_types: [options.pop_type],
+
+                    empty: true
+                  });
+              } else if (local_value == false) {
+                if (is_government_type)
+                  pop_scope = selectPops({
+                    province_id: options.province_id,
+                    pop_types: [options.pop_type],
+
+                    empty: true
+                  });
+              }
+            }
           } if (all_keys[i] == "is_mobilised") {
+            var is_mobilised = (usr.mobilisation.is_mobilised);
+
+            if (local_value == true) {
+              if (!is_mobilised)
+                pop_scope = selectPops({
+                  province_id: options.province_id,
+                  pop_types: [options.pop_type],
+
+                  empty: true
+                });
+            } else if (local_value == false) {
+              if (is_mobilised)
+                pop_scope = selectPops({
+                  province_id: options.province_id,
+                  pop_types: [options.pop_type],
+
+                  empty: true
+                });
+            }
           } if (all_keys[i] == "no_jobs") {
             //Fetch no_jobs scope
             var has_jobs = false;

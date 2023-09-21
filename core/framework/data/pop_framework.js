@@ -1727,7 +1727,7 @@ module.exports = {
     options: {
       province_id: "4707", - The province ID to merge pops from. Required
 
-      building_ids: [], - A given list of building ID's to merge
+      building_ids: [], - A given list of building ID's to select employed pops from
       education_level: { - Optional. Undefined by default
         min: 0,
         max: 1,

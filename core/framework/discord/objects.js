@@ -378,5 +378,16 @@ module.exports = {
 
     //Return statement
     return merged_obj;
+  },
+
+  sortObject: function (arg0_object, arg1_mode) {
+    //Convert from parameters
+    var object = arg0_object;
+    var mode = (arg1_mode) ? arg1_mode : "descending";
+
+    //Return statement
+    return Object.fromEntries(
+      Object.entries(object).sort(([, a], [, b]) => (mode == "descending") ? b - a : a - b)
+    );
   }
 };
