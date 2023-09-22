@@ -226,11 +226,46 @@ module.exports = {
 
     var spread = (options.spread) ? options.spread : Math.abs(max - min)/(3*statistical_dispersion); //Roughly 3 standard deviations. Doesn't actually cover this due to non-trapezoidal Riemann. Too lazy to implement that, though!
 
+    //Get skew_tail. By default this is symmetrical
+    var domain = Math.abs(max - min);
+    var max_distance = Math.abs(max - mean);
+    var min_distance = Math.abs(min - mean);
+    var skew_tail;
+
+    if (max_distance > min_distance) {
+      skew_tail = ["max", min_distance];
+    } else if (max_distance < min_distance) {
+      skew_tail = ["min", max_distance];
+    }
+
     //Iterate over amount as number of keys
     for (var i = 0; i < amount; i++) {
       var local_value = 0;
+      var scalar = 1;
+
       if (i >= min && i <= max)
         local_value = pearsonVIIPDF(i, mean, skew, statistical_dispersion, min, max);
+
+      //Fetch scalar
+      if (skew_tail != "") {
+        var lesser_fraction = domain/skew_tail[1];
+
+        if (i <= mean) {
+          if (skew_tail[1] == "min") {
+            local_value = local_value*(1/lesser_fraction);
+          } else {
+            local_value = local_value/lesser_fraction;
+          }
+        } else {
+          if (skew_tail[1] == "min") {
+            local_value = local_value/lesser_fraction;
+          } else {
+            local_value = local_value*(1/lesser_fraction);
+          }
+        }
+      }
+
+      //Multiply local_value by scalar
 
       if ((i >= min && i <= max) || !(options.truncate_amount && local_value == 0)) {
         distribution_obj[`${(options.key_name) ? options.key_name + "_" : ""}${i}`] = local_value;
