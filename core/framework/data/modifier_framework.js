@@ -1110,7 +1110,7 @@ module.exports = {
             var government_type = all_keys[i].replace("is_", "");
 
             if (config.governments[government_type]) {
-              var is_government_type == (usr.government == government_type);
+              var is_government_type = (usr.government == government_type);
 
               if (local_value == true) {
                 if (!is_government_type)

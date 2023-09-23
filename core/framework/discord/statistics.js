@@ -238,6 +238,12 @@ module.exports = {
       skew_tail = ["min", max_distance];
     }
 
+    var lesser_fraction = skew_tail[1]/domain;
+    var post_scalar = (1/lesser_fraction);
+
+    log.debug("Skew tail", skew_tail);
+    log.debug("Lesser fraction", lesser_fraction);
+
     //Iterate over amount as number of keys
     for (var i = 0; i < amount; i++) {
       var local_value = 0;
@@ -246,30 +252,31 @@ module.exports = {
       if (i >= min && i <= max)
         local_value = pearsonVIIPDF(i, mean, skew, statistical_dispersion, min, max);
 
-      //Fetch scalar
-      if (skew_tail != "") {
-        var lesser_fraction = domain/skew_tail[1];
+      //Multiply local_value by scalar
+      if (skew_tail)
+        if (i < mean) {
+          var triangle_scalar = (i - min + 1)/(mean - min);
+          triangle_scalar = triangle_scalar*post_scalar*2;
 
-        if (i <= mean) {
-          if (skew_tail[1] == "min") {
-            local_value = local_value*(1/lesser_fraction);
+          if (skew_tail[0] == "min") {
+            local_value = local_value*triangle_scalar;
           } else {
-            local_value = local_value/lesser_fraction;
+            local_value = local_value/triangle_scalar;
           }
-        } else {
-          if (skew_tail[1] == "min") {
-            local_value = local_value/lesser_fraction;
+        } else if (i > mean) {
+          var triangle_scalar = 1 - ((i - mean)/(max_distance + 1));
+          triangle_scalar = triangle_scalar*post_scalar*2;
+
+          if (skew_tail[0] == "min") {
+            local_value = local_value/triangle_scalar;
           } else {
-            local_value = local_value*(1/lesser_fraction);
+            local_value = local_value*triangle_scalar;
           }
         }
-      }
-
-      //Multiply local_value by scalar
 
       if ((i >= min && i <= max) || !(options.truncate_amount && local_value == 0)) {
         distribution_obj[`${(options.key_name) ? options.key_name + "_" : ""}${i}`] = local_value;
-        bayesian_sum += local_value;
+        bayesian_sum += returnSafeNumber(local_value);
       }
     }
 
@@ -278,6 +285,9 @@ module.exports = {
     for (var i = 0; i < amount; i++) {
       var local_key = `${(options.key_name) ? options.key_name + "_" : ""}${i}`;
       distribution_obj[local_key] = distribution_obj[local_key]*standard_scalar;
+
+      if (i < min || i > max)
+        distribution_obj[local_key] = 0;
     }
 
     //Return statement
