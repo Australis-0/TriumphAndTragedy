@@ -1464,8 +1464,21 @@ module.exports = {
     var options = (arg2_options) ? arg2_options : {};
 
     //Declare local instance variables
+    var config_obj = config.pops[pop_type];
     var current_median = province_obj[`${pop_type}_median_wage`];
+    var has_demotes = false;
+    var has_promotes = false;
+    var pop_scope = module.exports.selectPops({
+      province_id: province_id,
+      pop_types: [pop_type]
+    });
     var province_obj = main.provinces[province_id];
+
+    //Initialise variables
+    {
+      if (config_obj.demotes_to) has_demotes = true;
+      if (config_obj.promotes_to) has_promotes = true;
+    }
 
     //Pop Job Seeking and Employment
     {
@@ -1509,6 +1522,34 @@ module.exports = {
           unemployed_pops: unemployed_pops
         });
       }
+    }
+
+    //Pop Promotion/Demotion - [WIP] - Finish body function
+    if (pop_scope.size > 0) {
+      //Pop demotion
+      var pop_demotion_selectors = parsePopLimit(config.pop_mobility.demotion, {
+        province_id: province_id,
+        pop_type: pop_type,
+        pop_scope: pop_scope
+      });
+
+      if (pop_demotion_selectors.boolean) {
+        //pop_demotion_selectors.selectors - [pop_scope, value];
+        for (var i = 0; i < pop_demotion_selectors.selectors.length; i++) {
+          var local_pop_scope = pop_demotion_selectors.selectors[i][0];
+          var local_value = pop_demotion_selectors.selectors[i][1];
+
+          if (has_promotes) {
+            var local_promotes = parsePopLimit(config_obj.promotes_to, {
+              province_id: province_id,
+              pop_type: pop_type,
+              pop_scope: local_pop_scope
+            });
+          }
+        }
+      }
+
+      //Pop promotion
     }
   },
 

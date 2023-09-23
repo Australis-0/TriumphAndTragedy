@@ -87,50 +87,6 @@ config.pops = { //[WIP] - Rework chances, icons
         }
       },
 
-      promotes_to: {
-        scholars: {
-          base_chance: 0.02,
-
-          limit: {
-            education_level: 0.60,
-            wealth: 40000,
-            wealth_less_than: 250000
-          },
-
-          add_chance_libraries: {
-            limit: {
-              province_has_libraries: true
-            },
-            value: 0.01
-          },
-          add_chance_universities: {
-            limit: {
-              province_has_universities: true
-            },
-            value: 0.02
-          }
-        }
-      },
-      demotes_to: {
-        burghers: {
-          limit: {
-            wealth: 40000
-          },
-
-          add_chance_burgher_pops: {
-            per_percent: {
-              pop_type: "burghers",
-              value: 0.01
-            }
-          }
-        },
-        clergy: {
-          limit: {
-            education_level: 0.20
-          }
-        }
-      },
-
       tax_efficiency: 0.03,
       stability_modifier: 0.05
     },

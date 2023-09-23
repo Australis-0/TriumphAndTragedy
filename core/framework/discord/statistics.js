@@ -241,9 +241,6 @@ module.exports = {
     var lesser_fraction = skew_tail[1]/domain;
     var post_scalar = (1/lesser_fraction);
 
-    log.debug("Skew tail", skew_tail);
-    log.debug("Lesser fraction", lesser_fraction);
-
     //Iterate over amount as number of keys
     for (var i = 0; i < amount; i++) {
       var local_value = 0;
