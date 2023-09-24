@@ -702,6 +702,60 @@ module.exports = {
     }
   },
 
+  /*
+    getPopMobility() - Returns statistical last turn pop mobility for a province.
+    Returns: {
+      promotion: { total: 24390 },
+      demotion: { total: 4102 },
+
+      change: 2148 - Total change in pop (as driven by social mobility)
+    }
+  */
+  getPopMobility: function (arg0_province_id, arg1_pop_type) {
+    //Convert from parameters
+    var province_id = arg0_province_id;
+    var pop_type = arg1_pop_type;
+
+    //Declare local instance variables
+    var province_obj = main.provinces[province_id];
+    var total_demoted = 0;
+    var total_promoted = 0;
+    var return_obj = {
+      promotion: {},
+      demotion: {}
+    };
+
+    if (province_obj)
+      if (province_obj.trackers) {
+        var all_province_trackers = Object.keys(province_obj.trackers);
+
+        for (var i = 0; i < all_province_trackers.length; i++) {
+          var local_value = province_obj.trackers[all_province_trackers[i]];
+          var split_key = all_province_trackers[i].split("-");
+
+          if (split_key[0] == "demote")
+            if (split_key[1] == pop_type) {
+              modifyValue(return_obj.demotion, split_key[2], local_value);
+              total_demoted += local_value;
+            }
+          if (split_key[0] == "promote")
+            if (split_key[2] == pop_type) {
+              modifyValue(return_obj.promotion, split_key[1], local_value);
+              total_promoted += local_value;
+            }
+        }
+
+        return_obj.demotion.total = total_demoted;
+        return_obj.promotion.total = total_promoted;
+      }
+
+    //Set return_obj.change
+    return_obj.change = total_promoted - total_demoted;
+
+    //Return statement
+    return return_obj;
+  },
+
   getPopModifier: function (arg0_user, arg1_type, arg2_modifier) {
     //Convert from parameters
     var user_id = arg0_user;
@@ -1590,7 +1644,10 @@ module.exports = {
               //Add to chosen profession
               modifyValue(province_obj.pops, pop_type, local_demote_amount*-1, true);
               modifyValue(province_obj.pops, pop_type, `used_${pop_type}`, local_used_demote*-1, true);
-              modifyValue(province_obj.pops, all_demotes[x], local_demote_amount);
+              modifyValue(province_obj.pops, all_demote_chances[x], local_demote_amount);
+
+              //Set province tracker
+              province_obj.trackers[`demote-${pop_type}-${all_demote_chances[x]}`] = local_demote_amount;
             }
           }
         }
@@ -1657,7 +1714,10 @@ module.exports = {
               //Add to chosen profession
               modifyValue(province_obj.pops, pop_type, local_promote_amount*-1, true);
               modifyValue(province_obj.pops, pop_type, `used_${pop_type}`, local_used_promote*-1, true);
-              modifyValue(province_obj.pops, all_promotes[x], local_promote_amount);
+              modifyValue(province_obj.pops, all_promote_chances[x], local_promote_amount);
+
+              //Set province tracker
+              province_obj.trackers[`promote-${pop_type}-${all_promote_chances[x]}`] = local_promote_amount;
             }
           }
         }

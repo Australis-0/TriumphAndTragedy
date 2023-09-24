@@ -61,10 +61,35 @@ module.exports = {
                 var local_value = returnSafeNumber(province_obj.pops[pops_to_display[i]]);
 
                 var pop_obj = config.pops[pops_to_display[i]];
+                var local_mobility = getPopMobility(province_id, pops_to_display[i]);
                 var local_percentage = local_value/returnSafeNumber(province_obj.pops.population);
 
                 //Print to pops_string
                 pops_string.push(`- ${(config.icons[pop_obj.icon]) ? config.icons[pop_obj.icon] + " " : ""}${(pop_obj.name) ? pop_obj.name : pops_to_display[i]}: ${parseNumber(local_value)} (**${printPercentage(local_percentage, { display_float: true })}**)`);
+
+                //Get local_mobility change
+                if (local_mobility.change > 0) {
+                  var all_demotes = Object.keys(local_mobility.demotion);
+                  var all_promotes = Object.keys(local_mobility.promotion);
+
+                  pops_string.push(` - **${parseNumber(local_mobility.promotion.total, { display_prefix: true })}** Promoted`);
+                  for (var x = 0; x < all_promotes.length; x++)
+                    if (config.pops[all_promotes[x]]) {
+                      var local_promoted  = local_mobility.promotion[all_promotes[x]];
+
+                      pops_string.push(`   - ${parseNumber(local_promoted)} from ${parsePop(all_promotes[x])}`);
+                    }
+
+                  pops_string.push(` - **${parseNumber(local_mobility.demotion.total*-1, { display_prefix: true })}** Demoted`);
+                  for (var x = 0; x < all_demotes.length; x++)
+                    if (config.pops[all_demotes[x]]) {
+                      var local_demoted = local_mobility.demotion[all_demotes[x]];
+
+                      pops_string.push(`   - ${parseNumber(local_demoted)} to ${parsePop(all_demotes[x])}`);
+                    }
+
+                  pops_string.push(` - **${parseNumber(local_mobility.change, { display_prefix: true })}** Profession Growth`);
+                }
               }
 
             //General pop stats (Birth rate, mortality, immigration, emigration) [WIP] - Add mortality/immigration/emigration

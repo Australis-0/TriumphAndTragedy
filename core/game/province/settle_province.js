@@ -31,6 +31,7 @@ module.exports = {
             50000
         );
         province_obj.pops = {};
+        province_obj.trackers = {};
 
         //Add pops to province object
         for (var i = 0; i < all_pop_types.length; i++)
