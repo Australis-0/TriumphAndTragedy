@@ -840,7 +840,8 @@ module.exports = {
 
       boolean: true/false, - Used for hard non-fuzzy conditions such as has_industrialised
       selectors: [], - [pop_scope, value] - A list of selectors for which values are added onto
-      pop_obj: {} - The pop return object for which the boolean was fulfilled and value chance higher than 0
+
+      pop_scope: {} - The pop return object for which the boolean was fulfilled and value chance higher than 0
     }
   */
   parsePopLimit: function (arg0_scope, arg1_options) { //[WIP] - Finish function body
@@ -872,20 +873,20 @@ module.exports = {
 
       //Scope conditions
       if (parent == "add_chance") { //add_chance scope handler
-        if (scope.limit) {
-          var new_options = JSON.parse(JSON.stringify(options));
-          var new_pop_scope = JSON.parse(JSON.stringify(pop_scope));
+        var new_options = JSON.parse(JSON.stringify(options));
+        var new_pop_scope = JSON.parse(JSON.stringify(pop_scope));
 
-          new_options.parent_obj = scope;
-          new_options.pop_scope = pop_scope;
-          new_options.parents.push("add_chance_limit");
+        new_options.parent_obj = scope;
+        new_options.pop_scope = pop_scope;
+        new_options.parents.push("add_chance_limit");
 
-          var limit_pop_scope = module.exports.parsePopLimit(local_value, new_options);
-          var local_pop_scope = limit_pop_scope.pop_scope;
+        var limit_pop_scope = module.exports.parsePopLimit(local_value, new_options);
+        var local_pop_scope = limit_pop_scope.pop_scope;
 
-          var local_percentage = local_pop_scope.size/province_obj.pops[options.pop_type];
-          value += scope.value*local_percentage;
-        }
+        var local_percentage = local_pop_scope.size/province_obj.pops[options.pop_type];
+
+        if (limit_pop_scope.boolean)
+          value += scope.value;
       } else { //Hard limit handler. This defines the pop subscope that meets these conditions for which value is processed
         //Group scopes, any/or, not. AND is the default joiner
         //Reset parents when passing to group subscopes since this is a hard limit
@@ -954,7 +955,9 @@ module.exports = {
 
         //Individual conditions - not iterative scope
         if (!(parent == "per" || parent.startsWith("per_"))) {
-          if (all_keys[i] == "homeless") {
+          if (all_keys[i] == "base_value") {
+            value += local_value;
+          } if (all_keys[i] == "homeless") {
             //Fetch homeless scope
             var local_pop_scope = selectPops({
               province_id: options.province_id,
@@ -1644,6 +1647,9 @@ module.exports = {
       selectors = new_selectors;
 
       pop_scope.size = Math.min(province_obj.pops[options.pop_type], pop_scope.size);
+
+      //Push top-layer to selectors as well
+      selectors.unshift(pop_scope, value);
     }
 
     //Set value to 0 if conditions not met

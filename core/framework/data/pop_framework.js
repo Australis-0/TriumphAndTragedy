@@ -1464,6 +1464,7 @@ module.exports = {
     var options = (arg2_options) ? arg2_options : {};
 
     //Declare local instance variables
+    var building_map = getBuildingMap(province_id);
     var config_obj = config.pops[pop_type];
     var current_median = province_obj[`${pop_type}_median_wage`];
     var has_demotes = false;
@@ -1524,7 +1525,7 @@ module.exports = {
       }
     }
 
-    //Pop Promotion/Demotion - [WIP] - Finish body function
+    //Pop Promotion/Demotion - [WIP] - Finish body function; make it so that promotion/demotion can occur between classes if promotion/demotion is otherwise unspecified.
     if (pop_scope.size > 0) {
       //Pop demotion
       var pop_demotion_selectors = parsePopLimit(config.pop_mobility.demotion, {
@@ -1539,17 +1540,128 @@ module.exports = {
           var local_pop_scope = pop_demotion_selectors.selectors[i][0];
           var local_value = pop_demotion_selectors.selectors[i][1];
 
-          if (has_promotes) {
-            var local_promotes = parsePopLimit(config_obj.promotes_to, {
-              province_id: province_id,
-              pop_type: pop_type,
-              pop_scope: local_pop_scope
-            });
+          var all_local_tags = Object.keys(local_pop_scope.tags);
+
+          if (has_demotes) {
+            var all_demotes = Object.keys(config_obj.demotes_to);
+            var demote_chances = {};
+
+            for (var x = 0; x < all_demotes.length; x++)
+              if (config.pops[all_demotes[x]]) { //Revamp to standardise percentage of config_obj.demotes_to to one another; calculate chances for all and standardise to 100%; apply to local_pop_scope
+                var local_pop_demote_chance = parsePopLimit(config_obj.demotes_to[all_demotes[x]], {
+                  province_id: province_id,
+                  pop_type: pop_type,
+                  pop_scope: pop_demotion_selectors.pop_scope
+                });
+                var weighted_total = 0;
+
+                //Fetch weighted_total
+                if (local_pop_demote_chance.boolean) {
+                  for (var y = 0; y < local_pop_demote_chance.selectors.length; y++)
+                    weighted_total += local_pop_demote_chance.selectors[y][0].size*
+                      local_pop_demote_chance.selectors[y][1];
+
+                  //Add weighted_total to demote_chances
+                  modifyValue(demote_chances, all_demotes[x], weighted_total, true);
+                }
+              }
+
+            //Standardise percentage for demote_chances; iterate over all of them and demote to respective pops
+            demote_chances = standardisePercentage(demote_chances);
+
+            var all_demote_chances = Object.keys(demote_chances);
+
+            for (var x = 0; x < all_demote_chances.length; x++) {
+              var local_percentage = demote_chances[all_demote_chances[x]];
+
+              var local_demote_amount = Math.floor(returnSafeNumber(local_pop_scope[pop_type])*local_value*local_percentage);
+              var local_used_demote = Math.floor(returnSafeNumber(local_pop_scope[`used_${pop_type}`])*local_value*local_percentage);
+
+              //Layoff from wealth pools
+              for (var y = 0; y < all_local_tags.length; y++)
+                if (all_local_tags.startsWith("wealth-")) {
+                  var local_building = building_map[all_local_tags[y]];
+                  var local_layoff_amount = local_pop_scope.tags[all_local_tags[y]]*local_value*local_percentage;
+                  var split_wealth_key = all_local_tags[y].split("-");
+
+                  layoffWorkers(local_building, pop_type, local_layoff_amount);
+                }
+
+              //Add to chosen profession
+              modifyValue(province_obj.pops, pop_type, local_demote_amount*-1, true);
+              modifyValue(province_obj.pops, pop_type, `used_${pop_type}`, local_used_demote*-1, true);
+              modifyValue(province_obj.pops, all_demotes[x], local_demote_amount);
+            }
           }
         }
       }
 
       //Pop promotion
+      var pop_promotion_selectors = parsePopLimit(config.pop_mobility.promotion, {
+        province_id: province_id,
+        pop_type: pop_type,
+        pop_scope: pop_scope
+      });
+
+      if (pop_promotion_selectors.boolean) {
+        //pop_promotion_selectors.selectors - [pop_scope, value];
+        for (var i = 0; i < pop_promotion_selectors.length; i++) {
+          var local_pop_scope = pop_promotion_selectors.selectors[i][0];
+          var local_value = pop_demotion_selectors.selectors[i][1];
+
+          var all_local_tags = Object.keys(local_pop_scope.tags);
+
+          if (has_promotes) {
+            var all_promotes = Object.keys(config_obj.promotes_to);
+            var promote_chances = {};
+
+            for (var x = 0; x < all_promotes.length; x++)
+              if (config.pops[all_promotes[x]]) {
+                var local_pop_promote_chance = parsePopLimit(config_obj.promotes_to[all_promotes[x]], {
+                  province_id: province_id,
+                  pop_type: pop_type,
+                  pop_scope: pop_promotion_selectors.pop_scope
+                });
+                var weighted_total = 0;
+
+                //Fetch weighted_total
+                if (local_pop_promote_chance.boolean)
+                  for (var y = 0; y < local_pop_promote_chance.selectors.length; y++)
+                    weighted_total += local_pop_promote_chance.selectors[y][0].size*local_pop_promote_chance.selectors[y][1];
+
+                //Add weighted_total to promote_chances
+                modifyValue(promote_chances, all_promotes[x], weighted_total, true);
+              }
+
+            //Standardise percentage for promote_chances; iterate over all of them and promote to respective pops
+            promote_chances = standardisePercentage(promote_chances);
+
+            var all_promote_chances = Object.keys(promote_chances);
+
+            for (var x = 0; x < all_promote_chances.length; x++) {
+              var local_percentage = promtoe_chances[all_promote_chances[x]];
+
+              var local_promote_amount = Math.floor(returnSafeNumber(local_pop_scope[pop_type])*local_value*local_percentage);
+              var local_used_promote = Math.floor(returnSafeNumber(local_pop_scope[`used_${pop_type}`])*local_value*local_percentage);
+
+              //Layoff from wealth pools
+              for (var y = 0; y < all_local_tags.length; y++)
+                if (all_local_tags.startsWith("wealth-")) {
+                  var local_building = building_map[all_local_tags[y]];
+                  var local_layoff_amount = local_pop_scope.tags[all_local_tags[y]]*local_value*local_percentage;
+                  var split_wealth_key = all_local_tags[y].split("-");
+
+                  layoffWorkers(local_building, pop_type, local_layoff_amount);
+                }
+
+              //Add to chosen profession
+              modifyValue(province_obj.pops, pop_type, local_promote_amount*-1, true);
+              modifyValue(province_obj.pops, pop_type, `used_${pop_type}`, local_used_promote*-1, true);
+              modifyValue(province_obj.pops, all_promotes[x], local_promote_amount);
+            }
+          }
+        }
+      }
     }
   },
 
