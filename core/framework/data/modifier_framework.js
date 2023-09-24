@@ -957,18 +957,6 @@ module.exports = {
         if (!(parent == "per" || parent.startsWith("per_"))) {
           if (all_keys[i] == "base_value") {
             value += local_value;
-          } if (all_keys[i] == "homeless") {
-            //Fetch homeless scope
-            var local_pop_scope = selectPops({
-              province_id: options.province_id,
-              pop_types: [options.pop_type],
-
-              homeless: true
-            });
-
-            pop_scope = (parent.startsWith("any")) ?
-              mergeObjects(pop_scope, local_pop_scope) :
-              mergePopScopes(pop_scope, local_pop_scope); //and, not, default
           } if (all_keys[i].startsWith("can_afford_")) {
             //Fetch can afford scope
             var local_goods_category = all_keys[i].replace("can_afford_", "");
@@ -1060,6 +1048,18 @@ module.exports = {
                   empty: true
                 });
             }
+          } if (all_keys[i] == "homeless") {
+            //Fetch homeless scope
+            var local_pop_scope = selectPops({
+              province_id: options.province_id,
+              pop_types: [options.pop_type],
+
+              homeless: true
+            });
+
+            pop_scope = (parent.startsWith("any")) ?
+              mergeObjects(pop_scope, local_pop_scope) :
+              mergePopScopes(pop_scope, local_pop_scope); //and, not, default
           } if (all_keys[i] == "income") {
             //Fetch income scope
             var local_pop_scope = selectPops({
