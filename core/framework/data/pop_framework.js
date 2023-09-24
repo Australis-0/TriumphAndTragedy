@@ -1238,6 +1238,24 @@ module.exports = {
     return (!raw_modifier) ? Math.ceil(usr.pops[pop_type]*availability_modifier) : availability_modifier;
   },
 
+  //getTotalPopMobility() - Fetches total pop mobility statistics for an entire country's controlled provinces
+  getTotalPopMobility: function (arg0_user, arg1_pop_type) {
+    //Convert from parameters
+    var user_id = arg0_user;
+    var pop_type = arg1_pop_type;
+
+    //Declare local instance variables
+    var controlled_provinces = getProvinces(user_id, { include_occupations: true });
+    var return_obj = {};
+
+    //Iterate over controlled_provinces
+    for (var i = 0; i < controlled_provinces.length; i++)
+      return_obj = mergeObjects(return_obj, module.exports.getPopMobility(controlled_provinces[i].id, pop_type));
+
+    //Return statement
+    return return_obj;
+  },
+
   //getUnemployedPops() - Returns the total unemployed pops of a given type in a province
   getUnemployedPops: function (arg0_province_id, arg1_type, arg2_no_subsistence) {
     //Convert from parameters

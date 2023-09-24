@@ -707,9 +707,10 @@ module.exports = {
   /*
     getProvinces() - Returns an array of provinces for a certain user based on certain options.
     options: {
-      include_hostile_occupations: true/false, - Includes occupations by other users of the target user
-      include_occupations: true/false, - Includes occupations by the target user
-      return_keys: true/false - Whether to return the keys of the provinces instead of the object
+      exclude_cities: true/false, - Optional. Whether to exclude cities. False by default
+      include_hostile_occupations: true/false, - Optional. Includes occupations by other users of the target user. False by default.
+      include_occupations: true/false, - Optional. Includes occupations by the target user. False by default
+      return_keys: true/false - Optional. Whether to return the keys of the provinces instead of the object. False by default
     }
   */
   getProvinces: function (arg0_user, arg1_options) {

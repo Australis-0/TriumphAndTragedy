@@ -461,7 +461,7 @@ module.exports = {
     var all_users = Object.keys(main.users);
     var all_vassals = Object.keys(usr.diplomacy.vassals);
     var all_wars = Object.keys(main.global.wars);
-    var controlled_provinces = getProvinces(user_id);
+    var controlled_provinces = getProvinces(user_id, { include_occupations: true });
     var is_being_justified_on = isBeingJustifiedOn(user_id);
     var owned_provinces = getProvinces(user_id, { include_hostile_occupations: true });
 
