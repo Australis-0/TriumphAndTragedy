@@ -67,7 +67,7 @@ module.exports = {
                 //Print to pops_string
                 pops_string.push(`- ${(config.icons[pop_obj.icon]) ? config.icons[pop_obj.icon] + " " : ""}${(pop_obj.name) ? pop_obj.name : pops_to_display[i]}: ${parseNumber(local_value)} (**${printPercentage(local_percentage, { display_float: true })}**)`);
 
-                //Get local_mobility change
+                //Print local_mobility change
                 if (local_mobility.change > 0) {
                   var all_demotes = Object.keys(local_mobility.demotion);
                   var all_promotes = Object.keys(local_mobility.promotion);
@@ -372,6 +372,9 @@ module.exports = {
 
         pops_string.push(`**__Total Population:__**`);
         pops_string.push(`---`);
+        pops_string.push("");
+        pops_string.push(`**[${(!game_obj.hide_social_mobility) ? `Hide Social Mobility` : `Display Social Mobility`}]**`);
+        pops_string.push("");
 
         //Total pops
         //Print dynamic total pops - Total
@@ -387,8 +390,37 @@ module.exports = {
           if (game_obj.display_irrelevant_pops && game_obj.display_no_pops)
             display_pop = true;
 
-          if (display_pop)
+          if (display_pop) {
             pops_string.push(`- ${parsePop(all_pops[i])}: **${parseNumber(local_value)}**`);
+
+            //Print local mobility change
+            if (!game_obj.hide_social_mobility) {
+              var local_mobility = getTotalPopMobility(user_id, all_pops[i]);
+
+              if (local_mobility.change > 0) {
+                var all_demotes = Object.keys(local_mobility.demotion);
+                var all_promotes = Object.keys(local_mobility.promotion);
+
+                pops_string.push(` - **${parseNumber(local_mobility.promotion.total, { display_prefix: true })}** Promoted`);
+                for (var x = 0; x < all_promotes.length; x++)
+                  if (config.pops[all_promotes[x]]) {
+                    var local_promoted  = local_mobility.promotion[all_promotes[x]];
+
+                    pops_string.push(`   - ${parseNumber(local_promoted)} from ${parsePop(all_promotes[x])}`);
+                  }
+
+                pops_string.push(` - **${parseNumber(local_mobility.demotion.total*-1, { display_prefix: true })}** Demoted`);
+                for (var x = 0; x < all_demotes.length; x++)
+                  if (config.pops[all_demotes[x]]) {
+                    var local_demoted = local_mobility.demotion[all_demotes[x]];
+
+                    pops_string.push(`   - ${parseNumber(local_demoted)} to ${parsePop(all_demotes[x])}`);
+                  }
+
+                pops_string.push(` - **${parseNumber(local_mobility.change, { display_prefix: true })}** Profession Growth`);
+              }
+            }
+          }
         }
 
         //Print dynamic total pops - Availability

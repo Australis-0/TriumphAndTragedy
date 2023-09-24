@@ -3000,6 +3000,18 @@ module.exports = {
             delete game_obj.display_no_pops;
             printPops(user_id);
           }
+
+          //[Display Social Mobility]
+          if (input == "display social mobility") {
+            delete game_obj.hide_social_mobility;
+            printPops(user_id);
+          }
+
+          //[Hide Social Mobility]
+          if (input == "hide social mobility") {
+            game_obj.hide_social_mobility = true;
+            printPops(user_id);
+          }
         }
 
         if (game_obj.page.startsWith("view_demographics_")) {
