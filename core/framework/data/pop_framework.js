@@ -1525,7 +1525,7 @@ module.exports = {
       }
     }
 
-    //Pop Promotion/Demotion - [WIP] - Finish body function; make it so that promotion/demotion can occur between classes if promotion/demotion is otherwise unspecified.
+    //Pop Promotion/Demotion - [WIP] - Make it so that promotion/demotion can occur between classes if promotion/demotion is otherwise unspecified.
     if (pop_scope.size > 0) {
       //Pop demotion
       var pop_demotion_selectors = parsePopLimit(config.pop_mobility.demotion, {
