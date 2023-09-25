@@ -1287,7 +1287,7 @@ module.exports = {
                   empty: true
                 });
             }
-          } if (all_keys[i].startsWith("province_is_capital")) {
+          } if (all_keys[i].startsWith("province_is_capital") || all_keys[i] == "is_capital") {
             var is_capital = (province_obj.city_type == "capital");
             var pop_scope_empty = false;
 
@@ -1306,7 +1306,7 @@ module.exports = {
 
                 empty: true
               });
-          } if (all_keys[i].startsWith("province_is_rural")) {
+          } if (all_keys[i].startsWith("province_is_rural") || all_keys[i] == "is_rural") {
             var is_rural = (province_obj.type != "urban");
             var pop_scope_empty = true;
 

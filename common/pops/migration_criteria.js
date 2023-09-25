@@ -36,7 +36,7 @@ config.pop_migration = {
       },
       value: 0.02
     },
-    add_chance_universal_voting: { //START ADDING TO DOCUMENTATION FROM HERE
+    add_chance_universal_voting: {
       limit: {
         has_universal_voting: true
       },
@@ -240,9 +240,150 @@ config.pop_migration = {
   },
 
   external_emigration: {
+    base_value: 0.15,
 
+    add_chance_occupied: {
+      limit: {
+        occupied: true
+      },
+      value: 0.02
+    },
+    add_chance_staple_goods: {
+      limit: {
+        has_staple_goods_less_than: 0.50
+      },
+      value: 0.01
+    },
+    add_chance_unemployed: {
+      limit: {
+        is_employed: false
+      },
+      value: 0.005
+    },
+    add_chance_militancy_seven: {
+      limit: {
+        militancy: 7
+      },
+      value: 0.004
+    },
+    add_chance_culture_not_accepted: {
+      limit: {
+        has_accepted_culture: false
+      },
+      value: 0.0025
+    },
+    add_chance_militancy_five: {
+      limit: {
+        militancy: 5
+      },
+      value: 0.002
+    },
+    add_chance_homeless: {
+      limit: {
+        homeless: true
+      },
+      value: 0.002
+    },
+    per_discrimination: {
+      discrimination: 0.20,
+      value: 0.002
+    },
+    add_chance_political_influence: {
+      limit: {
+        political_influence_less_than: 0.50,
+        has_only_underground: true
+      },
+      value: 0.002
+    },
+    per_discontentment: {
+      political_discontent: 10,
+      value: 0.001
+    },
+    per_standard_of_living: {
+      limit: {
+        standard_of_living_less_than: 0.20
+      },
+      standard_of_living: -0.05,
+      value: 0.001
+    },
+    add_chance_ruling_party: {
+      limit: {
+        ruling_party: true
+      },
+      value: -0.0025
+    },
+    add_chance_living_wage_jobs: {
+      limit: {
+        living_wage_job_openings: 0
+      },
+      value: -0.003
+    }
   },
   internal_emigration: {
-
+    add_chance_occupied: {
+      limit: {
+        occupied: true
+      },
+      value: 0.04
+    },
+    add_chance_staple_goods: {
+      limit: {
+        has_staple_goods_less_than: 0.50
+      },
+      value: 0.02
+    },
+    add_chance_rural_industrialised: {
+      limit: {
+        has_industrialised: true,
+        is_rural: true
+      },
+      value: 0.01
+    },
+    add_chance_homeless: {
+      limit: {
+        homeless: true
+      },
+      value: 0.005
+    },
+    add_chance_luxury_goods: {
+      limit: {
+        has_luxury_goods_less_than: 0.10
+      },
+      value: 0.0025
+    },
+    add_chance_province_life_expectancy: {
+      limit: {
+        life_expectancy_below_average: true
+      },
+      value: 0.0025
+    },
+    per_discrimination: {
+      discrimination: 0.20,
+      value: 0.002
+    },
+    add_chance_rural: {
+      limit: {
+        is_rural: true
+      },
+      value: 0.001
+    },
+    add_chance_education_level: {
+      limit: {
+        education_level_less_than: 0.20
+      },
+      value: 0.001
+    },
+    add_chance_living_wage_jobs: {
+      limit: {
+        living_wage_job_openings: 0
+      },
+      value: -0.003
+    },
+    add_chance_colonial: {
+      limit: {
+        is_colonial: true
+      },
+      value: -0.05
+    }
   }
 };
