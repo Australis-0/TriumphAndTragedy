@@ -1446,6 +1446,59 @@ module.exports = {
       }
   },
 
+  /*
+    movePops() - Moves pops from one province to another.
+    options: {
+      do_not_layoff: true/false - Optional. False by default. Whether to layoff pops from their current jobs; if already laid off, switch to true.
+    }
+  */
+  movePops: function (arg0_province_id, arg1_pop_scope, arg2_province_id, arg3_options) {
+    //Convert from parameters
+    var from_province_id = arg0_province_id;
+    var pop_scope = arg1_pop_scope;
+    var to_province_id = arg1_province_id;
+    var options = (arg3_options) ? arg3_options : {};
+
+    //Declare local instance variables
+    var from_building_map = getBuildingMap(from_province_id);
+    var from_province = main.provinces[from_province_id];
+    var to_province = main.provinces[to_province_id];
+
+    //Initialise pop_scope
+    if (!pop_scope.size) {
+      pop_scope.province_id = from_province_id;
+      pop_scope = module.exports.selectPops(pop_scope);
+    }
+
+    //Move pops if pop_scope returned something
+    if (pop_scope.size > 0) {
+      //Handle tags
+      var all_tags = Object.keys(pop_scope.tags);
+
+      for (var i = 0; i < all_tags.length; i++) {
+        var local_value = pop_scope.tags[all_tags[i]];
+
+        //Move pop attributes
+        modifyValue(from_province.pops, all_tags[i], local_value*-1, true);
+        modifyValue(to_province.pops, all_tags[i], local_vlaue);
+
+        //Layoff pops
+        if (all_tags[i].startsWith("wealth-"))
+          if (!options.do_not_layoff) {
+            var split_wealth_key = all_tags[i].split("-");
+
+            var local_building = building_map[split_wealth_key[1]];
+
+            layoffWorkers(local_building, split_wealth_key[2], local_value);
+          }
+      }
+
+      //Subtract from from_province.pops.population
+      from_province.pops.population -= pop_scope.size;
+      to_province.pops.population += pop_scope.size;
+    }
+  },
+
   parsePops: function () {
     //Declare local instance variables
     var all_pops = Object.keys(config.pops);
@@ -1652,11 +1705,12 @@ module.exports = {
               //Layoff from wealth pools
               for (var y = 0; y < all_local_tags.length; y++)
                 if (all_local_tags.startsWith("wealth-")) {
-                  var local_building = building_map[all_local_tags[y]];
                   var local_layoff_amount = local_pop_scope.tags[all_local_tags[y]]*local_value*local_percentage;
                   var split_wealth_key = all_local_tags[y].split("-");
 
-                  layoffWorkers(local_building, pop_type, local_layoff_amount);
+                  var local_building = building_map[split_wealth_key[1]];
+
+                  layoffWorkers(local_building, split_wealth_key[2], local_layoff_amount);
                 }
 
               //Add to chosen profession
@@ -1722,11 +1776,12 @@ module.exports = {
               //Layoff from wealth pools
               for (var y = 0; y < all_local_tags.length; y++)
                 if (all_local_tags.startsWith("wealth-")) {
-                  var local_building = building_map[all_local_tags[y]];
                   var local_layoff_amount = local_pop_scope.tags[all_local_tags[y]]*local_value*local_percentage;
                   var split_wealth_key = all_local_tags[y].split("-");
 
-                  layoffWorkers(local_building, pop_type, local_layoff_amount);
+                  var local_building = building_map[split_wealth_key[1]];
+
+                  layoffWorkers(local_building, split_wealth_key[2], local_layoff_amount);
                 }
 
               //Add to chosen profession
