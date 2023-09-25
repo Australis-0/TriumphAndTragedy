@@ -115,6 +115,11 @@ config.defines.economy = {
   job_seeking_range: [0.75, 1], //The range of wages pops seek, where 1 is the building with the highest wage in a province
   strict_job_seeking: false, //Whether pops will refuse to seek jobs lower than a specific % of comparable wages in a province
 
+    //Pop Migration Behaviour
+    base_emigration_cost: 50, //Fiscal cost for migrating as a base
+    additional_province_emigration_cost: 50, //Added cost per province travelled
+    land_sea_connection_cost: 100, //Cost for embarking/disembarking on ships
+
   //Trade and World Market
   resource_init_max_percentile: 0.80, //Maximum percentage of shipment capacity that new countries (for the first 10 turns) can use on buying/selling goods from the World Market
   resource_max_percentile: 0.20, //Maximum percentage of shipment capacity that you can use per turn on buying/selling goods from the World Market
