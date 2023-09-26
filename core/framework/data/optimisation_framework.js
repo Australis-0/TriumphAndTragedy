@@ -22,6 +22,7 @@ module.exports = {
       all_modifier_names: getAllModifiers({ return_names: true }),
       all_national_modifiers: getNationalModifiers(),
       all_national_modifier_names: getNationalModifiers({ return_names: true }),
+      all_pop_classes: getPopClasses(),
       all_pop_needs: getAllPopNeeds(),
       all_pop_needs_categories: getAllPopNeedCategories(),
       all_subgoods: getGoodsSubgoods(),

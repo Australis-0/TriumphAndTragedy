@@ -2332,6 +2332,24 @@ module.exports = {
     return total_median_wage/all_pops.length;
   },
 
+  getTotalPositions: function (arg0_province_id, arg1_pop_type) {
+    //Convert from parameters
+    var province_id = arg0_province_id;
+    var pop_type = getList(arg1_pop_type);
+
+    //Declare local instance variables
+    var open_positions = 0;
+    var province_obj = main.provinces[province_id];
+
+    //Iterate over province_obj.buildings
+    for (var i = 0; i < province_obj.buildings.length; i++)
+      for (var x = 0; x < pop_type.length; x++)
+        open_positions += returnSafeNumber(province_obj.buildings[i][`${pop_type[x]}_positions`]);
+
+    //Return statement
+    return open_positions;
+  },
+
   hasBaseProductionChoice: function (arg0_building) {
     //Convert from parameters
     var building_name = arg0_building;

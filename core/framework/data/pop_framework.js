@@ -702,6 +702,25 @@ module.exports = {
     }
   },
 
+  getPopClasses: function () { //[WIP] - Finish function body
+    //Declare local instance variables
+    var all_pops = Object.keys(config.pops);
+    var class_obj = {};
+
+    //Iterate over all_pops in config and append unique classes to class_obj
+    for (var i = 0; i < all_pops.length; i++) {
+      var local_pop = config.pops[all_pops[i]];
+
+      if (local_pop.class) {
+        if (!class_obj[local_pop.class]) class_obj[local_pop.class] = {};
+        class_obj[local_pop.class].push(local_pop.class);
+      }
+    }
+
+    //Return statement
+    return class_obj;
+  },
+
   /*
     getPopMobility() - Returns statistical last turn pop mobility for a province.
     Returns: {
@@ -1133,6 +1152,39 @@ module.exports = {
 
     //Return statement
     return education_obj;
+  },
+
+  //getProvinceEmployees() - Returns the total number of employed pops in a province
+  getProvinceEmployees: function (arg0_province_id, arg1_pop_types) { //[WIP] - Finish province employment
+    //Convert from parameters
+    var province_id = arg0_province_id;
+    var pop_types = (arg1_pop_types) ? getList(arg1_pop_types) : Object.keys(config.pops);
+
+    //Declare local instance variables
+    var province_obj = main.provinces[province_id];
+    var total_employed = 0;
+
+    //Iterate over pop_types to count total_employed
+    if (province_obj.pops)
+      for (var i = 0; i < pop_types.length; i++)
+        total_employed += returnSafeNumber(province_obj.pops[`used_${pop_types[i]}`]);
+
+    //Return statement
+    return total_employed;
+  },
+
+  //getProvinceEmployment() - Returns the overall % of employed pops in a province
+  getProvinceEmployment: function (arg0_province_id, arg1_pop_types) {
+    //Convert from parameters
+    var province_id = arg0_province_id;
+    var pop_types = (arg1_pop_types) ? getList(arg1_pop_types) : Object.keys(config.pops);
+
+    //Declare local instance variables
+    var province_obj = main.provinces[province_id];
+    var total_employed = module.exports.getProvinceEmployees(province_id, pop_types);
+
+    //Return statement
+    return (province_obj.pops) ? total_employed/province_obj.pops.population : 0;
   },
 
   //getRelevantPops() - Returns an array of all pop keys with more than 0 population in a player country

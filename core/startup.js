@@ -43,6 +43,7 @@ module.exports = {
     FileManager.import("./framework/data/buildings_framework");
     FileManager.import("./framework/data/casus_belli_framework");
     FileManager.import("./framework/data/client_state_framework");
+    FileManager.import("./framework/data/colonisation_framework");
     FileManager.import("./framework/data/combat_framework");
     FileManager.import("./framework/data/culture_framework");
     FileManager.import("./framework/data/diplomacy_framework");
