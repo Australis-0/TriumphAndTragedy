@@ -2314,12 +2314,12 @@ module.exports = {
     return total;
   },
 
-  getTotalMedianWage: function (arg0_province_id) {
+  getTotalMedianWage: function (arg0_province_id, arg1_pop_types) {
     //Convert from parameters
     var province_id = arg0_province_id;
+    var all_pops = (arg1_pop_types) ? getList(arg1_pop_types) : Object.keys(config.pops);
 
     //Declare local instance variables
-    var all_pops = Object.keys(config.pops);
     var total_median_wage = 0;
 
     //Iterate over all_pops
@@ -2370,6 +2370,25 @@ module.exports = {
       for (var i = 0; i < all_maintenance_costs.length; i++)
         if (!all_maintenance_costs[i].startsWith("production_choice_")) return true;
     }
+  },
+
+  hasNonSubsistenceBuildings: function (arg0_province_id) {
+    //Convert from parameters
+    var province_id = arg0_province_id;
+
+    //Declare local instance variables
+    var province_obj = main.provinces[province_id];
+
+    //Iterate over province_obj.buildings
+    if (province_obj)
+      if (province_obj.buildings)
+        for (var i = 0; i < province_obj.buildings.length; i++) {
+          var local_config = lookup.all_buildings[province_obj.buildings[i].building_type];
+
+          if (local_config.manpower_cost)
+            //Return statement
+            return true;
+        }
   },
 
   hasProductionChoice: function (arg0_building_obj) {

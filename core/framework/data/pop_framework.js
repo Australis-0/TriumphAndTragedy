@@ -464,6 +464,30 @@ module.exports = {
     return pop_obj;
   },
 
+  getDemotionChance: function (arg0_province_id, arg1_pop_type) {
+    //Convert from parameters
+    var province_id = arg0_province_id;
+    var pop_type = arg1_pop_type;
+
+    //Declare local instance variables
+    var demotion_chance = 0;
+    var province_obj = main.provinces[province_id];
+
+    if (province_obj.trackers) {
+      var all_trackers = Object.keys(province_obj.trackers);
+
+      for (var i = 0; i < all_trackers.length; i++) {
+        var local_value = province_obj.trackers[all_trackers[i]];
+
+        if (all_trackers[i].startsWith(`demote-${pop_type}`))
+          demotion_chance += local_value;
+      }
+    }
+
+    //Return statement
+    return demotion_chance;
+  },
+
   //getEmploymentPercentages() - Returns employment percentages for a pop type by building in a province
   getEmploymentPercentages: function (arg0_province_id, arg1_type) {
     //Convert from parameters
@@ -1066,6 +1090,30 @@ module.exports = {
     return pop_obj.population;
   },
 
+  getPromotionChance: function (arg0_province_id, arg1_pop_type) {
+    //Convert from parameters
+    var province_id = arg0_province_id;
+    var pop_type = arg1_pop_type;
+
+    //Declare local instance variables
+    var promotion_chance = 0;
+    var province_obj = main.provinces[province_id];
+
+    if (province_obj.trackers) {
+      var all_trackers = Object.keys(province_obj.trackers);
+
+      for (var i = 0; i < all_trackers.length; i++) {
+        var local_value = province_obj.trackers[all_trackers[i]];
+
+        if (all_trackers[i].startsWith(`promote-${pop_type}`))
+          promotion_chance += local_value;
+      }
+    }
+
+    //Return statement
+    return promotion_chance;
+  },
+
   getProvinceBirths: function (arg0_user, arg1_province_id) {
     //Convert from parameters
     var user_id = arg0_user;
@@ -1171,6 +1219,27 @@ module.exports = {
 
     //Return statement
     return total_employed;
+  },
+
+  getProvinceEnslavedPercentage: function (arg0_province_id) {
+    //Convert from parameters
+    var province_id = arg0_province_id;
+
+    //Declare local instance variables
+    var all_pops = Object.keys(config.pops);
+    var enslaved_population = 0;
+    var province_obj = main.provinces[province_id];
+
+    //Iterate over all_pops and check for .slave_pop
+    for (var i = 0; i < all_pops.length; i++) {
+      var local_pop = config.pops[all_pops[i]];
+
+      if (typeof local_pop == "object")
+        if (local_pop.slave_pop)
+          enslaved_population += returnSafeNumber(province_obj.pops[all_pops[i]]);
+    }
+
+    return enslaved_population/province_obj.pops.population;
   },
 
   //getProvinceEmployment() - Returns the overall % of employed pops in a province
@@ -2120,9 +2189,11 @@ module.exports = {
   /*
     selectPops() - Merges pops based on a pop's characteristics and given frequency distributions according to proportionality.
     options: {
-      province_id: "4707", - The province ID to merge pops from. Required
+      province_id: "4707", - The province ID to merge pops from. Optional with pop_scope as an additional option
+      pop_scope: {}, - The pop scope to provide to get a subset of
 
       building_ids: [], - A given list of building ID's to select employed pops from
+      culture: [], - A list of culture IDs that should be scoped to
       education_level: { - Optional. Undefined by default
         min: 0,
         max: 1,
@@ -2133,7 +2204,9 @@ module.exports = {
       empty: true/false, - Optional. Whether to return an empty pop scope. False by default
       has_accepted_culture: true/false, - Optional. Restricts pops to accepted cultures only
       has_<goods_category>: true/false/0.50, - Optional. Either boolean or numeric value. Undefined by default
+      has_<goods_category>_less_than: 0.80, - Optional. Numeric percentage. Undefined by default
       has_<goods_category>_variety: true/false/0.50, - Optional. Either boolean or numeric value. Undefined by default
+      has_<goods_category>_variety_less_than: 0.90, - Optional. Undefined by default
       homeless: true/false, - Optional. Whether the pop is currently homeless. Undefined by default
       income: 500, - Optional. What income levels should be targeted in scope. Undefined by default
       income_less_than: 250, - Optional. What income levels should be targeted in scope. Undefined by default
@@ -2180,8 +2253,10 @@ module.exports = {
       tags: {}
     };
     var goods_fulfilment_selectors = {};
+    var goods_fulfilment_less_than_selectors = {};
     var goods_variety_selectors = {};
-    var province_id = options.province_id;
+    var goods_variety_less_than_selectors = {};
+    var province_id = (options.pop_scope) ? options.pop_scope.province_id : options.province_id;
     var province_obj = main.provinces[province_id];
 
     //Initialise defaults for variables
@@ -2189,7 +2264,7 @@ module.exports = {
 
     if (province_obj.pops && !options.empty) {
       var all_cultures = getList(options.culture);
-      var all_pop_keys = Object.keys(province_obj.pops);
+      var all_pop_keys = (options.pop_scope) ? options.pop_scope.tags : Object.keys(province_obj.pops);
       var max_selected = {};
 
       //Optimise dynamic selectors (has_<goods_category>, has_<goods_category>_variety, etc.)
@@ -2207,15 +2282,29 @@ module.exports = {
             if (lookup.all_pop_needs_categories.includes(goods_category_name))
               goods_fulfilment_selectors[all_options[i]] = local_value;
           }
+          if (all_options[i].startsWith("has_")) { //has_<goods_category>_less_than
+            var goods_category_name = all_options[i].replace("has_", "").replace("_less_than", "");
+
+            if (lookup.all_pop_needs_categories.includes(goods_category_name))
+              goods_fulfilment_less_than_selectors[all_options[i]] = local_value;
+          }
           if (all_options[i].startsWith("has_")) { //has_<goods_category>_variety
             var goods_category_name = all_options[i].replace("has_", "").replace("_variety", "");
 
             if (lookup.all_pop_needs_categories.includes(goods_category_name))
               goods_variety_selectors[all_options[i]] = local_value;
           }
+          if (all_options[i].startsWith("has_")) { //has_<goods_category>_variety_less_than
+            var goods_category_name = all_options[i].replace("has_", "").replace("_variety_less_than", "");
+
+            if (lookup.all_pop_needs_categories.includes(goods_category_name))
+              goods_variety_less_than_selectors[all_options[i]] = local_value;
+          }
         }
 
+        var all_goods_fulfilment_less_than_keys = Object.keys(goods_fulfilment_less_than_selectors);
         var all_goods_fulfilment_keys = Object.keys(goods_fulfilment_selectors);
+        var all_goods_variety_less_than_keys = Object.keys(goods_variety_less_than_selectors);
         var all_goods_variety_keys = Object.keys(goods_variety_selectors);
       }
 
@@ -2332,7 +2421,8 @@ module.exports = {
       //Iterate over all_pop_keys
       for (var i = 0; i < all_pop_keys.length; i++) {
         var explicitly_defined = false;
-        var local_subobj = province_obj.pops[all_pop_keys[i]];
+        var local_subobj = (options.pop_scope) ?
+          options.pop_scope.tags[all_pop_keys[i]] : province_obj.pops[all_pop_keys[i]];
         var meets_conditions = true;
 
         var attribute_type = "";
@@ -2412,18 +2502,40 @@ module.exports = {
                 meets_conditions = false;
             }
           if (all_pop_keys[i].startsWith("wealth-")) { //Wealth pool handler
-            for (var i = 0; i < all_goods_fulfilment_keys.length; i++) {
-              var local_category_name = all_goods_fulfilment_keys[i].replace("has_", "");
-              var local_value = goods_fulfilment_selectors[all_goods_fulfilment_keys[i]];
+            //Make sure local_subobj references wealth pool
+            if (typeof local_subobj != "object")
+              local_subobj = province_obj.pops[local_subobj];
+
+            //has_<goods_category> [WIP] - FIX FOR LOOPS!!
+            for (var x = 0; x < all_goods_fulfilment_keys.length; x++) {
+              var local_category_name = all_goods_fulfilment_keys[x].replace("has_", "");
+              var local_value = goods_fulfilment_selectors[all_goods_fulfilment_keys[x]];
 
               if (local_subobj[`${local_category_name}-fulfilment`] < local_value)
                 meets_conditions = false;
             }
-            for (var i = 0; i < all_goods_variety_keys.length; i++) {
-              var local_category_name = all_goods_variety_keys[i].replace("has_", "").replace("_variety", "");
-              var local_value = goods_variety_selectors[all_goods_variety_keys[i]];
+            //has_<goods_category>_less_than
+            for (var x = 0; x < all_goods_fulfilment_less_than_keys.length; i++) {
+              var local_category_name = all_goods_fulfilment_less_than_keys[x].replace("has_", "").replace("_less_than", "");
+              var local_value = goods_fulfilment_less_than_selectors[all_goods_fulfilment_keys[x]];
+
+              if (local_subobj[`${local_category_name}-fulfilment`] >= local_value)
+                meets_conditions = false;
+            }
+            //has_<goods_category>_variety
+            for (var x = 0; x < all_goods_variety_keys.length; x++) {
+              var local_category_name = all_goods_variety_keys[x].replace("has_", "").replace("_variety", "");
+              var local_value = goods_variety_selectors[all_goods_variety_keys[x]];
 
               if (local_subobj[`${local_category_name}-variety`] < local_value)
+                meets_conditions = false;
+            }
+            //has_<goods_category>_variety_less_than
+            for (var x = 0; x < all_goods_variety_less_than_keys.length; x++) {
+              var local_category_name = all_goods_variety_less_than_keys[x].replace("has_", "").replace("_variety_less_than", "");
+              var local_value = goods_variety_less_than_selectors[all_goods_variety_less_than_keys[x]];
+
+              if (local_subobj[`${local_category_name}-variety`] >= local_value)
                 meets_conditions = false;
             }
             if (options.income)
@@ -2543,6 +2655,7 @@ module.exports = {
       }
 
       //Override tags - KEEP AT BOTTOM!
+      current_scope.province_id = options.province_id;
       current_scope.tags.population = current_scope.size;
     }
 

@@ -861,9 +861,9 @@ module.exports = {
 
     //Declare local instance variables
     var all_keys = Object.keys(scope);
-    var conditions_met = true;
     var local_pop_obj = {};
     var parent = options.parents[options.parents.length - 1];
+    var pop_plurality_culture = ["", 0];
     var pop_scope = (options.pop_scope) ? options.pop_scope : selectPops({
       province_id: options.province_id,
       pop_types: [options.pop_type]
@@ -877,14 +877,29 @@ module.exports = {
     var ot_user;
 
     //Initialise scope variables
-    if (scope[0] == "country") {
-      ot_user = main.users[scope[1]];
-    } else if (scope[0] == "province") {
-      ot_user = main.users[main.provinces[scope[1]].controller];
-      ot_province = main.provinces[scope[1]];
+    {
+      if (options.flags.scope[0] == "country") {
+        ot_user = main.users[options.flags.scope[1]];
+      } else if (options.flags.scope[0] == "province") {
+        ot_user = main.users[main.provinces[options.flags.scope[1]].controller];
+        ot_province = main.provinces[options.flags.scope[1]];
+      }
+
+      if (!ot_province) ot_province = province_obj;
+      if (!ot_user) ot_user = main.users[province_obj.controller];
     }
 
-    if (!ot_province) ot_province = province_obj;
+
+    //Initialise pop optimisation tags
+    var all_pop_tags_keys = Object.keys(pop_scope.tags);
+
+    for (var i = 0; i < all_pop_tags_keys.length; i++)
+      if (all_pop_tags_keys[i].startsWith("culture-")) {
+        var local_value = pop_scope.tags[all_pop_tags_keys[i]];
+
+        if (local_value > pop_plurality_culture[1])
+          pop_plurality_culture = [all_pop_tags_keys[i].replace("culture-", ""), local_value];
+      }
 
     //Declare scalars for iterative scopes
     {
@@ -909,7 +924,10 @@ module.exports = {
         var target_pop_scope = [];
 
         var pp_demolition_scalar = 1;
+        var pp_employment_scalar = 1;
+        var pp_enslaved_scalar = 1;
         var pp_living_wage_job_openings_scalar = 1;
+        var pp_median_wage_percentage_scalar = 1;
         var pp_promotion_scalar = 1;
         var pp_pop_percent_scalar = 1;
       }
@@ -917,8 +935,13 @@ module.exports = {
       //per sclars (p)
       {
         //Declare local scalars
+        var p_available_housing_scalar = 1;
+        var p_building_categories_scalar = 1;
         var p_living_wage_job_openings_scalar = 1;
+        var p_population_scalar = 1;
+        var p_prestige_scalar = 1;
         var p_soldiers_in_province_scalar = 1;
+        var p_supply_limit_scalar = 1;
       }
     }
 
@@ -1021,7 +1044,7 @@ module.exports = {
           }
         }
 
-        //Individual conditions - not iterative scope
+        //Individual conditions - not iterative scope - [WIP] - REPLACE local_value with scope.value where applicable!!
         if (!(parent == "per" || parent.startsWith("per_"))) {
           if (all_keys[i] == "available_housing") {
             var available_housing = returnSafeNumber(ot_province.housing) - ot_province.pops.population;
@@ -1053,7 +1076,7 @@ module.exports = {
             var needs_category_price = getNeedsCategoryPrice(options.pop_type, local_goods_category);
 
             var local_pop_scope = selectPops({
-              province_id: options.province_id,
+              province_id: ot_province.id,
               pop_types: [options.pop_type],
 
               [(local_value == true) ? "income" : "income_less_than"]: needs_category_price/100000
@@ -1062,10 +1085,28 @@ module.exports = {
             pop_scope = (parent.startsWith("any")) ?
               mergeObjects(pop_scope, local_pop_scope) :
               mergePopScopes(pop_scope, local_pop_scope); //and, not, default
+          } if (all_keys[i] == "demotion_chance") {
+            if (province_obj.trackers) {
+              var local_demotion_chance = getDemotionChance(ot_province.id, options.pop_type);
+
+              if (local_demotion_chance < local_value)
+                empty_scope = true;
+            } else {
+              empty_scope = true;
+            }
+          } if (all_keys[i] == "demotion_chance_less_than") {
+            if (province_obj.trackers) {
+              var local_demotion_chance = getDemotionChance(ot_province.id, options.pop_type);
+
+              if (local_demotion_chance >= local_value)
+                empty_scope = true;
+            } else {
+              empty_scope = true;
+            }
           } if (all_keys[i] == "education_level") {
             //Fetch education level scope
             var local_pop_scope = selectPops({
-              province_id: options.province_id,
+              province_id: ot_province.id,
               pop_types: [options.pop_type],
 
               education_level: local_value
@@ -1077,7 +1118,7 @@ module.exports = {
           } if (all_keys[i] == "education_level_less_than") {
             //Fetch education level less than scope
             var local_pop_scope = selectPops({
-              province_id: options.province_id,
+              province_id: ot_province.id,
               pop_types: [options.pop_type],
 
               education_level_less_than: local_value
@@ -1086,6 +1127,16 @@ module.exports = {
             pop_scope = (parent.startsWith("any")) ?
               mergeObjects(pop_scope, local_pop_scope) :
               mergePopScopes(pop_scope, local_pop_scope); //and, not, default
+          } if (all_keys[i] == "employment") {
+            var province_employment = getProvinceEmployment(ot_province.id, options.pop_type);
+
+            if (province_employment < local_value)
+              empty_scope = true;
+          } if (all_keys[i] == "employment_less_than") {
+            var province_employment = getProvinceEmployment(ot_province.id, options.pop_type);
+
+            if (province_employment >= local_value)
+              empty_scope = true;
           } if (all_keys[i] == "fully_employed") {
             var local_building_category_key = parent.replace("building_category_", "");
 
@@ -1114,7 +1165,7 @@ module.exports = {
           } if (all_keys[i] == "has_accepted_culture") {
             //Fetch has_accepted_culture scope
             var local_pop_scope = selectPops({
-              province_id: options.province_id,
+              province_id: ot_province.id,
               pop_types: [options.pop_type],
 
               has_accepted_culture: local_value
@@ -1125,7 +1176,7 @@ module.exports = {
               mergePopScopes(pop_scope, local_pop_scope); //and, not, default
           } if (all_keys[i].startsWith("has_")) { //has_<goods_category>
             var local_pop_scope = selectPops({
-              province_id: options.province_id,
+              province_id: ot_province.id,
               pop_types: [options.pop_type],
 
               [all_keys[i]]: local_value
@@ -1134,9 +1185,30 @@ module.exports = {
             pop_scope = (parent.startsWith("any")) ?
               mergeObjects(pop_scope, local_pop_scope) :
               mergePopScopes(pop_scope, local_pop_scope); //and, not, default
+          } if (all_keys[i].startsWith("has_")) { //has_<goods_category>_less_than
+            var local_pop_scope = selectPops({
+              province_id: ot_province.id,
+              pop_types: [options.pop_type],
+
+              [all_keys[i]]: local_value
+            });
+
+            pop_scope = (parent.startsWith("any")) ?
+              mergeObjects(pop_scope, local_pop_scope) :
+              mergePopScopes(pop_scope, local_pop_scope); //and, not, default
+          } if (all_keys[i] == "has_housing") {
+            var province_has_housing = returnSafeNumber(ot_province.housing) - ot_province.pops.population;
+
+            if (local_value == true) {
+              if (province_has_housing <= 0)
+                empty_scope = true;
+            } else if (local_value == false) {
+              if (province_has_housing > 0)
+                empty_scope = true;
+            }
           } if (all_keys[i].startsWith("has_") && all_keys[i].includes("_variety")) { //has_<goods_category>_variety
             var local_pop_scope = selectPops({
-              province_id: options.province_id,
+              province_id: ot_province.id,
               pop_types: [options.pop_type],
 
               [all_keys[i]]: local_value
@@ -1145,6 +1217,57 @@ module.exports = {
             pop_scope = (parent.startsWith("any")) ?
               mergeObjects(pop_scope, local_pop_scope) :
               mergePopScopes(pop_scope, local_pop_scope); //and, not, default
+          } if (all_keys[i] == "has_" && all_keys[i].includes("_variety_less_than")) { //has_<goods_category>_variety_less_than
+            var local_pop_scope = selectPops({
+              province_id: ot_province.id,
+              pop_types: [options.pop_type],
+
+              [all_keys[i]]: local_value
+            });
+
+            pop_scope = (parent.startsWith("any")) ?
+              mergeObjects(pop_scope, local_pop_scope) :
+              mergePopScopes(pop_scope, local_pop_scope); //and, not, default
+          } if (all_keys[i] == "has_no_non_subsistence_buildings") {
+            var has_non_subsistence_buildings = hasNonSubsistenceBuildings(ot_province.id);
+
+            if (local_value == true) {
+              if (has_non_subsistence_buildings)
+                empty_scope = true;
+            } else if (local_value == false) {
+              if (!has_non_subsistence_buildings)
+                empty_scope = true;
+            }
+          } if (all_keys[i] == "has_pop_plurality_culture") {
+            //Whether the pop's plurality culture is a plurality in the current province scope
+            if (ot_province.pops) {
+              var plurality_ot_culture = getMajorityCulture(ot_province.id, { return_key: true });
+
+              if (local_value == true) {
+                if (plurality_ot_culture != pop_plurality_culture[0])
+                  empty_scope = true;
+              } else if (local_value == false) {
+                if (plurality_ot_culture == pop_plurality_culture[0])
+                  empty_scope = true;
+              }
+            }
+          } if (all_keys[i] == "has_primary_culture") {
+            //Whether the pop's plurality culture is a primary culture of the controller of the current province scope
+            if (ot_province.pops) {
+              var is_primary_culture = false;
+              var local_culture = main.global.cultures[pop_plurality_culture[0]];
+
+              if (local_culture)
+                is_primary_culture = (local_culture.primary_culture.includes(ot_province.controller));
+
+              if (local_value == true) {
+                if (!is_primary_culture)
+                  empty_scope = true;
+              } else if (local_value == false) {
+                if (is_primary_culture)
+                  empty_scope = true;
+              }
+            }
           } if (all_keys[i] == "has_standing_army") {
             if (local_value == true) {
               if (!hasStandingArmy(province_obj.controller))
@@ -1156,7 +1279,7 @@ module.exports = {
           } if (all_keys[i] == "homeless") {
             //Fetch homeless scope
             var local_pop_scope = selectPops({
-              province_id: options.province_id,
+              province_id: ot_province.id,
               pop_types: [options.pop_type],
 
               homeless: true
@@ -1168,7 +1291,7 @@ module.exports = {
           } if (all_keys[i] == "income") {
             //Fetch income scope
             var local_pop_scope = selectPops({
-              province_id: options.province_id,
+              province_id: ot_province.id,
               pop_types: [options.pop_type],
 
               income: local_value
@@ -1180,7 +1303,7 @@ module.exports = {
           } if (all_keys[i] == "income_less_than") {
             //Fetch income less than scope
             var local_pop_scope = selectPops({
-              province_id: options.province_id,
+              province_id: ot_province.id,
               pop_types: [options.pop_type],
 
               income_less_than: local_value
@@ -1208,7 +1331,7 @@ module.exports = {
           } if (all_keys[i] == "is_employed") {
             //Fetch is employed scope
             var local_pop_scope = selectPops({
-              province_id: options.province_id,
+              province_id: ot_province.id,
               pop_types: [options.pop_type],
 
               employed: local_value
@@ -1220,7 +1343,7 @@ module.exports = {
           } if (all_keys[i] == "is_employed_at") {
             //Fetch employment buildings scope
             var local_pop_scope = selectPops({
-              province_id: options.province_id,
+              province_id: ot_province.id,
               pop_types: [options.pop_type],
 
               building_ids: local_value
@@ -1270,6 +1393,26 @@ module.exports = {
               if (local_value == false)
                 empty_scope = true;
             }
+          } if (all_keys[i] == "median_wage_percentage") {
+            if (ot_province.id != options.province_id) {
+              var current_median_wage = getMedianWage(options.province_id);
+              var ot_median_wage = getMedianWage(ot_province.id);
+
+              var median_wage_percentage = (ot_median_wage/current_median_wage) - 1;
+
+              if (median_wage_percentage < local_value)
+                empty_scope = true;
+            }
+          } if (all_keys[i] == "median_wage_percentage_less_than") {
+            if (ot_province.id != options.province_id) {
+              var current_median_wage = getMedianWage(options.province_id);
+              var ot_median_wage = getMedianWage(ot_province.id);
+
+              var median_wage_percentage = (ot_median_wage/current_median_wage) - 1;
+
+              if (median_wage_percentage >= local_value)
+                empty_scope = true;
+            }
           } if (all_keys[i] == "no_jobs") {
             //Fetch no_jobs scope
             var has_jobs = false;
@@ -1281,7 +1424,7 @@ module.exports = {
 
             if (has_jobs) {
               var local_pop_scope = selectPops({
-                province_id: options.province_id,
+                province_id: ot_province.id,
                 pop_types: [options.pop_type]
               });
 
@@ -1302,13 +1445,13 @@ module.exports = {
               if (local_value == true)
                 if (province_obj.controller != province_obj.owner)
                   pop_scope = [parent.startsWith("any") ? "mergeObjects" : "mergePopScopes"](pop_scopes, selectPops({
-                    province_id: options.province_id,
+                    province_id: ot_province.id,
                     pop_types: [options.pop_type]
                   }));
               if (local_value == false)
                 if (province_obj.controller == province_obj.owner)
                   pop_scope = [parent.startsWith("any") ? "mergeObjects" : "mergePopScopes"](pop_scopes, selectPops({
-                    province_id: options.province_id,
+                    province_id: ot_province.id,
                     pop_types: [options.pop_type]
                   }));
             }
@@ -1324,6 +1467,16 @@ module.exports = {
             if (config.pops[pop_name])
               if (returnSafeNumber(province_obj.pops[pop_name])/province_obj.pops.population >= local_value)
                 empty_scope = true;
+          } if (all_keys[i] == "population") {
+            if (ot_province)
+              if (ot_province.pops)
+                if (ot_province.pops.population < local_value)
+                  empty_scope = true;
+          } if (all_keys[i] == "population_less_than") {
+            if (ot_province)
+              if (ot_province.pops)
+                if (ot_province.pops.population >= local_value)
+                  empty_scope = true;
           } if (all_keys[i] == "prestige") {
             if (ot_user)
               if (ot_user.modifiers.prestige < local_value)
@@ -1332,6 +1485,24 @@ module.exports = {
             if (ot_user)
               if (ot_user.modifiers.prestige >= local_value)
                 empty_scope = true;
+          } if (all_keys[i] == "promotion_chance") {
+            if (province_obj.trackers) {
+              var local_promotion_chance = getPromotionChance(ot_province.id, options.pop_type);
+
+              if (local_promotion_chance < local_value)
+                empty_scope = true;
+            } else {
+              empty_scope = true;
+            }
+          } if (all_keys[i] == "promotion_chance_less_than") {
+            if (province_obj.trackers) {
+              var local_promotion_chance = getPromotionChance(ot_province.id, options.pop_type);
+
+              if (local_promotion_chance >= local_value)
+                empty_scope = true;
+            } else {
+              empty_scope = true;
+            }
           } if (all_keys[i].startsWith("province_has_")) { //province_has_<building>
             var local_building_name = all_keys[i].replace("province_has_", "");
             var pop_scope_empty = false;
@@ -1411,12 +1582,12 @@ module.exports = {
             if (pop_scope_empty)
               empty_scope = true;
           } if (all_keys[i] == "soldiers_stationed_in_province") {
-            if (lookup.province_troop_strengths[options.province_id] < local_value)
+            if (lookup.province_troop_strengths[ot_province.id] < local_value)
               empty_scope = true;
           } if (all_keys[i] == "wealth") {
             //Fetch wealth scope
             var local_pop_scope = selectPops({
-              province_id: options.province_id,
+              province_id: ot_province.id,
               pop_types: [options.pop_type],
 
               wealth: local_value
@@ -1428,7 +1599,7 @@ module.exports = {
           } if (all_keys[i] == "wealth_less_than") {
             //Fetch wealth_less_than scope
             var local_pop_scope = selectPops({
-              province_id: options.province_id,
+              province_id: ot_province.id,
               pop_types: [options.pop_type],
 
               wealth_less_than: local_value
@@ -1444,10 +1615,9 @@ module.exports = {
             var local_max = Math.min(returnSafeNumber(scope.max), 1);
             var local_min = Math.max(returnSafeNumber(scope.min), 0);
 
-            if (all_keys[i] == "job_openings") { //[WIP] - Finish these three conditions
+            if (all_keys[i] == "job_openings") {
               var local_pop_types = (local_value.pop_type) ? getList(local_value.pop_type) : options.pop_type;
               var total_positions = getTotalPositions(ot_province.id, local_pop_types);
-
               p1_job_openings_scalar = total_positions/100000;
             } if (all_keys[i] == "pop_class") {
               var local_classes = getList(local_value);
@@ -1461,7 +1631,6 @@ module.exports = {
 
                     total_class_population += returnSafeNumber(ot_province.pops[local_pop_name]);
                   }
-
               p1_pop_class_scalar = total_class_population/100000;
             } if (all_keys[i] == "pop_type") {
               var local_pops = getList(local_value);
@@ -1470,7 +1639,6 @@ module.exports = {
               //Iterate over local_pops and get population
               for (var x = 0; x < local_pops.length; x++)
                 total_local_population += returnSafeNumber(ot_province.pops[local_pops[x]]);
-
               p1_pop_type_scalar = total_local_population/100000;
             }
 
@@ -1478,7 +1646,7 @@ module.exports = {
             if (i == all_keys.length - 1) {
               var per_scalar = p1_job_openings_scalar*p1_pop_class_scalar*p1_pop_type_scalar;
 
-              if (scope.base_value && conditions_met) {
+              if (scope.base_value) {
                 var base_scalar = Math.min(per_scalar, 1);
                 value += returnSafeNumber(scope.base_value)*base_scalar;
               }
@@ -1494,9 +1662,6 @@ module.exports = {
                   if (province_obj.buildings[x].building_type == local_value)
                     building_count++;
               pb_buildings_scalar = building_count;
-
-              if (building_count > 0)
-                conditions_met = true;
             } if (all_keys[i] == "has_building_category") {
               var local_building_category = config.buildings[local_value];
               var local_category_count = 0;
@@ -1507,16 +1672,13 @@ module.exports = {
                     if (local_building_category[province_obj.buildings[x].building_type])
                       local_category_count++;
               pb_building_category_scalar = local_category_count;
-
-              if (local_category_count > 0)
-                conditions_met = true;
             }
 
             //Add value once last key in object is processed
             if (i == all_keys.length - 1) {
               var per_scalar = pb_buildings_scalar*pb_building_category_scalar;
 
-              if (scope.base && conditions_met) {
+              if (scope.base) {
                 var base_scalar = Math.min(per_scalar, 1);
                 value += returnSafeNumber(scope.base)*base_scalar;
               }
@@ -1535,15 +1697,14 @@ module.exports = {
 
                 if (current_level <= local_max) {
                   var local_pop_scope = selectPops({
-                    province_id: options.province_id,
+                    province_id: ot_province.id,
+                    pop_scope: pop_scope,
                     pop_types: [options.pop_type],
 
                     education_level: current_level
                   });
 
                   //Add to selectors
-                  if (local_pop_scope.size > 0)
-                    conditions_met = true;
                   modifyValue(selectors, JSON.stringify(local_pop_scope), options.value);
 
                   //Break if no longer applicable
@@ -1556,7 +1717,7 @@ module.exports = {
               }
 
               //Add value since this is the last key
-              if (scope.base && conditions_met)
+              if (scope.base)
                 value += returnSafeNumber(scope.base);
             }
           } else if (parent == "per_percent" || parent.startsWith("per_percent_")) { //[WIP] - Finish iterative scope
@@ -1597,21 +1758,26 @@ module.exports = {
 
               pp_demolition_scalar = returnSafeNumber(total_demotion_chance/target_pop_scope.length, 1); //Average it out
               pp_demolition_scalar = pp_demolition_scalar/local_value; //Local value amplification
+            } if (all_keys[i] == "employment") {
+              var employment_percentage = getProvinceEmployment(ot_province.id, options.pop_type);
+              pp_employment_scalar = employment_percentage/local_value;
+            } if (all_keys[i] == "enslaved") {
+              var enslaved_percentage = getProvinceEnslavedPercentage(ot_province.id);
+              pp_enslaved_scalar = enslaved_percentage/local_value;
             } if (all_keys[i] == "education_level") {
               for (var x = 0; x < 100; x++) { //Break iteration after 100 times (max step)
                 var current_level = local_min + x/100;
 
                 if (current_level <= local_max) {
                   var local_pop_scope = selectPops({
-                    province_id: options.province_id,
+                    province_id: ot_province.id,
+                    pop_scope: pop_scope,
                     pop_types: target_pop_scope,
 
                     education_level: current_level
                   });
 
                   //Add to selectors
-                  if (local_pop_scope.size > 0)
-                    conditions_met = true;
                   modifyValue(selectors, JSON.stringify(local_pop_scope), options.value);
 
                   //Break if no longer applicable
@@ -1629,21 +1795,20 @@ module.exports = {
 
               if (is_needs_category)
                 for (var x = 0; x < target_pop_scope.length; x++) {
-                  for (var y = 0; y < 100; y++) { //Breka iteration after 100 times (max step)
+                  for (var y = 0; y < 100; y++) { //Break iteration after 100 times (max step)
                     var current_level = local_min + (local_value*y);
 
                     if (current_level <= local_max) {
                       var local_pop_scope = selectPops({
-                        province_id: options.province_id,
-                        pop_types: [target_pop_scope[y]],
+                        province_id: ot_province.id,
+                        pop_scope: pop_scope,
+                        pop_types: [target_pop_scope[x]],
 
                         [all_keys[i]]: current_level
                       });
 
                       //Add to selectors
-                      if (local_pop_scope.size > 0)
-                        conditions_met = true;
-                      modifyValue(selectors, JSON.stringify(local_pop_scope), options.value);
+                      modifyValue(selectors, JSON.stringify(local_pop_scope), scope.value);
 
                       //Break if no longer applicable
                       if (local_pop_scope.size == 0)
@@ -1654,18 +1819,82 @@ module.exports = {
                     }
                   }
                 }
+            } if (all_keys[i].startsWith("has_")) { //has_<needs_category>_variety
+              var target_category_name = all_keys[i].replace("has_", "").replace("_variety", "");
+
+              var is_needs_category = (lookup.all_pop_needs_categories[target_category_name]);
+
+              if (is_needs_category)
+                for (var x = 0; x < target_pop_scope.length; x++) {
+                  for (var y = 0; y < 100; y++) { //Break iteration after 100 times (max step)
+                    var current_level = local_min + (local_value*y);
+
+                    if (current_level <= local_max) {
+                      var local_pop_scope = selectPops({
+                        province_id: ot_province.id,
+                        pop_scope: pop_scope,
+                        pop_types: [target_pop_scope[x]],
+
+                        [all_keys[i]]: current_level
+                      });
+
+                      //Add to selectors
+                      modifyValue(selectors, JSON.stringify(local_pop_scope), scope.value);
+
+                      //Break if no longer applicable
+                      if (local_pop_scope.size == 0)
+                        break;
+                      //Error handler
+                      if (y == 100)
+                        log.debug(`[ERROR] Handler within per_percent.has_<needs_category> scope - iterative broke.`);
+                    }
+                  }
+                }
+            } if (all_keys[i] == "has_pop_plurality_culture") {
+              for (var x = 0; x < target_pop_scope.length; x++) {
+                var local_pop_scope = selectPops({
+                  province_id: ot_province.id,
+                  pop_scope: pop_scope,
+                  pop_types: [target_pop_scope[x]],
+
+                  culture: [pop_plurality_culture[0]]
+                });
+
+                if (local_pop_scope.size > 0)
+                  modifyValue(selectors, JSON.stringify(local_pop_scope), scope.value);
+              }
+            } if (all_keys[i] == "has_primary_culture") {
+              var local_majority_culture = getMajorityCulture(ot_province.id, { return_key: true });
+
+              for (var x = 0; x < target_pop_scope.length; x++) {
+                var local_pop_scope = selectPops({
+                  province_id: ot_province.id,
+                  pop_scope: pop_scope,
+                  pop_types: [target_pop_scope[x]],
+
+                  culture: [local_majority_culture]
+                });
+
+                if (local_pop_scope.size > 0)
+                  modifyValue(selectors, JSON.stringify(local_pop_scope), scope.value);
+              }
             } if (all_keys[i] == "living_wage_job_openings") {
               var total_living_wage_openings = 0;
 
               for (var x = 0; x < target_pop_scope.length; x++) {
-                var living_wage_job_openings = getJobOpenings(options.province_id, target_pop_scope[x], { living_wage: true });
+                var living_wage_job_openings = getJobOpenings(ot_province.id, target_pop_scope[x], { living_wage: true });
 
-                if (living_wage_job_openings >= local_value)
-                  conditions_met = true;
                 total_living_wage_openings += returnSafeNumber(living_wage_job_openings);
               }
 
               pp_living_wage_job_openings_scalar = returnSafeNumber(total_living_wage_openings/local_value);
+            } if (all_keys[i] == "median_wage_percentage") {
+              if (options.province_id != ot_province.id) {
+                var current_median_wage = getTotalMedianWage(options.province_id, target_pop_scope);
+                var ot_median_wage = getTotalMedianWage(ot_province.id, target_pop_scope);
+
+                pp_median_wage_percentage_scalar = ((returnSafeNumber(current_median_wage)/returnSafeNumber(ot_median_wage)) - 1)/local_value;
+              }
             } if (all_keys[i] == "promotion_chance") {
               var total_promotion_chance = 0;
 
@@ -1685,7 +1914,7 @@ module.exports = {
               //Apply max to percentage_scalar
               percentage_scalar = Math.min(percentage_scalar, local_max);
 
-              if (scope.base && conditions_met) {
+              if (scope.base) {
                 var base_scalar = Math.min(per_scalar, 1);
                 value += returnSafeNumber(scope.base)*base_scalar;
               }
@@ -1693,31 +1922,45 @@ module.exports = {
                 value += returnSafeNumber(scope.value)*percentage_scalar;
             }
           } else {
-            if (all_keys[i] == "living_wage_job_openings") {
-              var living_wage_job_openings = getJobOpenings(options.province_id, options.pop_type, { living_wage: true });
-              p_living_wage_job_openings_scalar = living_wage_job_openings/local_value;
+            if (all_keys[i] == "available_housing") {
+              var province_housing = returnSafeNumber(ot_province.housing) - ot_province.pops.population;
 
-              if (living_wage_job_openings >= local_value)
-                conditions_met = true;
+              p_available_housing_scalar = province_housing/local_value;
+            } if (config.buildings[all_keys[i]]) { //<building_category>
+              //Iterate over ot_province.buildings and check
+              var local_building_category = config.buildings[all_keys[i]];
+              var total_category_buildings = 0;
+
+              if (ot_province.buildings)
+                for (var x = 0; x < ot_province.buildings.length; x++)
+                  if (local_building_category[ot_province.buildings[x].building_type])
+                    total_category_buildings++;
+
+              p_building_categories_scalar += total_category_buildings/local_value;
+            } if (all_keys[i] == "living_wage_job_openings") {
+              var living_wage_job_openings = getJobOpenings(ot_province.id, options.pop_type, { living_wage: true });
+              p_living_wage_job_openings_scalar = (living_wage_job_openings/local_value);
+            } if (all_keys[i] == "population") {
+              p_population_scalar = ot_province.pops.population/local_value;
+            } if (all_keys[i] == "prestige") {
+              p_prestige_scalar = ot_user.modifiers.prestige/local_value;
             } if (all_keys[i] == "soldiers_stationed_in_province") {
-              var soldiers_in_province = lookup.province_troop_strengths[options.province_id];
+              var soldiers_in_province = lookup.province_troop_strengths[ot_province.id];
               soldiers_in_province_scalar = soldiers_in_province/local_value;
-
-              if (soldiers_in_province >= local_value)
-                conditions_met = true;
+            } if (all_keys[i] == "supply_limit") {
+              p_supply_limit_scalar = returnSafeNumber(ot_province.supply_limit, config.defines.combat.base_supply_limit)/local_value;
             } if (all_keys[i] == "wealth") {
               if (options.value)
                 for (var x = 0; x < 1000; x++) { //Break iteration after 1000 times
                   var local_pop_scope = selectPops({
-                    province_id: options.province_id,
+                    province_id: ot_province.id,
+                    pop_scope: pop_scope,
                     pop_types: [options.pop_type],
 
                     wealth: local_value*(x + 1)
                   });
 
                   //Add to selectors
-                  if (local_pop_scope.size > 0)
-                    conditions_met = true;
                   modifyValue(selectors, JSON.stringify(local_pop_scope), options.value);
 
                   //Break if no longer applicable
@@ -1731,9 +1974,9 @@ module.exports = {
 
             //Add value once last key in object is processed
             if (i == all_keys.length - 1) {
-              var per_scalar = p_living_wage_job_openings_scalar*p_soldiers_in_province_scalar;
+              var per_scalar = p_available_housing_scalar*p_building_categories_scalar*p_living_wage_job_openings_scalar*p_soldiers_in_province_scalar*p_population_scalar*p_prestige_scalar*p_supply_limit_scalar;
 
-              if (scope.base && conditions_met) {
+              if (scope.base) {
                 var base_scalar = Math.min(per_scalar, 1);
                 value += returnSafeNumber(scope.base)*base_scalar;
               }
@@ -1746,7 +1989,7 @@ module.exports = {
         //Empty scope handler
         if (empty_scope) {
           pop_scope = selectPops({
-            province_id: options.province_id,
+            province_id: ot_province.id,
             pop_types: [options.pop_type],
 
             empty: true
@@ -1778,7 +2021,6 @@ module.exports = {
     //Return statement
     return {
       selectors: selectors,
-      boolean: conditions_met,
       value: value,
 
       pop_scope: pop_scope
