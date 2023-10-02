@@ -32,9 +32,13 @@ module.exports = {
       good_types: getGoodTypes(),
 
       building_category: getBuildingsToCategoryMap(),
+
       category_buy_prices: getCategoryPrices("buy"),
       category_sell_prices: getCategoryPrices("sell"),
+      staple_goods_utilities: getNeedsUtilities({ staple_goods: true }),
+      luxury_goods_utilities: getNeedsUtilities(),
 
+      province_migration_attraction: updateMigrationAttraction(),
       province_troop_strengths: {}
     };
 

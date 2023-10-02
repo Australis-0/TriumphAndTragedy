@@ -1,5 +1,5 @@
 config.pop_migration = {
-  country_selection: {
+  country_selection: { //[WIP] - Implement in future
     add_chance_superpower: {
       limit: {
         has_rank: "superpower"

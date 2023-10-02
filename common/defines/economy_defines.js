@@ -108,7 +108,10 @@ config.defines.economy = {
       marginal_utility: 7
     }
   },
+  other_sol: 0.50, //Other factors SOL %
   staple_goods_categories: ["staple_goods"],
+  staple_sol: 0.20, //Staple Goods SOL %
+  luxury_sol: 0.30, //Luxury Goods SOL %
 
   //Pop Behaviour
   cultural_minority_display: 0.20, //The percentage a minority should comprise before being displayed in mainline headers

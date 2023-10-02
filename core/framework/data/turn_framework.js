@@ -275,10 +275,14 @@ module.exports = {
 
     //Optimisation processing
     {
+      //Combat
       lookup.province_troop_strengths = {};
 
       for (var i = 0; i < all_provinces.length; i++)
         lookup.province_troop_strengths[all_provinces[i]] = returnSafeNumber(getTroopsInProvince(all_provinces[i]));
+
+      //Economy/Pops
+      updateMigrationAttraction();
     }
 
     //World Market Up-Logic

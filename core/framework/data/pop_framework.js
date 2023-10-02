@@ -599,6 +599,34 @@ module.exports = {
     return military_pop_types;
   },
 
+  getNeedsCategoryTotalUtility: function (arg0_needs_category) {
+    //Convert from parameters
+    var needs_category = arg0_needs_category;
+
+    //Declare local instance variables
+    var all_needs_category_keys = Object.keys(needs_category);
+    var total_utility = 0;
+
+    //Iterate over all_needs_category_keys
+    for (var i = 0; i < all_needs_category_keys.length; i++) {
+      var local_subobj = needs_category[all_needs_category_keys[i]];
+
+      if (typeof local_subobj == "object") {
+        var all_group_goods = Object.keys(local_subobj);
+
+        for (var x = 0; x < all_group_goods.length; x++) {
+          var local_define = config.defines.economy.good_categories[lookup.good_types[all_group_goods[x]]];
+          var local_value = local_subobj[all_group_goods[x]];
+
+          total_utility += local_define.marginal_utility*local_value;
+        }
+      }
+    }
+
+    //Return statement
+    return total_utility;
+  },
+
   //Updates config.pops with a new needs_importance object for buying order reference
   getNeedsImportance: function () {
     //Declare local instance variables
@@ -724,6 +752,68 @@ module.exports = {
             local_pop.buy_order = actual_importances;
         }
     }
+  },
+
+  /*
+    getNeedsTotalUtility() - Gets the total utility of a pop type.
+    options: {
+      staple_goods: true/false - Whether to restrict the scope to staple goods. All non-staple goods by default
+    }
+  */
+  getNeedsTotalUtility: function (arg0_pop_type, arg1_options) {
+    //Convert from parameters
+    var pop_type = arg0_pop_type;
+    var options = (arg1_options) ? arg1_options : {};
+
+    //Declare local instance variables
+    var pop_obj = config.pops[pop_type];
+    var total_utility = 0;
+
+    //Check if pop_obj.per_100k.needs exists
+    if (pop_obj)
+      if (pop_obj.per_100k)
+        if (pop_obj.per_100k.needs) {
+          var all_needs_categories = Object.keys(pop_obj.per_100k.needs);
+
+          //Iterate over all_needs_categories
+          for (var i = 0; i < all_needs_categories.length; i++) {
+            var is_staple = (config.defines.economy.staple_goods_categories.includes(all_needs_categories[i]));
+            var local_value = pop_obj.per_100k.needs[all_needs_categories[i]];
+
+            if (options.staple_goods) {
+              if (is_staple)
+                total_utility += module.exports.getNeedsCategoryTotalUtility(local_value);
+            } else {
+              if (!is_staple)
+                total_utility += module.exports.getNeedsCategoryTotalUtility(local_value);
+            }
+          }
+        }
+
+    //Return statement
+    return total_utility;
+  },
+
+  /*
+    getNeedsUtilities() - Generates a total utility map of all pops for the relevant needs supercategory.
+    options: {
+      staple_goods: true/false - Whether to restrict the scope to staple-goods. All non-staple goods by default
+    }
+  */
+  getNeedsUtilities: function (arg0_options) {
+    //Convert from parameters
+    var options = (arg0_options) ? arg0_options : {};
+
+    //Declare local instance variables
+    var all_pops = Object.keys(config.pops);
+    var utility_obj = {};
+
+    //Iterate over all_pops
+    for (var i = 0; i < all_pops.length; i++)
+      modifyValue(utility_obj, all_pops[i], module.exports.getNeedsTotalUtility(all_pops[i], options));
+
+    //Return statement
+    return utility_obj;
   },
 
   getPopClasses: function () { //[WIP] - Finish function body
@@ -1282,6 +1372,22 @@ module.exports = {
     return (province_obj.pops) ? total_employed/province_obj.pops.population : 0;
   },
 
+  getProvinceSOL: function (arg0_province_id, arg1_pop_types) {
+    //Convert from parameters
+    var province_id = arg0_province_id;
+    var pop_types = (arg1_pop_types) ? getList(arg1_pop_types) : Object.keys(config.pops);
+
+    //Declare local instance variables
+    var pop_scope = module.exports.selectPops({
+      province_id: province_id,
+      pop_types: pop_types
+    });
+    var sol = module.exports.getSOL(pop_scope);
+
+    //Return statement
+    return sol;
+  },
+
   getProvinceWealth: function (arg0_province_id, arg1_pop_types) {
     //Convert from parameters
     var province_id = arg0_province_id;
@@ -1342,6 +1448,51 @@ module.exports = {
 
     //Return statement
     return relevant_pops;
+  },
+
+  //getSOL() - Fetches total standard of living for a pop based on the total utility of the fulfilled needs of pops +50% other factors (standardised to 0-100%)
+  getSOL: function (arg0_pop_scope) { //[WIP] - Finish function body
+    //Convert from parameters
+    var pop_scope = arg0_pop_scope;
+
+    //Declare local instance variables
+    var all_pop_scope_keys = Object.keys(pop_scope);
+    var other_utility = 0; //Housing, etc.
+    var province_obj = main.provinces[pop_scope.province_id];
+    var total_luxury_categories = 0;
+    var total_luxury_utility = 0;
+    var total_staple_categories = 0;
+    var total_staple_utility = 0;
+
+    //Declare local scalars
+    var housing_scalar = returnSafeNumber(province_obj.housing)/province_obj.pops.population; //[WIP] - Revisit in future
+
+    //Iterate over all_pop_scope_keys
+    for (var i = 0; i < all_pop_scope_keys.length; i++)
+      if (all_pop_scope_keys[i].endsWith("-fulfilment")) {
+        var local_category_name = all_pop_scope_keys[i].replace("-fulfilment", "");
+        var local_value = pop_scope[all_pop_scope_keys[i]];
+
+        var is_staple = (config.defines.economy.staple_goods_categories.includes(local_category_name));
+
+        if (is_staple) {
+          total_staple_categories++;
+          total_staple_utility += local_value;
+        } else {
+          total_luxury_categories++;
+          total_luxury_utility += local_value;
+        }
+      }
+
+    total_staple_utility = total_staple_utility/total_staple_categories;
+    total_luxury_utility = total_luxury_utility/total_luxury_categories;
+
+    other_utility = housing_scalar;
+
+    //Return statement
+    return total_staple_utility*config.defines.economy.staple_sol +
+      total_luxury_utility*config.defines.economy.luxury_sol +
+      other_utility*config.defines.economy.other_sol;
   },
 
   getTotalActiveDuty: function (arg0_user) {
@@ -1675,6 +1826,36 @@ module.exports = {
     }
   },
 
+  multiplyPops: function (arg0_pop_scope, arg1_amount) {
+    //Convert from parameters
+    var pop_scope = arg0_pop_scope;
+    var amount = arg1_amount;
+
+    //Declare local instance variables
+    var all_pop_scope_tags = Object.keys(pop_scope.tags);
+    var province_population = main.provinces[pop_scope.province_id].pops.population;
+
+    if (pop_scope.size > 0) {
+      var max_amount = (province_population/pop_scope.size);
+
+      amount = Math.min(amount, max_amount);
+
+      pop_scope.size = Math.min(Math.ceil(pop_scope.size*amount), province_population);
+      pop_scope.income = Math.ceil(pop_scope.income*amount);
+      pop_scope.wealth = Math.ceil(pop_scope.wealth*amount);
+
+      //Iterate over all_pop_scope_tags
+      for (var i = 0; i < all_pop_scope_tags.length; i++) {
+        var local_value = pop_scope.tags[all_pop_scope_tags[i]];
+
+        pop_scope.tags[all_pop_scope_tags[i]] = Math.ceil(local_value*amount);
+      }
+    }
+
+    //Return statement
+    return pop_scope;
+  },
+
   parsePops: function () {
     //Declare local instance variables
     var all_pops = Object.keys(config.pops);
@@ -1823,6 +2004,35 @@ module.exports = {
           sorted_wage_obj: options.sorted_wage_obj,
           unemployed_pops: unemployed_pops
         });
+      }
+    }
+
+    //Pop Migration
+    {
+      //Get external migration chance
+      var external_migration_chance = parsePopLimit(config.pop_migration.external_emigration, {
+        pop_scope: pop_scope,
+        province_id: province_id
+      });
+
+      //Get internal migration chance
+      var internal_migration_chance = parsePopLimit(config.pop_migration.internal_emigration, {
+        pop_scope: pop_scope,
+        province_id: province_id
+      });
+
+      //Apply external migration; internal migration to various pop scopes /2
+      var internal_migration_scopes = [];
+
+      for (var i = 0; i < external_migration_chance.selectors.length; i++) {
+        var local_value = external_migration_chance.selectors[i];
+
+        if (local_value[1] >= 0) {
+          var local_chance = local_value[1]/2;
+          var local_pop_scope = multiplyPops(local_value[0], local_chance);
+
+          internal_migration_scopes.push(local_pop_scope, local_chance);
+        }
       }
     }
 
@@ -2716,5 +2926,32 @@ module.exports = {
 
     //Return statement
     return current_scope;
+  },
+
+  updateMigrationAttraction: function () {
+    //Declare local instance variables
+    var all_provinces = Object.keys(main.provinces);
+    var all_users = Object.keys(main.users);
+    var migration_attraction = {};
+
+    for (var i = 0; i < all_provinces.length; i++) {
+      var local_province = main.provinces[all_provinces[i]];
+
+      if (local_province.controller) {
+        var local_migration_attraction = parseLimit(config.pop_migration.province_selection, {
+          scope: ["province", all_provinces[i]]
+        });
+
+        modifyValue(migration_attraction, all_provinces[i], returnSafeNumber(local_migration_attraction.value));
+      } else {
+        modifyValue(migration_attraction, all_provinces[i], 0);
+      }
+    }
+
+    migration_attraction = standardisePercentage(sortObject(migration_attraction));
+    lookup.province_migration_attraction = migration_attraction;
+
+    //Return statement
+    return migration_attraction;
   }
 };
