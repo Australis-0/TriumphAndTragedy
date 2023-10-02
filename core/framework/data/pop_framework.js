@@ -1202,6 +1202,32 @@ module.exports = {
     return education_obj;
   },
 
+  getProvinceEducationLevel: function (arg0_province_id) {
+    //Convert from parameters
+    var province_id = arg0_province_id;
+
+    //Declare local instance variables
+    var province_obj = main.provinces[province_id];
+    var weighted_total = 0;
+
+    if (province_obj)
+      if (province_obj.pops) {
+        var all_pop_keys = Object.keys(province_obj.pops);
+
+        for (var i = 0; i < all_pop_keys.length; i++)
+          if (all_pop_keys[i].startsWith("el_")) {
+            var local_education_level = parseInt(all_pop_keys[i].replace("el_", ""));
+            var local_value = province_obj.pops[all_pop_keys[i]];
+
+            if (!isNaN(local_education_level))
+              weighted_total += (local_education_level/100)*local_value;
+          }
+      }
+
+    //Return statement
+    return weighted_total/province_obj.pops.population;
+  },
+
   //getProvinceEmployees() - Returns the total number of employed pops in a province
   getProvinceEmployees: function (arg0_province_id, arg1_pop_types) { //[WIP] - Finish province employment
     //Convert from parameters
@@ -1254,6 +1280,35 @@ module.exports = {
 
     //Return statement
     return (province_obj.pops) ? total_employed/province_obj.pops.population : 0;
+  },
+
+  getProvinceWealth: function (arg0_province_id, arg1_pop_types) {
+    //Convert from parameters
+    var province_id = arg0_province_id;
+    var pop_types = (arg1_pop_types) ? getList(arg1_pop_types) : Object.keys(config.pops);
+
+    //Declare local instance variables
+    var wealth = 0;
+    var province_obj = main.provinces[province_id];
+
+    if (province_obj)
+      if (province_obj.pops) {
+        var all_pop_keys = Object.keys(province_obj.pops);
+
+        for (var i = 0; i < all_pop_keys.length; i++)
+          if (all_pop_keys[i].startsWith("wealth-")) {
+            var split_key = all_pop_keys[i].split("-");
+
+            if (pop_types.includes(split_key[2])) {
+              var local_wealth_pool = province_obj.pops[all_pop_keys[i]];
+
+              wealth += returnSafeNumber(local_wealth_pool.wealth);
+            }
+          }
+      }
+
+    //Return statement
+    return wealth;
   },
 
   //getRelevantPops() - Returns an array of all pop keys with more than 0 population in a player country
