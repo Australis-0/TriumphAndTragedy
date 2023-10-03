@@ -1957,6 +1957,12 @@ module.exports = {
     });
     var province_obj = main.provinces[province_id];
 
+    var external_migration_table = lookup.province_migration_attraction;
+    var internal_migration_table = lookup[`${province_obj.controller}-migration_attraction`];
+
+    var all_external_provinces = Object.keys(external_migration_table);
+    var all_internal_provinces = Object.keys(internal_migration_table);
+
     //Initialise variables
     {
       if (config_obj.demotes_to) has_demotes = true;
@@ -2021,11 +2027,11 @@ module.exports = {
         province_id: province_id
       });
 
-      //Apply external migration; internal migration to various pop scopes /2
+      //Apply internal migration to various pop scopes /2
       var internal_migration_scopes = [];
 
-      for (var i = 0; i < external_migration_chance.selectors.length; i++) {
-        var local_value = external_migration_chance.selectors[i];
+      for (var i = 0; i < internal_migration_chance.selectors.length; i++) {
+        var local_value = internal_migration_chance.selectors[i];
 
         if (local_value[1] >= 0) {
           var local_chance = local_value[1]/2;
@@ -2034,6 +2040,14 @@ module.exports = {
           internal_migration_scopes.push(local_pop_scope, local_chance);
         }
       }
+
+      //internal_migration_scopes is now the total amount of people that want to move out, transfer pops proportionally to internal provinces
+      for (var i = 0; i < all_internal_provinces.length; i++) {
+        
+      }
+
+      //Apply external migration to various pop scopes /2
+      var external_migration_scopes = [];
     }
 
     //Pop Promotion/Demotion - [WIP] - Make it so that promotion/demotion can occur between classes if promotion/demotion is otherwise unspecified.
@@ -2932,6 +2946,7 @@ module.exports = {
     //Declare local instance variables
     var all_provinces = Object.keys(main.provinces);
     var all_users = Object.keys(main.users);
+    var dynamic_tables = {};
     var migration_attraction = {};
 
     for (var i = 0; i < all_provinces.length; i++) {
@@ -2942,13 +2957,52 @@ module.exports = {
           scope: ["province", all_provinces[i]]
         });
 
-        modifyValue(migration_attraction, all_provinces[i], returnSafeNumber(local_migration_attraction.value));
-      } else {
-        modifyValue(migration_attraction, all_provinces[i], 0);
+        if (local_migration_attraction.value > 0)
+          modifyValue(migration_attraction, all_provinces[i], returnSafeNumber(local_migration_attraction.value));
       }
     }
 
-    migration_attraction = standardisePercentage(sortObject(migration_attraction));
+    migration_attraction = sortObject(migration_attraction);
+    var all_migration_attraction = Object.keys(migration_attraction);
+
+    //Iterate over all_users to fetch internal migration attraction
+    for (var i = 0; i < all_users.length; i++)
+      dynamic_tables[`${all_users[i]}-migration_attraction`] = {};
+
+    //Iterate over all_migration_attraction; append each province dependent on control to dynamic_tables
+    for (var i = 0; i < all_migration_attraction.length; i++) {
+      var local_province = main.provinces[all_migration_attraction[i]];
+      var local_value = migration_attraction[all_migration_attraction[i]];
+
+      if (local_province.controller)
+        dynamic_tables[`${local_province.controller}-migration_attraction`][local_province.id] = local_value;
+    }
+
+    //Standardise everything in dynamic_tables to 100%
+    for (var i = 0; i < all_users.length; i++) {
+      var local_key = `${all_users[i]}-migration_attraction`;
+      var local_value = dynamic_tables[local_key];
+
+      dynamic_tables[local_key] = sortObject(local_value);
+      var new_dynamic_table = dynamic_tables[local_key];
+
+      //Truncate dynamic tables at config.defines.economy.migration_provinces
+      var all_internal_keys = Object.keys(new_dynamic_table);
+
+      if (all_internal_keys.length > config.defines.economy.migration_provinces)
+        for (var x = config.defines.economy.migration_provinces; x < all_internal_keys.length; x++)
+          delete dynamic_tables[local_key][all_internal_keys[x]];
+
+      //Add dynamic tables to lookup
+      lookup[local_key] = dynamic_tables[local_key];
+    }
+
+    //Truncate migration_attraction at config.defines.economy.migration_provinces
+    if (all_migration_attraction.length > config.defines.economy.migration_provinces)
+      for (var i = config.defines.economy.migration_provinces; i < all_migration_attraction.length; i++)
+        delete migration_attraction[all_migration_attraction[i]];
+
+    migration_attraction = standardisePercentage(migration_attraction);
     lookup.province_migration_attraction = migration_attraction;
 
     //Return statement

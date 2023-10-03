@@ -38,8 +38,14 @@ module.exports = {
       staple_goods_utilities: getNeedsUtilities({ staple_goods: true }),
       luxury_goods_utilities: getNeedsUtilities(),
 
-      province_migration_attraction: updateMigrationAttraction(),
-      province_troop_strengths: {}
+      province_controllers: {},
+      province_migration_attraction: {},
+      province_owners: {},
+      province_troop_strengths: {},
+
+      /* Dynamic tables:
+        <user_id>-migration_attraction: {}
+      */
     };
 
     //Process config
@@ -74,6 +80,17 @@ module.exports = {
 
         for (var i = 0; i < lookup.all_pop_needs_categories.length; i++)
           lookup[lookup.all_pop_needs_categories[i]] = getNeedsCategory(lookup.all_pop_needs_categories[i]);
+      }
+
+      //User processing
+      {
+        updateControl();
+        updateOwnership();
+      }
+
+      //Post-user processing - KEEP AT BOTTOM!
+      {
+        updateMigrationAttraction();
       }
     }
 

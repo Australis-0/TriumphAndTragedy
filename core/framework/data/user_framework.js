@@ -1310,5 +1310,53 @@ module.exports = {
       //Change province colour
       setAllProvinceColours(options.target, options.province_id);
     }
+  },
+
+  updateControl: function () {
+    //Declare local instance variables
+    var all_provinces = Object.keys(main.provinces);
+    var all_users = Object.keys(main.users);
+    var control_obj = {};
+
+    //Initialise control_obj
+    for (var i = 0; i < all_users.length; i++)
+      control_obj[all_users[i]] = [];
+
+    //Iterate over all_provinces
+    for (var i = 0; i < all_provinces.length; i++) {
+      var local_province = main.provinces[all_provinces[i]];
+
+      if (local_province.controller)
+        control_obj[local_province.controller].push(all_provinces[i]);
+    }
+
+    lookup.province_controllers = control_obj;
+
+    //Return statement
+    return control_obj;
+  },
+
+  updateOwnership: function () {
+    //Declare local instance variables
+    var all_provinces = Object.keys(main.provinces);
+    var all_users = Object.keys(main.users);
+    var owner_obj = {};
+
+    //Initialise owner_obj
+    for (var i = 0; i < all_users.length; i++)
+      owner_obj[all_users[i]] = [];
+
+    //Iterate over all_provinces
+    for (var i = 0; i < all_provinces.length; i++) {
+      var local_province = main.provinces[all_provinces[i]];
+
+      if (local_province.owner)
+        owner_obj[local_province.owner].push(all_provinces[i]);
+    }
+
+    lookup.province_owners = owner_obj;
+
+    //Return statement
+    return owner_obj;
   }
 };

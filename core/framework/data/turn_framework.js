@@ -273,16 +273,13 @@ module.exports = {
       }
     }
 
-    //Optimisation processing
+    //Optimisation processing (Up-Logic)
     {
       //Combat
       lookup.province_troop_strengths = {};
 
       for (var i = 0; i < all_provinces.length; i++)
         lookup.province_troop_strengths[all_provinces[i]] = returnSafeNumber(getTroopsInProvince(all_provinces[i]));
-
-      //Economy/Pops
-      updateMigrationAttraction();
     }
 
     //World Market Up-Logic
@@ -410,6 +407,16 @@ module.exports = {
       //Set lookup tables for category_buy_prices and category_sell_prices
       lookup.category_buy_prices = getCategoryPrices("buy");
       lookup.category_sell_prices = getCategoryPrices("sell");
+    }
+
+    //Optimisation processing (Down-Logic)
+    {
+      //Initialisation
+      updateControl();
+      updateOwnership();
+
+      //Economy/Pops
+      updateMigrationAttraction();
     }
 
     //Force render all maps
