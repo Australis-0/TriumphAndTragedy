@@ -5,6 +5,7 @@ module.exports = {
       building_good_keys: ["cost", "maintenance", "production"],
       goods: ["aliases", "name", "icon", "id", "type"],
       pop_needs_order: ["staple_goods", "luxury_goods"],
+      pop_scope_sum_keys: ["size", "wealth", "tags"],
       production_choice: ["aliases", "name", "icon"],
       unit_good_keys: ["cost", "maintenance"]
     };
@@ -44,6 +45,7 @@ module.exports = {
       province_troop_strengths: {},
 
       /* Dynamic tables:
+        <user_id>-external_migration_attraction: {},
         <user_id>-migration_attraction: {}
       */
     };
