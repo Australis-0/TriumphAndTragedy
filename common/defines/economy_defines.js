@@ -108,6 +108,7 @@ config.defines.economy = {
       marginal_utility: 7
     }
   },
+  old_age_limit: 100, //When do old people kick the bucket in the simulation if not already dead?
   other_sol: 0.50, //Other factors SOL %
   staple_goods_categories: ["staple_goods"],
   staple_sol: 0.20, //Staple Goods SOL %
