@@ -108,16 +108,19 @@ config.defines.economy = {
       marginal_utility: 7
     }
   },
-  old_age_limit: 100, //When do old people kick the bucket in the simulation if not already dead?
   other_sol: 0.50, //Other factors SOL %
   staple_goods_categories: ["staple_goods"],
   staple_sol: 0.20, //Staple Goods SOL %
   luxury_sol: 0.30, //Luxury Goods SOL %
 
-  //Pop Behaviour
+  //Pops
   cultural_minority_display: 0.20, //The percentage a minority should comprise before being displayed in mainline headers
   job_seeking_range: [0.75, 1], //The range of wages pops seek, where 1 is the building with the highest wage in a province
   strict_job_seeking: false, //Whether pops will refuse to seek jobs lower than a specific % of comparable wages in a province
+
+    //Pop Life Expectancy
+    old_age_lower_upper_bound: 40, //When people naturally kick the bucket as an upper mortality bracket at game start
+    old_age_hard_upper_bound: 100, //When do old people kick the bucket in the simulation if not already dead?
 
     //Pop Migration Behaviour
     additional_province_emigration_cost: 50, //Added cost per province travelled

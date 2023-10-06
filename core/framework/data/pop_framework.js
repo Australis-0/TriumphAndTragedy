@@ -116,7 +116,7 @@ module.exports = {
         //Distribute age
         if (options.age) {
           var current_year = main.date.year;
-          var max = returnSafeNumber(options.age.max, config.defines.economy.old_age_limit);
+          var max = returnSafeNumber(options.age.max, config.defines.economy.old_age_hard_upper_bound);
           var min = returnSafeNumber(options.age.min, 0);
 
           var domain = Math.abs(max - min);
@@ -681,6 +681,9 @@ module.exports = {
     var all_needs_category_keys = Object.keys(needs_category);
     var total_utility = 0;
 
+    if (!lookup.good_types)
+      lookup.good_types = getGoodTypes();
+
     //Iterate over all_needs_category_keys
     for (var i = 0; i < all_needs_category_keys.length; i++) {
       var local_subobj = needs_category[all_needs_category_keys[i]];
@@ -692,7 +695,8 @@ module.exports = {
           var local_define = config.defines.economy.good_categories[lookup.good_types[all_group_goods[x]]];
           var local_value = local_subobj[all_group_goods[x]];
 
-          total_utility += local_define.marginal_utility*local_value;
+          if (local_define)
+            total_utility += local_define.marginal_utility*local_value;
         }
       }
     }
@@ -890,7 +894,7 @@ module.exports = {
     return utility_obj;
   },
 
-  getPopClasses: function () { //[WIP] - Finish function body
+  getPopClasses: function () {
     //Declare local instance variables
     var all_pops = Object.keys(config.pops);
     var class_obj = {};
@@ -900,7 +904,7 @@ module.exports = {
       var local_pop = config.pops[all_pops[i]];
 
       if (local_pop.class) {
-        if (!class_obj[local_pop.class]) class_obj[local_pop.class] = {};
+        if (!class_obj[local_pop.class]) class_obj[local_pop.class] = [];
         class_obj[local_pop.class].push(local_pop.class);
       }
     }

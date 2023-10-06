@@ -478,8 +478,12 @@ module.exports = {
     var failed_checks = 0;
     var parent = options.parents[options.parents.length - 1];
     var province_obj = (options.scope[0] == "province") ? main.provinces[options.scope[1]] : undefined;
+    var selectors = [];
     var usr = (province_obj) ? main.users[province_obj.controller] : main.users[options.scope[1]];
     var value = 0;
+
+    //Undefined handlers
+    if (!parent) parent = "";
 
     //Declare scalars for iterative scopes
     {
@@ -848,7 +852,7 @@ module.exports = {
     }
 
     //Dserialise selectors if no parents; add base selector to top
-    if (parents.length == 0) {
+    if (options.parents.length == 0) {
       var all_selector_keys = Object.keys(selectors);
       var new_selectors = [];
 

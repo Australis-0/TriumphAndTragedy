@@ -1,0 +1,6 @@
+config.births = {
+
+};
+config.deaths = {
+
+};

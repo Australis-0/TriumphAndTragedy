@@ -336,10 +336,8 @@ module.exports = {
     for (var i = 0; i < all_goods.length; i++) {
       var local_good = goods_obj[all_goods[i]];
 
-      if (local_good.type) {
-        if (!good_type_obj[local_good.type]) good_type_obj[local_good.type] = [];
-          good_type_obj[local_good.type].push(local_good.type);
-      }
+      if (local_good.type)
+        good_type_obj[all_goods[i]] = local_good.type;
     }
 
     //Return statement
