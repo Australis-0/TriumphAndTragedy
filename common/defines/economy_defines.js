@@ -118,7 +118,13 @@ config.defines.economy = {
   job_seeking_range: [0.75, 1], //The range of wages pops seek, where 1 is the building with the highest wage in a province
   strict_job_seeking: false, //Whether pops will refuse to seek jobs lower than a specific % of comparable wages in a province
 
-    //Pop Life Expectancy
+    //Pop Births
+    fertility_age_lower_bound: 15, //When does fertility begin as a lower bound?
+    fertility_age_upper_bound: 45, //When does most fertility stop as an upper bound?
+
+    //Pop Deaths
+    soldier_age_lower_bound: 18, //The assumed lower bound for how old soldier pops are
+    soldier_age_upper_bound: 35, //The assumed upper bound for how old soldier pops are
     old_age_lower_upper_bound: 40, //When people naturally kick the bucket as an upper mortality bracket at game start
     old_age_hard_upper_bound: 100, //When do old people kick the bucket in the simulation if not already dead?
 
