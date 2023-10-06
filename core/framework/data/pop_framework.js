@@ -2531,7 +2531,7 @@ module.exports = {
       amount: 10000 - How much of the pop to kill off
     }
   */
-  removePops: function (arg0_user, arg1_options) {
+  removePops: function (arg0_user, arg1_options) { //[REVISIT] - This should be more granular and less generic
     //Convert from parameters
     var user_id = arg0_user;
     var options = (arg1_options) ? arg1_options : {};
