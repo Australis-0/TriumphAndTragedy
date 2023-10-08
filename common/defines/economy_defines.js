@@ -118,7 +118,7 @@ config.defines.economy = {
   job_seeking_range: [0.75, 1], //The range of wages pops seek, where 1 is the building with the highest wage in a province
   strict_job_seeking: false, //Whether pops will refuse to seek jobs lower than a specific % of comparable wages in a province
 
-    //Pop Births
+    //Pop Births - Strict Gaussian
     fertility_age_lower_bound: 15, //When does fertility begin as a lower bound?
     fertility_age_upper_bound: 45, //When does most fertility stop as an upper bound?
 

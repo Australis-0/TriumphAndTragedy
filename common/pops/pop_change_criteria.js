@@ -17,7 +17,7 @@ config.births = {
   }
 };
 
-config.deaths = {
+config.deaths = { //[WIP] - Add age qualifiers to this somewhere
   upper_bound_life_expectancy: {
     per_percent_staple_goods_variety: {
       has_staple_goods: 0.01,
@@ -27,5 +27,6 @@ config.deaths = {
       wealth: 1, //Hard limit for now, add wealth_percentile later
       value: 0.0000001923 //Fully reached at 1 million
     }
-  }
+  },
+  lower_bound_life_expectancy: {}
 };

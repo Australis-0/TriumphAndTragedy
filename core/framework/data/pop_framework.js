@@ -117,7 +117,8 @@ module.exports = {
         modifyValue(province_obj.pops, all_pop_chances[i], population_change);
 
         //Distribute age
-        if (options.age)
+        if (!options.age) options.age = 0; //It needs to be something
+        if (options.age != undefined)
           if (typeof options.age == "object") {
             var current_year = main.date.year;
             var max = returnSafeNumber(options.age.max, config.defines.economy.old_age_hard_upper_bound);
@@ -1294,7 +1295,8 @@ module.exports = {
     return promotion_chance;
   },
 
-  getProvinceBirths: function (arg0_user, arg1_province_id) {
+  //getProvinceBirthRate() - General modifier on births, not actually the true province birth rate
+  getProvinceBirthRate: function (arg0_user, arg1_province_id) {
     //Convert from parameters
     var user_id = arg0_user;
     var province_id = arg1_province_id;
@@ -1304,21 +1306,21 @@ module.exports = {
     var all_pops = Object.keys(config.pops);
     var births = {}; //Split by pop type
     var province_obj = main.provinces[province_id];
+    var total_fertility = 0;
     var usr = main.users[actual_id];
+
+    //Famine guard clause
+    if (usr.has_famine)
+      return {};
 
     //Check if province exists and for urban/rural growth dichotomy
     if (province_obj)
       if (province_obj.controller == province_obj.owner)
         if (province_obj.type == "urban") {
-          //Calculate urban pop growth for all pops
-          for (var i = 0; i < all_pops.length; i++) {
-            var local_pop_growth = module.exports.getCityPopGrowth(province_obj, { pop_type: all_pops[i] });
+          var local_pop_growth = module.exports.getCityPopGrowth(province_obj, { pop_type: all_pops[i] });
 
-            if (province_obj.housing > province_obj.pops.population || local_pop_growth < 0) {
-              modifyValue(births, all_pops[i], local_pop_growth);
-              modifyValue(births, "total", local_pop_growth);
-            }
-          }
+          modifyValue(births, all_pops[i], (local_pop_growth/province_obj.pops.population) + 1);
+          total_fertility += (local_pop_growth/province_obj.pops.population) + 1;
         } else {
           if (!province_obj.pop_cap)
             province_obj.pop_cap = (config.defines.economy.rural_pop_cap) ?
@@ -1326,14 +1328,12 @@ module.exports = {
               randomNumber(120000, 140000);
 
           //Calculate rural pop growth for all pops
-          for (var i = 0; i < all_pops.length; i++) {
-            if (province_obj.pops.population < province_obj.pop_cap) {
+          if (province_obj.pops.population < province_obj.pop_cap)
+            for (var i = 0; i < all_pops.length; i++) {
               var local_pop_growth = Math.ceil(province_obj.pops[all_pops[i]]*usr.pops[`${all_pops[i]}_growth_modifier`]*usr.modifiers.pop_growth_modifier) - province_obj.pops[all_pops[i]];
 
-              modifyValue(births, all_pops[i], local_pop_growth);
-              modifyValue(births, "total", local_pop_growth);
+              modifyValue(births, all_pops[i], (local_pop_growth/province_obj.pops.population) + 1);
             }
-          }
         }
 
     //Return statement
@@ -1916,10 +1916,11 @@ module.exports = {
     }
   },
 
-  multiplyPops: function (arg0_pop_scope, arg1_amount) {
+  multiplyPops: function (arg0_pop_scope, arg1_amount, arg2_is_birth) {
     //Convert from parameters
     var pop_scope = arg0_pop_scope;
     var amount = arg1_amount;
+    var is_birth = arg2_is_birth;
 
     //Declare local instance variables
     var all_pop_scope_tags = Object.keys(pop_scope.tags);
@@ -1931,14 +1932,30 @@ module.exports = {
       amount = Math.min(amount, max_amount);
 
       pop_scope.size = Math.min(Math.ceil(pop_scope.size*amount), province_population);
-      pop_scope.income = Math.ceil(pop_scope.income*amount);
-      pop_scope.wealth = Math.ceil(pop_scope.wealth*amount);
+
+      if (!is_birth) {
+        pop_scope.income = Math.ceil(pop_scope.income*amount);
+        pop_scope.wealth = Math.ceil(pop_scope.wealth*amount);
+      }
 
       //Iterate over all_pop_scope_tags
       for (var i = 0; i < all_pop_scope_tags.length; i++) {
+        var is_mutable = false;
         var local_value = pop_scope.tags[all_pop_scope_tags[i]];
 
-        pop_scope.tags[all_pop_scope_tags[i]] = Math.ceil(local_value*amount);
+        //Check if pop tag is born with or not
+        if (all_pop_scope_tags[i].startsWith("b_"))
+          is_mutable = true;
+        if (all_pop_scope_tags[i].startsWith("el_"))
+          is_mutable = true;
+        if (all_pop_scope_tags[i].startsWith("wealth-"))
+          is_mutable = true;
+
+        if ((!is_mutable && is_birth) || !is_birth) {
+          pop_scope.tags[all_pop_scope_tags[i]] = Math.ceil(local_value*amount);
+        } else if (is_birth) {
+          delete pop_scope.tags[all_pop_scope_tags[i]];
+        }
       }
     }
 
@@ -2039,6 +2056,7 @@ module.exports = {
     var building_map = getBuildingMap(province_id);
     var config_obj = config.pops[pop_type];
     var current_median = province_obj[`${pop_type}_median_wage`];
+    var current_year = Math.floor(main.date.year);
     var has_demotes = false;
     var has_promotes = false;
     var pop_scope = module.exports.selectPops({
@@ -2046,6 +2064,8 @@ module.exports = {
       pop_types: [pop_type]
     });
     var province_obj = main.provinces[province_id];
+    var user_id = province_obj.controller;
+    var usr = main.users[user_id];
 
     var external_migration_table = lookup[`${province_obj.controller}-external_migration_attraction`];
     var internal_migration_table = lookup[`${province_obj.controller}-migration_attraction`];
@@ -2057,6 +2077,65 @@ module.exports = {
     {
       if (config_obj.demotes_to) has_demotes = true;
       if (config_obj.promotes_to) has_promotes = true;
+    }
+
+    //Pop Births and Deaths
+    {
+      //Get province growth scalar
+      var birth_scalar = province_obj.trackers.births[pop_type];
+
+      //Birth handling
+      if (!usr.has_famine) {
+        var birth_chance = parsePopLimit(config.births, {
+          pop_scope: pop_scope,
+          province_id: province_id
+        });
+
+        //Iterate over birth_chance.selectors - [pop_scope, value]
+        for (var i = 0; i < birth_chance.selectors.length; i++) {
+          var initial_pop_scope = birth_chance.selectors[i][0];
+          var local_value = birth_chance.selectors[i][1]*birth_scalar;
+
+          var local_pop_scope = module.exports.multiplyPops(initial_pop_scope, birth_scalar*local_value, true); //Using this instead of createPops() for more standardisation
+          var population_change = Math.ceil(local_pop_scope.size*birth_scalar*local_value);
+
+          //Add to b_ tag; replace local_pop_scope
+          modifyValue(province_obj.pops, `b_${current_year}`, population_change);
+
+          //[REVISIT] - Statistical compounding on iterative variable subset theory ops is probably an inevitability unless you can work out the completeness of some NP-HARD maths theorem, Aust. Doing this for now - Vis
+          var all_local_tags = Object.keys(local_pop_scope.tags);
+
+          //Override tags
+          for (var x = 0; x < all_local_tags.length; x++)
+            province_obj.pops[all_local_tags[x]] = local_pop_scope.tags[all_local_tags[x]];
+        }
+      }
+
+      //Death handling
+      {
+        //Fetch death pop scope arguments for accurate age distribution
+
+        //Fetch death_chance
+        var death_chance = parsePopLimit(config.deaths, {
+          pop_scope: pop_scope,
+          province_id: province_id
+        });
+
+        //Iterate over death_chance.selectors
+        for (var i = 0; i < death_chance.selectors.length; i++) {
+          var initial_pop_scope = death_chance.selectors[i][0];
+          var local_value = death_chance.selectors[i][1];
+
+          local_pop_scope = module.exports.multiplyPops(initial_pop_scope, local_value);
+
+          //Remove pops
+          module.exports.removePop(user_id, {
+            amount: local_pop_scope.size,
+            pop_scope: local_pop_scope
+          });
+        }
+      }
+
     }
 
     //Pop Job Seeking and Employment
@@ -2439,6 +2518,8 @@ module.exports = {
     //Declare local instance variables
     var all_pops = Object.keys(config.pops);
     var province_obj = main.provinces[province_id];
+    var user_id = province_obj.controller;
+    var usr = main.users[user_id];
 
     //Iterate over all pops and process them
     for (var i = 0; i < all_pops.length; i++) {
@@ -2450,10 +2531,25 @@ module.exports = {
       });
 
       //Set trackers
+      province_obj.births = module.exports.getProvinceBirthRate(user_id, province_id);
       province_obj[`${all_pops[i]}_median_wage`] = median_wage;
 
+      //Pop processing
       processPop(province_id, all_pops[i], {
         sorted_wage_obj: local_sorted_wages
+      });
+
+      //Kill off anyone over old-age upper bound
+      var over_upper_bound = module.exports.selectPops({
+        province_id: province_id,
+        age: {
+          min: config.defines.economy.old_age_hard_upper_bound,
+          max: 1000
+        }
+      });
+      module.exports.removePop(user_id, {
+        amount: over_upper_bound.size,
+        pop_scope: over_upper_bound
       });
     }
   },
@@ -2462,6 +2558,7 @@ module.exports = {
     removePop() - Removes pops from a province
     options: See selectPops(), additional options: {
       amount: 50000 - The amount of pops to remove,
+      pop_scope: {} - The pop scope to pass to the argument
     }
   */
   removePop: function (arg0_user, arg1_options) {
@@ -2472,7 +2569,7 @@ module.exports = {
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
     var killed = 0;
-    var pop_scope = module.exports.selectPops(options);
+    var pop_scope = (!options.pop_scope) ? module.exports.selectPops(options) : options.pop_scope;
     var province_obj = main.provinces[options.province_id];
     var usr = main.users[actual_id];
 
@@ -2692,6 +2789,11 @@ module.exports = {
 
     //Initialise defaults for variables
     var selected_pops = (options.pop_types) ? options.pop_type : Object.keys(config.pops);
+    if (options.age == undefined)
+      options.age = {
+        min: 0,
+        max: config.defines.economy.old_age_hard_upper_bound
+      };
 
     if (province_obj.pops && !options.empty) {
       var all_cultures = getList(options.culture);

@@ -1417,27 +1417,20 @@ module.exports = {
 
       //Economic processing
       {
-        for (var i = 0; i < owned_provinces.length; i++) {
+        for (var i = 0; i < controlled_provinces.length; i++) {
           processSubsistence(owned_provinces[i], {
             category_prices: lookup.category_buy_prices
           });
           processPops(owned_provinces[i]);
           processPurchases(owned_provinces[i]);
+
+          //Recalculate province population afterwards
+          var province_population = 0;
+
+          for (var x = 0; x < all_pops.length; x++)
+            province_population += returnSafeNumber(province_obj.pops[all_pops[x]]);
+          province_obj.pops.population = province_population;
         }
-      }
-
-      //Population growth
-      {
-        if (!usr.has_famine)
-          for (var i = 0; i < owned_provinces.length; i++) {
-            var local_births = module.exports.getProvinceBirths(user_id, owned_provinces[i].id);
-
-            for (var x = 0; x < all_pops.length; x++)
-              modifyValue(owned_provinces[i].pops, all_pops[x], returnSafeNumber(local_births[all_pops[x]]));
-
-            //Add to total population figure
-            modifyValue(owned_provinces[i].pops, "population", local_births.total);
-          }
       }
 
       //Population modifiers
