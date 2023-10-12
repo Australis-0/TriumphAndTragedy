@@ -452,10 +452,31 @@ config.buildings.processing_facilities = { //[WIP] - Add Synthetic Ruby Factory
       lumber: 4,
       money: 7500
     },
+    maintenance: {
+      production_choice_canned_food: {
+        tin: 3,
+        meat: 5
+      },
+      production_choice_jam: {
+        strawberries: 3,
+        sugar: 3,
+        glass: 2
+      }
+    },
     manpower_cost: {
       any_pop: {
         peasants: 8500,
         labourers: 8500
+      }
+    },
+    produces: {
+      production_choice_canned_food: {
+        name: "Canning",
+        canned_food: 5
+      },
+      production_choice_jam: {
+        name: "Jam Packing",
+        jam: 5
       }
     }
   },
@@ -475,14 +496,29 @@ config.buildings.processing_facilities = { //[WIP] - Add Synthetic Ruby Factory
       money: 12500
     },
     maintenance: {
-      production_choice_canned_food: {
-        tin: 3,
-        meat: 5
+      production_choice_ceramic_capacitors: {
+        copper_wire: 2,
+        ceramics: 1
       },
-      production_choice_jam: {
-        strawberries: 3,
-        sugar: 3,
-        glass: 2
+      production_choice_copper_capacitors: {
+        copper_wire: 2,
+        aluminium: 1
+      },
+      production_choice_tantalum_capacitors: {
+        copper_wire: 2,
+        tantalum: 1
+      },
+      production_choice_niobium_capacitors: {
+        copper_wire: 2,
+        niobium: 1
+      },
+      production_choice_silicon_capacitors: {
+        copper_wire: 2,
+        silicon: 2
+      },
+      production_choice_glass_capacitors: {
+        copper_wire: 2,
+        glass: 1
       }
     },
     manpower_cost: {
@@ -490,13 +526,29 @@ config.buildings.processing_facilities = { //[WIP] - Add Synthetic Ruby Factory
       engineers: 500
     },
     produces: {
-      production_choice_canned_food: {
-        name: "Canning",
-        canned_food: 5
+      production_choice_ceramic_capacitors: { //Placeholder names
+        name: "Ceramic Capacitors",
+        capacitors: 3
       },
-      production_choice_jam: {
-        name: "Jam Packing",
-        jam: 5
+      production_choice_copper_capacitors: {
+        name: "Copper Capacitors",
+        capacitors: 3
+      },
+      production_choice_tantalum_capacitors: {
+        name: "Tantalum Capacitors",
+        capacitors: 4
+      },
+      production_choice_niobium_capacitors: {
+        name: "Niobium Capacitors",
+        capacitors: 5
+      },
+      production_choice_silicon_capacitors: {
+        name: "Silicon Capacitors",
+        capacitors: 5
+      },
+      production_choice_glass_capacitors: {
+        name: "Glass Capacitors",
+        capacitors: 2
       }
     }
   },
