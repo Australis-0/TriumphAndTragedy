@@ -604,6 +604,10 @@ config.buildings.agriculture = {
         name: "Sweet Potatoes",
         sweet_potatoes: 4
       },
+      production_choice_tea_leaves: {
+        name: "Tea Leaves",
+        tea: 4
+      },
       production_choice_yam: {
         name: "Yam",
         yam: 5

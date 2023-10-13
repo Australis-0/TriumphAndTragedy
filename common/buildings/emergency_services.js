@@ -136,6 +136,7 @@ config.buildings.emergency_services = {
       tools: 5,
       lamps: 4,
       paper: 3,
+      bromine: 2,
       computers: 2,
       glass: 2,
       ink: 2,

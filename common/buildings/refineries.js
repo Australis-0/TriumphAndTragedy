@@ -254,7 +254,15 @@ config.buildings.refineries = {
       money: 2000
     },
     maintenance: {
-      wood: 5
+      production_choice_bituminous_coal: {
+        bitumen: 5
+      },
+      production_choice_brown_coal: {
+        lignite: 5
+      },
+      production_choice_hard_coal: {
+        anthracite: 5
+      }
     },
     manpower_cost: {
       any_pop: {
@@ -263,7 +271,18 @@ config.buildings.refineries = {
       }
     },
     produces: {
-      charcoal: 3
+      production_choice_bituminous_coal: {
+        name: "Bituminous Coal",
+        bituminous_coal: 5
+      },
+      production_choice_brown_coal: {
+        name: "Brown Coal",
+        brown_coal: 5
+      },
+      production_choice_hard_coal: {
+        name: "Hard Coal",
+        hard_coal: 5
+      }
     }
   },
   cobalt_refineries: {

@@ -243,5 +243,25 @@ config.buildings.resource_extraction = {
         slate: 2
       }
     }
+  },
+  shale_mines: {
+    name: "Shale Mines",
+    singular: "Shale Mine",
+
+    construction_turns: 3,
+    cost: {
+      wood: 8,
+      tools: 2,
+      money: 3500
+    },
+    manpower_cost: {
+      any_pop: {
+        labourers: 10000,
+        peasants: 10000
+      }
+    },
+    produces: {
+      shale: 4
+    }
   }
 };
