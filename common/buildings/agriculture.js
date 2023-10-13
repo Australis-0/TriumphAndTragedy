@@ -218,6 +218,30 @@ config.buildings.agriculture = {
       }
     }
   },
+  honeymaker: {
+    name: "Honeymakers",
+    singular: "Honeymaker",
+
+    construction_turns: 2,
+    cost: {
+      wood: 5,
+      stone: 3,
+      money: 800
+    },
+    maintenance: {
+      beeswax: 3
+    },
+    manpower_cost: {
+      any_pop:{
+        peasants: 5000,
+        serfs: 5000,
+        farmers: 5000
+      }
+    },
+    produces: {
+      honey: 2
+    }
+  },
   illicit_fields: {
     name: "Illicit Fields",
     singular: "Illicit Field",

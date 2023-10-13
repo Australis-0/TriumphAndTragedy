@@ -43,6 +43,7 @@ config.defines.common = {
       "cinnamon_plantations",
       "farms",
       "fruit_farms",
+      "honeymakers",
       "illicit_fields",
       "indigo_fields",
       "livestock_fields",
