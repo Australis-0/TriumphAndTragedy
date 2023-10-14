@@ -18,7 +18,8 @@ config.units.aeroplanes = {
     range: 6,
 
     cost: {
-      lumber: 1,
+      lumber: 2,
+      fabric: 2,
       coal: 1,
       money: 500,
 
@@ -48,6 +49,8 @@ config.units.aeroplanes = {
 
     cost: {
       lumber: 3,
+      fabric: 2,
+      hydrogen: 2,
       coal: 1,
       food: 1,
       money: 1000,
@@ -56,6 +59,7 @@ config.units.aeroplanes = {
     },
     maintenance: {
       coal: 1,
+      hydrogen: 1,
 
       aeroplanes_cp: 4,
       money: 500
@@ -78,7 +82,10 @@ config.units.aeroplanes = {
     range: 60,
 
     cost: {
+      fabric: 6,
       regular_steel: 5,
+      hydrogen: 3,
+      steel_beams: 2,
       lumber: 2,
       coal: 3,
       food: 3,
@@ -115,9 +122,11 @@ config.units.aeroplanes = {
 
     cost: {
       regular_steel: 5,
-      lumber: 2,
+      fabric: 3,
       coal: 3,
       food: 3,
+      lumber: 2,
+      machine_parts: 1,
       money: 2500,
 
       aeroplanes_cp: 20
@@ -150,14 +159,14 @@ config.units.aeroplanes = {
       lumber: 5,
       small_arms: 2,
       machine_parts: 2,
-      ammunition: 3,
+      low_calibre_ammunition: 3,
       refined_petroil: 1,
       money: 1250,
 
       aeroplanes_cp: 15
     },
     maintenance: {
-      ammunition: 1,
+      low_calibre_ammunition: 1,
       refined_petroil: 1,
       regular_steel: 1,
 
@@ -184,15 +193,18 @@ config.units.aeroplanes = {
       regular_steel: 7,
       lumber: 3,
       small_arms: 3,
-      machine_parts: 4,
-      ammunition: 3,
+      machine_parts: 3,
+      low_calibre_ammunition: 3,
       refined_petroil: 2,
+      rubber: 2,
+      electric_gear: 1,
+      glass: 1,
       money: 1500,
 
       aeroplanes_cp: 15
     },
     maintenance: {
-      ammunition: 2,
+      low_calibre_ammunition: 2,
       refined_petroil: 2,
       small_arms: 1,
       regular_steel: 1,
@@ -218,18 +230,21 @@ config.units.aeroplanes = {
 
     cost: {
       regular_steel: 5,
+      machine_parts: 4,
+      low_calibre_ammunition: 3,
       lumber: 2,
       small_arms: 3,
-      machine_parts: 5,
-      ammunition: 3,
       refined_petroil: 3,
+      rubber: 2,
+      electric_gear: 1,
+      glass: 1,
       money: 1500,
 
       aeroplanes_cp: 20,
       money: 900
     },
     maintenance: {
-      ammunition: 2,
+      low_calibre_ammunition: 2,
       refined_petroil: 2,
       machine_parts: 1,
       small_arms: 1,
@@ -256,14 +271,17 @@ config.units.aeroplanes = {
     range: 25,
 
     cost: {
+      low_calibre_ammunition: 8,
       aluminium: 5,
+      refined_petroil: 5,
+      machine_parts: 4,
+      rubber: 4,
       lumber: 3,
       small_arms: 3,
-      machine_parts: 5,
-      small_arms: 5,
       lumber: 3,
-      ammunition: 8,
-      refined_petroil: 5,
+      glass: 2,
+      electric_gear: 1,
+      radios: 1,
       money: 2500,
 
       aeroplanes_cp: 25
@@ -273,10 +291,12 @@ config.units.aeroplanes = {
       refined_petroil: 2,
       machine_parts: 2,
       small_arms: 1,
+      high_calibre_ammunition: 1,
       regular_steel: 1,
+      rubber: 1,
 
-      aeroplanes_cp: 7,
-      money: 1000
+      money: 1000,
+      aeroplanes_cp: 7
     },
     manpower_cost: {
       soldiers: 2360
@@ -296,22 +316,27 @@ config.units.aeroplanes = {
 
     cost: {
       aluminium: 10,
+      low_calibre_ammunition: 8,
       machine_parts: 7,
-      small_arms: 5,
-      lumber: 3,
-      ammunition: 8,
       refined_petroil: 5,
+      small_arms: 5,
+      rubber: 4,
+      glass: 2,
+      lumber: 3,
+      radios: 2,
       money: 2500,
 
       aeroplanes_cp: 25
     },
     maintenance: {
       refined_petroil: 3,
-      ammunition: 2,
+      low_calibre_ammunition: 2,
       small_arms: 2,
       aluminium: 1,
+      high_calibre_ammunition: 1,
       machine_parts: 1,
       regular_steel: 1,
+      rubber: 1,
       money: 1350,
 
       aeroplanes_cp: 8
@@ -333,12 +358,17 @@ config.units.aeroplanes = {
     range: 10,
 
     cost: {
-      aluminium: 6,
       machine_parts: 10,
-      small_arms: 4,
-      iron: 3,
-      ammunition: 5,
       refined_petroil: 10,
+      aluminium: 6,
+      rubber: 6,
+      small_arms: 4,
+      low_calibre_ammunition: 5,
+      glass: 2,
+      stainless_steel: 2,
+      turbines: 2,
+      electric_gear: 1,
+      turbines: 1,
       money: 4000,
 
       aeroplanes_cp: 30
@@ -346,12 +376,13 @@ config.units.aeroplanes = {
     maintenance: {
       refined_petroil: 4,
       machine_parts: 3,
-      ammunition: 3,
+      low_calibre_ammunition: 3,
       small_arms: 2,
       aluminium: 1,
+      rubber: 1,
+      money: 2500,
 
-      aeroplanes_cp: 10,
-      money: 2500
+      aeroplanes_cp: 10
     },
     manpower_cost: {
       soldiers: 2500
@@ -371,23 +402,32 @@ config.units.aeroplanes = {
     range: 40,
 
     cost: {
+      high_calibre_ammunition: 8,
       aluminium: 10,
       machine_parts: 8,
+      ferrochromium: 6,
       small_arms: 5,
-      ammunition: 12,
-      copper: 6,
-      gold: 2,
-      iron: 5,
-      money: 4000,
+      low_calibre_ammunition: 4,
+      capacitors: 4,
+      glass: 4,
+      rubber: 4,
+      radios: 4,
+      resistors: 2,
+      stainless_steel: 2,
+      turbines: 2,
 
+      money: 4000,
       aeroplanes_cp: 20
     },
     maintenance: {
       refined_petroil: 5,
-      machine_parts: 4,
-      ammunition: 3,
+      machine_parts: 3,
+      high_calibre_ammunition: 2,
       small_arms: 2,
-      aluminium: 1,
+      electric_gear: 1,
+      low_calibre_ammunition: 1,
+      resistors: 1,
+      rubber: 1,
 
       aeroplanes_cp: 12,
       money: 2000
@@ -410,13 +450,21 @@ config.units.aeroplanes = {
     range: 50,
 
     cost: {
-      aluminium: 12,
-      machine_parts: 15,
-      small_arms: 10,
       ammunition: 15,
-      copper: 8,
-      gold: 3,
+      machine_parts: 15,
+      aluminium: 12,
+      small_arms: 10,
+      copper_wire: 8,
+      glass: 6,
+      rubber: 6,
       refined_petroil: 5,
+      integrated_circuits: 4,
+      gold: 3,
+      cameras: 2,
+      turbines: 2,
+      radios: 2,
+      heavy_weaponry: 1,
+      lasers: 1,
       money: 5000,
 
       aeroplanes_cp: 20
@@ -424,10 +472,16 @@ config.units.aeroplanes = {
     maintenance: {
       refined_petroil: 6,
       machine_parts: 5,
-      ammunition: 4,
+      high_calibre_ammunition: 4,
+      heavy_weaponry: 2,
+      low_calibre_ammunition: 2,
       small_arms: 3,
-      aluminium: 1,
-      gold: 1,
+      film: 2,
+      silicon: 2,
+      copper_wire: 1,
+      explosives: 1,
+      integrated_circuits: 1,
+      rubber: 1,
 
       aeroplanes_cp: 15,
       money: 4000
@@ -450,19 +504,31 @@ config.units.aeroplanes = {
     range: 50,
 
     cost: {
+      low_calibre_ammunition: 10,
       aluminium: 5,
-      regular_steel: 5,
-      ammunition: 10,
-      gold: 4,
+      stainless_steel: 5,
+      glass: 4,
+      high_calibre_ammunition: 4,
+      integrated_circuits: 4,
+      cameras: 2,
+      computers: 2,
+      radios: 1,
       refined_petroil: 2,
+      regular_steel: 2,
+      rubber: 2,
+      lasers: 1,
       money: 20000,
 
       aeroplanes_cp: 5
     },
     maintenance: {
-      machine_parts: 3,
+      electric_gear: 3,
+      film: 2,
+      high_calibre_ammunition: 1,
+      integrated_circuits: 1,
+      low_calibre_ammunition: 1,
+      rubber: 1,
       small_arms: 1,
-      gold: 1,
 
       aeroplanes_cp: 10,
       money: 3000
@@ -485,23 +551,31 @@ config.units.aeroplanes = {
     range: 50,
 
     cost: {
-      ammunition: 20,
-      machine_parts: 20,
-      copper: 10,
-      gold: 15,
-      ammunition: 20,
+      high_calibre_ammunition: 20,
+      low_calibre_ammunition: 20,
+      copper_wire: 10,
+      integrated_circuits: 15,
+      computers: 12,
+      machine_parts: 8,
+      glass: 6,
+      rubber: 6,
       refined_petroil: 4,
+      turbines: 4,
+      lasers: 2,
       money: 8000,
 
       aeroplanes_cp: 30
     },
     maintenance: {
-      machine_parts: 6,
       refined_petroil: 6,
-      ammunition: 5,
+      high_calibre_ammunition: 5,
+      low_calibre_ammunition: 4,
+      electric_gear: 4,
       small_arms: 4,
-      gold: 2,
+      integrated_circuits: 2,
       aluminium: 1,
+      gold: 1,
+      rubber: 1,
 
       aeroplanes_cp: 20,
       money: 4500
@@ -528,16 +602,18 @@ config.units.aeroplanes = {
     cost: {
       regular_steel: 10,
       lumber: 8,
-      small_arms: 3,
+      fabric: 6,
+      high_calibre_ammunition: 7,
       machine_parts: 6,
-      ammunition: 7,
+      small_arms: 3,
       refined_petroil: 5,
       money: 2500,
 
       aeroplanes_cp: 20
     },
     maintenance: {
-      ammunition: 2,
+      high_calibre_ammunition: 2,
+      explosives: 2,
       refined_petroil: 2,
       machine_parts: 1,
       regular_steel: 1,
@@ -564,20 +640,26 @@ config.units.aeroplanes = {
 
     cost: {
       aluminium: 12,
-      regular_steel: 2,
-      small_arms: 6,
+      high_calibre_ammunition: 10,
       machine_parts: 8,
+      small_arms: 6,
       lumber: 5,
-      ammunition: 10,
       refined_petroil: 5,
+      low_calibre_ammunition: 4,
+      glass: 2,
+      regular_steel: 2,
+      cameras: 1,
       money: 3000,
 
       aeroplanes_cp: 25
     },
     maintenance: {
-      ammunition: 2,
+      explosives: 4,
+      high_calibre_ammunition: 2,
       refined_petroil: 2,
       machine_parts: 2,
+      film: 1,
+      low_calibre_ammunition: 1,
       regular_steel: 1,
 
       aeroplanes_cp: 6,
@@ -602,20 +684,28 @@ config.units.aeroplanes = {
 
     cost: {
       aluminium: 15,
-      regular_steel: 3,
+      high_calibre_ammunition: 15,
       small_arms: 8,
-      machine_parts: 8,
-      ammunition: 15,
       refined_petroil: 7,
+      electric_gear: 4,
+      glass: 4,
+      machine_parts: 4,
+      rubber: 4,
+      regular_steel: 3,
+      cameras: 2,
       money: 5000,
 
       aeroplanes_cp: 25
     },
     maintenance: {
-      ammunition: 4,
+      explosives: 6,
+      high_calibre_ammunition: 4,
       refined_petroil: 3,
       machine_parts: 3,
+      film: 2,
+      radios: 2,
       regular_steel: 1,
+      rubber: 1,
 
       aeroplanes_cp: 8,
       money: 1800
@@ -639,21 +729,30 @@ config.units.aeroplanes = {
 
     cost: {
       aluminium: 25,
-      regular_steel: 5,
+      high_calibre_ammunition: 15,
       machine_parts: 15,
-      copper: 10,
-      gold: 10,
-      ammunition: 15,
+      copper_wire: 10,
+      electric_gear: 10,
       refined_petroil: 10,
+      glass: 6,
+      regular_steel: 5,
+      cameras: 4,
+      rubber: 4,
+      radios: 2,
+      turbines: 4,
       money: 12000,
 
       aeroplanes_cp: 50
     },
     maintenance: {
+      explosives: 8,
       refined_petroil: 5,
       ammunition: 4,
       machine_parts: 4,
+      film: 4,
+      electric_gear: 1,
       regular_steel: 1,
+      rubber: 1,
 
       aeroplanes_cp: 12,
       money: 2500
@@ -677,22 +776,30 @@ config.units.aeroplanes = {
 
     cost: {
       aluminium: 25,
-      regular_steel: 5,
+      high_calibre_ammunition: 15,
       machine_parts: 15,
-      copper: 10,
-      gold: 10,
-      ammunition: 15,
+      copper_wire: 10,
+      electric_gear: 10,
       refined_petroil: 10,
+      cameras: 8,
+      glass: 8,
+      rubber: 6,
+      regular_steel: 5,
+      lasers: 4,
+      radios: 3,
+      turbines: 4,
       money: 12000,
 
       aeroplanes_cp: 50
     },
     maintenance: {
+      film: 8,
       refined_petroil: 6,
       machine_parts: 5,
-      ammunition: 4,
+      high_calibre_ammunition: 4,
       aluminium: 2,
-      gold: 2,
+      electric_gear: 2,
+      rubber: 1,
 
       aeroplanes_cp: 20,
       money: 4000
@@ -716,12 +823,20 @@ config.units.aeroplanes = {
 
     cost: {
       aluminium: 20,
-      regular_steel: 7,
       machine_parts: 18,
-      copper: 12,
-      gold: 5,
+      integrated_circuits: 14,
+      cameras: 12,
+      copper_wire: 12,
       ammunition: 10,
+      computers: 8,
+      glass: 8,
+      stainless_steel: 8,
+      regular_steel: 7,
+      rubber: 6,
+      electric_gear: 5,
       refined_petroil: 5,
+      lasers: 4,
+      turbines: 4,
       money: 10000,
 
       aeroplanes_cp: 50
@@ -729,9 +844,11 @@ config.units.aeroplanes = {
     maintenance: {
       refined_petroil: 5,
       machine_parts: 5,
-      ammunition: 4,
-      gold: 3,
+      high_calibre_ammunition: 4,
+      electric_gear: 3,
       small_arms: 2,
+      computers: 1,
+      rubber: 1,
 
       aeroplanes_cp: 15,
       money: 8000
@@ -757,15 +874,19 @@ config.units.aeroplanes = {
 
     cost: {
       aluminium: 3,
+      machine_parts: 3,
+      electric_gear: 1,
       regular_steel: 1,
       small_arms: 1,
-      machine_parts: 3,
+      cameras: 1,
+      radios: 1,
       refined_petroil: 1,
       money: 1000,
 
       aeroplanes_cp: 5
     },
     maintenance: {
+      film: 1,
       refined_petroil: 2,
       machine_parts: 1,
 
@@ -790,21 +911,28 @@ config.units.aeroplanes = {
     range: 10,
 
     cost: {
+      low_calibre_ammunition: 8,
       aluminium: 5,
-      regular_steel: 3,
       small_arms: 5,
       machine_parts: 5,
-      ammunition: 8,
+      electric_gear: 4,
+      regular_steel: 3,
+      cameras: 2,
+      glass: 2,
+      radios: 2,
       refined_petroil: 2,
+      stainless_steel: 2,
       money: 3000,
 
       aeroplanes_cp: 10
     },
     maintenance: {
       refined_petroil: 4,
-      ammunition: 4,
+      low_calibre_ammunition: 4,
       small_arms: 2,
       machine_parts: 2,
+      explosives: 1,
+      film: 1,
 
       aeroplanes_cp: 10,
       money: 1200
@@ -827,22 +955,35 @@ config.units.aeroplanes = {
     range: 20,
 
     cost: {
+      high_calibre_ammunition: 8,
+      integrated_circuits: 8,
       aluminium: 7,
-      regular_steel: 2,
+      stainless_steel: 4,
       small_arms: 6,
-      machine_parts: 8,
-      ammunition: 8,
+      glass: 4,
+      low_calibre_ammunition: 4,
+      machine_parts: 4,
+      electric_gear: 4,
       gold: 3,
+      computers: 2,
+      radios: 2,
       refined_petroil: 2,
+      regular_steel: 2,
+      rubber: 2,
+      televisions: 1,
+      turbines: 1,
       money: 3500,
 
       aeroplanes_cp: 10
     },
     maintenance: {
-      machine_parts: 5,
+      high_calibre_ammunition: 4,
       refined_petroil: 4,
-      ammunition: 4,
       small_arms: 4,
+      machine_parts: 3,
+      electric_gear: 2,
+      integrated_circuits: 2,
+      low_calibre_ammunition: 2,
 
       aeroplanes_cp: 12,
       money: 2000
@@ -867,16 +1008,20 @@ config.units.aeroplanes = {
 
     cost: {
       aluminium: 5,
-      ammunition: 5,
+      low_calibre_ammunition: 5,
+      fabric: 4,
       lumber: 3,
       refined_petroil: 3,
+      radios: 1,
+      regular_steel: 1,
       money: 2500,
 
       aeroplanes_cp: 10
     },
     maintenance: {
+      refined_petroil: 4,
       machine_parts: 2,
-      ammunition: 2,
+      torpedoes: 2,
 
       aeroplanes_cp: 8,
       money: 750
@@ -899,15 +1044,21 @@ config.units.aeroplanes = {
     cost: {
       aluminium: 6,
       lumber: 2,
-      ammunition: 3,
+      low_calibre_ammunition: 3,
       refined_petroil: 3,
+      rubber: 2,
+      regular_steel: 1,
       money: 1500,
 
       aeroplanes_cp: 10
     },
     maintenance: {
+      explosives: 4,
+      refined_petroil: 4,
       machine_parts: 3,
-      ammunition: 2,
+      low_calibre_ammunition: 2,
+      radios: 1,
+      rubber: 1,
       small_arms: 1,
 
       aeroplanes_cp: 10,
