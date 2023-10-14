@@ -17,15 +17,19 @@ config.units.artillery = {
     initiative: 1,
 
     cost: {
-      iron: 3,
       lead: 5,
+      bronze: 3,
       food: 3,
+      lumber: 2,
+      wood: 1,
       money: 1000,
 
       ground_artillery_cp: 5
     },
     maintenance: {
+      gunpowder: 2,
       lead: 2,
+      paper: 2,
       lumber: 1,
       food: 1,
 
@@ -48,14 +52,17 @@ config.units.artillery = {
     initiative: 3,
 
     cost: {
-      iron: 2,
-      lead: 1,
       food: 5,
+      bronze: 2,
+      lead: 1,
+      lumber: 1,
       money: 700,
 
       ground_artillery_cp: 10
     },
     maintenance: {
+      iron: 2,
+      gunpowder: 1,
       lead: 1,
       lumber: 1,
       food: 1,
@@ -79,16 +86,20 @@ config.units.artillery = {
     initiative: 4,
 
     cost: {
-      iron: 5,
-      lumber: 2,
-      lead: 3,
+      bronze: 5,
       food: 3,
+      lead: 3,
+      lumber: 2,
+      wood: 1,
       money: 1500,
 
       ground_artillery_cp: 10
     },
     maintenance: {
+      gunpowder: 4,
       lead: 2,
+      paper: 2,
+      iron: 1,
       lumber: 1,
       food: 1,
 
@@ -111,17 +122,20 @@ config.units.artillery = {
     initiative: 5,
 
     cost: {
-      iron: 4,
+      bronze: 4,
       lumber: 3,
       lead: 3,
       food: 3,
+      wood: 1,
       money: 2000,
 
       ground_artillery_cp: 15
     },
     maintenance: {
+      gunpowder: 4,
       iron: 2,
       lead: 2,
+      paper: 2,
       lumber: 1,
       food: 1,
 
@@ -143,19 +157,22 @@ config.units.artillery = {
     initiative: 4,
 
     cost: {
-      iron: 4,
+      bronze: 4,
       lumber: 2,
       lead: 2,
       food: 3,
+      wood: 1,
       money: 2000,
 
       ground_artillery_cp: 15
     },
     maintenance: {
+      gunpowder: 3,
       iron: 2,
       lead: 2,
-      lumber: 1,
       food: 1,
+      lumber: 1,
+      paper: 1,
 
       ground_artillery_cp: 9,
       money: 1200
@@ -175,18 +192,23 @@ config.units.artillery = {
     initiative: 5,
 
     cost: {
-      regular_steel: 5,
-      lumber: 3,
+      food: 5,
       lead: 5,
       sulphur: 5,
-      food: 5,
+      bronze: 4,
+      brass: 2,
+      regular_steel: 2,
+      lumber: 3,
+      wood: 1,
       money: 1500,
 
       ground_artillery_cp: 20
     },
     maintenance: {
+      gunpowder: 4,
       lead: 3,
       lumber: 2,
+      paper: 2,
       iron: 2,
       food: 1,
 
@@ -209,20 +231,25 @@ config.units.artillery = {
     initiative: 4,
 
     cost: {
+      food: 5,
+      lead: 5,
       regular_steel: 5,
       lumber: 3,
-      lead: 5,
-      sulphur: 5,
-      food: 5,
+      brass: 2,
+      bronze: 2,
+      wood: 1,
       money: 2000,
 
       ground_artillery_cp: 20
     },
     maintenance: {
+      gunpowder: 3,
       lead: 2,
       lumber: 2,
       iron: 2,
+      saltpetre: 2,
       food: 1,
+      paper: 1,
 
       ground_artillery_cp: 10,
       money: 1500
@@ -243,20 +270,22 @@ config.units.artillery = {
     initiative: 5,
 
     cost: {
-      regular_steel: 2,
-      lumber: 2,
-      lead: 5,
-      sulphur: 2,
       food: 5,
+      lead: 5,
+      lumber: 2,
+      bronze: 1,
+      brass: 1,
+      wood: 1,
       money: 1000,
 
       ground_artillery_cp: 5
     },
     maintenance: {
       lead: 3,
+      gunpowder: 2,
       lumber: 1,
       iron: 1,
-      sulphur: 1,
+      paper: 1,
 
       ground_artillery_cp: 6,
       money: 1200
@@ -277,20 +306,24 @@ config.units.artillery = {
     initiative: 2,
 
     cost: {
-      regular_steel: 8,
-      lead: 5,
-      sulphur: 10,
+      lumber: 8,
       food: 7,
+      bronze: 6,
+      lead: 5,
+      brass: 4,
+      regular_steel: 4,
+      hemp: 1,
       money: 3500,
 
       ground_artillery_cp: 20
     },
     maintenance: {
+      gunpowder: 6,
       lead: 5,
-      sulphur: 4,
       iron: 3,
-      lumber: 2,
       food: 2,
+      lumber: 2,
+      paper: 2,
 
       ground_artillery_cp: 14,
       money: 2000
@@ -311,18 +344,18 @@ config.units.artillery = {
     initiative: 2,
 
     cost: {
-      regular_steel: 2,
-      lead: 1,
-      lumber: 1,
+      iron: 3,
+      wood: 1,
       food: 1,
       money: 3000,
 
       ground_artillery_cp: 20
     },
     maintenance: {
-      sulphur: 6,
-      wood: 3,
+      gunpowder: 6,
+      wood: 2,
       copper: 1,
+      lead: 1,
       food: 1,
 
       ground_artillery_cp: 4,
@@ -344,19 +377,23 @@ config.units.artillery = {
     initiative: 5,
 
     cost: {
-      lumber: 2,
       iron: 3,
-      lead: 1,
+      bronze: 2,
+      lumber: 2,
       food: 2,
+      lead: 1,
       money: 1000,
 
       ground_artillery_cp: 5
     },
     maintenance: {
+      gunpowder: 4,
+      paper: 2,
+      iron: 2,
       lead: 2,
-      sulphur: 2,
       lumber: 2,
       food: 1,
+      wood: 1,
 
       ground_artillery_cp: 8,
       money: 1800
@@ -410,18 +447,21 @@ config.units.artillery = {
     initiative: 3,
 
     cost: {
-      artillery: 1,
-      lumber: 3,
-      ammunition: 5,
+      artillery_shells: 5,
       food: 5,
+      regular_steel: 4,
+      lumber: 3,
+      paper: 2,
+      heavy_weaponry: 1,
       money: 2000,
 
       ground_artillery_cp: 15
     },
     maintenance: {
+      gunpowder: 6,
       lumber: 2,
       lead: 2,
-      ammunition: 1,
+      artillery_shells: 1,
       food: 1,
       uniforms: 1,
 
@@ -444,9 +484,9 @@ config.units.artillery = {
     initiative: 4,
 
     cost: {
-      artillery: 1,
+      heavy_weaponry: 1,
       lumber: 2,
-      ammunition: 5,
+      artillery_shells: 5,
       machine_parts: 5,
       food: 5,
       money: 2500,
@@ -455,8 +495,8 @@ config.units.artillery = {
     },
     maintenance: {
       lumber: 4,
+      artillery_shells: 2,
       lead: 2,
-      ammunition: 2,
       food: 2,
       regular_steel: 1,
       uniforms: 1,
@@ -480,22 +520,25 @@ config.units.artillery = {
     initiative: 3,
 
     cost: {
-      artillery: 5,
+      artillery_shells: 20,
       refined_petroil: 10,
-      ammunition: 20,
+      food: 8,
+      heavy_weaponry: 5,
       machine_parts: 5,
       iron: 5,
-      food: 20,
+      regular_steel: 4,
+      cabins: 1,
+      locomotives: 1,
       money: 150000,
 
       ground_artillery_cp: 40
     },
     maintenance: {
-      ammunition: 4,
+      gunpowder: 8,
+      artillery_shells: 4,
       refined_petroil: 2,
       machine_parts: 2,
       regular_steel: 2,
-      sulphur: 1,
       uniforms: 1,
 
       ground_artillery_cp: 20,
@@ -517,8 +560,8 @@ config.units.artillery = {
     initiative: 2,
 
     cost: {
-      artillery: 1,
-      ammunition: 10,
+      artillery_shells: 10,
+      heavy_weaponry: 1,
       food: 5,
       money: 3000,
 
@@ -526,7 +569,7 @@ config.units.artillery = {
     },
     maintenance: {
       regular_steel: 3,
-      ammunition: 2,
+      artillery_shells: 2,
       machine_parts: 1,
       sulphur: 1,
       uniforms: 1,
@@ -550,17 +593,18 @@ config.units.artillery = {
     initiative: 3,
 
     cost: {
-      artillery: 2,
-      ammunition: 5,
+      artillery_shells: 5,
       machine_parts: 5,
       food: 3,
+      heavy_weaponry: 2,
+      rubber: 2,
       money: 3000,
 
       ground_artillery_cp: 10
     },
     maintenance: {
       regular_steel: 3,
-      ammunition: 3,
+      artillery_shells: 3,
       machine_parts: 2,
       copper: 1,
       uniforms: 1,
@@ -583,19 +627,23 @@ config.units.artillery = {
     initiative: 4,
 
     cost: {
-      artillery: 3,
+      machine_parts: 8,
       refined_petroil: 5,
-      ammunition: 5,
-      machine_parts: 10,
+      artillery_shells: 5,
       food: 3,
+      heavy_weaponry: 3,
+      electric_gear: 2,
+      trucks: 2,
+      chassis: 1,
       money: 3500,
 
       ground_artillery_cp: 20
     },
     maintenance: {
+      refined_petroil: 4,
       regular_steel: 4,
       machine_parts: 4,
-      ammunition: 4,
+      artillery_shells: 4,
       refined_petroil: 2,
       uniforms: 1,
 
@@ -619,21 +667,22 @@ config.units.artillery = {
     initiative: 2,
 
     cost: {
-      artillery: 4,
-      ammunition: 10,
-      gold: 1,
-      machine_parts: 10,
+      artillery_shells: 10,
+      machine_parts: 8,
+      heavy_weaponry: 4,
       food: 3,
+      electric_gear: 1,
       money: 5000,
 
       ground_artillery_cp: 30
     },
     maintenance: {
-      ammunition: 5,
+      artillery_shells: 5,
       machine_parts: 3,
-      artillery: 1,
-      gold: 1,
+      electric_gear: 1,
+      heavy_weaponry: 1,
       refined_petroil: 1,
+      chassis: 1,
       uniforms: 1,
 
       ground_artillery_cp: 12,
@@ -655,18 +704,22 @@ config.units.artillery = {
     initiative: 4,
 
     cost: {
-      artillery: 2,
-      ammunition: 10,
-      machine_parts: 15,
+      artillery_shells: 10,
+      machine_parts: 8,
       food: 5,
+      electric_gear: 4,
+      computers: 2,
+      heavy_weaponry: 2,
+      chassis: 1,
+      televisions: 1,
       money: 3500,
 
       ground_artillery_cp: 10
     },
     maintenance: {
-      ammunition: 4,
+      artillery_shells: 4,
       machine_parts: 2,
-      artillery: 1,
+      heavy_weaponry: 1,
       refined_petroil: 1,
       uniforms: 1,
 
@@ -688,20 +741,27 @@ config.units.artillery = {
     initiative: 1,
 
     cost: {
-      artillery: 5,
-      refined_petroil: 10,
-      ammunition: 15,
-      machine_parts: 10,
+      artillery_shells: 15,
       food: 10,
+      refined_petroil: 10,
+      electric_gear: 6,
+      heavy_weaponry: 5,
+      machine_parts: 4,
+      stainless_steel: 4,
+      cameras: 2,
+      chassis: 2,
+      engines: 2,
+      televisions: 1,
       money: 4000,
 
       ground_units_cp: 20
     },
     maintenance: {
-      ammunition: 3,
+      artillery_shells: 3,
       machine_parts: 2,
       refined_petroil: 2,
       regular_steel: 2,
+      computers: 1,
       uniforms: 1,
 
       ground_artillery_cp: 12,
@@ -722,19 +782,24 @@ config.units.artillery = {
     initiative: 2,
 
     cost: {
-      artillery: 3,
+      artillery_shells: 10,
       refined_petroil: 5,
-      ammunition: 10,
       food: 5,
+      electric_gear: 4,
+      heavy_weaponry: 3,
+      machine_parts: 2,
+      cameras: 1,
       money: 4000,
 
       ground_units_cp: 20
     },
     maintenance: {
-      ammunition: 8,
+      artillery_shells: 8,
       machine_parts: 4,
+      explosives: 2,
       refined_petroil: 2,
       regular_steel: 2,
+      film: 1,
       uniforms: 1,
 
       ground_artillery_cp: 14,
@@ -756,21 +821,28 @@ config.units.artillery = {
     initiative: 2,
 
     cost: {
-      artillery: 5,
-      machine_parts: 20,
-      ammunition: 15,
+      machine_parts: 10,
       refined_petroil: 10,
+      electric_gear: 5,
       food: 5,
+      heavy_weaponry: 5,
+      lasers: 4,
+      integrated_circuits: 4,
+      computers: 4,
+      cameras: 2,
+      televisions: 2,
+      turbines: 2,
       money: 7000,
 
       ground_artillery_cp: 40
     },
     maintenance: {
-      ammunition: 6,
       machine_parts: 6,
       refined_petroil: 4,
       regular_steel: 4,
-      copper: 2,
+      copper_wire: 2,
+      integrated_circuits: 2,
+      electric_gear: 1,
       uniforms: 1,
 
       ground_artillery_cp: 20,
@@ -792,22 +864,26 @@ config.units.artillery = {
     initiative: 5,
 
     cost: {
-      artillery: 6,
-      machine_parts: 25,
-      ammunition: 5,
+      machine_parts: 20,
       regular_steel: 10,
+      integrated_circuits: 8,
+      lasers: 8,
+      heavy_weaponry: 6,
+      artillery_shells: 5,
+      electric_gear: 5,
       refined_petroil: 5,
+      computers: 4,
+      turbines: 4,
       food: 3,
       money: 10000,
 
       ground_artillery_cp: 40
     },
     maintenance: {
-      artillery: 2,
-      ammunition: 4,
       machine_parts: 4,
+      copper_wire: 3,
+      heavy_weaponry: 2,
       refined_petroil: 2,
-      copper: 3,
       regular_steel: 2,
       uniforms: 1,
 
