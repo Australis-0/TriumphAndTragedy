@@ -107,8 +107,9 @@ config.units.infantry = {
     initative: 2,
 
     cost: {
-      iron: 3,
       food: 5,
+      iron: 3,
+      regular_steel: 2,
       money: 2500,
 
       ground_units_cp: 20
@@ -183,6 +184,8 @@ config.units.infantry = {
     },
     quantity: 10000
   },
+
+  //Post-start infantry
   pike_and_square: {
     name: "Pike and Square",
     singular: "Pikeman",

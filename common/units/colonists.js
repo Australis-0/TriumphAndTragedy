@@ -13,10 +13,10 @@ config.units.colonists = {
     movement: 7.41,
 
     cost: {
-      wood: 1,
-      lead: 2,
-      iron: 3,
       food: 5,
+      iron: 3,
+      lead: 2,
+      wood: 1,
       money: 2500
     },
     maintenance: {
@@ -35,10 +35,10 @@ config.units.colonists = {
     movement: 12.97,
 
     cost: {
+      food: 10,
+      iron: 5,
       wood: 3,
       lead: 2,
-      iron: 5,
-      food: 10,
       money: 5000
     },
     maintenance: {
@@ -57,11 +57,11 @@ config.units.colonists = {
     movement: 14,
 
     cost: {
+      food: 20,
+      iron: 10,
       wood: 10,
       lead: 5,
       gold: 5,
-      iron: 10,
-      food: 20,
       money: 6500
     },
     maintenance: {
@@ -80,11 +80,11 @@ config.units.colonists = {
     movement: 30,
 
     cost: {
+      food: 40,
       wood: 20,
+      iron: 15,
       lead: 7,
       gold: 5,
-      iron: 15,
-      food: 40,
       money: 7500
     },
     maintenance: {
@@ -103,11 +103,11 @@ config.units.colonists = {
     movement: 20.37,
 
     cost: {
+      food: 50,
       wood: 25,
       lead: 10,
-      gold: 5,
       regular_steel: 10,
-      food: 50,
+      gold: 5,
       money: 7500
     },
     maintenance: {
@@ -126,12 +126,12 @@ config.units.colonists = {
     movement: 42.60,
 
     cost: {
-      wood: 10,
-      lead: 20,
-      gold: 10,
-      regular_steel: 20,
-      petroil: 10,
       food: 100,
+      regular_steel: 20,
+      lead: 20,
+      paper: 10,
+      petroil: 10,
+      wood: 10,
       money: 10000
     },
     maintenance: {
@@ -150,13 +150,13 @@ config.units.colonists = {
     movement: 900,
 
     cost: {
-      wood: 30,
-      lead: 50,
-      gold: 20,
-      regular_steel: 30,
-      iron: 5,
-      petroil: 15,
       food: 150,
+      lead: 50,
+      regular_steel: 30,
+      wood: 30,
+      paper: 20,
+      petroil: 15,
+      iron: 5,
       money: 20000
     },
     maintenance: {
