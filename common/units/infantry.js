@@ -17,16 +17,17 @@ config.units.infantry = {
     initiative: 1,
 
     cost: {
+      food: 2,
       wood: 1,
       iron: 1,
-      food: 2,
       money: 500,
 
       ground_units_cp: 5
     },
     maintenance: {
-      iron: 1,
       food: 1,
+      iron: 1,
+      traditional_medicines: 1,
 
       money: 200,
       ground_units_cp: 2
@@ -47,9 +48,9 @@ config.units.infantry = {
     initiative: 2,
 
     cost: {
+      food: 2,
       wood: 2,
       iron: 1,
-      food: 2,
       money: 700,
 
       ground_units_cp: 5
@@ -57,6 +58,7 @@ config.units.infantry = {
     maintenance: {
       iron: 2,
       food: 1,
+      traditional_medicines: 1,
 
       money: 350,
       ground_units_cp: 3
@@ -77,9 +79,9 @@ config.units.infantry = {
     initiative: 3,
 
     cost: {
-      wood: 1,
-      iron: 2,
       food: 3,
+      iron: 2,
+      wood: 1,
       money: 1000,
 
       ground_units_cp: 10
@@ -87,6 +89,7 @@ config.units.infantry = {
     maintenance: {
       iron: 3,
       food: 2,
+      traditional_medicines: 1,
 
       money: 400,
       ground_units_cp: 4
@@ -117,6 +120,7 @@ config.units.infantry = {
     maintenance: {
       iron: 5,
       food: 3,
+      traditional_medicines: 1,
 
       money: 800,
       ground_units_cp: 10
@@ -137,8 +141,8 @@ config.units.infantry = {
     initative: 3,
 
     cost: {
-      lumber: 2,
       food: 3,
+      lumber: 2,
       money: 1000,
 
       ground_units_cp: 10
@@ -146,6 +150,7 @@ config.units.infantry = {
     maintenance: {
       wood: 2,
       food: 1,
+      traditional_medicines: 1,
 
       ground_units_cp: 4,
       money: 800
@@ -166,8 +171,8 @@ config.units.infantry = {
     initiative: 2,
 
     cost: {
-      lumber: 3,
       food: 4,
+      lumber: 3,
       money: 2000,
 
       ground_units_cp: 20
@@ -175,6 +180,7 @@ config.units.infantry = {
     maintenance: {
       wood: 4,
       food: 2,
+      traditional_medicines: 1,
 
       ground_units_cp: 8,
       money: 1500
@@ -197,9 +203,9 @@ config.units.infantry = {
     initiative: 2,
 
     cost: {
-      wood: 1,
-      iron: 2,
       food: 3,
+      iron: 2,
+      wood: 1,
       money: 850,
 
       ground_units_cp: 5
@@ -207,6 +213,7 @@ config.units.infantry = {
     maintenance: {
       food: 1,
       iron: 1,
+      traditional_medicines: 1,
       wood: 1,
 
       ground_units_cp: 6,
@@ -221,17 +228,17 @@ config.units.infantry = {
     name: "Pike and Shot",
     singular: "Pike and Shot",
 
-    attack: 3,
+    attack: 2,
     defence: 5,
     manoeuvre: 2,
     movement: 3,
     initiative: 3,
 
     cost: {
-      wood: 1,
       iron: 4,
-      lead: 2,
       food: 3,
+      lead: 2,
+      wood: 1,
       money: 2500,
 
       ground_units_cp: 5
@@ -240,6 +247,7 @@ config.units.infantry = {
       iron: 2,
       food: 2,
       wood: 2,
+      traditional_medicines: 1,
 
       ground_units_cp: 7,
       money: 1500
@@ -252,17 +260,17 @@ config.units.infantry = {
   tercio: {
     name: "Tercio",
 
-    attack: 6,
+    attack: 3,
     defence: 4,
     manoeuvre: 1,
     movement: 3,
     initiative: 2,
 
     cost: {
-      wood: 1,
       iron: 5,
-      lead: 2,
       food: 3,
+      lead: 2,
+      wood: 1,
       money: 2500,
 
       ground_units_cp: 5
@@ -270,6 +278,7 @@ config.units.infantry = {
     maintenance: {
       iron: 2,
       food: 1,
+      traditional_medicines: 1,
       wood: 1,
 
       ground_units_cp: 8,
@@ -286,7 +295,7 @@ config.units.infantry = {
     name: "Arquebusiers",
     singular: "Arquebusier",
 
-    attack: 4,
+    attack: 2,
     defence: 1,
     manoeuvre: 2,
     movement: 4.50,
@@ -307,6 +316,7 @@ config.units.infantry = {
       food: 1,
       lead: 1,
       lumber: 1,
+      traditional_medicines: 1,
 
       ground_units_cp: 4,
       money: 600
@@ -319,7 +329,7 @@ config.units.infantry = {
   snaplock_infantry: {
     name: "Snaplock Infantry",
 
-    attack: 5,
+    attack: 3,
     defence: 1,
     manoeuvre: 2,
     movement: 4.45,
@@ -336,7 +346,7 @@ config.units.infantry = {
       ground_units_cp: 10
     },
     maintenance: {
-      sulphur: 2,
+      gunpowder: 2,
       wood: 2,
       food: 1,
       lead: 1,
@@ -352,7 +362,7 @@ config.units.infantry = {
   snaphaunce_infantry: {
     name: "Snaphaunce Infantry",
 
-    attack: 5,
+    attack: 3,
     defence: 2,
     manoeuvre: 3,
     movement: 4.45,
@@ -368,10 +378,11 @@ config.units.infantry = {
       ground_units_cp: 10
     },
     maintenance: {
-      sulphur: 2,
+      gunpowder: 2,
       wood: 2,
       lead: 2,
       food: 1,
+      traditional_medicines: 1,
 
       ground_units_cp: 6,
       money: 900
@@ -385,26 +396,27 @@ config.units.infantry = {
     name: "Matchlock Infantry",
     singular: "Matchlock Infantryman",
 
-    attack: 6,
+    attack: 3,
     defence: 2,
     manoeuvre: 2,
     movement: 4.83,
     initiative: 3,
 
     cost: {
-      lumber: 4,
-      iron: 2,
       lead: 5,
+      lumber: 4,
       food: 3,
+      iron: 2,
       money: 2000,
 
       ground_units_cp: 10
     },
     maintenance: {
+      gunpowder: 2,
       lumber: 2,
-      sulphur: 2,
       food: 1,
       lead: 1,
+      traditional_medicines: 1,
       wood: 1,
 
       ground_units_cp: 6,
@@ -419,26 +431,27 @@ config.units.infantry = {
     name: "Wheellock Infantry",
     name: "Wheellock Infantryman",
 
-    attack: 6,
+    attack: 3,
     defence: 3,
     manoeuvre: 1,
     movement: 4.83,
     initiative: 4,
 
     cost: {
-      lumber: 5,
-      iron: 2,
       lead: 5,
+      lumber: 5,
       food: 3,
+      iron: 2,
       money: 2000,
 
       ground_units_cp: 10
     },
     maintenance: {
+      gunpowder: 2,
       lead: 2,
       lumber: 2,
-      sulphur: 2,
       food: 1,
+      traditional_medicines: 1,
       wood: 1,
 
       ground_units_cp: 6,
@@ -453,26 +466,27 @@ config.units.infantry = {
     name: "Flintlock Infantry",
     singular: "Flintlock Infantryman",
 
-    attack: 10,
+    attack: 5,
     defence: 2,
     manoeuvre: 1,
     movement: 4.83,
     initiative: 5,
 
     cost: {
-      lumber: 5,
-      iron: 3,
       lead: 5,
+      lumber: 5,
       food: 3,
+      iron: 3,
       money: 1500,
 
       ground_units_cp: 10
     },
     maintenance: {
+      gunpowder: 2,
       lead: 2,
       lumber: 2,
-      sulphur: 2,
       food: 1,
+      traditional_medicines: 1,
       wood: 1,
 
       ground_units_cp: 6,
@@ -487,7 +501,7 @@ config.units.infantry = {
     name: "Musketeers",
     singular: "Musketeer",
 
-    attack: 12,
+    attack: 6,
     defence: 5,
     manoeuvre: 1,
     movement: 4.75,
@@ -495,19 +509,20 @@ config.units.infantry = {
 
     cost: {
       lumber: 5,
-      iron: 3,
-      lead: 4,
       food: 4,
+      lead: 4,
+      iron: 3,
       money: 1000,
 
       ground_units_cp: 10
     },
     maintenance: {
+      gunpowder: 2,
       lead: 2,
       lumber: 2,
-      sulphur: 2,
       food: 1,
       iron: 1,
+      traditional_medicines: 1,
       wood: 1,
 
       ground_units_cp: 8,
@@ -522,29 +537,30 @@ config.units.infantry = {
     name: "Line Infantry",
     singular: "Line Infantryman",
 
-    attack: 15,
+    attack: 8,
     defence: 4,
     manoeuvre: 0,
     movement: 4.70,
     initiative: 5,
 
     cost: {
-      lumber: 5,
       uniforms: 5,
+      lumber: 5,
       iron: 3,
-      ammunition: 5,
+      low_calibre_ammunition: 5,
       food: 2,
       money: 1000,
 
       ground_units_cp: 10,
     },
     maintenance: {
+      gunpowder: 2,
       lumber: 2,
       iron: 2,
       lead: 2,
-      sulphur: 2,
       food: 1,
-      ammunition: 1,
+      low_calibre_ammunition: 1,
+      tonics: 1,
       wood: 1,
 
       ground_units_cp: 6,
@@ -559,7 +575,7 @@ config.units.infantry = {
     name: "Fusiliers",
     singular: "Fusilier",
 
-    attack: 18,
+    attack: 9,
     defence: 6,
     manoeuvre: 1,
     movement: 3.50,
@@ -577,10 +593,11 @@ config.units.infantry = {
     },
     maintenance: {
       lumber: 2,
-      ammunition: 1,
+      low_calibre_ammunition: 1,
       food: 1,
       iron: 1,
       lead: 1,
+      tonics: 1,
 
       ground_units_cp: 8,
       money: 2000
@@ -594,28 +611,29 @@ config.units.infantry = {
     name: "Napoleonic Infantry",
     singular: "Napoleonic Infantryman",
 
-    attack: 10,
+    attack: 5,
     defence: 3,
     manoeuvre: 3,
     movement: 5,
     initiative: 4,
 
     cost: {
+      low_calibre_ammunition: 5,
       lumber: 5,
       uniforms: 5,
-      iron: 1,
-      ammunition: 5,
       food: 2,
+      iron: 1,
       money: 1000,
 
       ground_units_cp: 5
     },
     maintenance: {
-      lumber: 1,
-      ammunition: 1,
       food: 1,
       lead: 1,
+      low_calibre_ammunition: 1,
+      lumber: 1,
       regular_steel: 1,
+      tonics: 1,
       uniforms: 1,
 
       ground_units_cp: 4,
@@ -630,17 +648,17 @@ config.units.infantry = {
     name: "Light Infantry",
     singular: "Light Infantryman",
 
-    attack: 5,
+    attack: 3,
     defence: 1,
     manoeuvre: 5,
     movement: 6,
     initiative: 6,
 
     cost: {
-      lumber: 3,
       uniforms: 5,
+      lumber: 3,
       iron: 1,
-      ammunition: 3,
+      low_calibre_ammunition: 3,
       food: 1,
       money: 1000,
 
@@ -649,9 +667,10 @@ config.units.infantry = {
     maintenance: {
       lumber: 2,
       regular_steel: 2,
-      ammunition: 1,
+      low_calibre_ammunition: 1,
       food: 1,
       lead: 1,
+      tonics: 1,
       uniforms: 1,
 
       ground_units_cp: 8,
@@ -666,7 +685,7 @@ config.units.infantry = {
     name: "Rangers",
     singular: "Ranger",
 
-    attack: 7,
+    attack: 4,
     defence: 3,
     manoeuvre: 6,
     movement: 6.50,
@@ -674,7 +693,7 @@ config.units.infantry = {
 
     cost: {
       lumber: 10,
-      ammunition: 5,
+      low_calibre_ammunition: 5,
       food: 4,
       money: 1500,
 
@@ -683,10 +702,11 @@ config.units.infantry = {
     maintenance: {
       lumber: 2,
       regular_steel: 2,
-      ammunition: 1,
       food: 1,
       lead: 1,
-      sulphur: 1,
+      low_calibre_ammunition: 1,
+      gunpowder: 1,
+      tonics: 1,
       uniforms: 1,
 
       ground_units_cp: 10,
@@ -701,7 +721,7 @@ config.units.infantry = {
     name: "Guards",
     singular: "Guard",
 
-    attack: 20,
+    attack: 10,
     defence: 5,
     manoeuvre: 2,
     movement: 4.50,
@@ -709,19 +729,20 @@ config.units.infantry = {
 
     cost: {
       lumber: 15,
+      low_calibre_ammunition: 10,
       uniforms: 10,
-      iron: 2,
-      ammunition: 10,
       food: 5,
+      iron: 2,
 
       ground_units_cp: 10
     },
     maintenance: {
       regular_steel: 2,
       uniforms: 2,
-      ammunition: 1,
+      low_calibre_ammunition: 1,
       food: 1,
       lumber: 1,
+      tonics: 1,
       small_arms: 1,
 
       ground_units_cp: 8,
@@ -736,7 +757,7 @@ config.units.infantry = {
     name: "Riflemen",
     singular: "Rifleman",
 
-    attack: 14,
+    attack: 7,
     defence: 10,
     manoeuvre: 3,
     movement: 4.50,
@@ -744,20 +765,22 @@ config.units.infantry = {
 
     cost: {
       lumber: 10,
-      uniforms: 5,
       iron: 5,
-      ammunition: 5,
+      low_calibre_ammunition: 5,
+      uniforms: 5,
       food: 3,
       money: 2000,
 
       ground_units_cp: 10
     },
     maintenance: {
-      ammunition: 1,
+      low_calibre_ammunition: 1,
       food: 1,
       lumber: 1,
-      small_arms: 1,
+      pharmaceuticals: 1,
       regular_steel: 1,
+      small_arms: 1,
+      tonics: 1,
       uniforms: 1,
 
       ground_units_cp: 8,
@@ -772,7 +795,7 @@ config.units.infantry = {
     name: "Marines",
     singular: "Marine",
 
-    attack: 20,
+    attack: 10,
     defence: 3,
     manoeuvre: 5,
     movement: 8.21,
@@ -782,18 +805,20 @@ config.units.infantry = {
       lumber: 15,
       uniforms: 10,
       iron: 5,
-      ammunition: 5,
+      low_calibre_ammunition: 5,
       food: 5,
       money: 3000,
 
       ground_units_cp: 15
     },
     maintenance: {
-      ammunition: 3,
+      low_calibre_ammunition: 3,
       food: 2,
       small_arms: 2,
       uniforms: 2,
+      pharmaceuticals: 1,
       regular_steel: 1,
+      tonics: 1,
 
       ground_units_cp: 10,
       money: 2500
@@ -806,27 +831,29 @@ config.units.infantry = {
   breechloaded_infantry: {
     name: "Breechloaded Infantry",
 
-    attack: 18,
+    attack: 9,
     defence: 20,
     manoeuvre: 2,
     movement: 8.05,
     initiative: 5,
 
     cost: {
+      low_calibre_ammunition: 5,
       lumber: 5,
-      uniforms: 5,
       regular_steel: 5,
-      ammunition: 5,
+      uniforms: 5,
       food: 3,
       money: 3000,
 
       ground_units_cp: 10
     },
     maintenance: {
-      ammunition: 2,
+      low_calibre_ammunition: 2,
       food: 1,
       small_arms: 1,
+      pharmaceuticals: 1,
       regular_steel: 1,
+      tonics: 1,
       uniforms: 1,
 
       ground_units_cp: 8,
@@ -863,7 +890,7 @@ config.units.infantry = {
   bolt_action_infantry: {
     name: "Bolt-Action Infantry",
 
-    attack: 12,
+    attack: 6,
     defence: 20,
     manoeuvre: 7,
     movement: 7.24,
@@ -871,18 +898,19 @@ config.units.infantry = {
 
     cost: {
       small_arms: 10,
+      low_calibre_ammunition: 5,
       regular_steel: 2,
-      ammunition: 5,
       food: 2,
       money: 2500,
 
       ground_units_cp: 10
     },
     maintenance: {
-      ammunition: 2,
+      low_calibre_ammunition: 2,
       food: 2,
       regular_steel: 2,
       uniforms: 2,
+      pharmaceuticals: 1,
       small_arms: 1,
       wood: 1,
 
@@ -898,7 +926,7 @@ config.units.infantry = {
     name: "MG Companies",
     singular: "Machine Gunner",
 
-    attack: 35,
+    attack: 18,
     defence: 5,
     manoeuvre: 1,
     movement: 6.44,
@@ -906,20 +934,21 @@ config.units.infantry = {
 
     cost: {
       small_arms: 20,
-      ammunition: 10,
-      lumber: 2,
+      low_calibre_ammunition: 10,
       food: 5,
+      lumber: 2,
       money: 10000,
 
       ground_units_cp: 20,
     },
     maintenance: {
-      ammunition: 4,
+      low_calibre_ammunition: 4,
       food: 2,
-      machine_parts: 1,
       small_arms: 2,
-      uniforms: 1,
       lumber: 1,
+      machine_parts: 1,
+      pharmaceuticals: 1,
+      uniforms: 1,
 
       ground_units_cp: 12,
       money: 3000
@@ -933,15 +962,15 @@ config.units.infantry = {
     name: "Great War Infantry",
     singular: "Great War Soldier",
 
-    attack: 10,
+    attack: 5,
     defence: 25,
     manoeuvre: 5,
     movement: 7.85,
     initiative: 5,
 
     cost: {
+      low_calibre_ammunition: 5,
       small_arms: 5,
-      ammunition: 5,
       food: 3,
       money: 2000,
 
@@ -950,9 +979,10 @@ config.units.infantry = {
     maintenance: {
       regular_steel: 2,
       uniforms: 2,
-      ammunition: 1,
+      low_calibre_ammunition: 1,
       food: 1,
       lumber: 1,
+      pharmaceuticals: 1,
       small_arms: 1,
 
       ground_units_cp: 8,
@@ -967,29 +997,30 @@ config.units.infantry = {
     name: "Shock Troops",
     singular: "Shock Troop",
 
-    attack: 20,
+    attack: 10,
     defence: 5,
     manoeuvre: 6,
     movement: 11.27,
     initiative: 6,
 
     cost: {
-      small_arms: 10,
+      low_calibre_ammunition: 10,
       lumber: 10,
-      regular_steel: 5,
-      ammunition: 10,
+      small_arms: 10,
       food: 6,
+      regular_steel: 5,
       money: 5000,
 
       ground_units_cp: 20
     },
     maintenance: {
       food: 2,
-      small_arms: 2,
       regular_steel: 2,
-      ammunition: 1,
+      small_arms: 2,
+      low_calibre_ammunition: 1,
       lumber: 1,
       machine_parts: 1,
+      pharmaceuticals: 1,
       uniforms: 1,
 
       ground_units_cp: 14,
@@ -1006,7 +1037,7 @@ config.units.infantry = {
     name: "Freikorps",
     singular: "Freiwilliger",
 
-    attack: 12,
+    attack: 6,
     defence: 5,
     manoeuvre: 2,
     movement: 25.75,
@@ -1023,7 +1054,7 @@ config.units.infantry = {
       ground_units_cp: 5
     },
     maintenance: {
-      ammunition: 2,
+      low_calibre_ammunition: 2,
       refined_petroil: 1,
 
       money: 8000
@@ -1037,7 +1068,7 @@ config.units.infantry = {
     name: "Motorised Infantry",
     aliases: ["motorized_infantry"],
 
-    attack: 15,
+    attack: 8,
     defence: 5,
     manoeuvre: 5,
     movement: 72.42,
@@ -1047,18 +1078,21 @@ config.units.infantry = {
       small_arms: 10,
       regular_steel: 10,
       refined_petroil: 5,
+      lorries: 4,
       food: 4,
       money: 2500,
 
       ground_units_cp: 10
     },
     maintenance: {
+      low_calibre_ammunition: 2,
+      radios: 2,
       refined_petroil: 2,
-      ammunition: 2,
       food: 1,
       machine_parts: 1,
-      small_arms: 1,
+      pharmaceuticals: 1,
       regular_steel: 1,
+      small_arms: 1,
       uniforms: 1,
 
       ground_units_cp: 9,
@@ -1072,7 +1106,7 @@ config.units.infantry = {
   paratroopers: {
     name: "Paratroopers",
 
-    attack: 5,
+    attack: 8,
     defence: 3,
     manoeuvre: 8,
     movement: 160.93,
@@ -1080,21 +1114,29 @@ config.units.infantry = {
 
     quantity: 10000,
     cost: {
-      small_arms: 5,
-      artillery: 1,
+      aluminium: 8,
+      food: 5,
       lumber: 5,
       refined_petroil: 5,
-      food: 5,
+      small_arms: 5,
+      chassis: 4,
+      electric_gear: 2,
+      fabric: 2,
+      turbines: 2,
+      heavy_weaponry: 1,
       money: 5000,
 
       ground_units_cp: 20
     },
     maintenance: {
       small_arms: 6,
-      ammunition: 4,
+      high_calibre_ammunition: 4,
+      low_calibre_ammunition: 4,
       refined_petroil: 4,
       food: 2,
       machine_parts: 2,
+      radios: 2,
+      pharmaceuticals: 1,
       regular_steel: 1,
       uniforms: 1,
 
@@ -1109,56 +1151,64 @@ config.units.infantry = {
   special_forces: {
     name: "Special Forces",
 
-    attack: 40,
+    attack: 800,
     defence: 3,
     manoeuvre: 8,
     movement: 160.93,
     initiative: 8,
 
     cost: {
-      small_arms: 10,
-      artillery: 1,
-      regular_steel: 5,
-      ammunition: 15,
-      refined_petroil: 5,
+      low_calibre_ammunition: 15,
       food: 10,
+      high_calibre_ammunition: 10,
+      small_arms: 10,
+      refined_petroil: 5,
+      regular_steel: 5,
+      uniforms: 5,
+      jeeps: 4,
+      lorries: 4,
+      heavy_weaponry: 1,
       money: 20000,
 
       ground_units_cp: 40
     },
     maintenance: {
-      ammunition: 6,
+      low_calibre_ammunition: 6,
       refined_petroil: 6,
-      small_arms: 4,
+      high_calibre_ammunition: 4,
       machine_parts: 4,
+      small_arms: 4,
       food: 2,
+      plastic_explosives: 2,
+      radios: 2,
       regular_steel: 2,
       uniforms: 2,
       copper: 1,
       lumber: 1,
+      pharmaceuticals: 1,
 
       ground_units_cp: 20,
       money: 10000
     },
     manpower_cost: {
-      soldiers: 10000
+      soldiers: 1000
     },
-    quantity: 10000
+    quantity: 1000
   },
   modern_infantry: {
     name: "Modern Infantry",
 
-    attack: 20,
+    attack: 10,
     defence: 35,
     manoeuvre: 4,
     movement: 8.85,
     initiative: 5,
 
     cost: {
-      small_arms: 5,
-      ammunition: 10,
-      uniforms: 5,
+      low_calibre_ammunition: 10,
       regular_steel: 5,
+      small_arms: 5,
+      uniforms: 5,
       food: 3,
       money: 3500,
 
@@ -1166,11 +1216,13 @@ config.units.infantry = {
     },
     maintenance: {
       small_arms: 4,
-      ammunition: 2,
+      low_calibre_ammunition: 2,
+      radios: 2,
       uniforms: 2,
       food: 1,
       lumber: 1,
       machine_parts: 1,
+      pharmaceuticals: 1,
       regular_steel: 1,
 
       ground_units_cp: 2,
@@ -1184,32 +1236,34 @@ config.units.infantry = {
   combined_arms_infantry: {
     name: "Combined Arms Infantry",
 
-    attack: 25,
+    attack: 13,
     defence: 8.85,
     manoeuvre: 3,
     movement: 241.40,
     initiative: 5,
 
     cost: {
+      low_calibre_ammunition: 10,
       small_arms: 10,
-      ammunition: 10,
-      uniforms: 5,
-      artillery: 1,
       regular_steel: 8,
       refined_petroil: 5,
+      uniforms: 5,
       food: 3,
+      heavy_weaponry: 1,
       money: 5000,
 
       ground_units_cp: 10
     },
     maintenance: {
-      ammunition: 4,
+      low_calibre_ammunition: 4,
       small_arms: 4,
       food: 2,
+      radios: 2,
       refined_petroil: 2,
       uniforms: 2,
       lumber: 1,
       machine_parts: 1,
+      pharmaceuticals: 1,
       regular_steel: 1,
 
       ground_units_cp: 6,
@@ -1223,7 +1277,7 @@ config.units.infantry = {
   contemporary_infantry: {
     name: "Contemporary Infantry",
 
-    attack: 30,
+    attack: 15,
     defence: 65,
     manoeuvre: 3,
     movement: 9.01,
@@ -1231,23 +1285,25 @@ config.units.infantry = {
 
     cost: {
       small_arms: 15,
-      ammunition: 10,
+      low_calibre_ammunition: 10,
       machine_parts: 10,
       uniforms: 5,
-      gold: 1,
       food: 5,
+      integrated_circuits: 1,
       money: 5500,
 
       ground_units_cp: 20
     },
     maintenance: {
-      ammunition: 5,
+      low_calibre_ammunition: 5,
       small_arms: 4,
       food: 2,
+      radios: 2,
       refined_petroil: 2,
       uniforms: 2,
       lumber: 1,
       machine_parts: 1,
+      pharmaceuticals: 1,
       regular_steel: 1,
 
       ground_units_cp: 8,
@@ -1262,30 +1318,33 @@ config.units.infantry = {
     name: "Augmented Infantry",
 
     attack: 40,
-    defence: 15,
+    defence: 25,
     manoeuvre: 1,
     movement: 28.16,
     initiative: 9,
 
     cost: {
       small_arms: 15,
-      ammunition: 10,
-      artillery: 3,
-      machine_parts: 15,
-      gold: 5,
+      computers: 12,
       food: 10,
+      low_calibre_ammunition: 10,
+      machine_parts: 6,
+      integrated_circuits: 5,
+      heavy_weaponry: 3,
       money: 7000,
 
       ground_units_cp: 40
     },
     maintenance: {
       small_arms: 6,
-      ammunition: 4,
+      low_calibre_ammunition: 4,
       food: 2,
       machine_parts: 2,
+      radios: 2,
       refined_petroil: 2,
       uniforms: 2,
       lumber: 1,
+      pharmaceuticals: 1,
       regular_steel: 1,
 
       ground_units_cp: 6,

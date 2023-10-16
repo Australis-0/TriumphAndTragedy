@@ -218,7 +218,7 @@ config.buildings.agriculture = {
       }
     }
   },
-  honeymaker: {
+  honeymakers: {
     name: "Honeymakers",
     singular: "Honeymaker",
 

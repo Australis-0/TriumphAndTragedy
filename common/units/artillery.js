@@ -633,7 +633,7 @@ config.units.artillery = {
       food: 3,
       heavy_weaponry: 3,
       electric_gear: 2,
-      trucks: 2,
+      lorries: 2,
       chassis: 1,
       money: 3500,
 
