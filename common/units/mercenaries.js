@@ -19,7 +19,7 @@ config.units.mercenaries = {
       money: 4000
     },
     maintenance: {
-      money: 1000
+      money: 2000
     },
     manpower_cost: {
       soldiers: 10000
@@ -40,7 +40,7 @@ config.units.mercenaries = {
       money: 6500
     },
     maintenance: {
-      money: 1500
+      money: 3000
     },
     manpower_cost: {
       soldiers: 10000
@@ -60,7 +60,7 @@ config.units.mercenaries = {
       money: 7000
     },
     maintenance: {
-      money: 3500
+      money: 7000
     },
     manpower_cost: {
       soldiers: 10000
@@ -72,7 +72,7 @@ config.units.mercenaries = {
     singular: "Swiss Guard",
 
     attack: 2,
-    defence: 6,
+    defence: 8,
     manoeuvre: 3,
     movement: 6,
     initiative: 2,
@@ -81,7 +81,7 @@ config.units.mercenaries = {
       money: 7000,
     },
     maintenance: {
-      money: 4000
+      money: 8000
     },
     manpower_cost: {
       soldiers: 10000
