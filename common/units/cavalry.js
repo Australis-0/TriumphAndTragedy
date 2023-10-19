@@ -17,17 +17,18 @@ config.units.cavalry = {
     initiative: 3,
 
     cost: {
-      wood: 1,
-      iron: 3,
       food: 3,
+      iron: 3,
+      wood: 1,
       money: 500,
 
       ground_units_cp: 10
     },
     maintenance: {
-      wood: 1,
       food: 1,
       iron: 1,
+      traditional_medicines: 1,
+      wood: 1,
 
       ground_units_cp: 4,
       money: 600
@@ -48,10 +49,11 @@ config.units.cavalry = {
     initiative: 4,
 
     cost: {
+      food: 4,
       lumber: 2,
       regular_steel: 2,
       tools: 1,
-      food: 4,
+      traditional_medicines: 1,
       money: 1000,
 
       ground_units_cp: 20
@@ -91,6 +93,7 @@ config.units.cavalry = {
       wood: 2,
       food: 1,
       iron: 1,
+      traditional_medicines: 1,
 
       ground_units_cp: 5,
       money: 750
@@ -126,6 +129,7 @@ config.units.cavalry = {
       iron: 2,
       food: 1,
       lead: 1,
+      traditional_medicines: 1,
 
       ground_units_cp: 6,
       money: 1200
@@ -161,6 +165,7 @@ config.units.cavalry = {
       food: 1,
       lead: 1,
       regular_steel: 1,
+      tonics: 1,
 
       ground_units_cp: 8,
       money: 1500
@@ -198,6 +203,7 @@ config.units.cavalry = {
       food: 1,
       lead: 1,
       regular_steel: 1,
+      tonics: 1,
 
       ground_units_cp: 6,
       money: 1250
@@ -229,12 +235,13 @@ config.units.cavalry = {
       ground_units_cp: 5
     },
     maintenance: {
+      food: 1,
       iron: 1,
       low_calibre_ammunition: 1,
       lumber: 1,
       small_arms: 1,
+      tonics: 1,
       uniforms: 1,
-      food: 1,
 
       ground_units_cp: 8,
       money: 800
@@ -269,6 +276,7 @@ config.units.cavalry = {
       low_calibre_ammunition: 1,
       lumber: 1,
       food: 1,
+      pharmaceuticals: 1,
 
       ground_units_cp: 10,
       money: 1200
@@ -306,9 +314,10 @@ config.units.cavalry = {
       machine_parts: 2,
       regular_steel: 2,
       small_arms: 2,
-      uniforms: 1,
-      low_calibre_ammunition: 1,
       food: 1,
+      low_calibre_ammunition: 1,
+      pharmaceuticals: 1,
+      uniforms: 1,
 
       ground_units_cp: 6,
       money: 2500

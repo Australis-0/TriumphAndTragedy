@@ -30,8 +30,9 @@ config.units.artillery = {
       gunpowder: 2,
       lead: 2,
       paper: 2,
-      lumber: 1,
       food: 1,
+      lumber: 1,
+      traditional_medicines: 1,
 
       ground_artillery_cp: 2,
       money: 1200
@@ -63,9 +64,10 @@ config.units.artillery = {
     maintenance: {
       iron: 2,
       gunpowder: 1,
+      food: 1,
       lead: 1,
       lumber: 1,
-      food: 1,
+      traditional_medicines: 1,
 
       ground_artillery_cp: 4,
       money: 800
@@ -99,9 +101,10 @@ config.units.artillery = {
       gunpowder: 4,
       lead: 2,
       paper: 2,
+      food: 1,
       iron: 1,
       lumber: 1,
-      food: 1,
+      traditional_medicines: 1,
 
       ground_artillery_cp: 6,
       money: 1200
@@ -136,8 +139,9 @@ config.units.artillery = {
       iron: 2,
       lead: 2,
       paper: 2,
-      lumber: 1,
       food: 1,
+      lumber: 1,
+      traditional_medicines: 1,
 
       ground_artillery_cp: 8,
       money: 1000
@@ -173,6 +177,7 @@ config.units.artillery = {
       food: 1,
       lumber: 1,
       paper: 1,
+      traditional_medicines: 1,
 
       ground_artillery_cp: 9,
       money: 1200
@@ -211,6 +216,7 @@ config.units.artillery = {
       paper: 2,
       iron: 2,
       food: 1,
+      traditional_medicines: 1,
 
       ground_artillery_cp: 12,
       money: 1800
@@ -250,6 +256,7 @@ config.units.artillery = {
       saltpetre: 2,
       food: 1,
       paper: 1,
+      traditional_medicines: 1,
 
       ground_artillery_cp: 10,
       money: 1500
@@ -286,6 +293,7 @@ config.units.artillery = {
       lumber: 1,
       iron: 1,
       paper: 1,
+      traditional_medicines: 1,
 
       ground_artillery_cp: 6,
       money: 1200
@@ -324,6 +332,7 @@ config.units.artillery = {
       food: 2,
       lumber: 2,
       paper: 2,
+      traditional_medicines: 1,
 
       ground_artillery_cp: 14,
       money: 2000
@@ -357,6 +366,7 @@ config.units.artillery = {
       copper: 1,
       lead: 1,
       food: 1,
+      traditional_medicines: 1,
 
       ground_artillery_cp: 4,
       money: 1800
@@ -393,6 +403,7 @@ config.units.artillery = {
       lead: 2,
       lumber: 2,
       food: 1,
+      traditional_medicines: 1,
       wood: 1,
 
       ground_artillery_cp: 8,
@@ -427,6 +438,7 @@ config.units.artillery = {
       wood: 3,
       copper: 1,
       food: 1,
+      tonics: 1,
 
       ground_artillery_cp: 6,
       money: 2200
@@ -463,6 +475,7 @@ config.units.artillery = {
       lead: 2,
       artillery_shells: 1,
       food: 1,
+      tonics: 1,
       uniforms: 1,
 
       ground_artillery_cp: 8,
@@ -499,6 +512,7 @@ config.units.artillery = {
       lead: 2,
       food: 2,
       regular_steel: 1,
+      tonics: 1,
       uniforms: 1,
 
       ground_artillery_cp: 12,
@@ -539,6 +553,7 @@ config.units.artillery = {
       refined_petroil: 2,
       machine_parts: 2,
       regular_steel: 2,
+      pharmaceuticals: 1,
       uniforms: 1,
 
       ground_artillery_cp: 20,
@@ -572,6 +587,7 @@ config.units.artillery = {
       artillery_shells: 2,
       machine_parts: 1,
       sulphur: 1,
+      pharmaceuticals: 1,
       uniforms: 1,
 
       ground_artillery_cp: 8,
@@ -607,6 +623,8 @@ config.units.artillery = {
       artillery_shells: 3,
       machine_parts: 2,
       copper: 1,
+      pharmaceuticals: 1,
+      radios: 1,
       uniforms: 1,
 
       ground_artillery_cp: 8,
@@ -645,6 +663,8 @@ config.units.artillery = {
       machine_parts: 4,
       artillery_shells: 4,
       refined_petroil: 2,
+      pharmaceuticals: 1,
+      radios: 1,
       uniforms: 1,
 
       ground_artillery_cp: 12,
@@ -683,6 +703,8 @@ config.units.artillery = {
       heavy_weaponry: 1,
       refined_petroil: 1,
       chassis: 1,
+      pharmaceuticals: 1,
+      radios: 1,
       uniforms: 1,
 
       ground_artillery_cp: 12,
@@ -720,6 +742,8 @@ config.units.artillery = {
       artillery_shells: 4,
       machine_parts: 2,
       heavy_weaponry: 1,
+      pharmaceuticals: 1,
+      radios: 1,
       refined_petroil: 1,
       uniforms: 1,
 
@@ -762,6 +786,8 @@ config.units.artillery = {
       refined_petroil: 2,
       regular_steel: 2,
       computers: 1,
+      pharmaceuticals: 1,
+      radios: 1,
       uniforms: 1,
 
       ground_artillery_cp: 12,
@@ -800,6 +826,7 @@ config.units.artillery = {
       refined_petroil: 2,
       regular_steel: 2,
       film: 1,
+      radios: 1,
       uniforms: 1,
 
       ground_artillery_cp: 14,
@@ -843,6 +870,8 @@ config.units.artillery = {
       copper_wire: 2,
       integrated_circuits: 2,
       electric_gear: 1,
+      pharmaceuticals: 1,
+      radios: 1,
       uniforms: 1,
 
       ground_artillery_cp: 20,
@@ -885,6 +914,8 @@ config.units.artillery = {
       heavy_weaponry: 2,
       refined_petroil: 2,
       regular_steel: 2,
+      pharmaceuticals: 1,
+      radios: 1,
       uniforms: 1,
 
       ground_artillery_cp: 10,

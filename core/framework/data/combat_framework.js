@@ -19,9 +19,10 @@ module.exports = {
       //Go through all units to deal damage
       for (var i = 0; i < defender_units.length; i++) {
         if (!isNaN(defending_army_obj.units[defender_units[i]])) {
+          var air_defence_scalar = (defending_army_obj.type == "navy") ? config.defines.combat.aeroplane_sea_defence_bonus : 1;
           var local_unit = getUnit(defender_units[i]);
 
-          var local_defence = getDefence(user_id, defender_units[i]);
+          var local_defence = getDefence(user_id, defender_units[i])*air_defence_scalar;
           var local_manoeuvre = returnSafeNumber(local_unit.manoeuvre);
           var local_manpower_costs = (local_unit.manpower_cost) ?
             Object.keys(local_unit.manpower_cost) :
@@ -105,7 +106,7 @@ module.exports = {
       //Check if unit is of type air in a navy
       if (local_category.type == "air")
         if (army_obj.type == "navy")
-          local_attack = local_attack*1.5; //+50% boost to aeroplanes at sea
+          local_attack = local_attack*config.defines.combat.aeroplane_sea_attack_bonus; //+100% boost to aeroplanes at sea
 
       var local_initiative_roll = randomNumber(0, 20);
       var local_attack_roll = randomNumber(local_attack*(1/3), local_attack);

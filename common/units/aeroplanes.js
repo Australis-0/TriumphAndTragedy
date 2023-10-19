@@ -26,6 +26,7 @@ config.units.aeroplanes = {
       aeroplanes_cp: 5
     },
     maintenance: {
+      tonics: 1,
       wood: 1,
 
       aeroplanes_cp: 2,
@@ -60,6 +61,7 @@ config.units.aeroplanes = {
     maintenance: {
       coal: 1,
       hydrogen: 1,
+      tonics: 1,
 
       aeroplanes_cp: 4,
       money: 500
@@ -97,6 +99,7 @@ config.units.aeroplanes = {
       ammunition: 2,
       coal: 1,
       machine_parts: 1,
+      tonics: 1,
       wood: 1,
 
       aeroplanes_cp: 20,
@@ -133,6 +136,7 @@ config.units.aeroplanes = {
     },
     maintenance: {
       ammunition: 1,
+      pharmaceuticals: 1,
       refined_petroil: 1,
 
       aeroplanes_cp: 5,
@@ -167,6 +171,7 @@ config.units.aeroplanes = {
     },
     maintenance: {
       low_calibre_ammunition: 1,
+      pharmaceuticals: 1,
       refined_petroil: 1,
       regular_steel: 1,
 
@@ -206,8 +211,9 @@ config.units.aeroplanes = {
     maintenance: {
       low_calibre_ammunition: 2,
       refined_petroil: 2,
-      small_arms: 1,
+      pharmaceuticals: 1,
       regular_steel: 1,
+      small_arms: 1,
 
       aeroplanes_cp: 5,
       money: 850
@@ -247,8 +253,9 @@ config.units.aeroplanes = {
       low_calibre_ammunition: 2,
       refined_petroil: 2,
       machine_parts: 1,
-      small_arms: 1,
+      pharmaceuticals: 1,
       regular_steel: 1,
+      small_arms: 1,
 
       aeroplanes_cp: 7
     },
@@ -290,10 +297,11 @@ config.units.aeroplanes = {
       ammunition: 2,
       refined_petroil: 2,
       machine_parts: 2,
-      small_arms: 1,
       high_calibre_ammunition: 1,
+      pharmaceuticals: 1,
       regular_steel: 1,
       rubber: 1,
+      small_arms: 1,
 
       money: 1000,
       aeroplanes_cp: 7
@@ -335,6 +343,7 @@ config.units.aeroplanes = {
       aluminium: 1,
       high_calibre_ammunition: 1,
       machine_parts: 1,
+      pharmaceuticals: 1,
       regular_steel: 1,
       rubber: 1,
       money: 1350,
@@ -379,6 +388,7 @@ config.units.aeroplanes = {
       low_calibre_ammunition: 3,
       small_arms: 2,
       aluminium: 1,
+      pharmaceuticals: 1,
       rubber: 1,
       money: 2500,
 
@@ -426,6 +436,7 @@ config.units.aeroplanes = {
       small_arms: 2,
       electric_gear: 1,
       low_calibre_ammunition: 1,
+      pharmaceuticals: 1,
       resistors: 1,
       rubber: 1,
 
@@ -481,6 +492,7 @@ config.units.aeroplanes = {
       copper_wire: 1,
       explosives: 1,
       integrated_circuits: 1,
+      pharmaceuticals: 1,
       rubber: 1,
 
       aeroplanes_cp: 15,
@@ -575,6 +587,7 @@ config.units.aeroplanes = {
       integrated_circuits: 2,
       aluminium: 1,
       gold: 1,
+      pharmaceuticals: 1,
       rubber: 1,
 
       aeroplanes_cp: 20,
@@ -616,6 +629,7 @@ config.units.aeroplanes = {
       explosives: 2,
       refined_petroil: 2,
       machine_parts: 1,
+      pharmaceuticals: 1,
       regular_steel: 1,
 
       aeroplanes_cp: 4,
@@ -660,6 +674,7 @@ config.units.aeroplanes = {
       machine_parts: 2,
       film: 1,
       low_calibre_ammunition: 1,
+      pharmaceuticals: 1,
       regular_steel: 1,
 
       aeroplanes_cp: 6,
@@ -703,6 +718,7 @@ config.units.aeroplanes = {
       refined_petroil: 3,
       machine_parts: 3,
       film: 2,
+      pharmaceuticals: 1,
       radios: 2,
       regular_steel: 1,
       rubber: 1,
@@ -751,6 +767,7 @@ config.units.aeroplanes = {
       machine_parts: 4,
       film: 4,
       electric_gear: 1,
+      pharmaceuticals: 1,
       regular_steel: 1,
       rubber: 1,
 
@@ -799,6 +816,7 @@ config.units.aeroplanes = {
       high_calibre_ammunition: 4,
       aluminium: 2,
       electric_gear: 2,
+      pharmaceuticals: 1,
       rubber: 1,
 
       aeroplanes_cp: 20,
@@ -848,6 +866,7 @@ config.units.aeroplanes = {
       electric_gear: 3,
       small_arms: 2,
       computers: 1,
+      pharmaceuticals: 1,
       rubber: 1,
 
       aeroplanes_cp: 15,
@@ -886,8 +905,9 @@ config.units.aeroplanes = {
       aeroplanes_cp: 5
     },
     maintenance: {
-      film: 1,
       refined_petroil: 2,
+      film: 1,
+      pharmaceuticals: 1,
       machine_parts: 1,
 
       aeroplanes_cp: 8,
@@ -933,6 +953,7 @@ config.units.aeroplanes = {
       machine_parts: 2,
       explosives: 1,
       film: 1,
+      pharmaceuticals: 1,
 
       aeroplanes_cp: 10,
       money: 1200
@@ -984,6 +1005,7 @@ config.units.aeroplanes = {
       electric_gear: 2,
       integrated_circuits: 2,
       low_calibre_ammunition: 2,
+      pharmaceuticals: 1,
 
       aeroplanes_cp: 12,
       money: 2000
@@ -1022,6 +1044,7 @@ config.units.aeroplanes = {
       refined_petroil: 4,
       machine_parts: 2,
       torpedoes: 2,
+      pharmaceuticals: 1,
 
       aeroplanes_cp: 8,
       money: 750
@@ -1057,6 +1080,7 @@ config.units.aeroplanes = {
       refined_petroil: 4,
       machine_parts: 3,
       low_calibre_ammunition: 2,
+      pharmaceuticals: 1,
       radios: 1,
       rubber: 1,
       small_arms: 1,

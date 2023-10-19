@@ -36,6 +36,7 @@ config.units.armour = {
       regular_steel: 2,
       low_calibre_ammunition: 1,
       machine_parts: 1,
+      pharmaceuticals: 1,
       rubber: 1,
 
       ground_vehicles_cp: 2,
@@ -74,6 +75,7 @@ config.units.armour = {
       regular_steel: 1,
       low_calibre_ammunition: 1,
       machine_parts: 1,
+      pharmaceuticals: 1,
 
       ground_vehicles_cp: 2,
       money: 700
@@ -109,6 +111,7 @@ config.units.armour = {
       refined_petroil: 4,
       food: 2,
       low_calibre_ammunition: 2,
+      pharmaceuticals: 1,
       radios: 1,
       regular_steel: 1,
       small_arms: 1,
@@ -146,6 +149,7 @@ config.units.armour = {
       refined_petroil: 2,
       machine_parts: 1,
       low_calibre_ammunition: 1,
+      pharmaceuticals: 1,
       small_arms: 1,
 
       ground_vehicles_cp: 2,
@@ -187,8 +191,9 @@ config.units.armour = {
       machine_parts: 2,
       computers: 1,
       low_calibre_ammunition: 1,
-      small_arms: 1,
+      pharmaceuticals: 1,
       radios: 1,
+      small_arms: 1,
 
       ground_vehicles_cp: 6,
       money: 2000
@@ -233,6 +238,7 @@ config.units.armour = {
       small_arms: 2,
       computers: 1,
       high_calibre_ammunition: 1,
+      pharmaceuticals: 1,
       radios: 1,
       regular_steel: 1,
 
@@ -277,6 +283,7 @@ config.units.armour = {
       food: 2,
       regular_steel: 2,
       engines: 1,
+      pharmaceuticals: 1,
 
       ground_vehicles_cp: 10,
       money: 1000
@@ -318,6 +325,7 @@ config.units.armour = {
       low_calibre_ammunition: 2,
       engines: 1,
       high_calibre_ammunition: 1,
+      pharmaceuticals: 1,
       small_arms: 1,
 
       ground_vehicles_cp: 8,
@@ -360,8 +368,9 @@ config.units.armour = {
       high_calibre_ammunition: 2,
       low_calibre_ammunition: 2,
       machine_parts: 2,
-      small_arms: 1,
+      pharmaceuticals: 1,
       regular_steel: 1,
+      small_arms: 1,
 
       ground_vehicles_cp: 6,
       money: 1200
@@ -411,6 +420,7 @@ config.units.armour = {
       electric_gear: 1,
       low_calibre_ammunition: 1,
       heavy_weaponry: 1,
+      pharmaceuticals: 1,
       plastic_explosives: 1,
       stainless_steel: 1,
       small_arms: 1,
@@ -466,6 +476,7 @@ config.units.armour = {
       low_calibre_ammunition: 2,
       regular_steel: 2,
       small_arms: 2,
+      pharmaceuticals: 1,
       plastic_explosives: 1,
 
       ground_vehicles_cp: 15,
@@ -505,9 +516,10 @@ config.units.armour = {
       food: 2,
       delayed_fuse_shells: 1,
       heavy_weaponry: 1,
+      low_calibre_ammunition: 1,
+      pharmaceuticals: 1,
       plastic_explosives: 1,
       sabot_rounds: 1,
-      low_calibre_ammunition: 1,
 
       ground_vehicles_cp: 4,
       money: 2000
@@ -551,9 +563,10 @@ config.units.armour = {
       regular_steel: 3,
       ap_rounds: 2,
       food: 2,
+      low_calibre_ammunition: 2,
       sabot_rounds: 2,
       delayed_fuse_shells: 1,
-      low_calibre_ammunition: 2,
+      pharmaceuticals: 1,
       plastic_explosives: 1,
       small_arms: 1,
 
@@ -609,6 +622,7 @@ config.units.armour = {
       electric_gear: 2,
       small_arms: 2,
       heavy_weaponry: 1,
+      pharmaceuticals: 1,
       plastic_explosives: 1,
       capacitors: 1,
       copper_wire: 1,
@@ -668,6 +682,7 @@ config.units.armour = {
       heavy_weaponry: 1,
       high_calibre_ammunition: 1,
       low_calibre_ammunition: 1,
+      pharmaceuticals: 1,
       plastic_explosives: 1,
       small_arms: 1,
       transistors: 1,
@@ -729,6 +744,7 @@ config.units.armour = {
       electric_gear: 2,
       food: 2,
       heavy_weaponry: 1,
+      pharmaceuticals: 1,
       plastic_explosives: 1,
 
       ground_vehicles_cp: 22,
@@ -785,6 +801,7 @@ config.units.armour = {
       small_arms: 2,
       heavy_weaponry: 2,
       computers: 1,
+      pharmaceuticals: 1,
       plastic_explosives: 1,
       rubber: 1,
 

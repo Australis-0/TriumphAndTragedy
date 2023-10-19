@@ -1,4 +1,6 @@
 config.defines.combat = {
+	aeroplane_sea_attack_bonus: 2, //What bonus in terms of attack should aeroplanes have at sea?
+	aeroplane_sea_defence_bonus: 2, //What bonus in terms of defence should aeroplanes have at sea?
 	anti_aircraft_base_damage: 10000, //How much AP should each AA gun be worth at the start?
 	anti_aircraft_building: "ack_ack_guns", //What is the name of the anti-aircraft building?
 	anti_aircraft_effectiveness: 1, //How effective should ack-ack be by default? This modifies total AP damage outputted by ack-ack gun buildings
@@ -32,7 +34,6 @@ config.defines.combat = {
   mobilise_unit: "none", //Default unit for mobilisation
 	occupation_requirement: 0.005, //What is the percentage of the population a hostile army needs for occupation?
   peacetime_mobilisation_penalty: 0.5, //What should the penalty for peacetime mobilisation be (in infamy)?
-	seaplane_bonus: 0.5, //What should the bonus combat modifier whilst at sea be?
 	submarine_cooldown: 1, //How many turns should it take for submarines to cooldown from their previous operation? Set to 0 to disable
 	unit_upkeep: 1, //How much should 100 units cost per turn?
   war_exhaustion_blockade_limit: 0.20, //What should be the maximum warscore penalty for being blockaded?

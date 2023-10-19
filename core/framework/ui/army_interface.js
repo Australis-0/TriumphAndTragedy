@@ -179,9 +179,21 @@ module.exports = {
 
         army_string.push("");
 
+        //Fetch local modifiers to naval fleet
+        var air_attack_bonus = config.defines.combat.aeroplane_sea_attack_bonus;
+        var air_bonus_string = "";
+        var air_defence_bonus = config.defines.combat.aeroplane_sea_defence_bonus;
+
+        if (air_attack_bonus || air_defence_bonus)
+          if (air_attack_bonus == air_defence_bonus) {
+            air_bonus_string = `**${printPercentage(air_attack_bonus, { base_zero: true, display_prefix: true })}** attack and defence bonus`;
+          } else {
+            air_bonus_string = `**${printPercentage(air_attack_bonus, { base_zero: true, display_prefix: true })}** attack and **${printPercentage(air_defence_bonus, { base_zero: true, display_prefix: true })}** defence bonus`;
+          }
+
         //Display modifiers
-        if (army_obj.carrier_capacity > 0)
-          army_string.push(`${config.icons.aeroplanes} **Aeroplanes** receive a **${printPercentage(config.defines.combat.seaplane_bonus, { base_zero: true, display_prefix: true })}** attack bonus whilst at sea.`);
+        if (army_obj.carrier_capacity > 0 && air_bonus_string.length > 0)
+          army_string.push(`${config.icons.aeroplanes} **Aeroplanes** receive a ${air_bonus_string} whilst at sea.`);
 
         //Push buttons
         command_string.push(`**[Rename Army]** | **[Deploy Units]** | ${(all_units.length > 0) ? "**[Relieve Units]** | **[Reorder Units]** | **[Transfer Units]** |" : ""} **[Delete Army]**`);
