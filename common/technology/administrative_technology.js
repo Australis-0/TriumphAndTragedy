@@ -20,7 +20,7 @@ config.technology.administrative_technology = {
     research_cost: 50,
     year: 1550,
     unlocks: {
-      unlock_building: "the_courthouse",
+      unlock_building: "courthouses",
       stability_modifier: 0.05
     }
   },
@@ -120,6 +120,7 @@ config.technology.administrative_technology = {
       unlock_building: ["national_departments", "palaces"]
     }
   },
+
   tax_oversight: {
     name: "Tax Oversight",
     icon: "taxes",
@@ -178,6 +179,7 @@ config.technology.administrative_technology = {
       diplomatic_slots: 1
     }
   },
+
   modern_theocracy: {
     name: "Modern Theocracy",
     icon: "infamy",
@@ -401,7 +403,7 @@ config.technology.administrative_technology = {
     }
   },
   political_standardisation: {
-    name: "Political Centralisation",
+    name: "Political Standardisation",
     icon: "old_scroll",
     description: "The varying aspects of all the political ideologies that were borne forth out of the great revolutions are finally beginning to coalesce into standard ideologies, of which certain tenets are shared between people of different political beliefs.",
     prerequisite_techs: ["political_thought_and_theory"],
