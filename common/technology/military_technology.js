@@ -806,6 +806,7 @@ config.technology.military_technology = {
       army_upkeep: 0.10
     }
   },
+
   early_balloons: {
     name: "Early Balloons",
     icon: "diplomacy",
@@ -1254,6 +1255,7 @@ config.technology.military_technology = {
       unlock_unit: "armoured_cars"
     }
   },
+
   improved_biplanes: {
     name: "Improved Biplanes",
     icon: "aeroplanes",
@@ -1556,6 +1558,7 @@ config.technology.military_technology = {
       obsolete_unit: "landship"
     }
   },
+  
   fighters: {
     name: "Fighters",
     icon: "aeroplanes",

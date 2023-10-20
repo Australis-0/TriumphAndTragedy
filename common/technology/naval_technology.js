@@ -615,6 +615,7 @@ config.technology.naval_technology = {
       unlock_unit: "destroyers"
     }
   },
+  
   torpedo: {
     name: "Torpedo",
     icon: "coal",
@@ -726,6 +727,7 @@ config.technology.naval_technology = {
       shipment_time: -0.03
     }
   },
+
   naval_catapults: {
     name: "Naval Catapults",
     icon: "aeroplanes",
@@ -921,6 +923,7 @@ config.technology.naval_technology = {
       naval_dp: 0.05
     }
   },
+
   nuclear_triad: {
     name: "Nuclear Triad",
     icon: "infamy",
@@ -978,6 +981,7 @@ config.technology.naval_technology = {
       obsolete_unit: "battleships"
     }
   },
+
   modern_cruisers_and_frigates: {
     name: "Modern Cruisers and Frigates",
     icon: "naval_units",
@@ -1000,6 +1004,7 @@ config.technology.naval_technology = {
       naval_ap: 0.10
     }
   },
+
   modern_naval_doctrine: {
     name: "Modern Naval Doctrine",
     icon: "globe",
@@ -1022,6 +1027,7 @@ config.technology.naval_technology = {
       naval_dp: 0.05
     }
   },
+
   asymmetric_naval_warfare: {
     name: "Asymmetric Naval Warfare",
     icon: "back_button",

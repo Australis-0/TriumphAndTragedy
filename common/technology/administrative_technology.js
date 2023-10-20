@@ -630,6 +630,7 @@ config.technology.administrative_technology = {
       influence_gain: 0.05
     }
   },
+
   military_academies: {
     name: "Military Academies",
     icon: "manpower",
