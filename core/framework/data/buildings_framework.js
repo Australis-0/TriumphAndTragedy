@@ -689,6 +689,10 @@ module.exports = {
     //Convert from parameters
     var building_category_name = arg0_name.trim().toLowerCase();
 
+    //Guard clause
+    if (config.buildings[building_category_name])
+      return config.buildings[building_category_name];
+
     //Initialise options
     var options = (arg1_options) ? arg1_options : {};
 
@@ -721,6 +725,19 @@ module.exports = {
       //Return statement after soft-hard search
       return (building_category_exists[0]) ? building_category_exists[1] : undefined;
     }
+  },
+
+  getBuildingCategoryShare: function (arg0_user, arg1_category_name) {
+    //Convert from parameters
+    var user_id = arg0_user;
+    var category_name = arg1_category_name;
+
+    //Declare local instance variables
+    var building_total = module.exports.getBuildingTotal(user_id, category_name, { type: "building_category" });
+    var total_buildings = module.exports.getBuildingTotal(user_id);
+
+    //Return statement
+    return building_total/total_buildings;
   },
 
   /*
@@ -1450,6 +1467,19 @@ module.exports = {
     return category_map;
   },
 
+  getBuildingShare: function (arg0_user, arg1_building_name) {
+    //Convert from parameters
+    var user_id = arg0_user;
+    var building_name = arg1_building_name;
+
+    //Declare local instance variables
+    var building_total = module.exports.getBuildingTotal(user_id, building_name);
+    var total_buildings = module.exports.getBuildingTotal(user_id);
+
+    //Return statement
+    return building_total/total_buildings;
+  },
+
   //Gets building slots for a given category/building, returns -1 if unlimited
   /*
     getBuildingSlots() - Returns an object of various building slot statistics for a given category within a city.
@@ -1618,6 +1648,53 @@ module.exports = {
 
         break;
     }
+  },
+
+  /*
+    getBuildingTotal() - Fetches the total number of buildings a user has of a specified building, category, or general total.
+    options:{
+      type: "building"/"building_category"/"total" - Resolves to "building" or "total" by default based on context
+      include_hostile_occupations: true/false, - Whether to include hostile occupations or not.
+      include_occupations: true/false - Whether to include occupations by the target user
+    }
+  */
+  getBuildingTotal: function (arg0_user, arg1_building_name, arg2_options) {
+    //Convert from parameters
+    var user_id = arg0_user;
+    var building_name = arg1_building_name;
+    var options = (arg2_options) ? arg2_options : {};
+
+    //Declare local instance variables
+    var provinces = getProvinces(user_id, {
+      include_hostile_occupations: options.include_hostile_occupations,
+      include_occupations: options.include_occupations;
+    });
+    var total = 0;
+
+    //Iterate over provinces
+    for (var i = 0; i < provinces.length; i++)
+      if (provinces[i].buildings) {
+        if (options.type == "total" || !building_name) {
+          total += provinces[i].buildings.length;
+        } else {
+          var category_obj = config.buildings[building_name];
+          var is_category = (options.type == "building_category");
+
+          for (var x = 0; x < provinces[i].buildings.length; x++) {
+            var local_building_type = provinces[i].buildings[x].building_type;
+
+            if (is_category) {
+              if (category_obj[local_building_type])
+                total++;
+            } else if (local_building_type == building_name) {
+              total++;
+            }
+          }
+        }
+      }
+
+    //Return statement
+    return total;
   },
 
   /*
