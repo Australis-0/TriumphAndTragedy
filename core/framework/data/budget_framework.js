@@ -54,11 +54,10 @@ module.exports = {
     }
   },
 
-  removeCustomTax: function (arg0_user, arg1_tax_id, arg2_index) {
+  removeCustomTax: function (arg0_user, arg1_index) {
     //Convert from parameters
     var user_id = arg0_user;
-    var tax_id = arg1_tax_id.trim().toLowerCase();
-    var index = parseInt(arg2_index);
+    var index = parseInt(arg1_index);
 
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];

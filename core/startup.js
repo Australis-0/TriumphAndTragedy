@@ -123,6 +123,11 @@ module.exports = {
       FileManager.import("./game/buildings/reopen");
       FileManager.import("./game/buildings/view_building");
 
+      FileManager.import("./game/budget/add_tax");
+      FileManager.import("./game/budget/move_tax");
+      FileManager.import("./game/budget/remove_tax");
+      FileManager.import("./game/budget/set_tax"); //For setting predefined taxes
+
       FileManager.import("./game/colonisation/cancel_charter");
       FileManager.import("./game/colonisation/settle");
 

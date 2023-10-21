@@ -49,7 +49,7 @@ module.exports = {
       visualPrompt(game_obj.alert_embed, user_id, {
         title: `Reorder Units:`,
         prompts: [
-          [`How many positions down/up would you like to move this unit?`, "number", { min: 0 }],
+          [`How many positions up/down would you like to move this unit?`, "number", { min: 0 }],
           [`What type of unit would you like to reorder in this army?`, "string"],
           [`Type "up" to send this unit closer to the frontlines. Type "down" to send this unit towards the rear.`, "string"]
         ]
