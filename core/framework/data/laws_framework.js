@@ -19,7 +19,7 @@ module.exports = {
       var local_reforms = Object.keys(local_reform_category);
 
       for (var x = 0; x < local_reforms.length; x++)
-        if (!["icon", "name", "order"].includes(local_reforms[x]))
+        if (!reserved.reform_keys.includes(local_reforms[x]))
           all_reforms.push(
             (!options.return_names) ?
               local_reform_category[local_reforms[x]] :
@@ -52,7 +52,7 @@ module.exports = {
       var local_reforms = Object.keys(local_reform_category);
 
       for (var x = 0; x < local_reforms.length; x++)
-        if (!["icon", "name", "order"].includes(local_reforms[x]))
+        if (!reserved.reform_keys.includes(local_reforms[x]))
           if (local_reforms[x].toLowerCase().indexOf(reform_name) != -1)
             reform_exists = [true, (!options.return_key) ? local_reform_category[local_reforms[x]] : local_reforms[x]];
     }
@@ -63,7 +63,7 @@ module.exports = {
       var local_reforms = Object.keys(local_reform_category);
 
       for (var x = 0; x < local_reforms.length; x++)
-        if (!["icon", "name", "order"].includes(local_reforms[x]))
+        if (!reserved.reform_keys.includes(local_reforms[x]))
           if (local_reforms[x].toLowerCase() == reform_name)
             reform_exists = [true, (!options.return_key) ? local_reform_category[local_reforms[x]] : local_reforms[x]];
     }
@@ -75,7 +75,7 @@ module.exports = {
         var local_reforms = Object.keys(local_reform_category);
 
         for (var x = 0; x < local_reforms.length; x++)
-          if (!["icon", "name", "order"].includes(local_reforms[x]))
+          if (!reserved.reform_keys.includes(local_reforms[x]))
             if (local_reform_category[local_reforms[x]].name.toLowerCase().indexOf(reform_name) != -1)
               reform_exists = [true, (!options.return_key) ? local_reform_category[local_reforms[x]] : local_reforms[x]];
       }
@@ -86,7 +86,7 @@ module.exports = {
         var local_reforms = Object.keys(local_reform_category);
 
         for (var x = 0; x < local_reforms.length; x++)
-          if (!["icon", "name", "order"].includes(local_reforms[x]))
+          if (!reserved.reform_keys.includes(local_reforms[x]))
             if (local_reform_category[local_reforms[x]].name.toLowerCase() == reform_name)
               reform_exists = [true, (!options.return_key) ? local_reform_category[local_reforms[x]] : local_reforms[x]];
       }

@@ -211,7 +211,7 @@ module.exports = {
       var local_units = Object.keys(local_unit_category);
 
       for (var x = 0; x < local_units.length; x++)
-        if (!["branch_name", "icon", "name", "order", "type"].includes(local_units[x])) {
+        if (!reserved.unit_category_keys.includes(local_units[x])) {
           all_units.push(
             (!options.return_names) ?
               local_unit_category[local_units[x]] :
@@ -247,7 +247,7 @@ module.exports = {
 
       //Format units
       for (var i = 0; i < local_units.length; i++)
-        if (!["branch_name", "icon", "name", "order", "type"].includes(local_units[i]))
+        if (!reserved.unit_category_keys.includes(local_units[i]))
           units.push((!options.return_names) ? category_obj[local_units[i]] : local_units[i]);
 
       //Return statement
@@ -373,7 +373,7 @@ module.exports = {
       var local_units = Object.keys(local_unit_category);
 
       for (var x = 0; x < local_units.length; x++)
-        if (!["branch_name", "icon", "name", "order", "type"].includes(local_units[x]))
+        if (!reserved.unit_category_keys.includes(local_units[x]))
           if (local_units[x].toLowerCase().indexOf(unit_name) != -1)
             unit_exists = [true, (!options.return_key) ? local_unit_category[local_units[x]] : local_units[x]];
     }
@@ -384,7 +384,7 @@ module.exports = {
       var local_units = Object.keys(local_unit_category);
 
       for (var x = 0; x < local_units.length; x++)
-        if (!["branch_name", "icon", "name", "order", "type"].includes(local_units[x]))
+        if (!reserved.unit_category_keys.includes(local_units[x]))
           if (local_units[x].toLowerCase() == unit_name)
             unit_exists = [true, (!options.return_key) ? local_unit_category[local_units[x]] : local_units[x]];
     }
@@ -396,7 +396,7 @@ module.exports = {
         var local_units = Object.keys(local_unit_category);
 
         for (var x = 0; x < local_units.length; x++)
-          if (!["branch_name", "icon", "name", "order", "type"].includes(local_units[x]))
+          if (!reserved.unit_category_keys.includes(local_units[x]))
             if (local_unit_category[local_units[x]].name.toLowerCase().indexOf(unit_name) != -1)
               unit_exists = [true, (!options.return_key) ? local_unit_category[local_units[x]] : local_units[x]];
       }
@@ -407,7 +407,7 @@ module.exports = {
         var local_units = Object.keys(local_unit_category);
 
         for (var x = 0; x < local_units.length; x++)
-          if (!["branch_name", "icon", "name", "order", "type"].includes(local_units[x]))
+          if (!reserved.unit_category_keys.includes(local_units[x]))
             if (local_unit_category[local_units[x]].name.toLowerCase() == unit_name)
               unit_exists = [true, (!options.return_key) ? local_unit_category[local_units[x]] : local_units[x]];
       }

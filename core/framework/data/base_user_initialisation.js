@@ -151,9 +151,26 @@ module.exports = {
     if (!usr.actions) usr.actions = 0;
     if (!usr.money) usr.money = 10000;
     if (!usr.prestige) usr.prestige = 0;
-    if (!usr.tax_rate) usr.tax_rate = 0;
+
+    //Taxes
+    if (!usr.corporate_tax) usr.corporate_tax = 0;
+
+    for (var i = 0; i < lookup.all_pop_classes.length; i++) {
+      var local_class = lookup.all_pop_classes[i];
+
+      if (!usr[`${local_class}_income_tax`])
+        usr[`${local_class}_income_tax`] = 0;
+      if (!usr[`${local_class}_duties_tax`])
+        usr[`${local_class}_duties_tax`] = 0;
+
+      if (!usr[`${local_class}_income_max_tax`])
+        usr[`${local_class}_income_max_tax`] = 0;
+      if (!usr[`${local_class}_duties_max_tax`])
+        usr[`${local_class}_duties_max_tax`] = 0;
+    }
 
     //Define subobjects
+    if (!usr.custom_taxes) usr.custom_taxes = {};
     if (!usr.diplomacy) usr.diplomacy = {};
       if (!usr.diplomacy.used_diplomatic_slots) usr.diplomacy.used_diplomatic_slots = 0;
 
@@ -184,7 +201,7 @@ module.exports = {
       if (!usr.modifiers.extra_building_slots) usr.modifiers.extra_building_slots = 0;
       if (!usr.modifiers.isolation) usr.modifiers.isolation = 0.50;
       if (!usr.modifiers.knowledge_investment_limit) usr.modifiers.knowledge_investment_limit = 1;
-      if (!usr.modifiers.max_tax) usr.modifiers.max_tax = 0;
+      if (!usr.modifiers.max_tax) usr.modifiers.max_tax = 0; //Max tax for custom taxes
       if (!usr.modifiers.maximum_expeditions) usr.modifiers.maximum_expeditions = 1;
       if (!usr.modifiers.maximum_transaction_amount) usr.modifiers.maximum_transaction_amount = config.defines.economy.resource_init_max_percentile;
       if (!usr.modifiers.pop_growth_modifier) usr.modifiers.pop_growth_modifier = 1.0539;

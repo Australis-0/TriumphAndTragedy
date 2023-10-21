@@ -1333,6 +1333,29 @@ module.exports = {
     return provinces_string;
   },
 
+  parseTaxName: function (arg0_tax_key, arg1_do_not_format) {
+    //Convert from parameters
+    var tax_key = arg0_tax_key;
+    var do_not_format = arg1_do_not_format;
+
+    //Declare local instance variables
+    var split_key = tax_key.split("-");
+
+    if (split_key[1] != "category_tax") {
+      var category_obj = config.buildings[split_key[0]];
+
+      return (!do_not_format) ?
+        `**${(category_obj.name) ? category_obj.name : split_key[0]}** Industry taxes` :
+        `${(category_obj.name) ? category_obj.name : split_key[0]} Industry Tax`;
+    } else {
+      var building_obj = getBuilding(split_key[0]);
+
+      return (!do_not_format) ?
+        `**${(building_obj.name) ? building_obj.name : split_key[0]}** taxes` :
+        `${(building_obj.name) ? building_obj.name : split_key[0]} Tax`;
+    }
+  },
+
   parseWargoalInfamyLocalisation: function (arg0_user, arg1_war_obj, arg2_wargoal_obj) {
     //Convert from parameters
     var user_id = arg0_user;

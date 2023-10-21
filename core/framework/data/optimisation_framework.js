@@ -2,11 +2,14 @@ module.exports = {
   initOptimisation: function () {
     global.reserved = {
       buildings: ["aliases", "ideal_climate", "name", "singular", "unlimited_slots"],
+      building_category_keys: ["icon", "name", "order"],
       building_good_keys: ["cost", "maintenance", "production"],
       goods: ["aliases", "name", "icon", "id", "type"],
       pop_needs_order: ["staple_goods", "luxury_goods"],
       pop_scope_sum_keys: ["size", "wealth", "tags"],
       production_choice: ["aliases", "name", "icon"],
+      reform_keys: ["icon", "name", "order"],
+      unit_category_keys: ["branch_name", "icon", "name", "order", "type"],
       unit_good_keys: ["cost", "maintenance"]
     };
     global.lookup = {

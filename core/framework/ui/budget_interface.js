@@ -116,11 +116,42 @@ module.exports = {
     budget_string.push("");
     budget_string.push(config.localisation.divider);
     budget_string.push("");
-    budget_string.push(`__**Economic Policy:**__`);
-    budget_string.push("");
-    budget_string.push(`Current tax: (**${printPercentage(usr.tax_rate)}**/**${printPercentage(usr.modifiers.max_tax)}**) ${(getIncome(user_id)[0] < 0) ? "- Consider adjusting your tax rate to gain additional income." : ""}`);
-    budget_string.push("");
-    budget_string.push(`- **[Set Tax]**`);
+
+    //Format tax code
+    {
+      budget_string.push(`__**Tax Code:**__`);
+
+      if (getIncome(user_id)[0] < 0) {
+        budget_string.push("");
+        budget_string.push(`:warning: Consider adjusting your tax rate to gain additional income.`);
+      }
+
+      budget_string.push("");
+      budget_string.push(`Corporate Income Tax: **${printPercentage(usr.tax_rate)}**/**${printPercentage(usr.modifiers.max_corporate_tax)}**`);
+      budget_string.push("");
+      budget_string.push(`**Class Taxes:**`);
+      budget_string.push("");
+
+      //Income Taxes
+      for (var i = 0; i < lookup.all_pop_classes.length; i++) {
+        var local_class = lookup.all_pop_classes[i];
+
+        budget_string.push(`- ${parseString(local_class)} Class Income Tax: **${printPercentage(usr[`${local_class}_income_tax`])}**/${printPercentage(usr.modifiers[`${local_class}_income_max_tax`])}`);
+      }
+
+      //Duties
+      budget_string.push(`> Duties are taxes levied on pop purchases of consumption goods, similar to sales taxes.`);
+      budget_string.push("");
+
+      for (var i = 0; i < lookup.all_pop_classes.length; i++) {
+        var local_class = lookup.all_pop_classes[i];
+
+        budget_string.push(`- ${parseString(local_class)} Duties: **${printPercentage(usr[`${local_class}_duties_tax`])}**/${printPercentage(usr.modifiers[`${local_class}_duties_max_tax`])}`);
+      }
+
+      budget_string.push("");
+      budget_string.push(`- **[Set Tax]**`);
+    }
     budget_string.push("");
     budget_string.push(`${config.icons.blockade} Blockade status: ${(isBlockaded(user_id)) ? "you are currently blockaded!" : "you are currently not blockaded."}`);
 

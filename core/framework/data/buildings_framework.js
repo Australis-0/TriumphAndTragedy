@@ -525,7 +525,7 @@ module.exports = {
         var local_buildings = Object.keys(local_building_category);
 
         for (var x = 0; x < local_buildings.length; x++) {
-          if (!["icon", "name", "order"].includes(local_buildings[x])) {
+          if (!reserved.building_category_keys.includes(local_buildings[x])) {
             var local_building = local_building_category[local_buildings[x]];
 
             if (local_building.name)

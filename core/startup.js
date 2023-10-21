@@ -40,6 +40,7 @@ module.exports = {
     FileManager.import("./framework/data/army_framework");
     FileManager.import("./framework/data/base_user_initialisation");
     FileManager.import("./framework/data/blockade_framework");
+    FileManager.import("./framework/data/budget_framework");
     FileManager.import("./framework/data/buildings_framework");
     FileManager.import("./framework/data/casus_belli_framework");
     FileManager.import("./framework/data/client_state_framework");
