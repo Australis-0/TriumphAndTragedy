@@ -16,8 +16,8 @@ module.exports = {
     var actual_id = main.global.user_map[user_id];
     var usr = main.users[actual_id];
 
-    var all_taxes = Object.keys(usr.modifiers.custom_taxes);
-    var current_taxes = usr.modifiers.custom_taxes;
+    var all_taxes = Object.keys(usr.custom_taxes);
+    var current_taxes = usr.custom_taxes;
 
     //Guard clauses
     if (all_taxes.length == 0)
@@ -43,7 +43,7 @@ module.exports = {
           new_taxes[all_taxes[i]] = current_taxes[all_taxes[i]];
 
         //Set taxes
-        usr.modifiers.custom_taxes = new_taxes;
+        usr.custom_taxes = new_taxes;
 
         return [true, `${parseTaxName(new_taxes[new_index])} were moved to the **${ordinalise(new_index + 1)}** section of the Tax Code.`];
       } else {
@@ -64,7 +64,7 @@ module.exports = {
     var actual_id = main.global.user_map[user_id];
     var usr = main.users[actual_id];
 
-    var all_taxes = Object.keys(usr.modifiers.custom_taxes);
+    var all_taxes = Object.keys(usr.custom_taxes);
 
     //Guard clause
     if (all_taxes.length == 0)
@@ -75,7 +75,7 @@ module.exports = {
       if (all_taxes[index]) {
         var old_tax_id = JSON.parse(JSON.stringify(all_taxes[index]));
 
-        delete usr.modifiers.custom_taxes[all_taxes[index]];
+        delete usr.custom_taxes[all_taxes[index]];
 
         return [true, `${parseTaxName(old_tax_id)} have been abolished.`];
       } else {
@@ -103,7 +103,7 @@ module.exports = {
 
     //Check if this value exceeds max_tax; clamp so it can't go negative
     amount = Math.max(amount, 0);
-    amount = Math.min(amount, usr.modifiers.max_tax);
+    amount = Math.min(amount, usr.modifiers.max_tax); //Default maximum for custom taxes
 
     //Check if building category is valid
     if (is_building_category || building_obj) {

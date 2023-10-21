@@ -122,23 +122,31 @@ module.exports = {
       if (options.set_party_popularity)
         usr.politics[government_name].popularity = options.set_party_popularity;
 
+      //Delete current tax keys for all classes
+      {
+        for (var i = 0; i < lookup.all_pop_classes.length; i++) {
+          var local_class = lookup.all_pop_classes[i];
+
+          delete usr.modifiers[`max_${local_class}_duties_tax`];
+          delete usr.modifiers[`max_${local_class}_income_tax`];
+        }
+      }
+
       //Loop through all keys and values
       for (var i = 0; i < all_government_keys.length; i++) {
         var local_value = government_obj.effect[all_government_keys[i]];
 
-        switch (all_government_keys[i]) {
-          case "civilian_actions":
-            usr.modifiers.civilian_actions = local_value;
+        if (all_government_keys[i] == "civilian_actions") {
+          usr.modifiers.civilian_actions = local_value;
+        } if (all_government_keys[i].endsWith("_tax_rate")) { //Class taxes
+          var new_key = all_government_keys[i].replace("_tax_rate", "_tax")
+            .replace("maximum_", "max_");
 
-            break;
-          case "maximum_manpower":
-            usr.modifiers.maximum_manpower = local_value;
-
-            break;
-          case "maximum_tax_rate":
-            usr.modifiers.max_tax = local_value;
-
-            break;
+          usr.modifiers[new_key] = local_value;
+        } if (all_government_keys[i] == "maximum_manpower") {
+          usr.modifiers.maximum_manpower = local_value;
+        } if (all_government_keys[i] == "maximum_tax_rate") {
+          usr.modifiers.max_tax = local_value;
         }
       }
 

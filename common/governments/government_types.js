@@ -12,10 +12,17 @@ config.governments = {
       disabled_reforms: true,
       has_elections: false,
       maximum_manpower: 1.00,
-      maximum_tax_rate: 0.01,
       civilian_actions: 1.00,
       stability_modifier: -0.10,
-      famine_penalty: 0.50
+      famine_penalty: 0.50,
+
+      maximum_tax_rate: 0.01,
+      maximum_upper_income_tax_rate: 0,
+      maximum_middle_income_tax_rate: 0,
+      maximum_lower_income_tax_rate: 0,
+      maximum_upper_duties_tax_rate: 0,
+      maximum_middle_duties_tax_rate: 0,
+      maximum_lower_duties_tax_rate: 0
     }
   },
   absolute_monarchy: {
@@ -30,9 +37,17 @@ config.governments = {
       disabled_reforms: true,
       has_elections: false,
       maximum_manpower: 0.10,
-      maximum_tax_rate: 0.65,
       civilian_actions: 0.10,
       reform_desire_gain: -0.1,
+
+      maximum_tax_rate: 0.65,
+      maximum_upper_income_tax_rate: 0.05,
+      maximum_middle_income_tax_rate: 0.15,
+      maximum_lower_income_tax_rate: 0.30,
+      maximum_upper_duties_tax_rate: 0.15,
+      maximum_middle_duties_tax_rate: 0.30,
+      maximum_lower_duties_tax_rate: 0.50,
+
       add_expiry_effect: {
         limit: {
           year_is_less_than: 1815
@@ -52,11 +67,18 @@ config.governments = {
       can_justify_wars: false,
       has_elections: true,
       maximum_manpower: 0.20,
-      maximum_tax_rate: 0.35,
       civilian_actions: 0.35,
       stability_modifier: 0.15,
       famine_penalty: 0.065,
-      reform_desire_gain: 0.02
+      reform_desire_gain: 0.02,
+
+      maximum_tax_rate: 0.35,
+      maximum_upper_income_tax_rate: 0.35,
+      maximum_middle_income_tax_rate: 0.30,
+      maximum_lower_income_tax_rate: 0.20,
+      maximum_upper_duties_tax_rate: 0.35,
+      maximum_middle_duties_tax_rate: 0.25,
+      maximum_lower_duties_tax_rate: 0.15
     }
   },
   communism: {
@@ -70,11 +92,18 @@ config.governments = {
       can_justify_wars: true,
       has_elections: false,
       maximum_manpower: 0.35,
-      maximum_tax_rate: 0.05,
       civilian_actions: 0.05,
       stability_modifier: -0.05,
       famine_penalty: 0.125,
-      reform_desire_gain: 0.01
+      reform_desire_gain: 0.01,
+
+      maximum_tax_rate: 1.00,
+      maximum_upper_income_tax_rate: 1.00,
+      maximum_middle_income_tax_rate: 1.00,
+      maximum_lower_income_tax_rate: 1.00,
+      maximum_upper_duties_tax_rate: 1.00,
+      maximum_middle_duties_tax_rate: 1.00,
+      maximum_lower_duties_tax_rate: 1.00
     }
   },
   socialism: {
@@ -88,11 +117,18 @@ config.governments = {
       can_justify_wars: false,
       has_elections: true,
       maximum_manpower: 0.35,
-      maximum_tax_rate: 0.15,
       civilian_actions: 0.20,
       stability_modifier: 0.15,
       famine_penalty: 0.07,
-      reform_desire_gain: 0.04
+      reform_desire_gain: 0.04,
+
+      maximum_tax_rate: 0.80,
+      maximum_upper_income_tax_rate: 0.90,
+      maximum_middle_income_tax_rate: 0.70,
+      maximum_lower_income_tax_rate: 0.50,
+      maximum_upper_duties_tax_rate: 0.50,
+      maximum_middle_duties_tax_rate: 0.35,
+      maximum_lower_duties_tax_rate: 0.35
     }
   },
   democracy: {
@@ -106,11 +142,18 @@ config.governments = {
       can_justify_wars: false,
       has_elections: true,
       maximum_manpower: 0.25,
-      maximum_tax_rate: 0.70,
       civilian_actions: 0.50,
       stability_modifier: 0.15,
       famine_penalty: 0.05,
-      reform_desire: 0.03
+      reform_desire: 0.03,
+
+      maximum_tax_rate: 0.60,
+      maximum_upper_income_tax_rate: 0.60,
+      maximum_middle_income_tax_rate: 0.50,
+      maximum_lower_income_tax_rate: 0.50,
+      maximum_upper_duties_tax_rate: 0.20,
+      maximum_middle_duties_tax_rate: 0.15,
+      maximum_lower_duties_tax_rate: 0.15
     }
   },
   fascism: {
@@ -124,11 +167,18 @@ config.governments = {
       can_justify_wars: true,
       has_elections: false,
       maximum_manpower: 0.10,
-      maximum_tax_rate: 0.70,
       civilian_actions: 0.20,
       stability_modifier: 0.10,
       famine_penalty: 0.05,
-      reform_desire_gain: -0.05
+      reform_desire_gain: -0.05,
+
+      maximum_tax_rate: 0.60,
+      maximum_upper_income_tax_rate: 0.20,
+      maximum_middle_income_tax_rate: 0.15,
+      maximum_lower_income_tax_rate: 0.50,
+      maximum_upper_duties_tax_rate: 0.20,
+      maximum_middle_duties_tax_rate: 0.20,
+      maximum_lower_duties_tax_rate: 0.20
     }
   }
 };

@@ -11,6 +11,7 @@ module.exports = {
 
     //Initialise budget_string
     var all_cooldowns = Object.keys(usr.cooldowns);
+    var all_taxes = Object.keys(usr.custom_taxes);
     var budget_string = [];
     var expenditures_string = [];
     var has_syphoned_actions = false;
@@ -150,6 +151,11 @@ module.exports = {
       }
 
       budget_string.push("");
+      budget_string.push(`- We currently have **${(all_taxes.length == 0) ? `no` : parseNumber(all_taxes.length)}** individual taxes levied on our industries.`);
+      budget_string.push(` - **[Edit Tax Code]**`);
+      budget_string.push("");
+
+      budget_string.push("");
       budget_string.push(`- **[Set Tax]**`);
     }
     budget_string.push("");
@@ -160,19 +166,70 @@ module.exports = {
       removeControlPanel(game_obj.id);
 
     //Create embed and edit to message
-    const budget_embed = new Discord.MessageEmbed()
-      .setColor(settings.bot_colour)
-      .setTitle(`**Budget:**`)
-      .setThumbnail(usr.flag)
-      .setImage("https://cdn.discordapp.com/attachments/722997700391338046/736141424315203634/margin.png")
-      .setDescription(budget_string.join("\n"));
-
-    if (game_obj) {
-      game_obj.main_embed = budget_embed;
-      game_obj.main_change = true;
-    }
+    createPageMenu(game_obj.middle_embed, {
+      embed_pages: splitEmbed(budget_string, {
+        title: `[Back] | [Jump To Page] | Budget:`,
+        title_pages: true,
+        fixed_width: true
+      }),
+      user: game_obj.user
+    });
 
     //Return statement
     return budget_embed;
+  },
+
+  printCustomTaxes: function (arg0_user) {
+    //Convert from parameters
+    var user_id = arg0_user;
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var game_obj = getGameObject(user_id);
+    var usr = main.users[actual_id];
+
+    var all_taxes = Object.keys(usr.custom_taxes);
+    var total_production = getProduction(user_id);
+    var user_income = getIncome(user_id, total_production);
+
+    //Format tax_string
+    var tax_string = [];
+
+    //Print header, buttons first
+    tax_string.push(`- **[Add Tax]** | **[Move Tax]** | **[Remove Tax]**`);
+    tax_string.push("");
+    tax_string.push(`> This is a list of custom nationwide taxes imposed on various industries and buildings in your country. Industry taxes may only be instituted on commercial or industrial buildings.`);
+    tax_string.push("");
+    tax_string.push(`__**Industry Taxes:**__`);
+    tax_string.push("");
+    tax_string.push(`> Industry tax caps are determined by your Maximum Tax modifier.`);
+    tax_string.push("");
+
+    //Iterate over all_taxes
+    for (var i = 0; i < all_taxes.length; i++) {
+      var local_tax = usr.custom_taxes[all_taxes[i]];
+
+      tax_string.push(`${i + 1}. ${parseTaxName(all_taxes[i])} - (**${printPercentage(local_tax)}**/${printPercentage(usr.modifiers.max_tax)})`);
+    }
+
+    //Print total income at bottom
+    var money_string = (user_income[0] != user_income[1]) ?
+      `${parseNumber(user_income[0])} - ${parseNumber(user_income[1])}` :
+      parseNumber(user_income[0]);
+
+    tax_string.push(`Your economic advisor estimates that you will gain ${config.icons.money} **${money_string}** in total income next turn.`);
+
+    //Remove control panel if one exists
+    removeControlPanel(game_obj.id);
+
+    //Edit main embed display
+    createPageMenu(game_obj.middle_embed, {
+      embed_pages: splitEmbed(tax_string, {
+        title: `[Back] | [Jump To Page] | Custom Taxes:`,
+        title_pages: true,
+        fixed_width: true
+      }),
+      user: game_obj.user
+    });
   }
 };
