@@ -119,7 +119,7 @@ module.exports = {
                 main.market[good_name].sell_price*(previous_stock/main.market[good_name].stock);
             }
 
-            main.market[good_name].amount_sold += good_amount;
+            main.market[good_name].demand += good_amount;
             modifyGoodAmount(user_id, good_name, good_amount);
 
             //Update market UI if game_obj.page == "world_market" || "trade"

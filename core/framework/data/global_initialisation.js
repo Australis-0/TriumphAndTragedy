@@ -63,7 +63,8 @@ module.exports = {
 
             //Initialise good object
             main.market[local_good_name] = {
-              amount_sold: 0, //Used as a tracker variable; reset each turn
+              demand: 0, //Used as a tracker variable; reset each turn
+
               buy_price: (all_goods[i].buy_price) ?
                 all_goods[i].buy_price :
                 all_goods[i].sell_price*2,

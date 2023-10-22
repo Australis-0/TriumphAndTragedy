@@ -282,24 +282,6 @@ module.exports = {
         lookup.province_troop_strengths[all_provinces[i]] = returnSafeNumber(getTroopsInProvince(all_provinces[i]));
     }
 
-    //World Market Up-Logic
-    {
-      for (var i = 0; i < all_market_goods.length; i++) {
-        var local_market_good = main.market[all_market_goods[i]];
-
-        //Increase buy_price each turn
-        if (local_market_good.buy_price < local_market_good.sell_price*1.2)
-          local_market_good.buy_price = Math.ceil(local_market_good.buy_price*1.2);
-
-        //Institute minimum good price caps
-        local_market_good.buy_price =
-          Math.max(local_market_good.buy_price, config.defines.economy.resource_min_buy_price);
-
-        local_market_good.sell_price =
-          Math.max(local_market_good.sell_price, config.defines.economy.resource_min_sell_price);
-      }
-    }
-
     //Iterate over all users and process their turns
     for (var i = 0; i < all_users.length; i++)
       try {
@@ -374,34 +356,28 @@ module.exports = {
     //World Market Down-Logic - This must happen after users process their turns
     {
       for (var i = 0; i < all_market_goods.length; i++) {
+        var local_good = getGood(all_market_goods[i]);
         var local_market_good = main.market[all_market_goods[i]];
+        var local_price = local_good.buy_price*(local_market_good.demand/local_market_good.stock);
 
-        //If no one cares about a good enough, the prices will come down
-        if (
-          local_market_good.amount_sold < 5 &&
+        //Supply must at least be 1
+        if (local_market_good.stock <= 1)
+          local_market_good.stock = 1;
 
-          //There can't be a shortage of the existing good
-          local_market_good.stock >= Math.ceil(
-            config.defines.economy.resource_base_stock*0.1
-          )
-        ) {
-          if (local_market_good.buy_price > 100 && local_market_good.sell_price > 100) {
-            local_market_good.buy_price = Math.ceil(local_market_good.buy_price*0.95);
-            local_market_good.sell_price = Math.ceil(local_market_good.sell_price*0.95);
-          }
-        } else {
-          //Randomly increase the buy_price of the good by anywhere from 3-8%, and decrease the sell_price of the good by anywhere from 3-8%.
+        //No demand? Just hold at buy_price
+        if (local_market_good.demand <= 0)
+          local_price = local_good.buy_price;
 
-          local_market_good.buy_price = Math.ceil(local_market_good.buy_price*
-            (randomNumber(103, 108)/100)
-          );
-          local_market_good.sell_price = Math.ceil(local_market_good.sell_price*
-            (randomNumber(92, 97)/100)
-          );
-        }
+        //Set buy/sell prices
+        local_market_good.buy_price = local_price;
+        local_market_good.sell_price = local_price*(1/(config.defines.economy.resource_markup + 1));
 
-        //amount_sold deteriorates each turn to simulate large market demand
-        local_market_good.amount_sold = Math.ceil(local_market_good.amount_sold*0.5);
+        //Institute minimum good price caps
+        local_market_good.buy_price =
+          Math.max(local_market_good.buy_price, config.defines.economy.resource_min_buy_price);
+
+        local_market_good.sell_price =
+          Math.max(local_market_good.sell_price, config.defines.economy.resource_min_sell_price);
       }
 
       //Set lookup tables for category_buy_prices and category_sell_prices
@@ -771,11 +747,19 @@ module.exports = {
             if (building_obj.special_effect)
               building_obj.special_effect(usr);
           } else {
+            var local_market_good = main.market[all_produced_goods[i]];
+            var produced_amount = randomNumber(local_value[0], local_value[1]);
+
             //Process goods
-            if (lookup.all_goods[all_produced_goods[i]] != undefined)
-              modifyGoodAmount(user_id, all_produced_goods[i], randomNumber(local_value[0], local_value[1]));
-            else
-              usr[all_produced_goods[i]] += randomNumber(local_value[0], local_value[1]);
+            if (lookup.all_goods[all_produced_goods[i]] != undefined) {
+              modifyGoodAmount(user_id, all_produced_goods[i], produced_amount);
+            } else {
+              usr[all_produced_goods[i]] += produced_amount;
+            }
+
+            //Add to market supply
+            if (local_market_good)
+              local_market_good.stock += produced_amount;
           }
         }
       }

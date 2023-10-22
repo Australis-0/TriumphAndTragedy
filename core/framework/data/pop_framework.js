@@ -2475,6 +2475,14 @@ module.exports = {
                           var actual_consumption = Math.min(getGoodAmount(user_id, local_buy_order[z]), local_need);
                           var local_worth = actual_consumption*local_market_good.buy_price;
                           var local_tax = local_worth*returnSafeNumber(usr[`${pop_obj.class}-duties_tax`]);
+                          var market_consumption = Math.ceil(actual_consumption*config.defines.economy.resource_production_scalar);
+
+                          //World Market processing
+                          local_market_good.demand += market_consumption;
+                          local_market_good.stock -= market_consumption;
+
+                          if (local_market_good.stock < 1)
+                            local_market_good.stock = 1;
 
                           spent_wealth += (local_worth + local_tax);
                           modifyValue(local_received_goods, local_buy_order[z], actual_consumption);

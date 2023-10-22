@@ -68,9 +68,6 @@ module.exports = {
                         (previous_stock/main.market[good_name].stock);
                     }
 
-                    //Increase amount sold
-                    main.market[good_name].amount_sold += good_amount;
-
                     //Update global market UI if page is still on world_market or trade
                     if (game_obj.page == "trade")
                       printTrade(game_obj.user);

@@ -139,8 +139,10 @@ config.defines.economy = {
 
   //Trade and World Market
   resource_init_max_percentile: 0.80, //Maximum percentage of shipment capacity that new countries (for the first 10 turns) can use on buying/selling goods from the World Market
+  resource_markup: 0.20, //The default markup between buy/sell prices
   resource_max_percentile: 0.20, //Maximum percentage of shipment capacity that you can use per turn on buying/selling goods from the World Market
   resource_min_buy_price: 150, //Minimum purchasing price for a resource
   resource_min_sell_price: 100, //Minimum sell price for a resource
+  resource_production_scalar: 0.10, //The share of global production that gets added to World Market supply
   starting_actions: 5, //Base actions per turn, and base starting actions
 };
