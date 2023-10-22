@@ -1667,7 +1667,7 @@ module.exports = {
     //Declare local instance variables
     var provinces = getProvinces(user_id, {
       include_hostile_occupations: options.include_hostile_occupations,
-      include_occupations: options.include_occupations;
+      include_occupations: options.include_occupations
     });
     var total = 0;
 
