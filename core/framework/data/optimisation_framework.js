@@ -55,6 +55,18 @@ module.exports = {
 
     //Process config
     {
+      //Budget processing
+      {
+        var all_taxes = Object.keys(config.budget.taxes);
+
+        for (var i = 0; i < all_taxes.length; i++) {
+          var local_value = config.budget.taxes[all_taxes[i]];
+
+          if (typeof local_value == "object")
+            local_value.id = all_taxes[i];
+        }
+      }
+
       //Building processing
       {
         //Push lowercase singular to aliases

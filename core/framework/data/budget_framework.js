@@ -1,5 +1,65 @@
 module.exports = {
   /*
+    getTax() - Returns a tax object/key based on options.
+    options: {
+      return_key: true/false - Whether to return a key or object. False by default
+    }
+  */
+  getTax: function (arg0_tax_name, arg1_options) {
+    //Convert from parameters
+    var tax_name = arg0_tax_name.trim().toLowerCase();
+    var options = (arg1_options) ? arg1_options : {};
+
+    //Declare local instance variables
+    var all_taxes = Object.keys(config.budget.taxes);
+    var tax_exists = [false, ""];
+
+    //Guard clause for verbatim key
+    if (config.budget.taxes[tax_name])
+      return (!options.return_key) ? config.budget.taxes[tax_name] : tax_name;
+
+    //Soft match
+    for (var i = 0; i < all_taxes.length; i++) {
+      var local_tax = config.budget.taxes[all_taxes[i]];
+
+      if (local_tax.name.toLowerCase().indexOf(tax_name) != -1)
+        tax_exists = [true, (!options.return_key) ? local_tax.id : local_tax];
+    }
+
+    //Hard match
+    for (var i = 0; i < all_taxes.length; i++) {
+      var local_tax = config.budget.taxes[all_taxes[i]];
+
+      if (local_tax.name.toLowerCase() == tax_name)
+        tax_exists = [true, (!options.return_key) ? local_tax.id : local_tax];
+    }
+
+    //If tax still cannot be found by names alone, search by alias
+    if (!tax_exists[0]) {
+      //Soft match first
+      for (var i = 0; i < all_taxes.length; i++) {
+        var local_tax = config.budget.taxes[all_taxes[i]];
+
+        for (var x = 0; x < local_tax.aliases.length; x++)
+          if (local_tax.aliases.toLowerCase().indexOf(tax_name) != -1)
+            tax_exists = [true, (!options.return_key) ? local_tax.id : local_tax];
+      }
+
+      //Hard match second
+      for (var i = 0; i < all_taxes.length; i++) {
+        var local_tax = config.budget.taxes[all_taxes[i]];
+
+        for (var x = 0; x < local_tax.aliases.length; x++)
+          if (local_tax.aliases.toLowerCase() == tax_name)
+            tax_exists = [true, (!options.return_key) ? local_tax.id : local_tax];
+      }
+    }
+
+    //Return statement
+    return (tax_exists[0]) ? tax_exists[1] : undefined;
+  },
+
+  /*
     moveCustomTax() - Reorders taxes in a tax object.
     options: {
       direction: "up"/"down", - Whether taxes are reordered up or down

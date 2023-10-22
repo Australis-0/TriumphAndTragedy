@@ -139,8 +139,8 @@ module.exports = {
         if (all_government_keys[i] == "civilian_actions") {
           usr.modifiers.civilian_actions = local_value;
         } if (all_government_keys[i].endsWith("_tax_rate")) { //Class taxes
-          var new_key = all_government_keys[i].replace("_tax_rate", "_tax")
-            .replace("maximum_", "max_");
+          var new_key = all_government_keys[i].replace("_tax_rate", "_max_tax")
+            .replace("maximum_", "");
 
           usr.modifiers[new_key] = local_value;
         } if (all_government_keys[i] == "maximum_manpower") {

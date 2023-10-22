@@ -1,5 +1,6 @@
 global.config = {};
 config.alerts = {};
+config.budget = {};
 config.buildings = {};
 config.defines = {};
 config.events = {};

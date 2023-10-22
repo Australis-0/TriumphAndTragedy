@@ -475,7 +475,7 @@ module.exports = {
   /*
     getBuilding() - Returns back a building object/key based on options
     options: {
-      return_key: true/false
+      return_key: true/false - Whether to return a key or object. False by default
     }
   */
   getBuilding: function (arg0_name, arg1_options) {
