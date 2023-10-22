@@ -3,7 +3,8 @@ module.exports = {
     "alerts"
   ],
   budget_pages: [
-    "budget"
+    "budget",
+    "custom_taxes"
   ],
   colonisation_pages: [
     "colonisation"

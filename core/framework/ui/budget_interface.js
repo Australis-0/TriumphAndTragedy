@@ -1,8 +1,9 @@
 module.exports = {
-  printBudget: function (arg0_user, arg1_page) {
+  printBudget: function (arg0_user, arg1_page, arg2_do_not_display) {
     //Convert from parameters
     var user_id = arg0_user;
     var page = (arg1_page) ? arg1_page : 0;
+    var do_not_display = arg2_do_not_display;
 
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
@@ -199,29 +200,34 @@ module.exports = {
     budget_string.push("");
     budget_string.push(`${config.icons.blockade} Blockade status: ${(isBlockaded(user_id)) ? "you are currently blockaded!" : "you are currently not blockaded."}`);
 
-    //Remove control panel if one exists
-    if (game_obj)
-      removeControlPanel(game_obj.id);
-
     //Create embed and edit to message
-    createPageMenu(game_obj.middle_embed, {
-      embed_pages: splitEmbed(budget_string, {
-        title: `[Back] | [Jump To Page] | Budget:`,
-        title_pages: true,
-        fixed_width: true
-      }),
-      page: page,
-      user: game_obj.user
+    var all_embeds = splitEmbed(budget_string, {
+      title: `[Back] | [Jump To Page] | Budget:`,
+      title_pages: true,
+      fixed_width: true
     });
 
+    if (!do_not_display) {
+      //Remove control panel if one exists
+      if (game_obj)
+        removeControlPanel(game_obj.id);
+
+      createPageMenu(game_obj.middle_embed, {
+        embed_pages: all_embeds,
+        page: page,
+        user: game_obj.user
+      });
+    }
+
     //Return statement
-    return budget_embed;
+    return all_embeds;
   },
 
-  printCustomTaxes: function (arg0_user, arg1_page) {
+  printCustomTaxes: function (arg0_user, arg1_page, arg2_do_not_display) {
     //Convert from parameters
     var user_id = arg0_user;
     var page = (arg1_page) ? arg1_page : 0;
+    var do_not_display = arg2_do_not_display;
 
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
@@ -267,18 +273,24 @@ module.exports = {
 
     tax_string.push(`Your economic advisor estimates that you will gain ${config.icons.money} **${money_string}** in total income next turn.`);
 
-    //Remove control panel if one exists
-    removeControlPanel(game_obj.id);
-
     //Edit main embed display
-    createPageMenu(game_obj.middle_embed, {
-      embed_pages: splitEmbed(tax_string, {
-        title: `[Back] | [Jump To Page] | Custom Taxes:`,
-        title_pages: true,
-        fixed_width: true
-      }),
-      page: page,
-      user: game_obj.user
+    var all_embeds = splitEmbed(tax_string, {
+      title: `[Back] | [Jump To Page] | Custom Taxes:`,
+      title_pages: true,
+      fixed_width: true
     });
+
+    if (!do_not_display) {
+      //Remove control panel if one exists
+      removeControlPanel(game_obj.id);
+
+      createPageMenu(game_obj.middle_embed, {
+        embed_pages: all_embeds,
+        page: page,
+        user: game_obj.user
+      });
+    }
+
+    return all_embeds;
   }
 };

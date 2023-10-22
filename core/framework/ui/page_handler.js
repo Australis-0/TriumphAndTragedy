@@ -666,6 +666,67 @@ module.exports = {
         }
       }
 
+      //Budget handler
+      {
+        if (game_obj.page == "budget") {
+          //[Edit Tax Code]
+          if (["edit taxes", "edit tax code"].includes(input)) {
+            game_obj.page = "custom_taxes";
+            printCustomTaxes(user_id, 0);
+          }
+
+          //[Jump To Page]
+          if (input == "jump to page") {
+            visualPrompt(game_obj.alert_embed, user_id, {
+              title: `Jump To Page:`,
+              prompts: [
+                [`Which page would you like to jump to?`, "number", { min: 1, max: printBudget(user_id, 0, true).length }]
+              ]
+            },
+            function (arg) {
+              printBudget(user_id, arg[0] - 1);
+            });
+          }
+
+          //[Set Tax]
+          if (input == "set tax")
+            initialiseSetTax(user_id);
+        }
+
+        if (game_obj.page == "custom_taxes") {
+          //[Add Tax]
+          if (input == "add tax")
+            initialiseAddTax(user_id);
+
+          //[Back]
+          if (input == "back") {
+            game_obj.page = "budget";
+            printBudget(user_id);
+          }
+
+          //[Jump To Page]
+          if (input == "jump to page") {
+            visualPrompt(game_obj.alert_embed, user_id, {
+              title: `Jump To Page:`,
+              prompts: [
+                [`Which page would you like to jump to?`, "number", { min: 1, max: printCustomTaxes(user_id, 0, true).length }]
+              ]
+            },
+            function (arg) {
+              printCustomTaxes(user_id, arg[0] - 1);
+            });
+          }
+
+          //[Move Tax]
+          if (input == "move tax")
+            initialiseMoveTax(user_id);
+
+          //[Remove Tax]
+          if (input == "remove tax")
+            initialiseRemoveTax(user_id);
+        }
+      }
+
       //Buildings/Cities page handler
       {
         if (game_obj.page.startsWith("view_building_")) {
