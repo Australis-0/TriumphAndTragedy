@@ -37,11 +37,6 @@ module.exports = {
 
       building_category: getBuildingsToCategoryMap(),
 
-      category_buy_prices: getCategoryPrices("buy"),
-      category_sell_prices: getCategoryPrices("sell"),
-      staple_goods_utilities: getNeedsUtilities({ staple_goods: true }),
-      luxury_goods_utilities: getNeedsUtilities(),
-
       province_controllers: {},
       province_migration_attraction: {},
       province_owners: {},
@@ -52,6 +47,9 @@ module.exports = {
         <user_id>-migration_attraction: {}
       */
     };
+
+    //Init global check
+    if (!main.provinces) initGlobal();
 
     //Process config
     {
@@ -91,8 +89,21 @@ module.exports = {
         }
       }
 
+      //Market processing
+      {
+        {
+          lookup.category_buy_prices = getCategoryPrices("buy");
+          lookup.category_sell_prices = getCategoryPrices("sell");
+        }
+      }
+
       //Pop processing
       {
+        {
+          lookup.staple_goods_utilities = getNeedsUtilities({ staple_goods: true });
+          lookup.luxury_goods_utilities = getNeedsUtilities();
+        }
+
         getNeedsImportance();
 
         for (var i = 0; i < lookup.all_pop_needs_categories.length; i++)
