@@ -647,6 +647,9 @@ module.exports = {
 
       //Update trackers
       {
+        //Budget
+        usr.trackers.tax = {};
+
         //Military
         usr.trackers.overall_supply = getOverallSupply(user_id);
         usr.trackers.total_active_duty = getTotalActiveDuty(user_id);

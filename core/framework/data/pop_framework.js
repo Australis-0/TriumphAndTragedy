@@ -2474,9 +2474,11 @@ module.exports = {
 
                           var actual_consumption = Math.min(getGoodAmount(user_id, local_buy_order[z]), local_need);
                           var local_worth = actual_consumption*local_market_good.buy_price;
+                          var local_tax = local_worth*returnSafeNumber(usr[`${pop_obj.class}-duties_tax`]);
 
-                          spent_wealth += local_worth;
+                          spent_wealth += (local_worth + local_tax);
                           modifyValue(local_received_goods, local_buy_order[z], actual_consumption);
+                          modifyValue(usr.trackers.tax, `${pop_obj.class}-duties_tax`, local_tax);
                         }
                       }
                   }

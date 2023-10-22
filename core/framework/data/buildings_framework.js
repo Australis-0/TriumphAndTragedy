@@ -2623,6 +2623,8 @@ module.exports = {
     //Declare local instance variables
     var all_good_keys = Object.keys(goods_obj);
     var cache = {};
+    var category_id = lookup.all_buildings_categories[building_obj.building_type];
+    var category_obj = config.buildings[category_id];
     var config_obj = lookup.all_buildings[building_obj.building_type];
     var original_stockpile = JSON.parse(JSON.stringify(building_obj.stockpile));
     var pop_types;
@@ -2643,37 +2645,45 @@ module.exports = {
       //Iterate over pop_types and set wages for each pop type as well as offer sizes
       if (!building_obj.insolvent)
         for (var i = 0; i < pop_types.length; i++) {
-        var local_employment_stats = module.exports.getBuildingHiringPositions(building_obj, {
-          pop_type: pop_types[i],
+          var config_obj = config.pops[pop_types[i]];
+          var local_employment_stats = module.exports.getBuildingHiringPositions(building_obj, {
+            pop_type: pop_types[i],
 
-          employment_level: building_employment_level,
-          profit_obj: profit_obj,
+            employment_level: building_employment_level,
+            profit_obj: profit_obj,
 
-          return_object: true
-        });
+            return_object: true
+          });
 
-        //Set wage and offer size
-        building_obj[`${pop_types[i]}_positions`] = local_employment_stats.hiring_positions;
-        building_obj[`${pop_types[i]}_wage`] = local_employment_stats.wage;
+          //Set wage and offer size
+          building_obj[`${pop_types[i]}_positions`] = local_employment_stats.hiring_positions;
+          building_obj[`${pop_types[i]}_wage`] = local_employment_stats.wage;
 
-        //Initialise/update pop wealth pool
-        var local_employees = returnSafeNumber(building_obj.employment[pop_types[i]]);
-        var key_name = `wealth-${building_obj.id}-${pop_types[i]}`;
+          //Initialise/update pop wealth pool
+          var local_employees = returnSafeNumber(building_obj.employment[pop_types[i]]);
+          var key_name = `wealth-${building_obj.id}-${pop_types[i]}`;
 
-        if (local_employees > 0) {
-          if (!province_obj.pops[key_name])
-            province_obj.pops[key_name] = {};
-          var local_building_pop = province_obj.pops[key_name];
+          if (local_employees > 0) {
+            if (!province_obj.pops[key_name])
+              province_obj.pops[key_name] = {};
+            var local_building_pop = province_obj.pops[key_name];
 
-          //Set .size, .income, .wealth
-          local_building_pop.size = local_employees;
-          local_building_pop.income = local_employment_stats.wage*local_employees;
-          modifyValue(local_building_pop, "wealth", local_building_pop.income);
+            //Set .size, .income, .wealth
+            local_building_pop.size = local_employees;
+            local_building_pop.income = local_employment_stats.wage*local_employees;
 
-          //Set cache
-          cache[`wages_${pop_types[i]}`] = local_building_pop.income;
+            //Process income taxes
+            var income_tax_amount = returnSafeNumber(usr[`${config_obj.class}_income_tax`])*local_building_pop.income;
+            modifyValue(usr.trackers.tax, `${config_obj.class}_income_tax`, income_tax_amount);
+
+            //Add wealth after taxes
+            local_building_pop.income -= income_tax_amount;
+            modifyValue(local_building_pop, "wealth", local_building_pop.income - income_tax_amount);
+
+            //Set cache
+            cache[`wages_${pop_types[i]}`] = local_building_pop.income;
+          }
         }
-      }
 
       //Building expenditures
       if (!building_obj.insolvent) {
@@ -2744,6 +2754,34 @@ module.exports = {
 
       //Set profit
       building_obj.profit = building_obj.stockpile.money - returnSafeNumber(original_stockpile.money);
+
+      //Building taxation
+      if (building_obj.profit) {
+        var building_tax_amount = 0;
+        var category_tax_amount = 0;
+        var corporate_tax_amount = returnSafeNumber(building_obj.profit*usr.corporate_tax);
+
+        //Initialise building_tax_amount; category_tax_amount
+        if (usr.custom_taxes[`${category_id}-category_tax`])
+          category_tax_amount = Math.ceil(building_obj.profit*usr.custom_taxes[`${category_id}-category_tax`]);
+        if (usr.custom_taxes[`${building_id}-tax`])
+          building_tax_amount = Math.ceil(building_obj.profit*usr.custom_taxes[`${building_id}-tax`]);
+
+        //Set taxes
+        building_obj.taxes = building_tax_amount + category_tax_amount + corporate_tax_amount;
+
+        //Set building_obj.profit after taxes
+        building_obj.profit = building_obj.profit - building_obj.taxes;
+
+        //Add to usr.money
+        usr.money += building_obj.taxes;
+        if (category_tax_amount > 0)
+          modifyValue(usr.trackers.tax, `${category_id}-category_tax`, category_tax_amount);
+        if (corporate_tax_amount > 0)
+          modifyValue(usr.trackers.tax, "corporate_tax", corporate_tax_amount);
+        if (building_tax_amount > 0)
+          modifyValue(usr.trackers.tax, `${building_id}-tax`, building_tax_amount);
+      }
     }
   },
 

@@ -2,7 +2,7 @@ module.exports = {
   initOptimisation: function () {
     global.reserved = {
       buildings: ["aliases", "ideal_climate", "name", "singular", "unlimited_slots"],
-      building_category_keys: ["icon", "name", "order"],
+      building_category_keys: ["icon", "name", "order", "taxable"],
       building_good_keys: ["cost", "maintenance", "production"],
       goods: ["aliases", "name", "icon", "id", "type"],
       pop_needs_order: ["staple_goods", "luxury_goods"],

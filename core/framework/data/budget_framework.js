@@ -172,7 +172,7 @@ module.exports = {
 
         return [true, `**${(building_obj.name) ? building_obj.name : building_name}** tax has been set to **${printPercentage(amount)}**.`];
       } else if (is_building_category) {
-        usr.custom_taxes[`${building_id}-category_tax`] = amount;
+        usr.custom_taxes[`${category_id}-category_tax`] = amount;
 
         return [true, `**${(category_obj.name) ? category_obj.name : category_id}** Industry tax has been set to **${printPercentage(amount)}**.`];
       }
