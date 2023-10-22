@@ -1,7 +1,8 @@
 module.exports = {
-  printBudget: function (arg0_user) {
+  printBudget: function (arg0_user, arg1_page) {
     //Convert from parameters
     var user_id = arg0_user;
+    var page = (arg1_page) ? arg1_page : 0;
 
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
@@ -15,7 +16,10 @@ module.exports = {
     var budget_string = [];
     var expenditures_string = [];
     var has_syphoned_actions = false;
+    var tax_object = getTotalTaxObject(user_id);
     var total_production = getProduction(user_id);
+    var total_tax_pc_cost = 0;
+    var total_tax_revenue = 0;
     var user_income = getIncome(user_id, total_production);
     var war_reparations = getWarReparations(user_id, user_income);
 
@@ -118,6 +122,22 @@ module.exports = {
     budget_string.push(config.localisation.divider);
     budget_string.push("");
 
+    //Display total bureaucratic tax cost
+    budget_string.push("");
+    budget_string.push(`__**Bureaucratic Cost:**__`);
+    budget_string.push("");
+
+    if (tax_object.revenue != 0 && returnSafeNumber(tax_object.political_capital) != 0) {
+      (tax_object.political_capital <= 0) ?
+        budget_string.push(`Our current Tax Code costs us ${config.icons.political_capital} **${parseNumber(tax_object.political_capital)}** Political Capital over **${parseNumber(tax_object.instituted_taxes)}** instituted tax(es).`) :
+        budget_string.push(`Our current Tax Code costs us nothing in terms of Political Capital over **${parseNumber(tax_object.instituted_taxes)}** instituted tax(es).`);
+      budget_string.push(`- We earned ${config.icons.money} **${parseNumber(tax_object.revenue, { display_prefix: true })}** in taxed revenue last turn. It has since been added to our National Treasury.`);
+    } else {
+      budget_string.push(`Our current Tax Code costs us nothing and earns us nothing. We should probably start taxing our population to give ourselves a budget.`);
+    }
+
+    budget_string.push("");
+
     //Format tax code
     {
       budget_string.push(`__**Tax Code:**__`);
@@ -128,7 +148,14 @@ module.exports = {
       }
 
       budget_string.push("");
-      budget_string.push(`Corporate Income Tax: **${printPercentage(usr.tax_rate)}**/**${printPercentage(usr.modifiers.max_corporate_tax)}**`);
+      budget_string.push(`> Estimated tax revenues are based on last turn. This is also how the total income figure is calculated.`);
+      budget_string.push("");
+
+      var corporate_suffix_string = (usr.corporate_tax != 0) ?
+        ` - ${config.icons.political_capital} ${parseNumber(corporate_tax_cost.political_capital*-1)} - ${config.icons.money} ${parseNumber(returnSafeNumber(usr.trackers.tax.corporate_tax), { display_prefix: true })}` : "";
+      var corporate_tax_cost = getTaxCost(user_id, `corporate_tax`);
+
+      budget_string.push(`Corporate Income Tax: **${printPercentage(usr.corporate_tax)}**/**${printPercentage(usr.modifiers.max_corporate_tax)}**${corporate_suffix_string}`);
       budget_string.push("");
       budget_string.push(`**Class Taxes:**`);
       budget_string.push("");
@@ -136,8 +163,13 @@ module.exports = {
       //Income Taxes
       for (var i = 0; i < lookup.all_pop_classes.length; i++) {
         var local_class = lookup.all_pop_classes[i];
+        var tax_key = `${local_class}_income_tax`;
 
-        budget_string.push(`- ${parseString(local_class)} Class Income Tax: **${printPercentage(usr[`${local_class}_income_tax`])}**/${printPercentage(usr.modifiers[`${local_class}_income_max_tax`])}`);
+        var local_tax = usr[tax_key];
+        var local_tax_cost = getTaxCost(user_id, tax_key);
+        var suffix_string = (local_tax != 0) ? ` - ${config.icons.political_capital} ${parseNumber(local_tax_cost*-1)} - ${config.icons.money} ${parseNumber(returnSafeNumber(usr.trackers.tax[tax_key]), { display_prefix: true })}` : "";
+
+        budget_string.push(`- ${parseString(local_class)} Class Income Tax: **${printPercentage(local_tax)}**/${printPercentage(usr.modifiers[`${local_class}_income_max_tax`])}${suffix_string}`);
       }
 
       //Duties
@@ -146,8 +178,13 @@ module.exports = {
 
       for (var i = 0; i < lookup.all_pop_classes.length; i++) {
         var local_class = lookup.all_pop_classes[i];
+        var tax_key = `${local_class}_duties_tax`;
 
-        budget_string.push(`- ${parseString(local_class)} Duties: **${printPercentage(usr[`${local_class}_duties_tax`])}**/${printPercentage(usr.modifiers[`${local_class}_duties_max_tax`])}`);
+        var local_tax = usr[tax_key];
+        var local_tax_cost = getTaxCost(user_id, tax_key);
+        var suffix_string = (local_tax != 0) ? ` - ${config.icons.political_capital} ${parseNumber(local_tax_cost*-1)} - ${config.icons.money} ${parseNumber(returnSafeNumber(usr.trackers.tax[tax_key]), { display_prefix: true })}` : "";
+
+        budget_string.push(`- ${parseString(local_class)} Duties: **${printPercentage(local_tax)}**/${printPercentage(usr.modifiers[`${local_class}_duties_max_tax`])}${suffix_string}`);
       }
 
       budget_string.push("");
@@ -158,6 +195,7 @@ module.exports = {
       budget_string.push("");
       budget_string.push(`- **[Set Tax]**`);
     }
+
     budget_string.push("");
     budget_string.push(`${config.icons.blockade} Blockade status: ${(isBlockaded(user_id)) ? "you are currently blockaded!" : "you are currently not blockaded."}`);
 
@@ -172,6 +210,7 @@ module.exports = {
         title_pages: true,
         fixed_width: true
       }),
+      page: page,
       user: game_obj.user
     });
 
@@ -179,9 +218,10 @@ module.exports = {
     return budget_embed;
   },
 
-  printCustomTaxes: function (arg0_user) {
+  printCustomTaxes: function (arg0_user, arg1_page) {
     //Convert from parameters
     var user_id = arg0_user;
+    var page = (arg1_page) ? arg1_page : 0;
 
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
@@ -204,12 +244,20 @@ module.exports = {
     tax_string.push("");
     tax_string.push(`> Industry tax caps are determined by your Maximum Tax modifier.`);
     tax_string.push("");
+    tax_string.push(`\`#. Tax Name - (Current Rate/Max. Rate) - PC Cost - Last Turn Revenue\``);
+    tax_string.push("");
+    tax_string.push(config.localisation.divider);
+    tax_string.push("");
 
     //Iterate over all_taxes
     for (var i = 0; i < all_taxes.length; i++) {
+      var local_revenue = returnSafeNumber(usr.trackers.tax[all_taxes[i]]);
       var local_tax = usr.custom_taxes[all_taxes[i]];
+      var local_tax_cost = getTaxCost(user_id, all_taxes[i], { custom_tax: true });
+      var pc_string = (local_tax_cost.political_capital >= 0) ?
+        `${config.icons.political_capital} ${parseNumber(local_tax_cost.political_capital*-1)} - ` : "";
 
-      tax_string.push(`${i + 1}. ${parseTaxName(all_taxes[i])} - (**${printPercentage(local_tax)}**/${printPercentage(usr.modifiers.max_tax)})`);
+      tax_string.push(`${i + 1}. ${parseTaxName(all_taxes[i])} - (**${printPercentage(local_tax)}**/${printPercentage(usr.modifiers.max_tax)}) - ${pc_string} - ${config.icons.money} ${parseNumber(local_revenue, { display_prefix: true })}`);
     }
 
     //Print total income at bottom
@@ -229,6 +277,7 @@ module.exports = {
         title_pages: true,
         fixed_width: true
       }),
+      page: page,
       user: game_obj.user
     });
   }

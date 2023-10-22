@@ -52,6 +52,6 @@ module.exports = {
 
     //Update UI
     if (game_obj.page == "budget")
-      printBudget(user_id);
+      printBudget(user_id, main.interfaces[game_obj.middle_embed.id].page);
   }
 };

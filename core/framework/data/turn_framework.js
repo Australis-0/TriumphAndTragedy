@@ -796,6 +796,7 @@ module.exports = {
       //Add money based on calculated user income
       var user_income = getIncome(user_id, all_production);
 
+      var tax_obj = getTotalTaxObject(user_id);
       var total_income = randomNumber(user_income[0], user_income[1]);
       usr.money += total_income;
 
@@ -811,6 +812,9 @@ module.exports = {
           local_recipient.money += money_taken;
         }
       }
+
+      //Tax costs processing
+      usr.modifiers.political_capital -= returnSafeNumber(tax_obj.political_capital);
     } catch (e) {
       console.log(e);
     }

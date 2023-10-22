@@ -134,6 +134,9 @@ config.defines.economy = {
     land_sea_connection_cost: 100, //Cost for embarking/disembarking on ships
     migration_provinces: 100, //The number of top migration attraction provinces that pops should move to
 
+  //Taxes
+  base_tax_pc_cost: 0.1, //PC cost per 1% tax
+
   //Trade and World Market
   resource_init_max_percentile: 0.80, //Maximum percentage of shipment capacity that new countries (for the first 10 turns) can use on buying/selling goods from the World Market
   resource_max_percentile: 0.20, //Maximum percentage of shipment capacity that you can use per turn on buying/selling goods from the World Market
