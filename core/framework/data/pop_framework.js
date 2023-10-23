@@ -102,6 +102,8 @@ module.exports = {
         }
       }
 
+      log.debug(`Pop Chances: `, pop_chances);
+
       pop_chances = standardisePercentage(pop_chances);
       var all_pop_chances = Object.keys(pop_chances);
       var culture_percentages = getProvinceCulture(province_obj.id);
@@ -155,7 +157,7 @@ module.exports = {
         //Distribute cultures proportionally
         if (!options.culture) {
           for (var x = 0; x < all_cultures.length; x++)
-            modifyValue(province_obj.pops, options.culture, population_change*Math.floor(culture_percentages[all_cultures[x]]));
+            modifyValue(province_obj.pops, `culture-${all_cultures[x]}`, population_change*Math.floor(culture_percentages[all_cultures[x]]));
         } else {
           if (typeof options.culture != "object") {
             var adjusted_percentages = {};
@@ -167,13 +169,13 @@ module.exports = {
             adjusted_percentages = standardisePercentage(adjusted_percentages);
 
             for (var x = 0; x < culture_list.length; x++)
-              modifyValue(province_obj.pops, options.culture, population_change*Math.floor(culture_percentages[all_cultures[x]]));
+              modifyValue(province_obj.pops, `culture-${culture_list[x]}`, population_change*Math.floor(culture_percentages[all_cultures[x]]));
           } else {
             var adjusted_percentages = standardisePercentage(options.culture);
             var all_specified_cultures = Object.keys(adjusted_percentages);
 
             for (var x = 0; x < all_specified_cultures.length; x++)
-              modifyValue(province_obj.pops, options.culture, population_change*Math.floor(adjusted_percentages[all_specified_cultures[x]]));
+              modifyValue(province_obj.pops, `culture-${all_specified_cultures[x]}`, population_change*Math.floor(adjusted_percentages[all_specified_cultures[x]]));
           }
         }
 
@@ -1520,8 +1522,8 @@ module.exports = {
 
     //Iterate over all_pop_keys and check if usr.pops finds a match
     for (var i = 0; i < all_pop_keys.length; i++)
-      if (usr.pops[all_pop_keys[i]]) {
-        var local_pop = usr.pops[all_pop_keys[i]];
+      if (config.pops[all_pop_keys[i]]) {
+        var local_pop = config.pops[all_pop_keys[i]];
         var meets_conditions = true;
 
         //Global pop limit handling

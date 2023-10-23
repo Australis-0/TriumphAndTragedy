@@ -455,7 +455,7 @@ module.exports = {
         all_primary_cultures.push((!options.return_objects) ? all_cultures[i] : local_culture);
     }
 
-    //Return statement#
+    //Return statement
     return all_primary_cultures;
   },
 
