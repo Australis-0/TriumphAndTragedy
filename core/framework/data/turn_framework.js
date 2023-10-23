@@ -457,7 +457,6 @@ module.exports = {
     try {
       //Generic trackers
       usr.country_age++;
-      usr.demographics = getDemographics(user_id);
       usr.provinces = owned_provinces.length;
 
       //Base action gain
@@ -1766,6 +1765,14 @@ module.exports = {
       balanceParties(user_id);
     }
     console.timeEnd(`Modifier cap processing!`);
+
+    console.time(`Post-tracker processing!`);
+    //Post-tracker processing - KEEP AT BOTTOM!
+    {
+      //Update pop trackers
+      getDemographics(user_id);
+    }
+    console.timeEnd(`Post-tracker processing!`);
 
     console.time(`Simulation processing!`);
     //Simulation handler

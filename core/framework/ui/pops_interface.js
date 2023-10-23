@@ -290,9 +290,13 @@ module.exports = {
     var all_modifiers = getAllModifiers();
     var all_pops = Object.keys(config.pops);
     var all_provinces = getProvinces(user_id);
-    var pop_obj = getDemographics(user_id);
     var pops_to_display = [];
     var relevant_pops = getRelevantPops(user_id);
+
+    //Update population
+    getDemographics(user_id);
+
+    var pop_obj = usr.pops;
 
     //Calculate pops_to_display
     pops_to_display = JSON.parse(JSON.stringify(relevant_pops));
@@ -379,18 +383,10 @@ module.exports = {
         //Total pops
         //Print dynamic total pops - Total
         for (var i = 0; i < all_pops.length; i++) {
-          var display_pop = false;
           var local_pop = config.pops[all_pops[i]];
-          var local_value = returnSafeNumber(pop_obj[`urban_${all_pops[i]}`]);
+          var local_value = returnSafeNumber(pop_obj[all_pops[i]]);
 
-          if (relevant_pops.includes(all_pops[i]))
-            display_pop = true;
-          if (game_obj.display_irrelevant_pops && local_value != 0)
-            display_pop = true;
-          if (game_obj.display_irrelevant_pops && game_obj.display_no_pops)
-            display_pop = true;
-
-          if (display_pop) {
+          if (pops_to_display.includes(all_pops[i])) {
             pops_string.push(`- ${parsePop(all_pops[i])}: **${parseNumber(local_value)}**`);
 
             //Print local mobility change
@@ -471,7 +467,7 @@ module.exports = {
         for (var i = 0; i < all_pops.length; i++) {
           var display_pop = false;
           var local_pop = config.pops[all_pops[i]];
-          var local_value = returnSafeNumber(pop_obj[`urban_${all_pops[i]}`]);
+          var local_value = returnSafeNumber(pop_obj[`rural_${all_pops[i]}`]);
 
           if (relevant_pops.includes(all_pops[i]))
             display_pop = true;
@@ -497,7 +493,7 @@ module.exports = {
           name: (i == 0) ?
             `${config.icons.development} __Urban Population:__ **${printPercentage(pop_obj.urban_population/pop_obj.population)}**\n-` :
             `${config.icons.development} __Urban Population:__`,
-          value: urban_pops_split_string.join("\n"),
+          value: urban_pops_split_string[i],
           inline: true
         });
 
@@ -506,7 +502,7 @@ module.exports = {
           name: (i == 0) ?
             `${config.icons.provinces} __Rural Population:__ **${printPercentage(pop_obj.rural_population/pop_obj.population)}**\n-` :
             `${config.icons.development} __Rural Population:__`,
-          value: rural_pops_split_string.join("\n"),
+          value: rural_pops_split_string[i],
           inline: true
         });
 

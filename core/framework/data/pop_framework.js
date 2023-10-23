@@ -509,48 +509,52 @@ module.exports = {
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
     var all_pops = Object.keys(config.pops);
-    var all_provinces = getProvinces(user_id);
-    var pop_obj = {};
+    var pop_trackers = {};
+    var provinces = getProvinces(user_id, { include_occupations: true });
+    var total_population = 0;
     var usr = main.users[actual_id];
 
-    //Iterate over all provinces and calculate population
-    for (var i = 0; i < all_provinces.length; i++)
-      for (var x = 0; x < all_pops.length; x++) {
-        var local_key = `${all_provinces[i].type}_${all_pops[x]}`;
+    //Iterate over provinces to fetch pop_trackers
+    for (var i = 0; i < provinces.length; i++)
+      if (provinces[i].pops) {
+        for (var x = 0; x < all_pops.length; x++) {
+          var local_value = returnSafeNumber(provinces[i].pops[all_pops[x]]);
 
-        pop_obj[local_key] = (pop_obj[local_key]) ?
-          pop_obj[local_key] + all_provinces[i].pops[all_pops[x]] :
-          all_provinces[i].pops[all_pops[x]];
+          //Pops and used pops
+          modifyValue(pop_trackers, all_pops[x], local_value);
+          modifyValue(pop_trackers, `used_${all_pops[x]}`, returnSafeNumber(provinces[i].pops[`used_${all_pops[x]}`]));
+
+          //Rural/urban statistics
+          modifyValue(pop_trackers, `${provinces[i].type}_${all_pops[x]}`, local_value);
+        }
+
+        modifyValue(pop_trackers, `${provinces[i].type}_population`, provinces[i].population);
+        total_population += returnSafeNumber(provinces[i].pops.population);
       }
 
-    //Get unique province types
-    var all_pop_keys = Object.keys(pop_obj);
-    var unique_province_types = [];
+    //Set global trackers
+    pop_trackers.population = total_population;
 
-    for (var i = 0; i < all_pop_keys.length; i++) {
-      var local_pop_array = all_pop_keys[i].split("_");
+    //Reset pops and used pops on usr.pops
+    for (var i = 0; i < all_pops.length; i++) {
+      delete usr.pops[all_pops[i]];
+      delete usr.pops[`used_${all_pops[i]}`];
 
-      if (!unique_province_types.includes(local_pop_array[0]))
-        unique_province_types.push(local_pop_array[0]);
+      delete usr.pops[`rural_${all_pops[i]}`];
+      delete usr.pops[`urban_${all_pops[i]}`];
     }
 
-    //Calculate total population for each province type
-    for (var i = 0; i < unique_province_types.length; i++) {
-      var local_key = `${unique_province_types[i]}_population`;
+    delete usr.pops.rural_population;
+    delete usr.pops.urban_population;
 
-      pop_obj[local_key] = 0;
+    delete usr.pops.population;
 
-      for (var x = 0; x < all_pops.length; x++)
-        pop_obj[local_key] += pop_obj[`${unique_province_types[i]}_${all_pops[x]}`];
-
-      //Add to total population
-      pop_obj.population = (pop_obj.population) ?
-        pop_obj.population + pop_obj[local_key] :
-        pop_obj[local_key];
-    }
+    //Merge objects
+    usr.pops = mergeObjects(usr.pops, pop_trackers);
+    usr.population = returnSafeNumber(total_population);
 
     //Return statement
-    return pop_obj;
+    return usr.pops;
   },
 
   getDemotionChance: function (arg0_province_id, arg1_pop_type) {
@@ -1266,11 +1270,13 @@ module.exports = {
 
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
-    var pop_obj = module.exports.getDemographics(user_id);
     var usr = main.users[actual_id];
 
+    //Update pops
+    module.exports.getDemographics(user_id);
+
     //Return statement
-    return pop_obj.population;
+    return usr.pops.population;
   },
 
   getPromotionChance: function (arg0_province_id, arg1_pop_type) {

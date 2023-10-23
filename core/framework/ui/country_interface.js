@@ -77,6 +77,7 @@ module.exports = {
 
     //Fix negative pops
     {
+      getDemographics(user_id);
       for (var i = 0; i < all_pops.length; i++)
         usr.pops[`used_${all_pops[i]}`] = Math.max(usr.pops[`used_${all_pops[i]}`], 0);
     }
