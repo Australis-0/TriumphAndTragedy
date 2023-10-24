@@ -66,7 +66,7 @@ module.exports = {
 
         //Iterate over all_taxes
         for (var i = 0; i < all_taxes.length; i++) {
-          var local_amount = usr.trackers.tax[all_taxes[i]];
+          var local_amount = returnSafeNumber(usr.trackers.tax[all_taxes[i]]);
 
           calculated_income[0] += local_amount;
           calculated_income[1] += local_amount;
@@ -183,9 +183,10 @@ module.exports = {
         pc_cost = pc_cost*building_share;
       }
     } else {
+      var tax_obj = module.exports.getTax(tax_name);
+
       var base_pc_cost = base_tax_pc_cost*(usr[tax_obj.id]*100);
       var pc_cost = base_pc_cost*(1/usr.modifiers.tax_efficiency);
-      var tax_obj = module.exports.getTax(tax_name);
 
       tax_cost.political_capital = Math.ceil(pc_cost);
     }
@@ -224,7 +225,7 @@ module.exports = {
       var local_tax_cost = module.exports.getTaxCost(user_id, all_taxes[i]);
 
       modifyValue(tax_object, "revenue", local_revenue);
-      tax_object = mergeObjects(tax_cost, local_tax_cost);
+      tax_object = mergeObjects(tax_object, local_tax_cost);
 
       if (local_tax != 0)
         modifyValue(tax_object, "instituted_taxes", 1);
@@ -237,7 +238,7 @@ module.exports = {
       var local_tax_cost = module.exports.getTaxCost(user_id, all_taxes[i], { custom_tax: true });
 
       modifyValue(tax_object, "revenue", local_revenue);
-      tax_object = mergeObjects(tax_cost, local_tax_cost);
+      tax_object = mergeObjects(tax_object, local_tax_cost);
 
       if (local_tax != 0)
         modifyValue(tax_object, "instituted_taxes", 1);

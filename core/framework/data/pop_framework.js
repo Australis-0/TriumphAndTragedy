@@ -924,7 +924,7 @@ module.exports = {
 
       if (local_pop.class) {
         if (!class_obj[local_pop.class]) class_obj[local_pop.class] = [];
-        class_obj[local_pop.class].push(local_pop.class);
+        class_obj[local_pop.class].push(all_pops[i]);
       }
     }
 

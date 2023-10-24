@@ -146,6 +146,7 @@ module.exports = {
         } if (all_government_keys[i] == "maximum_manpower") {
           usr.modifiers.maximum_manpower = local_value;
         } if (all_government_keys[i] == "maximum_tax_rate") {
+          usr.modifiers.corporate_max_tax = local_value;
           usr.modifiers.max_tax = local_value;
         }
       }

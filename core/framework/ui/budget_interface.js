@@ -83,63 +83,73 @@ module.exports = {
 
     budget_string.push("");
 
-    expenditures_string.push(`__**Expenditures:**__`);
-    expenditures_string.push("");
+    //Expenditures
+    {
+      budget_string.push(`__**Expenditures:**__`);
+      budget_string.push("");
 
-    if (unit_upkeep > 0)
-      expenditures_string.push(`- ${(unit_upkeep > 0) ? "-" : "+"}**£${parseNumber(unit_upkeep)}** from unit maintenance.`);
-    if (total_maintenance[0] + total_maintenance[1] > 0)
-      if (total_maintenance[0] == total_maintenance[1]) {
-        expenditures_string.push(`- ${(total_maintenance[0] > 0) ? "-" : "+"}**£${parseNumber(total_maintenance[0])}** from building maintenance.`);
-      } else {
-        expenditures_string.push(`- ${(total_maintenance[0] > 0) ? "-" : "+"}**£${parseNumber(total_maintenance[0])}** - ${(total_maintenance[1] < 0) ? "-" : "+"}**£${parseNumber(total_maintenance[1])}** from building maintenance.`);
+      if (unit_upkeep > 0)
+        expenditures_string.push(`- ${(unit_upkeep > 0) ? "-" : "+"}**£${parseNumber(unit_upkeep)}** from unit maintenance.`);
+      if (total_maintenance[0] + total_maintenance[1] > 0)
+        if (total_maintenance[0] == total_maintenance[1]) {
+          expenditures_string.push(`- ${(total_maintenance[0] > 0) ? "-" : "+"}**£${parseNumber(total_maintenance[0])}** from building maintenance.`);
+        } else {
+          expenditures_string.push(`- ${(total_maintenance[0] > 0) ? "-" : "+"}**£${parseNumber(total_maintenance[0])}** - ${(total_maintenance[1] < 0) ? "-" : "+"}**£${parseNumber(total_maintenance[1])}** from building maintenance.`);
+        }
+
+      //War reparations
+      if (Object.keys(war_reparations).length > 0) {
+        var all_war_reparations = Object.keys(war_reparations);
+
+        for (var i = 0; i < all_war_reparations.length; i++) {
+          var local_amount = war_reparations[all_war_reparations[i]];
+          var local_recipient = main.users[all_war_reparations[i]];
+
+          (local_amount[0] != local_amount[1]) ?
+            expenditures_string.push(`- -**£${parseNumber(local_amount[0])}** - -**£${parseNumber(local_amount[1])}** will be paid to **${local_recipient.name}** as war reparations for the next **${parseNumber(local_amount[2])}** turn(s).`) :
+            expenditures_string.push(`- -**£${parseNumber(local_amount[0])}** will be paid to **${local_recipient.name}** as war reparations for the next **${parseNumber(local_amount[2])}** turn(s).`);
+        }
       }
 
-    //War reparations
-    if (Object.keys(war_reparations).length > 0) {
-      var all_war_reparations = Object.keys(war_reparations);
+      var money_string = (user_income[0] != user_income[1]) ?
+        `${parseNumber(user_income[0])} - ${parseNumber(user_income[1])}` :
+        parseNumber(user_income[0]);
 
-      for (var i = 0; i < all_war_reparations.length; i++) {
-        var local_amount = war_reparations[all_war_reparations[i]];
-        var local_recipient = main.users[all_war_reparations[i]];
-
-        (local_amount[0] != local_amount[1]) ?
-          expenditures_string.push(`- -**£${parseNumber(local_amount[0])}** - -**£${parseNumber(local_amount[1])}** will be paid to **${local_recipient.name}** as war reparations for the next **${parseNumber(local_amount[2])}** turn(s).`) :
-          expenditures_string.push(`- -**£${parseNumber(local_amount[0])}** will be paid to **${local_recipient.name}** as war reparations for the next **${parseNumber(local_amount[2])}** turn(s).`);
+      if (expenditures_string.length > 0) {
+        budget_string.push(expenditures_string.join("\n"));
+        budget_string.push("");
+      } else {
+        budget_string.push(`_We currently have no expenditures to speak of._`);
+        budget_string.push("");
       }
     }
 
-    var money_string = (user_income[0] != user_income[1]) ?
-      `${parseNumber(user_income[0])} - ${parseNumber(user_income[1])}` :
-      parseNumber(user_income[0]);
+    //Revenues
+    {
+      budget_string.push(`__**Revenues:**__`);
+      budget_string.push("");
+      budget_string.push(`Your economic advisor estimates that you will gain ${config.icons.money} **${money_string}** in total income next turn.`);
+      budget_string.push("");
+      budget_string.push(config.localisation.divider);
+      budget_string.push("");
 
-    if (expenditures_string.length > 0) {
-      budget_string.push(expenditures_string.join("\n"));
+      //Display total bureaucratic tax cost
+      budget_string.push(`__**Bureaucratic Cost:**__`);
+      budget_string.push("");
+
+      if (tax_object.revenue != 0 && returnSafeNumber(tax_object.political_capital) != 0) {
+        (tax_object.political_capital <= 0) ?
+          budget_string.push(`Our current Tax Code costs us ${config.icons.political_capital} **${parseNumber(tax_object.political_capital)}** Political Capital over **${parseNumber(tax_object.instituted_taxes)}** instituted tax(es).`) :
+          budget_string.push(`Our current Tax Code costs us nothing in terms of Political Capital over **${parseNumber(tax_object.instituted_taxes)}** instituted tax(es).`);
+        budget_string.push(`- We earned ${config.icons.money} **${parseNumber(tax_object.revenue, { display_prefix: true })}** in taxed revenue last turn. It has since been added to our National Treasury.`);
+      } else {
+        budget_string.push(`Our current Tax Code costs us nothing and earns us nothing. We should probably start taxing our population to give ourselves a budget.`);
+      }
+
       budget_string.push("");
     }
 
-    budget_string.push(`Your economic advisor estimates that you will gain ${config.icons.money} **${money_string}** in total income next turn.`);
-    budget_string.push("");
-    budget_string.push(config.localisation.divider);
-    budget_string.push("");
-
-    //Display total bureaucratic tax cost
-    budget_string.push("");
-    budget_string.push(`__**Bureaucratic Cost:**__`);
-    budget_string.push("");
-
-    if (tax_object.revenue != 0 && returnSafeNumber(tax_object.political_capital) != 0) {
-      (tax_object.political_capital <= 0) ?
-        budget_string.push(`Our current Tax Code costs us ${config.icons.political_capital} **${parseNumber(tax_object.political_capital)}** Political Capital over **${parseNumber(tax_object.instituted_taxes)}** instituted tax(es).`) :
-        budget_string.push(`Our current Tax Code costs us nothing in terms of Political Capital over **${parseNumber(tax_object.instituted_taxes)}** instituted tax(es).`);
-      budget_string.push(`- We earned ${config.icons.money} **${parseNumber(tax_object.revenue, { display_prefix: true })}** in taxed revenue last turn. It has since been added to our National Treasury.`);
-    } else {
-      budget_string.push(`Our current Tax Code costs us nothing and earns us nothing. We should probably start taxing our population to give ourselves a budget.`);
-    }
-
-    budget_string.push("");
-
-    //Format tax code
+    //Revenues - Format tax code
     {
       budget_string.push(`__**Tax Code:**__`);
 
@@ -156,43 +166,42 @@ module.exports = {
         ` - ${config.icons.political_capital} ${parseNumber(corporate_tax_cost.political_capital*-1)} - ${config.icons.money} ${parseNumber(returnSafeNumber(usr.trackers.tax.corporate_tax), { display_prefix: true })}` : "";
       var corporate_tax_cost = getTaxCost(user_id, `corporate_tax`);
 
-      budget_string.push(`Corporate Income Tax: **${printPercentage(usr.corporate_tax)}**/**${printPercentage(usr.modifiers.max_corporate_tax)}**${corporate_suffix_string}`);
+      budget_string.push(`Corporate Income Tax: **${printPercentage(usr.corporate_tax)}**/**${printPercentage(usr.modifiers.corporate_max_tax)}**${corporate_suffix_string}`);
       budget_string.push("");
       budget_string.push(`**Class Taxes:**`);
       budget_string.push("");
 
       //Income Taxes
-      for (var i = 0; i < lookup.all_pop_classes.length; i++) {
-        var local_class = lookup.all_pop_classes[i];
+      for (var i = 0; i < lookup.all_classes.length; i++) {
+        var local_class = lookup.all_classes[i];
         var tax_key = `${local_class}_income_tax`;
 
         var local_tax = usr[tax_key];
         var local_tax_cost = getTaxCost(user_id, tax_key);
-        var suffix_string = (local_tax != 0) ? ` - ${config.icons.political_capital} ${parseNumber(local_tax_cost*-1)} - ${config.icons.money} ${parseNumber(returnSafeNumber(usr.trackers.tax[tax_key]), { display_prefix: true })}` : "";
+        var suffix_string = (local_tax != 0) ? ` - ${config.icons.political_capital} ${parseNumber(local_tax_cost.political_capital*-1)} - ${config.icons.money} ${parseNumber(returnSafeNumber(usr.trackers.tax[tax_key]), { display_prefix: true })}` : "";
 
-        budget_string.push(`- ${parseString(local_class)} Class Income Tax: **${printPercentage(local_tax)}**/${printPercentage(usr.modifiers[`${local_class}_income_max_tax`])}${suffix_string}`);
+        budget_string.push(`- ${parseString(local_class)} Class Income Tax: **${printPercentage(local_tax)}**/${printPercentage(returnSafeNumber(usr.modifiers[`${local_class}_income_max_tax`]))}${suffix_string}`);
       }
 
       //Duties
+      budget_string.push("");
       budget_string.push(`> Duties are taxes levied on pop purchases of consumption goods, similar to sales taxes.`);
       budget_string.push("");
 
-      for (var i = 0; i < lookup.all_pop_classes.length; i++) {
-        var local_class = lookup.all_pop_classes[i];
+      for (var i = 0; i < lookup.all_classes.length; i++) {
+        var local_class = lookup.all_classes[i];
         var tax_key = `${local_class}_duties_tax`;
 
         var local_tax = usr[tax_key];
         var local_tax_cost = getTaxCost(user_id, tax_key);
-        var suffix_string = (local_tax != 0) ? ` - ${config.icons.political_capital} ${parseNumber(local_tax_cost*-1)} - ${config.icons.money} ${parseNumber(returnSafeNumber(usr.trackers.tax[tax_key]), { display_prefix: true })}` : "";
+        var suffix_string = (local_tax != 0) ? ` - ${config.icons.political_capital} ${parseNumber(local_tax_cost.political_capital*-1)} - ${config.icons.money} ${parseNumber(returnSafeNumber(usr.trackers.tax[tax_key]), { display_prefix: true })}` : "";
 
-        budget_string.push(`- ${parseString(local_class)} Duties: **${printPercentage(local_tax)}**/${printPercentage(usr.modifiers[`${local_class}_duties_max_tax`])}${suffix_string}`);
+        budget_string.push(`- ${parseString(local_class)} Duties: **${printPercentage(local_tax)}**/${printPercentage(returnSafeNumber(usr.modifiers[`${local_class}_duties_max_tax`]))}${suffix_string}`);
       }
 
       budget_string.push("");
-      budget_string.push(`- We currently have **${(all_taxes.length == 0) ? `no` : parseNumber(all_taxes.length)}** individual taxes levied on our industries.`);
-      budget_string.push(` - **[Edit Tax Code]**`);
-      budget_string.push("");
-
+      budget_string.push(`We currently have **${(all_taxes.length == 0) ? `no` : parseNumber(all_taxes.length)}** individual taxes levied on our industries.`);
+      budget_string.push(`- **[Edit Tax Code]**`);
       budget_string.push("");
       budget_string.push(`- **[Set Tax]**`);
     }

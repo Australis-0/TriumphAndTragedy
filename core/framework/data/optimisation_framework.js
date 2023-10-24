@@ -100,6 +100,7 @@ module.exports = {
       //Pop processing
       {
         {
+          lookup.all_classes = Object.keys(lookup.all_pop_classes);
           lookup.staple_goods_utilities = getNeedsUtilities({ staple_goods: true });
           lookup.luxury_goods_utilities = getNeedsUtilities();
         }
