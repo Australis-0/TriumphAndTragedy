@@ -242,6 +242,10 @@ module.exports = {
       var local_subobj = scope[all_scope_keys[i]];
 
       if (typeof local_subobj == "object") {
+        //Push key itself first
+        if (!options.exclude_keys.includes(all_scope_keys[i]))
+          all_keys.push(all_scope_keys[i]);
+
         var all_subkeys = module.exports.getSubobjectKeys(local_subobj, options);
 
         if (options.include_objects || options.only_objects)

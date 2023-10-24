@@ -723,17 +723,16 @@ module.exports = {
         if (value != 0) {
           //Distribute goods equally across subgood keys
           var amount = Math.floor(value/subgoods.length);
-          var remainder = value % subgoods.length;
+          var remainder = value - (amount*subgoods.length);
 
-          for (var i = 0; i < subgoods.length; i++)
-            if (usr.inventory[subgoods[i]]) {
-              usr.inventory[subgoods[i]] += returnSafeNumber(amount);
+          for (var i = 0; i < subgoods.length; i++) {
+            modifyValue(usr.inventory, subgoods[i], returnSafeNumber(amount));
 
-              if (remainder > 0) {
-                usr.inventory[subgoods[i]]++;
-                remainder--;
-              }
+            if (remainder > 0) {
+              usr.inventory[subgoods[i]]++;
+              remainder--;
             }
+          }
         }
       } else {
         usr.inventory[raw_good_name] += returnSafeNumber(value);

@@ -4,7 +4,7 @@ module.exports = {
       buildings: ["aliases", "ideal_climate", "name", "singular", "unlimited_slots"],
       building_category_keys: ["icon", "name", "order", "taxable"],
       building_good_keys: ["cost", "maintenance", "production"],
-      goods: ["aliases", "name", "icon", "id", "type"],
+      goods: ["aliases", "buy_price", "chop_action_chance", "mine_action_chance", "name", "icon", "id", "quarry_action_chance", "sell_price", "type"],
       pop_needs_order: ["staple_goods", "luxury_goods"],
       pop_scope_sum_keys: ["size", "wealth", "tags"],
       production_choice: ["aliases", "name", "icon"],
