@@ -97,7 +97,7 @@ module.exports = {
         good_amount :
         usr[all_resource_requirements[i]];
 
-      if (resource_amount) {
+      if (resource_amount != undefined) {
         //Check for user shortage
         if (resource_amount < city_resources[all_resource_requirements[i]])
           resource_shortages[all_resource_requirements[i]] = city_resources[all_resource_requirements[i]] - resource_amount;
