@@ -35,7 +35,10 @@ module.exports = {
             //Get building costs, consumption and production
             var building_costs = getBuildingCost(user_id, local_buildings[x]);
             var building_maintenance = getBuildingConsumption(user_id, local_buildings[x]);
-            var building_production = getBuildingProduction(user_id, local_buildings[x], getCapital(user_id).name);
+            var building_production = getBuildingProduction({
+              building_type: local_buildings[x],
+              province_id: getCapital(user_id).id
+            });
             var local_building = getBuilding(local_buildings[x]);
             var local_options = { nesting: 0, no_formatting: true };
 

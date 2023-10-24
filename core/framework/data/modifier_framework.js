@@ -896,267 +896,270 @@ module.exports = {
     var options = (arg4_options) ? arg4_options : { nesting: 0 };
 
     //Declare local instance variables
-    var all_modifier_keys = Object.keys(modifier_obj);
     var f = "**"; //Formatter
     var h_prefix = (!exclude_bullets) ? bulletPoint(Math.max(options.nesting - 1, 0)) : "";
     var modifier_string = [];
     var prefix = (!exclude_bullets) ? bulletPoint(options.nesting) : "";
 
-    //Set formatter
-    if (options.formatter)
-      f = options.formatter;
-    if (options.no_formatting)
-      f = "";
+    if (modifier_obj) {
+      var all_modifier_keys = Object.keys(modifier_obj);
 
-    //Format modifier_string
-    for (var i = 0; i < all_modifier_keys.length; i++) {
-      var local_modifier = module.exports.getModifier(all_modifier_keys[i]);
-      var local_modifier_name;
-      var local_value = getList(modifier_obj[all_modifier_keys[i]]);
+      //Set formatter
+      if (options.formatter)
+        f = options.formatter;
+      if (options.no_formatting)
+        f = "";
 
-      //Fetch local_modifier_name
-      if (local_modifier) {
-        local_modifier_name = (local_modifier.name) ? local_modifier.name : all_modifier_keys[i];
-      } else {
-        //Substantiate dummy local_modifier variables if not found
-        local_modifier = { name: "" };
+      //Format modifier_string
+      for (var i = 0; i < all_modifier_keys.length; i++) {
+        var local_modifier = module.exports.getModifier(all_modifier_keys[i]);
+        var local_modifier_name;
+        var local_value = getList(modifier_obj[all_modifier_keys[i]]);
 
-        if (config.governments[all_modifier_keys[i]]) {
-          var local_government = config.governments[all_modifier_keys[i]];
-
-          local_modifier_name = `${local_government.name} Popularity`;
-        } else if (all_modifier_keys[i].includes("_ap")) {
-          local_modifier_name = parseString(all_modifier_keys[i].replace("_ap", " Attack"));
-        } else if (all_modifier_keys[i].includes("_dp")) {
-          local_modifier_name = parseString(all_modifier_keys[i].replace("_dp", " Defence"));
+        //Fetch local_modifier_name
+        if (local_modifier) {
+          local_modifier_name = (local_modifier.name) ? local_modifier.name : all_modifier_keys[i];
         } else {
-          local_modifier_name = parseString(all_modifier_keys[i]);
+          //Substantiate dummy local_modifier variables if not found
+          local_modifier = { name: "" };
+
+          if (config.governments[all_modifier_keys[i]]) {
+            var local_government = config.governments[all_modifier_keys[i]];
+
+            local_modifier_name = `${local_government.name} Popularity`;
+          } else if (all_modifier_keys[i].includes("_ap")) {
+            local_modifier_name = parseString(all_modifier_keys[i].replace("_ap", " Attack"));
+          } else if (all_modifier_keys[i].includes("_dp")) {
+            local_modifier_name = parseString(all_modifier_keys[i].replace("_dp", " Defence"));
+          } else {
+            local_modifier_name = parseString(all_modifier_keys[i]);
+          }
         }
-      }
 
-      //Good handling
-      if (lookup.all_goods[all_modifier_keys[i]]) {
-        var good_obj = lookup.all_goods[all_modifier_keys[i]];
+        //Good handling
+        if (lookup.all_goods[all_modifier_keys[i]]) {
+          var good_obj = lookup.all_goods[all_modifier_keys[i]];
 
-        if (local_value.length == 1) {
-          modifier_string.push(`${prefix}${f}${parseNumber(local_value[0])}${f} ${(good_obj.name) ? good_obj.name : all_modifier_keys[i]}`);
+          if (local_value.length == 1) {
+            modifier_string.push(`${prefix}${f}${parseNumber(local_value[0])}${f} ${(good_obj.name) ? good_obj.name : all_modifier_keys[i]}`);
+          } else {
+            modifier_string.push(`${prefix}${f}${parseNumber(local_value[0])} - ${parseNumber(local_value[1])}${f} ${(good_obj.name) ? good_obj.name : all_modifier_keys[i]}`);
+          }
+        } else if (all_modifier_keys[i] == "money") { //Money handler
+          (local_value.length == 1) ?
+            modifier_string.push(`${prefix}£${parseNumber(local_value[0])}`) :
+            modifier_string.push(`${prefix}£${parseNumber(local_value[0])} - ${parseNumber(local_value[1])}`);
+        } else if (config.pops[all_modifier_keys[i]]) { //Pops handling
+          var pop_obj = config.pops[all_modifier_keys[i]];
+
+          var local_pop_name = (pop_obj.name) ? pop_obj.name : all_modifier_keys[i];
+
+          (local_value.length == 1) ?
+            modifier_string.push(`${prefix}${parseNumber(local_value[0])} ${local_pop_name}`) :
+            modifier_string.push(`${prefix}${parseNumber(local_value[0])} - ${parseNumber(local_value[1])} ${local_pop_name}`);
         } else {
-          modifier_string.push(`${prefix}${f}${parseNumber(local_value[0])} - ${parseNumber(local_value[1])}${f} ${(good_obj.name) ? good_obj.name : all_modifier_keys[i]}`);
-        }
-      } else if (all_modifier_keys[i] == "money") { //Money handler
-        (local_value.length == 1) ?
-          modifier_string.push(`${prefix}£${parseNumber(local_value[0])}`) :
-          modifier_string.push(`${prefix}£${parseNumber(local_value[0])} - ${parseNumber(local_value[1])}`);
-      } else if (config.pops[all_modifier_keys[i]]) { //Pops handling
-        var pop_obj = config.pops[all_modifier_keys[i]];
+          if (local_modifier.type == "integer") {
+            var prefix_displayed = true;
 
-        var local_pop_name = (pop_obj.name) ? pop_obj.name : all_modifier_keys[i];
+            if (["political_capital"].includes(local_modifier.type))
+              prefix_displayed = false;
 
-        (local_value.length == 1) ?
-          modifier_string.push(`${prefix}${parseNumber(local_value[0])} ${local_pop_name}`) :
-          modifier_string.push(`${prefix}${parseNumber(local_value[0])} - ${parseNumber(local_value[1])} ${local_pop_name}`);
-      } else {
-        if (local_modifier.type == "integer") {
-          var prefix_displayed = true;
+            //Parse modifier as integer
+            modifier_string.push(`${prefix}${f}${parseNumber(local_value[0], { display_prefix: prefix_displayed })}${f} ${local_modifier_name}`);
+          } else {
+            //Effects/scopes parsing
+            if (all_modifier_keys[i] == "any_pop" || all_modifier_keys[i].startsWith("any_pop_")) {
+              var new_options = JSON.parse(JSON.stringify(options));
+              new_options.nesting++;
 
-          if (["political_capital"].includes(local_modifier.type))
-            prefix_displayed = false;
-
-          //Parse modifier as integer
-          modifier_string.push(`${prefix}${f}${parseNumber(local_value[0], { display_prefix: prefix_displayed })}${f} ${local_modifier_name}`);
-        } else {
-          //Effects/scopes parsing
-          if (all_modifier_keys[i] == "any_pop" || all_modifier_keys[i].startsWith("any_pop_")) {
-            var new_options = JSON.parse(JSON.stringify(options));
-            new_options.nesting++;
-
-            modifier_string.push(`${h_prefix}Any Pop:`);
-            modifier_string.push(
-              module.exports.parseModifiers(local_value[0], exclude_bullets, base_zero, base_one, new_options)
-            );
-          } else if (all_modifier_keys[i] == "construction_turns") {
-            modifier_string.push(`${prefix}Construction Time: ${f}${parseNumber(local_value[0])}${f} Turn(s)`);
-          } else if (all_modifier_keys[i] == "cost") {
-            var new_options = JSON.parse(JSON.stringify(options));
-            new_options.nesting++;
-
-            modifier_string.push(`${h_prefix}Cost:`);
-            modifier_string.push(
-              module.exports.parseModifiers(local_value[0], exclude_bullets, base_zero, base_one, new_options)
-            );
-          } else if (all_modifier_keys[i] == "enable_centralisation") {
-            modifier_string.push((local_value[0]) ? `Enables Centralisation` : `Disables Centralisation`);
-          } else if (all_modifier_keys[i] == "houses") {
-            modifier_string.push(`${h_prefix}Houses ${f}${parseNumber(local_value[0])}${f}`);
-          } else if (all_modifier_keys[i] == "infamy_loss") {
-            modifier_string.push(`${prefix}${f}${printPercentage(local_value[0], { display_prefix: true, base_zero: true })}${f} ${local_modifier_name}`);
-          } else if (all_modifier_keys[i] == "maintenance") {
-            var new_options = JSON.parse(JSON.stringify(options));
-            new_options.nesting++;
-
-            modifier_string.push(`${h_prefix}Maintenance:`);
-            modifier_string.push(
-              module.exports.parseModifiers(local_value[0], exclude_bullets, base_zero, base_one, new_options)
-            );
-          } else if (all_modifier_keys[i] == "maximum") {
-            modifier_string.push(`${h_prefix}Maximum: ${parseNumber(local_value[0])}`);
-          } else if (all_modifier_keys[i] == "manpower_cost") {
-            var local_obj = local_value[0];
-
-            var local_keys = Object.keys(local_obj);
-
-            for (var x = 0; x < local_keys.length; x++) {
-              var local_subobj = local_obj[local_keys[x]];
-
-              modifier_string.push(`${h_prefix}Manpower:`);
-              //Recursive scopes
-              if (local_keys[x] == "any_pop" || local_keys[i].startsWith("any_pop_")) {
-                var new_options = JSON.parse(JSON.stringify(options));
-                new_options.nesting++;
-
-                modifier_string.push(
-                  module.exports.parseModifiers(local_subobj, exclude_bullets, base_zero, base_one, new_options)
-                );
-              }
-
-              //Effects
-              if (config.pops[local_keys[x]]) {
-                var pop_obj = config.pops[local_keys[x]];
-
-                modifier_string.push(` ${prefix}${f}${parseNumber(local_subobj)}${f} ${(pop_obj.name) ? pop_obj.name : local_keys[x]}`);
-              }
-            }
-          } else if (all_modifier_keys[i] == "obsolete_building") {
-            var building_names = [];
-            for (var x = 0; x < local_value.length; x++)
-              building_names.push(
-                (getBuilding(local_value[x])) ?
-                  getBuilding(local_value[x]).name :
-                  local_value[x]
-              )
-
-            modifier_string.push(`${prefix}Obsoletes ${f}${building_names.join(", ")}${f}`);
-          } else if (all_modifier_keys[i] == "obsolete_government") {
-            var government_names = [];
-            for (var x = 0; x < local_value.length; x++)
-              government_names.push(
-                (config.governments[local_value[x]]) ?
-                  (config.governments[local_value[x]].name) ?
-                    config.governments[local_value[x]].name :
-                    local_value[x] :
-                  local_value[x]
-              )
-
-            modifier_string.push(`${prefix}Obsoletes ${f}${government_names.join(", ")}${f}`);
-          } else if (all_modifier_keys[i] == "obsolete_reform") {
-            var reform_names = [];
-            for (var x = 0; x < local_value.length; x++)
-              government_names.push(
-                (config.reforms[local_value[x]]) ?
-                    (config.reforms[local_value[x]].name) ?
-                      config.reforms[local_value[x]].name :
-                      local_value[x] :
-                  local_value[x]
+              modifier_string.push(`${h_prefix}Any Pop:`);
+              modifier_string.push(
+                module.exports.parseModifiers(local_value[0], exclude_bullets, base_zero, base_one, new_options)
               );
+            } else if (all_modifier_keys[i] == "construction_turns") {
+              modifier_string.push(`${prefix}Construction Time: ${f}${parseNumber(local_value[0])}${f} Turn(s)`);
+            } else if (all_modifier_keys[i] == "cost") {
+              var new_options = JSON.parse(JSON.stringify(options));
+              new_options.nesting++;
 
-            modifier_string.push(`${prefix}Obsoletes ${f}${reform_names.join(", ")}${f}`);
-          } else if (all_modifier_keys[i] == "obsolete_unit") {
-            var unit_names = [];
-            for (var x = 0; x < local_value.length; x++)
-              unit_names.push(
-                (getUnit(local_value[x])) ?
-                    (getUnit(local_value[x]).name) ?
+              modifier_string.push(`${h_prefix}Cost:`);
+              modifier_string.push(
+                module.exports.parseModifiers(local_value[0], exclude_bullets, base_zero, base_one, new_options)
+              );
+            } else if (all_modifier_keys[i] == "enable_centralisation") {
+              modifier_string.push((local_value[0]) ? `Enables Centralisation` : `Disables Centralisation`);
+            } else if (all_modifier_keys[i] == "houses") {
+              modifier_string.push(`${h_prefix}Houses ${f}${parseNumber(local_value[0])}${f}`);
+            } else if (all_modifier_keys[i] == "infamy_loss") {
+              modifier_string.push(`${prefix}${f}${printPercentage(local_value[0], { display_prefix: true, base_zero: true })}${f} ${local_modifier_name}`);
+            } else if (all_modifier_keys[i] == "maintenance") {
+              var new_options = JSON.parse(JSON.stringify(options));
+              new_options.nesting++;
+
+              modifier_string.push(`${h_prefix}Maintenance:`);
+              modifier_string.push(
+                module.exports.parseModifiers(local_value[0], exclude_bullets, base_zero, base_one, new_options)
+              );
+            } else if (all_modifier_keys[i] == "maximum") {
+              modifier_string.push(`${h_prefix}Maximum: ${parseNumber(local_value[0])}`);
+            } else if (all_modifier_keys[i] == "manpower_cost") {
+              var local_obj = local_value[0];
+
+              var local_keys = Object.keys(local_obj);
+
+              for (var x = 0; x < local_keys.length; x++) {
+                var local_subobj = local_obj[local_keys[x]];
+
+                modifier_string.push(`${h_prefix}Manpower:`);
+                //Recursive scopes
+                if (local_keys[x] == "any_pop" || local_keys[i].startsWith("any_pop_")) {
+                  var new_options = JSON.parse(JSON.stringify(options));
+                  new_options.nesting++;
+
+                  modifier_string.push(
+                    module.exports.parseModifiers(local_subobj, exclude_bullets, base_zero, base_one, new_options)
+                  );
+                }
+
+                //Effects
+                if (config.pops[local_keys[x]]) {
+                  var pop_obj = config.pops[local_keys[x]];
+
+                  modifier_string.push(` ${prefix}${f}${parseNumber(local_subobj)}${f} ${(pop_obj.name) ? pop_obj.name : local_keys[x]}`);
+                }
+              }
+            } else if (all_modifier_keys[i] == "obsolete_building") {
+              var building_names = [];
+              for (var x = 0; x < local_value.length; x++)
+                building_names.push(
+                  (getBuilding(local_value[x])) ?
+                    getBuilding(local_value[x]).name :
+                    local_value[x]
+                )
+
+              modifier_string.push(`${prefix}Obsoletes ${f}${building_names.join(", ")}${f}`);
+            } else if (all_modifier_keys[i] == "obsolete_government") {
+              var government_names = [];
+              for (var x = 0; x < local_value.length; x++)
+                government_names.push(
+                  (config.governments[local_value[x]]) ?
+                    (config.governments[local_value[x]].name) ?
+                      config.governments[local_value[x]].name :
+                      local_value[x] :
+                    local_value[x]
+                )
+
+              modifier_string.push(`${prefix}Obsoletes ${f}${government_names.join(", ")}${f}`);
+            } else if (all_modifier_keys[i] == "obsolete_reform") {
+              var reform_names = [];
+              for (var x = 0; x < local_value.length; x++)
+                government_names.push(
+                  (config.reforms[local_value[x]]) ?
+                      (config.reforms[local_value[x]].name) ?
+                        config.reforms[local_value[x]].name :
+                        local_value[x] :
+                    local_value[x]
+                );
+
+              modifier_string.push(`${prefix}Obsoletes ${f}${reform_names.join(", ")}${f}`);
+            } else if (all_modifier_keys[i] == "obsolete_unit") {
+              var unit_names = [];
+              for (var x = 0; x < local_value.length; x++)
+                unit_names.push(
+                  (getUnit(local_value[x])) ?
+                      (getUnit(local_value[x]).name) ?
+                        getUnit(local_value[x]).name :
+                        local_value[x] :
+                    local_value[x]
+                );
+
+              modifier_string.push(`${prefix}Obsoletes ${f}${unit_names.join(", ")}${f}`);
+            } else if (all_modifier_keys[i] == "produces") {
+              var new_options = JSON.parse(JSON.stringify(options));
+              new_options.nesting++;
+
+              modifier_string.push(`${h_prefix}Produces:`);
+              modifier_string.push(
+                module.exports.parseModifiers(local_value[0], exclude_bullets, base_zero, base_one, new_options)
+              );
+            } else if (all_modifier_keys[i] == "production_choice" || all_modifier_keys[i].startsWith("production_choice_")) {
+              var new_options = JSON.parse(JSON.stringify(options));
+              var production_choice_name = parseString(all_modifier_keys[i].replace("production_choice_", ""));
+              new_options.nesting++;
+
+              modifier_string.push(`${prefix}${production_choice_name} (PC)`);
+              modifier_string.push(
+                module.exports.parseModifiers(local_value[0], exclude_bullets, base_zero, base_one, new_options)
+              );
+            } else if (all_modifier_keys[i] == "reform_desire_gain") {
+              modifier_string.push(`${prefix}${f}${printPercentage(local_value[0], { base_zero: true })}${f} Reform Desire Gain`);
+            } else if (all_modifier_keys[i] == "resident_modifiers") {
+              var new_options = JSON.parse(JSON.stringify(options));
+              new_options.nesting++;
+
+              modifier_string.push(`Resident Modifiers:`);
+              modifier_string.push(
+                module.exports.parseModifiers(local_value[0], exclude_bullets, base_zero, base_one, new_options)
+              );
+            } else if (all_modifier_keys[i] == "stability_modifier") {
+              modifier_string.push(`${prefix}${f}${printPercentage(local_value[0], { base_zero: true })}${f} Stability Modifier`);
+            } else if (all_modifier_keys[i] == "unlock_building") {
+              var building_names = [];
+              for (var x = 0; x < local_value.length; x++)
+                building_names.push(
+                  (getBuilding(local_value[x])) ?
+                      (getBuilding(local_value[x]).name) ?
+                        getBuilding(local_value[x]).name :
+                        local_value[x] :
+                    local_value[x]
+                );
+
+              modifier_string.push(`${prefix}Enables ${f}${building_names.join(", ")}${f}`);
+            } else if (all_modifier_keys[i] == "unlock_government") {
+              var government_names = [];
+              for (var x = 0; x < local_value.length; x++)
+                government_names.push(
+                  (getGovernment(local_value[x])) ?
+                      (getGovernment(local_value[x]).name) ?
+                        getGovernment(local_value[x]).name :
+                        local_value[x]:
+                    local_value[x]
+                );
+
+              modifier_string.push(`${prefix}Unlocks ${f}${government_names.join(", ")}${f}`);
+            } else if (all_modifier_keys[i] == "unlock_reform") {
+              var reform_names = [];
+              for (var x = 0; x < local_value.length; x++)
+                reform_names.push(
+                  (config.reforms[local_value[x]]) ?
+                      (config.reforms[local_value[x]].name) ?
+                        config.reforms[local_value[x]].name :
+                        local_value[x] :
+                    local_value[x]
+                );
+
+              modifier_string.push(`${prefix}Unlocks ${f}${reform_names.join(", ")}${f}`);
+            } else if (all_modifier_keys[i] == "unlock_unit") {
+              var unit_names = [];
+              for (var x = 0; x < local_value.length; x++)
+                unit_names.push(
+                  (getUnit(local_value[x])) ?
+                    (getUnit(local_value[x])) ?
                       getUnit(local_value[x]).name :
                       local_value[x] :
-                  local_value[x]
-              );
+                    local_value[x]
+                );
 
-            modifier_string.push(`${prefix}Obsoletes ${f}${unit_names.join(", ")}${f}`);
-          } else if (all_modifier_keys[i] == "produces") {
-            var new_options = JSON.parse(JSON.stringify(options));
-            new_options.nesting++;
-
-            modifier_string.push(`${h_prefix}Produces:`);
-            modifier_string.push(
-              module.exports.parseModifiers(local_value[0], exclude_bullets, base_zero, base_one, new_options)
-            );
-          } else if (all_modifier_keys[i] == "production_choice" || all_modifier_keys[i].startsWith("production_choice_")) {
-            var new_options = JSON.parse(JSON.stringify(options));
-            var production_choice_name = parseString(all_modifier_keys[i].replace("production_choice_", ""));
-            new_options.nesting++;
-
-            modifier_string.push(`${prefix}${production_choice_name} (PC)`);
-            modifier_string.push(
-              module.exports.parseModifiers(local_value[0], exclude_bullets, base_zero, base_one, new_options)
-            );
-          } else if (all_modifier_keys[i] == "reform_desire_gain") {
-            modifier_string.push(`${prefix}${f}${printPercentage(local_value[0], { base_zero: true })}${f} Reform Desire Gain`);
-          } else if (all_modifier_keys[i] == "resident_modifiers") {
-            var new_options = JSON.parse(JSON.stringify(options));
-            new_options.nesting++;
-
-            modifier_string.push(`Resident Modifiers:`);
-            modifier_string.push(
-              module.exports.parseModifiers(local_value[0], exclude_bullets, base_zero, base_one, new_options)
-            );
-          } else if (all_modifier_keys[i] == "stability_modifier") {
-            modifier_string.push(`${prefix}${f}${printPercentage(local_value[0], { base_zero: true })}${f} Stability Modifier`);
-          } else if (all_modifier_keys[i] == "unlock_building") {
-            var building_names = [];
-            for (var x = 0; x < local_value.length; x++)
-              building_names.push(
-                (getBuilding(local_value[x])) ?
-                    (getBuilding(local_value[x]).name) ?
-                      getBuilding(local_value[x]).name :
-                      local_value[x] :
-                  local_value[x]
-              );
-
-            modifier_string.push(`${prefix}Enables ${f}${building_names.join(", ")}${f}`);
-          } else if (all_modifier_keys[i] == "unlock_government") {
-            var government_names = [];
-            for (var x = 0; x < local_value.length; x++)
-              government_names.push(
-                (getGovernment(local_value[x])) ?
-                    (getGovernment(local_value[x]).name) ?
-                      getGovernment(local_value[x]).name :
-                      local_value[x]:
-                  local_value[x]
-              );
-
-            modifier_string.push(`${prefix}Unlocks ${f}${government_names.join(", ")}${f}`);
-          } else if (all_modifier_keys[i] == "unlock_reform") {
-            var reform_names = [];
-            for (var x = 0; x < local_value.length; x++)
-              reform_names.push(
-                (config.reforms[local_value[x]]) ?
-                    (config.reforms[local_value[x]].name) ?
-                      config.reforms[local_value[x]].name :
-                      local_value[x] :
-                  local_value[x]
-              );
-
-            modifier_string.push(`${prefix}Unlocks ${f}${reform_names.join(", ")}${f}`);
-          } else if (all_modifier_keys[i] == "unlock_unit") {
-            var unit_names = [];
-            for (var x = 0; x < local_value.length; x++)
-              unit_names.push(
-                (getUnit(local_value[x])) ?
-                  (getUnit(local_value[x])) ?
-                    getUnit(local_value[x]).name :
-                    local_value[x] :
-                  local_value[x]
-              );
-
-            modifier_string.push(`${prefix}Enables ${f}${unit_names.join(", ")}${f}`);
-          } else {
-            //Default modifiers
-            if (
-              !reserved.buildings.includes(all_modifier_keys[i])
-            ) {
-              (local_modifier.type == "percentage" || (local_value[0] > -1 && local_value[0] < 1)) ?
-                modifier_string.push(`${prefix}${f}${printPercentage(local_value[0], { display_prefix: true, base_zero: base_zero, base_one: base_one })}${f} ${local_modifier_name}`) :
-                modifier_string.push(`${prefix}${f}${parseNumber(local_value[0], { display_prefix: true, base_zero: base_zero, base_one: base_one })}${f} ${local_modifier_name}`);
+              modifier_string.push(`${prefix}Enables ${f}${unit_names.join(", ")}${f}`);
+            } else {
+              //Default modifiers
+              if (
+                !reserved.buildings.includes(all_modifier_keys[i])
+              ) {
+                (local_modifier.type == "percentage" || (local_value[0] > -1 && local_value[0] < 1)) ?
+                  modifier_string.push(`${prefix}${f}${printPercentage(local_value[0], { display_prefix: true, base_zero: base_zero, base_one: base_one })}${f} ${local_modifier_name}`) :
+                  modifier_string.push(`${prefix}${f}${parseNumber(local_value[0], { display_prefix: true, base_zero: base_zero, base_one: base_one })}${f} ${local_modifier_name}`);
+              }
             }
           }
         }

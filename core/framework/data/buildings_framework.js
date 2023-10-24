@@ -480,10 +480,11 @@ module.exports = {
   */
   getBuilding: function (arg0_name, arg1_options) {
     //Convert from parameters
-    var building_name = arg0_name.toLowerCase();
-
-    //Initialise options
+    var building_name = arg0_name;
     var options = (arg1_options) ? arg1_options : {};
+
+    //Guard clause
+    if (typeof building_name == "object") return building_name;
 
     //Declare local instance variables
     var all_building_categories = Object.keys(config.buildings);
@@ -688,13 +689,11 @@ module.exports = {
   getBuildingCategory: function (arg0_name, arg1_options) {
     //Convert from parameters
     var building_category_name = arg0_name.trim().toLowerCase();
+    var options = (arg1_options) ? arg1_options : {};
 
     //Guard clause
     if (config.buildings[building_category_name])
-      return config.buildings[building_category_name];
-
-    //Initialise options
-    var options = (arg1_options) ? arg1_options : {};
+      return (!options.return_key) ? config.buildings[building_category_name] : building_category_name;
 
     //Declare local instance variables
     var all_building_categories = Object.keys(config.buildings);
@@ -773,11 +772,14 @@ module.exports = {
     //Convert from parameters
     var user_id = arg0_user;
     var building_obj = arg1_building;
+    var options = (arg2_options) ? arg2_options : {};
 
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
     var building_maintenance = {};
-    var config_obj = module.exports.getBuilding(building_obj.building_type);
+    var config_obj = (typeof building_obj == "object") ?
+      module.exports.getBuilding(building_obj.building_type) :
+      module.exports.getBuilding(building_obj);
     var employment_level;
     var maintenance_obj = {};
     var usr = main.users[actual_id];
@@ -795,8 +797,8 @@ module.exports = {
 
         //Get building_maintenance from production choice
         building_maintenance = module.exports.getProductionChoiceOutput({
-          building_object: building_obj,
-          production_choice: building_obj.production_choice
+          production_choice: building_obj.production_choice,
+          [(typeof building_obj == "object") ? "building_object" : "building_type"]: building_obj
         });
         building_maintenance = multiplyObject(building_maintenance, -1);
 
@@ -1198,10 +1200,11 @@ module.exports = {
 
       //Get building_production from production choice
       {
-        building_production = module.exports.getProductionChoiceOutput({
-          building_object: building_obj,
-          production_choice: building_obj.production_choice
-        });
+        building_production = (typeof building_obj == "object") ?
+          module.exports.getProductionChoiceOutput({
+            building_object: building_obj,
+            production_choice: building_obj.production_choice
+          }) : config_obj.produces;
 
         var all_building_production_keys = Object.keys(building_production);
 
@@ -1216,7 +1219,7 @@ module.exports = {
       production_obj = module.exports.applyProduction(
         JSON.parse(JSON.stringify(building_production)),
         {
-          config_obect: config_obj,
+          config_object: config_obj,
           current_scope: { name: "produces" },
           province_id: province_obj.id,
 
