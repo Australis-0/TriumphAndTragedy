@@ -388,6 +388,9 @@ module.exports = {
     var provinces = sortProvinces(user_id, "population_descending");
     var usr = main.users[actual_id];
 
+    //Initialise missing variables
+    if (!game_obj.building_sort) game_obj.building_sort = "alphabetical";
+
     //Format buildings_string
     var buildings_string = [];
 
@@ -502,8 +505,12 @@ module.exports = {
     var province_obj = main.provinces[province_id];
     var usr = main.users[actual_id];
 
+    //Initialise missing variables
+    if (!game_obj.building_sort) game_obj.building_sort = "alphabetical";
+
     //Format buildings_string
     var buildings_string = [];
+
 
     //Iterate over all buildings in province
     if (province_obj) {
