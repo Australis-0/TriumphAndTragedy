@@ -2801,7 +2801,7 @@ module.exports = {
 
     //Declare local instance variables
     var all_buildings = Object.keys(lookup.all_buildings);
-    var all_pops = Object.keys(lookup.all_pops);
+    var all_pops = Object.keys(config.pops);
     var province_obj = main.provinces[province_id];
     var qualified_pops = [];
     var local_subsistence_key;

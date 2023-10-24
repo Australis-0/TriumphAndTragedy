@@ -3028,7 +3028,7 @@ module.exports = {
 
         //Initialise tracker variables
         {
-          if (lookup.all_pops[all_pop_keys[i]])
+          if (config.pops[all_pop_keys[i]])
             local_pop_type = all_pop_keys[i];
           if (all_pop_keys[i].startsWith("used_")) {
             is_employed = true;
@@ -3164,7 +3164,7 @@ module.exports = {
 
           //Normal key handler
           {
-            if (lookup.all_pops[all_pop_keys[i]]) {
+            if (config.pops[all_pop_keys[i]]) {
               modifyValue(current_scope.tags, all_pop_keys[i], local_subobj);
               current_scope.size = Math.max(current_scope.size, local_subobj);
             }
