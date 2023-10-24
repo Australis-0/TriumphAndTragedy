@@ -735,46 +735,6 @@ module.exports = {
     return province_cache;
   },
 
-  getRevenue: function (arg0_user, arg1_production) {
-    //Convert from parameters
-    var user_id = arg0_user;
-    var raw_production = arg1_production;
-
-    //Declare local instance variables
-    var actual_id = main.global.user_map[user_id];
-    var calculated_revenues = [0, 0];
-    var usr = (typeof user_id != "object") ? main.users[actual_id] : user_id;
-
-    //Safeguard virtual_user arguments
-    if (typeof user_id == "object")
-      user_id = usr.id;
-
-    //Declare local tracker variables
-    var civilian_actions = Math.ceil(usr.actions*usr.modifiers.civilian_actions);
-
-    try {
-      var total_production = (!raw_production) ? getProduction(user_id) : raw_production;
-
-      //Add actions
-      var gained_actions = (total_production.actions) ?
-        total_production.actions : [0, 0];
-
-      for (var i = 0; i < gained_actions.length; i++)
-        calculated_revenues[i] = Math.ceil(
-            ((usr.actions + gained_actions[i]) - civilian_actions)
-          *config.defines.economy.money_per_action
-          *usr.tax_rate
-          *usr.modifiers.tax_efficiency
-        );
-
-      //Return statement
-      return calculated_revenues;
-    } catch (e) {
-      log.error(`getIncome() ran into an error whilst processing User ID: ${user_id}: ${e}.`);
-      console.log(e);
-    }
-  },
-
   getSupplyLimitMovementBonus: function (arg0_province, arg1_province, arg2_distance) {
     //Convert from parameters
     var current_province = arg0_province;
@@ -855,7 +815,7 @@ module.exports = {
 
     //Define income
     if (!income)
-      var income = module.exports.getIncome(user_id, undefined, true);
+      var income = getIncome(user_id, undefined, true);
 
     //Iterate through all cooldowns, check for war reparations, minimum case
     for (var i = 0; i < all_cooldowns.length; i++) {

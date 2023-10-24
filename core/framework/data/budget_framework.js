@@ -30,7 +30,7 @@ module.exports = {
         ].sort(function (a, b) { return a - b });
 
         //Total revenue
-        calculated_income = getRevenue(user_id, total_production);
+        calculated_income = module.exports.getRevenue(user_id, total_production);
 
         //Unit upkeep costs
         calculated_income = [
@@ -77,6 +77,46 @@ module.exports = {
         calculated_income[0] - total_maintenance[1],
         calculated_income[1] - total_maintenance[0]
       ];
+    } catch (e) {
+      log.error(`getIncome() ran into an error whilst processing User ID: ${user_id}: ${e}.`);
+      console.log(e);
+    }
+  },
+
+  getRevenue: function (arg0_user, arg1_production) {
+    //Convert from parameters
+    var user_id = arg0_user;
+    var raw_production = arg1_production;
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var calculated_revenues = [0, 0];
+    var usr = (typeof user_id != "object") ? main.users[actual_id] : user_id;
+
+    //Safeguard virtual_user arguments
+    if (typeof user_id == "object")
+      user_id = usr.id;
+
+    //Declare local tracker variables
+    var civilian_actions = Math.ceil(usr.actions*usr.modifiers.civilian_actions);
+
+    try {
+      var total_production = (!raw_production) ? getProduction(user_id) : raw_production;
+
+      //Add actions
+      var gained_actions = (total_production.actions) ?
+        total_production.actions : [0, 0];
+
+      for (var i = 0; i < gained_actions.length; i++)
+        calculated_revenues[i] = Math.ceil(
+            ((usr.actions + gained_actions[i]) - civilian_actions)
+          *config.defines.economy.money_per_action
+          *usr.corporate_tax
+          *usr.modifiers.tax_efficiency
+        );
+
+      //Return statement
+      return calculated_revenues;
     } catch (e) {
       log.error(`getIncome() ran into an error whilst processing User ID: ${user_id}: ${e}.`);
       console.log(e);
