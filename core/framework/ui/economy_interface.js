@@ -375,6 +375,9 @@ module.exports = {
     var production_localisation = getProductionLocalisation(user_id);
     var usr = main.users[actual_id];
 
+    if (production_localisation.length == 0)
+      production_localisation.push(`_Our country is currently not producing anything, nor does it have a regular import/export balance. Consider trading with other countries or building industry!_`);
+
     //Create embed and edit to message
     var production_embeds = splitEmbed(production_localisation, {
       title: `[Back] | [Jump To Page] | Domestic Production:`,
