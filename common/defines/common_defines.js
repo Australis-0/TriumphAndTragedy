@@ -187,6 +187,8 @@ config.defines.common = {
       "absolute_monarchy",
       "constitutional_monarchy",
       "democracy"
-    ]
+    ],
+
+    conquistadors: [3, 10]
   }
 };
