@@ -363,10 +363,11 @@ module.exports = {
     return inventory_embeds;
   },
 
-  printProduction: function (arg0_user, arg1_page) {
+  printProduction: function (arg0_user, arg1_page, arg2_do_not_display) {
     //Convert from parameters
     var user_id = arg0_user;
     var page = (arg1_page) ? arg1_page : 0;
+    var do_not_display = arg2_do_not_display;
 
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
@@ -381,12 +382,14 @@ module.exports = {
       fixed_width: true
     });
 
-    game_obj.main_embed = createPageMenu(game_obj.middle_embed, {
-      embed_pages: production_embeds,
-      user: game_obj.user,
-      page: page
-    });
-    game_obj.main_change = true;
+    if (!do_not_display) {
+      game_obj.main_embed = createPageMenu(game_obj.middle_embed, {
+        embed_pages: production_embeds,
+        user: game_obj.user,
+        page: page
+      });
+      game_obj.main_change = true;
+    }
 
     //Return statement
     return production_embeds;
