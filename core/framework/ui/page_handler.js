@@ -155,6 +155,12 @@ module.exports = {
           printInventory(user_id);
         }
 
+        //[Production]
+        if (["production", "resource production"].includes(input)) {
+          game_obj.page = "view_production";
+          printProduction(user_id);
+        }
+
         //[Settle]
         if (input == "settle")
           initialiseSettle(user_id);
@@ -2095,6 +2101,30 @@ module.exports = {
 
             game_obj.page = `view_building_${building_view.id}`;
           }
+        }
+
+        if (game_obj.page == "view_production") {
+          //[Back]
+          if (input == "back") {
+            game_obj.page = "economy";
+            printEconomy(user_id);
+          }
+
+          //[Jump To Page]
+          if (input == "jump to page")
+            visualPrompt(game_obj.alert_embed, user_id, {
+              title: `Jump To Page:`,
+              prompts: [
+                [`Which page would you like jump to?`, "number", { min: 1, max: printProduction(game_obj.user, 0, true).length }]
+              ]
+            },
+            function (arg) {
+              createPageMenu(game_obj.middle_embed, {
+                embed_pages: printProduction(game_obj.user),
+                page: arg[0] - 1,
+                user: game_obj.user
+              })
+            });
         }
       }
 

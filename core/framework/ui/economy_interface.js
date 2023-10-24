@@ -218,6 +218,7 @@ module.exports = {
     footer_string.push(`- **[Constructions]** View a complete list of current constructions.`);
     footer_string.push(`- **[Industry]** View a roster of all domestic buildings.`);
     footer_string.push(`- **[Inventory]** View your **current resources**.`);
+    footer_string.push(`- **[Production]** View domestic production and import/export balance of resources.`);
 
     //Remove control panel if one exists
     if (game_obj) {
@@ -232,7 +233,7 @@ module.exports = {
         .setDescription(economy_string.join("\n"))
         .addFields(
           { name: "__Production Modifiers:__\n━━", value: truncateString(modifiers_string.join("\n"), 1000), inline: true },
-          { name: "__Resource Production:__ (per turn)\n-", value: truncateString(resource_production_string.join("\n"), 1000), inline: true },
+          { name: "__[Resource Production]:__ (per turn)\n-", value: truncateString(resource_production_string.join("\n"), 1000), inline: true },
           { name: config.localisation.blank, value: footer_string.join("\n") }
         );
 
@@ -360,5 +361,34 @@ module.exports = {
 
     //Return statement
     return inventory_embeds;
+  },
+
+  printProduction: function (arg0_user, arg1_page) {
+    //Convert from parameters
+    var user_id = arg0_user;
+    var page = (arg1_page) ? arg1_page : 0;
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var game_obj = getGameObject(user_id);
+    var production_localisation = getProductionLocalisation(user_id);
+    var usr = main.users[actual_id];
+
+    //Create embed and edit to message
+    var production_embeds = splitEmbed(production_localisation, {
+      title: `[Back] | [Jump To Page] | Domestic Production:`,
+      title_pages: true,
+      fixed_width: true
+    });
+
+    game_obj.main_embed = createPageMenu(game_obj.middle_embed, {
+      embed_pages: production_embeds,
+      user: game_obj.user,
+      page: page
+    });
+    game_obj.main_change = true;
+
+    //Return statement
+    return production_embeds;
   }
 };

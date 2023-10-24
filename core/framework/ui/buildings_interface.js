@@ -465,7 +465,7 @@ module.exports = {
 
     //Create embed and edit to message
     var building_embeds = splitEmbed(buildings_string, {
-      title: `[Back] | [Jump To Page] | Buildings in ${(province_obj.name) ? province_obj.name : `Province ${province_obj.id}`}:`,
+      title: `[Back] | [Jump To Page] | Buildings in ${usr.name}:`,
       title_pages: true,
       fixed_width: true
     });
