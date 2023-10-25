@@ -164,7 +164,7 @@ module.exports = {
 
     //Iterate over all_scope_keys
     for (var i = 0; i < all_scope_keys.length; i++)
-      if (typeof all_scope_keys[i] == "number")
+      if (typeof scope[all_scope_keys[i]] == "number")
         total_sum += scope[all_scope_keys[i]];
 
     //Return statement
