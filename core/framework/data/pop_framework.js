@@ -2663,7 +2663,7 @@ module.exports = {
 
     var decimation_array = splitNumber(1, options.type.length);
     var target_provinces = (options.provinces) ?
-      getList(options.provinces) : shuffleArray(getProvinces(user_id, { return_key: true }));
+      getList(options.provinces) : shuffleArray(getProvinces(user_id, { return_keys: true }));
 
     //Initialise decimation_obj
     for (var i = 0; i < options.type.length; i++)
