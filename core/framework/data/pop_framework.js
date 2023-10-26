@@ -2711,7 +2711,7 @@ module.exports = {
       var new_options = JSON.parse(JSON.stringify(local_options));
       new_options.province_id = target_provinces[i];
 
-      var local_pop_scope = module.exports.selectPops({ new_options });
+      var local_pop_scope = module.exports.selectPops(new_options);
       total_applicable_pops += local_pop_scope.size;
       province_pop_scope_map[new_options.province_id] = local_pop_scope;
     }
