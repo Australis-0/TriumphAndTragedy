@@ -2663,7 +2663,7 @@ module.exports = {
 
     var decimation_array = splitNumber(1, options.type.length);
     var target_provinces = (options.provinces) ?
-      getList(options.provinces) : shuffleArray(getProvinces(user_id));
+      getList(options.provinces) : shuffleArray(getProvinces(user_id, { return_key: true }));
 
     //Initialise decimation_obj
     for (var i = 0; i < options.type.length; i++)
@@ -2709,7 +2709,7 @@ module.exports = {
     for (var i = 0; i < target_provinces.length; i++) {
       //Deep copy local_options to new_options and set province_id
       var new_options = JSON.parse(JSON.stringify(local_options));
-      new_options.province_id = target_provinces[i].id;
+      new_options.province_id = target_provinces[i];
 
       var local_pop_scope = module.exports.selectPops({ new_options });
       total_applicable_pops += local_pop_scope.size;
@@ -2818,6 +2818,8 @@ module.exports = {
       tags: {}
     };
     var province_id = (options.pop_scope) ? options.pop_scope.province_id : options.province_id;
+
+    console.log(`Province ID: `, province_id);
     var province_obj = main.provinces[province_id];
 
     //Initialise options
