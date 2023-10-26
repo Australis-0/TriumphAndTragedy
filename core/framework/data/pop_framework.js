@@ -2143,7 +2143,6 @@ module.exports = {
           });
         }
       }
-
     }
 
     //Pop Job Seeking and Employment
@@ -2826,8 +2825,6 @@ module.exports = {
       tags: {}
     };
     var province_id = (options.pop_scope) ? options.pop_scope.province_id : options.province_id;
-
-    console.log(`Province ID: `, province_id);
     var province_obj = main.provinces[province_id];
 
     //Initialise options

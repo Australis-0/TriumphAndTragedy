@@ -857,7 +857,7 @@ module.exports = {
       var new_selectors = [];
 
       for (var i = 0; i < all_selector_keys.length; i++)
-        new_selectors.push(all_selector_keys[i], selectors[all_selector_keys[i]]);
+        new_selectors.push([all_selector_keys[i], selectors[all_selector_keys[i]]]);
 
       selectors = new_selectors;
 
@@ -1229,6 +1229,9 @@ module.exports = {
     var ot_province;
     var ot_user;
 
+    //Insurance for variables
+    if (!parent) parent = "";
+
     //Initialise scope variables
     {
       if (options.flags.scope[0] == "country") {
@@ -1369,7 +1372,9 @@ module.exports = {
             new_options.pop_scope = pop_scope;
 
             var local_pop_scope = module.exports.parsePopLimit(local_value, new_options);
-            modifyValue(selectors, JSON.stringify(local_pop_scope.pop_scope), returnSafeNumber(local_pop_scope.value));
+
+            if (local_pop_scope.pop_scope.size > 0)
+              selectors[JSON.stringify(local_pop_scope.pop_scope)] = local_value.value;
           } else if (all_keys[i].startsWith("building_category_") && typeof local_value == "object") {
             var new_options = JSON.parse(JSON.stringify(options));
             var new_pop_scope = JSON.parse(JSON.stringify(pop_scope));
@@ -2347,19 +2352,17 @@ module.exports = {
     }
 
     //Deserialise selectors if no parents
-    if (parents.length == 0) {
+    if (options.parents.length == 0) {
       var all_selector_keys = Object.keys(selectors);
       var new_selectors = [];
 
       for (var i = 0; i < all_selector_keys.length; i++)
-        new_selectors.push(JSON.parse(all_selector_keys[i]), selectors[all_selector_keys[i]]);
+        new_selectors.push([JSON.parse(all_selector_keys[i]), selectors[all_selector_keys[i]]]);
 
       selectors = new_selectors;
 
-      pop_scope.size = Math.min(province_obj.pops[options.pop_type], pop_scope.size);
-
       //Push top-layer to selectors as well
-      selectors.unshift(pop_scope, value);
+      selectors.unshift([pop_scope, value]);
     }
 
     //Set value to 0 if conditions not met
@@ -2367,7 +2370,7 @@ module.exports = {
 
     //Get rid of selectors that don't target valid scopes
     for (var i = selectors.length - 1; i >= 0; i--)
-      if (selectors[i][0].size <= 0)
+      if (selectors[i][0].size <= 0 || selectors[i][1] == 0 || isNaN(selectors[i][1]))
         selectors.splice(i, 1);
 
     //Return statement
