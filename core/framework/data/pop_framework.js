@@ -2575,14 +2575,20 @@ module.exports = {
   /*
     removePop() - Removes pops from a province
     options: See selectPops(), additional options: {
-      amount: 50000 - The amount of pops to remove,
-      pop_scope: {} - The pop scope to pass to the argument
+      amount: 50000, - The amount of pops to remove.
+      province_id: "5707", - The province ID to remove pops from.
+      pop_scope: {} - Optional. The pop scope to pass to the argument
     }
   */
   removePop: function (arg0_user, arg1_options) {
     //Convert from parameters
     var user_id = arg0_user;
     var options = (arg1_options) ? arg1_options : {};
+
+    //Initialise undeclared options
+    if (!options.province_id)
+      if (options.pop_scope)
+        options.province_id = options.pop_scope.province_id;
 
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
@@ -2592,45 +2598,44 @@ module.exports = {
     var usr = main.users[actual_id];
 
     //Subtract population
-    if (province_obj)
-      if (province_obj.pops[options.pop_type]) {
-        var building_key_map = (options.building_key_map) ? options.building_key_map : getBuildingMap(options.province_id);
+    if (province_obj) {
+      var building_key_map = (options.building_key_map) ? options.building_key_map : getBuildingMap(options.province_id);
 
-        if (pop_scope.size > 0) {
-          var all_tags = Object.keys(pop_scope.tags);
-          var scalar = 1;
+      if (pop_scope.size > 0) {
+        var all_tags = Object.keys(pop_scope.tags);
+        var scalar = 1;
 
-          if (options.amount < pop_scope.size)
-            scalar = options.amount/pop_scope.size;
+        if (options.amount < pop_scope.size)
+          scalar = options.amount/pop_scope.size;
 
-          //Remove all tags; lay off those in wealth pools
-          for (var i = 0; i < all_tags.length; i++) {
-            var local_value = Math.floor(pop_scope.tags[all_tags[i]]*scalar);
+        //Remove all tags; lay off those in wealth pools
+        for (var i = 0; i < all_tags.length; i++) {
+          var local_value = Math.floor(pop_scope.tags[all_tags[i]]*scalar);
 
-            if (all_tags[i].startsWith("wealth-")) {
-              var split_key = all_tags[i].split("-");
+          if (all_tags[i].startsWith("wealth-")) {
+            var split_key = all_tags[i].split("-");
 
-              var building_id = split_key[1];
-              var local_building = province_obj.buildings[building_key_map[building_id]];
-              var local_pop_type = split_key[2];
+            var building_id = split_key[1];
+            var local_building = province_obj.buildings[building_key_map[building_id]];
+            var local_pop_type = split_key[2];
 
-              if (local_building)
-                layoffWorkers(local_building, local_pop_type, local_value);
-            } else {
-              modifyValue(province_obj.pops, all_tags[i], local_value*-1, true);
-            }
+            if (local_building)
+              layoffWorkers(local_building, local_pop_type, local_value);
+          } else {
+            modifyValue(province_obj.pops, all_tags[i], local_value*-1, true);
           }
-
-          //Set killed
-          killed = Math.floor(scalar*pop_scope.size);
         }
 
-        if (options.pop_type)
-          if (!province_obj.pops[options.pop_type])
-            province_obj.pops[options.pop_type] = 0;
-        if (!province_obj.pops.population)
-          province_obj.pops.population = 0;
+        //Set killed
+        killed = Math.floor(scalar*pop_scope.size);
       }
+
+      if (options.pop_type)
+        if (!province_obj.pops[options.pop_type])
+          province_obj.pops[options.pop_type] = 0;
+      if (!province_obj.pops.population)
+        province_obj.pops.population = 0;
+    }
 
     //Return statement
     return killed;
@@ -2718,28 +2723,31 @@ module.exports = {
 
     //Remove pops from target_provinces based on scalar of options.amount/total_applicable_pops
     var kill_scalar = options.amount/total_applicable_pops;
+    var soldiers_killed = 0;
     var total_removed = 0;
 
     for (var i = 0; i < target_provinces.length; i++) {
       var local_pop_scope = province_pop_scope_map[target_provinces[i]];
 
-      total_removed += module.exports.removePop({
-        amount: Math.ceil(kill_scalar),
+      total_removed += module.exports.removePop(user_id, {
+        amount: Math.ceil(kill_scalar*local_pop_scope.size),
+        province_id: target_provinces[i],
         pop_scope: local_pop_scope
       });
+
+      for (var x = 0; x < options.type.length; x++) {
+        var config_obj = config.pops[options.type[x]];
+
+        if (config_obj.military_pop)
+          soldiers_killed += returnSafeNumber(local_pop_scope[options.type[x]]);
+      }
     }
 
     //Add to civilian/military casualties tracker
-    if (!options.migration)
-      if (!getList(options.type).includes("all")) {
-        if (pop_obj.military_pop) {
-          usr.recent_military_casualties[usr.recent_military_casualties.length - 1] += total_removed;
-        } else {
-          usr.recent_civilian_casualties[usr.recent_civilian_casualties.length - 1] += total_removed;
-        }
-      } else {
-        usr.recent_civilian_casualties[usr.recent_civilian_casualties.length - 1] += total_removed;
-      }
+    if (!options.migration) {
+      usr.recent_military_casualties[usr.recent_military_casualties.length - 1] += soldiers_killed;
+      usr.recent_civilian_casualties[usr.recent_civilian_casualties.length - 1] += Math.max(total_removed - soldiers_killed, 0);
+    }
 
     //Return statement
     return total_removed;
@@ -3239,6 +3247,9 @@ module.exports = {
 
     current_scope.fulfilment = returnSafeNumber(total_general_fulfilment/total_wealth_pools);
     current_scope.variety = returnSafeNumber(total_general_variety/total_wealth_pools);
+
+    //Tracker tags
+    current_scope.province_id = province_id;
 
     //Return statement
     return current_scope;
