@@ -1515,6 +1515,37 @@ module.exports = {
     return wealth;
   },
 
+  getRelevantBuildingPops: function (arg0_user) {
+    //Convert from parameters
+    var user_id = arg0_user;
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var all_pops = Object.keys(config.pops);
+    var relevant_pops = [];
+    var usr = main.users[actual_id];
+
+    //Iterate over .available_buildings
+    for (var i = 0; i < usr.available_buildings.length; i++) {
+      var local_building = lookup.all_buildings[usr.available_buildings[i]];
+
+      if (local_building)
+        if (local_building.manpower_cost) {
+          var flattened_manpower_cost = flattenObject(local_building.manpower_cost);
+
+          var all_manpower_keys = Object.keys(flattened_manpower_cost);
+
+          //Iterate over all_manpower_keys
+          for (var x = 0; x < all_manpower_keys.length; x++)
+            if (!relevant_pops.includes(all_manpower_keys[x]))
+              relevant_pops.push(all_manpower_keys[x]);
+        }
+    }
+
+    //Return statement
+    return relevant_pops;
+  },
+
   //getRelevantPops() - Returns an array of all pop keys with more than 0 population in a player country
   getRelevantPops: function (arg0_user) {
     //Convert from parameters

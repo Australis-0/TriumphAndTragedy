@@ -1867,6 +1867,20 @@ module.exports = {
 
       //Economy page handler
       {
+        if (game_obj.page == "economy") {
+          //[Hide Available Pops]
+          if (input == "hide available pops") {
+            game_obj.hide_building_pops = true;
+            printEconomy(user_id);
+          }
+
+          //[Show Available Pops]
+          if (input == "show available pops") {
+            delete game_obj.hide_building_pops;
+            printEconomy(user_id);
+          }
+        }
+
         if (economy_pages.includes(game_obj.page)) {
           switch (input) {
             case "build":
