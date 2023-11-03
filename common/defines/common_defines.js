@@ -31,7 +31,7 @@ config.defines.common = {
     set_mobilisation_unit: "none",
     money: 50000,
     wood: 10,
-    stone: 15,
+    stone: 20,
     food: 50,
     research_to: 0,
 
