@@ -88,7 +88,7 @@ module.exports = {
         province_string.push("");
 
         //Buildings
-        {
+        if (province_obj.buildings) {
           province_string.push(`**Buildings:**`);
           province_string.push(config.localisation.divider);
           province_string.push("");
@@ -148,15 +148,16 @@ module.exports = {
                 province_string.push("");
               }
           }
+
+          province_string.push("");
         }
 
         //Pops
         {
-          province_string.push("");
           province_string.push(`**Population:**`);
           province_string.push(config.localisation.divider);
           province_string.push("");
-          province_string.push(`- ${(options.display_irrelevant_pops) ? `**[Display Relevant Pops]**` : `**[Display All Pops]**`}`);
+          province_string.push(`- ${(game_obj.display_irrelevant_pops) ? `**[Display Relevant Pops]**` : `**[Display All Pops]**`}`);
           province_string.push("");
 
           if (province_obj.pops) {
@@ -383,8 +384,8 @@ module.exports = {
     if (provinces.length != 0) {
       for (var i = 0; i < provinces.length; i++) {
         try {
-          var culture_obj = getCulture(provinces[i].culture);
           var local_field = [];
+          var province_culture_obj = getProvinceCulture(provinces[i].id);
           var province_type = "";
           var supply_limit = (provinces[i].supply_limit) ? provinces[i].supply_limit : config.defines.combat.base_supply_limit;
           var supply_use = Math.ceil(lookup.province_troop_strengths[provinces[i].id]/1000);
@@ -429,10 +430,11 @@ module.exports = {
           }
 
           //Print culture
-          local_field.push(`- ${config.icons.culture} Culture: ${culture_obj.name}`);
+          local_field.push(`- ${config.icons.culture} Culture: ${parseCultures(province_culture_obj)}`);
 
-          if (!accepted_cultures.includes(provinces[i].culture))
-            local_field.push(`- **[Assimilate]**`);
+          //[REVISIT] - Assimilation feature later
+          /*if (!accepted_cultures.includes(culture_obj.id))
+            local_field.push(` - **[Assimilate]**`);*/
 
           local_field.push(`- Supply: ${config.icons.railways} (${parseNumber(supply_use)}/${parseNumber(supply_limit)})${(supply_use > supply_limit) ? ` :warning:` : ""}`);
 

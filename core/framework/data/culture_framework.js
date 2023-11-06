@@ -332,6 +332,7 @@ module.exports = {
   getMajorityCulture: function (arg0_province_id, arg1_options) {
     //Convert from parameters
     var province_id = arg0_province_id;
+    var options = (arg1_options) ? arg1_options : {};
 
     //Declare local instance variables
     var largest_culture = [0, undefined];
@@ -345,7 +346,7 @@ module.exports = {
         //Iterate over all_pop_keys
         for (var i = 0; i < all_pop_keys.length; i++)
           if (all_pop_keys[i].startsWith("culture-")) {
-            var local_culture_id = all_pop_keys.replace("culture-", "");
+            var local_culture_id = all_pop_keys[i].replace("culture-", "");
             var local_value = province_obj.pops[all_pop_keys[i]];
 
             if (local_value > largest_culture[0])
@@ -363,49 +364,6 @@ module.exports = {
 
     //Return statement
     return largest_culture[1];
-  },
-
-  /*
-    getProvinceCulture() - Returns province culture object by percentage
-    options: {
-      return_sum: true/false - Optional. Whether to return sum totals for each culture instead of percentages. False by default
-    }
-  */
-  getProvinceCulture: function (arg0_province_id, arg1_options) {
-    //Convert from parameters
-    var province_id = arg0_province_id;
-    var options = (arg1_options) ? arg1_options : {};
-
-    //Declare local instance variables
-    var culture_obj = {};
-    var province_obj = main.provinces[province_id];
-
-    //Check if province_obj.pops exists; if so iterate over culture- tags
-    if (province_obj) {
-      if (province_obj.pops) {
-        var all_pop_keys = Object.keys(province_obj.pops);
-
-        for (var i = 0; i < all_pop_keys.length; i++)
-          if (all_pop_keys[i].startsWith("culture-")) {
-            var local_culture_id = all_pop_keys[i].replace("culture-", "");
-
-            modifyValue(culture_obj, local_culture_id, province_obj.pops[all_pop_keys[i]]);
-          }
-      }
-
-      if (Object.keys(culture_obj).length == 0) {
-        var primary_culture = getPrimaryCultures(province_obj.controller)[0];
-
-        culture_obj[primary_culture] = 1;
-      }
-    }
-
-    //Standardise to percentage
-    if (!options.return_sum)
-      culture_obj = standardisePercentage(culture_obj, province_obj.pops.population);
-
-    //Return statement
-    return sortObject(culture_obj);
   },
 
   getPrimaryCultureProvinces: function (arg0_user) {
@@ -457,6 +415,49 @@ module.exports = {
 
     //Return statement
     return all_primary_cultures;
+  },
+
+  /*
+    getProvinceCulture() - Returns province culture object by percentage
+    options: {
+      return_sum: true/false - Optional. Whether to return sum totals for each culture instead of percentages. False by default
+    }
+  */
+  getProvinceCulture: function (arg0_province_id, arg1_options) {
+    //Convert from parameters
+    var province_id = arg0_province_id;
+    var options = (arg1_options) ? arg1_options : {};
+
+    //Declare local instance variables
+    var culture_obj = {};
+    var province_obj = main.provinces[province_id];
+
+    //Check if province_obj.pops exists; if so iterate over culture- tags
+    if (province_obj) {
+      if (province_obj.pops) {
+        var all_pop_keys = Object.keys(province_obj.pops);
+
+        for (var i = 0; i < all_pop_keys.length; i++)
+          if (all_pop_keys[i].startsWith("culture-")) {
+            var local_culture_id = all_pop_keys[i].replace("culture-", "");
+
+            modifyValue(culture_obj, local_culture_id, province_obj.pops[all_pop_keys[i]]);
+          }
+      }
+
+      if (Object.keys(culture_obj).length == 0) {
+        var primary_culture = getPrimaryCultures(province_obj.controller)[0];
+
+        culture_obj[primary_culture] = 1;
+      }
+    }
+
+    //Standardise to percentage
+    if (!options.return_sum)
+      culture_obj = standardisePercentage(culture_obj, province_obj.pops.population);
+
+    //Return statement
+    return sortObject(culture_obj);
   },
 
   getSortedCultures: function (arg0_user) {

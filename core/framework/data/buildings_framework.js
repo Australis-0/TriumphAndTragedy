@@ -1747,7 +1747,7 @@ module.exports = {
   getBuildingWages: function (arg0_province_id, arg1_pop_type) {
     //Convert from parameters
     var province_id = arg0_province_id;
-    var pop_type = arg1_type;
+    var pop_type = arg1_pop_type;
 
     //Declare local instance variables
     var building_wages = {};

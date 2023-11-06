@@ -1408,6 +1408,17 @@ module.exports = {
       //Economic processing
       {
         for (var i = 0; i < controlled_provinces.length; i++) {
+          //Remove original province trackers
+          if (controlled_provinces[i].trackers) {
+            var all_province_trackers = Object.keys(controlled_provinces[i].trackers);
+
+            for (var x = 0; x < all_province_trackers.length; x++)
+              if (
+                all_province_trackers[x].startsWith("birth-") ||
+                all_province_trackers[x].startsWith("death-"))
+                  delete controlled_provinces[i].trackers[all_province_trackers[x]];
+          }
+
           processSubsistence(owned_provinces[i], {
             category_prices: lookup.category_buy_prices
           });

@@ -113,9 +113,10 @@ module.exports = {
   /*
     printPercentage() - Formats a string to fit a certain percentage (e.g. 23%), instead of a default decimal number.
     options: {
-      base_zero: true/false - Whether to start at a base zero instead of one
-      display_prefix: true/false - Whether or not to display a starting prefix
-      is_modifier: true/false - Used for parsing negative modifiers
+      base_zero: true/false, - Whether to start at a base zero instead of one
+      display_prefix: true/false, - Whether or not to display a starting prefix
+      is_modifier: true/false, - Used for parsing negative modifiers
+      precision: 4 - The number of decimal places to display. 2 by default
     }
   */
   printPercentage: function (arg0_number, arg1_options) {
@@ -124,14 +125,31 @@ module.exports = {
     var options = (arg1_options) ? arg1_options : {};
 
     //Declare local instance variables
+    var hit_separator = false;
     var prefix_string = `${(options.display_prefix && number > 0) ? "+" : ""}`;
+    var separator_characters = 0;
 
     //Adjust for base_one; set options
     if (options.base_one)
       number--;
+    if (!options.precision) options.precision = 2;
+
+    var percentage_string = `${prefix_string}${(!options.display_float) ? Math.round(number*100) : Math.round(number*100*100*100)/100/100}`;
+    var processed_string = "";
+
+    for (var i = 0; i < percentage_string.length; i++) {
+      if (hit_separator)
+        separator_characters++;
+
+      if (separator_characters <= options.precision)
+        processed_string += percentage_string[i];
+
+      if (percentage_string[i] == ".")
+        hit_separator = true;
+    }
 
     //Return statement
-    return `${prefix_string}${(!options.display_float) ? Math.round(number*100) : Math.round(number*100*100*100)/100/100}%`;
+    return `${processed_string}%`;
   },
 
   /*

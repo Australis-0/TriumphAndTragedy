@@ -3357,6 +3357,11 @@ module.exports = {
               });
 
               break;
+            case "view demographics":
+              printDemographics(user_id, province_name);
+              game_obj.page = `view_demographics_${province_name}`;
+
+              break;
           }
         }
       }

@@ -1303,6 +1303,33 @@ module.exports = {
     return promotion_chance;
   },
 
+  //getProvinceBirths() - Returns last turn province births by pop type
+  getProvinceBirths: function (arg0_province_id) {
+    //Convert from parameters
+    var province_id = arg0_province_id;
+
+    //Declare local instance variables
+    var all_pops = Object.keys(config.pops);
+    var birth_obj = {};
+    var province_obj = (typeof province_id != "object") ? main.provinces[province_id] : province_id;
+    var total_births = 0;
+
+    //Iterate over all_pops
+    for (var i = 0; i < all_pops.length; i++)
+      if (province_obj.trackers[`birth-${all_pops[i]}`]) {
+        var local_value = returnSafeNumber(province_obj.trackers[`birth-${all_pops[i]}`]);
+
+        modifyValue(birth_obj, all_pops[i], local_value);
+        total_births += local_value;
+      }
+
+    //Format birth_obj
+    birth_obj.total = total_births;
+
+    //Return statement
+    return birth_obj;
+  },
+
   //getProvinceBirthRate() - General modifier on births, not actually the true province birth rate
   getProvinceBirthRate: function (arg0_user, arg1_province_id) {
     //Convert from parameters
@@ -1313,7 +1340,7 @@ module.exports = {
     var actual_id = main.global.user_map[user_id];
     var all_pops = Object.keys(config.pops);
     var births = {}; //Split by pop type
-    var province_obj = main.provinces[province_id];
+    var province_obj = (typeof province_id != "object") ? main.provinces[province_id] : province_id;
     var total_fertility = 0;
     var usr = main.users[actual_id];
 
@@ -1346,6 +1373,33 @@ module.exports = {
 
     //Return statement
     return births;
+  },
+
+  //getProvinceDeaths() - Returns last turn province deaths by pop type
+  getProvinceDeaths: function (arg0_province_id) {
+    //Convert from parameters
+    var province_id = arg0_province_id;
+
+    //Declare local instance variables
+    var all_pops = Object.keys(config.pops);
+    var death_obj = {};
+    var province_obj = (typeof province_id != "object") ? main.provinces[province_id] : province_id;
+    var total_deaths = 0;
+
+    //Iterate over all_pops
+    for (var i = 0; i < all_pops.length; i++)
+      if (province_obj.trackers[`death-${all_pops[i]}`]) {
+        var local_value = returnSafeNumber(province_obj.trackers[`death-${all_pops[i]}`]);
+
+        modifyValue(death_obj, all_pops[i], local_value);
+        total_deaths += local_value;
+      }
+
+    //Format death_obj
+    death_obj.total = total_deaths;
+
+    //Return statement
+    return death_obj;
   },
 
   /*
@@ -2140,6 +2194,7 @@ module.exports = {
 
           //Add to b_ tag; replace local_pop_scope
           modifyValue(province_obj.pops, `b_${current_year}`, population_change);
+          modifyValue(province_obj.trackers, `birth-${pop_type}`, population_change);
 
           //[REVISIT] - Statistical compounding on iterative variable subset theory ops is probably an inevitability unless you can work out the completeness of some NP-HARD maths theorem, Aust. Doing this for now - Vis
           var all_local_tags = Object.keys(local_pop_scope.tags);
@@ -2172,6 +2227,7 @@ module.exports = {
             amount: local_pop_scope.size,
             pop_scope: local_pop_scope
           });
+          modifyValue(province_obj.trackers, `death-${pop_type}`, local_pop_scope.size);
         }
       }
     }

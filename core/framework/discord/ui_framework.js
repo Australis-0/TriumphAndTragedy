@@ -605,10 +605,7 @@ module.exports = {
           var bullets = "";
           var hit_maximum = false;
           var nesting = getNesting(array_string[i]);
-
-          log.debug(`Array String: `, array_string[i]);
-          console.log(`Nesting:`, nesting);
-
+          
           if (
             local_array_string.join("\n").length + array_string[i].length <= maximum_characters_per_array
           ) {

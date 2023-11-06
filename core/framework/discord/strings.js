@@ -203,7 +203,7 @@ module.exports = {
   */
   parseNumber: function (arg0_number, arg1_options) {
     //Convert from parameters
-    var number = arg0_number;
+    var number = returnSafeNumber(arg0_number);
     var options = (arg1_options) ? arg1_options : {};
 
     return (

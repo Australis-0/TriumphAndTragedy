@@ -576,6 +576,43 @@ module.exports = {
     }
   },
 
+  /*
+    parseCultures() - Returns culture string from province culture object standardised to 100%.
+    options: {
+      exclude_formatting: true/false - Whether to format the string
+    }
+  */
+  parseCultures: function (arg0_culture_obj, arg1_options) {
+    //Convert from parameters
+    var culture_obj = arg0_culture_obj;
+    var options = (arg1_options) ? arg1_options : {};
+
+    //Declare local instance variables
+    var all_cultures = Object.keys(culture_obj);
+    var f = (!exclude_formatting) ? `**` : "";
+    var localisation_string = [];
+    var others_percentage = 0;
+
+    //Iterate over all_cultures
+    for (var i = 0; i < all_cultures.length; i++) {
+      var lf = (i == 0) ? f : ""; //Local formatting for largest culture group
+      var local_culture = main.global.cultures[all_cultures[i]];
+      var local_value = culture_obj[all_cultures[i]];
+
+      if (local_value > 0.01) {
+        localisation_string.push(`${lf}${printPercentage(local_value)}${lf} ${(local_culture.name) ? local_culture.name : all_cultures[i]}`);
+      } else {
+        others_percentage += local_value;
+      }
+    }
+
+    if (others_percentage > 0)
+      localisation_string.push(`${printPercentage(others_percentage)} Other`);
+
+    //Return string
+    return localisation_string.join(", ");
+  },
+
   parseGood: function (arg0_good_name, arg1_formatting, arg2_exclude_icon, arg3_string) {
     //Convert from parameters
     var good_name = arg0_good_name;

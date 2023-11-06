@@ -40,7 +40,7 @@ module.exports = {
     if (province_obj) {
       if (province_obj.pops) {
         var all_pop_keys = Object.keys(province_obj.pops);
-        var birth_obj = getProvinceBirths(user_id, province_id);
+        var birth_obj = getProvinceBirthRate(user_id, province_id);
 
         //[WIP] - Push view and sort buttons to pops_string
 
@@ -58,14 +58,14 @@ module.exports = {
 
             if (!game_obj.hide_profession_breakdown)
               for (var i = 0; i < pops_to_display.length; i++) {
-                var local_value = returnSafeNumber(province_obj.pops[pops_to_display[i]]);
-
-                var pop_obj = config.pops[pops_to_display[i]];
                 var local_mobility = getPopMobility(province_id, pops_to_display[i]);
+                var local_value = returnSafeNumber(province_obj.pops[pops_to_display[i]]);
+                var pop_obj = config.pops[pops_to_display[i]];
+
                 var local_percentage = local_value/returnSafeNumber(province_obj.pops.population);
 
                 //Print to pops_string
-                pops_string.push(`- ${(config.icons[pop_obj.icon]) ? config.icons[pop_obj.icon] + " " : ""}${(pop_obj.name) ? pop_obj.name : pops_to_display[i]}: ${parseNumber(local_value)} (**${printPercentage(local_percentage, { display_float: true })}**)`);
+                pops_string.push(`- ${(pop_obj.icon) ? pop_obj.icon + " " : ""}${(pop_obj.name) ? pop_obj.name : pops_to_display[i]}: ${parseNumber(local_value)} (**${printPercentage(local_percentage, { display_float: true })}**)`);
 
                 //Print local_mobility change
                 if (local_mobility.change > 0) {
@@ -114,7 +114,7 @@ module.exports = {
           var province_homeless = returnSafeNumber(province_obj.pops.population) - province_obj.housing;
 
           pops_string.push("");
-          pops_string.push(`**Economic Statistics:** - ${(game_obj.minimise_economic_statistics) ? `**[Expand Economic Statistics]` : `**[Minimise Economic Statistics]**`}`);
+          pops_string.push(`**Economic Statistics:** - ${(game_obj.minimise_economic_statistics) ? `**[Expand Economic Statistics]**` : `**[Minimise Economic Statistics]**`}`);
 
           if (!game_obj.minimise_economic_statistics) {
             pops_string.push("");
@@ -186,7 +186,7 @@ module.exports = {
             }
 
             pops_string.push("");
-            pops_string.push(`- ${config.icons.workers} Total Unemployment Rate: **${printPercentage(total_unemployed_pops/province_obj.pops.population)}`);
+            pops_string.push(`- ${config.icons.labourers} Total Unemployment Rate: **${printPercentage(total_unemployed_pops/province_obj.pops.population)}**`);
           }
         }
 
