@@ -1,4 +1,5 @@
 config.buildings.resource_extraction = {
+  name: "Resource Extraction",
   order: 17,
 
   chalk_mines: {

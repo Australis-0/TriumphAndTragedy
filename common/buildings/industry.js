@@ -1,4 +1,5 @@
 config.buildings.industry = {
+  name: "Industry",
   order: 9,
 
   ai_hubs: {

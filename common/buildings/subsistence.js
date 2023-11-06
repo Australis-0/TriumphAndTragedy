@@ -1,4 +1,5 @@
 config.buildings.subsistence = {
+  name: "Subsistence",
   hidden: true,
 
   //Urban subsistence

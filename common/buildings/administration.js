@@ -1,4 +1,5 @@
 config.buildings.administration = {
+  name: "Administration",
   order: 1,
 
   city_halls: {

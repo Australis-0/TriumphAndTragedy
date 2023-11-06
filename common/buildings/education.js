@@ -1,4 +1,5 @@
 config.buildings.education = { //[WIP] - Add special_effect
+  name: "Education",
   order: 5,
 
   art_academies: {

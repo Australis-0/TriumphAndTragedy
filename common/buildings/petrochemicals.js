@@ -1,4 +1,5 @@
 config.buildings.petrochemicals = {
+  name: "Petrochemicals",
   order: 13,
 
   acetic_acid_plants: {

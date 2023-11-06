@@ -123,12 +123,15 @@ module.exports = {
     var number = arg0_number;
     var options = (arg1_options) ? arg1_options : {};
 
-    //Adjust for base_one
+    //Declare local instance variables
+    var prefix_string = `${(options.display_prefix && number > 0) ? "+" : ""}`;
+
+    //Adjust for base_one; set options
     if (options.base_one)
       number--;
 
     //Return statement
-    return `${(options.display_prefix && number > 0) ? "+" : ""}${(!options.display_float) ? Math.round(number*100) : Math.round(number*100*100)/100}%`;
+    return `${prefix_string}${(!options.display_float) ? Math.round(number*100) : Math.round(number*100*100*100)/100/100}%`;
   },
 
   /*

@@ -458,6 +458,8 @@ module.exports = {
     }
 
     Returns: {
+      localisation_string: [], - The localisation string for this current limit scope
+
       value: 0.045, - Base value for initial scope
       failed_checks: 0, - Used for hard non-fuzzy conditions such as has_industrialised
       selectors: [], - ["<scope_name>", "<scope_id>", value] - A list of selectors for which values are added onto
@@ -469,6 +471,7 @@ module.exports = {
     var options = (arg1_options) ? arg1_options : {};
 
     //Initialise options
+    if (!options.nesting) options.nesting = 1;
     if (!options.parent_obj) options.parent_obj = {};
     if (!options.parents) options.parents = [];
 
@@ -476,6 +479,7 @@ module.exports = {
     var all_keys = Object.keys(scope);
     var all_pops = Object.keys(config.pops);
     var failed_checks = 0;
+    var localisation_string = [];
     var parent = options.parents[options.parents.length - 1];
     var province_obj = (options.scope[0] == "province") ? main.provinces[options.scope[1]] : undefined;
     var selectors = [];
@@ -527,51 +531,73 @@ module.exports = {
       if (parent == "add_chance" && all_keys[i] == "limit") { //Add chance scope handler
         var new_options = JSON.parse(JSON.stringify(options));
 
+        new_options.nesting++;
         new_options.parent_obj = scope;
         new_options.parents.push("add_chance_limit");
 
         var limit_pop_scope = module.exports.parseLimit(local_value, new_options);
 
-        if (limit_pop_scope.failed_checks == 0) {
-          value += scope.value;
-        } else {
+        if (limit_pop_scope.failed_checks > 0) {
           failed_checks++;
+        } else {
+          value += scope.value;
         }
+
+        localisation_string.push(`${bulletPoint(options.nesting)}Limit:`);
+        localisation_string = appendArrays(localisation_string, limit_pop_scope.localisation_string);
       } else { //Hard limit handler. This defines further iterative subscopes and chance modifiers
         //Group scopes, any/or, not. AND is the default joiner
         //Reset parents when passing to group subscopes since this is a hard limit
         {
           if (all_keys[i] == "and" || all_keys[i].startsWith("and_")) {
+            new_options.nesting++;
             new_options.parent_obj = scope;
             new_options.parents.push("and_hard");
 
             var limit_scope = module.exports.parseLimit(local_value, new_options);
 
             //Check conditions
-            if (!limit_scope.failed_checks > 0)
+            if (!limit_scope.failed_checks > 0) {
               failed_checks++;
+            } else {
+              value += limit_scope.value;
+            }
+
+            localisation_string.push(`${bulletPoint(options.nesting)}${booleanCheck(limit_scope.failed_checks == 0)}ALL of the following:`);
+            localisation_string = appendArrays(localisation_string, limit_scope.localisation_string);
           }
           if (all_keys[i] == "any" || all_keys[i].startsWith("any_")) {
             var subscope_length = Object.keys(local_value).length;
 
+            new_options.nesting++;
             new_options.parent_obj = scope;
             new_options.parents.push("any_hard");
 
             var limit_scope = module.exports.parseLimit(local_value, new_options);
 
             //Check conditions
-            if (!limit_scope.failed_checks >= subscope_length)
+            if (!(limit_scope.failed_checks >= subscope_length)) {
               failed_checks++;
+            } else {
+              value += limit_scope.value;
+            }
+
+            localisation_string.push(`${bulletPoint(options.nesting)}${booleanCheck(!(limit_scope.failed_checks >= subscope_length))}ANY of the following:`);
+            localisation_string = appendArrays(localisation_string, limit_scope.localisation_string);
           }
           if (all_keys[i] == "not" || all_keys[i].startsWith("not_")) {
+            new_options.nesting++;
             new_options.parent_obj = scope;
             new_options.parents.push("not_hard");
 
             var limit_scope = module.exports.parseLimit(local_value, new_options);
 
             //Check conditions
-            if (!limit_scope.failed_checks == 0)
+            if (limit_scope.failed_checks == 0)
               failed_checks++;
+
+            localisation_string.push(`${bulletPoint(options.nesting)}${booleanCheck(limit_scope.failed_checks == 0)}NOT all of the following:`);
+            localisation_string = appendArrays(localisation_string, limit_scope.localisation_string);
           }
         }
 
@@ -579,6 +605,7 @@ module.exports = {
         if (all_keys[i] == "add_chance" || all_keys[i].startsWith("add_chance_")) {
           var new_options = JSON.parse(JSON.stringify(options));
 
+          new_options.nesting++;
           new_options.parent_obj = scope;
           new_options.parents.push("add_chance");
 
@@ -586,6 +613,7 @@ module.exports = {
 
           if (limit_scope.failed_checks == 0)
             value += scope.value;
+          localisation_string.push(`${bulletPoint(options.nesting)}${booleanCheck(limit_scope.failed_checks == 0)}${parseNumber(scope.value, { display_float: true, display_prefix: true })} score from:`);
         } else if (!(all_keys[i] == "per" || all_keys[i].startsWith("per_"))) {
           //Individual conditions - not iterative scope
           if (all_keys[i] == "available_housing") {
@@ -593,60 +621,95 @@ module.exports = {
 
             if (available_housing < local_value)
               failed_checks++;
+
+            localisation_string.push(`${bulletPoint(options.nesting)}${booleanCheck(available_housing >= local_value)}Has >=${parseNumber(local_value)} housing stock`);
           } if (all_keys[i] == "available_housing_less_than") {
             var available_housing = returnSafeNumber(province_obj.housing) - province_obj.pops.population;
 
             if (available_housing >= local_value)
               failed_checks++;
+            localisation_string.push(`${bulletPoint(options.nesting)}${booleanCheck(available_housing < local_value)}Has <${parseNumber(local_value)} housing stock`);
           } if (all_keys[i] == "being_colonised") {
             var province_expeditions = getProvinceExpeditions(province_obj.id);
 
             if (province_expeditions.length == 0) {
-              if (local_value == true)
+              if (local_value == true) {
                 failed_checks++;
+                localisation_string.push(`${bulletPoint(options.nesting)}${booleanCheck(false)}Is being colonised`);
+              } else {
+                localisation_string.push(`${bulletPoint(options.nesting)}${booleanCheck(true)}Is being colonised`);
+              }
             } else {
-              if (local_value == false)
+              if (local_value == false) {
                 failed_checks++;
+                localisation_string.push(`${bulletPoint(options.nesting)}${booleanCheck(false)}Is not being colonised`);
+              } else {
+                localisation_string.push(`${bulletPoint(options.nesting)}${booleanCheck(true)}Is not being colonised`);
+              }
             }
           } if (all_keys[i] == "demotion_chance") {
             var local_demotion_chance = getDemotionChance(province_obj.id);
 
             if (local_demotion_chance < local_value)
               failed_checks++;
+
+            localisation_string.push(`${bulletPoint(options.nesting)}${booleanCheck(local_demotion_chance >= local_value)}Pop demotion chance >=${printPercentage(local_value)}`);
           } if (all_keys[i] == "demotion_chance_less_than") {
             var local_demotion_chance = getDemotionChance(province_obj.id);
 
             if (local_demotion_chance >= local_value)
               failed_checks++;
+
+            localisation_string.push(`${bulletPoint(options.nesting)}${booleanCheck(local_demotion_chance < local_value)}Pop demotion chance <${printPercentage(local_value)}`);
           } if (all_keys[i] == "employment") {
             var province_employment = getProvinceEmployment(province_obj.id);
 
             if (province_employment < local_value)
               failed_checks++;
+
+            localisation_string.push(`${bulletPoint(options.nesting)}${booleanCheck(province_employment >= local_value)}Province employment >=${printPercentage(local_value)}`);
           } if (all_keys[i] == "employment_less_than") {
             var province_employment = getProvinceEmployment(province_obj.id);
 
             if (province_employment >= local_value)
               failed_checks++;
+
+            localisation_string.push(`${bulletPoint(options.nesting)}${booleanCheck(province_employment < local_value)}Province employment <${printPercentage(local_value)}`);
           } if (all_keys[i] == "has_housing") {
             var province_has_housing = returnSafeNumber(province_obj.housing) - province_obj.pops.population;
 
             if (local_value == true) {
-              if (province_has_housing <= 0)
+              if (province_has_housing <= 0) {
                 failed_checks++;
+                localisation_string.push(`${bulletPoint(options.nesting)}${booleanCheck(false)}Province has available housing`);
+              } else {
+                localisation_string.push(`${bulletPoint(options.nesting)}${booleanCheck(true)}Province has available housing`);
+              }
             } else if (local_value == false) {
-              if (province_has_housing > 0)
+              if (province_has_housing > 0) {
                 failed_checks++;
+                localisation_string.push(`${bulletPoint(options.nesting)}${booleanCheck(false)}Province has no available housing`);
+              } else {
+                localisation_string.push(`${bulletPoint(options.nesting)}${booleanCheck(true)}Province has available housing`);
+              }
             }
           } if (all_keys[i] == "has_no_non_subsistence_buildings") {
             var has_non_subsistence_buildings = hasNonSubsistenceBuildings(province_obj.id);
 
             if (local_value == true) {
-              if (has_non_subsistence_buildings)
+              if (has_non_subsistence_buildings) {
                 failed_checks++;
+                localisation_string.push(`${bulletPoint(options.nesting)}${booleanCheck(false)}Province has no non-subsistence buildings`);
+              } else {
+                localisation_string.push(`${bulletPoint(options.nesting)}${booleanCheck(true)}Province has no non-subsistence buildings`);
+              }
             } else if (local_value == false) {
-              if (!has_non_subsistence_buildings)
+              if (!has_non_subsistence_buildings) {
                 failed_checks++;
+                localisation_string.push(`${bulletPoint(options.nesting)}${booleanCheck(false)}Province has non-subsistence buildings`);
+              } else {
+                localisation_string.push(`${bulletPoint(options.nesting)}${booleanCheck(true)}Province has non-subsistence buildings`);
+              }
             }
           } if (all_keys[i] == "no_jobs") {
             var has_jobs = false;
@@ -663,42 +726,78 @@ module.exports = {
               }
 
             if (!has_jobs) {
-              if (local_value == true)
+              if (local_value == true) {
                 failed_checks++;
+                localisation_string.push(`${bulletPoint(options.nesting)}${booleanCheck(false)}Province has no jobs`);
+              } else {
+                localisation_string.push(`${bulletPoint(options.nesting)}${booleanCheck(true)}Province has no jobs`);
+              }
             } else {
-              if (local_value == false)
+              if (local_value == false) {
                 failed_checks++;
+                localisation_string.push(`${bulletPoint(options.nesting)}${booleanCheck(false)}Province has jobs`);
+              } else {
+                localisation_string.push(`${bulletPoint(options.nesting)}${booleanCheck(true)}Province has no jobs`);
+              }
             }
           } if (all_keys[i] == "occupied") {
             if (local_value == true)
-              if (province_obj.controller == province_obj.owner)
+              if (province_obj.controller == province_obj.owner) {
                 failed_checks++;
+                localisation_string.push(`${bulletPoint(options.nesting)}${booleanCheck(false)}Province is occupied`);
+              } else {
+                localisation_string.push(`${bulletPoint(options.nesting)}${booleanCheck(true)}Province is occupied`);
+              }
             if (local_value == false)
-              if (province_obj.controller != province_obj.owner)
+              if (province_obj.controller != province_obj.owner) {
                 failed_checks++;
+                localisation_string.push(`${bulletPoint(options.nesting)}${booleanCheck(false)}Province is not occupied`);
+              } else {
+                localisation_string.push(`${bulletPoint(options.nesting)}${booleanCheck(true)}Province is not occupied`);
+              }
           } if (all_keys[i] == "prestige") {
             if (usr)
               if (usr.modifiers)
-                if (usr.modifiers.prestige <= local_value)
+                if (usr.modifiers.prestige <= local_value) {
                   failed_checks++;
+                  localisation_string.push(`${bulletPoint(options.nesting)}${booleanCheck(false)}Prestige is greater than ${parseNumber(local_value)}`);
+                } else {
+                  localisation_string.push(`${bulletPoint(options.nesting)}${booleanCheck(true)}Prestige is greater than ${parseNumber(local_value)}`);
+                }
           } if (all_keys[i] == "prestige_less_than") {
             if (usr)
               if (usr.modifiers)
-                if (usr.modifiers.prestige > local_value)
+                if (usr.modifiers.prestige > local_value) {
                   failed_checks++;
+                  localisation_string.push(`${bulletPoint(options.nesting)}${booleanCheck(false)}Prestige is less than ${parseNumber(local_value)}`);
+                } else {
+                  localisation_string.push(`${bulletPoint(options.nesting)}${booleanCheck(true)}Prestige is less than ${parseNumber(local_value)}`);
+                }
           } if (all_keys[i] == "supply_limit") {
-            if (province_obj.supply_limit < local_value)
+            if (province_obj.supply_limit < local_value) {
               failed_checks++;
+              localisation_string.push(`${bulletPoint(options.nesting)}${booleanCheck(false)}Supply limit is >=${parseNumber(local_value)}`);
+            } else {
+              localisation_string.push(`${bulletPoint(options.nesting)}${booleanCheck(true)}Supply limit is >=${parseNumber(local_value)}`);
+            }
           } if (all_keys[i] == "wealth") {
             var province_wealth = getProvinceWealth(province_obj.id);
 
-            if (province_wealth < local_value)
+            if (province_wealth < local_value) {
               failed_checks++;
+              localisation_string.push(`${bulletPoint(options.nesting)}${booleanCheck(false)}Province wealth is >=${parseNumber(local_value)}`);
+            } else {
+              localisation_string.push(`${bulletPoint(options.nesting)}${booleanCheck(true)}Province wealth is >=${parseNumber(local_value)}`);
+            }
           } if (all_keys[i] == "wealth_less_than") {
             var province_wealth = getProvinceWealth(province_obj.id);
 
-            if (province_wealth >= local_value)
+            if (province_wealth >= local_value) {
               failed_checks++;
+              localisation_string.push(`${bulletPoint(options.nesting)}${booleanCheck(false)}Province wealth is <${parseNumber(local_value)}`);
+            } else {
+              localisation_string.push(`${bulletPoint(options.nesting)}${booleanCheck(true)}Province wealth is <${parseNumber(local_value)}`);
+            }
           }
         } else {
           //Individual conditions - iterative scope
@@ -711,6 +810,8 @@ module.exports = {
                   if (province_obj.buildings[x].building_type == local_value)
                     building_cost++;
               pb_buildings_scalar = building_count;
+
+              localisation_string.push(`${bulletPoint(options.nesting)}${numberCheck(pb_buildings_scalar, true)}${parseNumber(pb_buildings_scalar, { display_float: true, display_prefix: true })} score from ${parseNumber(pb_buildings_scalar)} buildings`);
             } if (all_keys[i] == "has_building_category") {
               var local_building_category = config.buildings[local_value];
               var local_category_count = 0;
@@ -721,6 +822,8 @@ module.exports = {
                     if (local_building_category[province_obj.buildings[x].building_type])
                       local_category_count++;
               pb_building_category_scalar = local_category_count;
+
+              localisation_string.push(`${bulletPoint(options.nesting)}${numberCheck(pb_building_category_scalar, true)}${parseNumber(pb_building_category_scalar, { display_float: true, display_prefix: true })} score from ${parseNumber(pb_building_category_scalar)} ${(local_building_category.name) ? local_building_category.name : local_value} buildings`);
             }
 
             //Add value once last key in object is processed
@@ -728,11 +831,16 @@ module.exports = {
               var per_scalar = pb_buildings_scalar*pb_building_category_scalar;
 
               if (scope.base) {
-                var base_scalar = Math.min(per_scalar, 1);
-                value += returnSafeNumber(scope.base)*base_scalar;
+                value += returnSafeNumber(scope.base);
+
+                localisation_string.push(`${bulletPoint(options.nesting)}${numberCheck(scope.base, true)}${parseNumber(scope.base, { display_float: true, display_prefix: true })} score from base value`);
               }
-              if (scope.value)
-                value += returnSafeNumber(scope.value)*per_scalar;
+              if (scope.value) {
+                var per_value = returnSafeNumber(scope.value)*per_scalar;
+                value += per_value;
+
+                localisation_string.push(`${bulletPoint(options.nesting)}${numberCheck(scope.value, true)}Total score: ${parseNumber(scope.value, { display_float: true, display_prefix: true })}`);
+              }
             }
           } else if (parent == "per_percent" || parent.startsWith("per_percent")) {
             //Declare hyperlocal scalars and trackers
@@ -750,15 +858,23 @@ module.exports = {
               pp_demotion_scalar = returnSafeNumber(total_demotion_chance/all_pops.length, 1); //Average it out
               if (pp_demotion_scalar != 1)
                 pp_demotion_scalar = pp_demotion_scalar/local_value;
+
+              localisation_string.push(`${bulletPoint(options.nesting)}${numberCheck(pp_demotion_scalar, true)}${parseNumber(pp_demotion_scalar, { display_float: true, display_prefix: true })} score from ${printPercentage(total_demotion_chance)} total demotion chance, unweighted`);
             } if (all_keys[i] == "education_level") {
               var education_percentage = getProvinceEducationLevel(province_obj.id);
               pp_education_scalar = education_percentage/local_value;
+
+              localisation_string.push(`${bulletPoint(options.nesting)}${numberCheck(pp_education_scalar, true)}${parseNumber(pp_education_scalar, { display_float: true, display_prefix: true })} score from ${printPercentage(education_percentage)} Education Level`);
             } if (all_keys[i] == "employment") {
               var employment_percentage = getProvinceEmployment(province_obj.id);
               pp_employment_scalar = employment_percentage/local_value;
+
+              localisation_string.push(`${bulletPoint(options.nesting)}${numberCheck(pp_employment_scalar, true)}${parseNumber(pp_employment_scalar, { display_float: true, display_prefix: true })} score from ${printPercentage(employment_percentage)} employment`);
             } if (all_keys[i] == "enslaved") {
               var enslaved_percentage = getProvinceEnslavedPercentage(province_obj.id);
               pp_enslaved_scalar = enslaved_percentage/local_value;
+
+              localisation_string.push(`${bulletPoint(options.nesting)}${numberCheck(pp_enslaved_scalar, true)}${parseNumber(pp_enslaved_scalar, { display_float: true, display_prefix: true })} score from ${printPercentage(enslaved_percentage)} enslaved population`);
             } if (all_keys[i] == "living_wage_job_openings") {
               var total_living_wage_openings = 0;
 
@@ -769,6 +885,8 @@ module.exports = {
               }
 
               pp_living_wage_job_openings_scalar = returnSafeNumber((total_living_wage_openings/province_obj.pops.population)/local_value);
+
+              localisation_string.push(`${bulletPoint(options.nesting)}${numberCheck(pp_living_wage_job_openings_scalar, true)}${parseNumber(pp_living_wage_job_openings_scalar, { display_float: true, display_prefix: true })} score from ${parseNumber(total_living_wage_openings)} wage job openings`);
             } if (all_keys[i] == "promotion_chance") {
               var total_promotion_chance = 0;
 
@@ -779,11 +897,21 @@ module.exports = {
               pp_promotion_scalar = returnSafeNumber(total_promotion_chance/all_pops.length, 1); //Average it out
               if (pp_promotion_scalar != 1)
                 pp_promotion_scalar = pp_promotion_scalar/local_value;
+
+              localisation_string.push(`${bulletPoint(options.nesting)}${numberCheck(pp_promotion_scalar, true)}${parseNumber(pp_promotion_scalar, { display_float: true, display_prefix: true })} score from ${printPercentage(total_promotion_chance)} total promotion chance, unweighted`);
             } if (config.pops[all_keys[i]]) { //<pop_name>
               var local_pop = config.pops[all_keys[i]];
+              var local_pop_names = [];
+              var total_applicable_pops = 0;
 
-              if (typeof local_pop == "object")
+              if (typeof local_pop == "object") {
                 pp_pop_percent_scalar += (returnSafeNumber(province_obj.pops[all_keys[i]])/province_obj.pops.population)/local_value;
+                total_applicable_pops += province_obj.pops[all_keys[i]];
+
+                local_pop_names.push((local_pop.name) ? local_pop.name : all_keys[i]);
+              }
+
+              localisation_string.push(`${bulletPoint(options.nesting)}${numberCheck(pp_pop_percent_scalar, true)}${parseNumber(pp_pop_percent_scalar, { display_float: true, display_prefix: true })} score from ${printPercentage(total_applicable_pops/province_obj.pops.population)} ${local_pop_names.join(", ")} population`);
             }
 
             //Add value once last key in object is processed
@@ -795,11 +923,16 @@ module.exports = {
               percentage_scalar = Math.max(percentage_scalar, local_min);
 
               if (scope.base) {
-                var base_scalar = Math.min(per_scalar, 1);
-                value += returnSafeNumber(scope.base)*base_scalar;
+                value += returnSafeNumber(scope.base);
+
+                localisation_string.push(`${bulletPoint(options.nesting)}${numberCheck(scope.base, true)}${parseNumber(scope.base, { display_float: true, display_prefix: true })} score from base value`);
               }
-              if (scope.value)
-                value += returnSafeNumber(scope.value)*percentage_scalar;
+              if (scope.value) {
+                var per_value = returnSafeNumber(scope.value)*percentage_scalar;
+                value += per_value;
+
+                localisation_string.push(`${bulletPoint(options.nesting)}${numberCheck(per_value, true)}Total score: ${parseNumber(per_value, { display_float: true, display_prefix: true })}`);
+              }
             }
           } else {
             //Regular per scope
@@ -807,6 +940,7 @@ module.exports = {
               var province_housing = returnSafeNumber(province_obj.housing) - province_obj.pops.population;
 
               p_available_housing_scalar = province_housing/local_value;
+              localisation_string.push(`${bulletPoint(options.nesting)}${numberCheck(p_available_housing_scalar, true)}${parseNumber(p_available_housing_scalar, { display_float: true, display_prefix: true })} score from ${parseNumber(province_housing)} available housing`);
             } if (config.buildings[all_keys[i]]) { //<building_category>
               var local_building_category = config.buildings[all_keys[i]];
               var total_category_buildings = 0;
@@ -817,6 +951,7 @@ module.exports = {
                     total_category_buildings++;
 
               p_building_categories_scalar += total_category_buildings/local_value;
+              localisation_string.push(`${bulletPoint(options.nesting)}${numberCheck(p_building_categories_scalar, true)}${parseNumber(p_building_categories_scalar, { display_float: true, display_prefix: true })} score from ${parseNumber(total_category_buildings)} ${(local_building_category.name) ? local_building_category.name : all_keys[i]} buildings`);
             } if (all_keys[i] == "living_wage_job_openings") {
               var living_wage_job_openings = 0;
 
@@ -824,15 +959,23 @@ module.exports = {
                 living_wage_job_openings += getJobOpenings(province_obj.id, all_pops[x], { living_wage: true });
 
               p_living_wage_job_openings_scalar = (living_wage_job_openings/local_value);
+              localisation_string.push(`${bulletPoint(options.nesting)}${numberCheck(p_living_wage_job_openings_scalar, true)}${parseNumber(p_living_wage_job_openings_scalar, { display_float: true, display_prefix: true })} score from ${parseNumber(living_wage_job_openings)} living wage job openings`);
             } if (all_keys[i] == "population") {
               p_population_scalar = province_obj.pops.population/local_value;
+              localisation_string.push(`${bulletPoint(options.nesting)}${numberCheck(p_population_scalar, true)}${parseNumber(p_population_scalar, { display_float: true, display_prefix: true })} score from ${parseNumber(province_obj.pops.population)} inhabitants`);
             } if (all_keys[i] == "prestige") {
               p_prestige_scalar = usr.modifiers.prestige/local_value;
+              localisation_string.push(`${bulletPoint(options.nesting)}${numberCheck(p_prestige_scalar, true)}${parseNumber(p_prestige_scalar, { display_float: true, display_prefix: true })} score from ${parseNumber(usr.modifiers.prestige)} prestige`);
             } if (all_keys[i] == "soldiers_stationed_in_province") {
               var soldiers_in_province = lookup.province_troop_strengths[province_obj.id];
               p_soldiers_in_province_scalar = soldiers_in_province/local_value;
+
+              localisation_string.push(`${bulletPoint(options.nesting)}${numberCheck(p_soldiers_in_province_scalar, true)}${parseNumber(p_soldiers_in_province_scalar, { display_float: true, display_prefix: true })} score from ${parseNumber(soldiers_in_province)} soldiers stationed in province`);
             } if (all_keys[i] == "supply_limit") {
-              p_supply_limit_scalar = returnSafeNumber(province_obj.supply_limit, config.defines.combat.base_supply_limit)/local_value;
+              var province_supply_limit = returnSafeNumber(province_obj.supply_limit, config.defines.combat.base_supply_limit);
+
+              p_supply_limit_scalar = province_supply_limit/local_value;
+              localisation_string.push(`${bulletPoint(options.nesting)}${numberCheck(p_supply_limit_scalar, true)}${parseNumber(p_supply_limit_scalar, { display_float: true, display_prefix: true })} score from ${parseNumber(province_supply_limit)} supply limit`);
             }
 
             //Add value once last key in object is processed
@@ -840,11 +983,15 @@ module.exports = {
               var per_scalar = p_available_housing_scalar*p_building_categories_scalar*p_living_wage_job_openings_scalar*p_population_scalar*p_prestige_scalar*p_soldiers_in_province_scalar*p_supply_limit_scalar;
 
               if (scope.base) {
-                var base_scalar = Math.min(per_scalar, 1);
-                value += returnSafeNumber(scope.base)*base_scalar;
+                value += returnSafeNumber(scope.base);
+                localisation_string.push(`${bulletPoint(options.nesting)}${numberCheck(scope.base, true)}${parseNumber(scope.base, { display_float: true, display_prefix: true })} score from base value`);
               }
-              if (scope.value)
-                value += returnSafeNumber(scope.value)*per_scalar;
+              if (scope.value) {
+                var per_value = returnSafeNumber(scope.value)*per_scalar;
+                value += per_value;
+
+                localisation_string.push(`${bulletPoint(options.nesting)}${numberCheck(per_value, true)}Total score: ${parseNumber(per_value, { display_float: true, display_prefix: true })}`);
+              }
             }
           }
         }
@@ -872,6 +1019,7 @@ module.exports = {
 
     //Return statement
     return {
+      localisation_string: localisation_string,
       value: value,
 
       failed_checks: failed_checks,
@@ -1175,7 +1323,8 @@ module.exports = {
     options: {
       flags: {
         scope: ["province", "4709"] - Defines the current scoped object.
-      }
+      },
+      nesting: 1, - The current depth level that things are being parsed at. 1 by default.
       parent_obj: {}, - The object of the initial parent. Optional.
       parents: [], - An array of parent elements used for placing relevant flags. Defaults to [],
        - and_hard
@@ -1192,6 +1341,7 @@ module.exports = {
     }
 
     Returns: {
+      localisation_string: [], - The localisation string returned as an array
       value: 0.045, - Base value for pop scope
 
       boolean: true/false, - Used for hard non-fuzzy conditions such as has_industrialised
@@ -1209,12 +1359,14 @@ module.exports = {
     if (!options.flags) options.flags = {
       scope: (!options.province_id) ? [undefined, undefined] : ["province", options.province_id]
     };
+    if (!options.nesting) options.nesting = 1;
     if (!options.parents) options.parents = [];
     if (!options.pop_flags) options.pop_flags = {};
 
     //Declare local instance variables
     var all_keys = Object.keys(scope);
     var local_pop_obj = {};
+    var localisation_string = [];
     var parent = options.parents[options.parents.length - 1];
     var pop_plurality_culture = ["", 0];
     var pop_scope = (options.pop_scope) ? options.pop_scope : selectPops({
@@ -1303,7 +1455,6 @@ module.exports = {
 
     //Iterate over all_keys
     for (var i = 0; i < all_keys.length; i++) {
-      var empty_scope = false;
       var local_value = scope[all_keys[i]];
 
       //Scope conditions
@@ -1311,6 +1462,7 @@ module.exports = {
         var new_options = JSON.parse(JSON.stringify(options));
         var new_pop_scope = JSON.parse(JSON.stringify(pop_scope));
 
+        new_options.nesting++;
         new_options.parent_obj = scope;
         new_options.pop_scope = pop_scope;
         new_options.parents.push("add_chance_limit");
@@ -1322,6 +1474,9 @@ module.exports = {
 
         if (limit_pop_scope.boolean)
           value += scope.value;
+
+        localisation_string.push(`${bulletPoint(options.nesting)}Limit:`);
+        localisation_string = appendArrays(localisation_string, limit_pop_scope.localisation_string);
       } else { //Hard limit handler. This defines the pop subscope that meets these conditions for which value is processed
         //Group scopes, any/or, not. AND is the default joiner
         //Reset parents when passing to group subscopes since this is a hard limit
@@ -1329,10 +1484,14 @@ module.exports = {
           if (all_keys[i] == "and" || all_keys[i].startsWith("and_")) {
             var new_options = JSON.parse(JSON.stringify(options));
 
+            new_options.nesting++;
             new_options.parent_obj = scope;
             new_options.parents.push("and_hard");
 
             var local_pop_limit = parsePopLimit(local_value, new_options);
+
+            localisation_string.push(`${bulletPoint(options.nesting)}${numberCheck(local_pop_limit.pop_scope.size, true)}ALL of the following:`);
+            localisation_string = appendArrays(localisation_string, local_pop_limit.localisation_string);
 
             //Intersect with pop_scope
             pop_scope = mergePopScopes(pop_scope, local_pop_limit.pop_scope);
@@ -1340,10 +1499,14 @@ module.exports = {
           if (all_keys[i] == "any" || all_keys[i].startsWith("any_")) {
             var new_options = JSON.parse(JSON.stringify(options));
 
+            new_options.nesting++;
             new_options.parent_obj = scope;
             new_options.parents.push("any_hard");
 
             var local_pop_limit = parsePopLimit(local_value, new_options);
+
+            localisation_string.push(`${bulletPoint(options.nesting)}${numberCheck(local_pop_limit.pop_scope.size, true)}ANY of the following:`);
+            localisation_string = appendArrays(localisation_string, local_pop_limit.localisation_string);
 
             //Intersect with pop_scope
             pop_scope = mergePopScopes(pop_scope, local_pop_limit.pop_scope);
@@ -1351,10 +1514,13 @@ module.exports = {
           if (all_keys[i] == "not" || all_keys[i].startsWith("not_")) {
             var new_options = JSON.parse(JSON.stringify(options));
 
+            new_options.nesting++;
             new_options.parent_obj = scope;
             new_options.parents.push("not_hard");
 
             var local_pop_limit = parsePopLimit(local_value, new_options);
+
+            localisation_string.push(`${bulletPoint(options.nesting)}${numberCheck(local_pop_limit.pop_scope.size*-1, true)}NOT all of the following:`);
 
             //Subtract from pop_scope
             pop_scope = subtractObjects(pop_scope, local_pop_limit.pop_scope);
@@ -1367,66 +1533,93 @@ module.exports = {
             var new_options = JSON.parse(JSON.stringify(options));
             var new_pop_scope = JSON.parse(JSON.stringify(pop_scope));
 
+            new_options.nesting++;
             new_options.parent_obj = scope;
             new_options.parents.push("add_chance");
             new_options.pop_scope = pop_scope;
 
             var local_pop_scope = module.exports.parsePopLimit(local_value, new_options);
+            localisation_string.push(`${bulletPoint(options.nesting)}${numberCheck(local_pop_scope.pop_scope.size, true)}${printPercentage(local_value.value, { display_float: true, display_prefix: true })} chance for ${parseNumber(local_pop_scope.pop_scope.size)} people from:`);
+            localisation_string = appendArrays(localisation_string, local_pop_scope.localisation_string);
 
             if (local_pop_scope.pop_scope.size > 0)
-              selectors[JSON.stringify(local_pop_scope.pop_scope)] = local_value.value;
+              modifyValue(selectors, JSON.stringify(pop_scope), returnSafeNumber(local_value.value));
           } else if (all_keys[i].startsWith("building_category_") && typeof local_value == "object") {
             var new_options = JSON.parse(JSON.stringify(options));
             var new_pop_scope = JSON.parse(JSON.stringify(pop_scope));
 
+            new_options.nesting++;
             new_options.parent_obj = scope;
             new_options.parents.push(all_keys[i]);
             new_options.pop_scope = pop_scope;
 
             var local_pop_scope = module.exports.parsePopLimit(local_value, new_options);
+            localisation_string.push(`${bulletPoint(options.nesting)}${numberCheck(local_pop_scope.value)}${printPercentage(local_pop_scope.value, { display_float: true })} chance for ${parseNumber(local_pop_scope.pop_scope.size)} people from:`);
+            localisation_string = appendArrays(localisation_string, local_pop_scope.localisation_string);
 
             //Merge selectors from per scope
-            modifyValue(selectors, JSON.stringify(local_pop_scope.pop_scope), returnSafeNumber(local_pop_scope.value));
+            modifyValue(selectors, JSON.stringify(pop_scope), returnSafeNumber(local_pop_scope.value));
           } else if (all_keys[i] == "per" || all_keys[i].startsWith("per_")) {
             var new_options = JSON.parse(JSON.stringify(options));
             var new_pop_scope = JSON.parse(JSON.stringify(pop_scope));
 
+            new_options.nesting++;
             new_options.parent_obj = scope;
             new_options.parents.push(all_keys[i]);
             new_options.pop_scope = pop_scope;
 
             var local_pop_scope = module.exports.parsePopLimit(local_value, new_options);
+            localisation_string.push(`${bulletPoint(options.nesting)}${numberCheck(local_pop_scope.pop_scope.size, true)}${printPercentage(local_value.value, { display_float: true, display_prefix: true })} chance for ${parseNumber(local_pop_scope.pop_scope.size)} people from:`);
+
+            console.log(`Local pop scope for ${all_keys[i]}:`, local_pop_scope);
+            localisation_string = appendArrays(localisation_string, local_pop_scope.localisation_string);
 
             //Merge selectors from per scope
-            modifyValue(selectors, JSON.stringify(local_pop_scope.pop_scope), returnSafeNumber(local_pop_scope.value));
+            modifyValue(selectors, JSON.stringify(pop_scope), returnSafeNumber(local_pop_scope.value));
           }
         }
 
         //Individual conditions - not iterative scope
         if (!(parent == "per" || parent.startsWith("per_"))) {
           if (all_keys[i] == "available_housing") {
-            var available_housing = returnSafeNumber(ot_province.housing) - ot_province.pops.population;
+            if (ot_province) {
+              var available_housing = returnSafeNumber(ot_province.housing) - ot_province.pops.population;
 
-            if (available_housing < local_value)
-              empty_scope = true;
+              if (available_housing < local_value)
+                empty_scope = true;
+
+              localisation_string.push(`${bulletPoint(options.nesting)}${booleanCheck(available_housing >= local_value)}Available Housing is >=${parseNumber(local_value)}`);
+            }
           } if (all_keys[i] == "available_housing_less_than") {
             if (ot_province) {
               var available_housing = returnSafeNumber(ot_province.housing) - ot_province.pops.population;
 
               if (available_housing >= local_value)
                 empty_scope = true;
+
+              localisation_string.push(`${bulletPoint(options.nesting)}${booleanCheck(available_housing < local_value)}Available Housing is <${parseNumber(local_value)}`)
             }
           } if (all_keys[i] == "base_value") {
             value += local_value;
+
+            localisation_string.push(`${bulletPoint(options.nesting)}${booleanCheck(true)}${printPercentage(local_value, { display_float: true, display_prefix: true })} Base Value`);
           } if (all_keys[i] == "being_colonised" || all_keys[i] == "being_settled") {
             var province_expeditions = getProvinceExpeditions(ot_province.id);
 
             if (province_expeditions.length == 0) {
-              if (local_value == true)
+              if (local_value == true) {
                 empty_scope = true;
+                localisation_string.push(`${bulletPoint(options.nesting)}${booleanCheck(false)}Is being colonised`);
+              } else {
+                localisation_string.push(`${bulletPoint(options.nesting)}${booleanCheck(true)}Is being colonised`);
+              }
             } else {
-              if (local_value == false)
+              if (local_value == false) {
                 empty_scope = true;
+                localisation_string.push(`${bulletPoint(options.nesting)}${booleanCheck(false)}Is not being colonised`);
+              } else {
+                localisation_string.push(`${bulletPoint(options.nesting)}${booleanCheck(true)}Is not being colonised`);
+              }
             }
           } if (all_keys[i].startsWith("can_afford_")) {
             //Fetch can afford scope
@@ -1443,23 +1636,35 @@ module.exports = {
             pop_scope = (parent.startsWith("any")) ?
               mergeObjects(pop_scope, local_pop_scope) :
               mergePopScopes(pop_scope, local_pop_scope); //and, not, default
+
+            localisation_string.push(`${bulletPoint(options.nesting)}${numberCheck(pop_scope.size)}${parseNumber(pop_scope.size)} people can afford ${config.localisation[local_goods_category]}`);
           } if (all_keys[i] == "demotion_chance") {
             if (province_obj.trackers) {
               var local_demotion_chance = getDemotionChance(ot_province.id, options.pop_type);
 
-              if (local_demotion_chance < local_value)
+              if (local_demotion_chance < local_value) {
                 empty_scope = true;
+                localisation_string.push(`${bulletPoint(options.nesting)}${booleanCheck(false)}Has >=${printPercentage(local_value)} demotion chance for ${parsePop(options.pop_type, true)}`);
+              } else {
+                localisation_string.push(`${bulletPoint(options.nesting)}${booleanCheck(true)}Has >=${printPercentage(local_value)} demotion chance for ${parsePop(options.pop_type, true)}`);
+              }
             } else {
               empty_scope = true;
+              localisation_string.push(`${bulletPoint(options.nesting)}${booleanCheck(false)}Has >=${printPercentage(local_value)} demotion chance for ${parsePop(options.pop_type, true)}`);
             }
           } if (all_keys[i] == "demotion_chance_less_than") {
             if (province_obj.trackers) {
               var local_demotion_chance = getDemotionChance(ot_province.id, options.pop_type);
 
-              if (local_demotion_chance >= local_value)
+              if (local_demotion_chance >= local_value) {
                 empty_scope = true;
+                localisation_string.push(`${bulletPoint(options.nesting)}${booleanCheck(false)}Has <${printPercentage(local_value)} demotion chance for ${parsePop(options.pop_type, true)}`);
+              } else {
+                localisation_string.push(`${bulletPoint(options.nesting)}${booleanCheck(true)}Has <${printPercentage(local_value)} demotion chance for ${parsePop(options.pop_type, true)}`);
+              }
             } else {
               empty_scope = true;
+              localisation_string.push(`${bulletPoint(options.nesting)}${booleanCheck(false)}Has <${printPercentage(local_value)} demotion chance for ${parsePop(options.pop_type, true)}`);
             }
           } if (all_keys[i] == "education_level") {
             //Fetch education level scope
@@ -1473,6 +1678,8 @@ module.exports = {
             pop_scope = (parent.startsWith("any")) ?
               mergeObjects(pop_scope, local_pop_scope) :
               mergePopScopes(pop_scope, local_pop_scope); //and, not, default
+
+            localisation_string.push(`${bulletPoint(options.nesting)}${numberCheck(pop_scope.size)}${parseNumber(pop_scope.size)} people have an Education level >=${printPercentage(local_value)}`);
           } if (all_keys[i] == "education_level_less_than") {
             //Fetch education level less than scope
             var local_pop_scope = selectPops({
@@ -1485,20 +1692,31 @@ module.exports = {
             pop_scope = (parent.startsWith("any")) ?
               mergeObjects(pop_scope, local_pop_scope) :
               mergePopScopes(pop_scope, local_pop_scope); //and, not, default
+
+            localisation_string.push(`${bulletPoint(options.nesting)}${numberCheck(pop_scope.size)}${parseNumber(pop_scope.size)} people have an Education level <${printPercentage(local_value)}`);
           } if (all_keys[i] == "employment") {
             var province_employment = getProvinceEmployment(ot_province.id, options.pop_type);
 
-            if (province_employment < local_value)
+            if (province_employment < local_value) {
               empty_scope = true;
+              localisation_string.push(`${bulletPoint(options.nesting)}${booleanCheck(false)}Province employment is >=${printPercentage(local_value)}`);
+            } else {
+              localisation_string.push(`${bulletPoint(options.nesting)}${booleanCheck(true)}Province employment is >=${printPercentage(local_value)}`);
+            }
           } if (all_keys[i] == "employment_less_than") {
             var province_employment = getProvinceEmployment(ot_province.id, options.pop_type);
 
-            if (province_employment >= local_value)
+            if (province_employment >= local_value) {
               empty_scope = true;
+              localisation_string.push(`${bulletPoint(options.nesting)}${booleanCheck(false)}Province employment is <${printPercentage(local_value)}`);
+            } else {
+              localisation_string.push(`${bulletPoint(options.nesting)}${booleanCheck(true)}Province employment is <${printPercentage(local_value)}`);
+            }
           } if (all_keys[i] == "fully_employed") {
             var local_building_category_key = parent.replace("building_category_", "");
 
             if (config.buildings[local_building_category_key]) {
+              var meets_conditions = true;
               var local_building_category = config.buildings[local_building_category_key];
 
               //Iterate over all buildings in province and check if each building is fully employed
@@ -1511,14 +1729,22 @@ module.exports = {
                       var remaining_positions = getBuildingRemainingPositions(local_building);
 
                       if (remaining_positions > 0) {
-                        if (local_value == true)
+                        if (local_value == true) {
                           empty_scope = true;
+                          meets_conditions = false;
+                        }
                       } else if (remaining_positions <= 0) {
-                        if (local_value == false)
+                        if (local_value == false) {
                           empty_scope = true;
+                          meets_conditions = false;
+                        }
                       }
                     }
                   }
+
+              (meets_conditions) ?
+                localisation_string.push(`${bulletPoint(options.nesting)})}${booleanCheck(meets_conditions)}${(local_building_category.name) ? local_building_category.name : local_building_category_key} is fully employed`) :
+                localisation_string.push(`${bulletPoint(options.nesting)})}${booleanCheck(meets_conditions)}${(local_building_category.name) ? local_building_category.name : local_building_category_key} is not fully employed`);
             }
           } if (all_keys[i] == "has_accepted_culture") {
             //Fetch has_accepted_culture scope
@@ -1532,7 +1758,10 @@ module.exports = {
             pop_scope = (parent.startsWith("any")) ?
               mergeObjects(pop_scope, local_pop_scope) :
               mergePopScopes(pop_scope, local_pop_scope); //and, not, default
+
+            localisation_string.push(`${bulletPoint(options.nesting)}${numberCheck(pop_scope.size)}${parseNumber(pop_scope.size)} are of an accepted culture`);
           } if (all_keys[i].startsWith("has_")) { //has_<goods_category>
+            var local_needs_category = all_keys[i].replace("has_", "");
             var local_pop_scope = selectPops({
               province_id: ot_province.id,
               pop_types: [options.pop_type],
@@ -1543,28 +1772,46 @@ module.exports = {
             pop_scope = (parent.startsWith("any")) ?
               mergeObjects(pop_scope, local_pop_scope) :
               mergePopScopes(pop_scope, local_pop_scope); //and, not, default
+
+            if (lookup.all_pop_needs_categories[local_needs_category])
+              localisation_string.push(`${bulletPoint(options.nesting)}${numberCheck(pop_scope.size)}${parseNumber(pop_scope.size)} have >=${printPercentage(local_value)} ${config.localisation[local_needs_category]} fulfilment`);
           } if (all_keys[i].startsWith("has_")) { //has_<goods_category>_less_than
-            var local_pop_scope = selectPops({
-              province_id: ot_province.id,
-              pop_types: [options.pop_type],
+            var local_needs_category = all_keys[i].replace("has_", "").replace("_less_than", "");
 
-              [all_keys[i]]: local_value
-            });
+            if (lookup.all_pop_needs_categories[local_needs_category]) {
+              var local_pop_scope = selectPops({
+                province_id: ot_province.id,
+                pop_types: [options.pop_type],
 
-            pop_scope = (parent.startsWith("any")) ?
-              mergeObjects(pop_scope, local_pop_scope) :
-              mergePopScopes(pop_scope, local_pop_scope); //and, not, default
+                [all_keys[i]]: local_value
+              });
+
+              pop_scope = (parent.startsWith("any")) ?
+                mergeObjects(pop_scope, local_pop_scope) :
+                mergePopScopes(pop_scope, local_pop_scope); //and, not, default
+
+              localisation_string.push(`${bulletPoint(options.nesting)}${numberCheck(pop_scope.size)}${parseNumber(pop_scope.size)} have <${printPercentage(local_value)} ${config.localisation[local_needs_category]} fulfilment`);
+            }
           } if (all_keys[i] == "has_housing") {
             var province_has_housing = returnSafeNumber(ot_province.housing) - ot_province.pops.population;
 
             if (local_value == true) {
-              if (province_has_housing <= 0)
+              if (province_has_housing <= 0) {
                 empty_scope = true;
+                localisation_string.push(`${bulletPoint(options.nesting)}${booleanCheck(true)}Province has available housing`);
+              } else {
+                localisation_string.push(`${bulletPoint(options.nesting)}${booleanCheck(false)}Province has available housing`);
+              }
             } else if (local_value == false) {
-              if (province_has_housing > 0)
+              if (province_has_housing > 0) {
                 empty_scope = true;
+                localisation_string.push(`${bulletPoint(options.nesting)}${booleanCheck(false)}Province has no available housing`);
+              } else {
+                localisation_string.push(`${bulletPoint(options.nesting)}${booleanCheck(true)}Province has no available housing`);
+              }
             }
           } if (all_keys[i].startsWith("has_") && all_keys[i].includes("_variety")) { //has_<goods_category>_variety
+            var local_goods_category = all_keys[i].replace("has_", "").replace("_variety", "");
             var local_pop_scope = selectPops({
               province_id: ot_province.id,
               pop_types: [options.pop_type],
@@ -1575,7 +1822,15 @@ module.exports = {
             pop_scope = (parent.startsWith("any")) ?
               mergeObjects(pop_scope, local_pop_scope) :
               mergePopScopes(pop_scope, local_pop_scope); //and, not, default
+
+            if (lookup.all_pop_needs_categories[local_goods_category])
+              if (pop_scope.size > 0) {
+                localisation_string.push(`${bulletPoint(options.nesting)}${booleanCheck(true)}Has >=${printPercentage(local_value)} ${config.localisation[local_goods_category]} variety`);
+              } else {
+                localisation_string.push(`${bulletPoint(options.nesting)}${booleanCheck(false)}Has >=${printPercentage(local_value)} ${config.localisation[local_goods_category]} variety`);
+              }
           } if (all_keys[i] == "has_" && all_keys[i].includes("_variety_less_than")) { //has_<goods_category>_variety_less_than
+            var local_goods_category = all_keys[i].replace("has_", "").replace("_variety_less_than", "");
             var local_pop_scope = selectPops({
               province_id: ot_province.id,
               pop_types: [options.pop_type],
@@ -1586,15 +1841,30 @@ module.exports = {
             pop_scope = (parent.startsWith("any")) ?
               mergeObjects(pop_scope, local_pop_scope) :
               mergePopScopes(pop_scope, local_pop_scope); //and, not, default
+
+            if (lookup.all_pop_needs_categories[local_goods_category])
+              if (pop_scope.size > 0) {
+                localisation_string.push(`${bulletPoint(options.nesting)}${booleanCheck(true)}Has <${printPercentage(local_value)} ${config.localisation[local_goods_category]} variety`);
+              } else {
+                localisation_string.push(`${bulletPoint(options.nesting)}${booleanCheck(false)}Has <${printPercentage(local_value)} ${config.localisation[local_goods_category]} variety`);
+              }
           } if (all_keys[i] == "has_no_non_subsistence_buildings") {
             var has_non_subsistence_buildings = hasNonSubsistenceBuildings(ot_province.id);
 
             if (local_value == true) {
-              if (has_non_subsistence_buildings)
+              if (has_non_subsistence_buildings) {
                 empty_scope = true;
+                localisation_string.push(`${bulletPoint(options.nesting)}${booleanCheck(false)}Has non-subsistence buildings`);
+              } else {
+                localisation_string.push(`${bulletPoint(options.nesting)}${booleanCheck(true)}Has non subsistence buildings`);
+              }
             } else if (local_value == false) {
-              if (!has_non_subsistence_buildings)
+              if (!has_non_subsistence_buildings) {
                 empty_scope = true;
+                localisation_string.push(`${bulletPoint(options.nesting)}${booleanCheck(false)}Has no non-subsistence buildings`);
+              } else {
+                localisation_string.push(`${bulletPoint(options.nesting)}${booleanCheck(true)}Has no non-subsistence buildings`);
+              }
             }
           } if (all_keys[i] == "has_pop_plurality_culture") {
             //Whether the pop's plurality culture is a plurality in the current province scope
@@ -1602,11 +1872,19 @@ module.exports = {
               var plurality_ot_culture = getMajorityCulture(ot_province.id, { return_key: true });
 
               if (local_value == true) {
-                if (plurality_ot_culture != pop_plurality_culture[0])
+                if (plurality_ot_culture != pop_plurality_culture[0]) {
                   empty_scope = true;
+                  localisation_string.push(`${bulletPoint(options.nesting)}${booleanCheck(false)}Pop is of province plurality culture`);
+                } else {
+                  localisation_string.push(`${bulletPoint(options.nesting)}${booleanCheck(true)}Pop is of province plurality culture`);
+                }
               } else if (local_value == false) {
-                if (plurality_ot_culture == pop_plurality_culture[0])
+                if (plurality_ot_culture == pop_plurality_culture[0]) {
                   empty_scope = true;
+                  localisation_string.push(`${bulletPoint(options.nesting)}${booleanCheck(false)}Pop is not of province plurality culture`);
+                } else {
+                  localisation_string.push(`${bulletPoint(options.nesting)}${booleanCheck(true)}Pop is not of province plurality culture`);
+                }
               }
             }
           } if (all_keys[i] == "has_primary_culture") {
@@ -1619,20 +1897,36 @@ module.exports = {
                 is_primary_culture = (local_culture.primary_culture.includes(ot_province.controller));
 
               if (local_value == true) {
-                if (!is_primary_culture)
+                if (!is_primary_culture) {
                   empty_scope = true;
+                  localisation_string.push(`${bulletPoint(options.nesting)}${booleanCheck(false)}Pop is of national primary culture`);
+                } else {
+                  localisation_string.push(`${bulletPoint(options.nesting)}${booleanCheck(true)}Pop is of national primary culture`);
+                }
               } else if (local_value == false) {
-                if (is_primary_culture)
+                if (is_primary_culture) {
                   empty_scope = true;
+                  localisation_string.push(`${bulletPoint(options.nesting)}${booleanCheck(false)}Pop is not of national primary culture`);
+                } else {
+                  localisation_string.push(`${bulletPoint(options.nesting)}${booleanCheck(true)}Pop is not of national primary culture`);
+                }
               }
             }
           } if (all_keys[i] == "has_standing_army") {
             if (local_value == true) {
-              if (!hasStandingArmy(province_obj.controller))
+              if (!hasStandingArmy(province_obj.controller)) {
                 empty_scope = true;
+                localisation_string.push(`${bulletPoint(options.nesting)}${booleanCheck(false)}Province controller has a Standing Army`);
+              } else {
+                localisation_string.push(`${bulletPoint(options.nesting)}${booleanCheck(true)}Province controller has a Standing Army`);
+              }
             } else if (local_value == false) {
-              if (hasStandingArmy(province_obj.controller))
+              if (hasStandingArmy(province_obj.controller)) {
                 empty_scope = true;
+                localisation_string.push(`${bulletPoint(options.nesting)}${booleanCheck(false)}Province controller has no Standing Army`);
+              } else {
+                localisation_string.push(`${bulletPoint(options.nesting)}${booleanCheck(true)}Province controller has no Standing Army`);
+              }
             }
           } if (all_keys[i] == "homeless") {
             //Fetch homeless scope
@@ -1646,6 +1940,8 @@ module.exports = {
             pop_scope = (parent.startsWith("any")) ?
               mergeObjects(pop_scope, local_pop_scope) :
               mergePopScopes(pop_scope, local_pop_scope); //and, not, default
+
+            localisation_string.push(`${bulletPoint(options.nesting)}${numberCheck(pop_scope.size, true)}${parseNumber(pop_scope.size)} people are homeless`);
           } if (all_keys[i] == "income") {
             //Fetch income scope
             var local_pop_scope = selectPops({
@@ -1658,6 +1954,8 @@ module.exports = {
             pop_scope = (parent.startsWith("any")) ?
               mergeObjects(pop_scope, local_pop_scope) :
               mergePopScopes(pop_scope, local_pop_scope); //and, not, default
+
+            localisation_string.push(`${bulletPoint(options.nesting)}${numberCheck(pop_scope.size, true)}${parseNumber(pop_scope.size)} people have >=${parseNumber(local_value)} income`);
           } if (all_keys[i] == "income_less_than") {
             //Fetch income less than scope
             var local_pop_scope = selectPops({
@@ -1670,13 +1968,17 @@ module.exports = {
             pop_scope = (parent.startsWith("any")) ?
               mergeObjects(pop_scope, local_pop_scope) :
               mergePopScopes(pop_scope, local_pop_scope); //and, not, default
+
+            localisation_string.push(`${bulletPoint(options.nesting)}${numberCheck(pop_scope.size, true)}${parseNumber(pop_scope.size)} people have <${parseNumber(local_value)} income`);
           } if (all_keys[i] == "is_allied") {
             var has_alliance;
 
             if (scope[0] == "country") {
               has_alliance = hasAlliance(user_id, scope[1]);
+              localisation_string.push(`${bulletPoint(options.nesting)}${booleanCheck(has_alliance)}Is allied with the current scope`);
             } else if (scope[0] == "province") {
               has_alliance = hasAlliance(user_id, main.provinces[scope[1]].controller);
+              localisation_string.push(`${bulletPoint(options.nesting)}${booleanCheck(has_alliance)}Controller of province is allied with the current scope`);
             }
 
             if (!has_alliance) {
@@ -1698,8 +2000,12 @@ module.exports = {
             pop_scope = (parent.startsWith("any")) ?
               mergeObjects(pop_scope, local_pop_scope) :
               mergePopScopes(pop_scope, local_pop_scope); //and, not, default
+
+            localisation_string.push(`${bulletPoint(options.nesting)}${numberCheck(pop_scope.size, true)} people are employed`);
           } if (all_keys[i] == "is_employed_at") {
             //Fetch employment buildings scope
+            var building_ids = getList(local_value);
+            var building_names = [];
             var local_pop_scope = selectPops({
               province_id: ot_province.id,
               pop_types: [options.pop_type],
@@ -1710,6 +2016,15 @@ module.exports = {
             pop_scope = (parent.startsWith("any")) ?
               mergeObjects(pop_scope, local_pop_scope) :
               mergePopScopes(pop_scope, local_pop_scope); //and, not, default
+
+            //Fetch building_names
+            for (var i = 0; i < building_ids.length; i++) {
+              var building_obj = getBuildingByID(building_ids[i]);
+              building_names.push(building_obj.name);
+            }
+
+            if (building_names.length > 0)
+              localisation_string.push(`${bulletPoint(options.nesting)}${numberCheck(pop_scope.size, true)} are employed at ${building_names.join(", ")}`);
           } if (all_keys[i].startsWith("is_")) { //is_<government_type>
             //Check to make sure this is a valid government type
             var government_type = all_keys[i].replace("is_", "");
@@ -1718,22 +2033,38 @@ module.exports = {
               var is_government_type = (usr.government == government_type);
 
               if (local_value == true) {
-                if (!is_government_type)
+                if (!is_government_type) {
                   empty_scope = true;
+                  localisation_string.push(`${bulletPoint(options.nesting)}${booleanCheck(false)}Government type is ${(config.governments.name) ? config.governments.name : government_type}`);
+                } else {
+                  localisation_string.push(`${bulletPoint(options.nesting)}${booleanCheck(true)}Government type is ${(config.governments.name) ? config.governments.name : government_type}`);
+                }
               } else if (local_value == false) {
-                if (is_government_type)
+                if (is_government_type) {
                   empty_scope = true;
+                  localisation_string.push(`${bulletPoint(options.nesting)}${booleanCheck(false)}Government type is not ${(config.governments.name) ? config.governments.name : government_type}`);
+                } else {
+                  localisation_string.push(`${bulletPoint(options.nesting)}${booleanCheck(true)}Government type is not ${(config.governments.name) ? config.governments.name : government_type}`);
+                }
               }
             }
           } if (all_keys[i] == "is_mobilised") {
             var is_mobilised = (usr.mobilisation.is_mobilised);
 
             if (local_value == true) {
-              if (!is_mobilised)
+              if (!is_mobilised) {
                 empty_scope = true;
+                localisation_string.push(`${bulletPoint(options.nesting)}${booleanCheck(false)}Is mobilised`);
+              } else {
+                localisation_string.push(`${bulletPoint(options.nesting)}${booleanCheck(true)}Is mobilised`);
+              }
             } else if (local_value == false) {
-              if (is_mobilised)
+              if (is_mobilised) {
                 empty_scope = true;
+                localisation_string.push(`${bulletPoint(options.nesting)}${booleanCheck(false)}Is not mobilised`);
+              } else {
+                localisation_string.push(`${bulletPoint(options.nesting)}${booleanCheck(true)}Is not mobilised`);
+              }
             }
           } if (all_keys[i] == "is_vassal") {
             var has_overlord;
@@ -1745,11 +2076,19 @@ module.exports = {
             }
 
             if (!has_overlord) {
-              if (local_value == true)
+              if (local_value == true) {
                 empty_scope = true;
+                localisation_string.push(`${bulletPoint(options.nesting)}${booleanCheck(false)}Is vassal`);
+              } else {
+                localisation_string.push(`${bulletPoint(options.nesting)}${booleanCheck(true)}Is vassal`);
+              }
             } else {
-              if (local_value == false)
+              if (local_value == false) {
                 empty_scope = true;
+                localisation_string.push(`${bulletPoint(options.nesting)}${booleanCheck(false)}Is not a vassal`);
+              } else {
+                localisation_string.push(`${bulletPoint(options.nesting)}${booleanCheck(true)}Is not a vassal`);
+              }
             }
           } if (all_keys[i] == "median_wage_percentage") {
             if (ot_province.id != options.province_id) {
@@ -1758,8 +2097,12 @@ module.exports = {
 
               var median_wage_percentage = (ot_median_wage/current_median_wage) - 1;
 
-              if (median_wage_percentage < local_value)
+              if (median_wage_percentage < local_value) {
                 empty_scope = true;
+                localisation_string.push(`${bulletPoint(options.nesting)}${booleanCheck(false)}Other province has a >=${printPercentage(local_value)} higher median wage`);
+              } else {
+                localisation_string.push(`${bulletPoint(options.nesting)}${booleanCheck(true)}Other province has a >=${printPercentage(local_value)} higher median wage`);
+              }
             }
           } if (all_keys[i] == "median_wage_percentage_less_than") {
             if (ot_province.id != options.province_id) {
@@ -1768,8 +2111,12 @@ module.exports = {
 
               var median_wage_percentage = (ot_median_wage/current_median_wage) - 1;
 
-              if (median_wage_percentage >= local_value)
+              if (median_wage_percentage >= local_value) {
                 empty_scope = true;
+                localisation_string.push(`${bulletPoint(options.nesting)}${booleanCheck(false)}Other province has a <${printPercentage(local_value)} higher median wage`);
+              } else {
+                localisation_string.push(`${bulletPoint(options.nesting)}${booleanCheck(true)}Other province has a <${printPercentage(local_value)} higher median wage`);
+              }
             }
           } if (all_keys[i] == "no_jobs") {
             //Fetch no_jobs scope
@@ -1780,81 +2127,136 @@ module.exports = {
                 if (ot_province.buildings[x][`${options.pop_type}_positions`] > 0)
                   has_jobs = true;
 
-            if (has_jobs) {
-              var local_pop_scope = selectPops({
-                province_id: ot_province.id,
-                pop_types: [options.pop_type]
-              });
-
-              pop_scope = (parent.startsWith("any")) ?
-                mergeObjects(pop_scope, local_pop_scope) :
-                mergePopScopes(pop_scope, local_pop_scope); //and, not, default
+            if (local_value == true) {
+              if (has_jobs) {
+                empty_scope = true;
+                localisation_string.push(`${bulletPoint(options.nesting)}${booleanCheck(false)} Province has no jobs`);
+              } else {
+                localisation_string.push(`${bulletPoint(options.nesting)}${booleanCheck(true)} Province has no jobs`);
+              }
+            } else {
+              if (!has_jobs) {
+                empty_scope = true;
+                localisation_string.push(`${bulletPoint(options.nesting)}${booleanCheck(false)} Province has available jobs`);
+              } else {
+                localisation_string.push(`${bulletPoint(options.nesting)}${booleanCheck(true)} Province has available jobs`);
+              }
             }
           } if (all_keys[i] == "occupied") {
             if (local_value == true)
-              if (ot_province.controller != ot_province.owner)
+              if (ot_province.controller != ot_province.owner) {
                 pop_scope = [parent.startsWith("any") ? "mergeObjects" : "mergePopScopes"](pop_scopes, selectPops({
                   province_id: ot_province.id,
                   pop_types: [options.pop_type]
                 }));
+                localisation_string.push(`${bulletPoint(options.nesting)}${booleanCheck(true)} Province is occupied`);
+              } else {
+                localisation_string.push(`${bulletPoint(options.nesting)}${booleanCheck(false)} Province is occupied`);
+              }
             if (local_value == false)
-              if (ot_province.controller == ot_province.owner)
+              if (ot_province.controller == ot_province.owner) {
                 pop_scope = [parent.startsWith("any") ? "mergeObjects" : "mergePopScopes"](pop_scopes, selectPops({
                   province_id: ot_province.id,
                   pop_types: [options.pop_type]
                 }));
+                localisation_string.push(`${bulletPoint(options.nesting)}${booleanCheck(true)} Province is not occupied`);
+              } else {
+                localisation_string.push(`${bulletPoint(options.nesting)}${booleanCheck(false)} Province is not occupied`);
+              }
           } if (all_keys[i].includes("_percentage")) { //<pop>_percentage
             var pop_name = all_keys[i].replace("_percentage", "");
 
-            if (config.pops[pop_name])
-              if (returnSafeNumber(province_obj.pops[pop_name])/province_obj.pops.population < local_value)
+            if (config.pops[pop_name]) {
+              var local_pop = config.pops[pop_name];
+
+              if (returnSafeNumber(province_obj.pops[pop_name])/province_obj.pops.population < local_value) {
                 empty_scope = true;
+                localisation_string.push(`${bulletPoint(options.nesting)}${booleanCheck(false)}>=${printPercentage(local_value)} ${(local_pop.name) ? local_pop.name : pop_name} in province`);
+              } else {
+                localisation_string.push(`${bulletPoint(options.nesting)}${booleanCheck(true)}>=${printPercentage(local_value)} ${(local_pop.name) ? local_pop.name : pop_name} in province`);
+              }
+            }
           } if (all_keys[i].includes("_percentage_less_than")) { //<pop>_percentage_less_than
             var pop_name = all_keys[i].replace("_percentage_less_than", "");
 
-            if (config.pops[pop_name])
-              if (returnSafeNumber(province_obj.pops[pop_name])/province_obj.pops.population >= local_value)
+            if (config.pops[pop_name]) {
+              var local_pop = config.pops[pop_name];
+
+              if (returnSafeNumber(province_obj.pops[pop_name])/province_obj.pops.population >= local_value) {
                 empty_scope = true;
+                localisation_string.push(`${bulletPoint(options.nesting)}${booleanCheck(false)}<${printPercentage(local_value)} ${(local_pop.name) ? local_pop.name : pop_name} in province`);
+              } else {
+                localisation_string.push(`${bulletPoint(options.nesting)}${booleanCheck(true)}<${printPercentage(local_value)} ${(local_pop.name) ? local_pop.name : pop_name} in province`);
+              }
+            }
           } if (all_keys[i] == "population") {
             if (ot_province)
               if (ot_province.pops)
-                if (ot_province.pops.population < local_value)
+                if (ot_province.pops.population < local_value) {
                   empty_scope = true;
+                  localisation_string.push(`${bulletPoint(options.nesting)}${booleanCheck(false)}Province population is >=${parseNumber(local_value)}`);
+                } else {
+                  localisation_string.push(`${bulletPoint(options.nesting)}${booleanCheck(true)}Province population is >=${parseNumber(local_value)}`);
+                }
           } if (all_keys[i] == "population_less_than") {
             if (ot_province)
               if (ot_province.pops)
-                if (ot_province.pops.population >= local_value)
+                if (ot_province.pops.population >= local_value) {
                   empty_scope = true;
+                  localisation_string.push(`${bulletPoint(options.nesting)}${booleanCheck(false)}Province population is <${parseNumber(local_value)}`);
+                } else {
+                  localisation_string.push(`${bulletPoint(options.nesting)}${booleanCheck(true)}Province population is <${parseNumber(local_value)}`);
+                }
           } if (all_keys[i] == "prestige") {
             if (ot_user)
-              if (ot_user.modifiers.prestige < local_value)
+              if (ot_user.modifiers.prestige < local_value) {
                 empty_scope = true;
+                localisation_string.push(`${bulletPoint(options.nesting)}${booleanCheck(false)}Prestige is at least ${parseNumber(local_value)}`);
+              } else {
+                localisation_string.push(`${bulletPoint(options.nesting)}${booleanCheck(true)}Prestige is at least ${parseNumber(local_value)}`);
+              }
           } if (all_keys[i] == "prestige_less_than") {
             if (ot_user)
-              if (ot_user.modifiers.prestige >= local_value)
+              if (ot_user.modifiers.prestige >= local_value) {
                 empty_scope = true;
+                localisation_string.push(`${bulletPoint(options.nesting)}${booleanCheck(false)}Prestige is less than ${parseNumber(local_value)}`);
+              } else {
+                localisation_string.push(`${bulletPoint(options.nesting)}${booleanCheck(true)}Prestige is less than ${parseNumber(local_value)}`);
+              }
           } if (all_keys[i] == "promotion_chance") {
             if (province_obj.trackers) {
               var local_promotion_chance = getPromotionChance(ot_province.id, options.pop_type);
 
-              if (local_promotion_chance < local_value)
+              if (local_promotion_chance < local_value) {
                 empty_scope = true;
+                localisation_string.push(`${bulletPoint(options.nesting)}${booleanCheck(false)}Pop promotion chance is greater than ${printPercentage(local_value)}`);
+              } else {
+                localisation_string.push(`${bulletPoint(options.nesting)}${booleanCheck(true)}Pop promotion chance is greater than ${printPercentage(local_value)}`);
+              }
             } else {
               empty_scope = true;
+              localisation_string.push(`${bulletPoint(options.nesting)}${booleanCheck(false)}Pop promotion chance is greater than ${printPercentage(local_value)}`);
             }
           } if (all_keys[i] == "promotion_chance_less_than") {
             if (province_obj.trackers) {
               var local_promotion_chance = getPromotionChance(ot_province.id, options.pop_type);
 
-              if (local_promotion_chance >= local_value)
+              if (local_promotion_chance >= local_value) {
                 empty_scope = true;
+                localisation_string.push(`${bulletPoint(options.nesting)}${booleanCheck(false)}Pop promotion chance is less than ${printPercentage(local_value)}`);
+              } else {
+                localisation_string.push(`${bulletPoint(options.nesting)}${booleanCheck(true)}Pop promotion chance is less than ${printPercentage(local_value)}`);
+              }
             } else {
               empty_scope = true;
+              localisation_string.push(`${bulletPoint(options.nesting)}${booleanCheck(false)}Pop promotion chance is less than ${printPercentage(local_value)}`);
             }
           } if (all_keys[i].startsWith("province_has_")) { //province_has_<building>
             var local_building_name = all_keys[i].replace("province_has_", "");
             var pop_scope_empty = false;
             var province_has_building = false;
+
+            var local_building_obj = config.buildings[local_building_name];
 
             //Check to make sure this is a valid building type
             if (lookup.all_buildings[local_building_name]) {
@@ -1864,11 +2266,19 @@ module.exports = {
                     province_has_building = true;
 
               if (local_value == true) {
-                if (!province_has_building)
+                if (!province_has_building) {
                   pop_scope_empty = true;
+                  localisation_string.push(`${bulletPoint(options.nesting)}${booleanCheck(false)}Province has ${(local_building_obj.name) ? local_building_obj.name : local_building_name}`);
+                } else {
+                  localisation_string.push(`${bulletPoint(options.nesting)}${booleanCheck(true)}Province has ${(local_building_obj.name) ? local_building_obj.name : local_building_name}`);
+                }
               } else if (local_value == false) {
-                if (province_has_building)
+                if (province_has_building) {
                   pop_scope_empty = true;
+                  localisation_string.push(`${bulletPoint(options.nesting)}${booleanCheck(false)}Province has no ${(local_building_obj.name) ? local_building_obj.name : local_building_name}`);
+                } else {
+                  localisation_string.push(`${bulletPoint(options.nesting)}${booleanCheck(true)}Province has no ${(local_building_obj.name) ? local_building_obj.name : local_building_name}`);
+                }
               }
 
               if (pop_scope_empty)
@@ -1891,11 +2301,19 @@ module.exports = {
                     province_has_building = true;
 
               if (local_value == true) {
-                if (!province_has_building)
+                if (!province_has_building) {
                   pop_scope_empty = true;
+                  localisation_string.push(`${bulletPoint(options.nesting)}${booleanCheck(false)}Province has ${(local_building_category.name) ? local_building_category.name : local_building_category_name} buildings`);
+                } else {
+                  localisation_string.push(`${bulletPoint(options.nesting)}${booleanCheck(true)}Province has ${(local_building_category.name) ? local_building_category.name : local_building_category_name} buildings`);
+                }
               } else if (local_value == false) {
-                if (province_has_building)
+                if (province_has_building) {
                   pop_scope_empty = true;
+                  localisation_string.push(`${bulletPoint(options.nesting)}${booleanCheck(false)}Province has no ${(local_building_category.name) ? local_building_category.name : local_building_category_name} buildings`);
+                } else {
+                  localisation_string.push(`${bulletPoint(options.nesting)}${booleanCheck(true)}Province has no ${(local_building_category.name) ? local_building_category.name : local_building_category_name} buildings`);
+                }
               }
 
               if (pop_scope_empty)
@@ -1906,11 +2324,19 @@ module.exports = {
             var pop_scope_empty = false;
 
             if (local_value == true) {
-              if (!is_capital)
+              if (!is_capital) {
                 pop_scope_empty = true;
+                localisation_string.push(`${bulletPoint(options.nesting)}${booleanCheck(false)}Province is capital`);
+              } else {
+                localisation_string.push(`${bulletPoint(options.nesting)}${booleanCheck(true)}Province is capital`);
+              }
             } else if (local_value == false) {
-              if (is_capital)
+              if (is_capital) {
                 pop_scope_empty = true;
+                localisation_string.push(`${bulletPoint(options.nesting)}${booleanCheck(false)}Province is not a capital`);
+              } else {
+                localisation_string.push(`${bulletPoint(options.nesting)}${booleanCheck(true)}Province is not a capital`);
+              }
             }
 
             if (pop_scope_empty)
@@ -1920,18 +2346,30 @@ module.exports = {
             var pop_scope_empty = true;
 
             if (local_value = true) {
-              if (!is_rural)
+              if (!is_rural) {
                 pop_scope_empty = true;
+                localisation_string.push(`${bulletPoint(options.nesting)}${booleanCheck(false)}Province is rural`);
+              } else {
+                localisation_string.push(`${bulletPoint(options.nesting)}${booleanCheck(true)}Province is rural`);
+              }
             } else if (local_value == false) {
-              if (is_rural)
+              if (is_rural) {
                 pop_scope_empty = true;
+                localisation_string.push(`${bulletPoint(options.nesting)}${booleanCheck(false)}Province is not rural`);
+              } else {
+                localisation_string.push(`${bulletPoint(options.nesting)}${booleanCheck(true)}Province is not rural`);
+              }
             }
 
             if (pop_scope_empty)
               empty_scope = true;
           } if (all_keys[i] == "soldiers_stationed_in_province") {
-            if (lookup.province_troop_strengths[ot_province.id] < local_value)
+            if (lookup.province_troop_strengths[ot_province.id] < local_value) {
               empty_scope = true;
+              localisation_string.push(`${bulletPoint(options.nesting)}${booleanCheck(false)}>=${parseNumber(local_value)} troops stationed in province`);
+            } else {
+              localisation_string.push(`${bulletPoint(options.nesting)}${booleanCheck(true)}>=${parseNumber(local_value)} troops stationed in province`);
+            }
           } if (all_keys[i] == "wealth") {
             //Fetch wealth scope
             var local_pop_scope = selectPops({
@@ -1944,6 +2382,8 @@ module.exports = {
             pop_scope = (parent.startsWith("any")) ?
               mergeObjects(pop_scope, local_pop_scope) :
               mergePopScopes(pop_scope, local_pop_scope); //and, not, default
+
+            localisation_string.push(`${bulletPoint(options.nesting)}${numberCheck(pop_scope.size, true)}people with more than £${local_wealth} in assets`);
           } if (all_keys[i] == "wealth_less_than") {
             //Fetch wealth_less_than scope
             var local_pop_scope = selectPops({
@@ -1956,6 +2396,8 @@ module.exports = {
             pop_scope = (parent.startsWith("any")) ?
               mergeObjects(pop_scope, local_pop_scope) :
               mergePopScopes(pop_scope, local_pop_scope); //and, not, default
+
+            localisation_string.push(`${bulletPoint(options.nesting)}${numberCheck(pop_scope.size, true)}people with less than £${local_wealth} in assets`);
           }
         } else {
           //Individual conditions - iterative scope
@@ -1967,19 +2409,27 @@ module.exports = {
               var local_pop_types = (local_value.pop_type) ? getList(local_value.pop_type) : options.pop_type;
               var total_positions = getTotalPositions(ot_province.id, local_pop_types);
               p1_job_openings_scalar = total_positions/100000;
+
+              localisation_string.push(`${bulletPoint(options.nesting)}${numberCheck(p1_job_openings_scalar)}${parseNumber(p1_job_openings_scalar, { display_float: true, display_prefix: true })} score from ${parseNumber(total_positions)} job openings`);
             } if (all_keys[i] == "pop_class") {
+              var local_class_names = [];
               var local_classes = getList(local_value);
               var total_class_population = 0;
 
               //Iterate over local_classes and get population
-              for (var x = 0; x < local_classes.length; x++)
+              for (var x = 0; x < local_classes.length; x++) {
                 if (lookup.all_pop_classes[local_classes[x]])
                   for (var y = 0; y < lookup.all_pop_classes[local_classes[x]].length; y++) {
                     var local_pop_name = lookup.all_pop_classes[local_classes[x]][y];
 
                     total_class_population += returnSafeNumber(ot_province.pops[local_pop_name]);
                   }
+
+                local_class_names.push((config.localisation[local_classes[x]]) ? config.localisation[local_classes[x]] : local_classes[x]);
+              }
               p1_pop_class_scalar = total_class_population/100000;
+
+              localisation_string.push(`${bulletPoint(options.nesting)}${numberCheck(p1_pop_class_scalar)}${parseNumber(p1_pop_class_scalar, { display_float: true, display_prefix: true })} score from ${parseNumber(total_class_population)} people in the ${local_class_names.join(", ")} Classes`);
             } if (all_keys[i] == "pop_type") {
               var local_pops = getList(local_value);
               var total_local_population = 0;
@@ -1988,6 +2438,8 @@ module.exports = {
               for (var x = 0; x < local_pops.length; x++)
                 total_local_population += returnSafeNumber(ot_province.pops[local_pops[x]]);
               p1_pop_type_scalar = total_local_population/100000;
+
+              localisation_string.push(`${bulletPoint(options.nesting)}${numberCheck(p1_pop_type_scalar)}${parseNumber(p1_pop_type_scalar, { display_float: true, display_prefix: true })} score from ${parseNumber(total_local_population)} inhabitants`);
             }
 
             //Add value once last key in object is processed
@@ -1995,11 +2447,16 @@ module.exports = {
               var per_scalar = p1_job_openings_scalar*p1_pop_class_scalar*p1_pop_type_scalar;
 
               if (scope.base_value) {
-                var base_scalar = Math.min(per_scalar, 1);
-                value += returnSafeNumber(scope.base_value)*base_scalar;
+                value += returnSafeNumber(scope.base_value);
+
+                localisation_string.push(`${bulletPoint(options.nesting)}${numberCheck(scope.base_value, true)}${parseNumber(scope.base_value, { display_float: true, display_prefix: true })} score from base value`);
               }
-              if (scope.value)
-                value += returnSafeNumber(scope.value)*per_scalar;
+              if (scope.value) {
+                var per_value = returnSafeNumber(scope.value)*per_scalar;
+                value += per_value;
+
+                localisation_string.push(`${bulletPoint(options.nesting)}${numberCheck(per_value, true)}Total score: ${parseNumber(per_value, { display_float: true, display_prefix: true })}`);
+              }
             }
           } if (parent == "per_building" || parent.startsWith("per_building_")) {
             if (all_keys[i] == "has_building") {
@@ -2010,6 +2467,8 @@ module.exports = {
                   if (ot_province.buildings[x].building_type == local_value)
                     building_count++;
               pb_buildings_scalar = building_count;
+
+              localisation_string.push(`${bulletPoint(options.nesting)}${numberCheck(pb_buildings_scalar, true)}${parseNumber(pb_buildings_scalar, { display_float: true, display_prefix: true })} score from ${parseNumber(building_cost)} local buildings`);
             } if (all_keys[i] == "has_building_category") {
               var local_building_category = config.buildings[local_value];
               var local_category_count = 0;
@@ -2020,6 +2479,8 @@ module.exports = {
                     if (local_building_category[ot_province.buildings[x].building_type])
                       local_category_count++;
               pb_building_category_scalar = local_category_count;
+
+              localisation_string.push(`${bulletPoint(options.nesting)}${numberCheck(pb_building_category_scalar, true)}${parseNumber(pb_building_category_scalar, { display_float: true, display_prefix: true })} score from ${parseNumber(local_category_count)} from building category`);
             }
 
             //Add value once last key in object is processed
@@ -2027,11 +2488,16 @@ module.exports = {
               var per_scalar = pb_buildings_scalar*pb_building_category_scalar;
 
               if (scope.base) {
-                var base_scalar = Math.min(per_scalar, 1);
-                value += returnSafeNumber(scope.base)*base_scalar;
+                value += returnSafeNumber(scope.base);
+
+                localisation_string.push(`${bulletPoint(options.nesting)}${numberCheck(scope.base_value, true)}${parseNumber(scope.base_value, { display_float: true, display_prefix: true })} score from base value`);
               }
-              if (scope.value)
-                value += returnSafeNumber(scope.value)*per_scalar;
+              if (scope.value) {
+                var per_value = returnSafeNumber(scope.value)*per_scalar;
+                value += per_value;
+
+                localisation_string.push(`${bulletPoint(options.nesting)}${numberCheck(per_value, true)}Total score: ${parseNumber(per_value, { display_float: true, display_prefix: true })}`);
+              }
             }
           } else if (parent == "per_education_level" || parent.startsWith("per_education_level_")) {
             //Only process scope once
@@ -2039,6 +2505,7 @@ module.exports = {
               var local_min = Math.max(scope.min, 0);
               var local_max = Math.min(scope.max, 1);
               var local_step = (scope.step) ? scope.step : 0.01;
+              var total_applicable_pops = 0;
 
               for (var x = 0; x < 100; x++) { //Break iteration after 100 times (max step)
                 var current_level = local_min + (local_step*x)/100;
@@ -2055,7 +2522,8 @@ module.exports = {
                   });
 
                   //Add to selectors
-                  modifyValue(selectors, JSON.stringify(local_pop_scope), options.value);
+                  modifyValue(selectors, JSON.stringify(local_pop_scope), scope.value);
+                  total_applicable_pops += local_pop_scope.size;
 
                   //Break if no longer applicable
                   if (local_pop_scope.size == 0)
@@ -2067,13 +2535,19 @@ module.exports = {
               }
 
               //Add value since this is the last key
-              if (scope.base)
+              localisation_string.push(`${bulletPoint(options.nesting)}${numberCheck(total_applicable_pops, true)}Total educated pops applied to scope: ${parseNumber(total_applicable_pops)}, with ${parseNumber(scope.value, { display_float: true, display_prefix: true })} score per ${printPercentage(local_step)} Education Level`);
+
+              if (scope.base) {
                 value += returnSafeNumber(scope.base);
+
+                localisation_string.push(`${bulletPoint(options.nesting)}${numberCheck(scope.base, true)}${parseNumber(scope.base, { display_float: true, display_prefix: true })} score from base value`);
+              }
             }
           } else if (parent == "per_percent" || parent.startsWith("per_percent_")) { //[WIP] - Finish iterative scope
             //Declare local scalars and trackers
             var local_max = Math.min(returnSafeNumber(scope.max), 1);
             var local_min = Math.max(returnSafeNumber(scope.min), 0);
+            var pop_names = [];
 
             //Initial scope processing - KEEP AT TOP!
             if (i == 0) {
@@ -2087,6 +2561,13 @@ module.exports = {
               } else {
                 target_pop_scope = [options.pop_type];
               }
+
+              for (var x = 0; x < target_pop_scope.length; x++) {
+                var local_pop = config.pops[target_pop_scope[x]];
+
+                if (local_pop)
+                  pop_names.push((local_pop.name) ? local_pop.name : target_pop_scope[x]);
+              }
             }
 
             //pp_pop_percent_scalar processing
@@ -2096,6 +2577,9 @@ module.exports = {
 
                 pp_pop_percent_scalar += local_percentage;
               }
+
+              if (pop_names.length > 0)
+                localisation_string.push(`${bulletPoint(options.nesting)}${numberCheck(pp_pop_percent_scalar, true)}${parseNumber(pp_pop_percent_scalar, { display_float: true, display_prefix: true })} score from ${printPercentage(pp_pop_percent_scalar)} ${pop_names.join(", ")} pops in province`);
             }
 
             //General set boolean processing
@@ -2108,7 +2592,11 @@ module.exports = {
 
               pp_demotion_scalar = returnSafeNumber(total_demotion_chance/target_pop_scope.length, 1); //Average it out
               pp_demotion_scalar = pp_demotion_scalar/local_value; //Local value amplification
+
+              localisation_string.push(`${bulletPoint(options.nesting)}${numberCheck(pp_demotion_scalar, true)}${parseNumber(pp_demotion_scalar, { display_float: true, display_prefix: true })} score from ${printPercentage(pp_demotion_scalar)} demotion chance`);
             } if (all_keys[i] == "education_level") {
+              var total_applicable_pops = 0;
+
               for (var x = 0; x < 100; x++) { //Break iteration after 100 times (max step)
                 var current_level = local_min + x/100;
 
@@ -2124,7 +2612,8 @@ module.exports = {
                   });
 
                   //Add to selectors
-                  modifyValue(selectors, JSON.stringify(local_pop_scope), options.value);
+                  modifyValue(selectors, JSON.stringify(local_pop_scope), scope.value);
+                  total_applicable_pops += local_pop_scope.size;
 
                   //Break if no longer applicable
                   if (local_pop_scope.size == 0)
@@ -2134,18 +2623,25 @@ module.exports = {
                     log.debug(`[ERROR] Handler within per_percent.education_level scope - iterative broke.`);
                 }
               }
+
+              localisation_string.push(`${bulletPoint(options.nesting)}${numberCheck(total_applicable_pops, true)}Total educated pops applied to scope: ${parseNumber(total_applicable_pops, true)}Total educated pops applied to scope: ${parseNumber(total_applicable_pops)}, with ${parseNumber(scope.value, { display_float: true, display_prefix: true })} score`);
             } if (all_keys[i] == "employment") {
               var employment_percentage = getProvinceEmployment(ot_province.id, options.pop_type);
               pp_employment_scalar = employment_percentage/local_value;
+
+              localisation_string.push(`${bulletPoint(options.nesting)}${printNumber(pp_employment_scalar, { display_float: true, display_prefix: true })} score from ${printPercentage(employment_percentage)} employment`);
             } if (all_keys[i] == "enslaved") {
               var enslaved_percentage = getProvinceEnslavedPercentage(ot_province.id);
               pp_enslaved_scalar = enslaved_percentage/local_value;
+
+              localisation_string.push(`${bulletPoint(options.nesting)}${printNumber(pp_enslaved_scalar, { display_float: true, display_prefix: true })} score from ${printPercentage(enslaved_percentage)} enslaved population`);
             } if (all_keys[i].startsWith("has_")) { //has_<needs_category>
               var target_category_name = all_keys[i].replace("has_", "");
+              var total_applicable_pops = 0;
 
               var is_needs_category = (lookup.all_pop_needs_categories[target_category_name]);
 
-              if (is_needs_category)
+              if (is_needs_category) {
                 for (var x = 0; x < target_pop_scope.length; x++) {
                   for (var y = 0; y < 100; y++) { //Break iteration after 100 times (max step)
                     var current_level = local_min + (local_value*y);
@@ -2161,6 +2657,7 @@ module.exports = {
 
                       //Add to selectors
                       modifyValue(selectors, JSON.stringify(local_pop_scope), scope.value);
+                      total_applicable_pops += local_pop_scope.size;
 
                       //Break if no longer applicable
                       if (local_pop_scope.size == 0)
@@ -2171,12 +2668,15 @@ module.exports = {
                     }
                   }
                 }
+
+                localisation_string.push(`${bulletPoint(options.nesting)}${numberCheck(total_applicable_pops, true)}${printNumber(scope.value, { display_float: true, display_prefix: true })} score per ${printPercentage(0.01)} ${config.localisation[target_category_name]} fulfilment`);
+              }
             } if (all_keys[i].startsWith("has_")) { //has_<needs_category>_variety
               var target_category_name = all_keys[i].replace("has_", "").replace("_variety", "");
 
               var is_needs_category = (lookup.all_pop_needs_categories[target_category_name]);
 
-              if (is_needs_category)
+              if (is_needs_category) {
                 for (var x = 0; x < target_pop_scope.length; x++) {
                   for (var y = 0; y < 100; y++) { //Break iteration after 100 times (max step)
                     var current_level = local_min + (local_value*y);
@@ -2202,7 +2702,12 @@ module.exports = {
                     }
                   }
                 }
+
+                localisation_string.push(`${bulletPoint(options.nesting)}${numberCheck(total_applicable_pops, true)}${printNumber(scope.value, { display_float: true, display_prefix: true })} score per ${printPercentage(0.01)} ${config.localisation[target_category]} variety`);
+              }
             } if (all_keys[i] == "has_pop_plurality_culture") {
+              var total_applicable_pops = 0;
+
               for (var x = 0; x < target_pop_scope.length; x++) {
                 var local_pop_scope = selectPops({
                   province_id: ot_province.id,
@@ -2214,9 +2719,13 @@ module.exports = {
 
                 if (local_pop_scope.size > 0)
                   modifyValue(selectors, JSON.stringify(local_pop_scope), scope.value);
+                total_applicable_pops += local_pop_scope.size;
               }
+
+              localisation_string.push(`${bulletPoint(options.nesting)}${numberCheck(total_applicable_pops, true)}${printNumber(scope.value, { display_float: true, display_prefix: true })} score from ${printPercentage(total_applicable_pops/province_obj.pops.population)} plurality culture`);
             } if (all_keys[i] == "has_primary_culture") {
-              var local_majority_culture = getMajorityCulture(ot_province.id, { return_key: true });
+              var primary_cultures = getPrimaryCultures(ot_province.controller);
+              var total_applicable_pops = 0;
 
               for (var x = 0; x < target_pop_scope.length; x++) {
                 var local_pop_scope = selectPops({
@@ -2224,12 +2733,15 @@ module.exports = {
                   pop_scope: pop_scope,
                   pop_types: [target_pop_scope[x]],
 
-                  culture: [local_majority_culture]
+                  culture: primary_cultures
                 });
 
                 if (local_pop_scope.size > 0)
                   modifyValue(selectors, JSON.stringify(local_pop_scope), scope.value);
+                total_applicable_pops += local_pop_scope.size;
               }
+
+              localisation_string.push(`${bulletPoint(options.nesting)}${numberCheck(scope.value, true)}${printNumber(scope.value, { display_float: true, display_prefix: true })} score for ${printPercentage(total_applicable_pops/province_obj.pops.population)} of controller primary culture`);
             } if (all_keys[i] == "living_wage_job_openings") {
               var total_living_wage_openings = 0;
 
@@ -2240,12 +2752,17 @@ module.exports = {
               }
 
               pp_living_wage_job_openings_scalar = returnSafeNumber(total_living_wage_openings/local_value);
+
+              localisation_string.push(`${bulletPoint(options.nesting)}${numberCheck(pp_living_wage_job_openings_scalar, true)}${printNumber(pp_living_wage_job_openings_scalar, { display_float: true, display_prefix: true })} score for ${printNumber(total_living_wage_openings)} living wage job openings`);
             } if (all_keys[i] == "median_wage_percentage") {
               if (options.province_id != ot_province.id) {
                 var current_median_wage = getTotalMedianWage(options.province_id, target_pop_scope);
                 var ot_median_wage = getTotalMedianWage(ot_province.id, target_pop_scope);
 
-                pp_median_wage_percentage_scalar = ((returnSafeNumber(current_median_wage)/returnSafeNumber(ot_median_wage)) - 1)/local_value;
+                var median_wage_difference = ((returnSafeNumber(current_median_wage)/returnSafeNumber(ot_median_wage)) - 1);
+                pp_median_wage_percentage_scalar = median_wage_difference/local_value;
+
+                localisation_string.push(`${bulletPoint(options.nesting)}${numberCheck(pp_median_wage_percentage_scalar, true)}${printNumber(pp_median_wage_percentage_scalar, { display_float: true, display_prefix: true })} score for ${printPercentage(median_wage_difference)} median wage difference`);
               }
             } if (all_keys[i] == "promotion_chance") {
               var total_promotion_chance = 0;
@@ -2256,6 +2773,8 @@ module.exports = {
 
               pp_promotion_scalar = returnSafeNumber(total_promotion_chance/target_pop_scope.length, 1); //Average it out
               pp_promotion_scalar = pp_promotion_scalar/local_value; //Local value amplification
+
+              localisation_string.push(`${bulletPoint(options.nesting)}${numberCheck(pp_promotion_scalar, true)}${printNumber(pp_promotion_scalar, { display_float: true, display_prefix: true })} score for ${printPercentage(total_promotion_chance)} total promotion chance over all pops, non-weighted`);
             }
 
             //Add value once last key in object is processed
@@ -2269,15 +2788,22 @@ module.exports = {
               if (scope.base) {
                 var base_scalar = Math.min(per_scalar, 1);
                 value += returnSafeNumber(scope.base)*base_scalar;
+
+                localisation_string.push(`${bulletPoint(options.nesting)}${numberCheck(scope.base, true)}${parseNumber(scope.base, { display_float: true, display_prefix: true })} score from base value`);
               }
-              if (scope.value)
-                value += returnSafeNumber(scope.value)*percentage_scalar;
+              if (scope.value) {
+                var per_value = returnSafeNumber(scope.value)*percentage_scalar;
+                value += per_value;
+
+                localisation_string.push(`${bulletPoint(options.nesting)}${numberCheck(per_value, true)}Total score: ${parseNumber(per_value, { display_float: true, display_prefix: true })}`);
+              }
             }
           } else {
             if (all_keys[i] == "available_housing") {
               var province_housing = returnSafeNumber(ot_province.housing) - ot_province.pops.population;
 
               p_available_housing_scalar = province_housing/local_value;
+              localisation_string.push(`${bulletPoint(options.nesting)}${numberCheck(p_available_housing_scalar, true)}${parseNumber(p_available_housing_scalar, { display_float: true, display_prefix: true })} score from ${parseNumber(province_housing)} available housing`);
             } if (config.buildings[all_keys[i]]) { //<building_category>
               //Iterate over ot_province.buildings and check
               var local_building_category = config.buildings[all_keys[i]];
@@ -2289,20 +2815,34 @@ module.exports = {
                     total_category_buildings++;
 
               p_building_categories_scalar += total_category_buildings/local_value;
+
+              localisation_string.push(`${bulletPoint(options.nesting)}${numberCheck(p_building_categories_scalar, true)}${parseNumber(p_building_categories_scalar, { display_float: true, display_prefix: true })} score from ${parseNumber(total_category_buildings)} ${(local_building_category.name) ? local_building_category.name : all_keys[i]} buildings in scope`);
             } if (all_keys[i] == "living_wage_job_openings") {
               var living_wage_job_openings = getJobOpenings(ot_province.id, options.pop_type, { living_wage: true });
               p_living_wage_job_openings_scalar = (living_wage_job_openings/local_value);
+
+              localisation_string.push(`${bulletPoint(options.nesting)}${numberCheck(p_living_wage_job_openings_scalar, true)}${parseNumber(p_living_wage_job_openings_scalar, { display_float: true, display_prefix: true })} score from ${parseNumber(living_wage_job_openings)} living wage job openings`);
             } if (all_keys[i] == "population") {
               p_population_scalar = ot_province.pops.population/local_value;
+
+              localisation_string.push(`${bulletPoint(options.nesting)}${numberCheck(p_population_scalar, true)}${parseNumber(p_population_scalar, { display_float: true, display_prefix: true })} score from ${parseNumber(ot_province.pops.population)} inhabitants`);
             } if (all_keys[i] == "prestige") {
               p_prestige_scalar = ot_user.modifiers.prestige/local_value;
+
+              localisation_string.push(`${bulletPoint(options.nesting)}${numberCheck(p_prestige_scalar, true)}${parseNumber(p_prestige_scalar, { display_float: true, display_prefix: true })} score from ${parseNumber(ot_user.modifiers.prestige)} prestige`);
             } if (all_keys[i] == "soldiers_stationed_in_province") {
               var soldiers_in_province = lookup.province_troop_strengths[ot_province.id];
               p_soldiers_in_province_scalar = soldiers_in_province/local_value;
+
+              localisation_string.push(`${bulletPoint(options.nesting)}${numberCheck(p_soldiers_in_province_scalar, true)}${parseNumber(p_soldiers_in_province_scalar, { display_float: true, display_prefix: true })} score from ${parseNumber(soldiers_in_province)} soldiers stationed in province`);
             } if (all_keys[i] == "supply_limit") {
               p_supply_limit_scalar = returnSafeNumber(ot_province.supply_limit, config.defines.combat.base_supply_limit)/local_value;
+
+              localisation_string.push(`${bulletPoint(options.nesting)}${numberCheck(p_supply_limit_scalar, true)}${parseNumber(p_supply_limit_scalar, { display_float: true, display_prefix: true })} score from ${parseNumber(ot_province.supply_limit)} supply limit`);
             } if (all_keys[i] == "wealth") {
-              if (options.value)
+              if (scope.value) {
+                var total_applicable_pops = 0;
+
                 for (var x = 0; x < 1000; x++) { //Break iteration after 1000 times
                   var local_pop_scope = selectPops({
                     province_id: ot_province.id,
@@ -2313,7 +2853,8 @@ module.exports = {
                   });
 
                   //Add to selectors
-                  modifyValue(selectors, JSON.stringify(local_pop_scope), options.value);
+                  modifyValue(selectors, JSON.stringify(local_pop_scope), scope.value);
+                  total_applicable_pops += local_pop_scope.size;
 
                   //Break if no longer applicable
                   if (local_pop_scope.size == 0)
@@ -2322,6 +2863,9 @@ module.exports = {
                   if (x == 1000)
                     log.debug(`[ERROR] wealth selector within general per scope - iterative broke.`);
                 }
+
+                localisation_string.push(`${bulletPoint(options.nesting)}${numberCheck(total_applicable_pops, true)}Applied to ${parseNumber(total_applicable_pops)} pops. ${parseNumber(options.value, { display_float: true, display_prefix: true })} score per £${parseNumber(local_value)} wealth`);
+              }
             }
 
             //Add value once last key in object is processed
@@ -2373,8 +2917,12 @@ module.exports = {
       if (selectors[i][0].size <= 0 || selectors[i][1] == 0 || isNaN(selectors[i][1]))
         selectors.splice(i, 1);
 
+    var empty_scope = (selectors.length == 0);
+
     //Return statement
     return {
+      localisation_string: localisation_string,
+
       boolean: empty_scope,
       selectors: selectors,
       value: value,

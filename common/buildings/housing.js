@@ -1,4 +1,6 @@
 config.buildings.housing = {
+  name: "Housing",
+  
   always_display: true,
   disable_slots: true,
   is_housing: true,

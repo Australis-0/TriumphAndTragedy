@@ -1,4 +1,5 @@
 config.buildings.military_buildings = { //[WIP] - Add £ maintenance
+  name: "Military Buildings",
   order: 11,
 
   ack_ack_guns: {

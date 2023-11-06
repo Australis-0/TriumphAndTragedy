@@ -1,4 +1,5 @@
 config.buildings.research_buildings = {
+  name: "Research Buildings",
   order: 16,
 
   archivists: {

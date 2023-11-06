@@ -1,4 +1,12 @@
 module.exports = {
+  booleanCheck: function (arg0_boolean) {
+    //Convert from parameters
+    var boolean = arg0_boolean;
+
+    //Return statement
+    return (boolean) ? `${config.icons.checkmark} ` : `${config.icons.cancel} `;
+  },
+
   getBuildingLocalisation: function (arg0_building_id, arg1_nesting) {
     //Convert from parameters
     var building_id = arg0_building_id;
@@ -550,6 +558,22 @@ module.exports = {
 
     //Return statement
     return local_obj;
+  },
+
+  numberCheck: function (arg0_number, arg1_negative_positive) {
+    //Convert from parameters
+    var number = arg0_number;
+    var negative_positive = arg1_negative_positive; //Whether this is a negative/positive scheme
+
+    //Return statements
+    if (!negative_positive) {
+      if (number != 0)
+        return `${config.icons.checkmark} `;
+      if (number == 0)
+        return `${config.icons.cancel} `;
+    } else {
+      return (number > 0) ? `${config.icons.checkmark} ` : `${config.icons.cancel} `;
+    }
   },
 
   parseGood: function (arg0_good_name, arg1_formatting, arg2_exclude_icon, arg3_string) {
@@ -1153,15 +1177,18 @@ module.exports = {
     return (wargoal_localisation) ? wargoal_localisation : [];
   },
 
-  parsePop: function (arg0_pop_name) {
+  parsePop: function (arg0_pop_name, arg1_exclude_icons) {
     //Convert from parameters
     var pop_type = arg0_pop_name;
+    var exclude_icons = arg1_exclude_icons;
 
     //Declare local instance variables
     var pop_obj = (typeof pop_type == "object") ? pop_type : config.pops[pop_type];
 
+    var pop_icon_string = `${(pop_obj.icon) ? pop_obj.icon + " " : ""}`;
+
     //Return statement
-    return `${(pop_obj.icon) ? pop_obj.icon + " " : ""}${(pop_obj.name) ? pop_obj.name : pop_type}`;
+    return `${(!exclude_icons) ? pop_icon_string : ""}${(pop_obj.name) ? pop_obj.name : pop_type}`;
   },
 
   parseProductionChoice: function (arg0_building_type, arg1_production_choice) {

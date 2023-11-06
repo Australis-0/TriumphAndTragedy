@@ -1,4 +1,5 @@
 config.buildings.hunting = {
+  name: "Hunting",
   order: 8,
 
   elephant_hunting_grounds: {

@@ -1,4 +1,5 @@
 config.buildings.telecommunications = {
+  name: "Telecommunication",
   order: 18,
 
   broadcast_stations: {

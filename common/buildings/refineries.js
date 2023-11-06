@@ -1,4 +1,5 @@
 config.buildings.refineries = {
+  name: "Refineries",
   order: 15,
 
   aluminium_factories: {

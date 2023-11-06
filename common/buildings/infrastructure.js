@@ -1,4 +1,6 @@
 config.buildings.infrastructure = {
+  name: "Infrastructure",
+
   disable_slots: true,
   order: 10,
 

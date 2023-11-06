@@ -1,4 +1,5 @@
 config.buildings.mines = {
+  name: "Mines",
   order: 12,
 
   anthracite_coal_mines: {

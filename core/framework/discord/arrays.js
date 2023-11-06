@@ -1,5 +1,20 @@
 //Arrays framework
 module.exports = {
+  appendArrays: function (arg0_array, arg1_array) {
+    //Convert from parameters
+    var array = getList(arg0_array);
+    var ot_array = getList(arg1_array);
+
+    //Iterate over ot_array, add to array
+    if (ot_array)
+      if (ot_array.length > 0)
+        for (var i = 0; i < ot_array.length; i++)
+          array.push(ot_array[i]);
+
+    //Return statement
+    return array;
+  },
+
   findDuplicates: function (arg0_array) {
     //Convert from parameters
     var array = arg0_array;

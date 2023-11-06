@@ -213,7 +213,7 @@ module.exports = {
     ) + Intl.NumberFormat('de').format(
       (typeof number == "number") ?
           (options.display_float) ?
-            parseInt(number*100)/100 :
+            parseInt(number*100*100)/100/100 :
             parseInt(number) :
         parseInt(number)
     );
