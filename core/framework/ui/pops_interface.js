@@ -41,6 +41,20 @@ module.exports = {
       if (province_obj.pops) {
         var all_pop_keys = Object.keys(province_obj.pops);
         var birth_obj = getProvinceBirths(province_id);
+        var death_obj = getProvinceDeaths(province_id);
+        var demotion_obj = getProvinceDemotion(province_id);
+        var emigration_obj = getProvinceEmigration(province_id);
+        var immigration_obj = getProvinceImmigration(province_id);
+        var promotion_obj = getProvincePromotion(province_id);
+
+        var pop_change_options = {
+          birth_obj: birth_obj,
+          death_obj: death_obj,
+          demotion_obj: demotion_obj,
+          emigration_obj: emigration_obj,
+          immigration_obj: immigration_obj,
+          promotion_obj: promotion_obj
+        };
 
         //[WIP] - Push view and sort buttons to pops_string
 
@@ -60,12 +74,13 @@ module.exports = {
               for (var i = 0; i < pops_to_display.length; i++) {
                 var local_mobility = getPopMobility(province_id, pops_to_display[i]);
                 var local_value = returnSafeNumber(province_obj.pops[pops_to_display[i]]);
+                var pop_change = getPopChange(province_id, pops_to_display[i], pop_change_options);
                 var pop_obj = config.pops[pops_to_display[i]];
 
                 var local_percentage = local_value/returnSafeNumber(province_obj.pops.population);
 
                 //Print to pops_string
-                pops_string.push(`- ${(pop_obj.icon) ? pop_obj.icon + " " : ""}${(pop_obj.name) ? pop_obj.name : pops_to_display[i]}: ${parseNumber(local_value)} (**${printPercentage(local_percentage, { display_float: true })}**)`);
+                pops_string.push(`- ${(pop_obj.icon) ? pop_obj.icon + " " : ""}${(pop_obj.name) ? pop_obj.name : pops_to_display[i]}: ${parseNumber(local_value)} (**${printPercentage(local_percentage, { display_float: true })}**)${(pop_change != 0) ? ` | ${parseNumber(pop_change, { display_prefix: true })}` : ""}`);
 
                 //Print local_mobility change
                 if (local_mobility.change > 0) {
@@ -103,7 +118,10 @@ module.exports = {
               pops_string.push(`> This province is currently occupied! Population growth is paused until it is liberated or transferred.`);
               pops_string.push("");
             }
-            pops_string.push(`- Births: ${parseNumber(birth_obj.total, { display_prefix: true })} (**${printPercentage(birth_obj.total/province_obj.pops.population)}**)`);
+
+            pops_string.push(`- Births: ${parseNumber(birth_obj.total, { display_prefix: true })} (**${printPercentage(birth_obj.total/province_obj.pops.population)}**) | Deaths: ${parseNumber(death_obj.total, { display_pop: true })} (**${printPercentage(death_obj.total/province_obj.pops.population)}**)`);
+            pops_string.push(`- Immigration: ${parseNumber(immigration_obj.total, { display_pop: true })} (**${printPercentage(immigration_obj.total/province_obj.pops.population)}**) | Emigration: ${parseNumber(emigration_obj.total, { display_pop: true })} (**${printPercentage(emigration_obj.total/province_obj.pops.population)}**)`);
+            pops_string.push(`- Promotion: ${parseNumber(promotion_obj.total, { display_pop: true })} (**${printPercentage(promotion_obj.total/province_obj.pops.population)}**) | Demotion: ${parseNumber(demotion_obj.total, { display_pop: true })} (**${printPercentage(demotion_obj.total/province_obj.pops.population)}**)`);
           }
         }
 
@@ -111,7 +129,7 @@ module.exports = {
         {
           var province_gdp = getProvinceGDP(province_id);
           var province_gdp_per_capita = province_gdp/returnSafeNumber(province_obj.pops.population);
-          var province_homeless = returnSafeNumber(province_obj.pops.population) - province_obj.housing;
+          var province_homeless = returnSafeNumber(province_obj.pops.population) - returnSafeNumber(province_obj.housing);
 
           pops_string.push("");
           pops_string.push(`**Economic Statistics:** - ${(game_obj.minimise_economic_statistics) ? `**[Expand Economic Statistics]**` : `**[Minimise Economic Statistics]**`}`);
@@ -172,7 +190,6 @@ module.exports = {
             pops_string.push("");
 
             //Unemployment Rates per pop type
-            pops_string.push("");
             pops_string.push(`**Unemployment Rates by Profession:**`);
             pops_string.push("");
 

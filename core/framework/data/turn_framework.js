@@ -1415,7 +1415,12 @@ module.exports = {
             for (var x = 0; x < all_province_trackers.length; x++)
               if (
                 all_province_trackers[x].startsWith("birth-") ||
-                all_province_trackers[x].startsWith("death-"))
+                all_province_trackers[x].startsWith("death-") ||
+                all_province_trackers[x].startsWith("demote-") ||
+                all_province_trackers[x].startsWith("emigration-") ||
+                all_province_trackers[x].startsWith("immigration-") ||
+                all_province_trackers[x].startsWith("promote-")
+              )
                   delete controlled_provinces[i].trackers[all_province_trackers[x]];
           }
 

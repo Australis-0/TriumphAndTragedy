@@ -913,6 +913,42 @@ module.exports = {
     return utility_obj;
   },
 
+  /*
+    getPopChange() - Fetches the total last turn change in pop type size.
+    options: {
+      birth_obj: (Object), - Optional. Optimisation parameter
+      death_obj: (Object), - Optional. Optimisation parameter
+      demotion_obj: (Object), - Optional. Optimisation parameter
+      emigration_obj: (Object), - Optional. Optimisation parameter
+      immigration_obj: (Object), - Optional. Optimisation parameter
+      promotion_obj: (Object) - Optional. Optimisation parameter
+    }
+  */
+  getPopChange: function (arg0_province_id, arg1_pop_type, arg2_options) {
+    //Convert from parameters
+    var province_id = arg0_province_id;
+    var pop_type = arg1_pop_type;
+    var options = (arg2_options) ? arg2_options : {};
+
+    //Initialise options
+    if (!options.birth_obj) options.birth_obj = getProvinceBirths(province_id);
+    if (!options.death_obj) options.death_obj = getProvinceDeaths(province_id);
+    if (!options.demotion_obj) options.demotion_obj = getProvinceDemotion(province_id);
+    if (!options.emigration_obj) options.emigration_obj = getProvinceEmigration(province_id);
+    if (!options.immigration_obj) options.immigration_obj = getProvinceImmigration(province_id);
+    if (!options.promotion_obj) options.promotion_obj = getProvincePromotion(province_id);
+
+    //Declare local instance variables
+    var pop_change = 0;
+    var province_obj = (typeof province_id != "object") ? main.provinces[province_id] : province_id;
+
+    //Modify pop_change
+    pop_change = returnSafeNumber(options.birth_obj[pop_type]) + returnSafeNumber(options.immigration_obj[pop_type]) + returnSafeNumber(options.promotion_obj[pop_type]) - returnSafeNumber(options.death_obj[pop_type]) - returnSafeNumber(options.demotion_obj[pop_type]) - returnSafeNumber(options.emigration_obj[pop_type]);
+
+    //Return statement
+    return pop_change;
+  },
+
   getPopClasses: function () {
     //Declare local instance variables
     var all_pops = Object.keys(config.pops);
@@ -1402,6 +1438,36 @@ module.exports = {
     return death_obj;
   },
 
+  getProvinceDemotion: function (arg0_province_id) {
+    //Convert from parameters
+    var province_id = arg0_province_id;
+
+    //Declare local instance variables
+    var demotion_obj = {};
+    var demotion_total = 0;
+    var province_obj = (typeof province_id != "object") ? main.provinces[province_id] : province_id;
+
+    //Iterate over trackers
+    if (province_obj.trackers) {
+      var all_province_trackers = Object.keys(province_obj.trackers);
+
+      for (var i = 0; i < all_province_trackers.length; i++)
+        if (all_province_trackers[i].startsWith("demote-")) {
+          var local_value = province_obj.trackers[all_province_trackers[i]];
+          var split_key = all_province_trackers[i].split("-");
+
+          modifyValue(demotion_obj, `${split_key[1]}-${split_key[2]}`, local_value);
+          demotion_total += local_value;
+        }
+    }
+
+    //Format demotion_obj
+    demotion_obj.total = demotion_total;
+
+    //Return statement
+    return demotion_obj;
+  },
+
   /*
     getProvinceEducation() - Returns province education level object by percentage.
     options: {
@@ -1470,6 +1536,36 @@ module.exports = {
     return weighted_total/province_obj.pops.population;
   },
 
+  getProvinceEmigration: function (arg0_province_id) {
+    //Convert from parameters
+    var province_id = arg0_province_id;
+
+    //Declare local instance variables
+    var emigration_obj = {};
+    var emigration_total = 0;
+    var province_obj = (typeof province_id != "object") ? main.provinces[province_id] : province_id;
+
+    //Iterate over trackers
+    if (province_obj.trackers) {
+      var all_province_trackers = Object.keys(province_obj.trackers);
+
+      for (var i = 0; i < all_province_trackers.length; i++)
+        if (all_province_trackers[i].startsWith("emigration-")) {
+          var local_value = province_obj.trackers[all_province_trackers[i]];
+          var split_key = all_province_trackers[i].split("-");
+
+          modifyValue(emigration_obj, split_key[1], local_value);
+          emigration_total += local_value;
+        }
+    }
+
+    //Format emigration_obj
+    emigration_obj.total = emigration_total;
+
+    //Return statement
+    return emigration_obj;
+  },
+
   //getProvinceEmployees() - Returns the total number of employed pops in a province
   getProvinceEmployees: function (arg0_province_id, arg1_pop_types) { //[WIP] - Finish province employment
     //Convert from parameters
@@ -1524,6 +1620,36 @@ module.exports = {
     return (province_obj.pops) ? total_employed/province_obj.pops.population : 0;
   },
 
+  getProvinceImmigration: function (arg0_province_id) {
+    //Convert from parameters
+    var province_id = arg0_province_id;
+
+    //Declare local instance variables
+    var immigration_obj = {};
+    var immigration_total = 0;
+    var province_obj = (typeof province_id != "object") ? main.provinces[province_id] : province_id;
+
+    //Iterate over trackers
+    if (province_obj.trackers) {
+      var all_province_trackers = Object.keys(province_obj.trackers);
+
+      for (var i = 0; i < all_province_trackers.length; i++)
+        if (all_province_trackers[i].startsWith("immigration-")) {
+          var local_value = province_obj.trackers[all_province_trackers[i]];
+          var split_key = all_province_trackers[i].split("-");
+
+          modifyValue(immigration_obj, split_key[1], local_value);
+          immigration_total += local_value;
+        }
+    }
+
+    //Format immigration_obj
+    immigration_obj.total = immigration_total;
+
+    //Return statement
+    return immigration_obj;
+  },
+
   getProvinceSOL: function (arg0_province_id, arg1_pop_types) {
     //Convert from parameters
     var province_id = arg0_province_id;
@@ -1538,6 +1664,36 @@ module.exports = {
 
     //Return statement
     return sol;
+  },
+
+  getProvincePromotion: function (arg0_province_id) {
+    //Convert from parameters
+    var province_id = arg0_province_id;
+
+    //Declare local instance variables
+    var promotion_obj = {};
+    var promotion_total = 0;
+    var province_obj = (typeof province_id != "object") ? main.provinces[province_id] : province_id;
+
+    //Iterate over trackers
+    if (province_obj.trackers) {
+      var all_province_trackers = Object.keys(province_obj.trackers);
+
+      for (var i = 0; i < all_province_trackers.length; i++)
+        if (all_province_trackers[i].startsWith("promote-")) {
+          var local_value = province_obj.trackers[all_province_trackers[i]];
+          var split_key = all_province_trackers[i].split("-");
+
+          modifyValue(promotion_obj, `${split_key[1]}-${split_key[2]}`, local_value);
+          promotion_total += local_value;
+        }
+    }
+
+    //Format promotion_obj
+    promotion_obj.total = promotion_total;
+
+    //Return statement
+    return promotion_obj;
   },
 
   getProvinceWealth: function (arg0_province_id, arg1_pop_types) {
@@ -2312,7 +2468,10 @@ module.exports = {
             for (var i = 0; i < all_internal_provinces.length; i++) {
               var local_value = internal_migration_table[all_internal_provinces[i]];
               var move_out_scope = module.exports.multiplyPops(internal_migration_scope, local_value);
+              var ot_province = main.provinces[all_internal_provinces[i]];
 
+              modifyValue(province_obj.trackers, `emigration-${all_internal_provinces[i]}`, move_out_scope.size);
+              modifyValue(ot_province.trackers, `immigration-${province_obj.id}`, move_out_scope.size);
               module.exports.movePops(province_obj.id, move_out_scope, all_internal_provinces[i]);
             }
         }
@@ -2349,10 +2508,13 @@ module.exports = {
 
           //external_migration_scopes is now the total amount of people that want to move out, transfer pops proportionally to external provinces
           if (external_migration_scope.size)
-            for (var i = 0; i < all_external_provinces.length; x++) {
+            for (var i = 0; i < all_external_provinces.length; i++) {
               var local_value = external_migration_table[all_external_provinces[i]];
               var move_out_scope = module.exports.multiplyPops(external_migration_scope, external_migration_scopes[i]);
+              var ot_province = main.provinces[all_external_provinces[i]];
 
+              modifyValue(province_obj.trackers, `emigration-${all_external_provinces[i]}`, move_out_scope.size);
+              modifyValue(province_obj.trackers, `immigration-${province_obj.id}`, move_out_scope.size);
               module.exports.movePops(province_obj.id, move_out_scope, all_external_provinces[i]);
             }
         }
