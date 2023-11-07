@@ -3126,6 +3126,24 @@ module.exports = {
           if (input == "back")
             printProvince(user_id, province_id);
 
+          //[Births]
+          if (input == "births")
+            printDemographicsLimitTooltip(user_id, province_id, {
+              mode: "births"
+            });
+
+          //[Deaths]
+          if (input == "deaths")
+            printDemographicsLimitTooltip(user_id, province_id, {
+              mode: "deaths"
+            });
+
+          //[Emigration]
+          if (input == "emigration")
+            printDemographicsLimitTooltip(user_id, province_id, {
+              mode: "emigration"
+            });
+
           //[Expand Economic Statistics]
           if (input == "expand economic statistics") {
             delete game_obj.minimise_economic_statistics;
@@ -3179,6 +3197,12 @@ module.exports = {
             printDemographics(user_id, province_id, current_page);
           }
 
+          //[Immigration]
+          if (input == "immigration")
+            printDemographicsLimitTooltip(user_id, province_id, {
+              mode: "immigration"
+            });
+
           //[Jump To Page]
           if (input == "jump to page")
             visualPrompt(game_obj.alert_embed, user_id, {
@@ -3208,6 +3232,12 @@ module.exports = {
             game_obj.minimise_wealth_pools = true;
             printDemographics(user_id, province_id, current_page);
           }
+
+          //[Promotion]
+          if (input == "promotion")
+            printDemographicsLimitTooltip(user_id, province_id, {
+              mode: "promotion"
+            });
 
           //[Show All Details]
           if (input == "show all details") {

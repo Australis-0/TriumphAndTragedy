@@ -119,9 +119,9 @@ module.exports = {
               pops_string.push("");
             }
 
-            pops_string.push(`- Births: ${parseNumber(birth_obj.total, { display_prefix: true })} (**${printPercentage(birth_obj.total/province_obj.pops.population)}**) | Deaths: ${parseNumber(death_obj.total, { display_pop: true })} (**${printPercentage(death_obj.total/province_obj.pops.population)}**)`);
-            pops_string.push(`- Immigration: ${parseNumber(immigration_obj.total, { display_pop: true })} (**${printPercentage(immigration_obj.total/province_obj.pops.population)}**) | Emigration: ${parseNumber(emigration_obj.total, { display_pop: true })} (**${printPercentage(emigration_obj.total/province_obj.pops.population)}**)`);
-            pops_string.push(`- Promotion: ${parseNumber(promotion_obj.total, { display_pop: true })} (**${printPercentage(promotion_obj.total/province_obj.pops.population)}**) | Demotion: ${parseNumber(demotion_obj.total, { display_pop: true })} (**${printPercentage(demotion_obj.total/province_obj.pops.population)}**)`);
+            pops_string.push(`- [Births]: ${parseNumber(birth_obj.total, { display_prefix: true })} (**${printPercentage(birth_obj.total/province_obj.pops.population)}**) | [Deaths]: ${parseNumber(death_obj.total, { display_pop: true })} (**${printPercentage(death_obj.total/province_obj.pops.population)}**)`);
+            pops_string.push(`- [Immigration]: ${parseNumber(immigration_obj.total, { display_pop: true })} (**${printPercentage(immigration_obj.total/province_obj.pops.population)}**) | [Emigration]: ${parseNumber(emigration_obj.total, { display_pop: true })} (**${printPercentage(emigration_obj.total/province_obj.pops.population)}**)`);
+            pops_string.push(`- [Promotion]: ${parseNumber(promotion_obj.total, { display_pop: true })} (**${printPercentage(promotion_obj.total/province_obj.pops.population)}**) | [Demotion]: ${parseNumber(demotion_obj.total, { display_pop: true })} (**${printPercentage(demotion_obj.total/province_obj.pops.population)}**)`);
           }
         }
 
@@ -286,6 +286,152 @@ module.exports = {
     } else {
       printError(game_obj.id, `The province you have specified, **${province_id}**, doesn't exist!`);
     }
+  },
+
+  /*
+    printDemographicsLimitTooltip() - Prints information tooltips for births, deaths, immigration, emigration, promotion, demotion.
+
+    options: {
+      do_not_display: true/false, - Whether to display the tooltip. False by default
+      mode: "births"/"deaths"/"demotion"/"emigration"/"immigration"/"promotion", - Optional. "births" by default
+      pop_scope: {}, - Optional. Optimisation parameter
+      pop_types: [] - Optional. All by default
+    }
+  */
+  printDemographicsLimitTooltip: function (arg0_user, arg1_province_id, arg2_options) { //[WIP] - Similar code. Consider optimising in the future
+    //Convert from parameters
+    var user_id = arg0_user;
+    var province_id = arg1_province_id;
+    var options = (arg2_options) ? arg2_options : {};
+
+    //Initialise options
+    if (!options.mode) options.mode = "births";
+    if (!options.pop_types) options.pop_types = Object.keys(config.pops);
+      options.pop_types = getList(options.pop_types);
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var game_obj = getGameObject(user_id);
+    var pop_scope = (!options.pop_scope) ? selectPops({
+      province_id: province_id,
+      pop_types: options.pop_types
+    }) : options.pop_scope;
+    var province_obj = (typeof province_id != "object") ? main.provinces[province_id] : province_obj;
+    var usr = main.users[actual_id];
+
+    //Format tooltip_string
+    var tooltip_string = [];
+
+    //Sort by mode
+    if (options.mode == "births") {
+      for (var i = 0; i < options.pop_types.length; i++) {
+        var local_pop = config.pops[options.pop_types[i]];
+
+        if (local_pop) {
+          var birth_chance = parsePopLimit(config.births, {
+            province_id: province_obj.id,
+            pop_type: options.pop_types[i]
+          });
+
+          if (birth_chance.localisation_string.length > 0) {
+            tooltip_string.push(`__**${parsePop(options.pop_types[i])} Birth Chance:**__`);
+            tooltip_string.push("");
+            tooltip_string = appendArrays(tooltip_string, birth_chance.localisation_string);
+          }
+        }
+      }
+    } else if (options.mode == "deaths") {
+      for (var i = 0; i < options.pop_types.length; i++) {
+        var local_pop = config.pops[options.pop_types[i]];
+
+        if (local_pop) {
+          var death_chance = parsePopLimit(config.deaths, {
+            province_id: province_obj.id,
+            pop_type: options.pop_types[i]
+          });
+
+          if (death_chance.localisation_string.length > 0) {
+            tooltip_string.push(`__**${parsePop(options.pop_types[i])} Death Chance:**__`);
+            tooltip_string.push("");
+            tooltip_string = appendArrays(tooltip_string, death_chance.localisation_string);
+          }
+        }
+      }
+    } else if (options.mode == "demotion") {
+      for (var i = 0; i < options.pop_types.length; i++) {
+        var local_pop = config.pops[options.pop_types[i]];
+
+        if (local_pop) {
+          var demotion_chance = parsePopLimit(config.pop_mobility.demotion, {
+            province_id: province_obj.id,
+            pop_type: options.pop_types[i]
+          });
+
+          if (demotion_chance.localisation_string.length > 0) {
+            tooltip_string.push(`__**${parsePop(options.pop_types[i])} Demotion Chance:**__`);
+            tooltip_string.push("");
+            tooltip_string = appendArrays(tooltip_string, demotion_chance.localisation_string);
+          }
+        }
+      }
+    } else if (options.mode == "emigration") {
+      for (var i = 0; i < options.pop_types.length; i++) {
+        var local_pop = config.pops[options.pop_types[i]];
+
+        if (local_pop) {
+          var external_emigration_chance = parsePopLimit(config.pop_migration.external_emigration, {
+            province_id: province_obj.id,
+            pop_type: options.pop_types[i]
+          });
+          var internal_emigration_chance = parsePopLimit(config.pop_migration.internal_emigration, {
+            province_id: province_obj.id,
+            pop_type: options.pop_types[i]
+          });
+
+          if (external_emigration_chance.localisation_string.length > 0) {
+            tooltip_string.push(`__**${parsePop(options.pop_types[i])} External Emigration Push:**__`);
+            tooltip_string.push("");
+            tooltip_string = appendArrays(tooltip_string, external_emigration_chance.localisation_string);
+          }
+
+          if (internal_emigration_chance.localisation_string.length > 0) {
+            if (external_emigration_chance.length > 0)
+              tooltip_string.push(""); //Newline separator if above text block exists
+
+            tooltip_string.push(`__**${parsePop(options.pop_types[i])} Internal Emigration Push:**__`);
+            tooltip_string.push("");
+            tooltip_string = appendArrays(tooltip_string, internal_emigration_chance.localisation_string);
+          }
+        }
+      }
+    } else if (options.mode == "immigration") { //[WIP] - Finish function body
+
+    } else if (options.mode == "promotion") {
+      for (var i = 0; i < options.pop_types.length; i++) {
+        var local_pop = config.pops[options.pop_types[i]];
+
+        if (local_pop) {
+          var promotion_chance = parsePopLimit(config.pop_mobility.promotion, {
+            province_id: province_obj.id,
+            pop_type: options.pop_types[i]
+          });
+
+          if (promotion_chance.localisation_string.length > 0) {
+            tooltip_string.push(`__**${parsePop(options.pop_types[i])} Promotion Chance:**__`);
+            tooltip_string.push("");
+            tooltip_string = appendArrays(tooltip_string, promotion_chance.localisation_string);
+          }
+        }
+      }
+    }
+
+    //Display tooltip_string
+    if (!options.do_not_display)
+      if (tooltip_string.length > 0)
+        printAlert(game_obj.id, tooltip_string.join("\n"));
+
+    //Return statement
+    return tooltip_string;
   },
 
   /*

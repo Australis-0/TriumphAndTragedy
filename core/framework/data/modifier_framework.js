@@ -1571,7 +1571,6 @@ module.exports = {
             var local_pop_scope = module.exports.parsePopLimit(local_value, new_options);
             localisation_string.push(`${bulletPoint(options.nesting)}${numberCheck(local_pop_scope.pop_scope.size, true)}${printPercentage(local_value.value, { display_float: true, display_prefix: true })} chance for ${parseNumber(local_pop_scope.pop_scope.size)} people from:`);
 
-            console.log(`Local pop scope for ${all_keys[i]}:`, local_pop_scope);
             localisation_string = appendArrays(localisation_string, local_pop_scope.localisation_string);
 
             //Merge selectors from per scope
@@ -2629,12 +2628,12 @@ module.exports = {
               var employment_percentage = getProvinceEmployment(ot_province.id, options.pop_type);
               pp_employment_scalar = employment_percentage/local_value;
 
-              localisation_string.push(`${bulletPoint(options.nesting)}${printNumber(pp_employment_scalar, { display_float: true, display_prefix: true })} score from ${printPercentage(employment_percentage)} employment`);
+              localisation_string.push(`${bulletPoint(options.nesting)}${parseNumber(pp_employment_scalar, { display_float: true, display_prefix: true })} score from ${printPercentage(employment_percentage)} employment`);
             } if (all_keys[i] == "enslaved") {
               var enslaved_percentage = getProvinceEnslavedPercentage(ot_province.id);
               pp_enslaved_scalar = enslaved_percentage/local_value;
 
-              localisation_string.push(`${bulletPoint(options.nesting)}${printNumber(pp_enslaved_scalar, { display_float: true, display_prefix: true })} score from ${printPercentage(enslaved_percentage)} enslaved population`);
+              localisation_string.push(`${bulletPoint(options.nesting)}${parseNumber(pp_enslaved_scalar, { display_float: true, display_prefix: true })} score from ${printPercentage(enslaved_percentage)} enslaved population`);
             } if (all_keys[i].startsWith("has_")) { //has_<needs_category>
               var target_category_name = all_keys[i].replace("has_", "");
               var total_applicable_pops = 0;
@@ -2669,7 +2668,7 @@ module.exports = {
                   }
                 }
 
-                localisation_string.push(`${bulletPoint(options.nesting)}${numberCheck(total_applicable_pops, true)}${printNumber(scope.value, { display_float: true, display_prefix: true })} score per ${printPercentage(0.01)} ${config.localisation[target_category_name]} fulfilment`);
+                localisation_string.push(`${bulletPoint(options.nesting)}${numberCheck(total_applicable_pops, true)}${parseNumber(scope.value, { display_float: true, display_prefix: true })} score per ${printPercentage(0.01)} ${config.localisation[target_category_name]} fulfilment`);
               }
             } if (all_keys[i].startsWith("has_")) { //has_<needs_category>_variety
               var target_category_name = all_keys[i].replace("has_", "").replace("_variety", "");
@@ -2703,7 +2702,7 @@ module.exports = {
                   }
                 }
 
-                localisation_string.push(`${bulletPoint(options.nesting)}${numberCheck(total_applicable_pops, true)}${printNumber(scope.value, { display_float: true, display_prefix: true })} score per ${printPercentage(0.01)} ${config.localisation[target_category]} variety`);
+                localisation_string.push(`${bulletPoint(options.nesting)}${numberCheck(total_applicable_pops, true)}${parseNumber(scope.value, { display_float: true, display_prefix: true })} score per ${printPercentage(0.01)} ${config.localisation[target_category]} variety`);
               }
             } if (all_keys[i] == "has_pop_plurality_culture") {
               var total_applicable_pops = 0;
@@ -2722,7 +2721,7 @@ module.exports = {
                 total_applicable_pops += local_pop_scope.size;
               }
 
-              localisation_string.push(`${bulletPoint(options.nesting)}${numberCheck(total_applicable_pops, true)}${printNumber(scope.value, { display_float: true, display_prefix: true })} score from ${printPercentage(total_applicable_pops/province_obj.pops.population)} plurality culture`);
+              localisation_string.push(`${bulletPoint(options.nesting)}${numberCheck(total_applicable_pops, true)}${parseNumber(scope.value, { display_float: true, display_prefix: true })} score from ${printPercentage(total_applicable_pops/province_obj.pops.population)} plurality culture`);
             } if (all_keys[i] == "has_primary_culture") {
               var primary_cultures = getPrimaryCultures(ot_province.controller);
               var total_applicable_pops = 0;
@@ -2741,7 +2740,7 @@ module.exports = {
                 total_applicable_pops += local_pop_scope.size;
               }
 
-              localisation_string.push(`${bulletPoint(options.nesting)}${numberCheck(scope.value, true)}${printNumber(scope.value, { display_float: true, display_prefix: true })} score for ${printPercentage(total_applicable_pops/province_obj.pops.population)} of controller primary culture`);
+              localisation_string.push(`${bulletPoint(options.nesting)}${numberCheck(scope.value, true)}${parseNumber(scope.value, { display_float: true, display_prefix: true })} score for ${printPercentage(total_applicable_pops/province_obj.pops.population)} of controller primary culture`);
             } if (all_keys[i] == "living_wage_job_openings") {
               var total_living_wage_openings = 0;
 
@@ -2753,7 +2752,7 @@ module.exports = {
 
               pp_living_wage_job_openings_scalar = returnSafeNumber(total_living_wage_openings/local_value);
 
-              localisation_string.push(`${bulletPoint(options.nesting)}${numberCheck(pp_living_wage_job_openings_scalar, true)}${printNumber(pp_living_wage_job_openings_scalar, { display_float: true, display_prefix: true })} score for ${printNumber(total_living_wage_openings)} living wage job openings`);
+              localisation_string.push(`${bulletPoint(options.nesting)}${numberCheck(pp_living_wage_job_openings_scalar, true)}${parseNumber(pp_living_wage_job_openings_scalar, { display_float: true, display_prefix: true })} score for ${parseNumber(total_living_wage_openings)} living wage job openings`);
             } if (all_keys[i] == "median_wage_percentage") {
               if (options.province_id != ot_province.id) {
                 var current_median_wage = getTotalMedianWage(options.province_id, target_pop_scope);
@@ -2762,7 +2761,7 @@ module.exports = {
                 var median_wage_difference = ((returnSafeNumber(current_median_wage)/returnSafeNumber(ot_median_wage)) - 1);
                 pp_median_wage_percentage_scalar = median_wage_difference/local_value;
 
-                localisation_string.push(`${bulletPoint(options.nesting)}${numberCheck(pp_median_wage_percentage_scalar, true)}${printNumber(pp_median_wage_percentage_scalar, { display_float: true, display_prefix: true })} score for ${printPercentage(median_wage_difference)} median wage difference`);
+                localisation_string.push(`${bulletPoint(options.nesting)}${numberCheck(pp_median_wage_percentage_scalar, true)}${parseNumber(pp_median_wage_percentage_scalar, { display_float: true, display_prefix: true })} score for ${printPercentage(median_wage_difference)} median wage difference`);
               }
             } if (all_keys[i] == "promotion_chance") {
               var total_promotion_chance = 0;
@@ -2774,7 +2773,7 @@ module.exports = {
               pp_promotion_scalar = returnSafeNumber(total_promotion_chance/target_pop_scope.length, 1); //Average it out
               pp_promotion_scalar = pp_promotion_scalar/local_value; //Local value amplification
 
-              localisation_string.push(`${bulletPoint(options.nesting)}${numberCheck(pp_promotion_scalar, true)}${printNumber(pp_promotion_scalar, { display_float: true, display_prefix: true })} score for ${printPercentage(total_promotion_chance)} total promotion chance over all pops, non-weighted`);
+              localisation_string.push(`${bulletPoint(options.nesting)}${numberCheck(pp_promotion_scalar, true)}${parseNumber(pp_promotion_scalar, { display_float: true, display_prefix: true })} score for ${printPercentage(total_promotion_chance)} total promotion chance over all pops, non-weighted`);
             }
 
             //Add value once last key in object is processed
