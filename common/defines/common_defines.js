@@ -34,8 +34,7 @@ config.defines.common = {
     stone: 20,
     food: 50,
     research_to: 0,
-
-    magnates: [3, 15],
+    
     unlock_building: [
       "beekeepers",
       "camphor_plantations",
