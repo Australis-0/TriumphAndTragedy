@@ -40,7 +40,7 @@ module.exports = {
     if (province_obj) {
       if (province_obj.pops) {
         var all_pop_keys = Object.keys(province_obj.pops);
-        var birth_obj = getProvinceBirthRate(user_id, province_id);
+        var birth_obj = getProvinceBirths(province_id);
 
         //[WIP] - Push view and sort buttons to pops_string
 
@@ -133,14 +133,14 @@ module.exports = {
               for (var x = 0; x < pops_to_display.length; x++) {
                 var local_pop = config.pops[pops_to_display[x]];
                 var pop_fulfilment = getActualPopFulfilment({
-                  province_id: province_id,
+                  province_id: province_obj.id,
                   pop_type: pops_to_display[x],
 
                   good_scope: lookup.all_pop_needs_categories[i]
                 });
 
                 //Push pop icon; fulfilment/variety percentages to local_fulfilment_string
-                local_fulfilment_string.push(`${(local_pop.icon) ? config.icons[local_pop.icon] + " " : ""} - ${printPercentage(pop_fulfilment.fulfilment)}/${printPercentage(pop_fulfilment.variety)}`);
+                local_fulfilment_string.push(`${(local_pop.icon) ? local_pop.icon + " " : ""} - ${printPercentage(pop_fulfilment.fulfilment)}/${printPercentage(pop_fulfilment.variety)}`);
               }
 
               pops_string.push(`- **${config.localisation[lookup.all_pop_needs_categories[i]]}** - ${local_fulfilment_string.join(", ")}`);
@@ -199,7 +199,7 @@ module.exports = {
 
           if (!game_obj.minimise_wealth_pools) {
             pops_string.push("");
-            pops_string.push(`- ${(game_obj.hide_pop_details) ? `**[Show All Details]**` : `**[Hide All Details]**`}${(game_obj.hide_employers) ? `**[Show Employers]**` : `**[Hide Employers]**`}${(game_obj.hide_needs_categories) ? `**[Show Needs Categories]**` : `**[Hide Needs Categories]**`}`);
+            pops_string.push(`- ${(game_obj.hide_pop_details) ? `**[Show All Details]**` : `**[Hide All Details]**`} | ${(game_obj.hide_employers) ? `**[Show Employers]**` : `**[Hide Employers]**`} | ${(game_obj.hide_needs_categories) ? `**[Show Needs Categories]**` : `**[Hide Needs Categories]**`}`);
             pops_string.push("");
 
             //Display demographics key
