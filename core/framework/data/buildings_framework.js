@@ -902,31 +902,37 @@ module.exports = {
   /*
     getBuildingEmploymentLevel() - Returns percentage of employment fulfilment for a building
     options: {
+      manpower_cost: {}, - The current manpower_cost subscope to compare things against
       return_employment_object: true/false - Returns both the employment object and percentage in { employment: {}, percentage: 0.67 } format.
     }
   */
-  getBuildingEmploymentLevel: function (arg0_building_obj, arg1_employment_obj, arg2_options) {
+  getBuildingEmploymentLevel: function (arg0_building_obj, arg1_options) {
     //Convert from parameters
     var building_obj = arg0_building_obj;
-    var employment_obj = arg1_employment_obj;
-    var options = (arg2_options) ? arg2_options : {};
+    var options = (arg1_options) ? arg1_options : {};
 
     if (building_obj.employment) {
       //Declare local instance variables
       var config_obj = lookup.all_buildings[building_obj.building_type];
       var fulfilment_percentages = [];
-      var employment_obj = (employment_obj) ? employment_obj : building_obj.employment;
+      var employment_obj = (options.employment_obj) ? options.employment_obj : building_obj.employment;
+
+      //Initialise options
+      if (!options.manpower_cost) options.manpower_cost = JSON.parse(JSON.stringify(config_obj.manpower_cost));
 
       if (config_obj)
         if (config_obj.manpower_cost) {
-          var all_manpower_keys = Object.keys(config_obj.manpower_cost);
+          var all_manpower_keys = Object.keys(options.manpower_cost);
 
           //Iterate over all_manpower_keys
           for (var i = 0; i < all_manpower_keys.length; i++) {
-            var local_subobj = config_obj.manpower_cost[all_manpower_keys[i]];
+            var local_subobj = options.manpower_cost[all_manpower_keys[i]];
 
             if (all_manpower_keys[i] == "any_pop" || all_manpower_keys[i].startsWith("any_pop_")) {
-              var subobj_fulfilment = module.exports.getBuildingEmploymentLevel(building_obj, local_subobj, { return_employment_object: true });
+              var subobj_fulfilment = module.exports.getBuildingEmploymentLevel(building_obj, {
+                manpower_cost: local_subobj,
+                return_employment_object: true
+              });
 
               employment_obj = mergeObjects(employment_obj, subobj_fulfilment.employment);
               fulfilment_percentages.push(subobj_fulfilment.percentage);
@@ -950,7 +956,7 @@ module.exports = {
             getAverage(fulfilment_percentages) : {
               employment: employment_obj,
               percentage: getAverage(fulfilment_percentages)
-            }
+            };
         }
     }
   },

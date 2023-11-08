@@ -150,15 +150,19 @@ module.exports = {
     if (!game_obj.hide_building_pops)
       for (var i = 0; i < relevant_building_pops.length; i++) {
         var local_pop = config.pops[relevant_building_pops[i]];
-        var pop_icon = (local_pop.icon) ? local_pop.icon + " " : "";
-        var pop_name = (local_pop.name) ? local_pop.name : relevant_building_pops[i];
 
-        economy_string.push(`${pop_icon}Available ${pop_name}: **${parseNumber(usr.pops[relevant_building_pops[i]] - usr.pops["used_" + relevant_building_pops[i]])}**`);
+        if (local_pop) {
+          var pop_icon = (local_pop.icon) ? local_pop.icon + " " : "";
+          var pop_name = (local_pop.name) ? local_pop.name : relevant_building_pops[i];
+
+          economy_string.push(`${pop_icon}Available ${pop_name}: **${parseNumber(usr.pops[relevant_building_pops[i]] - usr.pops["used_" + relevant_building_pops[i]])}**`);
+        }
       }
+
     economy_string.push(`${(game_obj.hide_building_pops) ? "" : "- "}${config.icons.population} Population Growth Rate: **${printPercentage(usr.modifiers.pop_growth_modifier-1)}**`);
     economy_string.push("");
     economy_string.push(`You have **${parseNumber(getCities(user_id, { include_hostile_occupations: true, include_occupations: true }).length)}** cities in total throughout your country.`);
-    economy_string.push(`- **[View Cities]**${(usr.city_cap-usr.city_count > 0) ? " | **[Found City]** (" + parseNumber(usr.city_cap-usr.city_count) + ")" : ""}`);
+    economy_string.push(`- **[View Cities]**${(usr.city_cap - usr.city_count > 0) ? " | **[Found City]** (" + parseNumber(usr.city_cap - usr.city_count) + ")" : ""}`);
     economy_string.push("");
     economy_string.push(config.localisation.divider);
     economy_string.push("");
