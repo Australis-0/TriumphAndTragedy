@@ -1016,6 +1016,11 @@ module.exports = {
               game_obj.page = `view_buildings_${city_obj.id}`;
 
               break;
+            case "view demographics":
+              printDemographics(user_id, city_name);
+              game_obj.page = `view_demographics_${city_name}`;
+
+              break;
           }
         }
       }
@@ -3121,6 +3126,10 @@ module.exports = {
 
         if (game_obj.page.startsWith("view_demographics_")) {
           var province_id = game_obj.page.replace("view_demographics_", "");
+          var province_obj = getProvince(province_id);
+
+          if (province_obj)
+            province_id = province_obj.id;
 
           //[Back]
           if (input == "back")

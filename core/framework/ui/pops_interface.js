@@ -20,6 +20,9 @@ module.exports = {
     var province_obj = (main.provinces[province_id]) ? main.provinces[province_id] : getProvince(province_id);
     var relevant_pops = getRelevantPops(user_id);
 
+    //Set province_id
+    province_id = province_obj.id;
+
     //Calculate pops_to_display
     pops_to_display = JSON.parse(JSON.stringify(relevant_pops));
 

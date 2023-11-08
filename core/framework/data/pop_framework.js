@@ -216,7 +216,7 @@ module.exports = {
             var local_value = province_obj.pops[all_local_pops[i]];
 
             usr.pops[all_local_pops[i]] += local_value;
-            total_population += local_value;
+            total_population += returnSafeNumber(local_value);
           }
       }
 
@@ -528,7 +528,7 @@ module.exports = {
 
           //Rural/urban statistics
           modifyValue(pop_trackers, `${provinces[i].type}_${all_pops[x]}`, local_value);
-          local_population += local_value;
+          local_population += returnSafeNumber(local_value);
         }
 
         modifyValue(pop_trackers, `${provinces[i].type}_population`, local_population);
@@ -2887,8 +2887,11 @@ module.exports = {
       if (options.pop_type)
         if (!province_obj.pops[options.pop_type])
           province_obj.pops[options.pop_type] = 0;
-      if (!province_obj.pops.population)
+      if (province_obj.pops.population) {
+        province_obj.pops.population -= returnSafeNumber(killed);
+      } else {
         province_obj.pops.population = 0;
+      }
     }
 
     //Return statement

@@ -34,7 +34,7 @@ config.defines.common = {
     stone: 20,
     food: 50,
     research_to: 0,
-    
+
     unlock_building: [
       "beekeepers",
       "camphor_plantations",
@@ -141,6 +141,7 @@ config.defines.common = {
       "rendering_works",
       "rice_wineries",
       "salt_works",
+      "sawmills",
       "silk_mills",
       "sleeping_bag_factories",
       "soap_factories",

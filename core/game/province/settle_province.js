@@ -68,8 +68,8 @@ module.exports = {
         //Calculate total population of province
         var total_population = 0;
         for (var i = 0; i < all_pop_types.length; i++) {
-          total_population += province_obj.pops[all_pop_types[i]];
-          usr.pops[all_pop_types[i]] += province_obj.pops[all_pop_types[i]];
+          total_population += returnSafeNumber(province_obj.pops[all_pop_types[i]]);
+          usr.pops[all_pop_types[i]] += returnSafeNumber(province_obj.pops[all_pop_types[i]]);
         }
 
         //Set culture and other modifiers/trackers
