@@ -589,7 +589,7 @@ module.exports = {
 
     //Declare local instance variables
     var all_cultures = Object.keys(culture_obj);
-    var f = (!exclude_formatting) ? `**` : "";
+    var f = (!options.exclude_formatting) ? `**` : "";
     var localisation_string = [];
     var others_percentage = 0;
 

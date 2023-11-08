@@ -923,12 +923,12 @@ module.exports = {
 
           //Iterate over all_manpower_keys
           for (var i = 0; i < all_manpower_keys.length; i++) {
-            var local_subobj = manpower_obj[all_manpower_keys[i]];
+            var local_subobj = config_obj.manpower_cost[all_manpower_keys[i]];
 
             if (all_manpower_keys[i] == "any_pop" || all_manpower_keys[i].startsWith("any_pop_")) {
-              var subobj_fulfilment = module.exports.getBuildingEmploymentLevel(building_obj, employment_obj, { return_employment_object: true });
+              var subobj_fulfilment = module.exports.getBuildingEmploymentLevel(building_obj, local_subobj, { return_employment_object: true });
 
-              employment_obj = subobj_fulfilment.employment;
+              employment_obj = mergeObjects(employment_obj, subobj_fulfilment.employment);
               fulfilment_percentages.push(subobj_fulfilment.percentage);
             } else {
               if (config.pops[all_manpower_keys[i]]) {
