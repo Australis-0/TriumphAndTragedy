@@ -89,6 +89,19 @@ module.exports = {
         }
       }
 
+      //Goods processing
+      {
+        if (config.goods.hidden) {
+          var all_hidden_goods = Object.keys(config.goods.hidden);
+
+          for (var i = 0; i < all_hidden_goods.length; i++) {
+            var local_good = config.goods.hidden[all_hidden_goods[i]];
+
+            local_good.hidden = true;
+          }
+        }
+      }
+
       //Market processing
       {
         {

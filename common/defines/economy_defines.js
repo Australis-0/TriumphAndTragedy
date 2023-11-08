@@ -112,6 +112,7 @@ config.defines.economy = {
   staple_goods_categories: ["staple_goods"],
   staple_sol: 0.20, //Staple Goods SOL %
   luxury_sol: 0.30, //Luxury Goods SOL %
+  view_special_goods: false, //Whether special goods like knowledge can be viewed in inventory
 
   //Pops
   cultural_minority_display: 0.20, //The percentage a minority should comprise before being displayed in mainline headers
