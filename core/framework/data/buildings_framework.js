@@ -480,7 +480,7 @@ module.exports = {
   */
   getBuilding: function (arg0_name, arg1_options) {
     //Convert from parameters
-    var building_name = arg0_name;
+    var building_name = (typeof arg0_name == "string") ? arg0_name.trim().toLowerCase() : arg0_name;
     var options = (arg1_options) ? arg1_options : {};
 
     //Guard clause

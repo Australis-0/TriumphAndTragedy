@@ -72,6 +72,7 @@ module.exports = {
             amount_taken*5;
 
           //Add to inventory; subtract from remaining_actions
+          console.log(`Calling modifyGoodAmount(${user_id}, ${current_element[1]}, ${amount_taken*5})`);
           modifyGoodAmount(user_id, current_element[1], amount_taken*5);
           remaining_actions -= amount_taken;
         }
@@ -85,7 +86,7 @@ module.exports = {
           var local_good = getGood(all_resources_gained[i]);
           var local_value = mined_resources[all_resources_gained[i]];
 
-          resource_gain_display.push(`${parseNumber(local_value)} ${(local_good.icon) ? config.icons[local_good.icon] : ""} ${(local_good.name) ? local_good.name : all_resources_gained[i]}`);
+          resource_gain_display.push(`${(local_good.icon) ? config.icons[local_good.icon] : ""} ${parseNumber(local_value)} ${(local_good.name) ? local_good.name : all_resources_gained[i]}`);
         }
 
         //Print out feedback

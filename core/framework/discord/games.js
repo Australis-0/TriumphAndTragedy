@@ -342,8 +342,10 @@ module.exports = {
             if (game_obj.alert_change)
               updateAlert(game_obj.user, { freeze_alerts: game_obj.freeze_alerts });
         } catch (e) {
-          log.warn(`Ran into error on initialiseGameLoop()!`);
-          console.log(e);
+          if (settings.debug_mode) {
+            log.warn(`Ran into error on initialiseGameLoop()!`);
+            console.log(e);
+          }
         }
       } else {
         clearInterval(cache[`${game_id}_alert_loop`]);

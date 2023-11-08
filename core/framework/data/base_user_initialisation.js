@@ -95,9 +95,10 @@ module.exports = {
         //Check if local_name is of type unit
         if (local_unit)
           if (local_name == local_unit_name)
-            usr.reserves[local_unit_name] += (local_list.length >= 2) ?
+            modifyValue(usr.reserves, local_unit_name, (local_list.length >= 2) ?
               randomNumber(local_list[0], local_list[1]) :
-              local_list[0];
+              local_list[0]
+            );
       }
     }
 

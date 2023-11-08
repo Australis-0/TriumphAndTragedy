@@ -718,24 +718,28 @@ module.exports = {
       var good_obj = lookup.all_goods[raw_good_name];
 
       if (typeof good_obj == "object") {
-        var subgoods = getSubobjectKeys(good_obj, { exclude_keys: reserved.goods });
+        if (good_obj.type == "category") {
+          var subgoods = getSubobjectKeys(good_obj, { exclude_keys: reserved.goods });
 
-        if (value != 0) {
-          //Distribute goods equally across subgood keys
-          var amount = Math.floor(value/subgoods.length);
-          var remainder = value - (amount*subgoods.length);
+          if (value != 0) {
+            //Distribute goods equally across subgood keys
+            var amount = Math.floor(value/subgoods.length);
+            var remainder = value - (amount*subgoods.length);
 
-          for (var i = 0; i < subgoods.length; i++) {
-            modifyValue(usr.inventory, subgoods[i], returnSafeNumber(amount));
+            for (var i = 0; i < subgoods.length; i++) {
+              modifyValue(usr.inventory, subgoods[i], returnSafeNumber(amount));
 
-            if (remainder > 0) {
-              usr.inventory[subgoods[i]]++;
-              remainder--;
+              if (remainder > 0) {
+                usr.inventory[subgoods[i]]++;
+                remainder--;
+              }
             }
           }
+        } else {
+          modifyValue(usr.inventory, raw_good_name, value);
         }
       } else {
-        usr.inventory[raw_good_name] += returnSafeNumber(value);
+        modifyValue(usr, raw_good_name, value);
       }
     }
   },

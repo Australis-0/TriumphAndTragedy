@@ -55,8 +55,11 @@ startBot();
 
 //Global error handling
 process.on("unhandledRejection", (error) => {
-  log.error(`Unhandled promise rejection. ${error.toString()}`);
-  console.log(error);
+  //Log enabled only with debug mode
+  if (settings.debug_mode) {
+    log.error(`Unhandled promise rejection. ${error.toString()}`);
+    console.log(error);
+  }
 });
 
 //Reaction/interaction framework

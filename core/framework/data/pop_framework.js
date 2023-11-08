@@ -517,6 +517,8 @@ module.exports = {
     //Iterate over provinces to fetch pop_trackers
     for (var i = 0; i < provinces.length; i++)
       if (provinces[i].pops) {
+        var local_population = 0;
+
         for (var x = 0; x < all_pops.length; x++) {
           var local_value = returnSafeNumber(provinces[i].pops[all_pops[x]]);
 
@@ -526,10 +528,14 @@ module.exports = {
 
           //Rural/urban statistics
           modifyValue(pop_trackers, `${provinces[i].type}_${all_pops[x]}`, local_value);
+          local_population += local_value;
         }
 
-        modifyValue(pop_trackers, `${provinces[i].type}_population`, provinces[i].population);
-        total_population += returnSafeNumber(provinces[i].pops.population);
+        modifyValue(pop_trackers, `${provinces[i].type}_population`, local_population);
+
+        //Add to total population; update province population
+        provinces[i].pops.population = local_population;
+        total_population += local_population;
       }
 
     //Set global trackers
