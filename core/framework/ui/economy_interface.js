@@ -219,7 +219,7 @@ module.exports = {
       footer_string.push(`:warning: _Our economy is not currently producing any goods! Consider constructing some new buildings in order to jumpstart our economy._`);
       footer_string.push("");
     } else {
-      footer_string.push(`Note: Buildings that lack requisite goods or maintenance will not produce anything. Infrastructure can improve your RGO Throughput.`);
+      footer_string.push(`Note: Buildings that lack requisite goods, employees, or maintenance will not produce anything. Infrastructure can improve your RGO Throughput.`);
       footer_string.push("");
     }
 
@@ -384,7 +384,7 @@ module.exports = {
     var usr = main.users[actual_id];
 
     if (production_localisation.length == 0)
-      production_localisation.push(`_Our country is currently not producing anything, nor does it have a regular import/export balance. Consider trading with other countries or building industry by typing_ **[Build]**_!_`);
+      production_localisation.push(`_Our country is currently not producing anything, nor does it have a regular import/export balance. Consider trading with other countries, building industry by typing_ **[Build]**_, or fix employment!_`);
 
     //Create embed and edit to message
     var production_embeds = splitEmbed(production_localisation, {

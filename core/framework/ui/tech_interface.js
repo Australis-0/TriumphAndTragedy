@@ -399,18 +399,23 @@ module.exports = {
     tech_string.push("");
 
     //Print tech research options
+    var printed_techs = 0;
+
     for (var i = 0; i < tech_array_dump.length; i++)
-      if (i < 5) {
-        var local_tech_obj = getTechnology(tech_array_dump[i]);
-        var local_tech_cost = getTechnologyCost(tech_array_dump[i]);
+      if (!isBeingResearched(user_id, tech_array_dump[i]))
+        if (printed_techs < 5) {
+          var local_tech_obj = getTechnology(tech_array_dump[i]);
+          var local_tech_cost = getTechnologyCost(tech_array_dump[i]);
 
-        var local_tech_name = (local_tech_obj.name) ? local_tech_obj.name : tech_array_dump[i];
+          var local_tech_name = (local_tech_obj.name) ? local_tech_obj.name : tech_array_dump[i];
 
-        tech_string.push(`- ${(local_tech_obj.icon) ? config.icons[local_tech_obj.icon] + " " : ""}${local_tech_name} (${config.icons.knowledge} **${parseNumber(local_tech_cost)}**) **[Research ${local_tech_name}]**`);
-      } else {
-        if (i == 6)
-          tech_string.push(`+${parseNumber(tech_array_dump.length - 5)} more ...`);
-      }
+          tech_string.push(`- ${(local_tech_obj.icon) ? config.icons[local_tech_obj.icon] + " " : ""}${local_tech_name} (${config.icons.knowledge} **${parseNumber(local_tech_cost)}**) **[Research ${local_tech_name}]**`);
+
+          printed_techs++;
+        } else {
+          if (printed_techs == 6)
+            tech_string.push(`+${parseNumber(tech_array_dump.length - 5)} more ...`);
+        }
     if (tech_array_dump.length == 0)
       tech_string.push(`_No available techs for research could be found._`);
 

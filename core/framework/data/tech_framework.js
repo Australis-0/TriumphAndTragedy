@@ -242,6 +242,21 @@ module.exports = {
     }
   },
 
+  isBeingResearched: function (arg0_user, arg1_technology_name) {
+    //Convert from parameters
+    var user_id = arg0_user;
+    var technology_name = arg1_technology_name;
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var usr = main.users[actual_id];
+
+    if (usr.researching)
+      for (var i = 0; i < usr.researching.length; i++)
+        if (usr.researching[i].technology == technology_name)
+          return true;
+  },
+
   //parseTechnology() - Parses the technological effects of a given tech for a given user. (Used primarily after the research of a tech has been finished)
   parseTechnology: function (arg0_user, arg1_technology_name) {
     //Convert from parameters

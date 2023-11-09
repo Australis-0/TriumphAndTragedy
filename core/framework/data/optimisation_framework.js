@@ -78,6 +78,10 @@ module.exports = {
           for (var x = 0; x < all_buildings_in_category.length; x++) {
             var local_building = local_building_category[all_buildings_in_category[x]];
 
+            //Set ID
+            local_building.id = all_buildings_in_category[x];
+
+            //Set aliases/singular
             if (typeof local_building == "object")
               if (local_building.singular)
                 if (!local_building.aliases) {

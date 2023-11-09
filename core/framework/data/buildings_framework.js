@@ -25,7 +25,10 @@ module.exports = {
     //Declare local instance variables
     var all_good_keys = Object.keys(scope);
     var building_object = options.config_object;
-    var current_scope_name = options.current_scope;
+    var current_scope_name;
+
+    if (options.current_scope)
+      current_scope_name = options.current_scope.name;
 
     //Initialise defaults for options
     if (!current_scope_name) current_scope_name = "produces"; //.produces by default
@@ -796,16 +799,26 @@ module.exports = {
         }
 
         //Get building_maintenance from production choice
-        building_maintenance = module.exports.getProductionChoiceOutput({
-          production_choice: building_obj.production_choice,
-          [(typeof building_obj == "object") ? "building_object" : "building_type"]: building_obj
-        });
-        building_maintenance = multiplyObject(building_maintenance, -1);
+        //Initialise maintenance_options
+        var maintenance_options = {
+          no_production: true,
+          production_choice: (typeof building_obj == "object") ? building_obj.production_choice : undefined,
+          province_id: getCapital(user_id).id
+        };
+
+        if (typeof building_obj == "object") {
+          maintenance_options.building_object = building_obj;
+        } else {
+          maintenance_options.building_type = config_obj.id;
+        }
+
+        building_maintenance = (typeof building_obj == "object") ?
+          module.exports.getProductionChoiceOutput(maintenance_options) : config_obj.maintenance;
 
         var all_building_maintenance_keys = Object.keys(building_maintenance);
 
         for (var i = 0; i < all_building_maintenance_keys.length; i++)
-          if (building_maintenance[all_building_maintenance_keys[i]] >= 0)
+          if (building_maintenance[all_building_maintenance_keys[i]] < 0)
             delete building_maintenance[all_building_maintenance_keys[i]];
       }
 
@@ -817,6 +830,7 @@ module.exports = {
           current_scope: { name: "maintenance" }
         }
       );
+
       maintenance_obj = multiplyObject(maintenance_obj, employment_level);
     }
 
@@ -959,6 +973,12 @@ module.exports = {
             };
         }
     }
+
+    //Not applicable to an individual building
+    return (!options.return_employment_object) ? 1 : {
+      employment: {},
+      percentage: 1
+    };
   },
 
   getBuildingExpenditure: function (arg0_building_obj) {
@@ -1209,7 +1229,8 @@ module.exports = {
         building_production = (typeof building_obj == "object") ?
           module.exports.getProductionChoiceOutput({
             building_object: building_obj,
-            production_choice: building_obj.production_choice
+            production_choice: building_obj.production_choice,
+            province_id: province_obj.id
           }) : config_obj.produces;
 
         var all_building_production_keys = Object.keys(building_production);
@@ -1775,6 +1796,32 @@ module.exports = {
     return building_wages;
   },
 
+  getDefaultProductionChoice: function (arg0_user, arg1_building) { //[WIP] - Allow user to custom set default production choice later
+    //Convert from parameters
+    var user_id = arg0_user;
+    var building_name = arg1_building;
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var building_obj = (typeof building_name != "object") ? getBuilding(building_name) : building_name;
+    var has_production_choice = [false, ""]; //[production_choice_exists, production_choice_name];
+    var usr = main.users[actual_id];
+
+    //Check if building has_production_choice in .produces
+    if (building_obj.produces) {
+      var all_production_keys = Object.keys(building_obj.produces);
+
+      for (var i = 0; i < all_production_keys.length; i++)
+        if (all_production_keys[i] == "production_choice" || all_production_keys[i].startsWith("production_choice_")) {
+          has_production_choice = [true, all_production_keys[i]];
+          break;
+        }
+    }
+
+    //Return statement
+    return (has_production_choice[0]) ? has_production_choice[1] : "";
+  },
+
   /*
     getMedianWage() - Returns the median wage for a given pop type in a province.
     options: {
@@ -2113,98 +2160,6 @@ module.exports = {
   },
 
   /*
-    getProductionChoiceOutput() - Returns a flattened good scope of produced goods.
-    options: {
-      province_id: "4407", - The province ID in which the building is located. Player modifiers are taken from the controller of the province if applicable, all production is negated if province is occupied
-      building_object: {}, - Optional. Uses default options.building_type if not defined, and assumes full employment
-      no_maintenance: true/false, - Optional. Whether or not to include maintenance in output calculations. False by default
-
-      building_type: "lumberjacks", - Optional. Replaces building_object
-      production_choice: "one" - Optional. The name of the production choice, excluding "production_choice_" prefix. If not defined, base scope is taken as production choice
-    }
-  */
-  getProductionChoiceOutput: function (arg0_options) {
-    //Convert from parameters
-    var options = (arg0_options) ? arg0_options : {};
-
-    //Declare local instance variables
-    var maintenance_obj = {};
-    var produces_obj = {};
-    var production_choice = (options.production_choice) ? options.production_choice : "";
-    var raw_building_name = (options.building_object) ? options.building_object.building_type : getBuilding(options.building_type, { return_key: true });
-
-    //Initialise local instance variables
-    maintenance_obj = multiplyObject(module.exports.getProductionChoice(raw_building_name, production_choice, "maintenance"), -1);
-    produces_obj = module.exports.getProductionChoice(raw_building_name, production_choice);
-
-    //Check if province exists
-    if (options.province_id) {
-      var province_id = options.province_id;
-      var province_obj = main.provinces[province_id];
-
-      //Make sure province isn't currently occupied
-      if (province_obj.controller)
-        if (province_obj.controller == province_obj.owner) {
-          var usr = main.users[province_obj.controller];
-
-          var building_obj;
-          var is_individual = (options.building_object);
-          var modifiers = JSON.parse(JSON.stringify(usr.modifiers));
-
-          //Initialise modifiers
-          {
-            //Override for local RGO throughput gain
-            var province_rgo_throughput = getCityRGOThroughput(province_obj);
-
-            //Remove modifiers
-            delete modifiers.rgo_throughput;
-
-            //Add local modifiers
-            modifiers[`${province_obj.resource}_gain`] =
-              (province_obj.resource && province_rgo_throughput) ? province_rgo_throughput : 1;
-          }
-
-          if (is_individual) {
-            //This has a verbatim building_object we're talking about
-            var local_building = options.building_object;
-
-            building_obj = lookup.all_buildings[local_building.building_type];
-
-            produces_obj = module.exports.applyProduction(produces_obj, {
-              config_object: building_obj,
-              current_scope: { name: "produces" },
-              province_id: province_obj.id,
-
-              modifiers: modifiers
-            });
-
-            //Account for maintenance
-            if (!do_not_display)
-              produces_obj = mergeObjects(produces_obj, maintenance_obj);
-          } else {
-            //This is a generic building; assume full employment
-            building_obj = module.exports.getBuilding(options.building_type);
-
-            produces_obj = module.exports.applyProduction(produces_obj, {
-              config_object: building_obj,
-              current_scope: { name: "produces" },
-              province_id: province_obj.id,
-
-              modifiers: modifiers
-            });
-
-            //Account for maintenance
-            if (!options.no_maintenance)
-              produces_obj = mergeObjects(produces_obj, maintenance_obj);
-          }
-        }
-    }
-
-    //Return statement
-    return produces_obj;
-  },
-
-  /*
     getProductionChoice() - Fetches a production choice object for either the .produces/.maintenance field
     options: {
       include_reserved: true/false - Whether to include reserved words in the production choice fetched
@@ -2213,12 +2168,12 @@ module.exports = {
   getProductionChoice: function (arg0_building, arg1_production_choice, arg2_maintenance_production, arg3_options) {
     //Convert from parameters
     var building_name = arg0_building;
-    var production_choice = arg1_production_choice.trim().toLowerCase();
+    var production_choice = (arg1_production_choice) ? arg1_production_choice.trim().toLowerCase() : "";
     var maintenance_production = (arg2_maintenance_production) ? arg2_maintenance_production : "produces";
     var options = (arg3_options) ? arg3_options : {};
 
     //Declare local instance variables
-    var building_obj = module.exports.getBuilding(building_name);
+    var building_obj = (typeof building_name != "object") ? module.exports.getBuilding(building_name) : building_name;
     var found_production_choice_obj = false;
     var production_choice_obj = {};
 
@@ -2254,6 +2209,101 @@ module.exports = {
 
     //Return statement
     return production_choice_obj;
+  },
+
+  /*
+    getProductionChoiceOutput() - Returns a flattened good scope of produced goods.
+    options: {
+      province_id: "4407", - The province ID in which the building is located. Player modifiers are taken from the controller of the province if applicable, all production is negated if province is occupied
+      building_object: {}, - Optional. Uses default options.building_type if not defined, and assumes full employment
+      no_maintenance: true/false, - Optional. Whether or not to include maintenance in output calculations. False by default
+      no_production: true/false, - Optional. Whether or not to include production in output calculations. False by default
+
+      building_type: "lumberjacks", - Optional. Replaces building_object
+      production_choice: "one" - Optional. The name of the production choice, excluding "production_choice_" prefix. If not defined, base scope is taken as production choice
+    }
+  */
+  getProductionChoiceOutput: function (arg0_options) {
+    //Convert from parameters
+    var options = (arg0_options) ? arg0_options : {};
+
+    //Declare local instance variables
+    var maintenance_obj = {};
+    var produces_obj = {};
+    var production_choice = (options.production_choice) ? options.production_choice : "";
+    var raw_building_name = (options.building_object) ? options.building_object.building_type : getBuilding(options.building_type, { return_key: true });
+
+    //Initialise local instance variables
+    maintenance_obj = multiplyObject(module.exports.getProductionChoice(raw_building_name, production_choice, "maintenance"), -1);
+
+    if (!options.no_production)
+      produces_obj = module.exports.getProductionChoice(raw_building_name, production_choice);
+
+    //Check if province exists
+    if (options.province_id) {
+      var province_id = options.province_id;
+      var province_obj = main.provinces[province_id];
+
+      //Make sure province isn't currently occupied
+      if (province_obj.controller)
+        if (province_obj.controller == province_obj.owner) {
+          var usr = main.users[province_obj.controller];
+
+          var building_obj;
+          var is_individual = (options.building_object);
+          var modifiers = JSON.parse(JSON.stringify(usr.modifiers));
+
+          //Initialise modifiers
+          {
+            //Override for local RGO throughput gain
+            var province_rgo_throughput = getCityRGOThroughput(province_obj);
+
+            //Remove modifiers
+            delete modifiers.rgo_throughput;
+
+            //Add local modifiers
+            modifiers[`${province_obj.resource}_gain`] =
+              (province_obj.resource && province_rgo_throughput) ? province_rgo_throughput : 1;
+          }
+
+          if (is_individual) {
+            //This has a verbatim building_object we're talking about
+            var local_building = options.building_object;
+
+            building_obj = lookup.all_buildings[local_building.building_type];
+            produces_obj = module.exports.applyProduction(produces_obj, {
+              config_object: building_obj,
+              current_scope: { name: "produces" },
+              province_id: province_obj.id,
+
+              modifiers: modifiers
+            });
+
+            //Account for maintenance
+            if (!options.no_maintenance)
+              produces_obj = mergeObjects(produces_obj, maintenance_obj);
+          } else {
+            //This is a generic building; assume full employment
+            building_obj = module.exports.getBuilding(options.building_type);
+            produces_obj = module.exports.applyProduction(produces_obj, {
+              config_object: building_obj,
+              current_scope: { name: "produces" },
+              province_id: province_obj.id,
+
+              modifiers: modifiers
+            });
+
+            //Account for maintenance
+            if (!options.no_maintenance)
+              produces_obj = mergeObjects(produces_obj, maintenance_obj);
+          }
+        }
+    } else {
+      log.warn(`No options.province_id argument provided for getProductionChoiceOutput()!`);
+    }
+
+    //Return statement
+    return produces_obj;
   },
 
   getProductionObject: function (arg0_user) {
@@ -2974,7 +3024,6 @@ module.exports = {
     //Declare local instance variables
     var building_array = [];
     var building_count = {};
-    var province_obj = main.provinces[province_id];
 
     if (building_array) {
       //Initialise building_count

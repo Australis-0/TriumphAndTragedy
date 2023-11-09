@@ -1045,7 +1045,8 @@ module.exports = {
 
     //Declare local instance variables
     var f = "**"; //Formatter
-    var h_prefix = (!exclude_bullets) ? bulletPoint(Math.max(options.nesting - 1, 0)) : "";
+    var h_prefix = (!exclude_bullets) ? bulletPoint(Math.max(options.nesting, 0)) : "";
+    var hi_prefix = (!exclude_bullets) ? bulletPoint(Math.max(options.nesting + 1, 0)) : "";
     var modifier_string = [];
     var prefix = (!exclude_bullets) ? bulletPoint(options.nesting) : "";
 
@@ -1141,13 +1142,17 @@ module.exports = {
             } else if (all_modifier_keys[i] == "infamy_loss") {
               modifier_string.push(`${prefix}${f}${printPercentage(local_value[0], { display_prefix: true, base_zero: true })}${f} ${local_modifier_name}`);
             } else if (all_modifier_keys[i] == "maintenance") {
-              var new_options = JSON.parse(JSON.stringify(options));
-              new_options.nesting++;
+              var local_maintenance = JSON.parse(JSON.stringify(local_value[0]));
 
-              modifier_string.push(`${h_prefix}Maintenance:`);
-              modifier_string.push(
-                module.exports.parseModifiers(local_value[0], exclude_bullets, base_zero, base_one, new_options)
-              );
+              if (Object.keys(local_maintenance).length > 0) {
+                var new_options = JSON.parse(JSON.stringify(options));
+                new_options.nesting++;
+
+                modifier_string.push(`${h_prefix}Maintenance:`);
+                modifier_string.push(
+                  module.exports.parseModifiers(local_maintenance, exclude_bullets, base_zero, base_one, new_options)
+                );
+              }
             } else if (all_modifier_keys[i] == "maximum") {
               modifier_string.push(`${h_prefix}Maximum: ${parseNumber(local_value[0])}`);
             } else if (all_modifier_keys[i] == "manpower_cost") {
@@ -1155,15 +1160,17 @@ module.exports = {
 
               var local_keys = Object.keys(local_obj);
 
+              //Manpower header first to avoid repeats
+              modifier_string.push(`${h_prefix}Manpower:`);
+
               for (var x = 0; x < local_keys.length; x++) {
                 var local_subobj = local_obj[local_keys[x]];
-
-                modifier_string.push(`${h_prefix}Manpower:`);
                 //Recursive scopes
                 if (local_keys[x] == "any_pop" || local_keys[i].startsWith("any_pop_")) {
                   var new_options = JSON.parse(JSON.stringify(options));
-                  new_options.nesting++;
+                  new_options.nesting += 2;
 
+                  modifier_string.push(`${hi_prefix}Any Pop:`);
                   modifier_string.push(
                     module.exports.parseModifiers(local_subobj, exclude_bullets, base_zero, base_one, new_options)
                   );
@@ -1223,13 +1230,17 @@ module.exports = {
 
               modifier_string.push(`${prefix}Obsoletes ${f}${unit_names.join(", ")}${f}`);
             } else if (all_modifier_keys[i] == "produces") {
-              var new_options = JSON.parse(JSON.stringify(options));
-              new_options.nesting++;
+              var local_produces = JSON.parse(JSON.stringify(local_value[0]));
 
-              modifier_string.push(`${h_prefix}Produces:`);
-              modifier_string.push(
-                module.exports.parseModifiers(local_value[0], exclude_bullets, base_zero, base_one, new_options)
-              );
+              if (Object.keys(local_produces).length > 0) {
+                var new_options = JSON.parse(JSON.stringify(options));
+                new_options.nesting++;
+
+                modifier_string.push(`${h_prefix}Produces:`);
+                modifier_string.push(
+                  module.exports.parseModifiers(local_value[0], exclude_bullets, base_zero, base_one, new_options)
+                );
+              }
             } else if (all_modifier_keys[i] == "production_choice" || all_modifier_keys[i].startsWith("production_choice_")) {
               var new_options = JSON.parse(JSON.stringify(options));
               var production_choice_name = parseString(all_modifier_keys[i].replace("production_choice_", ""));

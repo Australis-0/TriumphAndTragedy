@@ -82,7 +82,7 @@ module.exports = {
             //Push to local fields
             local_fields.push({
               name: `${building_icon} __**${building_name}**:__`,
-              value: `\`\`\`yaml\n${costs_string}${manpower_string}${production_string}${maintenance_string}\n${construction_string}\`\`\``,
+              value: `\`\`\`yaml\n${truncateString(`${costs_string}${manpower_string}${production_string}${maintenance_string}\n${construction_string}`, 1000)}\`\`\``,
               inline: true
             });
           }
@@ -447,10 +447,10 @@ module.exports = {
       //Iterate over provinces and the buildings inside them
       for (var i = 0; i < provinces.length; i++)
         if (provinces[i].buildings) {
-          var new_buildings = JSON.parse(JSON.stringify(province_obj.buildings));
+          var new_buildings = JSON.parse(JSON.stringify(provinces[i].buildings));
 
           new_buildings = sortBuildings(new_buildings, game_obj.building_sort);
-          if (province_obj.buildings.length > 0) has_buildings = true;
+          if (provinces[i].buildings.length > 0) has_buildings = true;
 
           buildings_string.push(`**${(provinces[i].name) ? provinces[i].name : `Province ${provinces[i].id}`}:** ${config.icons.population} ${parseNumber(provinces[i].pops.population)}`);
 

@@ -3409,194 +3409,144 @@ module.exports = {
       {
         var ignore_research = ["research list", "research possibilities", "research queue"];
 
-        switch (game_obj.page) {
-          case "research":
-            //Button handler
-            //[Back]
-            if (input == "back") {
-              printTechnology(user_id);
-              game_obj.page = "technology";
-            }
+        if (game_obj.page == "research") {
+          //[Back]
+          if (input == "back") {
+            printTechnology(user_id);
+            game_obj.page = "technology";
+          }
 
-            //[Cancel Research]
-            if (input.startsWith("cancel research ")) {
-              var slot_to_cancel = parseInt(input.replace("cancel research ", ""));
+          //[Cancel Research]
+          if (input.startsWith("cancel research ")) {
+            var slot_to_cancel = parseInt(input.replace("cancel research ", ""));
 
-              cancelResearch(user_id, slot_to_cancel);
-            } else if (input == "cancel research") {
-              initialiseCancelResearch(user_id);
-            }
+            cancelResearch(user_id, slot_to_cancel);
+          } else if (input == "cancel research") {
+            initialiseCancelResearch(user_id);
+          }
 
-            //[Research]; [Research (Tech)]
-            if (input.startsWith("research ") && !ignore_research.includes(input)) {
-              var tech_to_research = input.replace("research ", "");
+          //[View Research Queue]
+          if (["research queue", "view research queue"].includes(input)) {
+            createPageMenu(game_obj.middle_embed, {
+              embed_pages: printResearchQueue(user_id),
+              page: arg[0] - 1,
+              user: game_obj.user
+            });
+            game_obj.page = "research_queue";
+          }
+        }
 
-              research(user_id, tech_to_research);
-            } else if (input == "research") {
-              initialiseResearch(user_id);
-            }
+        if (game_obj.page == "research_list") {
+          //[Back]
+          if (input == "back") {
+            printTechnology(user_id);
+            game_obj.page = "technology";
+          }
 
-            //[Research List]
-            if (input == "research list") {
+          //[Jump To Page]
+          if (input == "jump to page")
+            visualPrompt(game_obj.alert_embed, user_id, {
+              title: `Jump To Page:`,
+              prompts: [
+                [`Which page would you like jump to?`, "number", { min: 1, max: printResearchList(game_obj.user).length }]
+              ]
+            },
+            function (arg) {
               createPageMenu(game_obj.middle_embed, {
-                embed_pages: printResearchList(user_id),
-                user: game_obj.user
-              });
-              game_obj.page = "research_list";
-            }
-
-            //[View Research Queue]
-            if (["research queue", "view research queue"].includes(input)) {
-              createPageMenu(game_obj.middle_embed, {
-                embed_pages: printResearchQueue(user_id),
+                embed_pages: printResearchList(game_obj.user),
                 page: arg[0] - 1,
                 user: game_obj.user
               });
-              game_obj.page = "research_queue";
-            }
+            });
+        }
 
-            break;
-          case "research_list":
-            //Button handler
-            //[Back]
-            if (input == "back") {
-              printTechnology(user_id);
-              game_obj.page = "technology";
-            }
+        if (game_obj.page == "research_queue") {
+          //[Add Technology]
+          if (
+            input.startsWith("add technology ") ||
+            (input.startsWith("add ") && input != "add technology")
+          ) {
+            var tech_to_add = input
+              .replace("add technology ", "")
+              .replace("add ", "");
 
-            //[Jump To Page]
-            if (input == "jump to page")
-              visualPrompt(game_obj.alert_embed, user_id, {
-                title: `Jump To Page:`,
-                prompts: [
-                  [`Which page would you like jump to?`, "number", { min: 1, max: printResearchList(game_obj.user).length }]
-                ]
-              },
-              function (arg) {
-                createPageMenu(game_obj.middle_embed, {
-                  embed_pages: printResearchList(game_obj.user),
-                  page: arg[0] - 1,
-                  user: game_obj.user
-                });
-              });
+            addResearchQueue(user_id, tech_to_add);
+          } else if (input == "add technology") {
+            initialiseAddResearchQueue(user_id);
+          }
 
-            //[Research]; [Research (Tech)]
-            if (input.startsWith("research ") && !ignore_research.includes(input)) {
-              var tech_to_research = input.replace("research ", "");
+          //[Back]
+          if (input == "back") {
+            printTechnology(user_id);
+            game_obj.page = "technology";
+          }
 
-              research(user_id, tech_to_research);
-            } else if (input == "research") {
-              initialiseResearch(user_id);
-            }
+          //[Current Research]
+          if (input == "current research") {
+            printResearch(user_id);
+            game_obj.page = "research";
+          }
 
-            break;
-          case "research_queue":
-            //Button handler
-            //[Add Technology]
-            if (
-              input.startsWith("add technology ") ||
-              (input.startsWith("add ") && input != "add technology")
-            ) {
-              var tech_to_add = input
-                .replace("add technology ", "")
-                .replace("add ", "");
+          //[Remove Technology]
+          if (
+            input.startsWith("remove technology ") ||
+            (input.startsWith("remove ") && input != "remove technology")
+          ) {
+            var tech_to_remove = input.replace("remove technology ", "")
+              .replace("remove ", "");
 
-              addResearchQueue(user_id, tech_to_add);
-            } else if (input == "add technology") {
-              initialiseAddResearchQueue(user_id);
-            }
+            removeResearchQueue(user_id, tech_to_add);
+          } else if (input == "remove technology") {
+            initialiseRemoveResearchQueue(user_id);
+          }
+        }
 
-            //[Back]
-            if (input == "back") {
-              printTechnology(user_id);
-              game_obj.page = "technology";
-            }
+        if (technology_pages.includes(game_obj.page)) {
+          //[Cancel Research]
+          if (input.startsWith("cancel research ")) {
+            var slot_to_cancel = parseInt(input.replace("cancel research ", ""));
 
-            //[Current Research]
-            if (input == "current research") {
-              printResearch(user_id);
-              game_obj.page = "research";
-            }
+            cancelResearch(user_id, slot_to_cancel);
+          } else if (input == "cancel research") {
+            initialiseCancelResearch(user_id);
+          }
 
-            //[Remove Technology]
-            if (
-              input.startsWith("remove technology ") ||
-              (input.startsWith("remove ") && input != "remove technology")
-            ) {
-              var tech_to_remove = input
-                .replace("remove technology ", "")
-                .replace("remove ", "");
+          //[Current Research]
+          if (input == "current research") {
+            printResearch(user_id);
+            game_obj.page = "research";
+          }
 
-              removeResearchQueue(user_id, tech_to_add);
-            } else if (input == "remove technology") {
-              initialiseRemoveResearchQueue(user_id);
-            }
+          //[Research List]; [Research Possibilities]
+          if (input == "research possibilities" || input == "research list") {
+            createPageMenu(game_obj.middle_embed, {
+              embed_pages: printResearchList(user_id),
+              user: game_obj.user
+            });
+            game_obj.page = "research_list";
+          }
 
-            //[Research]
-            if (input == "research")
-              initialiseResearch(user_id);
+          //[Research]
+          if (input == "research") {
+            initialiseResearch(user_id);
+          }
 
-            //[Research List]; [Research (Tech)]
-            if (input == "research list") {
-              createPageMenu(game_obj.middle_embed, {
-                embed_pages: printResearchList(user_id),
-                user: game_obj.user
-              });
-              game_obj.page = "research_list";
-            } else if (input.startsWith("research ") && !ignore_research.includes(input)) {
-              var tech_to_research = input.replace("research ", "");
+          //[Research (Tech)]
+          if (input.startsWith("research ") && !ignore_research.includes(input)) {
+            var tech_to_research = input.replace("research ", "");
 
-              research(user_id, tech_to_research);
-            }
+            research(user_id, tech_to_research);
+          }
 
-            break;
-
-          //Default handler for main technology tab
-          default:
-            if (technology_pages.includes(game_obj.page)) {
-              //Button Handler
-              //[Cancel Research]
-              if (input.startsWith("cancel research ")) {
-                var slot_to_cancel = parseInt(input.replace("cancel research ", ""));
-
-                cancelResearch(user_id, slot_to_cancel);
-              } else if (input == "cancel research") {
-                initialiseCancelResearch(user_id);
-              }
-
-              //[Current Research]
-              if (input == "current research") {
-                printResearch(user_id);
-                game_obj.page = "research";
-              }
-
-              //[Research Possibilities]; [Research (Tech)]
-              if (input == "research possibilities" || input == "research list") {
-                createPageMenu(game_obj.middle_embed, {
-                  embed_pages: printResearchList(user_id),
-                  user: game_obj.user
-                });
-                game_obj.page = "research_list";
-              } else if (input.startsWith("research " && !ignore_research.includes(input))) {
-                var tech_to_research = input.replace("research ", "");
-
-                research(user_id, tech_to_research);
-              } else if (input == "research") {
-                initialiseResearch(user_id);
-              }
-
-              //[View Research Queue]
-              if (["research queue", "view research queue"].includes(input)) {
-                createPageMenu(game_obj.middle_embed, {
-                  embed_pages: printResearchQueue(user_id),
-                  page: arg[0] - 1,
-                  user: game_obj.user
-                });
-                game_obj.page = "research_queue";
-              }
-            }
-
-            break;
+          //[View Research Queue]
+          if (["research queue", "view research queue"].includes(input)) {
+            createPageMenu(game_obj.middle_embed, {
+              embed_pages: printResearchQueue(user_id),
+              page: arg[0] - 1,
+              user: game_obj.user
+            });
+            game_obj.page = "research_queue";
+          }
         }
       }
 

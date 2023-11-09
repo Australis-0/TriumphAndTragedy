@@ -1118,12 +1118,12 @@ module.exports = {
 
   /*
     sortProvinces() - Sorts an array of user provinces by a certain mode.
-    mode: "population_ascending", "population_descending"
+    mode: "population_ascending", "population_descending". Optional. "population_descending" by default
   */
   sortProvinces: function (arg0_user, arg1_mode) {
     //Convert from parameters
     var user_id = arg0_user;
-    var mode = arg1_mode.toLowerCase();
+    var mode = (mode) ? arg1_mode.toLowerCase() : "population_descending";
 
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
