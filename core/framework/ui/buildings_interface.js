@@ -195,7 +195,7 @@ module.exports = {
 
       if (province_obj) {
         var actual_id = main.global.user_map[user_id];
-        var building_obj = getBuilding(local_building.building_type);
+        var config_obj = getBuilding(local_building.building_type);
         var usr = main.users[actual_id];
 
         //Push building name and display ID; current national owner
@@ -206,22 +206,22 @@ module.exports = {
         building_string.push(`- Province: **${(province_obj.name) ? province_obj.name : province_id}**`);
         building_string.push(`- Nationality: __${usr.name}__`);
 
-        building_string.push(`- Subsidised: ${(building_obj.subsidised) ? `${config.icons.checkmark} **[Turn Off Subsidies]**` : `${config.icons.cross} **[Subsidise]**`}`);
+        building_string.push(`- Subsidised: ${(local_building.subsidised) ? `${config.icons.checkmark} **[Turn Off Subsidies]**` : `${config.icons.cross} **[Subsidise]**`}`);
 
-        if (!building_obj.insolvent) { //[WIP] - Add additional goods in the future
+        if (!local_building.insolvent) { //[WIP] - Add additional goods in the future
           building_string.push("");
-          building_string.push(`- Liquidity: ${config.icons.money} ${parseNumber(building_obj.stockpile.money)}`);
+          building_string.push(`- Liquidity: ${config.icons.money} ${parseNumber(local_building.stockpile.money)}`);
 
-          if (building_obj.insolvency_turns)
-            building_string.push(` - This building has been insolvent for **${parseNumber(building_obj.insolvency_turns)}** turn(s).`);
+          if (local_building.insolvency_turns)
+            building_string.push(` - This building has been insolvent for **${parseNumber(local_building.insolvency_turns)}** turn(s).`);
         } else {
           building_string.push("");
           building_string.push(`- This building is currently __Insolvent__! We must manually **[Reopen]** this building for ${config.icons.money} ${parseNumber(getReopenCost(local_building))} instead.`);
         }
 
         //Display building employment
-        if (building_obj.manpower_cost) {
-          var employment_string = getBuildingEmploymentLocalisation(local_building, building_obj.manpower_cost);
+        if (config_obj.manpower_cost) {
+          var employment_string = getBuildingEmploymentLocalisation(local_building, config_obj.manpower_cost);
 
           //Push to building_string
           building_string.push("");
@@ -234,7 +234,7 @@ module.exports = {
 
         //Display building production choices
         if (hasProductionChoice(local_building)) {
-          var all_production_keys = Object.keys(building_obj.produces);
+          var all_production_keys = Object.keys(config_obj.produces);
 
           building_string.push("");
           building_string.push(config.localisation.divider);

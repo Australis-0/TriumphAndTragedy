@@ -652,8 +652,11 @@ module.exports = {
               building_obj = (!options.return_key) ? provinces[i].buildings[x] : [provinces[i].id, x];
 
     //If building_obj could not be fetched, return by ID
-    if (!building_obj)
-      return module.exports.getBuildingByID(building_name, options);
+    if (!building_obj) {
+      var building_id_obj = module.exports.getBuildingByID(building_name);
+
+      return (!options.return_key) ? building_id_obj : building_id_obj.id;
+    }
 
     //Return statement
     return building_obj;

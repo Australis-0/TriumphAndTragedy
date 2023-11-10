@@ -1292,12 +1292,12 @@ module.exports = {
     }
 
     //Format inputs/outputs
-    if (maintenance.length > 0 && production.length > 0) {
-      production_choice_string = `${maintenance.join(", ")} ➛ ${production.join(", ")}`;
-    } else if (production.length > 0) {
-      production_choice_string = `${production.join(", ")}`;
-    } else if (maintenance.length > 0) {
-      production_choice_string = `${maintenance.join(", ")} ➛ _Nothing_`;
+    if (maintenance_array.length > 0 && production_array.length > 0) {
+      production_choice_string = `${maintenance_array.join(", ")} ➛ ${production_array.join(", ")}`;
+    } else if (production_array.length > 0) {
+      production_choice_string = `${production_array.join(", ")}`;
+    } else if (maintenance_array.length > 0) {
+      production_choice_string = `${maintenance_array.join(", ")} ➛ _Nothing_`;
     }
 
     //Return statement
