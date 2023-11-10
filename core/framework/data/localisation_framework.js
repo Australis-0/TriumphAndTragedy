@@ -1238,11 +1238,13 @@ module.exports = {
     var config_obj = lookup.all_buildings[building_type];
     var production_choice_string = "";
 
+    console.log(`parseProductionChoice() called with parameters: `, building_type, production_choice_name);
+
     if (config_obj)
       if (config_obj.produces) {
         if (production_choice_name) {
-          var local_production_choice_key = getProductionChoice(building_type, production_choice_name);
-          var local_production_choice = config_obj.produces[local_production_choice_key];
+          var local_production_choice = config_obj.produces[`production_choice_${production_choice_name}`];
+          console.log(`Production choice:`, local_production_choice);
 
           production_choice_string = (local_production_choice) ?
             `${(local_production_choice.icon) ? local_production_choice.icon + " " : ""}${(local_production_choice.name) ? local_production_choice.name : local_production_choice_key}` :
@@ -1264,25 +1266,25 @@ module.exports = {
     var exclude_icons = arg1_exclude_icons;
 
     //Declare local instance variables
-    var all_goods = Object.keys(goods_obj);
+    var all_good_keys = Object.keys(goods_obj);
     var maintenance_array = [];
     var production_array = [];
     var production_choice_string = "";
 
-    //Iterate over all_goods
-    for (var i = 0; i < all_goods.length; i++) {
-      var local_value = production_chain_obj[all_good_keys[x]];
+    //Iterate over all_good_keys
+    for (var i = 0; i < all_good_keys.length; i++) {
+      var local_value = goods_obj[all_good_keys[i]];
 
       //Check if this is a good
-      if (lookup.all_goods[all_good_keys[x]]) {
+      if (lookup.all_goods[all_good_keys[i]]) {
         if (local_value < 0) {
-          maintenance_array.push(`${parseGood(all_good_keys[x], "", exclude_icons, `${parseNumber(local_value*-1)} `)}`);
+          maintenance_array.push(`${parseGood(all_good_keys[i], "", exclude_icons, `${parseNumber(local_value*-1)} `)}`);
         } else if (local_value > 0) {
-          production_array.push(`${parseGood(all_good_keys[x], "", exclude_icons, `${parseNumber(local_value)} `)}`);
+          production_array.push(`${parseGood(all_good_keys[i], "", exclude_icons, `${parseNumber(local_value)} `)}`);
         }
       } else {
         //Money handler
-        if (all_good_keys[x] == "money")
+        if (all_good_keys[i] == "money")
           if (local_value < 0) {
             maintenance_array.push(`${config.icons.money} ${parseNumber(local_value*-1)}`);
           } else if (local_value > 0) {

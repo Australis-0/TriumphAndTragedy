@@ -239,7 +239,7 @@ module.exports = {
           building_string.push("");
           building_string.push(config.localisation.divider);
           building_string.push("");
-          building_string.push(`${(!game_obj.hide_production_choices) ? `**[Show Production Choices]**` : `**[Hide Production Choices]**`} | **[Change Production Choice]**`);
+          building_string.push(`${(!game_obj.hide_production_choices) ? `**[Hide Production Choices]**` : `**[Show Production Choices]**`} | **[Change Production Choice]**`);
           building_string.push("");
           building_string.push(`- Production Choice: ${parseProductionChoice(local_building.building_type, local_building.production_choice)}`);
 
@@ -251,12 +251,13 @@ module.exports = {
 
             for (var i = 0; i < all_production_keys.length; i++)
               if (all_production_keys[i].startsWith("production_choice_")) {
+                var production_choice_name = all_production_keys[i].replace("production_choice_", "");
                 var production_choice_obj = getProductionChoiceOutput({
                   province_id: province_id,
                   building_object: local_building,
-                  production_choice: all_production_keys[i]
+
+                  production_choice: production_choice_name
                 });
-                var production_choice_name = all_production_keys[i].replace("production_choice_", "");
 
                 //Push production choices to building_string
                 building_string.push(`- ${parseProductionChoice(local_building.building_type, production_choice_name)}: **[Switch to ${parseProductionChoice(local_building.building_type, production_choice_name)}]**`);

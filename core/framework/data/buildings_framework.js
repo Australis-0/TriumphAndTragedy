@@ -2172,7 +2172,8 @@ module.exports = {
   /*
     getProductionChoice() - Fetches a production choice object for either the .produces/.maintenance field
     options: {
-      include_reserved: true/false - Whether to include reserved words in the production choice fetched
+      include_reserved: true/false, - Whether to include reserved words in the production choice fetched
+      return_key: true/false - Whether to return the key instead
     }
   */
   getProductionChoice: function (arg0_building, arg1_production_choice, arg2_maintenance_production, arg3_options) {
@@ -2199,6 +2200,10 @@ module.exports = {
           if (production_choice_name == production_choice) {
             found_production_choice_obj = true;
             production_choice_obj = JSON.parse(JSON.stringify(local_subobj));
+
+            //Return statement
+            if (options.return_key)
+              return all_production_keys[i];
           }
         }
 
