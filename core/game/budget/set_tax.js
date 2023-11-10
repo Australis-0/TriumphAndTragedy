@@ -35,23 +35,27 @@ module.exports = {
     var usr = main.users[actual_id];
 
     //Fetch local_max_tax
-    var local_max_tax = (local_tax.capacity_id) ?
-      returnSafeNumber(usr.modifiers[local_tax.capacity_id], 1) : 1;
+    if (local_tax) {
+      var local_max_tax = (local_tax.capacity_id) ?
+        returnSafeNumber(usr.modifiers[local_tax.capacity_id], 1) : 1;
 
-    //Clamp tax
-    amount = Math.max(amount, 0);
-    amount = Math.min(amount, local_max_tax);
+      //Clamp tax
+      amount = Math.max(amount, 0);
+      amount = Math.min(amount, local_max_tax);
 
-    //Set new tax
-    usr[local_tax.id] = amount;
+      //Set new tax
+      usr[local_tax.id] = amount;
 
-    //Print feedback
-    (amount != local_max_tax) ?
-      printAlert(game_obj.id, `You have set your **${(local_tax.name) ? local_tax.name : local_tax.id}** to **${printPercentage(amount)}**.`) :
-      printAlert(game_obj.id, `You have set your **${(local_tax.name) ? local_tax.name : local_tax.id}** to the maximum capacity of **${printPercentage(amount)}**.`);
+      //Print feedback
+      (amount != local_max_tax) ?
+        printAlert(game_obj.id, `You have set your **${(local_tax.name) ? local_tax.name : local_tax.id}** to **${printPercentage(amount)}**.`) :
+        printAlert(game_obj.id, `You have set your **${(local_tax.name) ? local_tax.name : local_tax.id}** to the maximum capacity of **${printPercentage(amount)}**.`);
 
-    //Update UI
-    if (game_obj.page == "budget")
-      printBudget(user_id, main.interfaces[game_obj.middle_embed.id].page);
+      //Update UI
+      if (game_obj.page == "budget")
+        printBudget(user_id, main.interfaces[game_obj.middle_embed.id].page);
+    } else {
+      printError(game_obj.id, `No tax by the name of **${tax_type}** could be found.`);
+    }
   }
 };

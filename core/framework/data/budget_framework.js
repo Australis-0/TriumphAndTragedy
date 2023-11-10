@@ -183,8 +183,6 @@ module.exports = {
       }
     }
 
-    console.log(`Tax exists:`, tax_exists);
-
     //Return statement
     return (tax_exists[0]) ? tax_exists[1] : undefined;
   },

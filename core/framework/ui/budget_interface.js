@@ -161,10 +161,11 @@ module.exports = {
       budget_string.push("");
       budget_string.push(`> Estimated tax revenues are based on last turn. This is also how the total income figure is calculated.`);
       budget_string.push("");
+      
+      var corporate_tax_cost = getTaxCost(user_id, `corporate_tax`);
 
       var corporate_suffix_string = (usr.corporate_tax != 0) ?
         ` - ${config.icons.political_capital} ${parseNumber(corporate_tax_cost.political_capital*-1)}PC - ${config.icons.money} ${parseNumber(returnSafeNumber(usr.trackers.tax.corporate_tax), { display_prefix: true })}` : "";
-      var corporate_tax_cost = getTaxCost(user_id, `corporate_tax`);
 
       budget_string.push(`Corporate Income Tax: **${printPercentage(usr.corporate_tax)}**/**${printPercentage(usr.modifiers.corporate_max_tax)}**${corporate_suffix_string}`);
       budget_string.push("");
