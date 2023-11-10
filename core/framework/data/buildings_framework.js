@@ -588,9 +588,10 @@ module.exports = {
       return_key: true/false - Whether to return the array element instead of the building object
     }
   */
-  getBuildingByID: function (arg0_id) {
+  getBuildingByID: function (arg0_id, arg1_options) {
     //Convert from parameters
     var id = (typeof arg0_id != "object") ? arg0_id.trim().toLowerCase() : arg0_id;
+    var options = (arg1_options) ? arg1_options : {};
 
     //Guard clause
     if (typeof id == "object") return id;
@@ -619,10 +620,11 @@ module.exports = {
       return_key: true/false - Whether to return an array [province_id, building_element] instead of an object
     }
   */
-  getBuildingByName: function (arg0_user, arg1_building_name) {
+  getBuildingByName: function (arg0_user, arg1_building_name, arg2_options) {
     //Convert from parameters
     var user_id = arg0_user;
     var building_name = (typeof arg1_building_name != "object") ? arg1_building_name.trim().toLowerCase() : arg1_building_name;
+    var options = (arg2_options) ? arg2_options : {};
 
     //Guard clause
     if (typeof building_name == "object") return building_name;
@@ -648,6 +650,10 @@ module.exports = {
           if (provinces[i].buildings[x].name)
             if (provinces[i].buildings[x].name.trim().toLowerCase() == building_name)
               building_obj = (!options.return_key) ? provinces[i].buildings[x] : [provinces[i].id, x];
+
+    //If building_obj could not be fetched, return by ID
+    if (!building_obj)
+      return module.exports.getBuildingByID(building_name, options);
 
     //Return statement
     return building_obj;

@@ -2109,13 +2109,11 @@ module.exports = {
           if (["subsidise all buildings", "subsidize all buildings"].includes(input))
             subsidiseAllBuildings(user_id);
 
-          //[View Building]
-          if (input == "view building")
+          //[View Building]; [View (Building Name)]
+          if (input == "view building") {
             initialiseViewBuilding(user_id);
-
-          //[View (Building Name)]
-          if (input.startsWith("view building ")) {
-            var building_name = input.replace("view building ", "");
+          } else if (input.startsWith("view ")) {
+            var building_name = input.replace("view ", "");
             var building_view = viewBuilding(user_id, building_name);
 
             game_obj.page = `view_building_${building_view.id}`;
