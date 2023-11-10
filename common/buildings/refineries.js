@@ -1,6 +1,7 @@
 config.buildings.refineries = {
   name: "Refineries",
   order: 15,
+  taxable: true,
 
   aluminium_factories: {
     name: "Aluminium Factories",

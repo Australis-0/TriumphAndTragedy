@@ -163,7 +163,7 @@ module.exports = {
       budget_string.push("");
 
       var corporate_suffix_string = (usr.corporate_tax != 0) ?
-        ` - ${config.icons.political_capital} ${parseNumber(corporate_tax_cost.political_capital*-1)} - ${config.icons.money} ${parseNumber(returnSafeNumber(usr.trackers.tax.corporate_tax), { display_prefix: true })}` : "";
+        ` - ${config.icons.political_capital} ${parseNumber(corporate_tax_cost.political_capital*-1)}PC - ${config.icons.money} ${parseNumber(returnSafeNumber(usr.trackers.tax.corporate_tax), { display_prefix: true })}` : "";
       var corporate_tax_cost = getTaxCost(user_id, `corporate_tax`);
 
       budget_string.push(`Corporate Income Tax: **${printPercentage(usr.corporate_tax)}**/**${printPercentage(usr.modifiers.corporate_max_tax)}**${corporate_suffix_string}`);
@@ -178,7 +178,7 @@ module.exports = {
 
         var local_tax = usr[tax_key];
         var local_tax_cost = getTaxCost(user_id, tax_key);
-        var suffix_string = (local_tax != 0) ? ` - ${config.icons.political_capital} ${parseNumber(local_tax_cost.political_capital*-1)} - ${config.icons.money} ${parseNumber(returnSafeNumber(usr.trackers.tax[tax_key]), { display_prefix: true })}` : "";
+        var suffix_string = (local_tax != 0) ? ` - ${config.icons.political_capital} ${parseNumber(local_tax_cost.political_capital*-1)}PC - ${config.icons.money} ${parseNumber(returnSafeNumber(usr.trackers.tax[tax_key]), { display_prefix: true })}` : "";
 
         budget_string.push(`- ${parseString(local_class)} Class Income Tax: **${printPercentage(local_tax)}**/${printPercentage(returnSafeNumber(usr.modifiers[`${local_class}_income_max_tax`]))}${suffix_string}`);
       }
@@ -194,7 +194,7 @@ module.exports = {
 
         var local_tax = usr[tax_key];
         var local_tax_cost = getTaxCost(user_id, tax_key);
-        var suffix_string = (local_tax != 0) ? ` - ${config.icons.political_capital} ${parseNumber(local_tax_cost.political_capital*-1)} - ${config.icons.money} ${parseNumber(returnSafeNumber(usr.trackers.tax[tax_key]), { display_prefix: true })}` : "";
+        var suffix_string = (local_tax != 0) ? ` - ${config.icons.political_capital} ${parseNumber(local_tax_cost.political_capital*-1)}PC - ${config.icons.money} ${parseNumber(returnSafeNumber(usr.trackers.tax[tax_key]), { display_prefix: true })}` : "";
 
         budget_string.push(`- ${parseString(local_class)} Duties: **${printPercentage(local_tax)}**/${printPercentage(returnSafeNumber(usr.modifiers[`${local_class}_duties_max_tax`]))}${suffix_string}`);
       }
@@ -269,8 +269,8 @@ module.exports = {
       var local_revenue = returnSafeNumber(usr.trackers.tax[all_taxes[i]]);
       var local_tax = usr.custom_taxes[all_taxes[i]];
       var local_tax_cost = getTaxCost(user_id, all_taxes[i], { custom_tax: true });
-      var pc_string = (local_tax_cost.political_capital >= 0) ?
-        `${config.icons.political_capital} ${parseNumber(local_tax_cost.political_capital*-1)} - ` : "";
+      var pc_string = (local_tax_cost.political_capital != 0) ?
+        `${config.icons.political_capital} ${parseNumber(local_tax_cost.political_capital*-1)}` : "";
 
       tax_string.push(`${i + 1}. ${parseTaxName(all_taxes[i])} - (**${printPercentage(local_tax)}**/${printPercentage(usr.modifiers.max_tax)}) - ${pc_string} - ${config.icons.money} ${parseNumber(local_revenue, { display_prefix: true })}`);
     }

@@ -1405,7 +1405,7 @@ module.exports = {
     //Declare local instance variables
     var split_key = tax_key.split("-");
 
-    if (split_key[1] != "category_tax") {
+    if (split_key[1] == "category_tax") {
       var category_obj = config.buildings[split_key[0]];
 
       return (!do_not_format) ?

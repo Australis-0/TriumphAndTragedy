@@ -1,6 +1,7 @@
 config.buildings.industry = {
   name: "Industry",
   order: 9,
+  taxable: true,
 
   ai_hubs: {
     name: "AI Hubs",

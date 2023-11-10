@@ -213,6 +213,14 @@ module.exports = {
                 money: module.exports.getStartingStockpile(building_obj)
               };
 
+              //Set starting production chocie if it has .produces
+              if (building_obj.produces) {
+                var default_production_choice = module.exports.getDefaultProductionChoice(province_obj.controller, building_obj);
+
+                if (default_production_choice.length > 0)
+                  local_object.production_choice = default_production_choice;
+              }
+
               province_obj.buildings.push(local_object);
             }
           }
@@ -771,6 +779,10 @@ module.exports = {
     //Declare local instance variables
     var all_building_categories = Object.keys(config.buildings);
     var building_category_exists = [false, ""]; //[building_category_exists, category_name]
+
+    //Guard clause if already category
+    if (config.buildings[building_name])
+      return (!options.return_key) ? config.buildings[building_name] : building_name;
 
     for (var i = 0; i < all_building_categories.length; i++)
       if (Object.keys(config.buildings[all_building_categories[i]]).includes(building_name))
@@ -1828,7 +1840,7 @@ module.exports = {
 
       for (var i = 0; i < all_production_keys.length; i++)
         if (all_production_keys[i] == "production_choice" || all_production_keys[i].startsWith("production_choice_")) {
-          has_production_choice = [true, all_production_keys[i]];
+          has_production_choice = [true, all_production_keys[i].replace("production_choice_", "")];
           break;
         }
     }

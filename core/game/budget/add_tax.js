@@ -13,11 +13,11 @@ module.exports = {
       title: `Add Industry Tax:`,
       prompts: [
         [`Which industry or building should a new tax be levied upon? You may type the name of building categories or individual buildings, so long as they are commercial.`, "string"],
-        [`What should the level of tax levied upon this sector be?`, "number", { min: 0, max: usr.modifiers.max_tax }]
+        [`What should the level of tax levied upon this sector be?`, "number", { min: 0, max: usr.modifiers.max_tax*100 }]
       ]
     },
     function (arg) {
-      var custom_tax = setCustomTax(user_id, arg[0], arg[1]);
+      var custom_tax = setCustomTax(user_id, arg[0], arg[1]/100);
 
       //Print feedback
       (custom_tax[0]) ?

@@ -146,16 +146,18 @@ module.exports = {
     for (var i = 0; i < all_taxes.length; i++) {
       var local_tax = config.budget.taxes[all_taxes[i]];
 
-      if (local_tax.name.toLowerCase().indexOf(tax_name) != -1)
-        tax_exists = [true, (!options.return_key) ? local_tax.id : local_tax];
+      if (local_tax.name)
+        if (local_tax.name.toLowerCase().indexOf(tax_name) != -1)
+          tax_exists = [true, (!options.return_key) ? local_tax : local_tax.id];
     }
 
     //Hard match
     for (var i = 0; i < all_taxes.length; i++) {
       var local_tax = config.budget.taxes[all_taxes[i]];
 
-      if (local_tax.name.toLowerCase() == tax_name)
-        tax_exists = [true, (!options.return_key) ? local_tax.id : local_tax];
+      if (local_tax.name)
+        if (local_tax.name.toLowerCase() == tax_name)
+          tax_exists = [true, (!options.return_key) ? local_tax : local_tax.id];
     }
 
     //If tax still cannot be found by names alone, search by alias
@@ -164,20 +166,24 @@ module.exports = {
       for (var i = 0; i < all_taxes.length; i++) {
         var local_tax = config.budget.taxes[all_taxes[i]];
 
-        for (var x = 0; x < local_tax.aliases.length; x++)
-          if (local_tax.aliases.toLowerCase().indexOf(tax_name) != -1)
-            tax_exists = [true, (!options.return_key) ? local_tax.id : local_tax];
+        if (local_tax.aliases)
+          for (var x = 0; x < local_tax.aliases.length; x++)
+            if (local_tax.aliases[x].toLowerCase().indexOf(tax_name) != -1)
+              tax_exists = [true, (!options.return_key) ? local_tax : local_tax.id];
       }
 
       //Hard match second
       for (var i = 0; i < all_taxes.length; i++) {
         var local_tax = config.budget.taxes[all_taxes[i]];
 
-        for (var x = 0; x < local_tax.aliases.length; x++)
-          if (local_tax.aliases.toLowerCase() == tax_name)
-            tax_exists = [true, (!options.return_key) ? local_tax.id : local_tax];
+        if (local_tax.aliases)
+          for (var x = 0; x < local_tax.aliases.length; x++)
+            if (local_tax.aliases[x].toLowerCase() == tax_name)
+              tax_exists = [true, (!options.return_key) ? local_tax : local_tax.id];
       }
     }
+
+    console.log(`Tax exists:`, tax_exists);
 
     //Return statement
     return (tax_exists[0]) ? tax_exists[1] : undefined;
@@ -217,7 +223,7 @@ module.exports = {
         if (tax_name.endsWith("-category_tax")) {
           building_share = getBuildingCategoryShare(user_id, tax_name.replace("-category_tax", ""));
         } else if (tax_name.endsWith("-tax")) { //Building tax handler
-          building_share = getBuildingCategoryShare(user_id, tax_name.replace("-tax", ""));
+          building_share = getBuildingShare(user_id, tax_name.replace("-tax", ""));
         }
 
         pc_cost = pc_cost*building_share;
@@ -307,6 +313,7 @@ module.exports = {
 
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
+    var game_obj = getGameObject(user_id);
     var usr = main.users[actual_id];
 
     var all_taxes = Object.keys(usr.custom_taxes);
@@ -358,6 +365,7 @@ module.exports = {
 
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
+    var game_obj = getGameObject(user_id);
     var usr = main.users[actual_id];
 
     var all_taxes = Object.keys(usr.custom_taxes);
@@ -398,7 +406,8 @@ module.exports = {
     var building_obj = getBuilding(building_name);
     var category_id = getBuildingCategory(building_name, { return_key: true });
     var category_obj = getBuildingCategory(building_name);
-    var is_building_category = (!building_obj && category_obj);
+    var game_obj = getGameObject(user_id);
+    var is_building_category = (category_obj);
     var usr = main.users[actual_id];
 
     //Check if this value exceeds max_tax; clamp so it can't go negative
@@ -412,7 +421,7 @@ module.exports = {
 
       //Check if category_obj is taxable
       if (category_obj.taxable) {
-        if (building_obj) {
+        if (building_obj && !category_obj) {
           //Impose tax on building
           usr.custom_taxes[`${building_id}-tax`] = amount;
 
@@ -421,8 +430,12 @@ module.exports = {
             printCustomTaxes(user_id, main.interfaces[game_obj.middle_embed.id].page);
 
           return [true, `**${(building_obj.name) ? building_obj.name : building_name}** tax has been set to **${printPercentage(amount)}**.`];
-        } else if (is_building_category) {
+        } else if (category_obj) {
           usr.custom_taxes[`${category_id}-category_tax`] = amount;
+
+          //Update UI
+          if (game_obj.page == "custom_taxes")
+            printCustomTaxes(user_id, main.interfaces[game_obj.middle_embed.id].page);
 
           return [true, `**${(category_obj.name) ? category_obj.name : category_id}** Industry tax has been set to **${printPercentage(amount)}**.`];
         }

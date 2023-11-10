@@ -1,6 +1,7 @@
 config.buildings.resource_extraction = {
   name: "Resource Extraction",
   order: 17,
+  taxable: true,
 
   chalk_mines: {
     name: "Chalk Mines",

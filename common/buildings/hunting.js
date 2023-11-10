@@ -1,6 +1,7 @@
 config.buildings.hunting = {
   name: "Hunting",
   order: 8,
+  taxable: true,
 
   elephant_hunting_grounds: {
     name: "Elephant Hunting Grounds",

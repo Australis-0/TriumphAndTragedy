@@ -235,7 +235,6 @@ module.exports = {
       FileManager.import("./game/politics/coup_government");
       FileManager.import("./game/politics/raise_stability");
       FileManager.import("./game/politics/set_government");
-      FileManager.import("./game/politics/set_tax");
       FileManager.import("./game/politics/support_party");
 
       FileManager.import("./game/province/cities");

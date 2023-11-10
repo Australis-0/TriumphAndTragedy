@@ -12,11 +12,11 @@ module.exports = {
     visualPrompt(game_obj.alert_embed, user_id, {
       title: `Remove Industry Tax:`,
       prompts: [
-        [`What is the ID of the tax you would like to abolish?\n\nThis is the number displayed to the left of the tax imposed.`, "number", { min: 0 }]
+        [`What is the ID of the tax you would like to abolish?\n\nThis is the number displayed to the left of the tax imposed.`, "number", { min: 1 }]
       ]
     },
     function (arg) {
-      var remove_tax = removeCustomTax(user_id, arg[0]);
+      var remove_tax = removeCustomTax(user_id, arg[0] - 1);
 
       //Print feedback
       (remove_tax[0]) ?

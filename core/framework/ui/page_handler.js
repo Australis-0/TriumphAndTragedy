@@ -682,7 +682,7 @@ module.exports = {
           }
 
           //[Jump To Page]
-          if (input == "jump to page") {
+          if (input == "jump to page")
             visualPrompt(game_obj.alert_embed, user_id, {
               title: `Jump To Page:`,
               prompts: [
@@ -692,7 +692,6 @@ module.exports = {
             function (arg) {
               printBudget(user_id, arg[0] - 1);
             });
-          }
 
           //[Set Tax]
           if (input == "set tax")

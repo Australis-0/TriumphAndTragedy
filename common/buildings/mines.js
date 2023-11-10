@@ -1,6 +1,7 @@
 config.buildings.mines = {
   name: "Mines",
   order: 12,
+  taxable: true,
 
   anthracite_coal_mines: {
     name: "Anthracite Coal Mines",

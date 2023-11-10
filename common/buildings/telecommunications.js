@@ -1,6 +1,7 @@
 config.buildings.telecommunications = {
   name: "Telecommunication",
   order: 18,
+  taxable: true,
 
   broadcast_stations: {
     name: "Broadcast Stations",

@@ -1,6 +1,7 @@
 config.buildings.agriculture = {
   name: "Agriculture",
   order: 2,
+  taxable: true,
 
   beekeepers: {
     name: "Beekeepers",

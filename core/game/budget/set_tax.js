@@ -13,11 +13,11 @@ module.exports = {
       title: `Adjust Tax Code:`,
       prompts: [
         [`Please type the name of the tax type you would like your bureaucrats to adjust.`, "string"],
-        [`What is the effective percentage you would like to change these taxes to?`, { min: 0, max: 1 }]
+        [`What is the effective percentage you would like to change these taxes to?`, "number", { min: 0, max: 100 }]
       ]
     },
     function (arg) {
-      module.exports.setTax(user_id, arg[0], arg[1]);
+      module.exports.setTax(user_id, arg[0], arg[1]/100);
     });
   },
 

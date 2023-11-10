@@ -1,6 +1,7 @@
 config.buildings.commercial = { //[WIP] - Add special_effect
   name: "Commercial",
   order: 4,
+  taxable: true,
 
   banks: {
     name: "Banks",

@@ -1,6 +1,7 @@
 config.buildings.processing_facilities = { //[WIP] - Add Synthetic Ruby Factory
   name: "Processing Facilities",
   order: 14,
+  taxable: true,
 
   apothecaries: {
     name: "Apothecaries",

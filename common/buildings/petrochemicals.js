@@ -1,6 +1,7 @@
 config.buildings.petrochemicals = {
   name: "Petrochemicals",
   order: 13,
+  taxable: true,
 
   acetic_acid_plants: {
     name: "Acetic Acid Plants",
