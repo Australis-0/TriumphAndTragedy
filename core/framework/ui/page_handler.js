@@ -765,15 +765,16 @@ module.exports = {
           }
 
           //[Jump To Page]
-          visualPrompt(game_obj.alert_embed, user_id, {
-            title: `Jump To Page:`,
-            prompts: [
-              [`Which page would you like to jump to?`, "number", { min: 1, max: printBuilding(game_obj.user, province_id, undefined, { do_not_display: true }).length }]
-            ]
-          },
-          function (arg) {
-            printBuilding(user_id, province_id, arg[0]);
-          });
+          if (input == "jump to page")
+            visualPrompt(game_obj.alert_embed, user_id, {
+              title: `Jump To Page:`,
+              prompts: [
+                [`Which page would you like to jump to?`, "number", { min: 1, max: printBuilding(game_obj.user, local_building, undefined, { do_not_display: true }).length }]
+              ]
+            },
+            function (arg) {
+              printBuilding(user_id, local_building, arg[0]);
+            });
 
           //[Rename Building]
           if (input == "rename building")
@@ -893,8 +894,8 @@ module.exports = {
             initialiseViewBuilding(user_id);
 
           //[View (Building Name)]
-          if (input.startsWith("view building ")) {
-            var building_name = input.replace("view building ", "");
+          if (input.startsWith("view ")) {
+            var building_name = input.replace("view ", "");
             var building_view = viewBuilding(user_id, building_name);
 
             game_obj.page = `view_building_${building_view.id}`;
@@ -2114,9 +2115,7 @@ module.exports = {
             initialiseViewBuilding(user_id);
           } else if (input.startsWith("view ")) {
             var building_name = input.replace("view ", "");
-            var building_view = viewBuilding(user_id, building_name);
-
-            game_obj.page = `view_building_${building_view.id}`;
+            var building_view = viewBuilding(user_id, building_name); //This automatically sets game_obj.page
           }
         }
 

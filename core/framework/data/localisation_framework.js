@@ -1238,13 +1238,10 @@ module.exports = {
     var config_obj = lookup.all_buildings[building_type];
     var production_choice_string = "";
 
-    console.log(`parseProductionChoice() called with parameters: `, building_type, production_choice_name);
-
     if (config_obj)
       if (config_obj.produces) {
         if (production_choice_name) {
           var local_production_choice = config_obj.produces[`production_choice_${production_choice_name}`];
-          console.log(`Production choice:`, local_production_choice);
 
           production_choice_string = (local_production_choice) ?
             `${(local_production_choice.icon) ? local_production_choice.icon + " " : ""}${(local_production_choice.name) ? local_production_choice.name : local_production_choice_key}` :

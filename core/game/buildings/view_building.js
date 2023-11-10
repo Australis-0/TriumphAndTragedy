@@ -33,6 +33,7 @@ module.exports = {
 
     if (building_id) {
       printBuilding(user_id, building_id);
+      game_obj.page = `view_building_${building_id}`;
     } else {
       printError(game_obj.id, `The building you are trying to view, **${building_name}**, does not exist!`);
     }

@@ -14,8 +14,12 @@ module.exports = {
     var options = (arg3_options) ? arg3_options : {};
 
     //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
     var base_production_choice = options.has_base_production_choice; //Optimisation parameter
+    var game_obj = getGameObject(user_id);
     var op_production_choice_key = options.production_choice_key; //Optimisation parameter
+    var return_message = [false, ""];
+    var usr = main.users[actual_id];
 
     //Change production choice
     if (building_obj) {
@@ -33,11 +37,11 @@ module.exports = {
         if (production_choice_name.trim().toLowerCase() == "base") {
           delete building_obj.production_choice; //Base production choice doesn't need to be specified
 
-          return [true, `You have set the Production Choice for **${(building_obj.name) ? building_obj.name : building_obj.id}** to its default.`];
+          return_message = [true, `You have set the Production Choice for **${(building_obj.name) ? building_obj.name : building_obj.id}** to its default.`];
         } else {
           building_obj.production_choice = production_choice_key;
 
-          return [true, `You have set the Production Choice for **${(building_obj.name) ? building_obj.name : building_obj.id}** to **${parseProductionChoice(building_obj.building_type, production_choice_key)}**.`];
+          return_message = [true, `You have set the Production Choice for **${(building_obj.name) ? building_obj.name : building_obj.id}** to **${parseProductionChoice(building_obj.building_type, production_choice_key)}**.`];
         }
 
         //Refresh UI
@@ -48,11 +52,14 @@ module.exports = {
         if (game_obj.page == "view_industry")
           printIndustry(user_id, main.interfaces[game_obj.middle_embed.id].page);
       } else {
-        return [false, `The production choice **${production_choice_name}** doesn't exist for **${(config_obj.name) ? config_obj.name : building_obj.building_type}!**!`];
+        return_message = [false, `The production choice **${production_choice_name}** doesn't exist for **${(config_obj.name) ? config_obj.name : building_obj.building_type}!**!`];
       }
     } else {
-      return [false, `The building specified couldn't be found!`];
+      return_message = [false, `The building specified couldn't be found!`];
     }
+
+    //Return statement
+    return return_message;
   },
 
   initialiseChangeProductionChoice: function (arg0_user, arg1_building_object) {

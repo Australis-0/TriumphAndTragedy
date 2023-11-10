@@ -635,31 +635,36 @@ module.exports = {
     var provinces = getProvinces(user_id, { include_occupations: true });
     var usr = main.users[actual_id];
 
-    //Iterate over all provinces; soft search first
-    for (var i = 0; i < provinces.length; i++)
-      if (provinces[i].buildings)
-        for (var x = 0; x < provinces[i].buildings.length; x++)
-          if (provinces[i].buildings[x].name)
-            if (provinces[i].buildings[x].name.trim().toLowerCase().indexOf(building_name) != -1)
-              building_obj = (!options.return_key) ? provinces[i].buildings[x] : [provinces[i].id, x];
+    //Fetch building by name
+    {
+      //Iterate over all provinces; soft search first
+      for (var i = 0; i < provinces.length; i++)
+        if (provinces[i].buildings)
+          for (var x = 0; x < provinces[i].buildings.length; x++)
+            if (provinces[i].buildings[x].name)
+              if (provinces[i].buildings[x].name.trim().toLowerCase().indexOf(building_name) != -1)
+                building_obj = (!options.return_key) ? provinces[i].buildings[x] : [provinces[i].id, x];
 
-    //Iterate over all provinces; hard search second
-    for (var i = 0; i < provinces.length; i++)
-      if (provinces[i].buildings)
-        for (var x = 0; x < provinces[i].buildings.length; x++)
-          if (provinces[i].buildings[x].name)
-            if (provinces[i].buildings[x].name.trim().toLowerCase() == building_name)
-              building_obj = (!options.return_key) ? provinces[i].buildings[x] : [provinces[i].id, x];
+      //Iterate over all provinces; hard search second
+      for (var i = 0; i < provinces.length; i++)
+        if (provinces[i].buildings)
+          for (var x = 0; x < provinces[i].buildings.length; x++)
+            if (provinces[i].buildings[x].name)
+              if (provinces[i].buildings[x].name.trim().toLowerCase() == building_name)
+                building_obj = (!options.return_key) ? provinces[i].buildings[x] : [provinces[i].id, x];
+    }
 
     //If building_obj could not be fetched, return by ID
     if (!building_obj) {
       var building_id_obj = module.exports.getBuildingByID(building_name);
 
-      return (!options.return_key) ? building_id_obj : building_id_obj.id;
+      //Return statement
+      if (building_id_obj)
+        return (!options.return_key) ? building_id_obj : building_id_obj.id;
     }
 
     //Return statement
-    return building_obj;
+    return (!options.return_key) ? building_obj : building_obj.id;
   },
 
   //Returns all building categories based on order (if it exists)
@@ -2170,13 +2175,13 @@ module.exports = {
   },
 
   /*
-    getProductionChoice() - Fetches a production choice object for either the .produces/.maintenance field
+    getProductionChoiceByKey() - Fetches a production choice object for either the .produces/.maintenance field
     options: {
       include_reserved: true/false, - Whether to include reserved words in the production choice fetched
       return_key: true/false - Whether to return the key instead
     }
   */
-  getProductionChoice: function (arg0_building, arg1_production_choice, arg2_maintenance_production, arg3_options) {
+  getProductionChoiceByKey: function (arg0_building, arg1_production_choice, arg2_maintenance_production, arg3_options) {
     //Convert from parameters
     var building_name = arg0_building;
     var production_choice = (arg1_production_choice) ? arg1_production_choice.trim().toLowerCase() : "";
@@ -2227,6 +2232,120 @@ module.exports = {
   },
 
   /*
+    getProductionChoiceByName() - Fetches a production choice by name alone from a building type
+    options: {
+      return_key: true/false - Whether to return a key
+    }
+  */
+  getProductionChoiceByName: function (arg0_building, arg1_production_choice_name, arg2_options) {
+    //Convert from parameters
+    var building_name = arg0_building;
+    var production_choice_name = (typeof arg1_production_choice_name != "object") ? arg1_production_choice_name.trim().toLowerCase() : arg1_production_choice_name;
+    var options = (arg2_options) ? arg2_options : {};
+
+    //Guard clause if production_choice_name is already object
+    if (typeof production_choice_name == "object")
+      return production_choice_name;
+
+    //Declare local instance variables
+    var building_obj = (typeof building_name != "object") ? module.exports.getBuilding(building_name) : building_name;
+    var production_choice_exists = [false, ""]; //[production_choice_exists, production_choice_obj];
+
+    //Name check first
+    {
+      //Check building_obj.produces first
+      if (building_obj.produces) {
+        var all_production_keys = Object.keys(building_obj.produces);
+
+        //Soft search first
+        for (var i = 0; i < all_production_keys.length; i++)
+          if (all_production_keys[i].startsWith("production_choice_")) {
+            var local_key = all_production_keys[i].replace("production_choice_", "");
+            var local_production_choice = module.exports.getProductionChoiceByKey(building_obj, local_key, "produces", options);
+            var local_value = building_obj.produces[all_production_keys[i]];
+
+
+            if (local_value.name) {
+              var local_name = local_value.name.trim().toLowerCase();
+
+              if (local_name.indexOf(production_choice_name) != -1)
+                production_choice_exists = [true, (!options.return_key) ? local_production_choice : local_key];
+            }
+          }
+
+        //Hard search second
+        for (var i = 0; i < all_production_keys.length; i++)
+          if (all_production_keys[i].startsWith("production_choice_")) {
+            var local_key = all_production_keys[i].replace("production_choice_", "");
+            var local_production_choice = module.exports.getProductionChoiceByKey(building_obj, local_key, "produces", options);
+            var local_value = building_obj.produces[all_production_keys[i]];
+
+
+            if (local_value.name) {
+              var local_name = local_value.name.trim().toLowerCase();
+
+              if (local_name == production_choice_name)
+                production_choice_exists = [true, (!options.return_key) ? local_production_choice : local_key];
+            }
+          }
+      }
+
+      //Check building_obj.maintenance next
+      if (!production_choice_exists[0]) {
+        var all_maintenance_keys = Object.keys(building_obj.maintenance);
+
+        //Soft search first
+        for (var i = 0; i < all_maintenance_keys.length; i++)
+          if (all_maintenance_keys[i].startsWith("production_choice_")) {
+            var local_key = all_production_keys[i].replace("production_choice_", "");
+
+            var local_maintenance_choice = module.exports.getProductionChoiceByKey(building_obj, local_key, "maintenance", options);
+            var local_value = building_obj.maintenance[all_maintenance_keys[i]];
+
+            if (local_value.name) {
+              var local_name = local_value.name.trim().toLowerCase();
+
+              if (local_name.indexOf(production_choice_name) != -1)
+                production_choice_exists = [true, (!options.return_key) ? local_production_choice : local_key];
+            }
+          }
+
+        //Hard search second
+        for (var i = 0; i < all_maintenance_keys.length; i++)
+          if (all_maintenance_keys[i].startsWith("production_choice_")) {
+            var local_key = all_production_keys[i].replace("production_choice_", "");
+
+            var local_maintenance_choice = module.exports.getProductionChoiceByKey(building_obj, local_key, "maintenance", options);
+            var local_value = building_obj.maintenance[all_maintenance_keys[i]];
+
+            if (local_value.name) {
+              var local_name = local_value.name.trim().toLowerCase();
+
+              if (local_name == production_choice_name)
+                production_choice_exists = [true, (!options.return_key) ? local_production_choice : local_key];
+            }
+          }
+      }
+    }
+
+    //Key check next using module.exports.getProductionChoiceByKey();
+    if (!production_choice_exists[0]) {
+      var production_choice_obj = module.exports.getProductionChoiceByKey(building_obj, production_choice_name, "produces", options);
+
+      //If still not there, check maintenance
+      if (!production_choice_obj)
+        production_choice_obj = module.exports.getProductionChoiceByKey(building_obj, production_choice_name, "maintenance", options);
+
+      //Now that production_choice_obj is fetched; set production_choice_exists
+      if (production_choice_obj)
+        production_choice_exists = [true, (!options.return_key) ? production_choice_obj : production_choice_name];
+    }
+
+    //Return statement
+    return (production_choice_exists[0]) ? production_choice_exists[1] : "";
+  },
+
+  /*
     getProductionChoiceOutput() - Returns a flattened good scope of produced goods.
     options: {
       province_id: "4407", - The province ID in which the building is located. Player modifiers are taken from the controller of the province if applicable, all production is negated if province is occupied
@@ -2249,10 +2368,10 @@ module.exports = {
     var raw_building_name = (options.building_object) ? options.building_object.building_type : getBuilding(options.building_type, { return_key: true });
 
     //Initialise local instance variables
-    maintenance_obj = multiplyObject(module.exports.getProductionChoice(raw_building_name, production_choice, "maintenance"), -1);
+    maintenance_obj = multiplyObject(module.exports.getProductionChoiceByKey(raw_building_name, production_choice, "maintenance"), -1);
 
     if (!options.no_production)
-      produces_obj = module.exports.getProductionChoice(raw_building_name, production_choice);
+      produces_obj = module.exports.getProductionChoiceByKey(raw_building_name, production_choice);
 
     //Check if province exists
     if (options.province_id) {

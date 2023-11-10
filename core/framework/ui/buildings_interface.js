@@ -198,6 +198,10 @@ module.exports = {
         var config_obj = getBuilding(local_building.building_type);
         var usr = main.users[actual_id];
 
+        //Set local_building.name if it doesn't exist
+        if (!local_building.name)
+          local_building.name = generateBuildingName(province_id, local_building.building_type);
+
         //Push building name and display ID; current national owner
         building_string.push(`${(local_building.custom_name) ? `${config.icons.old_scroll} ` : ""}__**${local_building.name}:**__ (ID: ${local_building.id})`);
         building_string.push("");
