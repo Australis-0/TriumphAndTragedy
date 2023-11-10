@@ -202,6 +202,7 @@ module.exports = {
                 id: module.exports.generateBuildingID(province_id),
                 building_type: raw_building_name,
                 order: province_obj.buildings.length,
+                name: module.exports.generateBuildingName(province_obj.id, raw_building_name),
 
                 //Random seeds
                 zipf_seed: getZipfTerm(Math.random()*2)
@@ -395,15 +396,15 @@ module.exports = {
       exclude_number: true/false - Whether to exclude the ending number (e.g. #15)
     }
   */
-  generateBuildingName: function (arg0_province_id, arg1_building_name, arg2_options) {
+  generateBuildingName: function (arg0_province_id, arg1_building_type, arg2_options) {
     //Convert from parameters
     var province_id = arg0_province_id;
-    var building_name = arg1_building_name.trim().toLowerCase();
+    var building_type = arg1_building_type.trim().toLowerCase();
     var options = (arg2_options) ? arg2_options : {};
 
     //Declare local instance variables
-    var building_key = module.exports.getBuilding(building_name, { return_key: true });
-    var building_obj = module.exports.getBuilding(building_name);
+    var building_key = module.exports.getBuilding(building_type, { return_key: true });
+    var building_obj = module.exports.getBuilding(building_type);
     var building_string = "";
     var province_obj = getProvince(province_id);
 
@@ -3021,8 +3022,7 @@ module.exports = {
     var building_array = arg0_building_array;
     var mode = (arg1_mode) ? arg1_mode.trim().toLowerCase() : "category";
 
-    //Declare local instance variables
-    var building_array = [];
+    //Declare local instance variables=
     var building_count = {};
 
     if (building_array) {

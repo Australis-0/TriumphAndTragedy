@@ -38,7 +38,7 @@ module.exports = {
           employment_string = `- ${getBuildingEmploymentStringLocalisation(local_building, building_obj.manpower_cost)}`;
         if (local_building.stockpile)
           if (local_building.stockpile.money)
-            money_stockpile_string = ` | ${config.icons.money} ${parseNumber(building_obj.stockpile.money)}`;
+            money_stockpile_string = ` | ${config.icons.money} ${parseNumber(local_building.stockpile.money)}`;
         if (building_obj.produces)
           production_choice_string = ` - ${module.exports.parseProductionChoice(local_building.building_type, local_building.production_choice)}`;
 
@@ -144,7 +144,7 @@ module.exports = {
         }
       }
 
-      options.any_pop_total += Math.ceil(total_pop_count/total_pop_numbers);
+      modifyValue(options, "any_pop_total", Math.ceil(total_pop_count/total_pop_numbers));
     }
 
     //Iterate over all_manpower_keys
@@ -156,18 +156,19 @@ module.exports = {
 
       if (local_pop) {
         //Add local_value to options.any_pop_fulfilment if any_pop_scope
-        if (!any_pop_scope) {
+        if (any_pop_scope) {
           change_remaining = options.any_pop_total - returnSafeNumber(options.any_pop_fulfilment);
 
-          if (change_remaining > 0) {
-            modifyValue(options, "any_pop_fulfilment", change_remaining);
+          any_pop_string.push(`${(local_pop.icon) ? local_pop.icon : ""}`);
 
-            any_pop_string.push(`${(local_pop.icon) ? local_pop.icon + " " : ""}`);
+          if (change_remaining > 0)
+            if (options.employment[all_manpower_keys[i]]) {
+              var local_employment = returnSafeNumber(options.employment[all_manpower_keys[i]]);
+              var local_employment_change = Math.min(local_employment, change_remaining);
 
-            options.any_pop_fulfilment += change_remaining;
-            if (options.employment[all_manpower_keys[i]])
-              options.employment[all_manpower_keys[i]] -= change_remaining;
-          }
+              modifyValue(options, "any_pop_fulfilment", local_employment_change);
+              options.employment[all_manpower_keys[i]] -= local_employment_change;
+            }
         } else {
           change_remaining = Math.max(local_subobj - local_value, 0);
 
@@ -195,11 +196,11 @@ module.exports = {
 
     //Push any_pop_string to end of employment_string
     if (any_pop_scope)
-      employment_string.push(`(${any_pop_string.join("/")}: ${parseNumber(options.any_pop_fulfilment)}/${parseNumber(options.any_pop_total)})`);
+      employment_string.push(`(Any of: ${any_pop_string.join("/")}: ${parseNumber(options.any_pop_fulfilment)}/${parseNumber(options.any_pop_total)})`);
 
     //Return something different if not nested
-    return (!options.nested) ? `(${employment_string.join(", ")})` : {
-      string: `(${employment_string.join(", ")})`,
+    return (!options.nested) ? `${employment_string.join(", ")}` : {
+      string: `${employment_string.join(", ")}`,
       employment: options.employment
     };
   },
@@ -463,7 +464,7 @@ module.exports = {
 
       if (!all_production_keys[i].includes("_upkeep"))
         if (all_production_keys[i] != "money") {
-          resource_production_string.push(`${(!options.exclude_bullets) ? "- " : ""}**${(local_value[0] == local_value[1]) ? parseNumber(local_value[0]) : parseNumber(local_value[0]) + " - " + parseNumber(local_value[1])}** ${(options.display_icons) ? module.exports.parseGood(local_good) : (local_good.name) ? local_good.name : all_production_keys[i]}.`);
+          resource_production_string.push(`${(!options.exclude_bullets) ? "- " : ""}**${(local_value[0] == local_value[1]) ? parseNumber(local_value[0]) : parseNumber(local_value[0]) + " - " + parseNumber(local_value[1])}** ${(options.display_icons) ? module.exports.parseGood(local_good) : all_production_keys[i]}.`);
         } else {
           resource_production_string.push(`${(!options.exclude_bullets) ? "- " : ""}**${(local_value[0] == local_value[1]) ? parseNumber(local_value[0]) : parseNumber(local_value[0]) + " - " + parseNumber(local_value[1])}** Money`);
         }
