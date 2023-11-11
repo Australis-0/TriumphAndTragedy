@@ -1089,12 +1089,12 @@ module.exports = {
     }
 
     //Return statement
-    (!options.return_object) ? open_positions : {
+    return (!options.return_object) ? open_positions : {
       hiring_positions: open_positions,
 
       has_deficit: has_deficit,
       has_liquidity: has_liquidity,
-      has_full_employment_profit: full_employment_profit,
+      has_full_employment_profit: has_full_employment_profit,
       minimum_hiring_liquidity: minimum_hiring_liquidity,
 
       full_employment_profit: wage_obj.full_employment_profit,
@@ -1418,7 +1418,7 @@ module.exports = {
 
         for (var i = 0; i < all_pops.length; i++) {
           var local_employees = returnSafeNumber(building_obj.employment[all_pops[i]]);
-          var local_value = building_obj.flattened_manpower_cost[all_pops[i]];
+          var local_value = config_obj.flattened_manpower_cost[all_pops[i]];
 
           //If current employment of pop type is 0, then push local value to remaining positions to incentivise hiring this pop type
           remaining_positions += (local_employees <= 0) ? local_value :
@@ -1447,7 +1447,10 @@ module.exports = {
     var province_id = building_obj.id.split("-")[0];
     var province_obj = main.provinces[province_id];
 
-    var goods_obj = (options.goods) ? options.goods : getBuildingProduction(user_id, building_obj, province_obj);
+    var goods_obj = (options.goods) ? options.goods : getBuildingProduction({
+      building_object: building_obj,
+      province_id: province_id
+    });
 
     //Iterate over goods_obj and multiply by current market price, 0 if not sellable
     var all_good_keys = Object.keys(goods_obj);
@@ -2989,6 +2992,11 @@ module.exports = {
         if (building_tax_amount > 0)
           modifyValue(usr.trackers.tax, `${building_id}-tax`, building_tax_amount);
       }
+
+      //Return statement
+      return building_obj;
+    } else {
+      log.warn(`processBuilding() - Could not find building in Province ${province_id}!`);
     }
   },
 
