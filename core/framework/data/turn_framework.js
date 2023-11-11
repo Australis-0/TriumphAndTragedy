@@ -732,10 +732,12 @@ module.exports = {
             if (!all_produced_goods[i].includes("money")) {
               var upkeep_to_process = all_produced_goods[i].replace("_upkeep", "");
 
-              if (lookup.all_goods[upkeep_to_process] != undefined)
+              if (lookup.all_goods[upkeep_to_process] != undefined) {
                 modifyGoodAmount(user_id, upkeep_to_process, randomNumber(local_value[0], local_value[1]));
-              else
-                usr[upkeep_to_process] -= randomNumber(local_value[0], local_value[1]);
+              } else {
+                if (!reserved.production_choice.includes(upkeep_to_process))
+                  usr[upkeep_to_process] -= randomNumber(local_value[0], local_value[1]);
+              }
             }
           } else if (all_produced_goods[i].includes("_special_effect")) {
             //Process special effects
@@ -753,7 +755,8 @@ module.exports = {
             if (lookup.all_goods[all_produced_goods[i]] != undefined) {
               modifyGoodAmount(user_id, all_produced_goods[i], produced_amount);
             } else {
-              usr[all_produced_goods[i]] += produced_amount;
+              if (!reserved.production_choice.includes(all_produced_goods[i]))
+                usr[all_produced_goods[i]] += produced_amount;
             }
 
             //Add to market supply

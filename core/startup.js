@@ -121,6 +121,7 @@ module.exports = {
       FileManager.import("./game/buildings/production_choices");
       FileManager.import("./game/buildings/rename_building");
       FileManager.import("./game/buildings/reopen");
+      FileManager.import("./game/buildings/subsidies");
       FileManager.import("./game/buildings/view_building");
 
       FileManager.import("./game/budget/add_tax");
