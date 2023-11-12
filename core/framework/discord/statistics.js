@@ -68,7 +68,7 @@ module.exports = {
       total_sum += numbers[i];
 
     //Return statement
-    return total_sum/numbers.length;
+    return returnSafeNumber(total_sum/numbers.length);
   },
 
   getCDF: function (arg0_pdf, arg1_min, arg2_max, arg3_intervals) {

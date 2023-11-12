@@ -1393,25 +1393,26 @@ module.exports = {
     //Check if province exists and for urban/rural growth dichotomy
     if (province_obj)
       if (province_obj.controller == province_obj.owner)
-        if (province_obj.type == "urban") {
-          var local_pop_growth = module.exports.getCityPopGrowth(province_obj, { pop_type: all_pops[i] });
+        for (var i = 0; i < all_pops.length; i++)
+          if (province_obj.type == "urban") {
+            var local_pop_growth = module.exports.getCityPopGrowth(province_obj, { pop_type: all_pops[i] });
 
-          modifyValue(births, all_pops[i], (local_pop_growth/province_obj.pops.population) + 1);
-          total_fertility += (local_pop_growth/province_obj.pops.population) + 1;
-        } else {
-          if (!province_obj.pop_cap)
-            province_obj.pop_cap = (config.defines.economy.rural_pop_cap) ?
-              randomNumber(config.defines.economy.rural_pop_cap[0], config.defines.economy.rural_pop_cap[1]) :
-              randomNumber(120000, 140000);
+            modifyValue(births, all_pops[i], returnSafeNumber(local_pop_growth/province_obj.pops.population) + 1);
+            total_fertility += (local_pop_growth/province_obj.pops.population) + 1;
+          } else {
+            if (!province_obj.pop_cap)
+              province_obj.pop_cap = (config.defines.economy.rural_pop_cap) ?
+                randomNumber(config.defines.economy.rural_pop_cap[0], config.defines.economy.rural_pop_cap[1]) :
+                randomNumber(120000, 140000);
 
-          //Calculate rural pop growth for all pops
-          if (province_obj.pops.population < province_obj.pop_cap)
-            for (var i = 0; i < all_pops.length; i++) {
-              var local_pop_growth = Math.ceil(province_obj.pops[all_pops[i]]*usr.pops[`${all_pops[i]}_growth_modifier`]*usr.modifiers.pop_growth_modifier) - province_obj.pops[all_pops[i]];
+            //Calculate rural pop growth for all pops
+            if (province_obj.pops.population < province_obj.pop_cap)
+              for (var i = 0; i < all_pops.length; i++) {
+                var local_pop_growth = Math.ceil(province_obj.pops[all_pops[i]]*usr.pops[`${all_pops[i]}_growth_modifier`]*usr.modifiers.pop_growth_modifier) - province_obj.pops[all_pops[i]];
 
-              modifyValue(births, all_pops[i], (local_pop_growth/province_obj.pops.population) + 1);
-            }
-        }
+                modifyValue(births, all_pops[i], (local_pop_growth/province_obj.pops.population) + 1);
+              }
+          }
 
     //Return statement
     return births;
@@ -1961,7 +1962,7 @@ module.exports = {
       }
 
     //Return statement
-    return returnSafeNumber(province_obj.pops[all_pop_keys[i]] - employed_pops);
+    return returnSafeNumber(province_obj.pops[pop_type] - employed_pops);
   },
 
   mergePopScopes: function (arg0_pop_scope, arg1_pop_scope) {
@@ -2256,42 +2257,56 @@ module.exports = {
 
         //Iterate over all_building_wages and select the range from the top of the current number of keys
         var all_building_wages = Object.keys(building_wages);
+        var end_index = all_building_wages.length - 1;
         var is_strict = config.defines.economy.strict_job_seeking;
         var job_seeking_range = config.defines.economy.job_seeking_range;
 
         var valid_building_range = [
-          Math.floor(all_building_wages.length*job_seeking_range[0]),
-          Math.floor(all_building_wages.length*job_seeking_range[1]) - 1
+          Math.floor(end_index*job_seeking_range[0]),
+          Math.ceil(end_index*job_seeking_range[1])
         ];
         valid_building_range.sort(function (a, b) { return a - b });
 
-        for (var i = valid_building_range[1] - 1; i >= ((is_strict) ? valid_building_range[0] : 0); i++) {
-          var building_id = all_building_wages[i];
-          var local_building = province_obj.buildings[building_map[building_id]];
-          var local_key = `wealth-${building_id}-${pop_type}`;
+        var actual_valid_building_range = (is_strict) ? valid_building_range[0] : 0;
 
-          //If they're currently hiring, take all the workers you can according to random_chance_roll. If positions max out, the unemployed_pops figure rolls over
-          if (building_obj[`${pop_type}_positions`]) {
-            var random_chance_roll = Math.random();
-            var random_hirees = Math.floor(unemployed_pops*random_chance_roll);
+        //Make sure that valid_building_range exists for the target pops searching for jobs
+        if (valid_building_range[0] != -1 && valid_building_range[1] != -1)
+          for (var i = valid_building_range[1]; i >= actual_valid_building_range; i--) {
+            var building_id = all_building_wages[i];
+            var local_building = province_obj.buildings[building_map[building_id]];
+            var local_key = `wealth-${building_id}-${pop_type}`;
 
-            if (unemployed_pops > 0) {
-              var available_positions = building_obj[`${pop_type}_positions`];
+            //Declare wealth pool if it doesn't exist
+            if (!province_obj.pops[local_key])
+              province_obj.pops[local_key] = {};
+            var local_wealth_pool = province_obj.pops[local_key];
 
-              if (available_positions > random_hirees) {
-                building_obj[`${pop_type}_positions`] -= random_hirees;
-                province_obj.pops[local_key].size += random_hirees;
-                unemployed_pops -= random_hirees;
-              } else {
-                province_obj.pops[local_key].size += available_positions;
-                unemployed_pops -= available_positions;
+            //If they're currently hiring, take all the workers you can according to random_chance_roll. If positions max out, the unemployed_pops figure rolls over
+            if (local_building)
+              if (local_building[`${pop_type}_positions`]) {
+                var random_chance_roll = Math.random();
+                var random_hirees = Math.floor(unemployed_pops*random_chance_roll);
 
-                //Delete building_obj[`${pop_type}_positions`] since all the positions have been hired
-                delete building_obj[`${pop_type}_positions`];
+                if (unemployed_pops > 0) {
+                  var available_positions = local_building[`${pop_type}_positions`];
+
+                  if (available_positions > random_hirees) {
+                    modifyValue(local_building, `${pop_type}_positions`, random_hirees*-1, true);
+                    modifyValue(local_building.employment, pop_type, random_hirees);
+                    modifyValue(local_wealth_pool, "size", random_hirees);
+
+                    unemployed_pops -= random_hirees;
+                  } else {
+                    modifyValue(local_building.employment, pop_type, available_positions);
+                    modifyValue(local_wealth_pool, "size", available_positions);
+                    unemployed_pops -= available_positions;
+
+                    //Delete local_building[`${pop_type}_positions`] since all the positions have been hired
+                    delete local_building[`${pop_type}_positions`];
+                  }
+                }
               }
-            }
           }
-        }
       }
   },
 
@@ -2310,7 +2325,6 @@ module.exports = {
     //Declare local instance variables
     var building_map = getBuildingMap(province_id);
     var config_obj = config.pops[pop_type];
-    var current_median = province_obj[`${pop_type}_median_wage`];
     var current_year = Math.floor(main.date.year);
     var has_demotes = false;
     var has_promotes = false;
@@ -2321,6 +2335,8 @@ module.exports = {
     var province_obj = main.provinces[province_id];
     var user_id = province_obj.controller;
     var usr = main.users[user_id];
+
+    var current_median = returnSafeNumber(province_obj[`${pop_type}_median_wage`]);
 
     var external_migration_table = lookup[`${province_obj.controller}-external_migration_attraction`];
     var internal_migration_table = lookup[`${province_obj.controller}-migration_attraction`];
@@ -2337,7 +2353,7 @@ module.exports = {
     //Pop Births and Deaths
     {
       //Get province growth scalar
-      var birth_scalar = province_obj.trackers.births[pop_type];
+      var birth_scalar = returnSafeNumber(province_obj.births[pop_type], 1); //[REVISIT] - Fix this to .trackers.birth_modifiers
 
       //Birth handling
       if (!usr.has_famine) {
@@ -2369,7 +2385,7 @@ module.exports = {
 
       //Death handling
       {
-        //Fetch death pop scope arguments for accurate age distribution
+        //[REVISIT] - Fetch death pop scope arguments for accurate age distribution
 
         //Fetch death_chance
         var death_chance = parsePopLimit(config.deaths, {
@@ -2812,17 +2828,23 @@ module.exports = {
       });
 
       //Kill off anyone over old-age upper bound
-      var over_upper_bound = module.exports.selectPops({
-        province_id: province_id,
-        age: {
-          min: config.defines.economy.old_age_hard_upper_bound,
-          max: 1000
-        }
-      });
-      module.exports.removePop(user_id, {
-        amount: over_upper_bound.size,
-        pop_scope: over_upper_bound
-      });
+      {
+        var over_upper_bound = module.exports.selectPops({
+          province_id: province_id,
+          age: {
+            min: config.defines.economy.old_age_hard_upper_bound,
+            max: 1000
+          },
+          pop_types: [all_pops[i]]
+        });
+        module.exports.removePop(user_id, {
+          amount: over_upper_bound.size,
+          pop_scope: over_upper_bound
+        });
+
+        //Iterate over all pops in over_upper_bound to track deaths
+        modifyValue(province_obj.trackers, `death-${all_pops[i]}`, over_upper_bound.size);
+      }
     }
   },
 
@@ -3341,44 +3363,77 @@ module.exports = {
 
       //Note that wealth superobjects are scaled to total_employed and not province_obj.pops.population
 
+      var category_scalars = {};
       var hard_specified_categories = [];
       var hard_specified_tags = {}; //Hard specified tags are just anything that has Object.keys().length > 0
       var pop_scalar = 1; //Multiplied iteratively by each consecutive category; then all other pop tags in the province not hard specified are multiplied by this to fetch final .tags result
+      var relative_scalars = {};
+
+      var category_tags = {
+        age: age_tags,
+        culture: culture_tags,
+        education: education_level_tags,
+        is_employed: {},
+        homeless: {},
+        pop_types: pop_type_tags,
+        wealth: wealth_pool_tags
+      };
+
+      //Reduce category_tags to key list
+      var all_category_tags = Object.keys(category_tags);
+
+      for (var i = 0; i < all_category_tags.length; i++) {
+        var local_value = category_tags[all_category_tags[i]];
+
+        category_tags[all_category_tags[i]] = Object.keys(local_value);
+      }
 
       {
         //Age handler
-        if (Object.keys(age_tags).length > 0) {
+        if (options.age) {
           hard_specified_tags = mergeObjects(age_tags, hard_specified_tags);
           var local_scalar = getObjectSum(age_tags)/province_obj.pops.population;
 
+          category_scalars.age = local_scalar;
           pop_scalar = pop_scalar*local_scalar;
+
           hard_specified_categories.push("age");
         }
 
         //Culture handler
-        if (Object.keys(culture_tags).length > 0) {
+        if (options.culture) {
           hard_specified_tags = mergeObjects(culture_tags, hard_specified_tags);
           var local_scalar = getObjectSum(culture_tags)/province_obj.pops.population;
 
+          category_scalars.culture = local_scalar;
           pop_scalar = pop_scalar*local_scalar;
+
           hard_specified_categories.push("culture");
         }
 
         //Education level handler
-        if (Object.keys(education_level_tags).length > 0) {
+        if (options.education_level || options.education_level_less_than) {
           hard_specified_tags = mergeObjects(education_level_tags, hard_specified_tags);
           var local_scalar = getObjectSum(education_level_tags)/province_obj.pops.population;
 
+          category_scalars.education = local_scalar;
           pop_scalar = pop_scalar*local_scalar;
+
           hard_specified_categories.push("education");
         }
 
         //Employed handler; Unemployed handler
         if (options.is_employed != undefined) {
           if (options.is_employed == true) {
+            var local_scalar = is_unemployed/province_obj.pops.population;
+
+            category_scalars.is_employed = local_scalar;
             pop_scalar = pop_scalar*(is_unemployed/province_obj.pops.population);
           } else if (options.is_employed == false) {
-            pop_scalar = pop_scalar*(total_employed/province_obj.pops.population);
+            var local_scalar = total_employed/province_obj.pops.population;
+
+            category_scalars.is_employed = local_scalar;
+            pop_scalar = pop_scalar*local_scalar;
           }
 
           hard_specified_categories.push("is_employed");
@@ -3387,30 +3442,72 @@ module.exports = {
         //Homeless handler; Housed handler - Boolean
         if (options.homeless != undefined) {
           if (options.homeless == true) {
-            pop_scalar = pop_scalar*(homeless_amount/province_obj.pops.population);
+            var local_scalar = homeless_amount/province_obj.pops.population;
+
+            category_scalars.homeless = local_scalar;
+            pop_scalar = pop_scalar*local_scalar;
           } else if (options.homeless == false) {
-            pop_scalar = pop_scalar*(housed_amount/province_obj.pops.population);
+            var local_scalar = housed_amount/province_obj.pops.population;
+
+            category_scalars.homeless = local_scalar;
+            pop_scalar = pop_scalar*local_scalar;
           }
 
           hard_specified_categories.push("homeless");
         }
 
         //Pop type handler
-        if (Object.keys(pop_type_tags).length > 0) {
+        if (options.pop_types) {
           hard_specified_tags = mergeObjects(pop_type_tags, hard_specified_tags);
           var local_scalar = getObjectSum(pop_type_tags)/province_obj.pops.population;
 
+          category_scalars.pop_types = local_scalar;
           pop_scalar = pop_scalar*local_scalar;
+
           hard_specified_categories.push("pop_types");
         }
 
-        //Wealth pool handler - Superobject; scaled to total_employed
+        //Wealth pool handler - Superobject; scaled to total_employed - [REVISIT]
         if (Object.keys(wealth_pool_tags).length > 0) {
           hard_specified_tags = mergeObjects(wealth_pool_tags, hard_specified_tags);
           var local_scalar = getObjectSum(wealth_pool_tags)/province_obj.pops.population;
 
           pop_scalar = pop_scalar*local_scalar;
           hard_specified_categories.push("wealth");
+        }
+
+        //Calculate relative_scalars from category_scalars;
+        var all_category_scalars = Object.keys(category_scalars);
+
+        for (var i = 0; i < all_category_scalars.length; i++) {
+          var key_to_exclude = all_category_scalars[i];
+          var relative_scalar = 1;
+
+          if (all_category_scalars.length > 1)
+            for (var x = 0; x < all_category_scalars.length; x++)
+              if (all_category_scalars[x] != key_to_exclude) {
+                var local_value = category_scalars[all_category_scalars[x]];
+                relative_scalar = relative_scalar*local_value;
+              }
+
+          //Set relative_scalar
+          relative_scalars[all_category_scalars[i]] = relative_scalar
+        }
+
+        //Scale hard_specified_tags by relative_scalar[hard_specified_tags[i]] (check against category_tags to determine category of tag)
+        var all_hard_specified_tags = Object.keys(hard_specified_tags);
+
+        for (var i = 0; i < all_hard_specified_tags.length; i++) {
+          var local_selector_category;
+          var local_value = hard_specified_tags[all_hard_specified_tags[i]];
+
+          for (var x = 0; x < all_category_tags.length; x++)
+            if (category_tags[all_category_tags[x]].includes(all_hard_specified_tags[i]))
+              local_selector_category = all_category_tags[x];
+
+          //Set hard scale (this is the scalar compared to the scalars of all the other relevant categories being scoped for)
+          if (local_selector_category)
+            hard_specified_tags[all_hard_specified_tags[i]] = local_value*relative_scalars[local_selector_category];
         }
 
         //Merge hard_specified_tags with current_scope.tags

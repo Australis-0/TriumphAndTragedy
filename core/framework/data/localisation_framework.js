@@ -73,7 +73,7 @@ module.exports = {
         var employment_substring = [];
 
         employment_string.push(`${bulletPoint(options.nesting)} Any Pop:`);
-        
+
         for (var x = 0; x < all_subobj_keys.length; x++) {
           var local_manpower_obj = local_subobj[all_subobj_keys[x]];
 
@@ -474,12 +474,16 @@ module.exports = {
       var local_good = lookup.all_goods[all_production_keys[i]];
       var local_value = production_obj[all_production_keys[i]];
 
-      if (!all_production_keys[i].includes("_upkeep"))
-        if (all_production_keys[i] != "money") {
-          resource_production_string.push(`${(!options.exclude_bullets) ? "- " : ""}**${(local_value[0] == local_value[1]) ? parseNumber(local_value[0]) : parseNumber(local_value[0]) + " - " + parseNumber(local_value[1])}** ${(options.display_icons) ? module.exports.parseGood(local_good) : all_production_keys[i]}.`);
-        } else {
-          resource_production_string.push(`${(!options.exclude_bullets) ? "- " : ""}**${(local_value[0] == local_value[1]) ? parseNumber(local_value[0]) : parseNumber(local_value[0]) + " - " + parseNumber(local_value[1])}** Money`);
-        }
+      var has_change = (!(local_value[0] == 0 && local_value[1] == 0));
+      var local_change_string = `**${(local_value[0] == local_value[1]) ? parseNumber(local_value[0]) : parseNumber(local_value[0]) + " - " + parseNumber(local_value[1])}** `;
+
+      if (has_change)
+        if (!all_production_keys[i].includes("_upkeep"))
+          if (all_production_keys[i] != "money") {
+            resource_production_string.push(`${(!options.exclude_bullets) ? "- " : ""} ${module.exports.parseGood(local_good, undefined, !options.display_icons, local_change_string)}`);
+          } else {
+            resource_production_string.push(`${(!options.exclude_bullets) ? "- " : ""}**${local_change_string}** Money`);
+          }
     }
 
     //Return statement

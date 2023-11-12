@@ -1084,10 +1084,6 @@ module.exports = {
 
     var open_positions = 0;
 
-    console.log(`Has deficit:`, has_deficit);
-    console.log(`Has liquidity:`, has_liquidity);
-    console.log(`Wage object:`, wage_obj);
-
     //Get remaining positions in two hiring cases; make sure that divide by 0 doesn't happen by clamping to 1
     if (has_liquidity && has_deficit && has_full_employment_profit) {
       open_positions = minimum_hiring_liquidity/unzero(wage_obj.wage, 1);
@@ -1098,8 +1094,6 @@ module.exports = {
     //Cap open_positions to config_obj.upper_bound_manpower
     if (config_obj.upper_bound_manpower)
       open_positions = Math.min(open_positions, wage_obj.remaining_positions*config.defines.economy.max_hire_percentage);
-
-    console.log(`Open positions:`, open_positions);
 
     //Return statement
     return (!options.return_object) ? open_positions : {
@@ -1139,28 +1133,37 @@ module.exports = {
     //Iterate over all_maintenance_keys
     var all_maintenance_keys = Object.keys(maintenance_obj);
 
-    for (var i = 0; i < all_maintenance_keys.length; i++) {
-      var local_shortfall = (options.maintenance_shortfall[all_maintenance_keys[i]]) ?
-        options.maintenance_shortfall[all_maintenance_keys[i]] : [0, 0];
-      var local_value = maintenance_obj[all_maintenance_keys[i]];
+    if (all_maintenance_keys.length > 0) {
+      for (var i = 0; i < all_maintenance_keys.length; i++) {
+        var local_shortfall = [0, 0];
+        var local_value = maintenance_obj[all_maintenance_keys[i]];
 
-      var local_fulfilment = (Array.isArray(local_value)) ? [
-        local_value[0]*local_shortfall[0],
-        local_value[1]*local_shortfall[1]
-      ] : [
-        local_value*local_shortfall[0],
-        local_value*local_shortfall[1]
+        //Initialise local_shortfall
+        if (options.maintenance_shortfall)
+          if (options.maintenance_shortfall[all_maintenance_keys[i]])
+            local_shortfall = options.maintenance_shortfall[all_maintenance_keys[i]];
+
+        var local_fulfilment = (Array.isArray(local_value)) ? [
+          local_value[0]*local_shortfall[0],
+          local_value[1]*local_shortfall[1]
+        ] : [
+          local_value*local_shortfall[0],
+          local_value*local_shortfall[1]
+        ];
+
+        input_fulfilments_low.push(local_fulfilment[0]);
+        input_fulfilments_high.push(local_fulfilment[1]);
+      }
+
+      //Return statement
+      return [
+        getAverage(input_fulfilments_low),
+        getAverage(input_fulfilments_high)
       ];
-
-      input_fulfilments_low.push(local_fulfilment[0]);
-      input_fulfilments_high.push(local_fulfilment[1]);
+    } else {
+      //Return statement
+      return [1, 1]; //There's no maintenance required, so inputs are fulfilled by default
     }
-
-    //Return statement
-    return [
-      getAverage(input_fulfilments_low),
-      getAverage(input_fulfilments_high)
-    ];
   },
 
   //getBuildingMap() - Returns a map of building IDs to building array keys in a given province
@@ -1471,8 +1474,6 @@ module.exports = {
 
     //Iterate over goods_obj and multiply by current market price, 0 if not sellable
     var all_good_keys = Object.keys(goods_obj);
-
-    console.log(`Goods object:`, goods_obj);
 
     for (var i = 0; i < all_good_keys.length; i++) {
       var local_market_good = main.market[all_good_keys[i]];
@@ -1999,7 +2000,7 @@ module.exports = {
           if (all_provinces[i].buildings)
             for (var x = 0; x < all_provinces[i].buildings.length; x++) {
               var local_building = all_provinces[i].buildings[x];
-              var local_employment = building_cache.employment[local_building.id];
+              var local_employment = building_cache.employment[local_building.id]; //[WIP] - FIX this
               var local_input_fulfilment = module.exports.getBuildingInputFulfilment(local_building, {
                 maintenance: building_cache.maintenance[local_building.id],
                 maintenance_shortfall: maintenance_shortfalls
@@ -2016,10 +2017,11 @@ module.exports = {
 
               for (var y = 0; y < all_local_production.length; y++) {
                 var local_array = getList(local_production[all_local_production[y]]);
-                if (local_array.length == 1) local_array.push(local_array[0]);
-
-                changeProductionValue(production_obj, all_local_production[y], "minimum", local_array[0]*local_input_fulfilment[0]);
-                changeProductionValue(production_obj, all_local_production[y], "maximum", local_array[0]*local_input_fulfilment[1]);
+                if (local_array.length == 1)
+                  local_array.push(returnSafeNumber(local_array[0]));
+                  
+                changeProductionValue(production_obj, all_local_production[y], "minimum", returnSafeNumber(local_array[0]*local_input_fulfilment[0]));
+                changeProductionValue(production_obj, all_local_production[y], "maximum", returnSafeNumber(local_array[1]*local_input_fulfilment[1]));
               }
 
               //Special effect handler
@@ -2043,6 +2045,9 @@ module.exports = {
                 module.exports.processBuilding(local_building, local_production);
             }
 
+        console.log(`Production object:`, production_obj);
+        console.log(`Maintenance object:`, maintenance_obj);
+
         //Merge maintenance_obj into production_obj; sort so that it really is [min, max]
         production_obj = mergeObjects(production_obj, maintenance_obj);
 
@@ -2062,7 +2067,7 @@ module.exports = {
     //Return statement
     return (good_type == "all") ?
       (Object.keys(production_obj).length > 0) ? production_obj : {} :
-      (production_obj[good_type]) ? production_obj[good_type] : [0, 0];
+        (production_obj[good_type]) ? production_obj[good_type] : [0, 0];
   },
 
   /*
@@ -2258,6 +2263,14 @@ module.exports = {
             if (reserved.production_choice.includes(all_production_keys[i]))
               delete production_choice_obj[all_production_keys[i]];
         }
+      } else {
+        //Strip .reserved keys from production_choice_obj if .include_reserved is not specified
+        var all_production_choice_keys = Object.keys(production_choice_obj);
+
+        if (!options.include_reserved)
+          for (var i = 0; i < all_production_choice_keys.length; i++)
+            if (reserved.production_choice.includes(all_production_choice_keys[i]))
+              delete production_choice_obj[all_production_choice_keys[i]];
       }
     }
 
@@ -2400,6 +2413,11 @@ module.exports = {
     var produces_obj = {};
     var production_choice = (options.production_choice) ? options.production_choice : "";
     var raw_building_name = (options.building_object) ? options.building_object.building_type : getBuilding(options.building_type, { return_key: true });
+
+    //Initialise production_choice
+    if (options.building_object)
+      if (options.building_object.production_choice)
+        production_choice = options.building_object.production_choice;
 
     //Initialise local instance variables
     maintenance_obj = multiplyObject(module.exports.getProductionChoiceByKey(raw_building_name, production_choice, "maintenance"), -1);
@@ -2851,6 +2869,7 @@ module.exports = {
 
     //Declare local instance variables
     var all_good_keys = Object.keys(goods_obj);
+    var building_id = building_obj.id;
     var cache = {};
     var category_id = lookup.all_buildings_categories[building_obj.building_type];
     var category_obj = config.buildings[category_id];
@@ -2870,6 +2889,7 @@ module.exports = {
       var building_employment_level = module.exports.getBuildingEmploymentLevel(building_obj);
       var profit_obj = module.exports.getBuildingProfit(building_obj, { return_object: true });
       var user_id = province_obj.controller;
+      var usr = main.users[user_id];
 
       //Iterate over pop_types and set wages for each pop type as well as offer sizes
       if (!building_obj.insolvent)
@@ -2883,8 +2903,6 @@ module.exports = {
 
             return_object: true
           });
-
-          console.log(`Hiring positions - processBuilding():`, local_employment_stats);
 
           //Set wage and offer size
           building_obj[`${pop_types[i]}_positions`] = parseInt((local_employment_stats.hiring_positions)/pop_types.length);

@@ -2407,7 +2407,7 @@ module.exports = {
               mergeObjects(pop_scope, local_pop_scope) :
               mergePopScopes(pop_scope, local_pop_scope); //and, not, default
 
-            localisation_string.push(`${bulletPoint(options.nesting)}${numberCheck(pop_scope.size, true)}people with less than £${local_wealth} in assets`);
+            localisation_string.push(`${bulletPoint(options.nesting)}${numberCheck(pop_scope.size, true)}people with less than £${local_value} in assets`);
           }
         } else {
           //Individual conditions - iterative scope
