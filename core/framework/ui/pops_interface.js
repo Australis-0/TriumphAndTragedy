@@ -233,8 +233,8 @@ module.exports = {
               if (all_pop_keys[i].startsWith("wealth-")) {
                 var split_wealth_key = all_pop_keys[i].split("-");
 
-                var local_building_id = split_wealth_key[1];
-                var local_pop_type = split_wealth_key[2];
+                var local_building_id = `${split_wealth_key[1]}-${split_wealth_key[2]}`;
+                var local_pop_type = split_wealth_key[3];
                 var local_pop = config.pops[local_pop_type];
                 var local_wealth_pool = province_obj.pops[all_pop_keys[i]];
                 var per_capita_income = local_wealth_pool.income/local_wealth_pool.size;

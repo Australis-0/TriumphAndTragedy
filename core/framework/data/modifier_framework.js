@@ -58,7 +58,7 @@ module.exports = {
           usr.modifiers.enable_blockades = effect_value[0];
         } else if (all_modifiers[i] == "enable_mobilisation") {
           usr.modifiers.enable_mobilisation = effect_value[0];
-        } else if (all_modiifers[i] == "obsolete_building") {
+        } else if (all_modifiers[i] == "obsolete_building") {
           for (var x = 0; x < effect_value.length; x++)
             usr.available_buildings = removeElement(usr.available_buildings, effect_value[x]);
         } else if (all_modifiers[i] == "obsolete_government") {

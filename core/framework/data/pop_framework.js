@@ -265,9 +265,9 @@ module.exports = {
       for (var i = 0; i < all_pop_keys.length; i++)
         if (all_pop_keys[i].startsWith("wealth-")) {
           var local_wealth_pool = province_obj.pops[all_pop_keys[i]];
-          var split_key = all_pop_keys[i].split("-");
+          var split_wealth_key = all_pop_keys[i].split("-");
 
-          var pop_type = split_key[2];
+          var pop_type = split_wealth_key[3];
 
           if (pop_type == options.pop_type) {
             var has_needs = false;
@@ -605,8 +605,8 @@ module.exports = {
         if (all_pop_keys[i].startsWith("wealth-")) {
           var split_wealth_key = all_pop_keys[i].split("-");
 
-          var building_id = split_wealth_key[1];
-          var local_pop_type = split_wealth_key[2];
+          var building_id = `${split_wealth_key[1]}-${split_wealth_key[2]}`;
+          var local_pop_type = split_wealth_key[3];
           var local_wealth_pool = province_obj.pops[all_pop_keys[i]];
 
           if (local_pop_type == pop_type) {
@@ -1718,9 +1718,9 @@ module.exports = {
 
         for (var i = 0; i < all_pop_keys.length; i++)
           if (all_pop_keys[i].startsWith("wealth-")) {
-            var split_key = all_pop_keys[i].split("-");
+            var split_wealth_key = all_pop_keys[i].split("-");
 
-            if (pop_types.includes(split_key[2])) {
+            if (pop_types.includes(split_wealth_key[3])) {
               var local_wealth_pool = province_obj.pops[all_pop_keys[i]];
 
               wealth += returnSafeNumber(local_wealth_pool.wealth);
@@ -1947,7 +1947,7 @@ module.exports = {
       if (all_pop_keys[i].startsWith("wealth-")) {
         var split_wealth_key = all_pop_keys[i].split("-");
 
-        var local_pop_type = split_wealth_key[2];
+        var local_pop_type = split_wealth_key[3];
 
         if (local_pop_type == pop_type) {
           var local_wealth_pool = province_obj.pops[all_pop_keys[i]];
@@ -2160,9 +2160,9 @@ module.exports = {
           if (!options.do_not_layoff) {
             var split_wealth_key = all_tags[i].split("-");
 
-            var local_building = building_map[split_wealth_key[1]];
+            var local_building = building_map[`${split_wealth_key[1]}-${split_wealth_key[2]}`];
 
-            layoffWorkers(local_building, split_wealth_key[2], local_value);
+            layoffWorkers(local_building, split_wealth_key[3], local_value);
           }
       }
 
@@ -2601,9 +2601,9 @@ module.exports = {
                   var local_layoff_amount = local_pop_scope.tags[all_local_tags[y]]*local_value*local_percentage;
                   var split_wealth_key = all_local_tags[y].split("-");
 
-                  var local_building = building_map[split_wealth_key[1]];
+                  var local_building = building_map[`${split_wealth_key[1]}-${split_wealth_key[2]}`];
 
-                  layoffWorkers(local_building, split_wealth_key[2], local_layoff_amount);
+                  layoffWorkers(local_building, split_wealth_key[3], local_layoff_amount);
                 }
 
               //Add to chosen profession
@@ -2672,9 +2672,9 @@ module.exports = {
                   var local_layoff_amount = local_pop_scope.tags[all_local_tags[y]]*local_value*local_percentage;
                   var split_wealth_key = all_local_tags[y].split("-");
 
-                  var local_building = building_map[split_wealth_key[1]];
+                  var local_building = building_map[`${split_wealth_key[1]}-${split_wealth_key[2]}`];
 
-                  layoffWorkers(local_building, split_wealth_key[2], local_layoff_amount);
+                  layoffWorkers(local_building, split_wealth_key[3], local_layoff_amount);
                 }
 
               //Add to chosen profession
@@ -2890,11 +2890,11 @@ module.exports = {
           var local_value = Math.floor(pop_scope.tags[all_tags[i]]*scalar);
 
           if (all_tags[i].startsWith("wealth-")) {
-            var split_key = all_tags[i].split("-");
+            var split_wealth_key = all_tags[i].split("-");
 
-            var building_id = split_key[1];
+            var building_id = `${split_wealth_key[1]}-${split_wealth_key[2]}`;
             var local_building = province_obj.buildings[building_key_map[building_id]];
-            var local_pop_type = split_key[2];
+            var local_pop_type = split_wealth_key[3];
 
             if (local_building)
               layoffWorkers(local_building, local_pop_type, local_value);
@@ -3147,10 +3147,10 @@ module.exports = {
           if (all_pop_keys[i].startsWith("wealth-")) {
             var all_conditions_met = true;
             var all_wealth_keys = Object.keys(local_value);
-            var split_key = all_pop_keys[i].split("-");
+            var split_wealth_key = all_pop_keys[i].split("-");
 
-            var building_id = split_key[1];
-            var local_pop_type = split_key[2];
+            var building_id = `${split_wealth_key[1]}-${split_wealth_key[2]}`;
+            var local_pop_type = split_wealth_key[3];
 
             //Building ID handler
             if (options.building_ids)

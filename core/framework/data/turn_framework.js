@@ -1411,6 +1411,8 @@ module.exports = {
       //Economic processing
       {
         for (var i = 0; i < controlled_provinces.length; i++) {
+          var province_obj = controlled_provinces[i];
+
           //Remove original province trackers
           if (controlled_provinces[i].trackers) {
             var all_province_trackers = Object.keys(controlled_provinces[i].trackers);
