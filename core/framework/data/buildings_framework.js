@@ -1091,6 +1091,9 @@ module.exports = {
       open_positions = wage_obj.profit_obj.profit/unzero(wage_obj.wage, 1);
     }
 
+    console.log(`Open positions:`, open_positions);
+    console.log(`Wage object:`, wage_obj);
+
     //Cap open_positions to config_obj.upper_bound_manpower
     if (config_obj.upper_bound_manpower)
       open_positions = Math.min(open_positions, wage_obj.remaining_positions*config.defines.economy.max_hire_percentage);
@@ -2019,7 +2022,7 @@ module.exports = {
                 var local_array = getList(local_production[all_local_production[y]]);
                 if (local_array.length == 1)
                   local_array.push(returnSafeNumber(local_array[0]));
-                  
+
                 changeProductionValue(production_obj, all_local_production[y], "minimum", returnSafeNumber(local_array[0]*local_input_fulfilment[0]));
                 changeProductionValue(production_obj, all_local_production[y], "maximum", returnSafeNumber(local_array[1]*local_input_fulfilment[1]));
               }
@@ -2044,9 +2047,6 @@ module.exports = {
               if (options.is_real)
                 module.exports.processBuilding(local_building, local_production);
             }
-
-        console.log(`Production object:`, production_obj);
-        console.log(`Maintenance object:`, maintenance_obj);
 
         //Merge maintenance_obj into production_obj; sort so that it really is [min, max]
         production_obj = mergeObjects(production_obj, maintenance_obj);
@@ -2413,11 +2413,6 @@ module.exports = {
     var produces_obj = {};
     var production_choice = (options.production_choice) ? options.production_choice : "";
     var raw_building_name = (options.building_object) ? options.building_object.building_type : getBuilding(options.building_type, { return_key: true });
-
-    //Initialise production_choice
-    if (options.building_object)
-      if (options.building_object.production_choice)
-        production_choice = options.building_object.production_choice;
 
     //Initialise local instance variables
     maintenance_obj = multiplyObject(module.exports.getProductionChoiceByKey(raw_building_name, production_choice, "maintenance"), -1);
