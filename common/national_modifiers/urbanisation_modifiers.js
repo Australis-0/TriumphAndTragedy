@@ -7,7 +7,7 @@ config.national_modifiers.urbanisation_modifiers = {
     description: "With our country being predominantly rural, a large amount of emphasis is still being placed on the production of raw resources - such as food, iron, copper, and wood, at the cost of our nascent industrial base.",
 
     trigger: function (usr) {
-      var urban_pop_percentile = usr.demographics.urban_population/usr.demographics.population;
+      var urban_pop_percentile = usr.pops.urban_population/usr.pops.population;
 
       if (
         urban_pop_percentile < 0.50 &&
@@ -30,7 +30,7 @@ config.national_modifiers.urbanisation_modifiers = {
     description: "As more and more people have begun moving from their agricultural posts to take up residence in our humble cities, production efficiency has begun to rise at the cost of raw resource production as human capital flight has started to become more noticeable throughout our country.",
 
     trigger: function (usr) {
-      var urban_pop_percentile = usr.demographics.urban_population/usr.demographics.population;
+      var urban_pop_percentile = usr.pops.urban_population/usr.pops.population;
 
       if (
         urban_pop_percentile >= 0.50 && urban_pop_percentile < 0.60 &&
@@ -52,7 +52,7 @@ config.national_modifiers.urbanisation_modifiers = {
     description: "Our country has now reached a state of urbanisation where the firm majority of our population are now concentrated in cities, helping forge the tools of industry and commerce as our economy gradually shifts from an agricultural to an industrial one.",
 
     trigger: function (usr) {
-      var urban_pop_percentile = usr.demographics.urban_population/usr.demographics.population;
+      var urban_pop_percentile = usr.pops.urban_population/usr.pops.population;
 
       if (
         urban_pop_percentile >= 0.60 && urban_pop_percentile < 0.75 &&
@@ -75,7 +75,7 @@ config.national_modifiers.urbanisation_modifiers = {
     description: "Although much of our citizenry remains in the countryside and raw resource production still makes up the majority of our economy, commercial and industrial interests in cities are beginning to notice that they can take advantage of cheaper labour than before due to the influx of migrants from the countryside, providing a boost to our industry.",
 
     trigger: function (usr) {
-      var urban_pop_percentile = usr.demographics.urban_population/usr.demographics.population;
+      var urban_pop_percentile = usr.pops.urban_population/usr.pops.population;
 
       if (
         urban_pop_percentile >= 0.75 && urban_pop_percentile < 0.85 &&
@@ -100,7 +100,7 @@ config.national_modifiers.urbanisation_modifiers = {
     description: "With the overwhelming majority of our population in cities, raw resource production and the economy of rural areas is beginning to suffer from a demographic imbalance, leading to a tremendous drop in raw resource output.",
 
     trigger: function (usr) {
-      var urban_pop_percentile = usr.demographics.urban_population/usr.demographics.population;
+      var urban_pop_percentile = usr.pops.urban_population/usr.pops.population;
 
       if (
         urban_pop_percentile >= 0.85 && urban_pop_percentile < 0.90 &&
@@ -125,7 +125,7 @@ config.national_modifiers.urbanisation_modifiers = {
     description: "Our country is now extremely urbanised, with over 90% of our population living in cities. People are flocking to join the industry and service sectors of our economies, massively increasing production efficiency at the cost of raw resource production and mining.",
 
     trigger: function (usr) {
-      var urban_pop_percentile = usr.demographics.urban_population/usr.demographics.population;
+      var urban_pop_percentile = usr.pops.urban_population/usr.pops.population;
 
       if (
         urban_pop_percentile >= 0.90 && urban_pop_percentile < 0.95 &&
@@ -149,7 +149,7 @@ config.national_modifiers.urbanisation_modifiers = {
     description: "With virtually everyone in the country concentrated in the cities, even industry is beginning to suffer as lack of land, congestion, and cheap labour has made our economy less competitive than ever before. The countryside is empty and the fields lay fallow as mass human capital flight takes hold and our nation becomes a globally renowned example in demographic crisis.",
 
     trigger: function (usr) {
-      var urban_pop_percentile = usr.demographics.urban_population/usr.demographics.population;
+      var urban_pop_percentile = usr.pops.urban_population/usr.pops.population;
 
       if (
         urban_pop_percentile > 0.95 &&
@@ -174,7 +174,7 @@ config.national_modifiers.urbanisation_modifiers = {
     description: "Without sufficient resources or technology necessary to sustain such high urban populations, our industry is beginning to lag behind those of other nations as overcrowding and lack of land becomes a serious issue!",
 
     trigger: function (usr) {
-      var urban_pop_percentile = usr.demographics.urban_population/usr.demographics.population;
+      var urban_pop_percentile = usr.pops.urban_population/usr.pops.population;
 
       if (
         urban_pop_percentile >= 0.85 && urban_pop_percentile < 0.90 &&
@@ -197,7 +197,7 @@ config.national_modifiers.urbanisation_modifiers = {
     description: "Without sufficient resources or technology necessary to sustain such high urban populations, our industry is beginning to lag behind those of other nations as overcrowding and lack of land becomes a serious issue! Fires are beginning to overwhelm our meagre fire crews, and on occassion, entire blocks of city have to be blown up to create necessary firebreaks. Disease is also spreading rampant through some of the poorer areas due to poor hygeine and sanitation.",
 
     trigger: function (usr) {
-      var urban_pop_percentile = usr.demographics.urban_population/usr.demographics.population;
+      var urban_pop_percentile = usr.pops.urban_population/usr.pops.population;
 
       if (
         urban_pop_percentile >= 0.90 && urban_pop_percentile < 0.95 &&
@@ -222,7 +222,7 @@ config.national_modifiers.urbanisation_modifiers = {
     description: "With everyone being crowded into urban slums, the fields of the farms fall fallow and disease is rampant. Craftsmen are scurrying to other countries to hide from the grime, the crime, and rivers as pure as the Ganges. No one works in the mines or countryside any longer, and poor peasants that can't afford to leave die on the roadside of plague. Their gravestones will mark their last words (if they are so fortunate): 'Uggghhhhhhhh'.",
 
     trigger: function (usr) {
-      var urban_pop_percentile = usr.demographics.urban_population/usr.demographics.population;
+      var urban_pop_percentile = usr.pops.urban_population/usr.pops.population;
 
       if (
         urban_pop_percentile >= 0.95 &&

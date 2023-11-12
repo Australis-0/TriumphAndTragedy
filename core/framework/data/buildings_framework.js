@@ -1038,9 +1038,11 @@ module.exports = {
     var province_id = building_obj.id.split("-")[0];
 
     //Return statement
-    return module.exports.getBuildingProduction({
+    return module.exports.getProductionChoiceOutput({
       building_type: building_obj.building_type,
-      province_id: province_id
+      province_id: province_id,
+
+      production_choice: building_obj.production_choice
     });
   },
 
@@ -1072,7 +1074,7 @@ module.exports = {
       return_object: true
     });
 
-    var has_deficit = (wage_obj.profit_obj.profit < 0);
+    var has_deficit = (wage_obj.profit_obj.profit <= 0);
     var has_liquidity = (building_obj.stockpile.money >= config.defines.economy.minimum_liquidity);
     var has_full_employment_profit = (wage_obj.full_employment_profit > wage_obj.profit_obj.profit);
     var minimum_hiring_liquidity = module.exports.getBuildingMinHiringLiquidity(building_obj, {
@@ -1081,12 +1083,18 @@ module.exports = {
 
     var open_positions = 0;
 
-    //Get remaining positions in two hiring cases
+    console.log(`Has deficit:`, has_deficit);
+    console.log(`Has liquidity:`, has_liquidity);
+    console.log(`Wage object:`, wage_obj);
+
+    //Get remaining positions in two hiring cases; make sure that divide by 0 doesn't happen by clamping to 1
     if (has_liquidity && has_deficit && has_full_employment_profit) {
-      open_positions = minimum_hiring_liquidity/wage_obj.wage;
+      open_positions = minimum_hiring_liquidity/unzero(wage_obj.wage, 1);
     } else if (has_liquidity && !has_deficit) {
-      open_positions = wage_obj.profit_obj.profit/wage_obj.wage;
+      open_positions = wage_obj.profit_obj.profit/unzero(wage_obj.wage, 1);
     }
+
+    console.log(`Open positions:`, open_positions);
 
     //Return statement
     return (!options.return_object) ? open_positions : {
@@ -1230,7 +1238,8 @@ module.exports = {
       building_type: "lumberjacks", - Optional. If not defined, defaults to building_object and factors in total employment
       province_id: "6607", - Required if building is drawn from building_type
 
-      employment_fulfilment: 0.67 - Optimisation parameter. Current employment fulfilment %,
+      employment_fulfilment: 0.67, - Optimisation parameter. Current employment fulfilment %
+      production_choice: "one" - The relevant production choice to check for
     }
   */
   getBuildingProduction: function (arg0_options) {
@@ -1253,10 +1262,13 @@ module.exports = {
 
       //Get building_production from production choice
       {
+        var building_production_choice = (building_obj) ?
+          building_obj.production_choice : options.production_choice;
+
         building_production = (typeof building_obj == "object") ?
           module.exports.getProductionChoiceOutput({
             building_object: building_obj,
-            production_choice: building_obj.production_choice,
+            production_choice: building_production_choice,
             province_id: province_obj.id
           }) : config_obj.produces;
 
@@ -1455,6 +1467,8 @@ module.exports = {
     //Iterate over goods_obj and multiply by current market price, 0 if not sellable
     var all_good_keys = Object.keys(goods_obj);
 
+    console.log(`Goods object:`, goods_obj);
+
     for (var i = 0; i < all_good_keys.length; i++) {
       var local_market_good = main.market[all_good_keys[i]];
       var local_value = goods_obj[all_good_keys[i]];
@@ -1464,7 +1478,7 @@ module.exports = {
     }
 
     //Return statement
-    return local_value;
+    return current_revenue;
   },
 
   /*
@@ -2864,6 +2878,8 @@ module.exports = {
 
             return_object: true
           });
+
+          console.log(`Hiring positions:`, local_employment_stats);
 
           //Set wage and offer size
           building_obj[`${pop_types[i]}_positions`] = local_employment_stats.hiring_positions;

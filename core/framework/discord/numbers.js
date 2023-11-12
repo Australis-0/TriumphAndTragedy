@@ -238,5 +238,14 @@ module.exports = {
     }
 
     yield number - sum_parts;
+  },
+
+  unzero: function (arg0_number, arg1_default) {
+    //Convert from parameters
+    var number = returnSafeNumber(arg0_number);
+    var default_number = arg1_default;
+
+    //Return statement
+    return (number != 0) ? number : default_number;
   }
 };
