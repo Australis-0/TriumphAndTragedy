@@ -1091,9 +1091,6 @@ module.exports = {
       open_positions = wage_obj.profit_obj.profit/unzero(wage_obj.wage, 1);
     }
 
-    console.log(`Open positions:`, open_positions);
-    console.log(`Wage object:`, wage_obj);
-
     //Cap open_positions to config_obj.upper_bound_manpower
     if (config_obj.upper_bound_manpower)
       open_positions = Math.min(open_positions, wage_obj.remaining_positions*config.defines.economy.max_hire_percentage);
