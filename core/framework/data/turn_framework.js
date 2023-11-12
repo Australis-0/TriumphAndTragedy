@@ -442,7 +442,7 @@ module.exports = {
     var all_modifier_names = lookup.all_modifier_names;
     var all_non_aggression_pacts = Object.keys(usr.diplomacy.non_aggression_pacts);
     var all_pops = Object.keys(config.pops);
-    var all_production = getProduction(user_id, undefined, { is_real: true });
+    var all_production = getProduction(user_id, undefined, { is_real: (!options.is_simulation) });
     var all_relations = Object.keys(usr.diplomacy.relations);
     var all_temporary_modifiers = Object.keys(usr.temporary_modifiers);
     var all_users = Object.keys(main.users);
@@ -1427,11 +1427,11 @@ module.exports = {
                   delete controlled_provinces[i].trackers[all_province_trackers[x]];
           }
 
-          processSubsistence(owned_provinces[i], {
+          processSubsistence(controlled_provinces[i].id, {
             category_prices: lookup.category_buy_prices
           });
-          processPops(owned_provinces[i]);
-          processPurchases(owned_provinces[i]);
+          processPops(controlled_provinces[i].id);
+          processPurchases(controlled_provinces[i].id);
 
           //Recalculate province population afterwards
           var province_population = 0;

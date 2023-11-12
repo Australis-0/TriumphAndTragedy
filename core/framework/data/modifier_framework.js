@@ -214,14 +214,15 @@ module.exports = {
 
     var local_id;
 
+    //Make sure usr.temporary_modifiers is defined
+    if (!usr.temporary_modifiers)
+      usr.temporary_modifiers = {};
+
     //While loop to find ID, just in-case of conflicting random ID's:
     while (true) {
       local_id = generateRandomID();
 
       //Return and break once a true ID is found
-      if (!usr.temporary_modifiers)
-        usr.temporary_modifiers = {};
-
       if (!usr.temporary_modifiers[local_id]) {
         return local_id;
         break;

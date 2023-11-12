@@ -2691,12 +2691,12 @@ module.exports = {
     }
   },
 
-  processPurchases: function (arg0_province_id) {
+  processPurchases: function (arg0_province_id) { //[WIP] - Please revisit to add subsistence purchase handling
     //Convert from parameters
     var province_id = arg0_province_id;
 
     //Declare local instance variables
-    var province_obj = main.provinces[province_id];
+    var province_obj = (typeof province_obj != "object") ? main.provinces[province_id] : province_id;
 
     if (province_obj)
       if (province_obj.pops) {
@@ -2708,92 +2708,93 @@ module.exports = {
           if (all_pop_keys[i].startsWith("wealth-")) {
             var current_allowance;
             var current_allowance_percentage;
-            var local_percentage = local_wealth_pool.size/100000;
             var local_wealth_pool = province_obj.pops[all_pop_keys[i]];
             var spent_wealth = 0;
             var split_key = all_pop_keys[i].split("-");
-            var pop_type = split_key[2];
+            var pop_type = split_key[3];
 
+            var local_percentage = local_wealth_pool.size/100000;
             var pop_obj = config.pops[pop_type];
 
             //Initialise received_goods scope
             local_wealth_pool.received_goods = {};
 
             //Check pop_obj.per_100k.needs
-            if (pop_obj.per_100k)
-              if (pop_obj.per_100k.needs) {
-                var category_buy_order = pop_obj.buy_order;
-                var total_fulfilment = 0;
-                var total_variety = 0;
+            if (pop_obj)
+              if (pop_obj.per_100k)
+                if (pop_obj.per_100k.needs) {
+                  var category_buy_order = pop_obj.buy_order;
+                  var total_fulfilment = 0;
+                  var total_variety = 0;
 
-                for (var x = 0; x < category_buy_order.length; x++)
-                  local_wealth_pool.received_goods[category_buy_order[x]] = {};
+                  for (var x = 0; x < category_buy_order.length; x++)
+                    local_wealth_pool.received_goods[category_buy_order[x]] = {};
 
-                for (var x = 0; x < all_good_categories.length; x++) {
-                  var local_good_category = config.defines.economy.good_categories[all_good_categories[x]];
-                  current_allowance_percentage = returnSafeNumber(local_good_category.importance, 1);
-                  current_allowance = local_wealth_pool.income*current_allowance_percentage;
+                  for (var x = 0; x < all_good_categories.length; x++) {
+                    var local_good_category = config.defines.economy.good_categories[all_good_categories[x]];
+                    current_allowance_percentage = returnSafeNumber(local_good_category.importance, 1);
+                    current_allowance = local_wealth_pool.income*current_allowance_percentage;
 
-                  //Iterate over category_buy_order and local needs groups to buy everything in lookup.goods_type[all_good_categories[x]]
-                  for (var y = 0; y < category_buy_order.length; y++) {
-                    var local_buy_order = pop_obj[`${category_buy_order[y]}-buy_order`];
-                    var local_category = pop_obj.per_100k.needs[category_buy_order[y]];
-                    var local_received_goods = local_wealth_pool.received_goods[category_buy_order[y]];
+                    //Iterate over category_buy_order and local needs groups to buy everything in lookup.goods_type[all_good_categories[x]]
+                    for (var y = 0; y < category_buy_order.length; y++) {
+                      var local_buy_order = pop_obj[`${category_buy_order[y]}-buy_order`];
+                      var local_category = pop_obj.per_100k.needs[category_buy_order[y]];
+                      var local_received_goods = local_wealth_pool.received_goods[category_buy_order[y]];
 
-                    for (var z = 0; z < local_buy_order.length; z++)
-                      if (spent_wealth < local_wealth_pool.income) {
-                        //Begin buying as many goods as needed for this wealth pool size
-                        var local_market_good = main.market[local_buy_order[z]]
-                        var local_value = local_category[local_buy_order[z]];
+                      for (var z = 0; z < local_buy_order.length; z++)
+                        if (spent_wealth < local_wealth_pool.income) {
+                          //Begin buying as many goods as needed for this wealth pool size
+                          var local_market_good = main.market[local_buy_order[z]]
+                          var local_value = local_category[local_buy_order[z]];
 
-                        //Spend money on good
-                        if (local_market_good) {
-                          var local_need = Math.ceil(local_value*local_percentage);
+                          //Spend money on good
+                          if (local_market_good) {
+                            var local_need = Math.ceil(local_value*local_percentage);
 
-                          var actual_consumption = Math.min(getGoodAmount(user_id, local_buy_order[z]), local_need);
-                          var local_worth = actual_consumption*local_market_good.buy_price;
-                          var local_tax = local_worth*returnSafeNumber(usr[`${pop_obj.class}-duties_tax`]);
-                          var market_consumption = Math.ceil(actual_consumption*config.defines.economy.resource_production_scalar);
+                            var actual_consumption = Math.min(getGoodAmount(user_id, local_buy_order[z]), local_need);
+                            var local_worth = actual_consumption*local_market_good.buy_price;
+                            var local_tax = local_worth*returnSafeNumber(usr[`${pop_obj.class}-duties_tax`]);
+                            var market_consumption = Math.ceil(actual_consumption*config.defines.economy.resource_production_scalar);
 
-                          //World Market processing
-                          local_market_good.demand += market_consumption;
-                          local_market_good.stock -= market_consumption;
+                            //World Market processing
+                            local_market_good.demand += market_consumption;
+                            local_market_good.stock -= market_consumption;
 
-                          if (local_market_good.stock < 1)
-                            local_market_good.stock = 1;
+                            if (local_market_good.stock < 1)
+                              local_market_good.stock = 1;
 
-                          spent_wealth += (local_worth + local_tax);
-                          modifyValue(local_received_goods, local_buy_order[z], actual_consumption);
-                          modifyValue(usr.trackers.tax, `${pop_obj.class}-duties_tax`, local_tax);
+                            spent_wealth += (local_worth + local_tax);
+                            modifyValue(local_received_goods, local_buy_order[z], actual_consumption);
+                            modifyValue(usr.trackers.tax, `${pop_obj.class}-duties_tax`, local_tax);
+                          }
                         }
-                      }
+                    }
                   }
+
+                  //Subtract spent_wealth from wealth pool
+                  local_wealth_pool.wealth -= spent_wealth;
+                  local_wealth_pool.spending = spent_wealth;
+
+                  //Update _fulfilment and _variety for each category
+                  for (var x = 0; x < category_buy_order.length; x++) {
+                    var local_received_goods = local_wealth_pool.received_goods[category_buy_order[x]];
+
+                    var local_fulfilment_obj = module.exports.getPopNeedsFulfilment(local_received_goods, pop_type, local_wealth_pool.size, {
+                      needs_category: category_buy_order[x],
+                      return_object: true
+                    });
+                    total_fulfilment += local_fulfilment_obj.fulfilment;
+                    total_variety += local_fulfilment_obj.variety;
+
+                    //Set local fulfilment and variety
+                    local_wealth_pool[`${category_buy_order[x]}-fulfilment`] = local_fulfilment_obj.fulfilment;
+                    local_wealth_pool[`${category_buy_order[x]}-variety`] = local_fulfilment_obj.variety;
+                  }
+
+                  //Set general fulfilment and variety
+                  local_wealth_pool.fulfilment = total_fulfilment/category_buy_order.length;
+                  local_wealth_pool.variety = total_variety/category_buy_order.length;
                 }
-
-                //Subtract spent_wealth from wealth pool
-                local_wealth_pool.wealth -= spent_wealth;
-                local_wealth_pool.spending = spent_wealth;
-
-                //Update _fulfilment and _variety for each category
-                for (var x = 0; x < category_buy_order.length; x++) {
-                  var local_received_goods = local_wealth_pool.received_goods[category_buy_order[x]];
-
-                  var local_fulfilment_obj = module.exports.getPopNeedsFulfilment(local_received_goods, pop_type, local_wealth_pool.size, {
-                    needs_category: category_buy_order[x],
-                    return_object: true
-                  });
-                  total_fulfilment += local_fulfilment_obj.fulfilment;
-                  total_variety += local_fulfilment_obj.variety;
-
-                  //Set local fulfilment and variety
-                  local_wealth_pool[`${category_buy_order[x]}-fulfilment`] = local_fulfilment_obj.fulfilment;
-                  local_wealth_pool[`${category_buy_order[x]}-variety`] = local_fulfilment_obj.variety;
-                }
-
-                //Set general fulfilment and variety
-                local_wealth_pool.fulfilment = total_fulfilment/category_buy_order.length;
-                local_wealth_pool.variety = total_variety/category_buy_order.length;
-              }
           }
       }
   },
@@ -2805,7 +2806,7 @@ module.exports = {
 
     //Declare local instance variables
     var all_pops = Object.keys(config.pops);
-    var province_obj = main.provinces[province_id];
+    var province_obj = (typeof province_id != "object") ? main.provinces[province_id] : province_id;
     var user_id = province_obj.controller;
     var usr = main.users[user_id];
 

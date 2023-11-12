@@ -3045,7 +3045,7 @@ module.exports = {
     //Declare local instance variables
     var all_buildings = Object.keys(lookup.all_buildings);
     var all_pops = Object.keys(config.pops);
-    var province_obj = main.provinces[province_id];
+    var province_obj = (province_id != "object") ? main.provinces[province_id] : province_id;
     var qualified_pops = [];
     var local_subsistence_key;
     var local_subsistence_obj;
@@ -3140,7 +3140,7 @@ module.exports = {
 
         for (var i = 0; i < all_wage_keys.length; i++) {
           var local_value = local_subsistence_obj.wages[all_wage_keys[i]];
-          var split_key = all_wage_keys.split("-"); //[good/category_name, statistic]
+          var split_key = all_wage_keys[i].split("-"); //[good/category_name, statistic]
 
           if (split_key.length >= 2)
             if (split_key[1] == "mean") {
