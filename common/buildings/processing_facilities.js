@@ -3152,124 +3152,124 @@ config.buildings.processing_facilities = { //[WIP] - Add Synthetic Ruby Factory
       }
     },
     manpower_cost: {
-      workers: 40000
+      labourers: 40000
     },
     produces: {
       production_choice_acacia: {
         name: "Acacia Lumber",
-        acacia: 3
+        acacia_lumber: 3
       },
       production_choice_ash: {
         name: "Ash Lumber",
-        ash: 3
+        ash_lumber: 3
       },
       production_choice_balsa: {
         name: "Balsa Lumber",
-        balsa: 2
+        balsa_lumber: 2
       },
       production_choice_basswood: {
         name: "Basswood Lumber",
-        basswood: 1
+        basswood_lumber: 1
       },
       production_choice_blackwood: {
         name: "Blackwood Lumber",
-        blackwood: 1
+        blackwood_lumber: 1
       },
       production_choice_bloodwood: {
         name: "Bloodwood Lumber",
-        bloodwood: 1
+        bloodwood_lumber: 1
       },
       production_choice_cedar: {
         name: "Cedar Lumber",
-        cedar: 3
+        cedar_lumber: 3
       },
       production_choice_cherry: {
         name: "Cherry Lumber",
-        cherry: 3
+        cherry_lumber: 3
       },
       production_choice_chestnut: {
         name: "Chestnut Lumber",
-        chestnut: 4
+        chestnut_lumber: 4
       },
       production_choice_cottonwood: {
         name: "Cottonwood Lumber",
-        cottonwood: 1
+        cottonwood_lumber: 1
       },
       production_choice_cypress: {
         name: "Cypress Lumber",
-        cypress: 4
+        cypress_lumber: 4
       },
       production_choice_ebony: {
         name: "Ebony Lumber",
-        ebony: 1
+        ebony_lumber: 1
       },
       production_choice_elm: {
         name: "Elm Lumber",
-        elm: 4
+        elm_lumber: 4
       },
       production_choice_eucalyptus: {
         name: "Eucalyptus Lumber",
-        eucalyptus: 6
+        eucalyptus_lumber: 6
       },
       production_choice_fir: {
         name: "Fir Lumber",
-        fir: 5
+        fir_lumber: 5
       },
       production_choice_hickory: {
         name: "Hickory Lumber",
-        hickory: 5
+        hickory_lumber: 5
       },
       production_choice_ironwood: {
         name: "Ironwood Lumber",
-        ironwood: 3
+        ironwood_lumber: 3
       },
       production_choice_lacewood: {
         name: "Lacewood Lumber",
-        lacewood: 2
+        lacewood_lumber: 2
       },
       production_choice_mahogany: {
         name: "Mahogany Lumber",
-        mahogany: 3
+        mahogany_lumber: 3
       },
       production_choice_maple: {
         name: "Maple Lumber",
-        maple: 4
+        maple_lumber: 4
       },
       production_choice_oak: {
         name: "Oak Lumber",
-        oak: 6
+        oak_lumber: 6
       },
       production_choice_pine: {
         name: "Pine Lumber",
-        pine: 5
+        pine_lumber: 5
       },
       production_choice_redwood: {
         name: "Redwood Lumber",
-        redwood: 4
+        redwood_lumber: 4
       },
       production_choice_rosewood: {
         name: "Rosewood Lumber",
-        rosewood: 3
+        rosewood_lumber: 3
       },
       production_choice_sandalwood: {
         name: "Sandalwood Lumber",
-        sandalwood: 1
+        sandalwood_lumber: 1
       },
       production_choice_spruce: {
         name: "Spruce Lumber",
-        spruce: 4
+        spruce_lumber: 4
       },
       production_choice_turpentine: {
         name: "Turpentine Lumber",
-        turpentine: 2
+        turpentine_lumber: 2
       },
       production_choice_walnut: {
         name: "Walnut Lumber",
-        walnut: 2
+        walnut_lumber: 2
       },
       production_choice_willow: {
         name: "Willow Lumber",
-        willow: 2
+        willow_lumber: 2
       }
     }
   },

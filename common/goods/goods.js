@@ -3110,7 +3110,7 @@ config.goods = { //[WIP] - Redo mine chances, buy/sell prices
         type: "normal",
         buy_price: 750
       },
-      chestut_lumber: {
+      chestnut_lumber: {
         name: "Chestnut Lumber",
         icon: "chestnut_lumber",
         type: "normal",
