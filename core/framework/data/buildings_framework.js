@@ -651,7 +651,7 @@ module.exports = {
           for (var x = 0; x < provinces[i].buildings.length; x++)
             if (provinces[i].buildings[x].name)
               if (provinces[i].buildings[x].name.trim().toLowerCase().indexOf(building_name) != -1)
-                building_obj = (!options.return_key) ? provinces[i].buildings[x] : [provinces[i].id, x];
+                building_obj = provinces[i].buildings[x];
 
       //Iterate over all provinces; hard search second
       for (var i = 0; i < provinces.length; i++)
@@ -659,7 +659,7 @@ module.exports = {
           for (var x = 0; x < provinces[i].buildings.length; x++)
             if (provinces[i].buildings[x].name)
               if (provinces[i].buildings[x].name.trim().toLowerCase() == building_name)
-                building_obj = (!options.return_key) ? provinces[i].buildings[x] : [provinces[i].id, x];
+                building_obj = provinces[i].buildings[x];
     }
 
     //If building_obj could not be fetched, return by ID
@@ -1064,6 +1064,7 @@ module.exports = {
     var options = (arg1_options) ? arg1_options : {};
 
     //Declare local instance variables
+    var config_obj = lookup.all_buildings[building_obj.building_type];
     var wage_obj = module.exports.getBuildingWage(building_obj, {
       pop_type: options.pop_type,
 
@@ -1093,6 +1094,10 @@ module.exports = {
     } else if (has_liquidity && !has_deficit) {
       open_positions = wage_obj.profit_obj.profit/unzero(wage_obj.wage, 1);
     }
+
+    //Cap open_positions to config_obj.upper_bound_manpower
+    if (config_obj.upper_bound_manpower)
+      open_positions = Math.min(open_positions, wage_obj.remaining_positions*config.defines.economy.max_hire_percentage);
 
     console.log(`Open positions:`, open_positions);
 
@@ -2879,11 +2884,11 @@ module.exports = {
             return_object: true
           });
 
-          console.log(`Hiring positions:`, local_employment_stats);
+          console.log(`Hiring positions - processBuilding():`, local_employment_stats);
 
           //Set wage and offer size
-          building_obj[`${pop_types[i]}_positions`] = local_employment_stats.hiring_positions;
-          building_obj[`${pop_types[i]}_wage`] = local_employment_stats.wage;
+          building_obj[`${pop_types[i]}_positions`] = parseInt((local_employment_stats.hiring_positions)/pop_types.length);
+          building_obj[`${pop_types[i]}_wage`] = (local_employment_stats.wage)*pop_types.length;
 
           //Initialise/update pop wealth pool
           var local_employees = returnSafeNumber(building_obj.employment[pop_types[i]]);

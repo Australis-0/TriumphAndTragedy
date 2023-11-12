@@ -77,8 +77,14 @@ module.exports = {
 
           if (config.pops[all_subobj_keys[x]]) {
             var local_pop = config.pops[all_subobj_keys[x]];
+            var local_wage = local_building[`${all_subobj_keys[x]}_wage`];
+            var wage_string = "";
 
-            employment_string.push(`${bulletPoint(options.nesting)}${parsePop(all_subobj_keys[x])}: ${returnSafeNumber(local_building.employment[all_subobj_keys[x]])}/${returnSafeNumber(local_manpower_obj)}`);
+            if (local_wage)
+              wage_string = ` | (${config.icons.money} ${parseNumber(local_wage, { display_float: true })} per turn)`;
+
+            employment_string.push(`${bulletPoint(options.nesting)} Any Pop:`);
+            employment_string.push(`${bulletPoint(options.nesting + 1)}${parsePop(all_subobj_keys[x])}: ${returnSafeNumber(local_building.employment[all_subobj_keys[x]])}/${returnSafeNumber(local_manpower_obj)}${wage_string}`);
           } else {
             if (all_subobj_keys[x] == "any_pop" || all_subobj_keys[x].startsWith("any_pop_")) {
               var local_subobj_value = local_subobj[all_subobj_keys[x]];
@@ -98,8 +104,13 @@ module.exports = {
       } else {
         if (config.pops[all_manpower_keys[i]]) {
           var local_pop = config.pops[all_manpower_keys[i]];
+          var local_wage = local_building[`${all_manpower_keys[i]}_wage`];
+          var wage_string = "";
 
-          employment_string.push(`${bulletPoint(options.nesting)}${parsePop(all_manpower_keys[i])}: ${returnSafeNumber(local_building.employment[all_manpower_keys[i]])}/${returnSafeNumber(local_subobj)}`);
+          if (local_wage)
+            wage_string = ` | (${config.icons.money} ${parseNumber(local_wage, { display_float: true })} per turn)`;
+
+          employment_string.push(`${bulletPoint(options.nesting)}${parsePop(all_manpower_keys[i])}: ${returnSafeNumber(local_building.employment[all_manpower_keys[i]])}/${returnSafeNumber(local_subobj)}${wage_string}`);
         }
       }
     }

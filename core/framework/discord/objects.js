@@ -94,11 +94,9 @@ module.exports = {
             scope[all_flattened_keys[x]] += flattened_subobj[all_flattened_keys[x]];
           }
       } else if (typeof local_subobj == "number") {
-        if (!scope[all_scope_keys[i]]) {
+        if (!scope[all_scope_keys[i]])
           scope[all_scope_keys[i]] = local_subobj;
-        } else {
-          scope[all_scope_keys[i]] += local_subobj;
-        }
+        //Do not implement an else scope here because that would add 1n per depth
       } else {
         scope[all_scope_keys[i]] = local_subobj;
       }

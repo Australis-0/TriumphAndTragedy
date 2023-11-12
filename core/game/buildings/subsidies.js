@@ -75,7 +75,7 @@ module.exports = {
         for (var x = 0; x < all_provinces[i].buildings.length; x++) {
           var local_building = all_provinces[i].buildings[x];
 
-          //Check if building is being subdisied/desubsidised
+          //Check if building is being subdisied/desubsidise
           if (local_building.subsidised) {
             if (options.desubsidise) {
               total_subsidised++;
@@ -134,14 +134,14 @@ module.exports = {
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
     var game_obj = getGameObject(user_id);
-    var province_id = building_obj.split("-")[0];
+    var province_id = building_obj.id.split("-")[0];
     var province_obj = main.provinces[province_id];
     var usr = main.users[actual_id];
 
     //Subsidise building
     if (province_obj.controller == actual_id) {
       if (!building_obj.insolvent) {
-        if (!options.desubsidised) {
+        if (options.desubsidise) {
           if (building_obj.subsidised) {
             delete building_obj.subsidised;
             delete usr.all_subsidies; //This is needed for obvious reasons
@@ -162,16 +162,16 @@ module.exports = {
             if (!options.do_not_display)
               printError(game_obj.id, `**${(building_obj.name) ? building_obj.name : building_obj.id}** is already being subsidised!`);
           }
+        }
 
-          if (!options.do_not_display) {
-            //Refresh UI
-            if (game_obj.page.startsWith("view_building_"))
-              printBuilding(user_id, building_obj, main.interfaces[game_obj.middle_embed.id].page);
-            if (game_obj.page.startsWith("view_buildings_"))
-              printProvinceBuildings(user_id, building_obj, main.interfaces[game_obj.middle_embed.id].page);
-            if (game_obj.page == "view_industry")
-              printIndustry(user_id, main.interfaces[game_obj.middle_embed.id].page);
-          }
+        if (!options.do_not_display) {
+          //Refresh UI
+          if (game_obj.page.startsWith("view_building_"))
+            printBuilding(user_id, building_obj, main.interfaces[game_obj.middle_embed.id].page);
+          if (game_obj.page.startsWith("view_buildings_"))
+            printProvinceBuildings(user_id, building_obj, main.interfaces[game_obj.middle_embed.id].page);
+          if (game_obj.page == "view_industry")
+            printIndustry(user_id, main.interfaces[game_obj.middle_embed.id].page);
         }
       } else {
         if (!options.do_not_display)

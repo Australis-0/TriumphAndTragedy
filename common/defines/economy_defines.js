@@ -79,6 +79,9 @@ config.defines.economy = {
   urban_pop_growth_penalty_threshold: 500000, //At what population should the urban population threshold kick in?
   urban_pop_growth_penalty_per_million: 0.03, //-3% growth per million
 
+  //Employment
+  max_hire_percentage: 1, //What max % of the upper bound manpower cost should companies attempt to hire at once? Set to 1 to disable
+
   //Goods
   good_categories: {
     giffen: {

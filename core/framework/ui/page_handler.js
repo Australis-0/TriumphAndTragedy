@@ -313,11 +313,13 @@ module.exports = {
               break;
             case "building list":
             case "buildings":
-              createPageMenu(game_obj.middle_embed, {
-                embed_pages: printBuildList(user_id),
-                user: game_obj.user
-              });
-              game_obj.page = "building_list";
+              if (!(game_obj.page.startsWith("view_city_") || game_obj.page.startsWith("view_province_"))) {
+                createPageMenu(game_obj.middle_embed, {
+                  embed_pages: printBuildList(user_id),
+                  user: game_obj.user
+                });
+                game_obj.page = "building_list";
+              }
 
               break;
             case "casus belli":
