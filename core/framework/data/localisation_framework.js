@@ -72,6 +72,8 @@ module.exports = {
         var all_subobj_keys = Object.keys(local_subobj);
         var employment_substring = [];
 
+        employment_string.push(`${bulletPoint(options.nesting)} Any Pop:`);
+        
         for (var x = 0; x < all_subobj_keys.length; x++) {
           var local_manpower_obj = local_subobj[all_subobj_keys[x]];
 
@@ -83,7 +85,6 @@ module.exports = {
             if (local_wage)
               wage_string = ` | (${config.icons.money} ${parseNumber(local_wage, { display_float: true })} per turn)`;
 
-            employment_string.push(`${bulletPoint(options.nesting)} Any Pop:`);
             employment_string.push(`${bulletPoint(options.nesting + 1)}${parsePop(all_subobj_keys[x])}: ${returnSafeNumber(local_building.employment[all_subobj_keys[x]])}/${returnSafeNumber(local_manpower_obj)}${wage_string}`);
           } else {
             if (all_subobj_keys[x] == "any_pop" || all_subobj_keys[x].startsWith("any_pop_")) {
