@@ -443,7 +443,7 @@ module.exports = {
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
     var formatter = "";
-    var production_obj = getProductionObject(user_id);
+    var production_obj = sortObject(getProductionObject(user_id));
     var resource_production_string = [];
     var usr = main.users[actual_id];
 

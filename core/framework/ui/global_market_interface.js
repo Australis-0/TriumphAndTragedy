@@ -24,11 +24,12 @@ module.exports = {
       var local_good = getGood(all_market_goods[i]);
       var local_market_good = main.market[all_market_goods[i]];
 
-      market_fields.push({
-        name: `${(local_good.icon) ? config.icons[local_good.icon] : ""} - ${(local_good.name) ? local_good.name : all_market_goods[i]} (**${parseNumber(local_market_good.stock)}** in stock):`,
-        value: "```yaml" + `\nBuy Price: £${parseNumber(local_market_good.buy_price)}\nSell Price: £${parseNumber(local_market_good.sell_price)}` + "``````css" + `\n- [Buy ${(local_good.name) ? local_good.name : all_market_goods[i]}]\n- [Sell ${(local_good.name) ? local_good.name : all_market_goods[i]}]` + "\n```",
-        inline: true
-      });
+      if (local_good && local_market_good)
+        market_fields.push({
+          name: `${(local_good.icon) ? config.icons[local_good.icon] : ""} - ${(local_good.name) ? local_good.name : all_market_goods[i]} (**${parseNumber(local_market_good.stock)}** in stock):`,
+          value: "```yaml" + `\nBuy Price: £${parseNumber(local_market_good.buy_price)}\nSell Price: £${parseNumber(local_market_good.sell_price)}` + "``````css" + `\n- [Buy ${(local_good.name) ? local_good.name : all_market_goods[i]}]\n- [Sell ${(local_good.name) ? local_good.name : all_market_goods[i]}]` + "\n```",
+          inline: true
+        });
     }
 
     //Interject ending message

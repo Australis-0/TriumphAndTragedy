@@ -195,6 +195,7 @@ module.exports = {
       var building_production = getBuildingProduction({ building_object: local_building });
       var building_profit = returnSafeNumber(local_building.profit);
       var building_revenue = returnSafeNumber(getBuildingLastTurnRevenue(local_building));
+      var has_production_choice = hasProductionChoice(local_building);
       var province_id = local_building.id.split("-")[0];
       var province_obj = main.provinces[province_id];
 
@@ -259,19 +260,20 @@ module.exports = {
 
         //Display building employment
         if (config_obj.manpower_cost) {
+          var building_employment_level = getBuildingEmploymentLevel(local_building);
           var employment_string = getBuildingEmploymentLocalisation(local_building, config_obj.manpower_cost);
 
           //Push to building_string
           building_string.push("");
-          building_string.push(`**Employment:**`);
+          building_string.push(`**Employment:** ${(building_employment_level == 0) ? `:warning: ` : ""}${printPercentage(building_employment_level)}`);
           building_string.push("");
 
           for (var i = 0; i < employment_string.length; i++)
             building_string.push(employment_string[i]);
         }
 
-        //Display building production choices
-        if (hasProductionChoice(local_building)) {
+        //Display building Production Choices; Input Fulfilment, and Base Production Choice - even if the building only has a base Production Choice, this information must be displayed to the user.
+        {
           var all_production_keys = Object.keys(config_obj.produces);
 
           building_string.push("");
@@ -279,8 +281,9 @@ module.exports = {
           building_string.push("");
           building_string.push(`${(!game_obj.hide_production_choices) ? `**[Hide Production Choices]**` : `**[Show Production Choices]**`} | **[Change Production Choice]**`);
           building_string.push("");
+
           building_string.push(`Input Fulfilment: ${(building_input_fulfilment[0] == building_input_fulfilment[1]) ? `**${printPercentage(building_input_fulfilment[0])}**` : `**${printPercentage(building_input_fulfilment[0])}** - ${printPercentage(building_input_fulfilment[1])}`}`);
-          building_string.push(`- Production Choice: ${parseProductionChoice(local_building.building_type, local_building.production_choice)}`);
+            building_string.push(`- Production Choice: ${parseProductionChoice(local_building.building_type, local_building.production_choice)}`);
 
           //Print building_production
           if (Object.keys(building_production).length > 0) {
@@ -291,29 +294,34 @@ module.exports = {
             building_string.push(` - _Not currently producing anything._`);
           }
 
-          //Display all_production_keys and current chosen production choice
+          //Set Production Choice information
           if (!options.hide_production_choices) {
             building_string.push("");
             building_string.push(`**Production Choices:**`);
             building_string.push(`> Production figures assume that Employment and Input Fulfilment are at 100%.`);
             building_string.push("");
+          }
 
-            for (var i = 0; i < all_production_keys.length; i++)
-              if (all_production_keys[i].startsWith("production_choice_")) {
-                var production_choice_name = all_production_keys[i].replace("production_choice_", "");
-                var production_choice_obj = getProductionChoiceOutput({
-                  province_id: province_id,
-                  building_object: local_building,
+          if (has_production_choice)
+            //Display all_production_keys and current chosen production choice
+            if (!options.hide_production_choices)
+              for (var i = 0; i < all_production_keys.length; i++)
+                if (all_production_keys[i].startsWith("production_choice_")) {
+                  var production_choice_name = all_production_keys[i].replace("production_choice_", "");
+                  var production_choice_obj = getProductionChoiceOutput({
+                    province_id: province_id,
+                    building_object: local_building,
 
-                  production_choice: production_choice_name
-                });
+                    production_choice: production_choice_name
+                  });
 
-                //Push production choices to building_string
-                building_string.push(`- ${parseProductionChoice(local_building.building_type, production_choice_name)}: **[Switch to ${parseProductionChoice(local_building.building_type, production_choice_name)}]**`);
-                building_string.push(` - ${parseProductionChoiceOutputs(production_choice_obj)}`);
-              }
+                  //Push production choices to building_string
+                  building_string.push(`- ${parseProductionChoice(local_building.building_type, production_choice_name)}: **[Switch to ${parseProductionChoice(local_building.building_type, production_choice_name)}]**`);
+                  building_string.push(` - ${parseProductionChoiceOutputs(production_choice_obj)}`);
+                }
 
-            //Base production chain output
+          //Base production chain output
+          if (!options.hide_production_choices) {
             var base_production_choice_obj = getProductionChoiceOutput({
               province_id: province_id,
               building_object: local_building
@@ -323,6 +331,9 @@ module.exports = {
             if (base_production_choice_string.length > 0) {
               building_string.push(`- Base (Prod. Choice): **[Switch to Base]**`);
               building_string.push(` - ${base_production_choice_string}`);
+            } else {
+              building_string.push(`- Base (Prod. Choice): **[Switch to Base]**`);
+              building_string.push(` - _Deactivates building._`);
             }
           }
         }

@@ -672,7 +672,8 @@ module.exports = {
     }
 
     //Return statement
-    return (!options.return_key) ? building_obj : building_obj.id;
+    if (building_obj)
+      return (!options.return_key) ? building_obj : building_obj.id;
   },
 
   //Returns all building categories based on order (if it exists)
@@ -2734,7 +2735,7 @@ module.exports = {
 
     //Declare local instance variables
     var config_obj = lookup.all_buildings[building_obj.building_type];
-
+    
     if (config_obj.produces) {
       var all_production_keys = Object.keys(config_obj.produces);
 
@@ -2751,9 +2752,9 @@ module.exports = {
     var amount = parseInt(arg2_amount);
 
     //Declare local instance variables
-    var key = `wealth-${all_building_keys[i]}-${options.pop_type}`;
+    var key = `wealth-${building_obj.id}-${pop_type}`;
     var layoffs = 0;
-    var local_wealth_pool = province_obj.pops[local_key];
+    var local_wealth_pool = province_obj.pops[key];
     var province_id = building_obj.id.split("-")[0];
     var province_obj = main.provinces[province_id];
 
@@ -3004,8 +3005,10 @@ module.exports = {
           var local_value = returnSafeNumber(goods_obj[all_good_keys[i]]);
           var market_good = main.market[all_good_keys[i]];
 
-          if (market_good)
+          if (market_good) {
             goods_revenue += local_value*market_good.sell_price;
+            market_good.stock += local_value;
+          }
         }
 
         //Add revenue to building stockpile; set building statistics to building_obj

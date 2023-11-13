@@ -2291,13 +2291,14 @@ module.exports = {
                   var available_positions = returnSafeNumber(local_building[`${pop_type}_positions`]);
 
                   if (available_positions > random_hirees) {
-                    modifyValue(local_building, `${pop_type}_positions`, random_hirees*-1, true);
                     modifyValue(local_building.employment, pop_type, random_hirees);
                     modifyValue(local_wealth_pool, "size", random_hirees);
 
+                    modifyValue(local_building, `${pop_type}_positions`, random_hirees*-1);
+
                     unemployed_pops -= random_hirees;
                   } else {
-                    modifyValue(local_building.employment, pop_type, available_positions*-1, true);
+                    modifyValue(local_building.employment, pop_type, available_positions, true);
                     modifyValue(local_wealth_pool, "size", available_positions);
                     unemployed_pops -= available_positions;
 

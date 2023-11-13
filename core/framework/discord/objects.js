@@ -409,7 +409,15 @@ module.exports = {
 
     //Return statement
     return Object.fromEntries(
-      Object.entries(object).sort(([, a], [, b]) => (mode == "descending") ? b - a : a - b)
+      Object.entries(object).sort(([, a], [, b]) => {
+        //Standardise array values
+        if (Array.isArray(a))
+          a = getSum(a);
+        if (Array.isArray(b))
+          b = getSum(b);
+
+        return (mode == "descending") ? b - a : a - b;
+      })
     );
   }
 };
