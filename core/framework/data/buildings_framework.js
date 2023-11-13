@@ -944,6 +944,7 @@ module.exports = {
   /*
     getBuildingEmploymentLevel() - Returns percentage of employment fulfilment for a building
     options: {
+      any_pop: true/false, - Optional. If the current scope is any_pop. False by default
       manpower_cost: {}, - The current manpower_cost subscope to compare things against
       return_employment_object: true/false - Returns both the employment object and percentage in { employment: {}, percentage: 0.67 } format.
     }
@@ -958,6 +959,7 @@ module.exports = {
       var config_obj = lookup.all_buildings[building_obj.building_type];
       var fulfilment_percentages = [];
       var employment_obj = (options.employment_obj) ? options.employment_obj : building_obj.employment;
+      var scope_fulfilled = false;
 
       //Initialise options
       if (!options.manpower_cost) options.manpower_cost = JSON.parse(JSON.stringify(config_obj.manpower_cost));
@@ -972,6 +974,7 @@ module.exports = {
 
             if (all_manpower_keys[i] == "any_pop" || all_manpower_keys[i].startsWith("any_pop_")) {
               var subobj_fulfilment = module.exports.getBuildingEmploymentLevel(building_obj, {
+                any_pop: true,
                 manpower_cost: local_subobj,
                 return_employment_object: true
               });
@@ -982,12 +985,26 @@ module.exports = {
               if (config.pops[all_manpower_keys[i]]) {
                 var employment_value = returnSafeNumber(employment_obj[all_manpower_keys[i]]);
 
-                if (employment_value >= local_subobj) {
-                  modifyValue(employment_value, all_manpower_keys[i], local_subobj*-1);
-                  fulfilment_percentages.push(1);
+                if (options.any_pop) {
+                  if (employment_value >= local_subobj) {
+                    modifyValue(employment_value, all_manpower_keys[i], local_subobj*-1);
+                    fulfilment_percentages = [1];
+                    scope_fulfilled = true;
+                  } else {
+                    if (!scope_fulfilled) {
+                      fulfilment_percentages = [Math.max(employment_value/local_subobj, returnSafeNumber(fulfilment_percentages[0]))];
+                      employment_value[all_manpower_keys[i]] = 0;
+                    }
+                  }
                 } else {
-                  fulfilment_percentages.push(employment_value/local_subobj);
-                  employment_value[all_manpower_keys[i]] = 0;
+                  //Regular handler
+                  if (employment_value >= local_subobj) {
+                    modifyValue(employment_value, all_manpower_keys[i], local_subobj*-1);
+                    fulfilment_percentages.push(1);
+                  } else {
+                    fulfilment_percentages.push(employment_value/local_subobj);
+                    employment_value[all_manpower_keys[i]] = 0;
+                  }
                 }
               }
             }
@@ -2735,7 +2752,7 @@ module.exports = {
 
     //Declare local instance variables
     var config_obj = lookup.all_buildings[building_obj.building_type];
-    
+
     if (config_obj.produces) {
       var all_production_keys = Object.keys(config_obj.produces);
 

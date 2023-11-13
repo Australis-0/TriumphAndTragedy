@@ -216,6 +216,7 @@ module.exports = {
         building_string.push(`**[Rename Building]** | **[Demolish]**`);
         building_string.push("");
         building_string.push(`- Province: **${(province_obj.name) ? province_obj.name : province_id}**`);
+        building_string.push(` - Building Type: ${(config_obj.name) ? config_obj.name : local_building.building_type}`);
         building_string.push(`- Owner (Nationality): __${usr.name}__`);
 
         building_string.push(`- Subsidised: ${(local_building.subsidised) ? `${config.icons.checkmark} **[Turn Off Subsidies]**` : `${config.icons.cross} **[Subsidise]**`}`);
