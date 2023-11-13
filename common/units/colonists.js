@@ -13,7 +13,7 @@ config.units.colonists = {
     movement: 7.41,
 
     cost: {
-      food: 5,
+      foods:5,
       iron: 3,
       lead: 2,
       wood: 1,
@@ -35,7 +35,7 @@ config.units.colonists = {
     movement: 12.97,
 
     cost: {
-      food: 10,
+      foods:10,
       iron: 5,
       wood: 3,
       lead: 2,
@@ -57,7 +57,7 @@ config.units.colonists = {
     movement: 14,
 
     cost: {
-      food: 20,
+      foods:20,
       iron: 10,
       wood: 10,
       lead: 5,
@@ -80,7 +80,7 @@ config.units.colonists = {
     movement: 30,
 
     cost: {
-      food: 40,
+      foods:40,
       wood: 20,
       iron: 15,
       lead: 7,
@@ -103,7 +103,7 @@ config.units.colonists = {
     movement: 20.37,
 
     cost: {
-      food: 50,
+      foods:50,
       wood: 25,
       lead: 10,
       regular_steel: 10,
@@ -126,7 +126,7 @@ config.units.colonists = {
     movement: 42.60,
 
     cost: {
-      food: 100,
+      foods:100,
       regular_steel: 20,
       lead: 20,
       paper: 10,
@@ -150,7 +150,7 @@ config.units.colonists = {
     movement: 900,
 
     cost: {
-      food: 150,
+      foods:150,
       lead: 50,
       regular_steel: 30,
       wood: 30,

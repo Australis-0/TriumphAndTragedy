@@ -190,8 +190,15 @@ module.exports = {
     var usr = main.users[actual_id];
 
     if (local_building) {
+      var building_expenditures = getBuildingLastTurnExpenditures(local_building);
+      var building_input_fulfilment = getBuildingInputFulfilment(local_building);
+      var building_production = getBuildingProduction({ building_object: local_building });
+      var building_profit = returnSafeNumber(local_building.profit);
+      var building_revenue = returnSafeNumber(getBuildingLastTurnRevenue(local_building));
       var province_id = local_building.id.split("-")[0];
       var province_obj = main.provinces[province_id];
+
+      var building_other_expenditures = (building_revenue - building_expenditures) - building_profit;
 
       if (province_obj) {
         var actual_id = main.global.user_map[user_id];
@@ -208,13 +215,40 @@ module.exports = {
         building_string.push(`**[Rename Building]** | **[Demolish]**`);
         building_string.push("");
         building_string.push(`- Province: **${(province_obj.name) ? province_obj.name : province_id}**`);
-        building_string.push(`- Nationality: __${usr.name}__`);
+        building_string.push(`- Owner (Nationality): __${usr.name}__`);
 
         building_string.push(`- Subsidised: ${(local_building.subsidised) ? `${config.icons.checkmark} **[Turn Off Subsidies]**` : `${config.icons.cross} **[Subsidise]**`}`);
 
         if (!local_building.insolvent) { //[WIP] - Add additional goods in the future
+          var has_profit_string = false;
+
           building_string.push("");
           building_string.push(`- Liquidity: ${config.icons.money} ${parseNumber(local_building.stockpile.money)}`);
+          if (building_profit > 0) {
+            building_string.push(` - Profit: ${config.icons.money} ${parseNumber(building_profit, { display_prefix: true })}`);
+            has_profit_string = true;
+          } else if (building_profit < 0) {
+            building_string.push(` - :warning: Deficit: ${config.icons.money} ${parseNumber(building_profit, { display_prefix: true })}`);
+            has_profit_string = true;
+          }
+
+          if (has_profit_string) {
+            //Print goods revenue
+            if (local_building.goods_revenue)
+              building_string.push(`   - ${config.icons.money} ${parseNumber(local_building.goods_revenue, { display_prefix: true })} from selling produced goods`);
+
+            //Print wage cost
+            if (local_building.wage_cost)
+              building_string.push(`   - ${config.icons.money} ${parseNumber(local_building.wage_cost*-1, { display_prefix: true })} from paying wages`);
+
+            //Print tax cost
+            if (local_building.taxes)
+              building_string.push(`   - ${config.icons.money} ${parseNumber(local_building.taxes*-1, { display_prefix: true })} from taxes`);
+
+            //Print other expenditures
+            if (building_other_expenditures > 0)
+              building_string.push(`   - ${config.icons.money} ${parseNumber(building_other_expenditures*-1, { display_prefix: true })} from other expenditures, such as hiring/purchasing input goods`);
+          }
 
           if (local_building.insolvency_turns)
             building_string.push(` - This building has been insolvent for **${parseNumber(local_building.insolvency_turns)}** turn(s).`);
@@ -245,12 +279,23 @@ module.exports = {
           building_string.push("");
           building_string.push(`${(!game_obj.hide_production_choices) ? `**[Hide Production Choices]**` : `**[Show Production Choices]**`} | **[Change Production Choice]**`);
           building_string.push("");
+          building_string.push(`Input Fulfilment: ${(building_input_fulfilment[0] == building_input_fulfilment[1]) ? `**${printPercentage(building_input_fulfilment[0])}**` : `**${printPercentage(building_input_fulfilment[0])}** - ${printPercentage(building_input_fulfilment[1])}`}`);
           building_string.push(`- Production Choice: ${parseProductionChoice(local_building.building_type, local_building.production_choice)}`);
+
+          //Print building_production
+          if (Object.keys(building_production).length > 0) {
+            var production_string = parseGoods(building_production, { nesting: 2 });
+
+            building_string = appendArrays(building_string, production_string);
+          } else {
+            building_string.push(` - _Not currently producing anything._`);
+          }
 
           //Display all_production_keys and current chosen production choice
           if (!options.hide_production_choices) {
             building_string.push("");
             building_string.push(`**Production Choices:**`);
+            building_string.push(`> Production figures assume that Employment and Input Fulfilment are at 100%.`);
             building_string.push("");
 
             for (var i = 0; i < all_production_keys.length; i++)

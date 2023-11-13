@@ -1166,6 +1166,22 @@ module.exports = {
     }
   },
 
+  getBuildingLastTurnExpenditures: function (arg0_building_obj) {
+    //Convert from parameters
+    var building_obj = arg0_building_obj;
+
+    //Return statement
+    return (returnSafeNumber(building_obj.wage_cost) + returnSafeNumber(building_obj.taxes));
+  },
+
+  getBuildingLastTurnRevenue: function (arg0_building_obj) {
+    //Convert from parameters
+    var building_obj = arg0_building_obj;
+
+    //Return statement
+    return (returnSafeNumber(building_obj.goods_revenue));
+  },
+
   //getBuildingMap() - Returns a map of building IDs to building array keys in a given province
   getBuildingMap: function (arg0_province_id) {
     //Convert from parameters
@@ -1454,7 +1470,7 @@ module.exports = {
   /*
     getBuildingRevenue() - Calculates total building revenue from produced goods.
     options: {
-      goods: {} - Specifies a theoretical alternate amount of produced goods
+      goods: {} - Optional. Optimisation parameter. Specifies a theoretical alternate amount of produced goods
     }
   */
   getBuildingRevenue: function (arg0_building_obj, arg1_options) {
@@ -1794,6 +1810,7 @@ module.exports = {
     var options = (arg1_options) ? arg1_options : {};
 
     //Declare local instance variables
+    var current_positions = 0;
     var full_employment_profit;
     var profit_obj = (options.profit_obj) ? options.profit_obj :
       module.exports.getBuildingProfit(building_obj, { return_object: true });
@@ -1803,12 +1820,16 @@ module.exports = {
         employment_level: options.employment_level, pop_type: options.pop_type
       });
 
+    //current_positions should have employment
+    current_positions += returnSafeNumber(remaining_positions);
+    current_positions += returnSafeNumber(building_obj.employment[options.pop_type]);
+
     //Fetch full_employment_profit
     var full_employment_goods_obj = module.exports.getBuildingFullEmploymentProduction(building_obj);
     full_employment_profit = module.exports.getBuildingRevenue(building_obj, { goods: full_employment_goods_obj });
 
     //Fetch position_wage
-    var position_wage = returnSafeNumber(Math.abs(full_employment_profit - profit_obj.profit)/remaining_positions);
+    var position_wage = returnSafeNumber(Math.abs(full_employment_profit - profit_obj.profit)/unzero(current_positions, 1));
 
     //Return statement
     return (!options.return_object) ? position_wage : {
@@ -3092,26 +3113,30 @@ module.exports = {
           }
         }
 
-        if (local_subsistence_obj.allowed_pops)
-          for (var i = 0; i < local_subsistence_obj.allowed_pops.length; i++)
-            if (!qualified_pops.includes(local_subsistence_obj.allowed_pops[i]))
-              qualified_pops.push(local_subsistence_obj.allowed_pops[i]);
-        if (local_subsistence_obj.allowed_classes)
-          for (var i = 0; i < all_pops.length; i++) {
-            var local_pop = config.pops[all_pops[i]];
+        if (local_subsistence_obj) {
+          if (local_subsistence_obj.allowed_pops)
+            for (var i = 0; i < local_subsistence_obj.allowed_pops.length; i++)
+              if (!qualified_pops.includes(local_subsistence_obj.allowed_pops[i]))
+                qualified_pops.push(local_subsistence_obj.allowed_pops[i]);
+          if (local_subsistence_obj.allowed_classes)
+            for (var i = 0; i < all_pops.length; i++) {
+              var local_pop = config.pops[all_pops[i]];
 
-            if (local_pop.class) {
-              var local_classes = getList(local_pop.class);
+              if (local_pop.class) {
+                var local_classes = getList(local_pop.class);
 
-              for (var x = 0; x < local_subsistence_obj.allowed_classes.length; x++) {
-                var local_pop_key = local_subsistence_obj.allowed_classes[x];
+                for (var x = 0; x < local_subsistence_obj.allowed_classes.length; x++) {
+                  var local_pop_key = local_subsistence_obj.allowed_classes[x];
 
-                if (local_classes.includes(local_pop_key))
-                  if (!qualified_pops.includes(local_pop_key))
-                    qualified_pops.push(local_pop_key);
+                  if (local_classes.includes(local_pop_key))
+                    if (!qualified_pops.includes(local_pop_key))
+                      qualified_pops.push(local_pop_key);
+                }
               }
             }
-          }
+        } else {
+          log.warn(`No subsistence building could be found in ${province_obj.id}!`);
+        }
 
         //Set subsistence object
         province_obj.subsistence = {

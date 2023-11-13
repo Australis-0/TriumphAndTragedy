@@ -3152,7 +3152,11 @@ config.buildings.processing_facilities = { //[WIP] - Add Synthetic Ruby Factory
       }
     },
     manpower_cost: {
-      labourers: 40000
+      any_pop: {
+        labourers: 5000,
+        peasants: 5000,
+        serfs: 5000
+      }
     },
     produces: {
       production_choice_acacia: {

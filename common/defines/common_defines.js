@@ -32,7 +32,7 @@ config.defines.common = {
     money: 50000,
     wood: 10,
     stone: 20,
-    food: 50,
+    foods: 50,
     research_to: 0,
 
     unlock_building: [

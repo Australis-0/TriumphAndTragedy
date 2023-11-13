@@ -74,44 +74,28 @@ module.exports = {
 
         employment_string.push(`${bulletPoint(options.nesting)} Any Pop:`);
 
-        for (var x = 0; x < all_subobj_keys.length; x++) {
-          var local_manpower_obj = local_subobj[all_subobj_keys[x]];
+        //Iterate over nesting and pass local_subobj into manpower_obj
+        var new_options = JSON.parse(JSON.stringify(options));
+        new_options.nesting++;
 
-          if (config.pops[all_subobj_keys[x]]) {
-            var local_pop = config.pops[all_subobj_keys[x]];
-            var local_wage = local_building[`${all_subobj_keys[x]}_wage`];
-            var wage_string = "";
+        var local_nested_employment_string = module.exports.getBuildingEmploymentLocalisation(local_building, local_subobj, new_options);
 
-            if (local_wage)
-              wage_string = ` | (${config.icons.money} ${parseNumber(local_wage, { display_float: true })} per turn)`;
-
-            employment_string.push(`${bulletPoint(options.nesting + 1)}${parsePop(all_subobj_keys[x])}: ${returnSafeNumber(local_building.employment[all_subobj_keys[x]])}/${returnSafeNumber(local_manpower_obj)}${wage_string}`);
-          } else {
-            if (all_subobj_keys[x] == "any_pop" || all_subobj_keys[x].startsWith("any_pop_")) {
-              var local_subobj_value = local_subobj[all_subobj_keys[x]];
-
-              //Iterate over nesting and pass local_subobj_value into manpower_obj
-              var new_options = JSON.parse(JSON.stringify(options));
-              new_options.nesting++;
-
-              var local_nested_employment_string = module.exports.getBuildingEmploymentLocalisation(local_building, local_subobj_value, new_options);
-
-              //Push local_nested_employment_string to employment_string
-              for (var y = 0; y < local_nested_employment_string.length; y++)
-                employment_string.push(local_nested_employment_string[y]);
-            }
-          }
-        }
+        employment_string = appendArrays(employment_string, local_nested_employment_string);
       } else {
         if (config.pops[all_manpower_keys[i]]) {
           var local_pop = config.pops[all_manpower_keys[i]];
+          var local_positions = local_building[`${all_manpower_keys[i]}_positions`];
           var local_wage = local_building[`${all_manpower_keys[i]}_wage`];
+
+          var hire_string = "";
           var wage_string = "";
 
+          if (local_positions)
+            hire_string = ` | Hiring ${parseNumber(local_positions)}`;
           if (local_wage)
             wage_string = ` | (${config.icons.money} ${parseNumber(local_wage, { display_float: true })} per turn)`;
 
-          employment_string.push(`${bulletPoint(options.nesting)}${parsePop(all_manpower_keys[i])}: ${returnSafeNumber(local_building.employment[all_manpower_keys[i]])}/${returnSafeNumber(local_subobj)}${wage_string}`);
+          employment_string.push(`${bulletPoint(options.nesting)}${parsePop(all_manpower_keys[i])}: ${returnSafeNumber(local_building.employment[all_manpower_keys[i]])}/${returnSafeNumber(local_subobj)}${hire_string}${wage_string}`);
         }
       }
     }
@@ -670,6 +654,7 @@ module.exports = {
     parseGoods() - Returns an array string of a goods object passed to it
     options: {
       exclude_bullets: true/false, - Whether to exclude bullets or not
+      nesting: 1, - The current nesting. 1 by default
       no_formatting: true/false - Whether to format strings or not
     }
   */
@@ -678,16 +663,19 @@ module.exports = {
     var goods_obj = arg0_goods;
     var options = (arg1_options) ? arg1_options : {};
 
+    //Initialise options
+    if (!options.nesting) options.nesting = 1;
+
     //Declare local instance variables
     var all_good_keys = Object.keys(goods_obj);
     var f = (!options.no_formatting) ? `**` : "";
     var goods_string = [];
-    var prefix = (!options.exclude_bullets) ? `- ` : "";
+    var prefix = (!options.exclude_bullets) ? bulletPoint(options.nesting) : "";
 
     //Iterate over all_good_keys and parseGood() with local value
     for (var i = 0; i < all_good_keys.length; i++) {
       var local_good = lookup.all_goods[all_good_keys[i]];
-      var local_value = goods_obj[all_good_keys[i]];
+      var local_value = returnSafeNumber(goods_obj[all_good_keys[i]]);
 
       if (local_good) {
         goods_string.push(`${prefix}${module.exports.parseGood(all_good_keys[i], "", false, `${f}${printRange(local_value)}${f} `)}`);

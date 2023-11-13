@@ -46,7 +46,7 @@ module.exports = {
     var list = arg0_array;
 
     //Return statement
-    if (list) {
+    if (list != undefined) {
       return (Array.isArray(list)) ? list : [list];
     } else {
       return [];

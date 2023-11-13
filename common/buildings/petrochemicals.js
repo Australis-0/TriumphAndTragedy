@@ -330,8 +330,7 @@ config.buildings.petrochemicals = {
       money: 6000
     },
     maintenance: {
-      charcoal: 2,
-      gas: 1
+      wood: 10,
     },
     manpower_cost: {
       any_pop: {
@@ -340,7 +339,8 @@ config.buildings.petrochemicals = {
       }
     },
     produces: {
-      carbon: 10
+      carbon: 5,
+      charcoal: 5
     }
   },
   chloralkali_process_plants: {

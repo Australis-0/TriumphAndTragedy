@@ -72,11 +72,12 @@ module.exports = {
           var local_market_good = main.market[lookup.all_good_names[i]];
           total_category_goods++;
 
-          if (buy_sell == "buy") {
-            total_price += returnSafeNumber(local_market_good.buy_price);
-          } else {
-            total_price += returnSafeNumber(local_market_good.sell_price);
-          }
+          if (local_market_good)
+            if (buy_sell == "buy") {
+              total_price += returnSafeNumber(local_market_good.buy_price);
+            } else {
+              total_price += returnSafeNumber(local_market_good.sell_price);
+            }
         }
     }
 
@@ -784,8 +785,9 @@ module.exports = {
           var local_value_list = getList(local_good[reserved.goods[x]]);
 
           for (var y = 0; y < local_value_list.length; y++)
-            if (local_value_list[y].trim().toLowerCase().includes(search_query))
-              local_significance += search_query.length/local_value_list[y].length;
+            if (typeof local_value_list[y] == "string")
+              if (local_value_list[y].trim().toLowerCase().includes(search_query))
+                local_significance += search_query.length/local_value_list[y].length;
         }
 
       //Set local_significance in significance_matrix

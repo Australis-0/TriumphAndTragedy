@@ -165,7 +165,7 @@ module.exports = {
 
     if (!Array.isArray(array))
       array = getList(array);
-
+      
     //Return statement
     if (array.length > 1)
       return (array[0] == array[1]) ?

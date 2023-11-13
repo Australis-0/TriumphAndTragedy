@@ -53,7 +53,7 @@ config.units.aeroplanes = {
       fabric: 2,
       hydrogen: 2,
       coal: 1,
-      food: 1,
+      foods:1,
       money: 1000,
 
       aeroplanes_cp: 10
@@ -90,7 +90,7 @@ config.units.aeroplanes = {
       steel_beams: 2,
       lumber: 2,
       coal: 3,
-      food: 3,
+      foods:3,
       money: 2500,
 
       aeroplanes_cp: 20
@@ -127,7 +127,7 @@ config.units.aeroplanes = {
       regular_steel: 5,
       fabric: 3,
       coal: 3,
-      food: 3,
+      foods:3,
       lumber: 2,
       machine_parts: 1,
       money: 2500,

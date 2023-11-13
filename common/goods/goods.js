@@ -2347,6 +2347,7 @@ config.goods = { //[WIP] - Redo mine chances, buy/sell prices
       },
       steam_carriages: {
         name: "Steam Carriages",
+        icon: "steam_carriages",
         type: "normal",
         buy_price: 4500
       },

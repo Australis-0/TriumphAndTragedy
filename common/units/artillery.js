@@ -19,7 +19,7 @@ config.units.artillery = {
     cost: {
       lead: 5,
       bronze: 3,
-      food: 3,
+      foods:3,
       lumber: 2,
       wood: 1,
       money: 1000,
@@ -30,7 +30,7 @@ config.units.artillery = {
       gunpowder: 2,
       lead: 2,
       paper: 2,
-      food: 1,
+      foods:1,
       lumber: 1,
       traditional_medicines: 1,
 
@@ -53,7 +53,7 @@ config.units.artillery = {
     initiative: 3,
 
     cost: {
-      food: 5,
+      foods:5,
       bronze: 2,
       lead: 1,
       lumber: 1,
@@ -64,7 +64,7 @@ config.units.artillery = {
     maintenance: {
       iron: 2,
       gunpowder: 1,
-      food: 1,
+      foods:1,
       lead: 1,
       lumber: 1,
       traditional_medicines: 1,
@@ -89,7 +89,7 @@ config.units.artillery = {
 
     cost: {
       bronze: 5,
-      food: 3,
+      foods:3,
       lead: 3,
       lumber: 2,
       wood: 1,
@@ -101,7 +101,7 @@ config.units.artillery = {
       gunpowder: 4,
       lead: 2,
       paper: 2,
-      food: 1,
+      foods:1,
       iron: 1,
       lumber: 1,
       traditional_medicines: 1,
@@ -128,7 +128,7 @@ config.units.artillery = {
       bronze: 4,
       lumber: 3,
       lead: 3,
-      food: 3,
+      foods:3,
       wood: 1,
       money: 2000,
 
@@ -139,7 +139,7 @@ config.units.artillery = {
       iron: 2,
       lead: 2,
       paper: 2,
-      food: 1,
+      foods:1,
       lumber: 1,
       traditional_medicines: 1,
 
@@ -164,7 +164,7 @@ config.units.artillery = {
       bronze: 4,
       lumber: 2,
       lead: 2,
-      food: 3,
+      foods:3,
       wood: 1,
       money: 2000,
 
@@ -174,7 +174,7 @@ config.units.artillery = {
       gunpowder: 3,
       iron: 2,
       lead: 2,
-      food: 1,
+      foods:1,
       lumber: 1,
       paper: 1,
       traditional_medicines: 1,
@@ -197,7 +197,7 @@ config.units.artillery = {
     initiative: 5,
 
     cost: {
-      food: 5,
+      foods:5,
       lead: 5,
       sulphur: 5,
       bronze: 4,
@@ -215,7 +215,7 @@ config.units.artillery = {
       lumber: 2,
       paper: 2,
       iron: 2,
-      food: 1,
+      foods:1,
       traditional_medicines: 1,
 
       ground_artillery_cp: 12,
@@ -237,7 +237,7 @@ config.units.artillery = {
     initiative: 4,
 
     cost: {
-      food: 5,
+      foods:5,
       lead: 5,
       regular_steel: 5,
       lumber: 3,
@@ -254,7 +254,7 @@ config.units.artillery = {
       lumber: 2,
       iron: 2,
       saltpetre: 2,
-      food: 1,
+      foods:1,
       paper: 1,
       traditional_medicines: 1,
 
@@ -277,7 +277,7 @@ config.units.artillery = {
     initiative: 5,
 
     cost: {
-      food: 5,
+      foods:5,
       lead: 5,
       lumber: 2,
       bronze: 1,
@@ -315,7 +315,7 @@ config.units.artillery = {
 
     cost: {
       lumber: 8,
-      food: 7,
+      foods:7,
       bronze: 6,
       lead: 5,
       brass: 4,
@@ -329,7 +329,7 @@ config.units.artillery = {
       gunpowder: 6,
       lead: 5,
       iron: 3,
-      food: 2,
+      foods:2,
       lumber: 2,
       paper: 2,
       traditional_medicines: 1,
@@ -355,7 +355,7 @@ config.units.artillery = {
     cost: {
       iron: 3,
       wood: 1,
-      food: 1,
+      foods:1,
       money: 3000,
 
       ground_artillery_cp: 20
@@ -365,7 +365,7 @@ config.units.artillery = {
       wood: 2,
       copper: 1,
       lead: 1,
-      food: 1,
+      foods:1,
       traditional_medicines: 1,
 
       ground_artillery_cp: 4,
@@ -390,7 +390,7 @@ config.units.artillery = {
       iron: 3,
       bronze: 2,
       lumber: 2,
-      food: 2,
+      foods:2,
       lead: 1,
       money: 1000,
 
@@ -402,7 +402,7 @@ config.units.artillery = {
       iron: 2,
       lead: 2,
       lumber: 2,
-      food: 1,
+      foods:1,
       traditional_medicines: 1,
       wood: 1,
 
@@ -428,7 +428,7 @@ config.units.artillery = {
       lumber: 2,
       regular_steel: 4,
       lead: 2,
-      food: 2,
+      foods:2,
       money: 3000,
 
       ground_artillery_cp: 20
@@ -437,7 +437,7 @@ config.units.artillery = {
       sulphur: 12,
       wood: 3,
       copper: 1,
-      food: 1,
+      foods:1,
       tonics: 1,
 
       ground_artillery_cp: 6,
@@ -460,7 +460,7 @@ config.units.artillery = {
 
     cost: {
       artillery_shells: 5,
-      food: 5,
+      foods:5,
       regular_steel: 4,
       lumber: 3,
       paper: 2,
@@ -474,7 +474,7 @@ config.units.artillery = {
       lumber: 2,
       lead: 2,
       artillery_shells: 1,
-      food: 1,
+      foods:1,
       tonics: 1,
       uniforms: 1,
 
@@ -501,7 +501,7 @@ config.units.artillery = {
       lumber: 2,
       artillery_shells: 5,
       machine_parts: 5,
-      food: 5,
+      foods:5,
       money: 2500,
 
       ground_artillery_cp: 10
@@ -510,7 +510,7 @@ config.units.artillery = {
       lumber: 4,
       artillery_shells: 2,
       lead: 2,
-      food: 2,
+      foods:2,
       regular_steel: 1,
       tonics: 1,
       uniforms: 1,
@@ -536,7 +536,7 @@ config.units.artillery = {
     cost: {
       artillery_shells: 20,
       refined_petroil: 10,
-      food: 8,
+      foods:8,
       heavy_weaponry: 5,
       machine_parts: 5,
       iron: 5,
@@ -577,7 +577,7 @@ config.units.artillery = {
     cost: {
       artillery_shells: 10,
       heavy_weaponry: 1,
-      food: 5,
+      foods:5,
       money: 3000,
 
       ground_artillery_cp: 10
@@ -611,7 +611,7 @@ config.units.artillery = {
     cost: {
       artillery_shells: 5,
       machine_parts: 5,
-      food: 3,
+      foods:3,
       heavy_weaponry: 2,
       rubber: 2,
       money: 3000,
@@ -648,7 +648,7 @@ config.units.artillery = {
       machine_parts: 8,
       refined_petroil: 5,
       artillery_shells: 5,
-      food: 3,
+      foods:3,
       heavy_weaponry: 3,
       electric_gear: 2,
       lorries: 2,
@@ -690,7 +690,7 @@ config.units.artillery = {
       artillery_shells: 10,
       machine_parts: 8,
       heavy_weaponry: 4,
-      food: 3,
+      foods:3,
       electric_gear: 1,
       money: 5000,
 
@@ -728,7 +728,7 @@ config.units.artillery = {
     cost: {
       artillery_shells: 10,
       machine_parts: 8,
-      food: 5,
+      foods:5,
       electric_gear: 4,
       computers: 2,
       heavy_weaponry: 2,
@@ -766,7 +766,7 @@ config.units.artillery = {
 
     cost: {
       artillery_shells: 15,
-      food: 10,
+      foods:10,
       refined_petroil: 10,
       electric_gear: 6,
       heavy_weaponry: 5,
@@ -810,7 +810,7 @@ config.units.artillery = {
     cost: {
       artillery_shells: 10,
       refined_petroil: 5,
-      food: 5,
+      foods:5,
       electric_gear: 4,
       heavy_weaponry: 3,
       machine_parts: 2,
@@ -851,7 +851,7 @@ config.units.artillery = {
       machine_parts: 10,
       refined_petroil: 10,
       electric_gear: 5,
-      food: 5,
+      foods:5,
       heavy_weaponry: 5,
       lasers: 4,
       integrated_circuits: 4,
@@ -903,7 +903,7 @@ config.units.artillery = {
       refined_petroil: 5,
       computers: 4,
       turbines: 4,
-      food: 3,
+      foods:3,
       money: 10000,
 
       ground_artillery_cp: 40

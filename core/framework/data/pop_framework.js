@@ -2288,7 +2288,7 @@ module.exports = {
                 var random_hirees = Math.floor(unemployed_pops*random_chance_roll);
 
                 if (unemployed_pops > 0) {
-                  var available_positions = local_building[`${pop_type}_positions`];
+                  var available_positions = returnSafeNumber(local_building[`${pop_type}_positions`]);
 
                   if (available_positions > random_hirees) {
                     modifyValue(local_building, `${pop_type}_positions`, random_hirees*-1, true);
@@ -2297,7 +2297,7 @@ module.exports = {
 
                     unemployed_pops -= random_hirees;
                   } else {
-                    modifyValue(local_building.employment, pop_type, available_positions);
+                    modifyValue(local_building.employment, pop_type, available_positions*-1, true);
                     modifyValue(local_wealth_pool, "size", available_positions);
                     unemployed_pops -= available_positions;
 

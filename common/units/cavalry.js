@@ -17,7 +17,7 @@ config.units.cavalry = {
     initiative: 3,
 
     cost: {
-      food: 3,
+      foods:3,
       iron: 3,
       wood: 1,
       money: 500,
@@ -25,7 +25,7 @@ config.units.cavalry = {
       ground_units_cp: 10
     },
     maintenance: {
-      food: 1,
+      foods:1,
       iron: 1,
       traditional_medicines: 1,
       wood: 1,
@@ -49,7 +49,7 @@ config.units.cavalry = {
     initiative: 4,
 
     cost: {
-      food: 4,
+      foods:4,
       lumber: 2,
       regular_steel: 2,
       tools: 1,
@@ -60,7 +60,7 @@ config.units.cavalry = {
     },
     maintenance: {
       lumber: 1,
-      food: 1,
+      foods:1,
       regular_steel: 1,
 
       ground_units_cp: 6,
@@ -84,14 +84,14 @@ config.units.cavalry = {
     cost: {
       wood: 1,
       iron: 1,
-      food: 2,
+      foods:2,
       money: 250,
 
       ground_units_cp: 10
     },
     maintenance: {
       wood: 2,
-      food: 1,
+      foods:1,
       iron: 1,
       traditional_medicines: 1,
 
@@ -115,7 +115,7 @@ config.units.cavalry = {
 
     cost: {
       iron: 6,
-      food: 4,
+      foods:4,
       wood: 3,
       small_arms: 2,
       lead: 1,
@@ -127,7 +127,7 @@ config.units.cavalry = {
     maintenance: {
       gunpowder: 2,
       iron: 2,
-      food: 1,
+      foods:1,
       lead: 1,
       traditional_medicines: 1,
 
@@ -150,7 +150,7 @@ config.units.cavalry = {
     initiative: 6,
 
     cost: {
-      food: 6,
+      foods:6,
       lumber: 5,
       lead: 3,
       regular_steel: 2,
@@ -162,7 +162,7 @@ config.units.cavalry = {
     maintenance: {
       gunpowder: 3,
       lumber: 2,
-      food: 1,
+      foods:1,
       lead: 1,
       regular_steel: 1,
       tonics: 1,
@@ -186,7 +186,7 @@ config.units.cavalry = {
     initiative: 5,
 
     cost: {
-      food: 3,
+      foods:3,
       lumber: 1,
       iron: 1,
       lead: 1,
@@ -200,7 +200,7 @@ config.units.cavalry = {
       gunpowder: 2,
       lumber: 2,
       iron: 2,
-      food: 1,
+      foods:1,
       lead: 1,
       regular_steel: 1,
       tonics: 1,
@@ -225,7 +225,7 @@ config.units.cavalry = {
 
     cost: {
       low_calibre_ammunition: 5,
-      food: 3,
+      foods:3,
       lumber: 2,
       small_arms: 2,
       regular_steel: 1,
@@ -235,7 +235,7 @@ config.units.cavalry = {
       ground_units_cp: 5
     },
     maintenance: {
-      food: 1,
+      foods:1,
       iron: 1,
       low_calibre_ammunition: 1,
       lumber: 1,
@@ -262,7 +262,7 @@ config.units.cavalry = {
     initiative: 2,
 
     cost: {
-      food: 5,
+      foods:5,
       small_arms: 5,
       uniforms: 5,
       low_calibre_ammunition: 3,
@@ -275,7 +275,7 @@ config.units.cavalry = {
       uniforms: 2,
       low_calibre_ammunition: 1,
       lumber: 1,
-      food: 1,
+      foods:1,
       pharmaceuticals: 1,
 
       ground_units_cp: 10,
@@ -296,7 +296,7 @@ config.units.cavalry = {
     initiative: 1,
 
     cost: {
-      food: 7,
+      foods:7,
       ap_rounds: 5,
       low_calibre_ammunition: 5,
       regular_steel: 5,
@@ -314,7 +314,7 @@ config.units.cavalry = {
       machine_parts: 2,
       regular_steel: 2,
       small_arms: 2,
-      food: 1,
+      foods:1,
       low_calibre_ammunition: 1,
       pharmaceuticals: 1,
       uniforms: 1,
