@@ -242,7 +242,7 @@ module.exports = {
                 var local_building = getBuildingByID(local_building_id);
 
                 if (local_pop) {
-                  pops_string.push(`- ${(local_pop.icon) ? config.icons[local_pop.icon] + " " : ""}${parseNumber(local_wealth_pool.size)} ${(local_pop.name) ? local_pop.name : local_pop_type} | ${config.icons.money} ${parseNumber(local_wealth_pool.wealth)} - ${config.icons.coins} ${parseNumber(per_capita_income)} | [${printPercentage(local_wealth_pool.fulfilment)}/${printPercentage(local_wealth_pool.variety)}]`);
+                  pops_string.push(`- ${(local_pop.icon) ? local_pop.icon + " " : ""}${parseNumber(local_wealth_pool.size)} ${(local_pop.name) ? local_pop.name : local_pop_type} | ${config.icons.money} ${parseNumber(local_wealth_pool.wealth)} - ${config.icons.coins} ${parseNumber(per_capita_income)} | [${printPercentage(local_wealth_pool.fulfilment)}/${printPercentage(local_wealth_pool.variety)}]`);
 
                   if (!game_obj.hide_employers)
                     pops_string.push(` - Employer: ${(local_building.name) ? local_building.name : local_building_id}`);
