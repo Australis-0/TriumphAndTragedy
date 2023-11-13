@@ -3018,7 +3018,7 @@ module.exports = {
       building_obj.profit = building_obj.stockpile.money - returnSafeNumber(original_stockpile.money);
 
       //Building taxation
-      if (building_obj.profit) {
+      if (building_obj.profit > 0) {
         var building_tax_amount = 0;
         var category_tax_amount = 0;
         var corporate_tax_amount = returnSafeNumber(building_obj.profit*usr.corporate_tax);
