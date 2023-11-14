@@ -1317,8 +1317,8 @@ module.exports = {
                 !reserved.buildings.includes(all_modifier_keys[i])
               ) {
                 (local_modifier.type == "percentage" || (local_value[0] > -1 && local_value[0] < 1)) ?
-                  modifier_string.push(`${prefix}${f}${printPercentage(local_value[0], { display_prefix: true, base_zero: base_zero, base_one: base_one })}${f} ${local_modifier_name}`) :
-                  modifier_string.push(`${prefix}${f}${parseNumber(local_value[0], { display_prefix: true, base_zero: base_zero, base_one: base_one })}${f} ${local_modifier_name}`);
+                  modifier_string.push(`${prefix}${f}${printPercentage(local_value[0], { display_prefix: true, base_one: base_one })}${f} ${local_modifier_name}`) :
+                  modifier_string.push(`${prefix}${f}${parseNumber(local_value[0], { display_prefix: true, base_one: base_one })}${f} ${local_modifier_name}`);
               }
             }
           }

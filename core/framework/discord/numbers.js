@@ -124,15 +124,19 @@ module.exports = {
     var number = arg0_number;
     var options = (arg1_options) ? arg1_options : {};
 
-    //Declare local instance variables
-    var hit_separator = false;
-    var prefix_string = `${(options.display_prefix && number > 0) ? "+" : ""}`;
-    var separator_characters = 0;
-
     //Adjust for base_one; set options
     if (options.base_one)
       number--;
     if (!options.precision) options.precision = 2;
+
+    //Declare local instance variables
+    var hit_separator = false;
+    var prefix_string = "";
+    var separator_characters = 0;
+
+    //Set prefix_string
+    if (options.display_prefix && number > 0)
+      prefix_string = `+`;
 
     var percentage_string = `${prefix_string}${(!options.display_float) ? Math.round(number*100) : Math.round(number*100*100*100)/100/100}`;
     var processed_string = "";
@@ -165,7 +169,7 @@ module.exports = {
 
     if (!Array.isArray(array))
       array = getList(array);
-      
+
     //Return statement
     if (array.length > 1)
       return (array[0] == array[1]) ?
