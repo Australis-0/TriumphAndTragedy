@@ -10,6 +10,7 @@ module.exports = {
     var usr = main.users[actual_id];
 
     //Declare politics_string and other formatting strings
+    var political_capital_gain = getPoliticalCapitalGain(user_id);
     var politics_string = [];
     var reforms_string = [];
     var ruling_government_obj = config.governments[usr.government];
@@ -32,7 +33,7 @@ module.exports = {
     politics_string.push(config.localisation.divider);
     politics_string.push("");
     politics_string.push(`${config.icons.government} Government Type: **${ruling_government_obj.name}**`);
-    politics_string.push(`${config.icons.political_capital} Political Capital: **${parseNumber(usr.modifiers.political_capital)}** (${parseNumber(usr.modifiers.political_capital_gain, { display_prefix: true })} per turn)`);
+    politics_string.push(`${config.icons.political_capital} Political Capital: **${parseNumber(usr.modifiers.political_capital)}** (${parseNumber(political_capital_gain, { display_prefix: true })} per turn)`);
     politics_string.push("");
     politics_string.push(`- **[Coup ${config.icons.political_capital} ${parseNumber(config.defines.politics.coup_cost)}]** | **[Support Party ${config.icons.political_capital} ${parseNumber(config.defines.politics.support_cost)}]**`);
     politics_string.push(`- **[View Cultures]**${(usr.available_reforms.length > 0) ? ` | **[View Reforms]**` : ""}`);

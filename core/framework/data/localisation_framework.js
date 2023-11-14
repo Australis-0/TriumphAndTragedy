@@ -92,7 +92,7 @@ module.exports = {
 
           if (local_positions)
             hire_string = ` | Hiring ${parseNumber(local_positions)}`;
-          if (local_wage)
+          if (local_wage != undefined)
             wage_string = ` | (${config.icons.money} ${parseNumber(local_wage, { display_float: true })} per turn)`;
 
           employment_string.push(`${bulletPoint(options.nesting)}${parsePop(all_manpower_keys[i])}: ${returnSafeNumber(local_building.employment[all_manpower_keys[i]])}/${returnSafeNumber(local_subobj)}${hire_string}${wage_string}`);

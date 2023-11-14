@@ -785,7 +785,6 @@ module.exports = {
       //Add money based on calculated user income
       var user_income = getIncome(user_id, all_production);
 
-      var tax_obj = getTotalTaxObject(user_id);
       var total_income = randomNumber(user_income[0], user_income[1]);
       usr.money += total_income;
 
@@ -801,9 +800,6 @@ module.exports = {
           local_recipient.money += money_taken;
         }
       }
-
-      //Tax costs processing
-      usr.modifiers.political_capital -= returnSafeNumber(tax_obj.political_capital);
     } catch (e) {
       console.log(e);
     }
@@ -990,18 +986,9 @@ module.exports = {
 
         //Vassalage
         {
-          //Overlordship
-          if (all_vassals.length > 0)
-            usr.modifiers.political_capital -= getVassalMaintenance(user_id);
-
           //Vassal status
           if (getVassal(user_id))
             usr.vassal_years++;
-        }
-
-        //Volunteer Armies
-        {
-          usr.modifiers.political_capital -= getVolunteerMaintenance(user_id);
         }
 
         //Wargoal justification
@@ -1213,7 +1200,6 @@ module.exports = {
 
       //Coup
       if (usr.coup_this_turn != "") {
-        usr.tax_rate = 0;
         setGovernment(user_id, usr.coup_this_turn);
 
         //Reset coup_this_turn so we don't coup 24/7
@@ -1278,13 +1264,7 @@ module.exports = {
 
       //Political Capital
       {
-        usr.modifiers.political_capital += usr.modifiers.political_capital_gain;
-
-        //Accepted cultures maintenance for political capital
-        usr.modifiers.political_capital -= getAcceptedCultures(user_id).length*config.defines.politics.accepted_culture_maintenance_cost;
-
-        //Round off political_capital
-        usr.modifiers.political_capital = Math.round(usr.modifiers.political_capital);
+        usr.modifiers.political_capital += getPoliticalCapitalGain(user_id);
       }
 
       //Reform Desire
@@ -1358,8 +1338,6 @@ module.exports = {
 
                 //Reset actions and tax rate
                 usr.actions = 0;
-                if (!options.is_simulation)
-                  usr.tax_rate = 0;
               }
           }
         }

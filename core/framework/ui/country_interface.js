@@ -73,6 +73,7 @@ module.exports = {
     var all_national_modifiers = Object.keys(usr.national_modifiers);
     var all_pops = Object.keys(config.pops);
     var has_no_provinces = (getProvinces(user_id, { include_hostile_occupations: true, include_occupations: true }).length == 0);
+    var political_capital_gain = getPoliticalCapitalGain(user_id);
     var user_income = getIncome(user_id);
 
     //Fix negative pops
@@ -202,7 +203,7 @@ module.exports = {
         politics_string.push(`- Your country is currently in anarchy! Consider using **[Set Government]** to establish an effective government.\n`) :
         politics_string.push(`- **[Coup]** | **[Government List]**\n`);
     } catch {}
-    politics_string.push(`${config.icons.political_capital} Political Capital: **${parseNumber(usr.modifiers.political_capital)}** (${(usr.modifiers.political_capital_gain >= 0) ? "+" : ""}${parseNumber(usr.modifiers.political_capital_gain)} per turn)`);
+    politics_string.push(`${config.icons.political_capital} Political Capital: **${parseNumber(usr.modifiers.political_capital)}** (${parseNumber(political_capital_gain, { display_prefix: true })} per turn)`);
 
     //Add infamy section later
     politics_string.push(`${config.icons.infamy} Infamy: **${parseNumber(usr.modifiers.infamy, { display_float: true })}** (${parseNumber(usr.modifiers.infamy_loss, { display_float: true, display_prefix: true })} per turn)`);

@@ -2963,8 +2963,6 @@ module.exports = {
     //Print out all individual modifiers first
     if (government_stability_modifier != 0)
       stability_string.push(`• **${printPercentage(government_stability_modifier, { display_prefix: true })}** due to ${config.governments[usr.government].name} being in power.`);
-    if (usr.tax_rate > 0)
-      stability_string.push(`• **${printPercentage(usr.tax_rate*-1, { display_prefix: true })}** from current tax rate.`);
     if (returnSafeNumber(usr.boosted_stability) > 0)
       stability_string.push(`• **${printPercentage(usr.boosted_stability, { display_prefix: true })}** from boosted stability. (**-1%** per turn).`);
     if (usr.modifiers.overextension != 0)

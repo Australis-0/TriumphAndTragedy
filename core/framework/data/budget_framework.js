@@ -9,6 +9,7 @@ module.exports = {
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
     var calculated_income = 0;
+    var tax_obj = getTotalTaxObject(user_id);
     var usr = (typeof user_id != "object") ? main.users[actual_id] : user_id;
 
     //Safeguard virtual_user arguments
@@ -62,15 +63,10 @@ module.exports = {
       //Taxes (Last turn)
       {
         //Add everything in usr.trackers.tax to income
-        var all_taxes = Object.keys(usr.trackers.tax);
+        var tax_revenue = returnSafeNumber(tax_obj.revenue);
 
-        //Iterate over all_taxes
-        for (var i = 0; i < all_taxes.length; i++) {
-          var local_amount = returnSafeNumber(usr.trackers.tax[all_taxes[i]]);
-
-          calculated_income[0] += local_amount;
-          calculated_income[1] += local_amount;
-        }
+        calculated_income[0] += tax_revenue;
+        calculated_income[1] += tax_revenue;
       }
 
       return [
@@ -230,7 +226,7 @@ module.exports = {
       var tax_obj = module.exports.getTax(tax_name);
 
       var base_pc_cost = base_tax_pc_cost*(usr[tax_obj.id]*100);
-      var pc_cost = base_pc_cost*(1/usr.modifiers.tax_efficiency);
+      var pc_cost = base_pc_cost*Math.max(1/usr.modifiers.tax_efficiency, 1); //If tax efficiency is over 100%, decrease PC cost
 
       tax_cost.political_capital = Math.ceil(pc_cost);
     }

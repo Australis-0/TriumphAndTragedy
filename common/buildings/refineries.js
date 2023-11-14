@@ -236,11 +236,18 @@ config.buildings.refineries = {
       wood: 4,
       money: 1000
     },
+    maintenance: {
+      charcoal: 2,
+      gas: 1
+    },
     manpower_cost: {
       any_pop: {
         peasants: 1500,
         labourers: 1500
       }
+    },
+    produces: {
+      carbon: 10
     }
   },
   coal_washers: {

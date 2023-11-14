@@ -153,6 +153,38 @@ module.exports = {
     return (government_exists[0]) ? government_exists[1] : undefined;
   },
 
+  getPoliticalCapitalGain: function (arg0_user) {
+    //Convert from parameters
+    var user_id = arg0_user;
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var total_tax_obj = getTotalTaxObject(user_id);
+    var vassal_maintenance = getVassalMaintenance(user_id);
+    var volunteer_maintenance = getVolunteerMaintenance(user_id);
+    var usr = main.users[actual_id];
+
+    var political_capital_gain = 0;
+
+    //Add current modifier to political_capital_gain
+    political_capital_gain += usr.modifiers.political_capital_gain;
+
+    //Subtract Accepted Cultures cost
+    political_capital_gain -= getAcceptedCultures(user_id).length*config.defines.politics.accepted_culture_maintenance_cost;
+
+    //Subtract Tax cost
+    political_capital_gain -= returnSafeNumber(total_tax_obj.political_capital);
+
+    //Subtract Vassal cost
+    political_capital_gain -= vassal_maintenance;
+
+    //Subtract War Intervention cost
+    political_capital_gain -= volunteer_maintenance;
+
+    //Return statement
+    return Math.round(political_capital_gain);
+  },
+
   getStability: function (arg0_user) {
     //Convert from parameters
     var user_id = arg0_user;

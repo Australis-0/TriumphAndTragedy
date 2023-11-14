@@ -53,6 +53,7 @@ module.exports = {
     var enemies = [];
     var offensive_wars = 0;
     var pc_string = getPoliticalCapitalLocalisation(user_id);
+    var political_capital_gain = getPoliticalCapitalGain(user_id);
     var vassal_obj = usr.diplomacy.vassals;
 
     //Initialise war trackers
@@ -83,7 +84,7 @@ module.exports = {
       diplomacy_string.push(`${config.icons.diplomacy} _You are currently at peace._`);
 
     //Format diplomacy_string
-    diplomacy_string.push(`${config.icons.political_capital} Political Capital: **${parseNumber(usr.modifiers.political_capital)}** (${parseNumber(usr.modifiers.political_capital_gain, { display_prefix: true })} per turn)`);
+    diplomacy_string.push(`${config.icons.political_capital} Political Capital: **${parseNumber(usr.modifiers.political_capital)}** (${parseNumber(political_capital_gain, { display_prefix: true })} per turn)`);
 
     //Check if user has any vassals or accepted cultures dragging down their gain per turn
     if (pc_string.length > 0) {

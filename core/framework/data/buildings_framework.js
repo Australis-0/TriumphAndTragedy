@@ -3053,6 +3053,7 @@ module.exports = {
 
         //Set taxes
         building_obj.taxes = building_tax_amount + category_tax_amount + corporate_tax_amount;
+        building_obj.taxes = building_obj.taxes*Math.min(usr.modifiers.tax_efficiency, 1); //Can only tax up to 100% of profit; PC cost is reduced with further tax efficiency
 
         //Set building_obj.profit after taxes
         building_obj.profit = building_obj.profit - building_obj.taxes;

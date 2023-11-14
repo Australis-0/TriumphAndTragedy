@@ -274,7 +274,7 @@ module.exports = {
         }
 
         //Display building Production Choices; Input Fulfilment, and Base Production Choice - even if the building only has a base Production Choice, this information must be displayed to the user.
-        {
+        if (config_obj.produces) {
           var all_production_keys = Object.keys(config_obj.produces);
 
           building_string.push("");
