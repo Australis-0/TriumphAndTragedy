@@ -81,6 +81,7 @@ config.defines.economy = {
 
   //Employment
   max_hire_percentage: 1, //What max % of the upper bound manpower cost should companies attempt to hire at once? Set to 1 to disable
+  min_employment_wage: 0.20, //What % of a company's profit should be directed to employees at minimum if a profit is being earned?
 
   //Goods
   good_categories: {

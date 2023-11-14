@@ -1846,8 +1846,15 @@ module.exports = {
     var full_employment_goods_obj = module.exports.getBuildingFullEmploymentProduction(building_obj);
     full_employment_profit = module.exports.getBuildingRevenue(building_obj, { goods: full_employment_goods_obj });
 
+    //Get employment_liquidity
+    var employment_liquidity = Math.abs(full_employment_profit - profit_obj.profit);
+    var min_employment_liquidity = profit_obj.profit*config.defines.economy.min_employment_wage;
+
+    if (employment_liquidity < min_employment_liquidity)
+      employment_liquidity = min_employment_liquidity;
+
     //Fetch position_wage
-    var position_wage = returnSafeNumber(Math.abs(full_employment_profit - profit_obj.profit)/unzero(current_positions, 1));
+    var position_wage = employment_liquidity/unzero(current_positions, 1);
 
     //Return statement
     return (!options.return_object) ? position_wage : {

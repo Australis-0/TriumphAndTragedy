@@ -378,6 +378,11 @@ module.exports = {
               game_obj.page = "view_governments";
 
               break;
+            case "industry":
+              printIndustry(user_id);
+              game_obj.page = "view_industry";
+
+              break;
             case "ledger":
               printLedger(user_id);
               game_obj.page = "ledger";
