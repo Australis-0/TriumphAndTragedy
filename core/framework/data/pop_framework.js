@@ -1225,13 +1225,10 @@ module.exports = {
                     var local_goods_amount = (!options.restrict_goods) ? all_local_goods.length : options.restrict_goods.length;
                     var local_value = local_needs_category[all_local_goods[y]]*multiplier;
 
-                    //Calculate current_fulfillment, variety
+                    //Calculate current_fulfillment
                     var current_fulfillment = local_allowance/local_value;
 
                     percent_fulfilled += current_fulfillment*(local_value/total_goods);
-
-                    if (local_allowance > 0)
-                      percent_variety += 1/local_goods_amount;
 
                     //Subtract from goods_obj[all_local_goods[y]]
                     goods_obj[all_local_goods[y]] = Math.max(goods_obj[all_local_goods[y]] - local_value, 0);
@@ -1239,8 +1236,6 @@ module.exports = {
                     //Special variety parsing logic for local_good.type 'category'
                     if (local_good.type == "category") {
                       var all_subgood_keys = getSubobjectKeys(local_good, { exclude_keys: reserved.goods, only_objects: true });
-
-                      percent_variety = 0;
 
                       for (var z = 0; z < all_subgood_keys.length; z++) {
                         var local_subgood = lookup.all_goods[all_subgood_keys[z]];
@@ -1252,6 +1247,10 @@ module.exports = {
                             percent_variety += returnSafeNumber(1/all_subgood_keys.length);
                         }
                       }
+                    } else {
+                      //Current variety handler for individual goods
+                      if (local_allowance > 0)
+                        percent_variety += 1/local_goods_amount;
                     }
                   }
 
@@ -2747,6 +2746,7 @@ module.exports = {
             var local_percentage = returnSafeNumber(local_wealth_pool.size)/100000;
             var pop_obj = config.pops[pop_type];
             var user_id = province_obj.controller;
+            var usr = main.users[user_id];
 
             //Initialise received_goods scope
             local_wealth_pool.received_goods = {};
@@ -2793,7 +2793,7 @@ module.exports = {
                               var local_need = Math.ceil(local_value*local_percentage);
 
                               var actual_consumption = returnSafeNumber(Math.ceil(Math.min(getGoodAmount(user_id, all_local_needs[a]), local_need)));
-                              var local_worth = actual_consumption*local_market_good.buy_price;
+                              var local_worth = actual_consumption*(local_market_good.buy_price/2);
                               var local_tax = local_worth*returnSafeNumber(usr[`${pop_obj.class}-duties_tax`]);
                               var market_consumption = Math.ceil(actual_consumption*config.defines.economy.resource_production_scalar);
 
@@ -2805,6 +2805,7 @@ module.exports = {
                                 local_market_good.stock = 1;
 
                               spent_wealth += (local_worth + local_tax);
+                              
                               modifyValue(local_received_goods, all_local_needs[a], returnSafeNumber(actual_consumption));
                               modifyValue(usr.trackers.tax, `${pop_obj.class}-duties_tax`, local_tax);
 
