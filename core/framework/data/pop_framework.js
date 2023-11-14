@@ -2746,7 +2746,7 @@ module.exports = {
 
             var local_percentage = returnSafeNumber(local_wealth_pool.size)/100000;
             var pop_obj = config.pops[pop_type];
-            var usr = main.users[province_obj.controller];
+            var user_id = province_obj.controller;
 
             //Initialise received_goods scope
             local_wealth_pool.received_goods = {};
@@ -2807,6 +2807,9 @@ module.exports = {
                               spent_wealth += (local_worth + local_tax);
                               modifyValue(local_received_goods, all_local_needs[a], returnSafeNumber(actual_consumption));
                               modifyValue(usr.trackers.tax, `${pop_obj.class}-duties_tax`, local_tax);
+
+                              //Subtract actual_consumption from usr.inventory
+                              modifyGoodAmount(usr, all_local_needs[a], returnSafeNumber(actual_consumption)*-1);
                             }
                           }
                       }
