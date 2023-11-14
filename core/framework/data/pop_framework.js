@@ -2795,7 +2795,7 @@ module.exports = {
                               var actual_consumption = returnSafeNumber(Math.ceil(Math.min(getGoodAmount(user_id, all_local_needs[a]), local_need)));
                               var local_worth = actual_consumption*(local_market_good.buy_price/2);
                               var local_tax = local_worth*returnSafeNumber(usr[`${pop_obj.class}-duties_tax`]);
-                              var market_consumption = Math.ceil(actual_consumption*config.defines.economy.resource_production_scalar);
+                              var market_consumption = Math.floor(actual_consumption*config.defines.economy.resource_production_scalar);
 
                               //World Market processing
                               local_market_good.demand += market_consumption;
@@ -2805,7 +2805,7 @@ module.exports = {
                                 local_market_good.stock = 1;
 
                               spent_wealth += (local_worth + local_tax);
-                              
+
                               modifyValue(local_received_goods, all_local_needs[a], returnSafeNumber(actual_consumption));
                               modifyValue(usr.trackers.tax, `${pop_obj.class}-duties_tax`, local_tax);
 
