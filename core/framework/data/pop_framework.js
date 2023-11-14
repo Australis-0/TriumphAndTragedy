@@ -1587,8 +1587,26 @@ module.exports = {
 
     //Iterate over pop_types to count total_employed
     if (province_obj.pops)
-      for (var i = 0; i < pop_types.length; i++)
+      for (var i = 0; i < pop_types.length; i++) {
+        //Make sure province_obj.pops[`used_${pop_types[i]}`] actually exists
+        if (!province_obj.pops[`used_${pop_types[i]}`]) {
+          var used_pops = 0;
+
+          //Iterate over all province buildings to determine used pops
+          if (province_obj.buildings)
+            for (var x = 0; x < province_obj.buildings.length; x++) {
+              var local_building = province_obj.buildings[x];
+
+              if (local_building.employment)
+                used_pops += returnSafeNumber(local_building.employment[pop_types[i]]);
+            }
+
+          province_obj.pops[`used_${pop_types[i]}`] = used_pops;
+        }
+
+
         total_employed += returnSafeNumber(province_obj.pops[`used_${pop_types[i]}`]);
+      }
 
     //Return statement
     return total_employed;
@@ -2421,14 +2439,17 @@ module.exports = {
         var total_job_seekers = 0;
         var unemployed_pops = module.exports.getUnemployedPops(province_id, pop_type);
 
+        var employed_pops = Math.max(province_obj.pops[pop_type] - unemployed_pops, 0);
+        var employment_percentage = employed_pops/province_obj.pops[pop_type];
+
         for (var i = 0; i < province_obj.buildings.length; i++) {
           var local_building = province_obj.buildings[i];
 
           open_positions += returnSafeNumber(local_building[`${pop_type}_positions`]);
         }
 
-        //Remove unemployed_pops from open_positions
-        open_positions -= unemployed_pops;
+        //Factor in current labour shortages to job seeking (whether a pop will resign from their current position)
+        open_positions = Math.floor(returnSafeNumber(open_positions*employment_percentage));
 
         //Iterate over province_obj.buildings and if the wages are now below current_median, pop types should seek new jobs if higher positions exist
         if (open_positions > 0)
@@ -2437,10 +2458,13 @@ module.exports = {
 
             if (local_building.employment)
               if (local_building[`${pop_type}_wage`]) {
+                var current_employees = returnSafeNumber(local_building.employment[pop_type]);
                 var current_wage = local_building[`${pop_type}_wage`];
 
                 if (current_wage < current_median) {
-                  var new_job_seekers = 1 - (current_wage/current_median);
+                  var new_job_seeker_percentage = (1 - (current_wage/unzero(current_median, 1)));
+
+                  var new_job_seekers = current_employees*new_job_seeker_percentage;
                   new_job_seekers = Math.min(new_job_seekers, open_positions);
 
                   total_job_seekers += new_job_seekers;
@@ -2825,6 +2849,9 @@ module.exports = {
       //Set trackers
       province_obj.births = module.exports.getProvinceBirthRate(user_id, province_id);
       province_obj[`${all_pops[i]}_median_wage`] = median_wage;
+
+      //Sets .used_${all_pops[i]} to be accurate
+      getProvinceEmployees(province_obj.id, all_pops[i]);
 
       //Pop processing
       processPop(province_id, all_pops[i], {
