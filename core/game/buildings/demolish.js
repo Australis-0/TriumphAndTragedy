@@ -3,11 +3,11 @@ module.exports = {
     demolish() - Demolishes a set of buildings and prints an output to a user's game_obj.
     options: {
       province_id: "4407", - The province ID in which to demolish the building
-      building_count
-      building_count: 2, - Optional. 1 by default. The number of buildings to demolish
+      amount
+      amount: 2, - Optional. 1 by default. The number of buildings to demolish
       building_type: "lumberjacks", - Optional. building_object will be used if not specified
 
-      building_object: {} - Overrides building_count/building_type
+      building_object: {} - Overrides amount/building_type
     }
   */
   demolish: function (arg0_user, arg1_options) { //[WIP] - Kick out of building UI if currently in it and options.building_object is defined
@@ -19,7 +19,7 @@ module.exports = {
     var individual_id = false;
 
     var actual_id = main.global.user_map[user_id];
-    var amount = options.building_count;
+    var amount = options.amount;
     var building_obj;
     var game_obj = getGameObject(user_id);
     var province_id = options.province_id;
@@ -35,9 +35,11 @@ module.exports = {
       building_obj = lookup.all_buildings[options.building_object.building_type];
       raw_building_name = options.building_object.building_type;
     } else {
-      building_obj = module.exports.getBuilding(options.building_type);
-      raw_building_name = module.exports.getBuilding(options.building_type, { return_key: true });
+      building_obj = getBuilding(options.building_type);
+      raw_building_name = getBuilding(options.building_type, { return_key: true });
     }
+
+    console.log(`Raw building name:`, raw_building_name);
 
     //Check for any errors
     if (!isBeingJustifiedOn(user_id)) {
@@ -54,9 +56,10 @@ module.exports = {
 
               if (total_buildings >= amount) {
                 if (amount > 0) {
-                  var demolished_buildings = (individual_id) ? destroyBuildings({
+                  var demolished_buildings = (!individual_id) ?
+                    destroyBuildings({
                       province_id: province_obj.id,
-                      building_count: amount,
+                      amount: amount,
                       building_type: raw_building_name
                     }) : destroyBuildings({
                       province_id: province_obj.id,
@@ -140,7 +143,7 @@ module.exports = {
       visualPrompt(game_obj.alert_embed, user_id, {
         title: `Demolishing Building(s) in ${(province_obj.name) ? province_obj.name : `Province ${province_id}`}:`,
         prompts: [
-          [`How many buildings of this type would you like to get rid of?`, "number", { min: 1 }],
+          [`How many building(s) of this type would you like to get rid of?`, "number", { min: 1 }],
           [`What sort of building would you like to demolish in **${(province_obj.name) ? province_obj.name : province_id}**?`, "string"]
         ]
       },
@@ -148,14 +151,14 @@ module.exports = {
         demolish(user_id, {
           province_id: province_obj.id,
 
-          building_count: arg[0],
+          amount: arg[0],
           building_type: arg[1]
         });
       }) :
       visualPrompt(game_obj.alert_embed, user_id, {
         title: `Demolish Building(s):`,
         prompts: [
-          [`How many building of this type would you like to get rid of?`, "number", { min: 1 }],
+          [`How many building(s) of this type would you like to get rid of?`, "number", { min: 1 }],
           [`What sort of building would you like to demolish?`, "string"],
           [`Which city/province are these buildings currently located?`, "string"]
         ]
@@ -166,7 +169,7 @@ module.exports = {
         demolish(user_id, {
           province_id: city_obj.id,
 
-          building_count: arg[0],
+          amount: arg[0],
           building_type: arg[1]
         });
       });

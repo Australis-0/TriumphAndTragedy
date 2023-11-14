@@ -35,7 +35,7 @@ module.exports = {
         if (building_obj.insolvent) f = `~~`;
 
         if (building_obj.manpower_cost)
-          employment_string = `- ${getBuildingEmploymentStringLocalisation(local_building, building_obj.manpower_cost)}`;
+          employment_string = ` - ${getBuildingEmploymentStringLocalisation(local_building, building_obj.manpower_cost)}`;
         if (local_building.stockpile)
           if (local_building.stockpile.money)
             money_stockpile_string = ` | ${config.icons.money} ${parseNumber(local_building.stockpile.money)}`;
@@ -43,7 +43,7 @@ module.exports = {
           production_choice_string = ` - ${module.exports.parseProductionChoice(local_building.building_type, local_building.production_choice)}`;
 
         //Print string
-        building_string.push(`${bulletPoint(nesting)}${f}${(local_building.name) ? local_building.name : building_obj.name}${f}${money_stockpile_string}${employment_string}${production_choice_string}${(local_building.subsidised) ? config.icons.money : ""}`);
+        building_string.push(`${bulletPoint(nesting)}${f}${(local_building.name) ? local_building.name : building_obj.name}${f}${money_stockpile_string}${employment_string}${production_choice_string} ${(local_building.subsidised) ? config.icons.taxes : ""}`);
         building_string.push(`${bulletPoint(nesting + 1)}**[View ${(local_building.name) ? local_building.name : local_building.id}]**`);
       }
     }
@@ -1249,9 +1249,9 @@ module.exports = {
 
           production_choice_string = (local_production_choice) ?
             `${(local_production_choice.icon) ? local_production_choice.icon + " " : ""}${(local_production_choice.name) ? local_production_choice.name : local_production_choice_key}` :
-            `Base (Prod. Method)`;
+            `Base (Prod. Choice)`;
         } else {
-          production_choice_string = `Base (Prod. Method)`;
+          production_choice_string = `Base (Prod. Choice)`;
         }
       } else {
         production_choice_string = `No Production`;

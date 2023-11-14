@@ -237,29 +237,37 @@ module.exports = {
                 var local_pop_type = split_wealth_key[3];
                 var local_pop = config.pops[local_pop_type];
                 var local_wealth_pool = province_obj.pops[all_pop_keys[i]];
-                var per_capita_income = local_wealth_pool.income/local_wealth_pool.size;
 
                 var local_building = getBuildingByID(local_building_id);
 
-                if (local_pop) {
-                  pops_string.push(`- ${(local_pop.icon) ? local_pop.icon + " " : ""}${parseNumber(local_wealth_pool.size)} ${(local_pop.name) ? local_pop.name : local_pop_type} | ${config.icons.money} ${parseNumber(local_wealth_pool.wealth)} - ${config.icons.coins} ${parseNumber(per_capita_income)} | [${printPercentage(local_wealth_pool.fulfilment)}/${printPercentage(local_wealth_pool.variety)}]`);
+                //Non-subsistence handler (Regular buildings)
+                if (!all_pop_keys[i].includes("_subsistence-")) {
+                  if (local_building && local_pop) {
+                    var per_capita_income = local_wealth_pool.income/local_wealth_pool.size;
 
-                  if (!game_obj.hide_employers)
-                    pops_string.push(` - Employer: ${(local_building.name) ? local_building.name : local_building_id}`);
+                    pops_string.push(`- ${(local_pop.icon) ? local_pop.icon + " " : ""}${parseNumber(local_wealth_pool.size)} ${(local_pop.name) ? local_pop.name : local_pop_type} | ${config.icons.money} ${parseNumber(local_wealth_pool.wealth)} - ${config.icons.coins} ${parseNumber(per_capita_income)} | [${printPercentage(local_wealth_pool.fulfilment)}/${printPercentage(local_wealth_pool.variety)}]`);
 
-                  if (local_pop.per_100k)
-                    if (local_pop.per_100k.needs) {
-                      var all_needs_categories = Object.keys(local_pop.per_100k.needs);
+                    if (!game_obj.hide_employers)
+                      pops_string.push(` - Employer: ${(local_building.name) ? local_building.name : local_building_id}`);
 
-                      if (!game_obj.hide_needs_categories)
-                        for (var x = 0; x < all_needs_categories.length; x++) {
-                          var category_name = config.localisation[all_needs_categories[x]];
-                          var local_fulfilment = local_wealth_pool[`${all_needs_categories[x]}-fulfilment`];
-                          var local_variety = local_wealth_pool[`${all_needs_categories[x]}-variety`];
+                    if (local_pop.per_100k)
+                      if (local_pop.per_100k.needs) {
+                        var all_needs_categories = Object.keys(local_pop.per_100k.needs);
 
-                          pops_string.push(` - ${(category_name) ? category_name : all_needs_categories[x]} - ${printPercentage(local_fulfilment)}/${printPercentage(local_variety)}`);
-                        }
-                    }
+                        if (!game_obj.hide_needs_categories)
+                          for (var x = 0; x < all_needs_categories.length; x++) {
+                            var category_name = config.localisation[all_needs_categories[x]];
+                            var local_fulfilment = local_wealth_pool[`${all_needs_categories[x]}-fulfilment`];
+                            var local_variety = local_wealth_pool[`${all_needs_categories[x]}-variety`];
+
+                            pops_string.push(` - ${(category_name) ? category_name : all_needs_categories[x]} - ${printPercentage(local_fulfilment)}/${printPercentage(local_variety)}`);
+                          }
+                      }
+                  }
+
+                  //If local_building doesn't exist, delete wealth pool
+                  if (!local_building)
+                    delete province_obj.pops[all_pop_keys[i]];
                 }
               }
           }

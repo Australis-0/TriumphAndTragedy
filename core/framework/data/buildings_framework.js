@@ -269,7 +269,7 @@ module.exports = {
     destroyBuildings() - Demolishes a set of buildings and returns the freed manpower.
     options: {
       province_id: "4406", - The province ID to demolish in
-      building_count: 2, - Optional. 1 by default
+      amount: 2, - Optional. 1 by default
       building_type: "lumberjacks", - Optional. The building type to demolish. If not defined, building_object must be provided
 
       building_object: {} - The building object to demolish
@@ -282,7 +282,7 @@ module.exports = {
     //Declare local instance variables
     var individual_id = false;
 
-    var amount = options.building_count;
+    var amount = options.amount;
     var building_obj;
     var freed_manpower = {};
     var layoffs = {};
@@ -356,7 +356,7 @@ module.exports = {
                 usr.pops[`used_${all_manpower_keys[i]}`] -= manpower_cost;
 
                 //Add to tracker variable
-                modifyValue(freed_manpower, all_manpower_costs[i], manpower_cost);
+                modifyValue(freed_manpower, all_manpower_keys[i], manpower_cost);
               }
             }
 
@@ -2771,31 +2771,33 @@ module.exports = {
     //Declare local instance variables
     var key = `wealth-${building_obj.id}-${pop_type}`;
     var layoffs = 0;
-    var local_wealth_pool = province_obj.pops[key];
     var province_id = building_obj.id.split("-")[0];
     var province_obj = main.provinces[province_id];
 
+    var local_wealth_pool = province_obj.pops[key];
+
     if (local_wealth_pool) {
       var local_percentage = amount/local_wealth_pool.size;
+      var employed_workers = returnSafeNumber(building_obj.employment[pop_type]);
 
       //Subtract wealth; income proportionally from the pool
       local_wealth_pool.income -= local_wealth_pool.income*local_percentage;
       local_wealth_pool.wealth -= local_wealth_pool.wealth*local_percentage;
 
       //Set layoffs and reduce size
-      layoffs = (local_wealth_pool.size >= layoffs) ? layoffs : local_wealth_pool.size;
-      local_wealth_pool.size -= amount;
+      layoffs = (employed_workers >= amount) ? amount : employed_workers;
 
-      //Delete pool if size is now zero
-      if (local_wealth_pool.size <= 0)
-        delete province_obj.pops[pop_type];
+      //Remove from wealth pool size
+      local_wealth_pool.size -= layoffs;
 
       //Remove from building employment
       if (building_obj.employment[pop_type]) {
-        building_obj.employment[pop_type] -= amount;
+        building_obj.employment[pop_type] -= layoffs;
 
-        if (building_obj.employment[pop_type] <= 0)
-          delete building_obj.employment[pop_type];
+        if (building_obj.employment[pop_type] <= 0) {
+          delete building_obj.employment[pop_type]; //Delete employment of this pop
+          delete province_obj.pops[key]; //Delete wealth pool
+        }
       }
     }
 

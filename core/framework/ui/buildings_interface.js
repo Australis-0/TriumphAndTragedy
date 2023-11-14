@@ -503,7 +503,7 @@ module.exports = {
     {
       //City by city view
       buildings_string.push(`> **City Name:**`);
-      buildings_string.push(`> - __Building Name:__ | Cash Reserves - Employment`);
+      buildings_string.push(`> - __Building Name:__ | Cash Reserves - Employment - Prod. Choice - Subsidised (${config.icons.taxes})`);
       buildings_string.push("");
 
       //Iterate over provinces and the buildings inside them
