@@ -156,6 +156,8 @@ config.defines.common = {
       "beryllium_refineries",
       "bronze_factories",
       "coal_kilns",
+      "copper_kilns",
+      "copper_refineries",
       "gold_refineries",
       "iron_refineries",
       "ironworks",

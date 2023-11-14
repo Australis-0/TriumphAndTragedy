@@ -322,6 +322,106 @@ config.buildings.refineries = {
       cobalt: 3
     }
   },
+  copper_kilns: {
+    name: "Copper Kilns",
+    singular: "Copper Kiln",
+
+    construction_turns: 2,
+    cost: {
+      wood: 6,
+      stone: 5,
+      clay: 4,
+      flint: 3,
+      money: 2000
+    },
+    maintenance: {
+      production_choice_chalcocite: {
+        chalcocite: 4,
+        wood: 2
+      },
+      production_choice_chalcopyrite: {
+        chalcopyrite: 4,
+        wood: 2
+      },
+      production_choice_malachite: {
+        malachite: 4,
+        charcoal: 1
+      }
+    },
+    manpower_cost: {
+      any_pop: {
+        peasants: 5000,
+        labourers: 5000
+      }
+    },
+    produces: {
+      production_choice_chalcocite: {
+        name: "Chalcocite Roasting",
+        copper: 2
+      },
+      production_choice_chalcopyrite: {
+        name: "Chalcopyrite Roasting",
+        copper: 2
+      },
+      production_choice_malachite: {
+        name: "Malachite Roasting",
+        copper: 2
+      }
+    }
+  },
+  copper_refineries: {
+    name: "Copper Refineries",
+    singular: "Copper Refinery",
+
+    construction_turns: 5,
+    cost: {
+      bricks: 12,
+      glass: 8,
+      cement: 6,
+      lumber: 6,
+      tools: 4,
+      money: 5000
+    },
+    maintenance: {
+      production_choice_bornite: {
+        bornite: 5
+      },
+      production_choice_chalcocite: {
+        chalcocite: 5
+      },
+      production_choice_chalcopyrite: {
+        chalcopyrite: 10
+      },
+      production_choice_malachite: {
+        malachite: 5
+      }
+    },
+    manpower_cost: {
+      any_pop: {
+        peasants: 5000,
+        labourers: 5000
+      },
+      engineers: 600
+    },
+    produces: {
+      production_choice_bornite: {
+        name: "Bornite Extraction",
+        copper: 3
+      },
+      production_choice_chalcocite: {
+        name: "Chalcocite Flash Smelting",
+        copper: 4
+      },
+      production_choice_chalcopyrite: {
+        name: "Chalcopyrite Flash Smelting",
+        copper: 3
+      },
+      production_choice_malachite: {
+        name: "Malachite Smelting",
+        copper: 3
+      }
+    }
+  },
   diamond_refineries: {
     name: "Diamond Refineries",
     singular: "Diamond Refinery",

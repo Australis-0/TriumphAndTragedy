@@ -3750,8 +3750,22 @@ config.buildings.processing_facilities = { //[WIP] - Add Synthetic Ruby Factory
       money: 5000
     },
     maintenance: {
-      wood: 5,
-      regular_steel: 3
+      production_choice_copper_tools: {
+        wood: 2,
+        copper: 2
+      },
+      production_choice_bronze_tools: {
+        wood: 4,
+        bronze: 3
+      },
+      production_choice_iron_tools: {
+        wood: 4,
+        iron: 2
+      },
+      production_choice_steel_tools: {
+        wood: 5,
+        regular_steel: 3
+      }
     },
     manpower_cost: {
       any_pop: {
@@ -3761,7 +3775,22 @@ config.buildings.processing_facilities = { //[WIP] - Add Synthetic Ruby Factory
       artisans: 500
     },
     produces: {
-      tools: 10
+      production_choice_copper_tools: {
+        name: "Copper Tools",
+        tools: 2
+      },
+      production_choice_bronze_tools: {
+        name: "Bronze Tools",
+        tools: 3
+      },
+      production_choice_iron_tools: {
+        name: "Iron Tools",
+        tools: 5
+      },
+      production_choice_steel_tools: {
+        name: "Steel Tools",
+        tools: 10
+      }
     }
   },
   train_factories: {
