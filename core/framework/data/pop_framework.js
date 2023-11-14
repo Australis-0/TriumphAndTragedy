@@ -300,11 +300,15 @@ module.exports = {
                         }
                     }
 
-                  var actual_need = per_100k_need*(local_wealth_pool.size/100000);
+                  //Set total_goods for individual goods scope
+                  if (total_goods == 0 && lookup.all_goods[options.good_scope])
+                    total_goods = 1;
+
+                  var actual_need = returnSafeNumber(per_100k_need*(local_wealth_pool.size/100000));
 
                   //Set total_fulfilment; total_variety
-                  total_fulfilment += Math.min(local_wealth_pool.size*(total_goods/actual_need), local_wealth_pool.size);
-                  total_variety += Math.min(local_wealth_pool.size*(total_subgoods_fulfilled/local_subgoods.length), local_wealth_pool.size);
+                  total_fulfilment += returnSafeNumber(Math.min(local_wealth_pool.size*(total_goods/actual_need), local_wealth_pool.size));
+                  total_variety += returnSafeNumber(Math.min(local_wealth_pool.size*(total_subgoods_fulfilled/local_subgoods.length), local_wealth_pool.size));
                 } else if (pop_obj.buy_order.includes(options.good_scope)) {
                   total_fulfilment += local_wealth_pool.size*returnSafeNumber(local_wealth_pool[`${options.good_scope}-fulfilment`]);
                   total_variety += local_wealth_pool.size*returnSafeNumber(local_wealth_pool[`${options.good_scope}-variety`]);
@@ -2740,11 +2744,16 @@ module.exports = {
             var split_key = all_pop_keys[i].split("-");
             var pop_type = split_key[3];
 
-            var local_percentage = local_wealth_pool.size/100000;
+            var local_percentage = returnSafeNumber(local_wealth_pool.size)/100000;
             var pop_obj = config.pops[pop_type];
+            var usr = main.users[province_obj.controller];
 
             //Initialise received_goods scope
             local_wealth_pool.received_goods = {};
+
+            //Make sure .income, .wealth is safe number
+            local_wealth_pool.income = returnSafeNumber(local_wealth_pool.income);
+            local_wealth_pool.wealth = returnSafeNumber(local_wealth_pool.wealth);
 
             //Check pop_obj.per_100k.needs
             if (pop_obj)
@@ -2768,33 +2777,39 @@ module.exports = {
                       var local_category = pop_obj.per_100k.needs[category_buy_order[y]];
                       var local_received_goods = local_wealth_pool.received_goods[category_buy_order[y]];
 
-                      for (var z = 0; z < local_buy_order.length; z++)
-                        if (spent_wealth < local_wealth_pool.income) {
-                          //Begin buying as many goods as needed for this wealth pool size
-                          var local_market_good = main.market[local_buy_order[z]]
-                          var local_value = local_category[local_buy_order[z]];
+                      for (var z = 0; z < local_buy_order.length; z++) {
+                        var local_needs_group = pop_obj.per_100k.needs[category_buy_order[y]][local_buy_order[z].name];
 
-                          //Spend money on good
-                          if (local_market_good) {
-                            var local_need = Math.ceil(local_value*local_percentage);
+                        var all_local_needs = Object.keys(local_needs_group);
 
-                            var actual_consumption = Math.min(getGoodAmount(user_id, local_buy_order[z]), local_need);
-                            var local_worth = actual_consumption*local_market_good.buy_price;
-                            var local_tax = local_worth*returnSafeNumber(usr[`${pop_obj.class}-duties_tax`]);
-                            var market_consumption = Math.ceil(actual_consumption*config.defines.economy.resource_production_scalar);
+                        for (var a = 0; a < all_local_needs.length; a++)
+                          if (spent_wealth < local_wealth_pool.income) {
+                            //Begin buying as many goods as needed for this wealth pool size
+                            var local_market_good = main.market[all_local_needs[a]]
+                            var local_value = local_needs_group[all_local_needs[a]];
 
-                            //World Market processing
-                            local_market_good.demand += market_consumption;
-                            local_market_good.stock -= market_consumption;
+                            //Spend money on good
+                            if (local_market_good) {
+                              var local_need = Math.ceil(local_value*local_percentage);
 
-                            if (local_market_good.stock < 1)
-                              local_market_good.stock = 1;
+                              var actual_consumption = returnSafeNumber(Math.ceil(Math.min(getGoodAmount(user_id, all_local_needs[a]), local_need)));
+                              var local_worth = actual_consumption*local_market_good.buy_price;
+                              var local_tax = local_worth*returnSafeNumber(usr[`${pop_obj.class}-duties_tax`]);
+                              var market_consumption = Math.ceil(actual_consumption*config.defines.economy.resource_production_scalar);
 
-                            spent_wealth += (local_worth + local_tax);
-                            modifyValue(local_received_goods, local_buy_order[z], actual_consumption);
-                            modifyValue(usr.trackers.tax, `${pop_obj.class}-duties_tax`, local_tax);
+                              //World Market processing
+                              local_market_good.demand += market_consumption;
+                              local_market_good.stock -= market_consumption;
+
+                              if (local_market_good.stock < 1)
+                                local_market_good.stock = 1;
+
+                              spent_wealth += (local_worth + local_tax);
+                              modifyValue(local_received_goods, all_local_needs[a], returnSafeNumber(actual_consumption));
+                              modifyValue(usr.trackers.tax, `${pop_obj.class}-duties_tax`, local_tax);
+                            }
                           }
-                        }
+                      }
                     }
                   }
 
@@ -2816,6 +2831,23 @@ module.exports = {
                     //Set local fulfilment and variety
                     local_wealth_pool[`${category_buy_order[x]}-fulfilment`] = local_fulfilment_obj.fulfilment;
                     local_wealth_pool[`${category_buy_order[x]}-variety`] = local_fulfilment_obj.variety;
+                  }
+
+                  //Clean up received_goods for local_wealth_pool
+                  if (local_wealth_pool.received_goods) {
+                    var all_received_goods_categories = Object.keys(local_wealth_pool.received_goods);
+
+                    for (var x = 0; x < all_received_goods_categories.length; x++) {
+                      var local_category = local_wealth_pool.received_goods[all_received_goods_categories[x]];
+
+                      var all_local_received = Object.keys(local_category);
+
+                      for (var y = 0; y < all_local_received.length; y++) {
+                        var local_value = local_category[all_local_received[y]];
+
+                        local_category[all_local_received[y]] = returnSafeNumber(local_value);
+                      }
+                    }
                   }
 
                   //Set general fulfilment and variety

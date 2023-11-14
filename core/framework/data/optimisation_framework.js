@@ -116,6 +116,8 @@ module.exports = {
 
       //Pop processing
       {
+        var all_pops = Object.keys(config.pops);
+
         {
           lookup.all_classes = Object.keys(lookup.all_pop_classes);
           lookup.staple_goods_utilities = getNeedsUtilities({ staple_goods: true });
@@ -126,6 +128,20 @@ module.exports = {
 
         for (var i = 0; i < lookup.all_pop_needs_categories.length; i++)
           lookup[lookup.all_pop_needs_categories[i]] = getNeedsCategory(lookup.all_pop_needs_categories[i]);
+
+        //Sort buy order categories
+        for (var i = 0; i < all_pops.length; i++)
+          if (typeof config.pops[all_pops[i]] == "object") {
+            var local_pop = config.pops[all_pops[i]];
+
+            if (local_pop.buy_order)
+              for (var x = 0; x < local_pop.buy_order.length; x++) {
+                var local_category_order = local_pop[`${local_pop.buy_order[x]}-buy_order`];
+
+                //Sort local_category_order in descending order
+                local_category_order.sort((first_needs_group, second_needs_group) => second_needs_group.importance - first_needs_group.importance);
+              }
+          }
       }
 
       //User processing

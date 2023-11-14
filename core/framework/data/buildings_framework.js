@@ -3033,7 +3033,7 @@ module.exports = {
 
           if (market_good) {
             goods_revenue += local_value*market_good.sell_price;
-            market_good.stock += local_value;
+            market_good.stock += Math.ceil(local_value*config.defines.economy.resource_production_scalar);
           }
         }
 

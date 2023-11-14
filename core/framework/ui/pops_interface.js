@@ -170,7 +170,7 @@ module.exports = {
             //GDP/GDP per capita
             pops_string.push("");
             pops_string.push(`- GDP (Local): ${config.icons.money} ${parseNumber(province_gdp)}`);
-            pops_string.push(` - Per capita: ${parseNumber(province_gdp_per_capita)}`);
+            pops_string.push(` - Per capita: ${parseNumber(province_gdp_per_capita, { display_float: true })}`);
 
             //Housing/Homelessness
             pops_string.push(`- ${config.icons.neighbourhoods} Housing: ${parseNumber(province_obj.housing)}`);
