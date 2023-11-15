@@ -909,6 +909,12 @@ config.goods = { //[WIP] - Redo mine chances, buy/sell prices
         type: "normal",
         buy_price: 50
       },
+      cacao: {
+        name: "Cacao",
+        icon: "coffee_beans",
+        type: "normal",
+        buy_price: 180
+      },
       citrus: {
         name: "Citrus",
         icon: "citrus",

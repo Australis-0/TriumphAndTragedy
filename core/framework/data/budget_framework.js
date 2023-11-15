@@ -203,7 +203,7 @@ module.exports = {
     var actual_id = main.global.user_map[user_id];
     var base_tax_pc_cost = config.defines.economy.base_tax_pc_cost;
     var tax_cost = {};
-    var usr = main.users[actual_id];
+    var usr = (typeof user_id != "object") ? main.users[actual_id] : user_id;
 
     //Dual handler for custom_tax
     if (options.custom_tax) {
@@ -253,7 +253,7 @@ module.exports = {
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
     var tax_object = {};
-    var usr = main.users[actual_id];
+    var usr = (typeof user_id != "object") ? main.users[actual_id] : user_id;
 
     var all_taxes = Object.keys(config.budget.taxes);
     var all_custom_taxes = Object.keys(usr.custom_taxes);
