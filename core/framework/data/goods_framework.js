@@ -184,7 +184,7 @@ module.exports = {
   /*
     getGoodAmount() - Fetches a good amount based on its options from a user's inventory.
     options: {
-      exclude_categories: true/false, - Whether to exclude categories from the counting. False by default
+      exclude_categories: true/false, - Whether to exclude categories from the counting. True by default
     }
   */
   getGoodAmount: function (arg0_user, arg1_name, arg2_options) {
@@ -192,6 +192,9 @@ module.exports = {
     var user_id = arg0_user;
     var name = arg1_name;
     var options = (arg2_options) ? arg2_options : {};
+
+    //Initialise options
+    if (!options.exclude_categories) options.exclude_categories = true;
 
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
