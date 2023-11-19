@@ -1050,7 +1050,9 @@ module.exports = {
     //Regular error trapping just in case the specified modifier does not exist
     try {
       //Calculate total_modifier
-      total_modifier = (total_pop_type/100000)*pop_obj.per_100k[raw_modifier];
+      if (pop_obj.per_100k)
+        if (pop_obj.per_100k[raw_modifier])
+          total_modifier = (total_pop_type/100000)*pop_obj.per_100k[raw_modifier];
 
       //Make sure to implement a proper cap
       if (pop_obj.max_modifier_limit)
