@@ -31,7 +31,7 @@ module.exports = {
 
       if (
         production_choice_key ||
-        (production_choice_name.trim().toLowerCase() == "base" && has_base_production_choice)
+        production_choice_name.trim().toLowerCase() == "base"
       ) {
         //Switch production_choice
         if (production_choice_name.trim().toLowerCase() == "base") {

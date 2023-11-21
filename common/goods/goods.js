@@ -2370,6 +2370,11 @@ config.goods = { //[WIP] - Redo mine chances, buy/sell prices
         buy_price: 2500
       }
     },
+    batteries: {
+      name: "Batteries",
+      type: "normal",
+      buy_price: 650
+    },
     bicycles: {
       name: "Bicycles",
       icon: "bicycles",

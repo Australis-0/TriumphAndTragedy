@@ -1085,10 +1085,12 @@ module.exports = {
 
     //Declare local instance variables
     var config_obj = lookup.all_buildings[building_obj.building_type];
+    var employment_level = (options.employment_level) ?
+      options.employment_level : module.exports.getBuildingEmploymentLevel(building_obj);
     var wage_obj = module.exports.getBuildingWage(building_obj, {
       pop_type: options.pop_type,
 
-      employment_level: options.employment_level,
+      employment_level: employment_level,
       profit_obj: options.profit_obj,
       remaining_positions: options.remaining_positions,
 
@@ -1106,7 +1108,7 @@ module.exports = {
 
     //Get remaining positions in two hiring cases; make sure that divide by 0 doesn't happen by clamping to 1
     if (building_obj.subsidised) {
-      if (wage_obj.employment_level < 1)
+      if (employment_level < 1)
         open_positions = wage_obj.remaining_positions; //Continue hiring workers if employment_level isn't 100% if subsidised
     } else {
       if (has_liquidity && has_deficit && has_full_employment_profit) {
