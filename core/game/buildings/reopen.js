@@ -80,7 +80,7 @@ module.exports = {
 
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
-    var building_obj = (typeof building_name != "object") ? getBuildingByName(user_id, building_name) : building_obj;
+    var building_obj = (typeof building_name != "object") ? getBuildingByName(user_id, building_name) : building_name;
     var game_obj = getGameObject(user_id);
     var usr = main.users[actual_id];
 

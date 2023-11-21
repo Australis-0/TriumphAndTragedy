@@ -257,7 +257,9 @@ module.exports = {
 
         usr.money -= building_obj.stockpile.money*-1;
         usr.money -= subsidy_infusion;
-        building_obj.stockpile.money = subsidy_infusion;
+
+        if (building_obj.stockpile)
+          building_obj.stockpile.money = subsidy_infusion;
       }
     }
 
@@ -1103,10 +1105,15 @@ module.exports = {
     var open_positions = 0;
 
     //Get remaining positions in two hiring cases; make sure that divide by 0 doesn't happen by clamping to 1
-    if (has_liquidity && has_deficit && has_full_employment_profit) {
-      open_positions = minimum_hiring_liquidity/unzero(wage_obj.wage, 1);
-    } else if (has_liquidity && !has_deficit) {
-      open_positions = wage_obj.profit_obj.profit/unzero(wage_obj.wage, 1);
+    if (building_obj.subsidised) {
+      if (wage_obj.employment_level < 1)
+        open_positions = wage_obj.remaining_positions; //Continue hiring workers if employment_level isn't 100% if subsidised
+    } else {
+      if (has_liquidity && has_deficit && has_full_employment_profit) {
+        open_positions = minimum_hiring_liquidity/unzero(wage_obj.wage, 1);
+      } else if (has_liquidity && !has_deficit) {
+        open_positions = wage_obj.profit_obj.profit/unzero(wage_obj.wage, 1);
+      }
     }
 
     //Cap open_positions to config_obj.upper_bound_manpower
@@ -1513,8 +1520,11 @@ module.exports = {
       var local_market_good = main.market[all_good_keys[i]];
       var local_value = goods_obj[all_good_keys[i]];
 
-      if (local_market_good)
+      if (local_market_good) {
         current_revenue += local_value*local_market_good.buy_price;
+      } else if (all_good_keys[i] == "actions") {
+        current_revenue += local_value*config.defines.economy.money_per_action;
+      }
     }
 
     //Return statement
@@ -2927,9 +2937,14 @@ module.exports = {
 
     if (province_obj) {
       var building_employment_level = module.exports.getBuildingEmploymentLevel(building_obj);
+      var building_money = 0;
       var profit_obj = module.exports.getBuildingProfit(building_obj, { return_object: true });
       var user_id = province_obj.controller;
       var usr = main.users[user_id];
+
+      //Initialise local instance variables
+      if (building_obj.stockpile)
+        building_money = JSON.parse(JSON.stringify(returnSafeNumber(building_obj.stockpile.money)));
 
       //Iterate over pop_types and set wages for each pop type as well as offer sizes
       if (!building_obj.insolvent)
@@ -3073,6 +3088,22 @@ module.exports = {
           modifyValue(usr.trackers.tax, "corporate_tax", corporate_tax_amount);
         if (building_tax_amount > 0)
           modifyValue(usr.trackers.tax, `${building_id}-tax`, building_tax_amount);
+      }
+
+      //Subsidies handler - covers all building losses
+      {
+        if (building_obj.subsidised)
+          if (building_obj.stockpile) {
+            var current_loss = building_money - building_obj.stockpile.money;
+
+            if (current_loss > 0) {
+              usr.money -= returnSafeNumber(current_loss);
+              building_obj.stockpile.money += current_loss;
+              building_obj.subsidies = current_loss;
+            } else {
+              delete building_obj.subsidies;
+            }
+          }
       }
 
       //Return statement
