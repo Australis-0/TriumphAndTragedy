@@ -116,6 +116,7 @@ module.exports = {
 
       //Pop processing
       {
+        var all_good_categories = Object.keys(config.defines.economy.good_categories);
         var all_pops = Object.keys(config.pops);
 
         {
@@ -134,13 +135,45 @@ module.exports = {
           if (typeof config.pops[all_pops[i]] == "object") {
             var local_pop = config.pops[all_pops[i]];
 
-            if (local_pop.buy_order)
+            if (local_pop.buy_order) {
               for (var x = 0; x < local_pop.buy_order.length; x++) {
                 var local_category_order = local_pop[`${local_pop.buy_order[x]}-buy_order`];
 
                 //Sort local_category_order in descending order
                 local_category_order.sort((first_needs_group, second_needs_group) => second_needs_group.importance - first_needs_group.importance);
               }
+
+              //Sort goods_buy_order
+              if (!local_pop.goods_buy_order) local_pop.goods_buy_order = [];
+
+              for (var x = 0; x < all_good_categories.length; x++) {
+                var local_good_category = config.defines.economy.good_categories[all_good_categories[x]];
+
+                var current_allowance_percentage = returnSafeNumber(local_good_category.importance, 1);
+
+                for (var y = 0; y < local_pop.buy_order.length; y++) {
+                  var local_buy_order = local_pop[`${local_pop.buy_order[y]}-buy_order`];
+                  var local_category = local_pop.per_100k.needs[local_pop.buy_order[y]];
+
+                  for (var z = 0; z < local_buy_order.length; z++) {
+                    var local_needs_group = local_pop.per_100k.needs[local_pop.buy_order[y]][local_buy_order[z].name];
+
+                    var all_local_needs = Object.keys(local_needs_group);
+                    var local_allowance = current_allowance_percentage/local_pop.buy_order.length;
+
+                    for (var a = 0; a < all_local_needs.length; a++)
+                      local_pop.goods_buy_order.push({
+                        good_type: all_local_needs[a],
+                        category: local_pop.buy_order[y],
+                        group: local_buy_order[z],
+
+                        amount: local_needs_group[all_local_needs[a]],
+                        allowance: local_allowance/all_local_needs.length
+                      });
+                  }
+                }
+              }
+            }
           }
       }
 

@@ -198,9 +198,14 @@ module.exports = {
 
             var total_unemployed_pops = 0;
             for (var i = 0; i < pops_to_display.length; i++) {
+              var labour_shortage_string = "";
               var unemployed_pops = getUnemployedPops(province_id, pops_to_display[i], true);
+              var unemployment_rate = unemployed_pops/unzero(province_obj.pops[pops_to_display[i]], 1);
 
-              pops_string.push(`- ${parsePop(pops_to_display[i])}: ${printPercentage(unemployed_pops/returnSafeNumber(province_obj.pops[pops_to_display[i]]))}`);
+              if (unemployment_rate < 0)
+                labour_shortage_string = `- :warning: Labour Shortage!`
+
+              pops_string.push(`- ${parsePop(pops_to_display[i])}: ${printPercentage(unemployment_rate)}${labour_shortage_string}`);
 
               total_unemployed_pops += unemployed_pops;
             }
