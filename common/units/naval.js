@@ -259,7 +259,7 @@ config.units.naval = {
     },
     maintenance: {
       foods:2,
-      coal: 1,
+      coals: 1,
       copper: 1,
       high_calibre_ammunition: 1,
       lead: 1,
@@ -339,7 +339,7 @@ config.units.naval = {
     maintenance: {
       regular_steel: 4,
       regular_shells: 2,
-      coal: 2,
+      coals: 2,
       foods:2,
       copper: 1,
       heavy_weaponry: 1,
@@ -376,13 +376,13 @@ config.units.naval = {
       copper: 4,
       brass: 3,
       heavy_weaponry: 3,
-      coal: 3,
+      coals: 3,
       money: 10000,
 
       naval_units_cp: 20
     },
     maintenance: {
-      coal: 4,
+      coals: 4,
       iron: 4,
       foods:2,
       heavy_weaponry: 2,
@@ -418,7 +418,7 @@ config.units.naval = {
       heavy_weaponry: 4,
       uniforms: 5,
       regular_shells: 10,
-      coal: 3,
+      coals: 3,
       foods:3,
       copper: 2,
       brass: 2,
@@ -428,7 +428,7 @@ config.units.naval = {
     },
     maintenance: {
       iron: 6,
-      coal: 4,
+      coals: 4,
       regular_shells: 4,
       heavy_weaponry: 2,
       foods:2,
@@ -476,7 +476,7 @@ config.units.naval = {
       refined_petroil: 10,
       explosives: 4,
       torpedoes: 4,
-      coal: 3,
+      coals: 3,
       regular_steel: 3,
       regular_shells: 2,
       foods:2,

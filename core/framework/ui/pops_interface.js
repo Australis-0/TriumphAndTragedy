@@ -147,6 +147,22 @@ module.exports = {
             pops_string.push(`>  - Goods Category - [Pop Icon - Fulfilment %/Variety %]`);
             pops_string.push("");
 
+            //Overall needs fulfilment
+            var total_fulfilment_string = [];
+
+            for (var i = 0; i < pops_to_display.length; i++) {
+              var local_pop = config.pops[pops_to_display[i]];
+              var pop_fulfilment = getActualPopFulfilment({
+                province_id: province_obj.id,
+                pop_type: pops_to_display[x]
+              });
+
+              //Push pop icon; fulfilment/variety percentages to total_fulfilment_string
+              total_fulfilment_string.push(`${(local_pop.icon) ? local_pop.icon + " " : ""} ${printPercentage(pop_fulfilment.fulfilment)}/${printPercentage(pop_fulfilment.variety)}`);
+            }
+
+            pops_string.push(`- **Overall Goods** - ${total_fulfilment_string.join(", ")}`);
+
             //Average needs fulfilment/variety per category for all pops
             for (var i = 0; i < lookup.all_pop_needs_categories.length; i++) {
               var local_fulfilment_string = [];

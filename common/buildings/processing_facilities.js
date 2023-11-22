@@ -1355,7 +1355,7 @@ config.buildings.processing_facilities = { //[WIP] - Add Synthetic Ruby Factory
         gunpowder: 2,
         lead: 2,
         brass: 2,
-        coal: 1,
+        coals: 1,
         iron: 1
       },
       production_choice_low_calibre_ammunition: {

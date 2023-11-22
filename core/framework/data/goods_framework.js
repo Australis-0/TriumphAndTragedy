@@ -112,7 +112,7 @@ module.exports = {
   */
   getGood: function (arg0_name, arg1_options) {
     //Convert from parameters
-    var good_name = arg0_name.toLowerCase();
+    var good_name = (typeof arg0_name != "object") ? arg0_name.toLowerCase() : arg0_name;
     var options = (arg1_options) ? arg1_options : {};
 
     //Declare local instance variables
@@ -121,6 +121,9 @@ module.exports = {
     var good_exists = [false, "", ""]; //[good_exists, good_obj, good_id]
 
     var local_goods = Object.keys(all_goods);
+
+    //Guard clause for object
+    if (typeof good_name == "object") return good_name;
 
     //Check if argument provided is a raw name
     if (all_goods[good_name])

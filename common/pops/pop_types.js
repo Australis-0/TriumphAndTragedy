@@ -219,7 +219,7 @@ config.pops = { //[WIP] - Rework chances, icons
           },
           food: {
             grains: 2,
-            meeat: 2,
+            meat: 2,
             milk: 2,
             vegetables: 2,
             salt: 1
@@ -934,7 +934,7 @@ config.pops = { //[WIP] - Rework chances, icons
       needs: {
         luxury_goods: {
           food: {
-            liquor: 5,
+            alcohol: 5,
             coffee: 2,
             foods: 2,
             sugar: 2,
@@ -950,7 +950,7 @@ config.pops = { //[WIP] - Rework chances, icons
             automobiles: 1,
             ceramics: 1,
             chinaware: 1,
-            coal: 1,
+            coals: 1,
             glass: 1,
             lightbulbs: 1,
             telephones: 1,
@@ -959,7 +959,7 @@ config.pops = { //[WIP] - Rework chances, icons
             violins: 1
           },
           personal: {
-            regular_clothes: 3,
+            staple_clothes: 3,
             soap: 2,
             cameras: 1,
             glasses: 1,
@@ -1717,7 +1717,7 @@ config.pops = { //[WIP] - Rework chances, icons
             foods: 3,
             tea: 3,
             chocolate: 2,
-            liquor: 2,
+            alcohol: 2,
             coffee: 1,
             nuts: 1,
             olive_oil: 1,
@@ -1942,7 +1942,7 @@ config.pops = { //[WIP] - Rework chances, icons
           furnishings: {
             automobiles: 5,
             lumber: 5,
-            leather_shoes: 4,
+            leather_boots: 4,
             luxury_furniture: 4,
             tapestries: 3,
             velvet: 3,
@@ -2428,7 +2428,7 @@ config.pops = { //[WIP] - Rework chances, icons
         luxury_goods: {
           food: {
             foods: 3,
-            liquor: 2,
+            alcohol: 2,
             sugar: 2,
             canned_food: 1,
             coffee: 1,
@@ -2452,7 +2452,7 @@ config.pops = { //[WIP] - Rework chances, icons
           personal: {
             staple_clothes: 2,
             cameras: 1,
-            cigarette: 1,
+            cigarettes: 1,
             computers: 1,
             film: 1,
             jewellery: 1,
@@ -2545,7 +2545,7 @@ config.pops = { //[WIP] - Rework chances, icons
       needs: {
         luxury_goods: {
           food: {
-            liquor: 3,
+            alcohol: 3,
             coffee: 2,
             foods: 2,
             sugar: 2,
@@ -2810,7 +2810,7 @@ config.pops = { //[WIP] - Rework chances, icons
             bread: 3,
             canned_food: 2,
             grains: 2,
-            liquor: 2,
+            alcohol: 2,
             meat: 2,
             tropical_crops: 2,
             cheese: 1,

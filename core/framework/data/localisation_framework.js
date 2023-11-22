@@ -463,10 +463,10 @@ module.exports = {
 
       if (has_change)
         if (!all_production_keys[i].includes("_upkeep"))
-          if (all_production_keys[i] != "money") {
+          if (!["actions", "money"].includes(all_production_keys[i])) {
             resource_production_string.push(`${(!options.exclude_bullets) ? "- " : ""} ${module.exports.parseGood(local_good, undefined, !options.display_icons, local_change_string)}`);
           } else {
-            resource_production_string.push(`${(!options.exclude_bullets) ? "- " : ""}**${local_change_string}** Money`);
+            resource_production_string.push(`${(!options.exclude_bullets) ? "- " : ""}${local_change_string} ${parseString(all_production_keys[i])}`);
           }
     }
 
@@ -555,7 +555,7 @@ module.exports = {
       `_We currently have no deficit goods._`;
 
     //Other trackers
-    local_obj.overall_supply = printPercentage(usr.trackers.overall_supply);
+    local_obj.overall_supply = returnSafeNumber(printPercentage(usr.trackers.overall_supply));
 
     //Return statement
     return local_obj;
@@ -624,6 +624,7 @@ module.exports = {
     //Declare local instance variables
     var formatter = "";
     var good_icon = "";
+
     var good_obj = (typeof good_name == "object") ? good_name : getGood(good_name);
     var good_string = "";
 

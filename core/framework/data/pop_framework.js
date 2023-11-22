@@ -292,15 +292,16 @@ module.exports = {
                       var local_needs_category = pop_obj.per_100k.needs[pop_obj.buy_order[x]];
                       var local_received_goods = local_wealth_pool.received_goods[pop_obj.buy_order[x]];
 
-                      for (var y = 0; y < local_subgoods.length; y++)
-                        if (local_received_goods[local_subgoods[y]]) {
-                          var local_value = local_received_goods[local_subgoods[y]];
+                      if (local_received_goods)
+                        for (var y = 0; y < local_subgoods.length; y++)
+                          if (local_received_goods[local_subgoods[y]]) {
+                            var local_value = local_received_goods[local_subgoods[y]];
 
-                          total_goods += returnSafeNumber(local_value);
-                          if (local_value > 0) total_subgoods_fulfilled++;
+                            total_goods += returnSafeNumber(local_value);
+                            if (local_value > 0) total_subgoods_fulfilled++;
 
-                          per_100k_need += returnSafeNumber(local_needs_category[local_subgoods[y]]);
-                        }
+                            per_100k_need += returnSafeNumber(local_needs_category[local_subgoods[y]]);
+                          }
                     }
 
                   //Set total_goods for individual goods scope
@@ -310,8 +311,9 @@ module.exports = {
                   var actual_need = returnSafeNumber(per_100k_need*(local_wealth_pool.size/100000));
 
                   //Set total_fulfilment; total_variety
-                  total_fulfilment += returnSafeNumber(Math.min(local_wealth_pool.size*(total_goods/actual_need), local_wealth_pool.size));
-                  total_variety += returnSafeNumber(Math.min(local_wealth_pool.size*(total_subgoods_fulfilled/local_subgoods.length), local_wealth_pool.size));
+                  total_fulfilment += returnSafeNumber(Math.min(local_wealth_pool.size*(total_goods/actual_need), 1));
+
+                  total_variety += returnSafeNumber(Math.min(local_wealth_pool.size*(total_subgoods_fulfilled/local_subgoods.length), 1));
                 } else if (pop_obj.buy_order.includes(options.good_scope)) {
                   total_fulfilment += local_wealth_pool.size*returnSafeNumber(local_wealth_pool[`${options.good_scope}-fulfilment`]);
                   total_variety += local_wealth_pool.size*returnSafeNumber(local_wealth_pool[`${options.good_scope}-variety`]);

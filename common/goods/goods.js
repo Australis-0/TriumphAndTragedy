@@ -958,6 +958,12 @@ config.goods = { //[WIP] - Redo mine chances, buy/sell prices
         type: "normal",
         buy_price: 60
       },
+      tobacco: {
+        name: "Tobacco",
+        icon: "tobacco",
+        type: "normal",
+        buy_price: 250
+      },
       yam: {
         name: "Yam",
         icon: "yams",
@@ -2259,6 +2265,67 @@ config.goods = { //[WIP] - Redo mine chances, buy/sell prices
             icon: "white_bordeaux",
             type: "luxury",
             buy_price: 2800
+          }
+        },
+        rice_wine: {
+          name: "Rice Wine",
+          type: "category",
+
+          cheongju: {
+            name: "Cheongju",
+            icon: "cheongju",
+            type: "luxury",
+
+            buy_price: 800
+          },
+          chhaang: {
+            name: "Chhaang",
+            icon: "chhaang",
+            type: "luxury",
+
+            buy_price: 600
+          },
+          gwaha_ju: {
+            name: "Gwaha-ju",
+            icon: "gwaha_ju",
+            type: "luxury",
+
+            buy_price: 600
+          },
+          huangjiu: {
+            name: "Huangjiu",
+            icon: "huangjiu",
+            type: "luxury",
+
+            buy_price: 700
+          },
+          mirin: {
+            name: "Mirin",
+            icon: "mirin",
+            type: "luxury",
+
+            buy_price: 850
+          },
+          sake: {
+            name: "Sake",
+            icon: "sake",
+            type: "luxury",
+
+            buy_price: 1200
+          },
+          shaoxing: {
+            name: "Shaoxing",
+            icon: "shaoxing",
+            type: "luxury",
+
+            buy_price: 650
+          },
+          tapuy: {
+            name: "Tapuy",
+            icon: "tapuy",
+            type: "luxury",
+
+            buy_price: 400
           }
         }
       },
