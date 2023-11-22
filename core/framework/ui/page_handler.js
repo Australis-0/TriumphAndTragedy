@@ -3150,6 +3150,12 @@ module.exports = {
               mode: "deaths"
             });
 
+          //[Demotion]
+          if (input == "demotion")
+            printDemographicsLimitTooltip(user_id, province_id, {
+              mode: "demotion"
+            });
+
           //[Emigration]
           if (input == "emigration")
             printDemographicsLimitTooltip(user_id, province_id, {

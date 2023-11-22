@@ -154,7 +154,7 @@ module.exports = {
               var local_pop = config.pops[pops_to_display[i]];
               var pop_fulfilment = getActualPopFulfilment({
                 province_id: province_obj.id,
-                pop_type: pops_to_display[x]
+                pop_type: pops_to_display[i]
               });
 
               //Push pop icon; fulfilment/variety percentages to total_fulfilment_string
@@ -219,7 +219,7 @@ module.exports = {
               var unemployment_rate = unemployed_pops/unzero(province_obj.pops[pops_to_display[i]], 1);
 
               if (unemployment_rate < 0)
-                labour_shortage_string = `- :warning: Labour Shortage!`
+                labour_shortage_string = ` - :warning: Labour Shortage!`
 
               pops_string.push(`- ${parsePop(pops_to_display[i])}: ${printPercentage(unemployment_rate)}${labour_shortage_string}`);
 

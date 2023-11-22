@@ -29,7 +29,7 @@ module.exports = {
         var local_good = getGood(local_auto_trade.good_type);
         var local_good_icon = (local_auto_trade.good_type == "money") ?
           config.icons.money + " " :
-          (local_good) ?
+          (local_good.icon) ?
             config.icons[local_good.icon] + " " :
             "";
         var local_good_name = (local_good) ?

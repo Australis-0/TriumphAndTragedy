@@ -536,7 +536,7 @@ module.exports = {
         new_options.parent_obj = scope;
         new_options.parents.push("add_chance_limit");
 
-        var limit_pop_scope = module.exports.parseLimit(local_value, new_options);
+        var limit_pop_scope = module.exports.parseLimit(local_value.limit, new_options);
 
         if (limit_pop_scope.failed_checks > 0) {
           failed_checks++;
@@ -610,11 +610,12 @@ module.exports = {
           new_options.parent_obj = scope;
           new_options.parents.push("add_chance");
 
-          var limit_scope = module.exports.parseLimit(local_value, new_options);
+          var limit_scope = module.exports.parseLimit(local_value.limit, new_options);
 
           if (limit_scope.failed_checks == 0)
             value += scope.value;
           localisation_string.push(`${bulletPoint(options.nesting)}${booleanCheck(limit_scope.failed_checks == 0)}${parseNumber(scope.value, { display_float: true, display_prefix: true })} score from:`);
+          localisation_string = appendArrays(localisation_string, limit_scope.localisation_string);
         } else if (!(all_keys[i] == "per" || all_keys[i].startsWith("per_"))) {
           //Individual conditions - not iterative scope
           if (all_keys[i] == "available_housing") {
@@ -1333,9 +1334,11 @@ module.exports = {
   /*
     parsePopLimit() - Returns pop tags and objects for a given province depending on the selector. Recursive. May return more than the total pop type of a province, Math.min() bound in this case.
     options: {
+      debug: true/false, - Returns a debug value
       flags: {
         scope: ["province", "4709"] - Defines the current scoped object.
       },
+      ignore_pop_size: true/false, - Whether to ignore 0 pop size selectors
       nesting: 1, - The current depth level that things are being parsed at. 1 by default.
       parent_obj: {}, - The object of the initial parent. Optional.
       parents: [], - An array of parent elements used for placing relevant flags. Defaults to [],
@@ -1377,6 +1380,7 @@ module.exports = {
 
     //Declare local instance variables
     var all_keys = Object.keys(scope);
+    var ignore_pop_size = (options.debug || options.ignore_pop_size);
     var local_pop_obj = {};
     var localisation_string = [];
     var parent = options.parents[options.parents.length - 1];
@@ -1554,8 +1558,10 @@ module.exports = {
             localisation_string.push(`${bulletPoint(options.nesting)}${numberCheck(local_pop_scope.pop_scope.size, true)}${printPercentage(local_value.value, { display_float: true, display_prefix: true })} chance for ${parseNumber(local_pop_scope.pop_scope.size)} people from:`);
             localisation_string = appendArrays(localisation_string, local_pop_scope.localisation_string);
 
-            if (local_pop_scope.pop_scope.size > 0)
+            if (local_pop_scope.pop_scope.size > 0 || ignore_pop_size) {
               modifyValue(selectors, JSON.stringify(pop_scope), returnSafeNumber(local_value.value));
+              value += returnSafeNumber(local_value.value);
+            }
           } else if (all_keys[i].startsWith("building_category_") && typeof local_value == "object") {
             var new_options = JSON.parse(JSON.stringify(options));
             var new_pop_scope = JSON.parse(JSON.stringify(pop_scope));
@@ -1587,6 +1593,28 @@ module.exports = {
 
             //Merge selectors from per scope
             modifyValue(selectors, JSON.stringify(pop_scope), returnSafeNumber(local_pop_scope.value));
+          } else if ([
+            "lower_bound_life_expectancy",
+            "upper_bound_life_expectancy"
+          ].includes(all_keys[i])) {
+            var new_options = JSON.parse(JSON.stringify(options));
+            var new_pop_scope = JSON.parse(JSON.stringify(pop_scope));
+
+            new_options.nesting++;
+            new_options.parent_obj = scope;
+            new_options.parents.push(all_keys[i]);
+            new_options.pop_scope = pop_scope;
+
+            var local_pop_scope = module.exports.parsePopLimit(local_value, new_options);
+            var local_scope_name = "";
+
+            if (all_keys[i] == "lower_bound_life_expectancy")
+              local_scope_name = `Lower Bound Life Expectancy`;
+            if (all_keys[i] == "upper_bound_life_expectancy")
+              local_scope_name = `Upper Bound Life Expectancy`;
+
+            localisation_string.push(`${bulletPoint(options.nesting)}${numberCheck(local_pop_scope.pop_scope.size)} ${local_scope_name} - Value: ${parseNumber(local_pop_scope.value, { display_float: true, display_prefix: true })} - ${parseNumber(local_pop_scope.pop_scope.size)} people from:`);
+            localisation_string = appendArrays(localisation_string, local_pop_scope.localisation_string);
           }
         }
 
@@ -2394,7 +2422,7 @@ module.exports = {
               mergeObjects(pop_scope, local_pop_scope) :
               mergePopScopes(pop_scope, local_pop_scope); //and, not, default
 
-            localisation_string.push(`${bulletPoint(options.nesting)}${numberCheck(pop_scope.size, true)}people with more than £${local_wealth} in assets`);
+            localisation_string.push(`${bulletPoint(options.nesting)}${numberCheck(pop_scope.size, true)}people with more than £${local_value} in assets`);
           } if (all_keys[i] == "wealth_less_than") {
             //Fetch wealth_less_than scope
             var local_pop_scope = selectPops({
@@ -2635,7 +2663,7 @@ module.exports = {
                 }
               }
 
-              localisation_string.push(`${bulletPoint(options.nesting)}${numberCheck(total_applicable_pops, true)}Total educated pops applied to scope: ${parseNumber(total_applicable_pops, true)}Total educated pops applied to scope: ${parseNumber(total_applicable_pops)}, with ${parseNumber(scope.value, { display_float: true, display_prefix: true })} score`);
+              localisation_string.push(`${bulletPoint(options.nesting)}${numberCheck(total_applicable_pops, true)}Total educated pops applied to scope: ${parseNumber(total_applicable_pops, true)}, with ${parseNumber(scope.value, { display_float: true, display_prefix: true })} score`);
             } if (all_keys[i] == "employment") {
               var employment_percentage = getProvinceEmployment(ot_province.id, options.pop_type);
               pp_employment_scalar = employment_percentage/local_value;
@@ -2865,7 +2893,8 @@ module.exports = {
 
                   //Add to selectors
                   modifyValue(selectors, JSON.stringify(local_pop_scope), scope.value);
-                  total_applicable_pops += local_pop_scope.size;
+                  if (x == 0)
+                    total_applicable_pops = local_pop_scope.size;
 
                   //Break if no longer applicable
                   if (local_pop_scope.size == 0)
@@ -2906,6 +2935,9 @@ module.exports = {
       }
     }
 
+    if (options.debug)
+      console.log(`Current value when parsing keys:`, Object.keys(scope), value);
+
     //Deserialise selectors if no parents
     if (options.parents.length == 0) {
       var all_selector_keys = Object.keys(selectors);
@@ -2921,12 +2953,14 @@ module.exports = {
     }
 
     //Set value to 0 if conditions not met
-    if (pop_scope.size == 0) value = 0;
+    if (!ignore_pop_size)
+      if (pop_scope.size == 0) value = 0;
 
     //Get rid of selectors that don't target valid scopes
-    for (var i = selectors.length - 1; i >= 0; i--)
-      if (selectors[i][0].size <= 0 || selectors[i][1] == 0 || isNaN(selectors[i][1]))
-        selectors.splice(i, 1);
+    if (!ignore_pop_size)
+      for (var i = selectors.length - 1; i >= 0; i--)
+        if (selectors[i][0].size <= 0 || selectors[i][1] == 0 || isNaN(selectors[i][1]))
+          selectors.splice(i, 1);
 
     var empty_scope = (selectors.length == 0);
 

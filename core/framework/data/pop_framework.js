@@ -260,7 +260,7 @@ module.exports = {
     if (province_obj.pops) {
       var all_pop_keys = Object.keys(province_obj.pops);
       var is_good = (lookup.all_goods[options.good_scope]);
-      var local_population = returnSafeNumber(province_obj.pops[options.pop_type]);
+      var local_population = 0;
 
       for (var i = 0; i < all_pop_keys.length; i++)
         if (all_pop_keys[i].startsWith("wealth-")) {
@@ -270,6 +270,8 @@ module.exports = {
           var pop_type = split_wealth_key[3];
 
           if (pop_type == options.pop_type) {
+            local_population += returnSafeNumber(local_wealth_pool.size);
+
             var has_needs = false;
             var pop_obj = config.pops[pop_type];
             var total_goods = 0;
@@ -2159,7 +2161,7 @@ module.exports = {
     //Convert from parameters
     var from_province_id = arg0_province_id;
     var pop_scope = arg1_pop_scope;
-    var to_province_id = arg1_province_id;
+    var to_province_id = arg2_province_id;
     var options = (arg3_options) ? arg3_options : {};
 
     //Declare local instance variables
@@ -3680,11 +3682,12 @@ module.exports = {
       var local_province = main.provinces[all_provinces[i]];
 
       if (local_province.controller) {
-        var local_migration_attraction = parseLimit(config.pop_migration.province_selection, {
-          scope: ["province", all_provinces[i]]
+        var local_migration_attraction = parsePopLimit(config.pop_migration.province_selection, {
+          province_id: all_provinces[i],
+          ignore_pop_size: true
         });
 
-        if (local_migration_attraction.value > 0)
+        if (local_migration_attraction.value != 0)
           modifyValue(migration_attraction, all_provinces[i], returnSafeNumber(local_migration_attraction.value));
       }
     }
