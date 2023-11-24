@@ -264,10 +264,11 @@ module.exports = {
     return all_keys;
   },
 
-  mergeObjects: function (arg0_scope, arg1_scope) {
+  mergeObjects: function (arg0_scope, arg1_scope, arg2_overwrite) {
     //Convert from parameters
     var merged_obj = JSON.parse(JSON.stringify(arg0_scope));
     var merge_obj = JSON.parse(JSON.stringify(arg1_scope));
+    var overwrite = arg2_overwrite;
 
     //Declare local instance variables
     var all_merge_keys = Object.keys(merge_obj);
@@ -279,7 +280,9 @@ module.exports = {
 
       if (typeof local_value == "number") {
         if (merged_obj[all_merge_keys[i]]) {
-          merged_obj[all_merge_keys[i]] = merged_obj[all_merge_keys[i]] + local_value; //Add numbers together
+          merged_obj[all_merge_keys[i]] = (overwrite) ?
+            merged_obj[all_merge_keys[i]] + local_value :
+            local_value; //Add numbers together
         } else {
           merged_obj[all_merge_keys[i]] = local_value;
         }
@@ -342,22 +345,32 @@ module.exports = {
     return scope;
   },
 
-  standardisePercentage: function (arg0_scope, arg1_total) {
+  standardisePercentage: function (arg0_scope, arg1_total, arg2_round) {
     //Convert from parameters
     var scope = JSON.parse(JSON.stringify(arg0_scope));
-    var total = arg1_total;
+    var total = (arg1_total) ? arg1_total : 1;
+    var round = arg2_round;
 
     //Declare local instance variables
     var all_scope_keys = Object.keys(scope);
-    var scope_total = (total) ? total : 0;
+    var scope_total = 0;
 
     //Fetch scope_total
-    if (!total)
-      for (var i = 0; i < all_scope_keys.length; i++)
-        scope_total += returnSafeNumber(scope[all_scope_keys[i]]);
-    //Standardise to scope_total
     for (var i = 0; i < all_scope_keys.length; i++)
-      scope[all_scope_keys[i]] = scope[all_scope_keys[i]]/scope_total;
+      scope_total += returnSafeNumber(scope[all_scope_keys[i]]);
+
+    //Standardise to scope_total
+    for (var i = 0; i < all_scope_keys.length; i++) {
+      var local_value = scope[all_scope_keys[i]];
+
+      //Set local_value to % value
+      local_value = local_value/scope_total;
+
+      //Multiply % value by total
+      scope[all_scope_keys[i]] = (round) ?
+        Math.ceil(local_value*total) :
+        local_value*total;
+    }
 
     //Return statement
     return scope;

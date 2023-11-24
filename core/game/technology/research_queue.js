@@ -1,8 +1,9 @@
 module.exports = {
-  addResearchQueue: function (arg0_user, arg1_technology_name) {
+  addResearchQueue: function (arg0_user, arg1_technology_name, arg2_do_not_display) {
     //Convert from parameters
     var user_id = arg0_user;
     var raw_technology_name = arg1_technology_name.toLowerCase();
+    var do_not_display = arg2_do_not_display;
 
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
@@ -30,32 +31,39 @@ module.exports = {
             usr.research_queue.push(tech_name);
 
             //UI updater
-            if (game_obj.page == "research_list")
-              createPageMenu(game_obj.middle_embed, {
-                embed_pages: printResearchList(user_id),
-                page: interfaces[game_obj.middle_embed.id].page,
-                user: game_obj.user
-              });
-            if (game_obj.page == "research_queue")
-              createPageMenu(game_obj.middle_embed, {
-                embed_pages: printResearchQueue(user_id),
-                page: interfaces[game_obj.middle_embed.id].page,
-                user: game_obj.user
-              });
+            if (!do_not_display)
+              if (game_obj.page == "research_list")
+                createPageMenu(game_obj.middle_embed, {
+                  embed_pages: printResearchList(user_id),
+                  page: interfaces[game_obj.middle_embed.id].page,
+                  user: game_obj.user
+                });
+            if (!do_not_display)
+              if (game_obj.page == "research_queue")
+                createPageMenu(game_obj.middle_embed, {
+                  embed_pages: printResearchQueue(user_id),
+                  page: interfaces[game_obj.middle_embed.id].page,
+                  user: game_obj.user
+                });
 
             //Print user feedback
-            printAlert(game_obj.id, `You have successfully added **${(tech_obj.name) ? tech_obj.name : tech_name}** to your research queue.`);
+            if (!do_not_display)
+              printAlert(game_obj.id, `You have successfully added **${(tech_obj.name) ? tech_obj.name : tech_name}** to your research queue.`);
           } else {
-            printError(game_obj.id, `You are already researching this item! Therefore, this technology could not be added to your queue.`);
+            if (!do_not_display)
+              printError(game_obj.id, `You are already researching this item! Therefore, this technology could not be added to your queue.`);
           }
         } else {
-          printError(game_obj.id, `**${tech_name}** has already been added into your queue! Check your current queue for more information.`);
+          if (!do_not_display)
+            printError(game_obj.id, `**${tech_name}** has already been added into your queue! Check your current queue for more information.`);
         }
       } else {
-        printError(game_obj.id, `You have already hit your maximum queue limit! Consider freeing up space by cancelling one of your queued items.`);
+        if (!do_not_display)
+          printError(game_obj.id, `You have already hit your maximum queue limit! Consider freeing up space by cancelling one of your queued items.`);
       }
     } else {
-      printError(game_obj.id, `The tech you have specified proved as elusive as perpetual motion!`);
+      if (!do_not_display)
+        printError(game_obj.id, `The tech you have specified proved as elusive as perpetual motion!`);
     }
   },
 

@@ -39,6 +39,9 @@ module.exports = {
     var province_string = [];
 
     if (province_obj) {
+      //Fix province beforehand
+      fixProvinces(user_id, province_obj.id);
+
       province_string.push(`**[Back]** | **[Jump To Page]** | **[View Demographics]**`);
       province_string.push("");
 
@@ -361,6 +364,9 @@ module.exports = {
     var game_obj = getGameObject(user_id);
     var relevant_pops = getRelevantPops(user_id);
     var usr = main.users[actual_id];
+
+    //Fix province beforehand
+    fixProvinces(user_id);
 
     //Declare local tracker variables
     var accepted_cultures = getAcceptedCultures(user_id);

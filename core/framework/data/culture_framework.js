@@ -454,7 +454,7 @@ module.exports = {
 
     //Standardise to percentage
     if (!options.return_sum)
-      culture_obj = standardisePercentage(culture_obj, province_obj.pops.population);
+      culture_obj = standardisePercentage(culture_obj);
 
     //Return statement
     return sortObject(culture_obj);

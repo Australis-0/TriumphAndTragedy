@@ -249,24 +249,26 @@ module.exports = {
             pops_string.push(`>    - Goods Category - Fulfilment %/Variety %`);
             pops_string.push("");
 
+            var all_wealth_keys = sortWealthPools(province_obj.id);
+
             //Iterate over all wealth pools first
-            for (var i = 0; i < all_pop_keys.length; i++)
-              if (all_pop_keys[i].startsWith("wealth-")) {
-                var split_wealth_key = all_pop_keys[i].split("-");
+            for (var i = 0; i < all_wealth_keys.length; i++)
+              if (all_wealth_keys[i].startsWith("wealth-")) {
+                var split_wealth_key = all_wealth_keys[i].split("-");
 
                 var local_building_id = `${split_wealth_key[1]}-${split_wealth_key[2]}`;
                 var local_pop_type = split_wealth_key[3];
                 var local_pop = config.pops[local_pop_type];
-                var local_wealth_pool = province_obj.pops[all_pop_keys[i]];
+                var local_wealth_pool = province_obj.pops[all_wealth_keys[i]];
 
                 var local_building = getBuildingByID(local_building_id);
 
                 //Non-subsistence handler (Regular buildings)
-                if (!all_pop_keys[i].includes("_subsistence-")) {
+                if (!all_wealth_keys[i].includes("_subsistence-")) {
                   if (local_building && local_pop) {
                     var per_capita_income = local_wealth_pool.income/local_wealth_pool.size;
 
-                    pops_string.push(`- ${(local_pop.icon) ? local_pop.icon + " " : ""}${parseNumber(local_wealth_pool.size)} ${(local_pop.name) ? local_pop.name : local_pop_type} | ${config.icons.money} ${parseNumber(local_wealth_pool.wealth)} - ${config.icons.coins} ${parseNumber(per_capita_income)} | [${printPercentage(local_wealth_pool.fulfilment)}/${printPercentage(local_wealth_pool.variety)}]`);
+                    pops_string.push(`- ${(local_pop.icon) ? local_pop.icon + " " : ""}${parseNumber(local_wealth_pool.size)} ${(local_pop.name) ? local_pop.name : local_pop_type} | ${config.icons.money} ${parseNumber(local_wealth_pool.wealth)} - ${config.icons.coins} ${parseNumber(per_capita_income, { display_float: true })} | [${printPercentage(local_wealth_pool.fulfilment)}/${printPercentage(local_wealth_pool.variety)}]`);
 
                     if (!game_obj.hide_employers)
                       pops_string.push(` - Employer: ${(local_building.name) ? local_building.name : local_building_id}`);
@@ -288,7 +290,7 @@ module.exports = {
 
                   //If local_building doesn't exist, delete wealth pool
                   if (!local_building)
-                    delete province_obj.pops[all_pop_keys[i]];
+                    delete province_obj.pops[all_wealth_keys[i]];
                 }
               }
           }

@@ -1,13 +1,10 @@
 config.births = {
   limit: {
-    occupied: false
+    occupied: false,
+    has_staple_goods: 0.10 //Needs at least 10% staple goods fulfilment to grow
   },
   per_education_level: {
     value: -0.007783
-  },
-  per_percent_staple_goods: {
-    has_staple_goods: 0.01,
-    value: 0.002349
   },
   add_chance_homelessness: {
     limit: {

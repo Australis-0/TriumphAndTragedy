@@ -60,7 +60,7 @@ module.exports = {
         mean: 0.50 - Optional. Midpoint by default
       },
       tags: {}, - Adds certain tags to the end province. Used typically for transferring pops
-      type: "all"/["workers", "soldiers"] - Chooses the types of pops to generate
+      type: "all"/["workers", "soldiers"] - Optional. Chooses the types of pops to generate. All by default
       amount: 100000 - How many pops should be generated in the given province
     }
   */
@@ -233,6 +233,35 @@ module.exports = {
       usr.population += total_population;
     } catch (e) {
       log.error(`createPops() ran into an error: ${e}.`);
+    }
+  },
+
+  fixProvinces: function (arg0_user, arg1_provinces) {
+    //Convert from parameters
+    var user_id = arg0_user;
+    var provinces = (arg1_provinces) ? getList(arg1_provinces) : getProvinces(user_id, { include_occupations: true, return_keys: true });
+
+    //Iterate over all provinces
+    for (var i = 0; i < provinces.length; i++) {
+      var local_province = getProvince(provinces[i]);
+
+      //Standardise atttributes
+      standardiseAttributes(local_province, "age");
+      standardiseAttributes(local_province, "culture");
+
+      if (local_province.pops) {
+        var all_pop_keys = Object.keys(local_province.pops);
+
+        //Fix wealth pools
+        for (var x = 0; x < all_pop_keys.length; x++) {
+          var local_value = local_province.pops[all_pop_keys[x]];
+
+          if (all_pop_keys[x].startsWith("wealth-"))
+            if (!all_pop_keys[x].includes("subsistence"))
+              if (!local_value.size) //If size is 0 or undefined
+                delete local_province.pops[all_pop_keys[x]];
+        }
+      }
     }
   },
 
@@ -2214,12 +2243,10 @@ module.exports = {
     var all_pop_scope_tags = Object.keys(pop_scope.tags);
     var province_population = main.provinces[pop_scope.province_id].pops.population;
 
+    console.log(`Multiply pops called with parameters:`, pop_scope, amount, is_birth);
+
     if (pop_scope.size > 0) {
-      var max_amount = (province_population/pop_scope.size);
-
-      amount = Math.min(amount, max_amount);
-
-      pop_scope.size = Math.min(Math.ceil(pop_scope.size*amount), province_population);
+      pop_scope.size = Math.ceil(pop_scope.size*amount);
 
       if (!is_birth) {
         pop_scope.income = Math.ceil(pop_scope.income*amount);
@@ -2236,6 +2263,10 @@ module.exports = {
           is_mutable = true;
         if (all_pop_scope_tags[i].startsWith("el_"))
           is_mutable = true;
+        if (all_pop_scope_tags[i] == "population")
+          is_mutable = true;
+        if (all_pop_scope_tags[i].startsWith("used_"))
+          is_mutable = true;
         if (all_pop_scope_tags[i].startsWith("wealth-"))
           is_mutable = true;
 
@@ -2245,6 +2276,10 @@ module.exports = {
           delete pop_scope.tags[all_pop_scope_tags[i]];
         }
       }
+
+      //Birth handling
+      if (is_birth)
+        modifyValue(pop_scope, `b_${main.date.year}`, pop_scope.size);
     }
 
     //Return statement
@@ -2412,7 +2447,7 @@ module.exports = {
 
           //Override tags
           for (var x = 0; x < all_local_tags.length; x++)
-            province_obj.pops[all_local_tags[x]] = local_pop_scope.tags[all_local_tags[x]];
+            modifyValue(province_obj.pops, all_local_tags[x], local_pop_scope.tags[all_local_tags[x]]);
         }
       }
 
@@ -2511,7 +2546,7 @@ module.exports = {
 
           if (local_value[1] >= 0) {
             var local_chance = local_value[1]/2;
-            var local_pop_scope = multiplyPops(local_value[0], local_chance);
+            var local_pop_scope = module.exports.multiplyPops(local_value[0], local_chance);
 
             internal_migration_scopes.push(local_pop_scope);
           }
@@ -2531,9 +2566,11 @@ module.exports = {
               var move_out_scope = module.exports.multiplyPops(internal_migration_scope, local_value);
               var ot_province = main.provinces[all_internal_provinces[i]];
 
-              modifyValue(province_obj.trackers, `emigration-${all_internal_provinces[i]}`, move_out_scope.size);
-              modifyValue(ot_province.trackers, `immigration-${province_obj.id}`, move_out_scope.size);
-              module.exports.movePops(province_obj.id, move_out_scope, all_internal_provinces[i]);
+              if (local_value > 0) {
+                modifyValue(province_obj.trackers, `emigration-${all_internal_provinces[i]}`, move_out_scope.size);
+                modifyValue(ot_province.trackers, `immigration-${province_obj.id}`, move_out_scope.size);
+                module.exports.movePops(province_obj.id, move_out_scope, all_internal_provinces[i]);
+              }
             }
         }
       }
@@ -2574,9 +2611,11 @@ module.exports = {
               var move_out_scope = module.exports.multiplyPops(external_migration_scope, external_migration_scopes[i]);
               var ot_province = main.provinces[all_external_provinces[i]];
 
-              modifyValue(province_obj.trackers, `emigration-${all_external_provinces[i]}`, move_out_scope.size);
-              modifyValue(province_obj.trackers, `immigration-${province_obj.id}`, move_out_scope.size);
-              module.exports.movePops(province_obj.id, move_out_scope, all_external_provinces[i]);
+              if (local_value > 0) {
+                modifyValue(province_obj.trackers, `emigration-${all_external_provinces[i]}`, move_out_scope.size);
+                modifyValue(province_obj.trackers, `immigration-${province_obj.id}`, move_out_scope.size);
+                module.exports.movePops(province_obj.id, move_out_scope, all_external_provinces[i]);
+              }
             }
         }
       }
@@ -2910,6 +2949,9 @@ module.exports = {
         modifyValue(province_obj.trackers, `death-${all_pops[i]}`, over_upper_bound.size);
       }
     }
+
+    //Fix pops in province
+    fixProvinces(user_id, province_obj.id);
   },
 
   /*
@@ -3669,6 +3711,126 @@ module.exports = {
 
     //Return statement
     return current_scope;
+  },
+
+  /*
+    sortWealthPools() - Sorts wealth pool objects in province,
+    options: {
+      mode: "income"/"pop_type"/"size"/"wealth", - Optional. "size" by default
+      return_object: true/false - Whether to return wealth pools as a single object. Returns keys by default
+    }
+  */
+  sortWealthPools: function (arg0_province_id, arg1_options) {
+    //Convert from parameters
+    var province_id = arg0_province_id;
+    var options = (arg1_options) ? arg1_options : {};
+
+    //Declare local instance variables
+    var mode = (options.mode) ? options.mode : "size";
+    var province_obj = (typeof province_id != "object") ? main.provinces[province_id] : province_id;
+    var return_obj = {};
+    var subsistence_obj = {};
+
+    //Iterate over province_obj.pops for wealth pools
+    if (province_obj.pops) {
+      var all_pops = Object.keys(config.pops);
+      var all_pop_keys = Object.keys(province_obj.pops);
+      var regular_wealth_pools = [];
+
+      //Subsistence pools go up top
+      for (var i = 0; i < all_pop_keys.length; i++)
+        if (all_pop_keys[i].startsWith("wealth-")) {
+          var local_value = province_obj.pops[all_pop_keys[i]];
+
+          if (all_pop_keys[i].includes("subsistence")) {
+            local_value.key = all_pop_keys[i];
+            subsistence_obj = local_value;
+          } else {
+            //Non-subsistence handling
+            var split_key = all_pop_keys[i].split("-");
+            var pop_type = split_key[3];
+
+            local_value.key = all_pop_keys[i];
+            local_value.pop_type = pop_type;
+
+            regular_wealth_pools.push(local_value);
+          }
+        }
+
+      //Sort wealth pools by mode in descending order
+      if (mode == "income") {
+        regular_wealth_pools.sort((a, b) => b.income - a.income);
+      } else if (mode == "size") {
+        regular_wealth_pools.sort((a, b) => b.size - a.size);
+      } else if (mode == "pop_type") {
+        regular_wealth_pools.sort((a, b) => b.pop_type - a.pop_type);
+      } else if (mode == "wealth") {
+        regular_wealth_pools.sort((a, b) => b.wealth - a.wealth);
+      }
+
+      //Append regular_wealth_pools/new_wealth_pools to subsistence_obj as a sorted_wealth_pools_obj
+      var sorted_wealth_pools_obj = {};
+
+      for (var i = 0; i < regular_wealth_pools.length; i++) {
+        var local_value = regular_wealth_pools[i];
+
+        sorted_wealth_pools_obj[local_value.key] = local_value;
+        var local_wealth_pool = sorted_wealth_pools_obj[local_value.key];
+
+        delete local_wealth_pool.key;
+        delete local_wealth_pool.pop_type;
+      }
+
+      return_obj = mergeObjects(subsistence_obj, sorted_wealth_pools_obj);
+
+      //Return statements
+      return (!options.return_object) ? Object.keys(return_obj) : return_obj;
+    }
+  },
+
+  /*
+    standardiseAttributes() - Standardises a set of attributes to 100% of the population.
+    mode: "age"/"culture"
+  */
+  standardiseAttributes: function (arg0_province_id, arg1_mode) {
+    //Convert from parameters
+    var province_id = arg0_province_id;
+    var mode = arg1_mode.toString().trim();
+
+    //Declare local instance variables
+    var province_obj = main.provinces[province_id];
+    var tag_obj = {};
+
+    //Standardise to mode
+    if (province_obj)
+      if (province_obj.pops) {
+        var all_pop_keys = Object.keys(province_obj.pops);
+        var province_population = province_obj.pops.population;
+
+        if (mode == "age") {
+          for (var i = 0; i < all_pop_keys.length; i++)
+            if (all_pop_keys[i].startsWith("b_")) {
+              var local_value = province_obj.pops[all_pop_keys[i]];
+
+              tag_obj[all_pop_keys[i]] = local_value;
+            }
+          tag_obj = standardisePercentage(tag_obj, province_population, true);
+        } if (mode == "culture") {
+          for (var i = 0; i < all_pop_keys.length; i++)
+            if (all_pop_keys[i].startsWith("culture-")) {
+              var local_value = province_obj.pops[all_pop_keys[i]];
+
+              tag_obj[all_pop_keys[i]] = local_value;
+            }
+          tag_obj = standardisePercentage(tag_obj, province_population, true);
+        }
+
+        //Merge province_obj.pops and tag_obj, with overwrite mode
+        province_obj.pops = mergeObjects(province_obj.pops, tag_obj, true);
+      }
+
+    //Return statement
+    return tag_obj;
   },
 
   updateMigrationAttraction: function () {
