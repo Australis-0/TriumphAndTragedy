@@ -1153,9 +1153,11 @@ module.exports = {
     var options = (arg1_options) ? arg1_options : {};
 
     //Declare local instance variables
+    var input_high_sum = 0;
     var input_fulfilment = [];
     var input_fulfilments_high = [];
     var input_fulfilments_low = [];
+    var input_low_sum = 0;
     var maintenance_obj = (options.maintenance) ? options.maintenance : module.exports.getBuildingConsumption(user_id, building_obj);
     var split_key = building_obj.id.split("-");
 
@@ -1188,14 +1190,16 @@ module.exports = {
           Math.min(1 - (local_shortfall[1]/local_maintenance_cost[1]), 1)
         ];
 
-        input_fulfilments_low.push(local_fulfilment[0]);
-        input_fulfilments_high.push(local_fulfilment[1]);
+        input_fulfilments_low.push(local_fulfilment[0]*local_maintenance_cost[0]);
+        input_fulfilments_high.push(local_fulfilment[1]*local_maintenance_cost[1]);
+        input_low_sum += local_maintenance_cost[0];
+        input_high_sum += local_maintenance_cost[1];
       }
 
-      //Return statement
+      //Return statement; weighted averages
       return [
-        getAverage(input_fulfilments_low),
-        getAverage(input_fulfilments_high)
+        getSum(input_fulfilments_low)/input_low_sum,
+        getSum(input_fulfilments_high)/input_high_sum
       ];
     } else {
       //Return statement
