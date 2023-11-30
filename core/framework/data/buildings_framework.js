@@ -844,6 +844,7 @@ module.exports = {
 
         building_maintenance = (typeof building_obj == "object") ?
           module.exports.getProductionChoiceOutput(maintenance_options) : config_obj.maintenance;
+        building_maintenance = multiplyObject(building_maintenance, -1);
 
         var all_building_maintenance_keys = Object.keys(building_maintenance);
 
@@ -1156,26 +1157,35 @@ module.exports = {
     var input_fulfilments_high = [];
     var input_fulfilments_low = [];
     var maintenance_obj = (options.maintenance) ? options.maintenance : module.exports.getBuildingConsumption(user_id, building_obj);
+    var split_key = building_obj.id.split("-");
+
+    var province_obj = main.provinces[split_key[0]];
+    var usr = main.users[province_obj.controller];
 
     //Iterate over all_maintenance_keys
     var all_maintenance_keys = Object.keys(maintenance_obj);
 
     if (all_maintenance_keys.length > 0) {
       for (var i = 0; i < all_maintenance_keys.length; i++) {
+        var local_good_amount = getGoodAmount(province_obj.controller, all_maintenance_keys[i]);
         var local_shortfall = [0, 0];
         var local_value = maintenance_obj[all_maintenance_keys[i]];
+
+        var local_maintenance_cost = (Array.isArray(local_value)) ? local_value : [local_value, local_value];
+        local_shortfall = [
+          Math.max(local_maintenance_cost[0] - local_good_amount, 0),
+          Math.max(local_maintenance_cost[1] - local_good_amount, 0)
+        ];
 
         //Initialise local_shortfall
         if (options.maintenance_shortfall)
           if (options.maintenance_shortfall[all_maintenance_keys[i]])
             local_shortfall = options.maintenance_shortfall[all_maintenance_keys[i]];
 
-        var local_fulfilment = (Array.isArray(local_value)) ? [
-          local_value[0]*local_shortfall[0],
-          local_value[1]*local_shortfall[1]
-        ] : [
-          local_value*local_shortfall[0],
-          local_value*local_shortfall[1]
+        //Initialise local_fulfilment
+        var local_fulfilment = [
+          Math.min(1 - (local_shortfall[0]/local_maintenance_cost[0]), 1),
+          Math.min(1 - (local_shortfall[1]/local_maintenance_cost[1]), 1)
         ];
 
         input_fulfilments_low.push(local_fulfilment[0]);
