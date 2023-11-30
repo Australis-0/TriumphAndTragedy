@@ -1460,6 +1460,7 @@ module.exports = {
       {
         //Declare local scalars
         var p_available_housing_scalar = 1;
+        var p_building_scalar = 1;
         var p_building_categories_scalar = 1;
         var p_living_wage_job_openings_scalar = 1;
         var p_population_scalar = 1;
@@ -1613,7 +1614,8 @@ module.exports = {
             modifyValue(selectors, JSON.stringify(pop_scope), returnSafeNumber(local_pop_scope.value));
           } else if ([
             "lower_bound_life_expectancy",
-            "upper_bound_life_expectancy"
+            "mortality",
+            "upper_bound_life_expectancy",
           ].includes(all_keys[i])) {
             var new_options = JSON.parse(JSON.stringify(options));
             var new_pop_scope = JSON.parse(JSON.stringify(pop_scope));
@@ -1628,6 +1630,8 @@ module.exports = {
 
             if (all_keys[i] == "lower_bound_life_expectancy")
               local_scope_name = `Lower Bound Life Expectancy`;
+            if (all_keys[i] == "mortality")
+              local_scope_name = `Mortality`;
             if (all_keys[i] == "upper_bound_life_expectancy")
               local_scope_name = `Upper Bound Life Expectancy`;
 
@@ -2728,7 +2732,7 @@ module.exports = {
 
                 localisation_string.push(`${bulletPoint(options.nesting)}${numberCheck(total_applicable_pops, true)}${parseNumber(scope.value, { display_float: true, display_prefix: true })} score per ${printPercentage(0.01)} ${config.localisation[target_category_name]} fulfilment`);
               }
-            } if (all_keys[i].startsWith("has_")) { //has_<needs_category>_variety
+            } if (all_keys[i].startsWith("has_") && all_keys[i].endsWith("_variety")) { //has_<needs_category>_variety
               var target_category_name = all_keys[i].replace("has_", "").replace("_variety", "");
 
               var is_needs_category = (lookup.all_pop_needs_categories.includes(target_category_name));
@@ -2760,7 +2764,7 @@ module.exports = {
                   }
                 }
 
-                localisation_string.push(`${bulletPoint(options.nesting)}${numberCheck(total_applicable_pops, true)}${parseNumber(scope.value, { display_float: true, display_prefix: true })} score per ${printPercentage(0.01)} ${config.localisation[target_category]} variety`);
+                localisation_string.push(`${bulletPoint(options.nesting)}${numberCheck(total_applicable_pops, true)}${parseNumber(scope.value, { display_float: true, display_prefix: true })} score per ${printPercentage(0.01)} ${config.localisation[target_category_name]} variety`);
               }
             } if (all_keys[i] == "has_pop_plurality_culture") {
               var total_applicable_pops = 0;
@@ -2861,6 +2865,18 @@ module.exports = {
 
               p_available_housing_scalar = province_housing/local_value;
               localisation_string.push(`${bulletPoint(options.nesting)}${numberCheck(p_available_housing_scalar, true)}${parseNumber(p_available_housing_scalar, { display_float: true, display_prefix: true })} score from ${parseNumber(province_housing)} available housing`);
+            } if (lookup.all_buildings[all_keys[i]]) { //<building_key>
+              var local_building = lookup.all_buildings[all_keys[i]];
+              var total_buildings = 0;
+
+              if (ot_province.buildings)
+                for (var x = 0; x < ot_province.buildings.length; x++)
+                  if (ot_province.buildings[x].building_type == all_keys[i])
+                    total_buildings++;
+
+              p_building_scalar += total_buildings/local_value;
+
+              localisation_string.push(`${bulletPoint(options.nesting)}${numberCheck(p_building_scalar, true)}${parseNumber(p_building_scalar, { display_float: true, display_prefix: true })} score from ${parseNumber(total_buildings)} ${(local_building.name) ? local_building.name : all_keys[i]} in scope`);
             } if (config.buildings[all_keys[i]]) { //<building_category>
               //Iterate over ot_province.buildings and check
               var local_building_category = config.buildings[all_keys[i]];
@@ -2928,7 +2944,7 @@ module.exports = {
 
             //Add value once last key in object is processed
             if (i == all_keys.length - 1) {
-              var per_scalar = p_available_housing_scalar*p_building_categories_scalar*p_living_wage_job_openings_scalar*p_soldiers_in_province_scalar*p_population_scalar*p_prestige_scalar*p_supply_limit_scalar;
+              var per_scalar = p_available_housing_scalar*p_building_scalar*p_building_categories_scalar*p_living_wage_job_openings_scalar*p_soldiers_in_province_scalar*p_population_scalar*p_prestige_scalar*p_supply_limit_scalar;
 
               if (scope.base) {
                 var base_scalar = Math.min(per_scalar, 1);

@@ -2607,6 +2607,46 @@ module.exports = {
     return all_production;
   },
 
+  /*
+    getProvinceBuildingModifier() - Returns the total modifier from buildings in a province. [REVISIT] - Only parses straight up numbers currently
+    modifier: <modifier_key> - e.g. "hospital_capacity"
+  */
+  getProvinceBuildingModifier: function (arg0_province_id, arg1_modifier) {
+    //Convert from parameters
+    var province_id = arg0_province_id;
+    var modifier = arg1_modifier;
+
+    //Declare local instance variables
+    var modifier_sum = 0;
+    var province_obj = (typeof province_id != "object") ? getProvince(province_id) : province_id;
+
+    //Iterate over all province_obj.buildings
+    if (province_obj)
+      if (province_obj.buildings)
+        for (var i = 0; i < province_obj.buildings.length; i++) {
+          var local_building = province_obj.buildings[i];
+          var local_config = lookup.all_buildings[local_building.building_type];
+
+          //Add to modifier_sum
+          if (local_config.modifiers)
+            if (local_config.modifiers[modifier]) {
+              if (typeof local_value == "number") {
+                //Scale by current production
+                var local_employment = module.exports.getBuildingEmploymentLevel(local_employment);
+                var local_fulfilment = module.exports.getBuildingInputFulfilment(local_building);
+                var local_value = local_config.modifiers[modifier];
+
+                modifier_sum += returnSafeNumber(local_value*local_employment*local_fulfilment);
+              } else {
+                modifier_sum++;
+              }
+            }
+        }
+
+    //Return statement
+    return modifier_sum;
+  },
+
   getProvinceGDP: function (arg0_province_id) {
     //Convert from parameters
     var province_id = arg0_province_id;

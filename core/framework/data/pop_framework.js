@@ -2603,26 +2603,65 @@ module.exports = {
       //Death handling
       {
         //[REVISIT] - Fetch death pop scope arguments for accurate age distribution
-
-        //Fetch death_chance
-        var death_chance = parsePopLimit(config.deaths, {
+        var life_expectancy = parsePopLimit(config.deaths.upper_bound_life_expectancy, {
           pop_scope: pop_scope,
           province_id: province_id
         });
 
-        //Iterate over death_chance.selectors
-        for (var i = 0; i < death_chance.selectors.length; i++) {
-          var initial_pop_scope = death_chance.selectors[i][0];
-          var local_value = death_chance.selectors[i][1];
+        //Kill people according to life_expectancy
+        for (var i = 0; i < life_expectancy.selectors.length; i++) {
+          var initial_pop_scope = life_expectancy.selectors[i][0];
+          var local_value = life_expectancy.selectors[i][1];
 
-          local_pop_scope = module.exports.multiplyPops(initial_pop_scope, local_value);
+          var local_life_expectancy = Math.floor(config.defines.economy.old_age_lower_upper_bound + local_value);
+          var local_mortality = parabola(local_life_expectancy, local_life_expectancy, config.defines.economy.life_expectancy_deaths);
 
-          //Remove pops
-          module.exports.removePop(user_id, {
-            amount: local_pop_scope.size,
-            pop_scope: local_pop_scope
-          });
-          modifyValue(province_obj.trackers, `death-${pop_type}`, local_pop_scope.size);
+          var all_mortality_keys = Object.keys(local_mortality);
+
+          for (var x = 0; x < all_mortality_keys.length; x++) {
+            var local_mortality_chance = local_mortality[all_mortality_keys[x]];
+            var local_pop_scope = selectPops({
+              pop_scope: initial_pop_scope,
+              age: {
+                min: parseInt(all_mortality_keys[x]),
+                max: parseInt(all_mortality_keys[x]) + 1
+              }
+            });
+
+            if (local_pop_scope.size > 0) {
+              var remove_pop_scope = module.exports.multiplyPops(local_pop_scope, local_mortality_chance);
+
+              //Remove pops
+              module.exports.removePop(user_id, {
+                amount: remove_pop_scope.size,
+                pop_scope: remove_pop_scope
+              });
+              modifyValue(province_obj.trackers, `death-${pop_type}`, returnSafeNumber(emove_pop_scope.size));
+            }
+          }
+        }
+
+        //Kill people according to general mortality
+        var general_mortality_chance = parsePopLimit(config.deaths.mortality, {
+          pop_scope: pop_scope,
+          province_id: province_id
+        });
+
+        //Just kill people generally
+        for (var i = 0; i < general_mortality_chance.selectors.length; i++) {
+          var initial_pop_scope = general_mortality_chance.selectors[i][0];
+          var local_value = general_mortality_chance.selectors[i][1];
+
+          if (initial_pop_scope.size) {
+            var remove_pop_scope = module.exports.multiplyPops(initial_pop_scope, local_value);
+
+            //Remove pops
+            module.exports.removePop(user_id, {
+              amount: remove_pop_scope.size,
+              pop_scope: remove_pop_scope
+            });
+            modifyValue(province_obj.trackers, `death-${pop_type}`, returnSafeNumber(emove_pop_scope.size));
+          }
         }
       }
     }

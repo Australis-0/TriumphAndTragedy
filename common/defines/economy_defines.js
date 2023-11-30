@@ -128,10 +128,11 @@ config.defines.economy = {
     fertility_age_upper_bound: 45, //When does most fertility stop as an upper bound?
 
     //Pop Deaths
-    soldier_age_lower_bound: 18, //The assumed lower bound for how old soldier pops are
-    soldier_age_upper_bound: 35, //The assumed upper bound for how old soldier pops are
+    life_expectancy_deaths: 0.15, //~15% of people typically die during the year of life expectancy
     old_age_lower_upper_bound: 40, //When people naturally kick the bucket as an upper mortality bracket at game start
     old_age_hard_upper_bound: 100, //When do old people kick the bucket in the simulation if not already dead?
+    soldier_age_lower_bound: 18, //The assumed lower bound for how old soldier pops are
+    soldier_age_upper_bound: 35, //The assumed upper bound for how old soldier pops are
 
     //Pop Migration Behaviour
     additional_province_emigration_cost: 50, //Added cost per province travelled

@@ -37,6 +37,7 @@ config.births_oefr = {
 };
 
 config.deaths = { //[WIP] - Add age qualifiers to this somewhere
+  //Upper bound life expectancy. 15% of people die at this age, with an exponential parabola reaching its apoapsis here
   upper_bound_life_expectancy: {
     per_percent_staple_goods_variety: {
       has_staple_goods: 0.01,
@@ -49,9 +50,16 @@ config.deaths = { //[WIP] - Add age qualifiers to this somewhere
       max: 20
     }
   },
-  lower_bound_life_expectancy: {},
 
+  //General dying before life expectancy
   mortality: {
+    base_value: 0.01, //1% mortality per turn. Arbitrary figure
 
+    add_chance_famine: {
+      limit: {
+        has_staple_goods_less_than: 0.10
+      },
+      value: 0.05 //Arbitrary figure, should be usr.modifiers.famine_penalty
+    },
   }
 };

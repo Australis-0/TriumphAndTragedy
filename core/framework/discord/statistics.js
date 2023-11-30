@@ -199,6 +199,25 @@ module.exports = {
     return 0; //Symmetric distribution
   },
 
+  parabola: function (arg0_x, arg1_y, arg2_intervals) {
+    //Convert from parameters
+    var x = parseInt(arg0_x);
+    var y = parseInt(arg1_y);
+    var intervals = parseInt(arg2_intervals);
+
+    //Declare local instance variables
+    var return_obj = {};
+
+    for (var i = 0; i < intervals.length; i++) {
+      var local_value = -(Math.pow(i - x, 2)) + y;
+
+      modifyValue(return_obj, i.toString(), local_value);
+    }
+
+    //Return statement
+    return return_obj;
+  },
+
   /*
     pearsonVIIDistribution() - Returns percentage distribution as an object of key:value pairings. Truncated Pearson Type VII.
     options: {
