@@ -6,6 +6,7 @@ config.buildings.agriculture = {
   beekeepers: {
     name: "Beekeepers",
     singular: "Beekeeper",
+    type: "agriculture",
 
     construction_turns: 2,
     cost: {
@@ -26,6 +27,7 @@ config.buildings.agriculture = {
   camphor_plantations: {
     name: "Camphor Plantations",
     singular: "Camphor Plantation",
+    type: "agriculture",
 
     construction_turns: 2,
     cost: {
@@ -46,6 +48,7 @@ config.buildings.agriculture = {
   carmine_harvesters: {
     name: "Carmine Harvesters",
     singular: "Carmine Harvester",
+    type: "agriculture",
 
     construction_turns: 3,
     cost: {
@@ -65,6 +68,7 @@ config.buildings.agriculture = {
   cinnamon_plantations: {
     name: "Cinnamon Plantations",
     singular: "Cinnamon Plantation",
+    type: "agriculture",
 
     construction_turns: 3,
     cost: {
@@ -88,6 +92,7 @@ config.buildings.agriculture = {
   clove_plantations: {
     name: "Clove Plantations",
     singular: "Clove Plantation",
+    type: "agriculture",
 
     construction_turns: 3,
     cost: {
@@ -111,6 +116,7 @@ config.buildings.agriculture = {
   farms: {
     name: "Farms",
     singular: "Farm",
+    type: "agriculture",
 
     construction_turns: 3,
     cost: {
@@ -175,6 +181,7 @@ config.buildings.agriculture = {
   fruit_farms: {
     name: "Fruit Farms",
     singular: "Fruit Farm",
+    type: "agriculture",
 
     construction_turns: 2,
     cost: {
@@ -223,6 +230,7 @@ config.buildings.agriculture = {
   honeymakers: {
     name: "Honeymakers",
     singular: "Honeymaker",
+    type: "agriculture",
 
     construction_turns: 2,
     cost: {
@@ -247,6 +255,7 @@ config.buildings.agriculture = {
   illicit_fields: {
     name: "Illicit Fields",
     singular: "Illicit Field",
+    type: "agriculture",
 
     construction_turns: 1,
     cost: {
@@ -280,6 +289,7 @@ config.buildings.agriculture = {
   indigo_fields: {
     name: "Indigo Fields",
     singular: "Indigo Field",
+    type: "agriculture",
 
     construction_turns: 4,
     cost: {
@@ -303,6 +313,7 @@ config.buildings.agriculture = {
   livestock_farms: {
     name: "Livestock Farms",
     singular: "Livestock Farm",
+    type: "agriculture",
 
     construction_turns: 2,
     cost: {
@@ -374,6 +385,7 @@ config.buildings.agriculture = {
   mustard_plantations: {
     name: "Mustard Plantations",
     singular: "Mustard Plantation",
+    type: "agriculture",
 
     construction_turns: 3,
     cost: {
@@ -431,6 +443,7 @@ config.buildings.agriculture = {
   palm_oil_plantations: {
     name: "Palm Oil Plantations",
     singular: "Palm Oil Plantation",
+    type: "agriculture",
 
     construction_turns: 4,
     cost: {
@@ -509,6 +522,7 @@ config.buildings.agriculture = {
   spice_plantations: {
     name: "Spice Plantations",
     singular: "Spice Plantation",
+    type: "agriculture",
 
     construction_turns: 3,
     cost: {
@@ -563,6 +577,7 @@ config.buildings.agriculture = {
   tropical_plantations: {
     name: "Tropical Plantations",
     singular: "Tropical Plantation",
+    type: "agriculture",
 
     construction_turns: 3,
     cost: {
@@ -643,6 +658,7 @@ config.buildings.agriculture = {
   rubber_plantations: {
     name: "Rubber Plantations",
     singular: "Rubber Plantation",
+    type: "agriculture",
 
     construction_turns: 4,
     cost: {
@@ -664,6 +680,7 @@ config.buildings.agriculture = {
   sugar_plantations: {
     name: "Sugar Plantations",
     singular: "Sugar Plantation",
+    type: "agriculture",
 
     construction_turns: 4,
     cost: {
@@ -688,6 +705,7 @@ config.buildings.agriculture = {
   vegetable_fields: {
     name: "Vegetable Fields",
     singular: "Vegetable Field",
+    type: "agriculture",
 
     construction_turns: 2,
     cost: {
@@ -756,6 +774,7 @@ config.buildings.agriculture = {
   woad_harvesters: {
     name: "Woad Harvesters",
     singular: "Woad Harvester",
+    type: "agriculture",
 
     construction_turns: 2,
     cost: {

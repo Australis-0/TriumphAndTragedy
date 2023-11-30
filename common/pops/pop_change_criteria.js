@@ -1,7 +1,7 @@
-config.births = {
+config.births = { //+/-% change from Province Pop OEFR
   limit: {
     occupied: false,
-    has_staple_goods: 0.10 //Needs at least 10% staple goods fulfilment to grow
+    has_staple_goods: 0.10 //Needs at least 10% staple goods fulfilment to not starve
   },
   per_education_level: {
     value: -0.007783
@@ -11,7 +11,29 @@ config.births = {
       homeless: true
     },
     value: 0.231
+  },
+  add_chance_urban: {
+    limit: {
+      province_is_urban: true
+    },
+    value: -0.11
+  },
+  add_chance_rural: {
+    limit: {
+      province_is_rural: true
+    },
+    value: 0.0316 //Supposed to be a raw TFR modifier but oh well
   }
+};
+config.births_oefr = {
+  tribal: 4.3,
+  agriculture: 6.6,
+  manufacturing: 5.5,
+  services: 1.55,
+
+  //Wealth curve for fertility at Lorenz curve with Gini of 39,4. Data is taken from contemporary US
+  wealth_domain: 10000000,
+  wealth_deciles: [-1450, 7202, 30475, 82191, 153046, 256334, 408326, 698716, 1325809, 4710310]
 };
 
 config.deaths = { //[WIP] - Add age qualifiers to this somewhere
@@ -22,8 +44,14 @@ config.deaths = { //[WIP] - Add age qualifiers to this somewhere
     },
     per_wealth: {
       wealth: 1, //Hard limit for now, add wealth_percentile later
-      value: 0.0000001923 //Fully reached at 1 million
+      value: 0.0000001923, //Fully reached at 1 million
+
+      max: 20
     }
   },
-  lower_bound_life_expectancy: {}
+  lower_bound_life_expectancy: {},
+
+  mortality: {
+
+  }
 };

@@ -6,6 +6,7 @@ config.buildings.processing_facilities = { //[WIP] - Add Synthetic Ruby Factory
   apothecaries: {
     name: "Apothecaries",
     singular: "Apothecary",
+    type: "services",
 
     construction_turns: 2,
     cost: {
@@ -40,6 +41,7 @@ config.buildings.processing_facilities = { //[WIP] - Add Synthetic Ruby Factory
   arms_factories: {
     name: "Arms Factories",
     singular: "Arms Factory",
+    type: "manufacturing",
 
     construction_turns: 4,
     cost: {
@@ -68,6 +70,7 @@ config.buildings.processing_facilities = { //[WIP] - Add Synthetic Ruby Factory
   audio_appliance_factories: {
     name: "Audio Appliance Factories",
     singular: "Audio Appliance Factory",
+    type: "manufacturing",
 
     construction_turns: 5,
     cost: {
@@ -124,6 +127,7 @@ config.buildings.processing_facilities = { //[WIP] - Add Synthetic Ruby Factory
   automobile_factories: {
     name: "Automobile Factories",
     singular: "Automobile Factory",
+    type: "manufacturing",
 
     construction_turns: 6,
     cost: {
@@ -284,6 +288,7 @@ config.buildings.processing_facilities = { //[WIP] - Add Synthetic Ruby Factory
   bakeries: {
     name: "Bakeries",
     singular: "Bakery",
+    type: "services",
 
     construction_turns: 2,
     cost: {
@@ -311,6 +316,7 @@ config.buildings.processing_facilities = { //[WIP] - Add Synthetic Ruby Factory
   bicycle_factories: {
     name: "Bicycle Factories",
     singular: "Bicycle Factory",
+    type: "manufacturing",
 
     construction_turns: 3,
     cost: {
@@ -340,6 +346,7 @@ config.buildings.processing_facilities = { //[WIP] - Add Synthetic Ruby Factory
   breweries: {
     name: "Breweries",
     singular: "Brewery",
+    type: "manufacturing",
 
     construction_turns: 4,
     cost: {
@@ -361,6 +368,7 @@ config.buildings.processing_facilities = { //[WIP] - Add Synthetic Ruby Factory
   brick_kilns: {
     name: "Brick Kilns",
     singular: "Brick Kiln",
+    type: "manufacturing",
 
     construction_turns: 2,
     cost: {
@@ -388,6 +396,7 @@ config.buildings.processing_facilities = { //[WIP] - Add Synthetic Ruby Factory
   camera_factories: {
     name: "Camera Factories",
     singular: "Camera Factory",
+    type: "manufacturing",
 
     construction_turns: 4,
     cost: {
@@ -412,6 +421,7 @@ config.buildings.processing_facilities = { //[WIP] - Add Synthetic Ruby Factory
   candleworks: {
     name: "Candleworks",
     singular: "Candlework",
+    type: "manufacturing",
 
     construction_turns: 1,
     cost: {
@@ -442,6 +452,7 @@ config.buildings.processing_facilities = { //[WIP] - Add Synthetic Ruby Factory
   canneries: {
     name: "Canneries",
     singular: "Cannery",
+    type: "manufacturing",
 
     construction_turns: 3,
     cost: {
@@ -485,6 +496,7 @@ config.buildings.processing_facilities = { //[WIP] - Add Synthetic Ruby Factory
   capacitor_factories: {
     name: "Capacitor Factories",
     singular: "Capacitor Factory",
+    type: "manufacturing",
 
     construction_turns: 5,
     cost: {
@@ -557,6 +569,7 @@ config.buildings.processing_facilities = { //[WIP] - Add Synthetic Ruby Factory
   cement_factories: {
     name: "Cement Factories",
     singular: "Cement Factory",
+    type: "manufacturing",
 
     construction_turns: 4,
     cost: {
@@ -585,6 +598,7 @@ config.buildings.processing_facilities = { //[WIP] - Add Synthetic Ruby Factory
   cheesemakers: {
     name: "Cheesemakers",
     singular: "Cheesemaker",
+    type: "agriculture",
 
     construction_turns: 8,
     cost: {
@@ -790,6 +804,7 @@ config.buildings.processing_facilities = { //[WIP] - Add Synthetic Ruby Factory
   chocolatiers: {
     name: "Chocolatiers",
     singular: "Chocolatier",
+    type: "services",
 
     construction_turns: 7,
     cost: {
@@ -823,6 +838,7 @@ config.buildings.processing_facilities = { //[WIP] - Add Synthetic Ruby Factory
   cigar_factories: {
     name: "Cigar Factories",
     singular: "Cigar Factory",
+    type: "services",
 
     construction_turns: 2,
     cost: {
@@ -850,6 +866,7 @@ config.buildings.processing_facilities = { //[WIP] - Add Synthetic Ruby Factory
   cigarette_factories: {
     name: "Cigarette Factories",
     singular: "Cigarette Factory",
+    type: "manufacturing",
 
     construction_turns: 3,
     cost: {
@@ -874,6 +891,7 @@ config.buildings.processing_facilities = { //[WIP] - Add Synthetic Ruby Factory
   coffee_roasters: {
     name: "Coffee Roasters",
     singular: "Coffee Roaster",
+    type: "manufacturing",
 
     construction_turns: 2,
     cost: {
@@ -897,6 +915,7 @@ config.buildings.processing_facilities = { //[WIP] - Add Synthetic Ruby Factory
   computer_factories: {
     name: "Computer Factories",
     singular: "Computer Factory",
+    type: "manufacturing",
 
     construction_turns: 6,
     cost: {
@@ -933,6 +952,7 @@ config.buildings.processing_facilities = { //[WIP] - Add Synthetic Ruby Factory
   concrete_plants: {
     name: "Concrete Plants",
     singular: "Concrete Plant",
+    type: "manufacturing",
 
     construction_turns: 4,
     cost: {
@@ -959,6 +979,7 @@ config.buildings.processing_facilities = { //[WIP] - Add Synthetic Ruby Factory
   cottage_drug_industries: {
     name: "Cottage Drug Industries",
     singular: "Cottage Drug Industry",
+    type: "manufacturing",
 
     construction_turns: 1,
     cost: {
@@ -1001,6 +1022,7 @@ config.buildings.processing_facilities = { //[WIP] - Add Synthetic Ruby Factory
   cosmetic_works: {
     name: "Cosmetic Works",
     singular: "Cosmetic Works",
+    type: "manufacturing",
 
     construction_turns: 3,
     cost: {
@@ -1031,6 +1053,7 @@ config.buildings.processing_facilities = { //[WIP] - Add Synthetic Ruby Factory
   distilleries: {
     name: "Distilleries",
     singular: "Distillery",
+    type: "manufacturing",
 
     construction_turns: 4,
     cost: {
@@ -1113,6 +1136,7 @@ config.buildings.processing_facilities = { //[WIP] - Add Synthetic Ruby Factory
   drug_labs: {
     name: "Drug Labs",
     singular: "Drug Lab",
+    type: "manufacturing",
 
     construction_turns: 2,
     cost: {
@@ -1193,6 +1217,7 @@ config.buildings.processing_facilities = { //[WIP] - Add Synthetic Ruby Factory
   dye_works: {
     name: "Dye Works",
     singular: "Dye Works",
+    type: "manufacturing",
 
     construction_turns: 3,
     cost: {
@@ -1218,6 +1243,7 @@ config.buildings.processing_facilities = { //[WIP] - Add Synthetic Ruby Factory
   electric_gear_factories: {
     name: "Electric Gear Factories",
     singular: "Electric Gear Factory",
+    type: "manufacturing",
 
     construction_turns: 8,
     cost: {
@@ -1244,6 +1270,7 @@ config.buildings.processing_facilities = { //[WIP] - Add Synthetic Ruby Factory
   engine_factories: {
     name: "Engine Factories",
     singular: "Engine Factory",
+    type: "manufacturing",
 
     construction_turns: 5,
     cost: {
@@ -1277,6 +1304,7 @@ config.buildings.processing_facilities = { //[WIP] - Add Synthetic Ruby Factory
   explosive_factories: {
     name: "Explosive Factories",
     singular: "Explosive Factory",
+    type: "manufacturing",
 
     construction_turns: 4,
     cost: {
@@ -1452,6 +1480,7 @@ config.buildings.processing_facilities = { //[WIP] - Add Synthetic Ruby Factory
   fabrication_plants: {
     name: "Fabrication Plants",
     singular: "Fabrication Plant",
+    type: "manufacturing",
 
     construction_turns: 12,
     cost: {
@@ -1494,6 +1523,7 @@ config.buildings.processing_facilities = { //[WIP] - Add Synthetic Ruby Factory
     name: "Fertiliser Factories",
     singular: "Fertiliser Factory",
     aliases: ["fertilizer factories", "fertilizer factory"],
+    type: "manufacturing",
 
     construction_turns: 8,
     cost: {
@@ -1527,6 +1557,7 @@ config.buildings.processing_facilities = { //[WIP] - Add Synthetic Ruby Factory
     name: "Filament Works",
     singular: "Filament Works",
     aliases: ["filament factories", "filament factory"],
+    type: "manufacturing",
 
     construction_turns: 6,
     cost: {
@@ -1570,6 +1601,7 @@ config.buildings.processing_facilities = { //[WIP] - Add Synthetic Ruby Factory
   fineries: {
     name: "Fineries",
     singular: "Finery",
+    type: "services",
 
     construction_turns: 4,
     cost: {
@@ -1596,6 +1628,7 @@ config.buildings.processing_facilities = { //[WIP] - Add Synthetic Ruby Factory
   flour_mills: {
     name: "Flour Mills",
     singular: "Flour Mill",
+    type: "manufacturing",
 
     construction_turns: 3,
     cost: {
@@ -1647,6 +1680,7 @@ config.buildings.processing_facilities = { //[WIP] - Add Synthetic Ruby Factory
   food_factories: {
     name: "Food Factories",
     singular: "Food Factory",
+    type: "manufacturing",
 
     construction_turns: 3,
     cost: {
@@ -1717,6 +1751,7 @@ config.buildings.processing_facilities = { //[WIP] - Add Synthetic Ruby Factory
   forgeries: {
     name: "Forgeries",
     singular: "Forgery",
+    type: "manufacturing",
 
     construction_turns: 3,
     cost: {
@@ -1744,6 +1779,7 @@ config.buildings.processing_facilities = { //[WIP] - Add Synthetic Ruby Factory
   furniture_factories: {
     name: "Furniture Factories",
     singular: "Furniture Factory",
+    type: "manufacturing",
 
     construction_turns: 3,
     cost: {
@@ -1772,6 +1808,7 @@ config.buildings.processing_facilities = { //[WIP] - Add Synthetic Ruby Factory
   gem_cutters: {
     name: "Gem Cutters",
     singular: "Gem Cutter",
+    type: "services",
 
     construction_turns: 3,
     cost: {
@@ -1796,6 +1833,7 @@ config.buildings.processing_facilities = { //[WIP] - Add Synthetic Ruby Factory
   glassworks: {
     name: "Glassworks",
     singular: "Glassworks",
+    type: "manufacturing",
 
     construction_turns: 4,
     cost: {
@@ -1839,6 +1877,7 @@ config.buildings.processing_facilities = { //[WIP] - Add Synthetic Ruby Factory
   incense_works: {
     name: "Incense Works",
     singular: "Incense Works",
+    type: "manufacturing",
 
     construction_turns: 3,
     cost: {
@@ -1879,6 +1918,7 @@ config.buildings.processing_facilities = { //[WIP] - Add Synthetic Ruby Factory
   inkworks: {
     name: "Inkworks",
     singular: "Inkworks",
+    type: "manufacturing",
 
     construction_turns: 2,
     cost: {
@@ -1905,6 +1945,7 @@ config.buildings.processing_facilities = { //[WIP] - Add Synthetic Ruby Factory
   jerky_dehydrators: {
     name: "Jerky Dehydrators",
     singular: "Jerky Dehydrator",
+    type: "manufacturing",
 
     construction_turns: 2,
     cost: {
@@ -1927,6 +1968,7 @@ config.buildings.processing_facilities = { //[WIP] - Add Synthetic Ruby Factory
   jewellers: {
     name: "Jewellers",
     singular: "Jeweller",
+    type: "services",
 
     construction_turns: 4,
     cost: {
@@ -1997,6 +2039,7 @@ config.buildings.processing_facilities = { //[WIP] - Add Synthetic Ruby Factory
   kiln_works: {
     name: "Kiln Works",
     singular: "Kiln Works",
+    type: "manufacturing",
 
     construction_turns: 3,
     cost: {
@@ -2095,6 +2138,7 @@ config.buildings.processing_facilities = { //[WIP] - Add Synthetic Ruby Factory
   laser_factories: {
     name: "Laser Factories",
     singular: "Laser Factory",
+    type: "manufacturing",
 
     construction_turns: 8,
     cost: {
@@ -2123,6 +2167,7 @@ config.buildings.processing_facilities = { //[WIP] - Add Synthetic Ruby Factory
   lens_manufactories: {
     name: "Lens Manufactories",
     singular: "Lens Manufactory",
+    type: "manufacturing",
 
     construction_turns: 6,
     cost: {
@@ -2153,6 +2198,7 @@ config.buildings.processing_facilities = { //[WIP] - Add Synthetic Ruby Factory
   lift_factories: {
     name: "Lift Factories",
     singular: "Lift Factory",
+    type: "manufacturing",
 
     construction_turns: 6,
     cost: {
@@ -2185,6 +2231,7 @@ config.buildings.processing_facilities = { //[WIP] - Add Synthetic Ruby Factory
   lighting_factories: {
     name: "Lighting Factories",
     singular: "Lighting Factory",
+    type: "manufacturing",
 
     construction_turns: 4,
     cost: {
@@ -2243,6 +2290,7 @@ config.buildings.processing_facilities = { //[WIP] - Add Synthetic Ruby Factory
   luxury_furniture_factories: {
     name: "Luxury Furniture Factories",
     singular: "Luxury Furniture Factory",
+    type: "services",
 
     construction_turns: 4,
     cost: {
@@ -2278,6 +2326,7 @@ config.buildings.processing_facilities = { //[WIP] - Add Synthetic Ruby Factory
   luxury_tailors: {
     name: "Luxury Tailors",
     singular: "Luxury Tailor",
+    type: "services",
 
     construction_turns: 5,
     cost: {
@@ -2372,6 +2421,7 @@ config.buildings.processing_facilities = { //[WIP] - Add Synthetic Ruby Factory
   machine_parts_factories: {
     name: "Machine Parts Factories",
     singular: "Machine Parts Factory",
+    type: "manufacturing",
 
     construction_turns: 8,
     cost: {
@@ -2408,6 +2458,7 @@ config.buildings.processing_facilities = { //[WIP] - Add Synthetic Ruby Factory
   malting_works: {
     name: "Malting Works",
     singular: "Malting Works",
+    type: "manufacturing",
 
     construction_turns: 3,
     cost: {
@@ -2433,6 +2484,7 @@ config.buildings.processing_facilities = { //[WIP] - Add Synthetic Ruby Factory
     name: "Marquetry Workshops",
     singular: "Marquetry Workshop",
     aliases: ["marquestry workshops"],
+    type: "manufacturing",
 
     construction_turns: 3,
     cost: {
@@ -2460,6 +2512,7 @@ config.buildings.processing_facilities = { //[WIP] - Add Synthetic Ruby Factory
   meat_packing_plants: {
     name: "Meat Packing Plants",
     singular: "Meat Packing Plant",
+    type: "manufacturing",
 
     construction_turns: 3,
     cost: {
@@ -2501,6 +2554,7 @@ config.buildings.processing_facilities = { //[WIP] - Add Synthetic Ruby Factory
   molasses_factories: {
     name: "Molasses Factories",
     singular: "Molasses Factory",
+    type: "manufacturing",
 
     construction_turns: 4,
     cost: {
@@ -2527,6 +2581,7 @@ config.buildings.processing_facilities = { //[WIP] - Add Synthetic Ruby Factory
   oast_house: {
     name: "Oast House",
     singular: "Oast House",
+    type: "manufacturing",
 
     construction_turns: 2,
     cost: {
@@ -2553,6 +2608,7 @@ config.buildings.processing_facilities = { //[WIP] - Add Synthetic Ruby Factory
   oil_manufactories: {
     name: "Oil Manufactories",
     singular: "Oil Manufactory",
+    type: "manufacturing",
 
     construction_turns: 3,
     cost: {
@@ -2578,6 +2634,7 @@ config.buildings.processing_facilities = { //[WIP] - Add Synthetic Ruby Factory
   naval_suppliers: {
     name: "Naval Suppliers",
     singular: "Naval Supplier",
+    type: "manufacturing",
 
     construction_turns: 4,
     cost: {
@@ -2613,6 +2670,7 @@ config.buildings.processing_facilities = { //[WIP] - Add Synthetic Ruby Factory
   paper_mills: {
     name: "Paper Mills",
     singular: "Paper Mill",
+    type: "manufacturing",
 
     construction_turns: 3,
     cost: {
@@ -2637,6 +2695,7 @@ config.buildings.processing_facilities = { //[WIP] - Add Synthetic Ruby Factory
   peat_dryers: {
     name: "Peat Dryers",
     singular: "Peat Dryer",
+    type: "manufacturing",
 
     construction_turns: 2,
     cost: {
@@ -2657,6 +2716,7 @@ config.buildings.processing_facilities = { //[WIP] - Add Synthetic Ruby Factory
   pharmaceuticals: {
     name: "Pharmaceuticals",
     singular: "Pharmaceutical",
+    type: "manufacturing",
 
     construction_turns: 12,
     cost: {
@@ -2793,6 +2853,7 @@ config.buildings.processing_facilities = { //[WIP] - Add Synthetic Ruby Factory
   photographic_film_factories: {
     name: "Photographic Film Factories",
     singular: "Photographic Film Factory",
+    type: "manufacturing",
 
     construction_turns: 6,
     cost: {
@@ -2822,6 +2883,7 @@ config.buildings.processing_facilities = { //[WIP] - Add Synthetic Ruby Factory
     name: "Rebar Factories",
     singular: "Rebar Factory",
     aliases: ["reinforced concrete factories", "reinforced concrete factory"],
+    type: "manufacturing",
 
     construction_turns: 4,
     cost: {
@@ -2849,6 +2911,7 @@ config.buildings.processing_facilities = { //[WIP] - Add Synthetic Ruby Factory
   rendering_works: {
     name: "Rendering Works",
     singular: "Rendering Works",
+    type: "manufacturing",
 
     construction_turns: 3,
     cost: {
@@ -2871,6 +2934,7 @@ config.buildings.processing_facilities = { //[WIP] - Add Synthetic Ruby Factory
   resistor_factories: {
     name: "Resistor Factories",
     singular: "Resistor Factory",
+    type: "manufacturing",
 
     construction_turns: 8,
     cost: {
@@ -2926,6 +2990,7 @@ config.buildings.processing_facilities = { //[WIP] - Add Synthetic Ruby Factory
   rice_wineries: {
     name: "Rice Wineries",
     singular: "Rice Winery",
+    type: "manufacturing",
 
     construction_turns: 6,
     cost: {
@@ -3010,6 +3075,7 @@ config.buildings.processing_facilities = { //[WIP] - Add Synthetic Ruby Factory
   rubber_plants: {
     name: "Rubber Plants",
     singular: "Rubber Plant",
+    type: "manufacturing",
 
     construction_turns: 6,
     cost: {
@@ -3280,6 +3346,7 @@ config.buildings.processing_facilities = { //[WIP] - Add Synthetic Ruby Factory
   shampoo_factories: {
     name: "Shampoo Factories",
     singular: "Shampoo Factory",
+    type: "manufacturing",
 
     construction_turns: 4,
     cost: {
@@ -3310,6 +3377,7 @@ config.buildings.processing_facilities = { //[WIP] - Add Synthetic Ruby Factory
   sewing_machine_factories: {
     name: "Sewing Machine Factories",
     singular: "Sewing Machine Factory",
+    type: "manufacturing",
 
     construction_turns: 5,
     cost: {
@@ -3341,6 +3409,7 @@ config.buildings.processing_facilities = { //[WIP] - Add Synthetic Ruby Factory
   silk_mills: {
     name: "Silk Mills",
     singular: "Silk Mill",
+    type: "manufacturing",
 
     construction_turns: 3,
     cost: {
@@ -3365,6 +3434,7 @@ config.buildings.processing_facilities = { //[WIP] - Add Synthetic Ruby Factory
     name: "Sleeping Bag Factories",
     singular: "Sleeping Bag Factory",
     aliases: ["sleeping bags factories"],
+    type: "manufacturing",
 
     construction_turns: 3,
     cost: {
@@ -3391,6 +3461,7 @@ config.buildings.processing_facilities = { //[WIP] - Add Synthetic Ruby Factory
   soap_factories: {
     name: "Soap Factories",
     singular: "Soap Factory",
+    type: "manufacturing",
 
     construction_turns: 2,
     cost: {
@@ -3410,6 +3481,7 @@ config.buildings.processing_facilities = { //[WIP] - Add Synthetic Ruby Factory
   souvenir_factories: {
     name: "Souvenir Factories",
     singular: "Souvenir Factory",
+    type: "manufacturing",
 
     construction_turns: 4,
     cost: {
@@ -3439,6 +3511,7 @@ config.buildings.processing_facilities = { //[WIP] - Add Synthetic Ruby Factory
   sugar_refineries: {
     name: "Sugar Refineries",
     singular: "Sugar Refinery",
+    type: "manufacturing",
 
     construction_turns: 3,
     cost: {
@@ -3464,6 +3537,7 @@ config.buildings.processing_facilities = { //[WIP] - Add Synthetic Ruby Factory
   tailors: {
     name: "Tailors",
     singular: "Tailor",
+    type: "services",
 
     construction_turns: 4,
     cost: {
@@ -3516,6 +3590,7 @@ config.buildings.processing_facilities = { //[WIP] - Add Synthetic Ruby Factory
   tapestry_looms: {
     name: "Tapestry Looms",
     singular: "Tapestry Loom",
+    type: "manufacturing",
 
     construction_turns: 4,
     cost: {
@@ -3543,6 +3618,7 @@ config.buildings.processing_facilities = { //[WIP] - Add Synthetic Ruby Factory
   tea_driers: {
     name: "Tea Driers",
     singular: "Tea Drier",
+    type: "manufacturing",
 
     construction_turns: 2,
     cost: {
@@ -3630,6 +3706,7 @@ config.buildings.processing_facilities = { //[WIP] - Add Synthetic Ruby Factory
   telephone_manufacturers: {
     name: "Telephone Manufacturers",
     singular: "Telephone Manufacturer",
+    type: "manufacturing",
 
     construction_turns: 6,
     cost: {
@@ -3661,6 +3738,7 @@ config.buildings.processing_facilities = { //[WIP] - Add Synthetic Ruby Factory
     name: "Television Factories",
     singular: "Television Factory",
     aliases: ["TV Factories", "TV Factory"],
+    type: "manufacturing",
 
     construction_turns: 8,
     cost: {
@@ -3684,6 +3762,7 @@ config.buildings.processing_facilities = { //[WIP] - Add Synthetic Ruby Factory
   textile_mills: {
     name: "Textile Mills",
     singular: "Textile Mill",
+    type: "manufacturing",
 
     construction_turns: 6,
     cost: {
@@ -3738,6 +3817,7 @@ config.buildings.processing_facilities = { //[WIP] - Add Synthetic Ruby Factory
   toolworks: {
     name: "Toolworks",
     singular: "Toolworks",
+    type: "manufacturing",
 
     construction_turns: 5,
     cost: {
@@ -3796,6 +3876,7 @@ config.buildings.processing_facilities = { //[WIP] - Add Synthetic Ruby Factory
   train_factories: {
     name: "Train Factories",
     singular: "Train Factory",
+    type: "manufacturing",
 
     construction_turns: 7,
     cost: {
@@ -3867,6 +3948,7 @@ config.buildings.processing_facilities = { //[WIP] - Add Synthetic Ruby Factory
   transistor_manufacturers: {
     name: "Transitor Manufacturers",
     singular: "Transistor Manufacturer",
+    type: "manufacturing",
 
     construction_turns: 8,
     cost: {
@@ -3904,6 +3986,7 @@ config.buildings.processing_facilities = { //[WIP] - Add Synthetic Ruby Factory
   turbine_manufactories: {
     name: "Turbine Manufactories",
     singular: "Turbine Manufactory",
+    type: "manufacturing",
 
     construction_turns: 8,
     cost: {
@@ -3931,6 +4014,7 @@ config.buildings.processing_facilities = { //[WIP] - Add Synthetic Ruby Factory
     name: "Tyres Factories",
     singular: "Tyre Factory",
     aliases: ["tires factories", "tires factory", "tire factories", "tire factory"],
+    type: "manufacturing",
 
     construction_turns: 6,
     cost: {
@@ -3961,6 +4045,7 @@ config.buildings.processing_facilities = { //[WIP] - Add Synthetic Ruby Factory
     name: "Uniforms Factories",
     singular: "Uniforms Factory",
     aliases: ["uniform factory", "uniform factories"],
+    type: "manufacturing",
 
     construction_turns: 4,
     cost: {
@@ -3990,6 +4075,7 @@ config.buildings.processing_facilities = { //[WIP] - Add Synthetic Ruby Factory
   violin_makers: {
     name: "Violin Makers",
     singular: "Violin Maker",
+    type: "manufacturing",
 
     construction_turns: 8,
     cost: {
@@ -4017,6 +4103,7 @@ config.buildings.processing_facilities = { //[WIP] - Add Synthetic Ruby Factory
   wineries: {
     name: "Wineries",
     singular: "Winery",
+    type: "agriculture",
 
     construction_turns: 6,
     cost: {
@@ -4318,6 +4405,7 @@ config.buildings.processing_facilities = { //[WIP] - Add Synthetic Ruby Factory
   wire_manufactories: {
     name: "Wire Manufactories",
     singular: "Wire Manufactory",
+    type: "manufacturing",
 
     construction_turns: 5,
     cost: {

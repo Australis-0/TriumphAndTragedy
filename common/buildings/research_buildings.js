@@ -5,6 +5,7 @@ config.buildings.research_buildings = {
   archivists: {
     name: "Archivists",
     singular: "Archivist",
+    type: "services",
 
     construction_turns: 4,
     cost: {
@@ -43,6 +44,7 @@ config.buildings.research_buildings = {
   biolabs: {
     name: "Biolabs",
     singular: "Biolab",
+    type: "services",
 
     construction_turns: 8,
     cost: {
@@ -81,6 +83,7 @@ config.buildings.research_buildings = {
   experimental_facilities: {
     name: "Experimental Facilities",
     singular: "Experimental Facility",
+    type: "services",
 
     construction_turns: 10,
     cost: {
@@ -121,6 +124,7 @@ config.buildings.research_buildings = {
   great_libraries: {
     name: "Great Libraries",
     singular: "Great Library",
+    type: "services",
 
     construction_turns: 8,
     cost: {
@@ -153,6 +157,7 @@ config.buildings.research_buildings = {
   publishing_houses: {
     name: "Publishing Houses",
     singular: "Publishing House",
+    type: "manufacturing",
 
     construction_turns: 6,
     cost: {
@@ -194,6 +199,7 @@ config.buildings.research_buildings = {
   research_complexes: {
     name: "Research Complexes",
     singular: "Research Complex",
+    type: "services",
 
     construction_turns: 16,
     cost: {
@@ -238,6 +244,7 @@ config.buildings.research_buildings = {
   research_institutes: {
     name: "Research Institutes",
     singular: "Research Institute",
+    type: "services",
 
     construction_turns: 12,
     cost: {
@@ -282,6 +289,7 @@ config.buildings.research_buildings = {
   research_labs: {
     name: "Research labs",
     singular: "Research Lab",
+    type: "services",
 
     construction_turns: 8,
     cost: {
@@ -318,6 +326,7 @@ config.buildings.research_buildings = {
   scholarhouses: {
     name: "Scholarhouses",
     singular: "Scholarhouse",
+    type: "services",
 
     construction_turns: 4,
     cost: {

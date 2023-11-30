@@ -6,6 +6,7 @@ config.buildings.petrochemicals = {
   acetic_acid_plants: {
     name: "Acetic Acid Plants",
     singular: "Acetic Acid Plant",
+    type: "manufacturing",
 
     construction_turns: 5,
     cost: {
@@ -46,6 +47,7 @@ config.buildings.petrochemicals = {
   acetone_manufacturers: {
     name: "Acetone Manufacturers",
     singular: "Acetone Manufacturer",
+    type: "manufacturing",
 
     construction_turns: 4,
     cost: {
@@ -84,6 +86,7 @@ config.buildings.petrochemicals = {
   acid_manufacturers: {
     name: "Acid Manufacturers",
     singular: "Acid Manufacturer",
+    type: "manufacturing",
 
     construction_turns: 4,
     cost: {
@@ -141,6 +144,7 @@ config.buildings.petrochemicals = {
   ammonia_plants: {
     name: "Ammonia Plants",
     singular: "Ammonia Plant",
+    type: "manufacturing",
 
     construction_turns: 5,
     cost: {
@@ -169,6 +173,7 @@ config.buildings.petrochemicals = {
   benzene_plants: {
     name: "Benzene Plants",
     singular: "Benzene Plant",
+    type: "manufacturing",
 
     construction_turns: 4,
     cost: {
@@ -220,6 +225,7 @@ config.buildings.petrochemicals = {
   biofuel_plants: {
     name: "Biofuel Plants",
     singular: "Biofuel Plant",
+    type: "manufacturing",
 
     construction_turns: 6,
     cost: {
@@ -265,6 +271,7 @@ config.buildings.petrochemicals = {
   bromine_distilleries: {
     name: "Bromine Distilleries",
     singular: "Bromine Distiller",
+    type: "manufacturing",
 
     construction_turns: 4,
     cost: {
@@ -289,6 +296,7 @@ config.buildings.petrochemicals = {
   calcium_preparators: {
     name: "Calcium Preparators",
     singular: "Calcium Preparator",
+    type: "manufacturing",
 
     construction_turns: 5,
     cost: {
@@ -322,6 +330,7 @@ config.buildings.petrochemicals = {
   charcoal_kilns: {
     name: "Charcoal Kilns",
     singular: "Charcoal Kiln",
+    type: "manufacturing",
 
     construction_turns: 3,
     cost: {
@@ -346,6 +355,7 @@ config.buildings.petrochemicals = {
   chloralkali_process_plants: {
     name: "Chloralkali Process Plants",
     singular: "Chloralkali Process Plant",
+    type: "manufacturing",
 
     construction_turns: 4,
     cost: {
@@ -385,6 +395,7 @@ config.buildings.petrochemicals = {
   derricks: {
     name: "Derricks",
     singular: "Derrick",
+    type: "manufacturing",
 
     construction_turns: 3,
     cost: {
@@ -402,6 +413,7 @@ config.buildings.petrochemicals = {
   ethylene_glycol_boiling_plants: {
     name: "Ethylene Glycol Boiling Plants",
     singular: "Ethylene Glycol Boiling plant",
+    type: "manufacturing",
 
     construction_turns: 6,
     cost: {
@@ -429,6 +441,7 @@ config.buildings.petrochemicals = {
   epoxyethane_works: {
     name: "Epoxyethane Works",
     singular: "Epoxyethane Work",
+    type: "manufacturing",
 
     construction_turns: 6,
     cost: {
@@ -472,6 +485,7 @@ config.buildings.petrochemicals = {
   fluorine_plants: {
     name: "Fluorine Plants",
     singular: "Fluorine Plant",
+    type: "manufacturing",
 
     construction_turns: 5,
     cost: {
@@ -498,6 +512,7 @@ config.buildings.petrochemicals = {
   formaldehyde_plants: {
     name: "Formaldehyde Plants",
     singular: "Formaldehyde Plant",
+    type: "manufacturing",
 
     construction_turns: 4,
     cost: {
@@ -523,6 +538,7 @@ config.buildings.petrochemicals = {
   gas_plants: {
     name: "Gas Plants",
     singular: "Gas Plant",
+    type: "manufacturing",
 
     construction_turns: 4,
     cost: {
@@ -579,6 +595,7 @@ config.buildings.petrochemicals = {
   gas_refineries: {
     name: "Gas Refineries",
     singular: "Gas Refinery",
+    type: "manufacturing",
 
     construction_turns: 6,
     cost: {
@@ -603,6 +620,7 @@ config.buildings.petrochemicals = {
   gas_works: {
     name: "Gas Works",
     singular: "Gas Works",
+    type: "manufacturing",
 
     construction_turns: 8,
     cost: {
@@ -628,6 +646,7 @@ config.buildings.petrochemicals = {
   hydrogen_plants: {
     name: "Hydrogen Plants",
     singular: "Hydrogen Plant",
+    type: "manufacturing",
 
     construction_turns: 5,
     cost: {
@@ -736,6 +755,7 @@ config.buildings.petrochemicals = {
   iodine_plants: {
     name: "Iodine Plants",
     singular: "Iodine Plant",
+    type: "manufacturing",
 
     construction_turns: 4,
     cost: {
@@ -761,6 +781,7 @@ config.buildings.petrochemicals = {
   lye_factories: {
     name: "Lye Factories",
     singular: "Lye Factory",
+    type: "manufacturing",
 
     construction_turns: 3,
     cost: {
@@ -788,6 +809,7 @@ config.buildings.petrochemicals = {
   methanol_plants: {
     name: "Methanol Plants",
     singular: "Methanol Plant",
+    type: "manufacturing",
 
     construction_turns: 4,
     cost: {
@@ -817,6 +839,7 @@ config.buildings.petrochemicals = {
     name: "MTBE Manufacturing Plants",
     singular: "MTBE Manufacturing Plant",
     aliases: ["methyl tertiary-butyl ether", "methyl tert-butyl ether", "tert-butyl methyl ether", "methyl tertiary butyl ether"],
+    type: "manufacturing",
 
     construction_turns: 5,
     cost: {
@@ -845,6 +868,7 @@ config.buildings.petrochemicals = {
   natural_gas_extractors: {
     name: "Natural Gas Extractors",
     singular: "Natural Gas Extractor",
+    type: "manufacturing",
 
     construction_turns: 6,
     cost: {
@@ -864,6 +888,7 @@ config.buildings.petrochemicals = {
   nitric_acid_plants: {
     name: "Nitric Acid Plants",
     singular: "Nitric Acid Plant",
+    type: "manufacturing",
 
     construction_turns: 4,
     cost: {
@@ -886,6 +911,7 @@ config.buildings.petrochemicals = {
     name: "Oxygen Chemical Factories",
     singular: "Oxygen Chemical Factory",
     aliases: ["oxygen plants", "oxygen factories"],
+    type: "manufacturing",
 
     construction_turns: 5,
     cost: {
@@ -910,6 +936,7 @@ config.buildings.petrochemicals = {
   phenol_plants: {
     name: "Phenol Plants",
     singular: "Phenol Plant",
+    type: "manufacturing",
 
     construction_turns: 4,
     cost: {
@@ -967,6 +994,7 @@ config.buildings.petrochemicals = {
   phosphate_works: {
     name: "Phosphate Works",
     singular: "Phosphate Works",
+    type: "manufacturing",
 
     construction_turns: 4,
     cost: {
@@ -994,6 +1022,7 @@ config.buildings.petrochemicals = {
     name: "Plastic Factories",
     singular: "Plastic Factory",
     aliases: ["plastic works"],
+    type: "manufacturing",
 
     construction_turns: 3,
     cost: {
@@ -1018,6 +1047,7 @@ config.buildings.petrochemicals = {
   refineries: {
     name: "Refineries",
     singular: "Refinery",
+    type: "manufacturing",
 
     construction_turns: 6,
     cost: {
@@ -1044,6 +1074,7 @@ config.buildings.petrochemicals = {
   sodium_carbonate_works: {
     name: "Sodium Carbonate Works",
     singular: "Sodium Carbonate Works",
+    type: "manufacturing",
 
     construction_turns: 6,
     cost: {
@@ -1097,6 +1128,7 @@ config.buildings.petrochemicals = {
   steam_crackers: {
     name: "Steam Crackers",
     singular: "Steam Cracker",
+    type: "manufacturing",
 
     construction_turns: 2,
     cost: {
@@ -1152,6 +1184,7 @@ config.buildings.petrochemicals = {
   titanium_dioxide_works: {
     name: "Titanium Dioxide Works",
     singular: "Titanium Dioxide Works",
+    type: "manufacturing",
 
     construction_turns: 4,
     cost: {
@@ -1176,6 +1209,7 @@ config.buildings.petrochemicals = {
   toluene_works: {
     name: "Toluene Works",
     singular: "Toluene Works",
+    type: "manufacturing",
 
     construction_turns: 3,
     cost: {
@@ -1223,6 +1257,7 @@ config.buildings.petrochemicals = {
   urea_factories: {
     name: "Urea Factories",
     singular: "Urea Factory",
+    type: "manufacturing",
 
     construction_turns: 4,
     cost: {

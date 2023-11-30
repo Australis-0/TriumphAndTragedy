@@ -7,6 +7,7 @@ config.buildings.military_buildings = { //[WIP] - Add £ maintenance
     singular: "Ack-Ack Gun",
     aliases: ["aa guns", "anti aircraft"],
     icon: "artillery_piece",
+    type: "military",
 
     construction_turns: 1,
     cost: {
@@ -31,6 +32,7 @@ config.buildings.military_buildings = { //[WIP] - Add £ maintenance
     name: "Air Bases",
     singular: "Air Base",
     icon: "aeroplanes",
+    type: "military",
 
     construction_turns: 2,
     cost: {
@@ -63,6 +65,7 @@ config.buildings.military_buildings = { //[WIP] - Add £ maintenance
   artillery_encampments: {
     name: "Artillery Encampments",
     singular: "Artillery Encampment",
+    type: "manufacturing",
 
     construction_turns: 3,
     cost: {
@@ -90,6 +93,7 @@ config.buildings.military_buildings = { //[WIP] - Add £ maintenance
   auto_plants: {
     name: "Auto Plants",
     singular: "Auto Plant",
+    type: "manufacturing",
 
     construction_turns: 4,
     cost: {
@@ -119,6 +123,7 @@ config.buildings.military_buildings = { //[WIP] - Add £ maintenance
   barracks: {
     name: "Barracks",
     singular: "Barracks",
+    type: "military",
 
     construction_turns: 3,
     cost: {
@@ -147,6 +152,7 @@ config.buildings.military_buildings = { //[WIP] - Add £ maintenance
   bastions: {
     name: "Bastions",
     singular: "Bastion",
+    type: "military",
 
     construction_turns: 4,
     cost: {
@@ -173,6 +179,7 @@ config.buildings.military_buildings = { //[WIP] - Add £ maintenance
   bunkers: {
     name: "Bunkers",
     singular: "Bunker",
+    type: "military",
 
     construction_turns: 3,
     cost: {
@@ -198,6 +205,7 @@ config.buildings.military_buildings = { //[WIP] - Add £ maintenance
   castles: {
     name: "Castles",
     singular: "Castle",
+    type: "military",
 
     construction_turns: 5,
     cost: {
@@ -224,6 +232,7 @@ config.buildings.military_buildings = { //[WIP] - Add £ maintenance
   city_walls: {
     name: "City Walls",
     singular: "City Wall",
+    type: "military",
 
     construction_turns: 4,
     cost: {
@@ -244,6 +253,7 @@ config.buildings.military_buildings = { //[WIP] - Add £ maintenance
   coastal_defences: {
     name: "Coastal Defences",
     singular: "Coastal Defence",
+    type: "military",
 
     construction_turns: 4,
     cost: {
@@ -270,6 +280,7 @@ config.buildings.military_buildings = { //[WIP] - Add £ maintenance
     name: "Conscription Centres",
     singular: "Conscription Centre",
     aliases: ["conscription center", "selective service", "draft"],
+    type: "services",
 
     construction_turns: 3,
     cost: {
@@ -296,6 +307,7 @@ config.buildings.military_buildings = { //[WIP] - Add £ maintenance
   dockyards: {
     name: "Dockyards",
     singular: "Dockyard",
+    type: "manufacturing",
 
     construction_turns: 5,
     cost: {
@@ -328,6 +340,7 @@ config.buildings.military_buildings = { //[WIP] - Add £ maintenance
   fortresses: {
     name: "Fortresses",
     singular: "Fortress",
+    type: "military",
 
     construction_turns: 9,
     cost: {
@@ -368,6 +381,7 @@ config.buildings.military_buildings = { //[WIP] - Add £ maintenance
   forts: {
     name: "Forts",
     singular: "Fort",
+    type: "military",
 
     construction_turns: 7,
     cost: {
@@ -404,6 +418,7 @@ config.buildings.military_buildings = { //[WIP] - Add £ maintenance
   impressment_offices: {
     name: "Impressment Offices",
     singular: "Impressment Office",
+    type: "military",
 
     construction_turns: 4,
     cost: {
@@ -435,6 +450,7 @@ config.buildings.military_buildings = { //[WIP] - Add £ maintenance
   military_academies: {
     name: "Military Academies",
     singular: "Military Academy",
+    type: "services",
 
     construction_turns: 6,
     cost: {
@@ -482,6 +498,7 @@ config.buildings.military_buildings = { //[WIP] - Add £ maintenance
   military_bases: {
     name: "Military Bases",
     singular: "Military Base",
+    type: "military",
 
     construction_turns: 8,
     cost: {
@@ -527,6 +544,7 @@ config.buildings.military_buildings = { //[WIP] - Add £ maintenance
   naval_bases: {
     name: "Naval Bases",
     singular: "Naval Base",
+    type: "military",
 
     construction_turns: 8,
     cost: {
@@ -561,6 +579,7 @@ config.buildings.military_buildings = { //[WIP] - Add £ maintenance
   ramparts: {
     name: "Ramparts",
     singular: "Rampart",
+    type: "military",
 
     construction_turns: 2,
     cost: {
@@ -589,6 +608,7 @@ config.buildings.military_buildings = { //[WIP] - Add £ maintenance
   recruitment_offices: {
     name: "Recruitment Offices",
     singular: "Recruitment Office",
+    type: "services",
 
     construction_turns: 5,
     cost: {
@@ -622,6 +642,7 @@ config.buildings.military_buildings = { //[WIP] - Add £ maintenance
     name: "SAM's",
     singular: "SAM",
     aliases: ["surface to air missiles", "surface-to-air missiles"],
+    type: "military",
 
     construction_turns: 4,
     cost: {
@@ -683,6 +704,7 @@ config.buildings.military_buildings = { //[WIP] - Add £ maintenance
   stockades: {
     name: "Stockades",
     singular: "Stockade",
+    type: "military",
 
     construction_turns: 2,
     cost: {
@@ -701,6 +723,7 @@ config.buildings.military_buildings = { //[WIP] - Add £ maintenance
   training_fields: {
     name: "Training Fields",
     singular: "Training Field",
+    type: "military",
 
     construction_turns: 3,
     cost: {
@@ -727,6 +750,7 @@ config.buildings.military_buildings = { //[WIP] - Add £ maintenance
   trenches: {
     name: "Trenches",
     singular: "Trench",
+    type: "military",
 
     construction_turns: 2,
     cost: {

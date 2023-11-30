@@ -7,6 +7,7 @@ config.buildings.refineries = {
     name: "Aluminium Factories",
     singular: "Aluminium Factory",
     aliases: ["alumina factory", "alumina factories", "aluminum factories", "aluminum factory"],
+    type: "manufacturing",
 
     construction_turns: 4,
     cost: {
@@ -35,6 +36,7 @@ config.buildings.refineries = {
     name: "Aluminium Refineries",
     singular: "Aluminium Refinery",
     aliases: ["aluminum refineries", "aluminum refineries"],
+    type: "manufacturing",
 
     construction_turns: 4,
     cost: {
@@ -61,6 +63,7 @@ config.buildings.refineries = {
   arsenic_refineries: {
     name: "Arsenic Refineries",
     singular: "Arsenic Refinery",
+    type: "manufacturing",
 
     construction_turns: 4,
     cost: {
@@ -87,6 +90,7 @@ config.buildings.refineries = {
   barium_refineries: {
     name: "Barium Refineries",
     singular: "Barium Refinery",
+    type: "manufacturing",
 
     construction_turns: 4,
     cost: {
@@ -112,6 +116,7 @@ config.buildings.refineries = {
   beryllium_refineries: {
     name: "Beryllium Refineries",
     singular: "Beryllium Refinery",
+    type: "manufacturing",
 
     construction_turns: 4,
     cost: {
@@ -137,6 +142,7 @@ config.buildings.refineries = {
   bronze_factories: {
     name: "Bronze Factories",
     singular: "Bronze Factory",
+    type: "manufacturing",
 
     construction_turns: 3,
     cost: {
@@ -166,6 +172,7 @@ config.buildings.refineries = {
   centrifuges: {
     name: "Centrifuges",
     singular: "Centrifuge",
+    type: "manufacturing",
 
     cost: {
       stainless_steel: 8,
@@ -203,6 +210,7 @@ config.buildings.refineries = {
   chromium_refineries: {
     name: "Chromium Refineries",
     singular: "Chromium Refinery",
+    type: "manufacturing",
 
     construction_turns: 5,
     cost: {
@@ -229,6 +237,7 @@ config.buildings.refineries = {
   coal_kilns: {
     name: "Coal Kilns",
     singular: "Coal Kiln",
+    type: "manufacturing",
 
     construction_turns: 2,
     cost: {
@@ -253,6 +262,7 @@ config.buildings.refineries = {
   coal_washers: {
     name: "Coal Washers",
     singular: "Coal Washer",
+    type: "manufacturing",
 
     construction_turns: 2,
     cost: {
@@ -297,6 +307,7 @@ config.buildings.refineries = {
   cobalt_refineries: {
     name: "Cobalt Refineries",
     singular: "Cobalt Refinery",
+    type: "manufacturing",
 
     construction_turns: 5,
     cost: {
@@ -325,6 +336,7 @@ config.buildings.refineries = {
   copper_kilns: {
     name: "Copper Kilns",
     singular: "Copper Kiln",
+    type: "manufacturing",
 
     construction_turns: 2,
     cost: {
@@ -372,6 +384,7 @@ config.buildings.refineries = {
   copper_refineries: {
     name: "Copper Refineries",
     singular: "Copper Refinery",
+    type: "manufacturing",
 
     construction_turns: 5,
     cost: {
@@ -425,6 +438,7 @@ config.buildings.refineries = {
   diamond_refineries: {
     name: "Diamond Refineries",
     singular: "Diamond Refinery",
+    type: "manufacturing",
 
     construction_turns: 4,
     cost: {
@@ -449,6 +463,7 @@ config.buildings.refineries = {
   ferrochromite_refineries: {
     name: "Ferrochromite Refineries",
     singular: "Ferrochromite Refinery",
+    type: "manufacturing",
 
     construction_turns: 3,
     cost: {
@@ -475,6 +490,7 @@ config.buildings.refineries = {
   gold_refineries: {
     name: "Gold Refineries",
     singular: "Gold Refinery",
+    type: "manufacturing",
 
     construction_turns: 3,
     cost: {
@@ -514,6 +530,7 @@ config.buildings.refineries = {
   gum_factories: {
     name: "Gum Factories",
     singular: "Gum Factory",
+    type: "manufacturing",
 
     construction_turns: 3,
     cost: {
@@ -543,6 +560,7 @@ config.buildings.refineries = {
   iron_refineries: {
     name: "Iron Refineries",
     singular: "Iron Refinery",
+    type: "manufacturing",
 
     construction_turns: 3,
     cost: {
@@ -568,6 +586,7 @@ config.buildings.refineries = {
   ironworks: {
     name: "Ironworks",
     singular: "Ironworks",
+    type: "manufacturing",
 
     construction_turns: 4,
     cost: {
@@ -630,6 +649,7 @@ config.buildings.refineries = {
   leadworks: {
     name: "Leadworks",
     singular: "Leadworks",
+    type: "manufacturing",
 
     construction_turns: 4,
     cost: {
@@ -658,6 +678,7 @@ config.buildings.refineries = {
   manganese_refineries: {
     name: "Manganese Refineries",
     singular: "Manganese Refinery",
+    type: "manufacturing",
 
     construction_turns: 5,
     cost: {
@@ -695,6 +716,7 @@ config.buildings.refineries = {
   mercuric_refineries: {
     name: "Mercuric Refineries",
     singular: "Mercuric Refinery",
+    type: "manufacturing",
 
     construction_turns: 4,
     cost: {
@@ -722,6 +744,7 @@ config.buildings.refineries = {
   molybdenite_refineries: {
     name: "Molybdenite Refineries",
     singular: "Molybdenite Refinery",
+    type: "manufacturing",
 
     construction_turns: 4,
     cost: {
@@ -751,6 +774,7 @@ config.buildings.refineries = {
   nickelworks: {
     name: "Nickelworks",
     singular: "Nickelworks",
+    type: "manufacturing",
 
     construction_turns: 5,
     cost: {
@@ -782,6 +806,7 @@ config.buildings.refineries = {
   niobic_refineries: {
     name: "Niobic Refineries",
     singular: "Niobic Refinery",
+    type: "manufacturing",
 
     construction_turns: 5,
     cost: {
@@ -807,6 +832,7 @@ config.buildings.refineries = {
   palladium_refineries: {
     name: "Palladium Refineries",
     singular: "Palladium Refinery",
+    type: "manufacturing",
 
     construction_turns: 6,
     cost: {
@@ -837,6 +863,7 @@ config.buildings.refineries = {
   platinum_refineries: {
     name: "Platinum Refineries",
     singular: "Platinum Refinery",
+    type: "manufacturing",
 
     construction_turns: 5,
     cost: {
@@ -868,6 +895,7 @@ config.buildings.refineries = {
     name: "Saltpetre Works",
     singular: "Saltpetre Works",
     aliases: ["saltpetre factory", "saltpetre factories", "saltpeter works"],
+    type: "manufacturing",
 
     construction_turns: 4,
     cost: {
@@ -895,6 +923,7 @@ config.buildings.refineries = {
   silicate_factories: {
     name: "Silicate Factories",
     singular: "Silicate Factory",
+    type: "manufacturing",
 
     construction_turns: 3,
     cost: {
@@ -922,6 +951,7 @@ config.buildings.refineries = {
   silver_refineries: {
     name: "Silver Refineries",
     singular: "Silver Refinery",
+    type: "manufacturing",
 
     construction_turns: 3,
     cost: {
@@ -948,6 +978,7 @@ config.buildings.refineries = {
   stainless_steel_factories: {
     name: "Stainless Steel Factories",
     singular: "Stainless Steel Factory",
+    type: "manufacturing",
 
     construction_turns: 4,
     cost: {
@@ -979,6 +1010,7 @@ config.buildings.refineries = {
     name: "Steel Beams Factories",
     singular: "Steel Beams Factory",
     aliases: ["steel beam factories", "steel beam factory"],
+    type: "manufacturing",
 
     construction_turns: 5,
     cost: {
@@ -1011,6 +1043,7 @@ config.buildings.refineries = {
   steelworks: {
     name: "Steelworks",
     singular: "Steelworks",
+    type: "manufacturing",
 
     construction_turns: 4,
     cost: {
@@ -1057,6 +1090,7 @@ config.buildings.refineries = {
     name: "Sulphuric Works",
     singular: "Sulphuric Works",
     aliases: ["sulfuric works", "sulfur works", "sulfuric factory", "sulfur factory"],
+    type: "manufacturing",
 
     construction_turns: 3,
     cost: {
@@ -1092,6 +1126,7 @@ config.buildings.refineries = {
   tantalum_factories: {
     name: "Tantalum Factories",
     singular: "Tantalum Factory",
+    type: "manufacturing",
 
     construction_turns: 6,
     cost: {
@@ -1118,6 +1153,7 @@ config.buildings.refineries = {
   tin_factories: {
     name: "Tin Factories",
     singular: "Tin Factory",
+    type: "manufacturing",
 
     construction_turns: 4,
     cost: {
@@ -1145,6 +1181,7 @@ config.buildings.refineries = {
   titanium_refineries: {
     name: "Titanium Refineries",
     singular: "Titanium Refinery",
+    type: "manufacturing",
 
     construction_turns: 5,
     cost: {
@@ -1171,6 +1208,7 @@ config.buildings.refineries = {
   tungsten_refineries: {
     name: "Tungsten Refineries",
     singular: "Tungsten Refinery",
+    type: "manufacturing",
 
     construction_turns: 5,
     cost: {
@@ -1209,6 +1247,7 @@ config.buildings.refineries = {
   uranium_refineries: {
     name: "Uranium Refineries",
     singular: "Uranium Refinery",
+    type: "manufacturing",
 
     construction_turns: 6,
     cost: {
@@ -1236,6 +1275,7 @@ config.buildings.refineries = {
   zinc_refineries: {
     name: "Zinc Refineries",
     singular: "Zinc Refinery",
+    type: "manufacturing",
 
     construction_turns: 4,
     cost: {

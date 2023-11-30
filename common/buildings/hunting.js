@@ -6,6 +6,7 @@ config.buildings.hunting = {
   elephant_hunting_grounds: {
     name: "Elephant Hunting Grounds",
     singular: "Elephant Hunting Ground",
+    type: "agriculture",
 
     construction_turns: 2,
     cost: {
@@ -28,6 +29,7 @@ config.buildings.hunting = {
   fisheries: {
     name: "Fisheries",
     singular: "Fishery",
+    type: "agriculture",
 
     construction_turns: 2,
     cost: {
@@ -69,6 +71,7 @@ config.buildings.hunting = {
   fur_trappers: {
     name: "Fur Trappers",
     singular: "Fur Trapper",
+    type: "agriculture",
 
     construction_turns: 1,
     cost: {
@@ -91,6 +94,7 @@ config.buildings.hunting = {
   pearlers: {
     name: "Pearlers",
     singular: "Pearler",
+    type: "agriculture",
 
     construction_turns: 3,
     cost: {
@@ -116,6 +120,7 @@ config.buildings.hunting = {
   whaling_stations: {
     name: "Whaling Stations",
     singular: "Whaling Station",
+    type: "agriculture",
 
     cosntruction_turns: 4,
     cost: {

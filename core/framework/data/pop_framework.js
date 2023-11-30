@@ -1017,6 +1017,47 @@ module.exports = {
   },
 
   /*
+    getPopJobBreakdown() - Returns a breakdown of job percentages by type.
+
+    Returns: {
+      tribal: 0,
+      agriculture: 0,
+      manufacturing: 0,
+      services: 0,
+      ..
+    }
+  */
+  getPopJobBreakdown: function (arg0_province_id, arg1_pop_type) { //[WIP] - Finish function body
+    //Convert from parameters
+    var province_id = arg0_province_id;
+    var pop_type = arg1_pop_type;
+
+    //Declare local instance variables
+    var job_breakdown_obj = {};
+    var pop_obj = config.pops[pop_type];
+    var province_obj = (typeof province_id != "object") ? getProvince(province_id) : province_id;
+
+    //Iterate over all province buildings
+    if (province_obj)
+      if (province_obj.buildings)
+        for (var i = 0; i < province_obj.buildings.length; i++) {
+          var local_building = province_obj.buildings[i];
+          var local_config = lookup.all_buildings[local_building.building_type];
+
+          if (local_building.employment)
+            if (local_building.employment[pop_type]) {
+              var local_value = returnSafeNumber(local_building.employment[pop_type]);
+
+              if (local_config.type)
+                modifyValue(job_breakdown_obj, local_config.type, local_value);
+            }
+        }
+
+    //Return statement
+    return standardisePercentage(job_breakdown_obj);
+  },
+
+  /*
     getPopMobility() - Returns statistical last turn pop mobility for a province.
     Returns: {
       promotion: { total: 24390 },
@@ -1347,6 +1388,74 @@ module.exports = {
         variety: total_variety
       };
     }
+  },
+
+  /*
+    getPopOEFR() - Gets the OEFR for a pop type in a province.
+    options: {
+      job_breakdown_obj: {}, - Optional. Optimisation parameter for job breakdowns
+      pop_wealth: 12422 - Optional. Optimisation parameter.
+    }
+  */
+  getPopOEFR: function (arg0_province_id, arg1_pop_type, arg2_options) {
+    //Convert from parameters
+    var province_id = arg0_province_id;
+    var pop_type = arg1_pop_type;
+    var options = (arg2_options) ? arg2_options : {};
+
+    //Declare local instance variables
+    var job_breakdown_obj = (options.job_breakdown_obj) ?
+      options.job_breakdown_obj : module.exports.getPopJobBreakdown(province_id, pop_type);
+    var oefr = 0;
+    var pop_obj = config.pops[pop_type];
+
+    var all_job_breakdown_keys = Object.keys(job_breakdown_obj);
+
+    //Iterate over all_job_breakdown_keys
+    for (var i = 0; i < all_job_breakdown_keys.length; i++) {
+      var local_oefr = returnSafeNumber(config.births_oefr[all_job_breakdown_keys[i]]);
+      var local_value = job_breakdown_obj[all_job_breakdown_keys[i]];
+
+      oefr += local_oefr*local_value;
+    }
+
+    //Return statement
+    return oefr;
+  },
+
+  getPopWealth: function (arg0_province_id, arg1_pop_type) {
+    //Convert from parameters
+    var province_id = arg0_province_id;
+    var pop_type = arg1_pop_type;
+
+    //Declare local instance variables
+    var pop_obj = config.pops[pop_type];
+    var province_obj = (typeof province_id != "object") ? getProvince(province_id) : province_id;
+    var total_wealth = 0;
+
+    //Check to make sure province exists
+    if (province_obj)
+      if (province_obj.pops) {
+        var all_pop_keys = Object.keys(province_obj.pops);
+
+        //Iterate over all_pop_keys
+        for (var i = 0; i < all_pop_keys.length; i++) {
+          var local_value = province_obj.pops[all_pop_keys[i]];
+
+          if (all_pop_keys[i].startsWith("wealth-")) {
+            var split_key = all_pop_keys[i].split("-");
+
+            var local_pop_type = split_wealth_key[3];
+
+            //Add to total_wealth
+            if (local_pop_type == pop_type)
+              total_wealth += returnSafeNumber(local_value.wealth);
+          }
+        }
+      }
+
+    //Return statement
+    return total_wealth;
   },
 
   getPopulation: function (arg0_user) {
@@ -1686,6 +1795,36 @@ module.exports = {
 
     //Return statement
     return (province_obj.pops) ? total_employed/province_obj.pops.population : 0;
+  },
+
+  getProvinceFertileWomen: function (arg0_province_id) {
+    //Convert from parameters
+    var province_id = arg0_province_id;
+
+    //Declare local instance variables
+    var fertile_women = 0;
+    var province_obj = (typeof province_id != "object") ? getProvince(province_id) : province_id;
+
+    //Check to make sure province has pop
+    if (province_obj)
+      if (province_obj.pops) {
+        //Iterate over all pop keys
+        var all_pop_keys = Object.keys(province_obj.pops);
+
+        for (var i = 0; i < all_pop_keys.length; i++) {
+          var local_value = province_obj.pops[all_pop_keys[i]];
+
+          if (all_pop_keys[i].startsWith("b_")) {
+            var age = main.date.year - parseInt(all_pop_keys[i].replace("b_", ""));
+
+            if (age >= config.defines.economy.fertility_age_lower_bound && age <= config.defines.economy.fertility_age_upper_bound)
+              fertile_women += Math.floor(local_value/2); //Only half this population is usually female [REVISIT] - In future adjust this to gender
+          }
+        }
+      }
+
+    //Return statement
+    return fertile_women;
   },
 
   getProvinceImmigration: function (arg0_province_id) {
@@ -2243,8 +2382,6 @@ module.exports = {
     var all_pop_scope_tags = Object.keys(pop_scope.tags);
     var province_population = main.provinces[pop_scope.province_id].pops.population;
 
-    console.log(`Multiply pops called with parameters:`, pop_scope, amount, is_birth);
-
     if (pop_scope.size > 0) {
       pop_scope.size = Math.ceil(pop_scope.size*amount);
 
@@ -2422,13 +2559,25 @@ module.exports = {
     {
       //Get province growth scalar
       var birth_scalar = returnSafeNumber(province_obj.births[pop_type], 1); //[REVISIT] - Fix this to .trackers.birth_modifiers
+      var exceeds_pop_cap = false;
+      var pop_percentage = pop_scope.size/province_obj.pops.population;
+
+      var fertile_scalar = 1/(config.defines.economy.fertility_age_upper_bound - config.defines.economy.fertility_age_lower_bound);
+      var pop_fertile_women = module.exports.getProvinceFertileWomen(province_id)*pop_percentage;
+      var pop_oefr = module.exports.getPopOEFR(province_id, pop_type);
+      var pop_turn_fertility = Math.ceil(pop_fertile_women*pop_oefr*fertile_scalar);
+
+      if (province_obj.pop_cap)
+        if (pop_scope.size >= province_obj.pop_cap)
+          exceeds_pop_cap = true;
 
       //Birth handling
-      if (!usr.has_famine) {
+      if (!usr.has_famine && !exceeds_pop_cap) {
         var birth_chance = parsePopLimit(config.births, {
           pop_scope: pop_scope,
           province_id: province_id
         });
+        birth_scalar = pop_turn_fertility;
 
         //Iterate over birth_chance.selectors - [pop_scope, value]
         for (var i = 0; i < birth_chance.selectors.length; i++) {
@@ -3158,7 +3307,6 @@ module.exports = {
         mean: 0.50 - Optional. Midpoint by default
       },
       education_level_less_than: 0.50, - Optional. Undefined by default.
-      employed: true/false, - Optional. Whether the pop is employed or not. False by default
       empty: true/false, - Optional. Whether to return an empty pop scope. False by default
       has_accepted_culture: true/false, - Optional. Restricts pops to accepted cultures only
       has_<goods_category>: true/false/0.50, - Optional. Either boolean or numeric value. Undefined by default
@@ -3230,6 +3378,8 @@ module.exports = {
     var pop_type_tags = {};
     var wealth_pool_tags = {};
 
+    var has_wealth_hard_specified = false;
+
     //Trackers for internal purposes
     var total_employed = 0;
     var total_fulfilment = {};
@@ -3272,32 +3422,40 @@ module.exports = {
               if (all_options[x].startsWith("has_")) {
                 var local_goods_category = all_options[x].replace("has_", "");
 
-                if (local_value[`${local_goods_category}-fulfilment`] < options[all_options[x]])
+                if (local_value[`${local_goods_category}-fulfilment`] < options[all_options[x]]) {
                   all_conditions_met = false;
+                  has_wealth_hard_specified = true;
+                }
               }
 
               //has_<goods_category>_less_than
               if (all_options[x].startsWith("has_") && all_options[x].endsWith("_less_than")) {
                 var local_goods_category = all_options[x].replace("has_", "").replace("_less_than", "");
 
-                if (local_value[`${local_goods_category}-fulfilment`] >= options[all_options[x]])
+                if (local_value[`${local_goods_category}-fulfilment`] >= options[all_options[x]]) {
                   all_conditions_met = false;
+                  has_wealth_hard_specified = true;
+                }
               }
 
               //has_<goods_category>_variety
               if (all_options[x].startsWith("has_") && all_options[x].endsWith("_variety")) {
                 var local_goods_category = all_options[x].replace("has_", "").replace("_variety", "");
 
-                if (local_value[`${local_goods_category}-variety`] < options[all_options[x]])
+                if (local_value[`${local_goods_category}-variety`] < options[all_options[x]]) {
                   all_conditions_met = false;
+                  has_wealth_hard_specified = true;
+                }
               }
 
               //has_<goods_category>_variety_less_than
               if (all_options[x].startsWith("has_") && all_options[x].endsWith("_variety_less_than")) {
                 var local_goods_category = all_options[x].replace("has_", "").replace("_variety_less_than", "");
 
-                if (local_value[`${local_goods_category}-variety`] >= options[all_options[x]])
+                if (local_value[`${local_goods_category}-variety`] >= options[all_options[x]]) {
                   all_conditions_met = false;
+                  has_wealth_hard_specified = true;
+                }
               }
             }
 
@@ -3305,27 +3463,37 @@ module.exports = {
             var actual_income = local_value.income/local_value.size;
 
             if (options.income)
-              if (actual_income < options.income)
+              if (actual_income < options.income) {
                 all_conditions_met = false;
+                has_wealth_hard_specified = true;
+              }
 
             if (options.income_less_than)
-              if (actual_income >= options.income_less_than)
+              if (actual_income >= options.income_less_than) {
                 all_conditions_met = false;
+                has_wealth_hard_specified = true;
+              }
 
             //Pop type handler
-            if (!options.pop_types.includes(local_pop_type))
+            if (!options.pop_types.includes(local_pop_type)) {
               all_conditions_met = false;
+              has_wealth_hard_specified = true;
+            }
 
             //Wealth handler
             var actual_wealth = local_value.wealth/local_value.size;
 
             if (options.wealth)
-              if (actual_wealth < options.wealth)
+              if (actual_wealth < options.wealth) {
                 all_conditions_met = false;
+                has_wealth_hard_specified = true;
+              }
 
             if (options.wealth_less_than)
-              if (actual_wealth >= options.wealth_less_than)
+              if (actual_wealth >= options.wealth_less_than) {
                 all_conditions_met = false;
+                has_wealth_hard_specified = true;
+              }
 
             //Append to wealth_pool_tags if all_conditions_met
             if (all_conditions_met) {
@@ -3387,6 +3555,22 @@ module.exports = {
               modifyValue(age_tags, `b_${local_birth_year}`, local_value);
             }
           }
+        } else {
+          //Age number handler - Block select
+          var max = config.defines.economy.old_age_hard_upper_bound;
+          var min = returnSafeNumber(options.age, 0);
+
+          for (var i = 0; i < all_pop_keys.length; i++) {
+            var local_value = province_obj.pops[all_pop_keys[i]];
+
+            if (all_pop_keys[i].startsWith("b_")) {
+              var birth_year = parseInt(all_pop_keys[i].replace("b_", ""));
+              var current_age = Math.floor(main.date.year - birth_year);
+
+              if (current_age >= min && current_age <= max)
+                modifyValue(age_tags, all_pop_keys[i], local_value);
+            }
+          }
         }
 
         //Education level handler
@@ -3419,6 +3603,17 @@ module.exports = {
               var local_value = local_education_amount*local_amount;
 
               modifyValue(education_level_tags, all_education_distribution_keys[i], local_value);
+            }
+          }
+        } else if (options.education_level_less_than) {
+          for (var i = 0; i < all_pop_keys.length; i++) {
+            var local_value = province_obj.pops[all_pop_keys[i]];
+
+            if (all_pop_keys[i].startsWith("el_")) {
+              var education_level = parseInt(local_value.replace("el_", ""));
+
+              if (education_level < options.education_level_less_than*100)
+                modifyValue(education_level_tags, `el_${education_level}`, local_value);
             }
           }
         }
@@ -3456,7 +3651,6 @@ module.exports = {
         //Unemployed handler
         {
           if (options.is_employed != undefined) {
-
             for (var i = 0; i < options.pop_types.length; i++)
               total_employed += returnSafeNumber(province_obj.pops[`used_${options.pop_types[i]}`]);
 
@@ -3574,7 +3768,7 @@ module.exports = {
         }
 
         //Wealth pool handler - Superobject; scaled to total_employed - [REVISIT]
-        if (Object.keys(wealth_pool_tags).length > 0) {
+        if (Object.keys(wealth_pool_tags).length > 0 || has_wealth_hard_specified) {
           hard_specified_tags = mergeObjects(wealth_pool_tags, hard_specified_tags);
           var local_scalar = getObjectSum(wealth_pool_tags)/province_obj.pops.population;
 
@@ -3597,7 +3791,7 @@ module.exports = {
               }
 
           //Set relative_scalar
-          relative_scalars[all_category_scalars[i]] = relative_scalar
+          relative_scalars[all_category_scalars[i]] = relative_scalar;
         }
 
         //Scale hard_specified_tags by relative_scalar[hard_specified_tags[i]] (check against category_tags to determine category of tag)

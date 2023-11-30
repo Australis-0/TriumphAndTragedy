@@ -7,6 +7,7 @@ config.buildings.infrastructure = {
   aerodromes: {
     name: "Aerodromes",
     singular: "Aerodrome",
+    type: "services",
 
     construction_turns: 4,
     cost: {
@@ -45,6 +46,7 @@ config.buildings.infrastructure = {
   airstrips: {
     name: "Airstrips",
     singular: "Airstrip",
+    type: "services",
 
     construction_turns: 4,
     cost: {
@@ -86,6 +88,7 @@ config.buildings.infrastructure = {
   bus_depots: {
     name: "Bus Depots",
     singular: "Bus Depot",
+    type: "manufacturing",
 
     construction_turns: 3,
     cost: {
@@ -120,6 +123,7 @@ config.buildings.infrastructure = {
   bus_stops: {
     name: "Bus Stops",
     singular: "Bus Stop",
+    type: "services",
 
     construction_turns: 1,
     cost: {
@@ -146,6 +150,7 @@ config.buildings.infrastructure = {
   cargo_ports: {
     name: "Cargo Ports",
     singular: "Cargo Port",
+    type: "manufacturing",
 
     construction_turns: 8,
     cost: {
@@ -181,6 +186,7 @@ config.buildings.infrastructure = {
   clipper_shipyards: {
     name: "Clipper Shipyards",
     singular: "Clipper Shipyard",
+    type: "manufacturing",
 
     construction_turns: 5,
     cost: {
@@ -219,6 +225,7 @@ config.buildings.infrastructure = {
   commuter_piers: {
     name: "Commuter Piers",
     singular: "Commuter Pier",
+    type: "services",
 
     construction_turns: 4,
     cost: {
@@ -247,6 +254,7 @@ config.buildings.infrastructure = {
   docks: {
     name: "Docks",
     singular: "Dock",
+    type: "manufacturing",
 
     construction_turns: 6,
     cost: {
@@ -280,6 +288,7 @@ config.buildings.infrastructure = {
   drydocks: {
     name: "Drydocks",
     singular: "Drydock",
+    type: "manufacturing",
 
     construction_turns: 6,
     cost: {
@@ -318,6 +327,7 @@ config.buildings.infrastructure = {
   fuel_stations: {
     name: "Fuel Stations",
     singular: "Fuel Station",
+    type: "services",
 
     construction_turns: 2,
     cost: {
@@ -346,6 +356,7 @@ config.buildings.infrastructure = {
   gas_pipelines: {
     name: "Gas Pipelines",
     singular: "Gas Pipeline",
+    type: "manufacturing",
 
     construction_turns: 3,
     cost: {
@@ -367,6 +378,7 @@ config.buildings.infrastructure = {
     name: "High-Speed Rail",
     singular: "High-Speed Railway",
     aliases: ["high speed rail"],
+    type: "services",
 
     construction_turns: 8,
     cost: {
@@ -403,6 +415,7 @@ config.buildings.infrastructure = {
   loading_wharfs: {
     name: "Loading Wharfs",
     singular: "Loading Wharf",
+    type: "manufacturing",
 
     construction_turns: 4,
     cost: {
@@ -443,6 +456,7 @@ config.buildings.infrastructure = {
   lng_terminals: {
     name: "LNG Terminals",
     singular: "LNG Terminal",
+    type: "manufacturing",
 
     construction_turns: 6,
     cost: {
@@ -473,6 +487,7 @@ config.buildings.infrastructure = {
   metro_lines: {
     name: "Metro Lines",
     singular: "Metro Line",
+    type: "services",
 
     construction_turns: 6,
     cost: {
@@ -504,6 +519,7 @@ config.buildings.infrastructure = {
   metro_stops: {
     name: "Metro Stops",
     singular: "Metro Stop",
+    type: "services",
 
     construction_turns: 3,
     cost: {
@@ -538,6 +554,7 @@ config.buildings.infrastructure = {
     name: "Motorways",
     singular: "Motorway",
     aliases: ["autobahn", "highway"],
+    type: "services",
 
     construction_turns: 6,
     cost: {
@@ -567,6 +584,7 @@ config.buildings.infrastructure = {
     name: "International Aeroports",
     singular: "International Aeroport",
     aliases: ["international airports"],
+    type: "services",
 
     construction_turns: 12,
     cost: {
@@ -614,6 +632,7 @@ config.buildings.infrastructure = {
   piers: {
     name: "Piers",
     singular: "Pier",
+    type: "manufacturing",
 
     construction_turns: 6,
     cost: {
@@ -653,6 +672,7 @@ config.buildings.infrastructure = {
   ports: {
     name: "Ports",
     singular: "Port",
+    type: "manufacturing",
 
     construction_turns: 8,
     cost: {
@@ -692,6 +712,7 @@ config.buildings.infrastructure = {
   public_moorings: {
     name: "Public moorings",
     singular: "Public Mooring",
+    type: "services",
 
     construction_turns: 4,
     cost: {
@@ -724,6 +745,7 @@ config.buildings.infrastructure = {
   railways: {
     name: "Railways",
     singular: "Railway",
+    type: "services",
 
     construction_turns: 3,
     cost: {
@@ -755,6 +777,7 @@ config.buildings.infrastructure = {
     name: "Regional Aeroports",
     singular: "Regional Aeroport",
     aliases: ["regional airport"],
+    type: "services",
 
     construction_turns: 4,
     cost: {
@@ -793,6 +816,7 @@ config.buildings.infrastructure = {
   repair_cranes: {
     name: "Repair Cranes",
     singular: "Repair Crane",
+    type: "manufacturing",
 
     construction_turns: 2,
     cost: {
@@ -823,6 +847,7 @@ config.buildings.infrastructure = {
   seawalls: {
     name: "Seawalls",
     singular: "Seawall",
+    type: "manufacturing",
 
     construction_turns: 2,
     cost: {
@@ -853,6 +878,7 @@ config.buildings.infrastructure = {
   shipyards: {
     name: "Shipyards",
     singular: "Shipyard",
+    type: "manufacturing",
 
     construction_turns: 6,
     cost: {
@@ -890,6 +916,7 @@ config.buildings.infrastructure = {
   steam_shipyards: {
     name: "Steam Shipyards",
     singular: "Steam Shipyard",
+    type: "manufacturing",
 
     construction_turns: 7,
     cost: {
@@ -927,6 +954,7 @@ config.buildings.infrastructure = {
   tractor_barns: {
     name: "Tractor Barns",
     singular: "Tractor Barn",
+    type: "agriculture",
 
     construction_turns: 2,
     cost: {
@@ -955,6 +983,7 @@ config.buildings.infrastructure = {
   train_depots: {
     name: "Train Depots",
     singular: "Train Depot",
+    type: "manufacturing",
 
     construction_turns: 4,
     cost: {
@@ -997,6 +1026,7 @@ config.buildings.infrastructure = {
   tram_lines: {
     name: "Tram Lines",
     singular: "Tram Line",
+    type: "services",
 
     construction_turns: 4,
     cost: {

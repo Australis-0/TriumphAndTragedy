@@ -5,6 +5,7 @@ config.buildings.emergency_services = {
   clinics: {
     name: "Clinics",
     singular: "Clinic",
+    type: "services",
 
     construction_turns: 2,
     cost: {
@@ -45,6 +46,7 @@ config.buildings.emergency_services = {
   fire_departments: {
     name: "Fire Departments",
     singular: "Fire Department",
+    type: "services",
 
     construction_turns: 4,
     cost: {
@@ -84,6 +86,7 @@ config.buildings.emergency_services = {
   fire_stations: {
     name: "Fire Stations",
     singular: "Fire Station",
+    type: "services",
 
     construction_turns: 3,
     cost: {
@@ -116,6 +119,7 @@ config.buildings.emergency_services = {
   hospitals: {
     name: "Hospitals",
     singular: "Hospital",
+    type: "services",
 
     construction_turns: 3,
     cost: {
@@ -157,6 +161,7 @@ config.buildings.emergency_services = {
   police_departments: {
     name: "Police Departments",
     singular: "Police Department",
+    type: "services",
 
     construction_turns: 4,
     cost: {
@@ -204,6 +209,7 @@ config.buildings.emergency_services = {
   police_stations: {
     name: "Police Stations",
     singular: "Police Station",
+    type: "services",
 
     construction_turns: 3,
     cost: {
@@ -245,6 +251,7 @@ config.buildings.emergency_services = {
   sanatoriums: {
     name: "Sanatoriums",
     singular: "Sanatorium",
+    type: "services",
 
     construction_turns: 6,
     cost: {

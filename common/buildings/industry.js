@@ -6,6 +6,7 @@ config.buildings.industry = {
   ai_hubs: {
     name: "AI Hubs",
     singular: "AI Hub",
+    type: "services",
 
     construction_turns: 10,
     cost: {
@@ -40,6 +41,7 @@ config.buildings.industry = {
   arsenals: {
     name: "Arsenals",
     singular: "Arsenal",
+    type: "manufacturing",
 
     construction_turns: 8,
     cost: {
@@ -68,6 +70,7 @@ config.buildings.industry = {
   assembly_plants: {
     name: "Assembly Plants",
     singular: "Assembly Plant",
+    type: "manufacturing",
 
     construction_turns: 8,
     cost: {
@@ -97,6 +100,7 @@ config.buildings.industry = {
   civilian_industries: {
     name: "Civilian Industries",
     singular: "Civilian Industry",
+    type: "manufacturing",
 
     construction_turns: 6,
     cost: {
@@ -125,6 +129,7 @@ config.buildings.industry = {
   factories: {
     name: "Factories",
     singular: "Factory",
+    type: "manufacturing",
 
     construction_turns: 6,
     cost: {
@@ -151,6 +156,7 @@ config.buildings.industry = {
   guilds: {
     name: "Guilds",
     singular: "Guild",
+    type: "manufacturing",
 
     construction_turns: 3,
     cost: {
@@ -172,6 +178,7 @@ config.buildings.industry = {
   industrial_complexes: {
     name: "Industrial Complexes",
     singular: "Industrial Complex",
+    type: "manufacturing",
 
     construction_turns: 8,
     cost: {
@@ -202,6 +209,7 @@ config.buildings.industry = {
   manufactories: {
     name: "Manufactories",
     singular: "Manufactory",
+    type: "manufacturing",
 
     construction_turns: 6,
     cost: {
@@ -231,6 +239,7 @@ config.buildings.industry = {
   mills: {
     name: "Mills",
     singular: "Mill",
+    type: "manufacturing",
 
     construction_turns: 4,
     cost: {
@@ -259,6 +268,7 @@ config.buildings.industry = {
   production_facilities: {
     name: "Production Facilities",
     singular: "Production Facility",
+    type: "manufacturing",
 
     construction_turns: 6,
     cost: {
@@ -290,6 +300,7 @@ config.buildings.industry = {
   watermills: {
     name: "Watermills",
     singular: "Watermill",
+    type: "manufacturing",
 
     construction_turns: 4,
     cost: {
@@ -315,6 +326,7 @@ config.buildings.industry = {
   wartime_industries: {
     name: "Wartime Industries",
     singular: "Wartime Industry",
+    type: "manufacturing",
 
     construction_turns: 7,
     cost: {
@@ -352,6 +364,7 @@ config.buildings.industry = {
   workshops: {
     name: "Workshops",
     singular: "Workshop",
+    type: "manufacturing",
 
     construction_turns: 3,
     cost: {

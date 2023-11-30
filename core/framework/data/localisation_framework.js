@@ -563,7 +563,7 @@ module.exports = {
 
   numberCheck: function (arg0_number, arg1_negative_positive) {
     //Convert from parameters
-    var number = arg0_number;
+    var number = returnSafeNumber(arg0_number);
     var negative_positive = arg1_negative_positive; //Whether this is a negative/positive scheme
 
     //Return statements

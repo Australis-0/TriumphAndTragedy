@@ -1577,6 +1577,24 @@ module.exports = {
 
             //Merge selectors from per scope
             modifyValue(selectors, JSON.stringify(pop_scope), returnSafeNumber(local_pop_scope.value));
+          } else if (all_keys[i] == "limit") {
+            var new_options = JSON.parse(JSON.stringify(options));
+            var new_pop_scope = JSON.parse(JSON.stringify(pop_scope));
+
+            new_options.nesting++;
+            new_options.parent_obj = scope;
+            new_options.parents.push("limit");
+            new_options.pop_scope = pop_scope;
+
+            var local_pop_scope = module.exports.parsePopLimit(local_value, new_options);
+            local_pop_scope.pop_scope.size = returnSafeNumber(local_pop_scope.pop_scope.size);
+
+            localisation_string.push(`${bulletPoint(options.nesting)}${numberCheck(local_pop_scope.pop_scope.size, true)} Fulfills limit:`);
+            localisation_string = appendArrays(localisation_string, local_pop_scope.localisation_string);
+
+            if (local_pop_scope.pop_scope.size <= 0)
+              if (!ignore_pop_size)
+                empty_scope = true;
           } else if (all_keys[i] == "per" || all_keys[i].startsWith("per_")) {
             var new_options = JSON.parse(JSON.stringify(options));
             var new_pop_scope = JSON.parse(JSON.stringify(pop_scope));
@@ -1812,12 +1830,12 @@ module.exports = {
               mergeObjects(pop_scope, local_pop_scope) :
               mergePopScopes(pop_scope, local_pop_scope); //and, not, default
 
-            if (lookup.all_pop_needs_categories[local_needs_category])
+            if (lookup.all_pop_needs_categories.includes(local_needs_category))
               localisation_string.push(`${bulletPoint(options.nesting)}${numberCheck(pop_scope.size)}${parseNumber(pop_scope.size)} have >=${printPercentage(local_value)} ${config.localisation[local_needs_category]} fulfilment`);
-          } if (all_keys[i].startsWith("has_")) { //has_<goods_category>_less_than
+          } if (all_keys[i].startsWith("has_") && all_keys[i].endsWith("_less_than")) { //has_<goods_category>_less_than
             var local_needs_category = all_keys[i].replace("has_", "").replace("_less_than", "");
 
-            if (lookup.all_pop_needs_categories[local_needs_category]) {
+            if (lookup.all_pop_needs_categories.includes(local_needs_category)) {
               var local_pop_scope = selectPops({
                 province_id: ot_province.id,
                 pop_types: [options.pop_type],
@@ -1849,7 +1867,7 @@ module.exports = {
                 localisation_string.push(`${bulletPoint(options.nesting)}${booleanCheck(true)}Province has no available housing`);
               }
             }
-          } if (all_keys[i].startsWith("has_") && all_keys[i].includes("_variety")) { //has_<goods_category>_variety
+          } if (all_keys[i].startsWith("has_") && all_keys[i].endsWith("_variety")) { //has_<goods_category>_variety
             var local_goods_category = all_keys[i].replace("has_", "").replace("_variety", "");
             var local_pop_scope = selectPops({
               province_id: ot_province.id,
@@ -1862,13 +1880,13 @@ module.exports = {
               mergeObjects(pop_scope, local_pop_scope) :
               mergePopScopes(pop_scope, local_pop_scope); //and, not, default
 
-            if (lookup.all_pop_needs_categories[local_goods_category])
+            if (lookup.all_pop_needs_categories.includes(local_goods_category))
               if (pop_scope.size > 0) {
                 localisation_string.push(`${bulletPoint(options.nesting)}${booleanCheck(true)}Has >=${printPercentage(local_value)} ${config.localisation[local_goods_category]} variety`);
               } else {
                 localisation_string.push(`${bulletPoint(options.nesting)}${booleanCheck(false)}Has >=${printPercentage(local_value)} ${config.localisation[local_goods_category]} variety`);
               }
-          } if (all_keys[i] == "has_" && all_keys[i].includes("_variety_less_than")) { //has_<goods_category>_variety_less_than
+          } if (all_keys[i] == "has_" && all_keys[i].endsWith("_variety_less_than")) { //has_<goods_category>_variety_less_than
             var local_goods_category = all_keys[i].replace("has_", "").replace("_variety_less_than", "");
             var local_pop_scope = selectPops({
               province_id: ot_province.id,
@@ -1881,7 +1899,7 @@ module.exports = {
               mergeObjects(pop_scope, local_pop_scope) :
               mergePopScopes(pop_scope, local_pop_scope); //and, not, default
 
-            if (lookup.all_pop_needs_categories[local_goods_category])
+            if (lookup.all_pop_needs_categories.includes(local_goods_category))
               if (pop_scope.size > 0) {
                 localisation_string.push(`${bulletPoint(options.nesting)}${booleanCheck(true)}Has <${printPercentage(local_value)} ${config.localisation[local_goods_category]} variety`);
               } else {
@@ -2184,7 +2202,7 @@ module.exports = {
           } if (all_keys[i] == "occupied") {
             if (local_value == true)
               if (ot_province.controller != ot_province.owner) {
-                pop_scope = [parent.startsWith("any") ? "mergeObjects" : "mergePopScopes"](pop_scopes, selectPops({
+                pop_scope = global[parent.startsWith("any") ? "mergeObjects" : "mergePopScopes"](pop_scope, selectPops({
                   province_id: ot_province.id,
                   pop_types: [options.pop_type]
                 }));
@@ -2194,7 +2212,7 @@ module.exports = {
               }
             if (local_value == false)
               if (ot_province.controller == ot_province.owner) {
-                pop_scope = [parent.startsWith("any") ? "mergeObjects" : "mergePopScopes"](pop_scopes, selectPops({
+                pop_scope = global[parent.startsWith("any") ? "mergeObjects" : "mergePopScopes"](pop_scope, selectPops({
                   province_id: ot_province.id,
                   pop_types: [options.pop_type]
                 }));
@@ -2678,7 +2696,7 @@ module.exports = {
               var target_category_name = all_keys[i].replace("has_", "");
               var total_applicable_pops = 0;
 
-              var is_needs_category = (lookup.all_pop_needs_categories[target_category_name]);
+              var is_needs_category = (lookup.all_pop_needs_categories.includes(target_category_name));
 
               if (is_needs_category) {
                 for (var x = 0; x < target_pop_scope.length; x++) {
@@ -2713,7 +2731,7 @@ module.exports = {
             } if (all_keys[i].startsWith("has_")) { //has_<needs_category>_variety
               var target_category_name = all_keys[i].replace("has_", "").replace("_variety", "");
 
-              var is_needs_category = (lookup.all_pop_needs_categories[target_category_name]);
+              var is_needs_category = (lookup.all_pop_needs_categories.includes(target_category_name));
 
               if (is_needs_category) {
                 for (var x = 0; x < target_pop_scope.length; x++) {

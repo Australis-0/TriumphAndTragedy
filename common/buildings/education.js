@@ -5,6 +5,7 @@ config.buildings.education = { //[WIP] - Add special_effect
   art_academies: {
     name: "Art Academies",
     singular: "Art Academy",
+    type: "services",
 
     construction_turns: 5,
     cost: {
@@ -49,6 +50,7 @@ config.buildings.education = { //[WIP] - Add special_effect
     name: "Community Colleges",
     singular: "Community College",
     aliases: ["cc"],
+    type: "services",
 
     construction_turns: 6,
     cost: {
@@ -94,6 +96,7 @@ config.buildings.education = { //[WIP] - Add special_effect
   libraries: {
     name: "Libraries",
     singular: "Library",
+    type: "services",
 
     construction_turns: 4,
     cost: {
@@ -128,6 +131,7 @@ config.buildings.education = { //[WIP] - Add special_effect
   primary_schools: {
     name: "Primary Schools",
     singular: "Primary School",
+    type: "services",
 
     construction_turns: 3,
     cost: {
@@ -171,6 +175,7 @@ config.buildings.education = { //[WIP] - Add special_effect
   schoolhouses: {
     name: "Schoolhouses",
     singular: "Schoolhouse",
+    type: "services",
 
     construction_turns: 2,
     cost: {
@@ -212,6 +217,7 @@ config.buildings.education = { //[WIP] - Add special_effect
   secondary_schools: {
     name: "Secondary Schools",
     singular: "Secondary School",
+    type: "services",
 
     construction_turns: 5,
     cost: {
@@ -252,6 +258,7 @@ config.buildings.education = { //[WIP] - Add special_effect
   universities: {
     name: "Universities",
     singular: "University",
+    type: "services",
 
     construction_turns: 8,
     cost: {

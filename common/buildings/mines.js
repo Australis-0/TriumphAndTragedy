@@ -6,6 +6,7 @@ config.buildings.mines = {
   anthracite_coal_mines: {
     name: "Anthracite Coal Mines",
     singular: "Anthracite Coal Mine",
+    type: "manufacturing",
 
     construction_turns: 4,
     cost: {
@@ -28,6 +29,7 @@ config.buildings.mines = {
   arsenic_mines: {
     name: "Arsenic Mines",
     singular: "Arsenic Mine",
+    type: "manufacturing",
 
     construction_turns: 3,
     cost: {
@@ -49,6 +51,7 @@ config.buildings.mines = {
   barium_mines: {
     name: "Barium Mines",
     singular: "Barium Mine",
+    type: "manufacturing",
 
     construction_turns: 4,
     cost: {
@@ -70,6 +73,7 @@ config.buildings.mines = {
   bauxite_mines: {
     name: "Bauxite Mines",
     singular: "Bauxite Mine",
+    type: "manufacturing",
 
     construction_turns: 4,
     cost: {
@@ -92,6 +96,7 @@ config.buildings.mines = {
   beryllium_mines: {
     name: "Beryllium Mines",
     singular: "Beryllium Mine",
+    type: "manufacturing",
 
     construction_turns: 4,
     cost: {
@@ -114,6 +119,7 @@ config.buildings.mines = {
   bitumen_coal_mines: {
     name: "Bitumen Coal Mines",
     singular: "Bitumen Coal Mine",
+    type: "manufacturing",
 
     construction_turns: 3,
     cost: {
@@ -136,6 +142,7 @@ config.buildings.mines = {
   bornite_copper_mines: {
     name: "Bornite Copper Mines",
     singular: "Bornite Copper Mine",
+    type: "manufacturing",
 
     construction_turns: 4,
     cost: {
@@ -157,6 +164,7 @@ config.buildings.mines = {
   chalcocite_copper_mines: {
     name: "Chalcocite Copper Mines",
     singular: "Chalcocite Copper Mine",
+    type: "manufacturing",
 
     construction_turns: 2,
     cost: {
@@ -178,6 +186,7 @@ config.buildings.mines = {
   chalcopyrite_copper_mines: {
     name: "Chalcopyrite Copper Mines",
     singular: "Chalcopyrite Copper Mine",
+    type: "manufacturing",
 
     construction_turns: 2,
     cost: {
@@ -199,6 +208,7 @@ config.buildings.mines = {
   chromite_mines: {
     name: "Chromite Mines",
     singular: "Chromite Mine",
+    type: "manufacturing",
 
     construction_turns: 4,
     cost: {
@@ -220,6 +230,7 @@ config.buildings.mines = {
   cinnabar_mines: {
     name: "Cinnabar Mines",
     singular: "Cinnabar Mine",
+    type: "manufacturing",
 
     construction_turns: 5,
     cost: {
@@ -242,6 +253,7 @@ config.buildings.mines = {
   cobalt_mines: {
     name: "Cobalt Mines",
     singular: "Cobalt Mine",
+    type: "manufacturing",
 
     construction_turns: 5,
     cost: {
@@ -265,6 +277,7 @@ config.buildings.mines = {
   coltan_mines: {
     name: "Coltan Mines",
     singular: "Coltan Mine",
+    type: "manufacturing",
 
     construction_turns: 4,
     cost: {
@@ -285,6 +298,7 @@ config.buildings.mines = {
   cooperite_mines: {
     name: "Cooperite Mines",
     singular: "Cooperite Mine",
+    type: "manufacturing",
 
     construction_turns: 3,
     cost: {
@@ -307,6 +321,7 @@ config.buildings.mines = {
   fluorite_mines: {
     name: "Fluorite Mines",
     singular: "Fluorite Mine",
+    type: "manufacturing",
 
     construction_turns: 2,
     cost: {
@@ -329,6 +344,7 @@ config.buildings.mines = {
   galena_lead_mines: {
     name: "Galena Lead Mines",
     singular: "Galena Lead Mine",
+    type: "manufacturing",
 
     construction_turns: 3,
     cost: {
@@ -350,6 +366,7 @@ config.buildings.mines = {
   gold_washers: {
     name: "Gold Washers",
     singular: "Gold Washer",
+    type: "manufacturing",
 
     construction_turns: 1,
     cost: {
@@ -371,6 +388,7 @@ config.buildings.mines = {
   guano_gatherers: {
     name: "Guano Gatherers",
     singular: "Guano Gatherer",
+    type: "manufacturing",
 
     construction_turns: 2,
     cost: {
@@ -390,6 +408,7 @@ config.buildings.mines = {
   hematite_iron_mines: {
     name: "Hematite Iron Mines",
     singular: "Hematite Iron Mine",
+    type: "manufacturing",
 
     construction_turns: 3,
     cost: {
@@ -410,6 +429,7 @@ config.buildings.mines = {
   ilmenite_titanium_mines: {
     name: "Ilmenite Titanium Mines",
     singular: "Ilmenite Titanium Mine",
+    type: "manufacturing",
 
     construction_turns: 4,
     cost: {
@@ -433,6 +453,7 @@ config.buildings.mines = {
   kimberlite_mines: {
     name: "Kimberlite Mines",
     singular: "Kimberlite Mine",
+    type: "manufacturing",
 
     construction_turns: 5,
     cost: {
@@ -455,6 +476,7 @@ config.buildings.mines = {
   lignite_coal_mines: {
     name: "Lignite Coal Mines",
     singular: "Lignite Coal Mine",
+    type: "manufacturing",
 
     construction_turns: 5,
     cost: {
@@ -477,6 +499,7 @@ config.buildings.mines = {
   magnetite_iron_mines: {
     name: "Magnetite Iron Mines",
     singular: "Magnetite Iron Mine",
+    type: "manufacturing",
 
     construction_turns: 4,
     cost: {
@@ -497,6 +520,7 @@ config.buildings.mines = {
   malachite_copper_mines: {
     name: "Malachite Copper Mines",
     singular: "Malachite Copper Mine",
+    type: "manufacturing",
 
     construction_turns: 4,
     cost: {
@@ -518,6 +542,7 @@ config.buildings.mines = {
   manganese_mines: {
     name: "Manganese Mines",
     singular: "Manganese Mine",
+    type: "manufacturing",
 
     construction_turns: 3,
     cost: {
@@ -539,6 +564,7 @@ config.buildings.mines = {
   molybdenum_mines: {
     name: "Molybdenum Mines",
     singular: "Molybdenum Mine",
+    type: "manufacturing",
 
     construction_turns: 4,
     cost: {
@@ -561,6 +587,7 @@ config.buildings.mines = {
   nickel_mines: {
     name: "Nickel Mines",
     singular: "Nickel Mine",
+    type: "manufacturing",
 
     construction_turns: 3,
     cost: {
@@ -583,6 +610,7 @@ config.buildings.mines = {
   platinum_mines: {
     name: "Platinum Mines",
     singular: "Platinum Mine",
+    type: "manufacturing",
 
     construction_turns: 5,
     cost: {
@@ -606,6 +634,7 @@ config.buildings.mines = {
   quartz_mines: {
     name: "Quartz Mines",
     singular: "Quartz Mine",
+    type: "manufacturing",
 
     construction_turns: 3,
     cost: {
@@ -627,6 +656,7 @@ config.buildings.mines = {
   ruby_mines: {
     name: "Ruby Mines",
     singular: "Ruby Mine",
+    type: "manufacturing",
 
     construction_turns: 6,
     cost: {
@@ -648,6 +678,7 @@ config.buildings.mines = {
   silica_sand_quarries: {
     name: "Silica Sand Quarries",
     singular: "Silica Sand Quarry",
+    type: "manufacturing",
 
     construction_turns: 1,
     cost: {
@@ -668,6 +699,7 @@ config.buildings.mines = {
   scheelite_mines: {
     name: "Scheelite Mines",
     singular: "Scheelite Mine",
+    type: "manufacturing",
 
     construction_turns: 3,
     cost: {
@@ -689,6 +721,7 @@ config.buildings.mines = {
   silver_mines: {
     name: "Silver Mines",
     singular: "Silver Mine",
+    type: "manufacturing",
 
     construction_turns: 4,
     cost: {
@@ -710,6 +743,7 @@ config.buildings.mines = {
   tin_mines: {
     name: "Tin Mines",
     singular: "Tin Mine",
+    type: "manufacturing",
 
     construction_turns: 4,
     cost: {
@@ -731,6 +765,7 @@ config.buildings.mines = {
   tungsten_mines: {
     name: "Tungsten Mines",
     singular: "Tungsten Mine",
+    type: "manufacturing",
 
     construction_turns: 5,
     cost: {
@@ -752,6 +787,7 @@ config.buildings.mines = {
   uranium_mines: {
     name: "Uranium Mines",
     singular: "Uranium Mine",
+    type: "manufacturing",
 
     construction_turns: 6,
     cost: {
@@ -773,6 +809,7 @@ config.buildings.mines = {
   zinc_mines: {
     name: "Zinc Mines",
     singular: "Zinc Mine",
+    type: "manufacturing",
 
     construction_turns: 4,
     cost: {

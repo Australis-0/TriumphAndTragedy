@@ -6,6 +6,7 @@ config.buildings.commercial = { //[WIP] - Add special_effect
   banks: {
     name: "Banks",
     singular: "Bank",
+    type: "services",
 
     construction_turns: 5,
     cost: {
@@ -55,6 +56,7 @@ config.buildings.commercial = { //[WIP] - Add special_effect
     name: "Central Business Districts",
     singular: "Central Business District",
     aliases: ["CBD"],
+    type: "services",
 
     construction_turns: 8,
     cost: {
@@ -97,6 +99,7 @@ config.buildings.commercial = { //[WIP] - Add special_effect
     name: "Chemists",
     singular: "Chemist",
     aliases: ["pharmacy"],
+    type: "services",
 
     construction_turns: 2,
     cost: {
@@ -122,6 +125,7 @@ config.buildings.commercial = { //[WIP] - Add special_effect
   counting_houses: {
     name: "Counting Houses",
     singular: "Counting House",
+    type: "services",
 
     construction_turns: 4,
     cost: {
@@ -153,6 +157,7 @@ config.buildings.commercial = { //[WIP] - Add special_effect
   department_stores: {
     name: "Department Stores",
     singular: "Department Store",
+    type: "services",
 
     construction_turns: 4,
     cost: {
@@ -203,6 +208,7 @@ config.buildings.commercial = { //[WIP] - Add special_effect
   furniture_stores: {
     name: "Furniture Stores",
     singular: "Furniture Store",
+    type: "services",
 
     construction_turns: 2,
     cost: {
@@ -239,6 +245,7 @@ config.buildings.commercial = { //[WIP] - Add special_effect
   malls: {
     name: "Malls",
     singular: "Mall",
+    type: "services",
 
     construction_turns: 3,
     cost: {
@@ -270,6 +277,7 @@ config.buildings.commercial = { //[WIP] - Add special_effect
   markets: {
     name: "Markets",
     singular: "Market",
+    type: "services",
 
     construction_turns: 2,
     cost: {
@@ -303,6 +311,7 @@ config.buildings.commercial = { //[WIP] - Add special_effect
     name: "Modern Financial Centres",
     singular: "Modern Financial Centre",
     aliases: ["modern financial center"],
+    type: "services",
 
     construction_turns: 6,
     cost: {
@@ -355,6 +364,7 @@ config.buildings.commercial = { //[WIP] - Add special_effect
   restaurants: {
     name: "Restaurants",
     singular: "Restaurant",
+    type: "services",
 
     construction_turns: 3,
     cost: {
@@ -393,6 +403,7 @@ config.buildings.commercial = { //[WIP] - Add special_effect
     name: "Shopping Centres",
     singular: "Shopping Centre",
     aliases: ["shopping center"],
+    type: "services",
 
     construction_turns: 4,
     cost: {
@@ -440,6 +451,7 @@ config.buildings.commercial = { //[WIP] - Add special_effect
     name: "Stock Exchanges",
     singular: "Stock Exchange",
     aliases: ["stock market"],
+    type: "services",
 
     construction_turns: 6,
     cost: {

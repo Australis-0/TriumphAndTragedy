@@ -5,6 +5,7 @@ config.buildings.administration = {
   city_halls: {
     name: "City Halls",
     singular: "City Hall",
+    type: "services",
 
     construction_turns: 4,
     cost: {
@@ -37,6 +38,7 @@ config.buildings.administration = {
   courthouses: {
     name: "Courthouses",
     singular: "Courthouse",
+    type: "services",
 
     construction_turns: 3,
     cost: {
@@ -76,6 +78,7 @@ config.buildings.administration = {
     name: "Harbourmasters",
     singular: "Harbourmaster",
     aliases: ["harbormasters"],
+    type: "manufacturing",
 
     construction_turns: 4,
     cost: {
@@ -122,6 +125,7 @@ config.buildings.administration = {
   local_departments: {
     name: "Local Departments",
     singular: "Local Department",
+    type: "services",
 
     construction_turns: 2,
     cost: {
@@ -158,6 +162,7 @@ config.buildings.administration = {
   national_departments: {
     name: "National Departments",
     singular: "National Department",
+    type: "services",
 
     construction_turns: 4,
     cost: {
@@ -198,6 +203,7 @@ config.buildings.administration = {
   mental_institutions: {
     name: "Mental Institutions",
     singular: "Mental Institution",
+    type: "services",
 
     construction_turns: 3,
     cost: {
@@ -244,6 +250,7 @@ config.buildings.administration = {
   palaces: {
     name: "Palaces",
     singular: "Palace",
+    type: "services",
 
     construction_turns: 8,
     cost: {
@@ -297,6 +304,7 @@ config.buildings.administration = {
   prisons: {
     name: "Prisons",
     singular: "Prison",
+    type: "services",
 
     construction_turns: 4,
     cost: {
@@ -332,6 +340,7 @@ config.buildings.administration = {
   state_houses: {
     name: "State Houses",
     singular: "State House",
+    type: "services",
 
     construction_turns: 6,
     cost: {
@@ -371,6 +380,7 @@ config.buildings.administration = {
   town_halls: {
     name: "Town Halls",
     singular: "Town Hall",
+    type: "services",
 
     construction_turns: 3,
     cost: {
@@ -405,6 +415,7 @@ config.buildings.administration = {
   trade_depots: {
     name: "Trade Depots",
     singular: "Trade Depot",
+    type: "manufacturing",
 
     construction_turns: 4,
     cost: {
@@ -435,6 +446,7 @@ config.buildings.administration = {
   trade_unions: {
     name: "Trade Unions",
     singular: "Trade Union",
+    type: "services",
 
     construction_turns: 3,
     cost: {
@@ -469,6 +481,7 @@ config.buildings.administration = {
   warehouses: {
     name: "Warehouses",
     singular: "Warehouse",
+    type: "manufacturing",
 
     construction_turns: 2,
     cost: {

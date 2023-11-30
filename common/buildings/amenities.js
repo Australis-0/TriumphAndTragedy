@@ -5,6 +5,7 @@ config.buildings.amenities = {
   amusement_parks: {
     name: "Amusement Parks",
     singular: "Amusement Park",
+    type: "services",
 
     construction_turns: 6,
     cost: {
@@ -51,6 +52,7 @@ config.buildings.amenities = {
   botanical_gardens: {
     name: "Botanical Gardens",
     singular: "Botanical Garden",
+    type: "services",
 
     construction_turns: 8,
     cost: {
@@ -91,6 +93,7 @@ config.buildings.amenities = {
     name: "Cafés",
     singular: "Café",
     aliases: ["cafe"],
+    type: "services",
 
     construction_turns: 5,
     cost: {
@@ -128,6 +131,7 @@ config.buildings.amenities = {
     name: "Cathedrals",
     singular: "Cathedral",
     aliases: ["cathedral"],
+    type: "services",
 
     construction_turns: 16,
     cost: {
@@ -176,6 +180,7 @@ config.buildings.amenities = {
   churches: {
     name: "Churches",
     singular: "Church",
+    type: "services",
 
     construction_turns: 6,
     cost: {
@@ -212,6 +217,7 @@ config.buildings.amenities = {
     name: "Community Centres",
     singular: "Community Centre",
     aliases: ["community center"],
+    type: "services",
 
     construction_turns: 4,
     cost: {
@@ -254,6 +260,7 @@ config.buildings.amenities = {
   esplanades: {
     name: "Esplanades",
     singular: "Esplanade",
+    type: "services",
 
     construction_turns: 5,
     cost: {
@@ -285,6 +292,7 @@ config.buildings.amenities = {
   hotels: {
     name: "Hotels",
     singular: "Hotel",
+    type: "services",
 
     construction_turns: 4,
     cost: {
@@ -324,6 +332,7 @@ config.buildings.amenities = {
   members_clubs: {
     name: "Members Clubs",
     singular: "Member Club",
+    type: "services",
 
     construction_turns: 5,
     cost: {
@@ -364,6 +373,7 @@ config.buildings.amenities = {
   memorials: {
     name: "Memorials",
     singular: "Memorial",
+    type: "services",
 
     construction_turns: 6,
     cost: {
@@ -395,6 +405,7 @@ config.buildings.amenities = {
   mosques: {
     name: "Mosques",
     singular: "Mosque",
+    type: "services",
 
     construction_turns: 8,
     cost: {
@@ -428,6 +439,7 @@ config.buildings.amenities = {
   museums: {
     name: "Museums",
     singular: "Museum",
+    type: "services",
 
     construction_turns: 6,
     cost: {
@@ -472,6 +484,7 @@ config.buildings.amenities = {
   nightclubs: {
     name: "Nightclubs",
     singular: "Nightclub",
+    type: "services",
 
     construction_turns: 3,
     cost: {
@@ -511,6 +524,7 @@ config.buildings.amenities = {
   operas: {
     name: "Operas",
     singular: "Opera",
+    type: "services",
 
     construction_turns: 7,
     cost: {
@@ -557,6 +571,7 @@ config.buildings.amenities = {
   parks: {
     name: "Parks",
     singular: "Park",
+    type: "services",
 
     construction_turns: 3,
     cost: {
@@ -584,6 +599,7 @@ config.buildings.amenities = {
   plazas: {
     name: "Plazas",
     singular: "Plaza",
+    type: "services",
 
     construction_turns: 4,
     cost: {
@@ -613,6 +629,7 @@ config.buildings.amenities = {
   post_offices: {
     name: "Post Offices",
     singular: "Post Office",
+    type: "services",
 
     construction_turns: 3,
     cost: {
@@ -645,6 +662,7 @@ config.buildings.amenities = {
   pubs: {
     name: "Pubs",
     singular: "Pub",
+    type: "services",
 
     construction_turns: 2,
     cost: {
@@ -675,6 +693,7 @@ config.buildings.amenities = {
   stadiums: {
     name: "Stadiums",
     singular: "Stadium",
+    type: "services",
 
     construction_turns: 6,
     cost: {
@@ -717,6 +736,7 @@ config.buildings.amenities = {
   synagogues: {
     name: "Synagogues",
     singular: "Synagogue",
+    type: "services",
 
     construction_turns: 7,
     cost: {
@@ -752,6 +772,7 @@ config.buildings.amenities = {
   temples: {
     name: "Temples",
     singular: "Temple",
+    type: "services",
 
     construction_turns: 6,
     cost: {
@@ -787,6 +808,7 @@ config.buildings.amenities = {
   theatres: {
     name: "Theatres",
     singular: "Theatre",
+    type: "services",
 
     construction_turns: 6,
     cost: {
@@ -820,6 +842,7 @@ config.buildings.amenities = {
     name: "World's Fair",
     singular: "World's Fair",
     aliases: ["worlds fairs"],
+    type: "services",
 
     construction_turns: 12,
     cost: {
@@ -889,6 +912,7 @@ config.buildings.amenities = {
   zoos: {
     name: "Zoos",
     singular: "Zoo",
+    type: "services",
 
     construction_turns: 8,
     cost: {

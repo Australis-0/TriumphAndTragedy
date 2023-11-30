@@ -6,6 +6,7 @@ config.buildings.telecommunications = {
   broadcast_stations: {
     name: "Broadcast Stations",
     singular: "Broadcast Station",
+    type: "services",
 
     construction_turns: 4,
     cost: {
@@ -37,6 +38,7 @@ config.buildings.telecommunications = {
   internet_cables: {
     name: "Internet Cables",
     singular: "Internet Cable",
+    type: "services",
 
     construction_turns: 5,
     cost: {
@@ -65,6 +67,7 @@ config.buildings.telecommunications = {
   radio_towers: {
     name: "Radio Towers",
     singular: "Radio Tower",
+    type: "services",
 
     construction_turns: 3,
     cost: {
@@ -97,6 +100,7 @@ config.buildings.telecommunications = {
   server_rooms: {
     name: "Server Rooms",
     singular: "Server Room",
+    type: "services",
 
     construction_turns: 5,
     cost: {
@@ -122,6 +126,7 @@ config.buildings.telecommunications = {
   telegraph_offices: {
     name: "Telegraph Offices",
     singular: "Telegraph Office",
+    type: "services",
 
     construction_turns: 3,
     cost: {
@@ -144,6 +149,7 @@ config.buildings.telecommunications = {
   telecommunication_lines: {
     name: "Telecommunication Lines",
     singular: "Telecommunication Line",
+    type: "services",
 
     construction_turns: 2,
     cost: {
@@ -172,6 +178,7 @@ config.buildings.telecommunications = {
   television_towers: {
     name: "Television Towers",
     singular: "Television Tower",
+    type: "services",
 
     construction_turns: 3,
     cost: {

@@ -6,6 +6,7 @@ config.buildings.resource_extraction = {
   chalk_mines: {
     name: "Chalk Mines",
     singular: "Chalk Mine",
+    type: "manufacturing",
 
     construction_turns: 2,
     cost: {
@@ -26,6 +27,7 @@ config.buildings.resource_extraction = {
   clay_mines: {
     name: "Clay Mines",
     singular: "Clay Mine",
+    type: "manufacturing",
 
     construction_turns: 3,
     cost: {
@@ -46,6 +48,7 @@ config.buildings.resource_extraction = {
   lumberjacks: {
     name: "Lumberjacks",
     singular: "Lumberjack",
+    type: "manufacturing",
 
     construction_turns: 2,
     cost: {
@@ -182,6 +185,7 @@ config.buildings.resource_extraction = {
   quarries: {
     name: "Quarries",
     singular: "Quarry",
+    type: "manufacturing",
 
     construction_turns: 3,
     cost: {
@@ -249,6 +253,7 @@ config.buildings.resource_extraction = {
   shale_mines: {
     name: "Shale Mines",
     singular: "Shale Mine",
+    type: "manufacturing",
 
     construction_turns: 3,
     cost: {

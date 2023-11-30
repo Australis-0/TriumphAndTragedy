@@ -58,7 +58,7 @@ config.pop_mobility = {
     },
     add_chance_employed: {
       limit: {
-        employed: true
+        is_employed: true
       },
       value: -0.02
     }
