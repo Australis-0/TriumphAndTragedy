@@ -56,11 +56,11 @@ module.exports = {
       local_cb_string.push(`- ${config.icons.old_scroll} Requirement: ${local_cb_description}`);
 
       if (peace_demands_array.length > 0 && !local_cb.attacker_peace_demands && !local_cb.defender_peace_demands)
-        local_cb_string.push(`- ${config.icons.diplomacy} Peace Demands:\n • ${peace_demands_array.join("\n• ")}\n`);
+        local_cb_string.push(`- ${config.icons.diplomacy} Peace Demands:\n${peace_demands_array.join("\n - ")}\n`);
 
       if (local_cb.attacker_peace_demands || local_cb.defender_peace_demands) {
-        local_cb_string.push(`- ${config.icons.diplomacy} Attacker Peace Demands:\n • ${peace_demands_localisation.attacker_peace_demands_string.join("\n• ")}\n`);
-        local_cb_string.push(`- ${config.icons.diplomacy} Defender Peace Demands:\n • ${peace_demands_localisation.defender_peace_demands_string.join("\n• ")}\n`);
+        local_cb_string.push(`- ${config.icons.diplomacy} Attacker Peace Demands:\n - ${peace_demands_localisation.attacker_peace_demands_string.join("\n- ")}\n`);
+        local_cb_string.push(`- ${config.icons.diplomacy} Defender Peace Demands:\n - ${peace_demands_localisation.defender_peace_demands_string.join("\n- ")}\n`);
       }
 
       local_cb_string.push(`- ${config.icons.infamy} Infamy: ${parseNumber(local_cb_infamy)}`);
