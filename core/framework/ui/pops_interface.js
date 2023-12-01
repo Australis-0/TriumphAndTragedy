@@ -228,7 +228,7 @@ module.exports = {
               var median_wage = getMedianWage(province_id, { pop_type: pops_to_display[i] });
 
               //Push to pops_string
-              pops_string.push(`- ${parsePop(pops_to_display[i])}: ${parseNumber(median_wage)}`);
+              pops_string.push(`- ${parsePop(pops_to_display[i])}: ${parseNumber(median_wage, { display_float: true })}`);
             }
 
             pops_string.push("");
