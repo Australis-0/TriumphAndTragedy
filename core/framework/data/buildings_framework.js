@@ -1132,7 +1132,7 @@ module.exports = {
 
     //Get remaining positions in two hiring cases; make sure that divide by 0 doesn't happen by clamping to 1
     if (building_obj.subsidised) {
-      if (employment_level < 1)
+      if (returnSafeNumber(employment_level) < 1)
         open_positions = wage_obj.remaining_positions; //Continue hiring workers if employment_level isn't 100% if subsidised
     } else {
       if (has_liquidity && has_deficit && has_full_employment_profit) {
@@ -1141,9 +1141,6 @@ module.exports = {
         open_positions = wage_obj.profit_obj.profit/unzero(wage_obj.wage, 1);
       }
     }
-
-    console.log(`Subsidised:`, building_obj.subsidised);
-    console.log(`Employment level:`, employment_level);
 
     //Cap open_positions to config_obj.upper_bound_manpower
     if (config_obj.upper_bound_manpower)
