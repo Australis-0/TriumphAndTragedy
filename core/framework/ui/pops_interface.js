@@ -217,7 +217,7 @@ module.exports = {
 
             //Housing/Homelessness
             pops_string.push(`- ${config.icons.neighbourhoods} Housing: ${parseNumber(province_obj.housing)}`);
-            pops_string.push(` - Homelessness: ${parseNumber(province_homeless)} (**${printPercentage(province_homeless/province_obj.pops.population)}**)`);
+            pops_string.push(` - ${(province_homeless >= 0) ? `Homelessness` : `Housing Surplus`}: ${parseNumber(Math.abs(province_homeless))} (**${printPercentage(Math.abs(province_homeless)/province_obj.pops.population)}**)`);
 
             //Median Wage per pop type
             pops_string.push("");
