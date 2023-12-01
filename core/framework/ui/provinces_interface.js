@@ -286,6 +286,9 @@ module.exports = {
             province_string.push(`${(game_obj.show_pop_need_warnings) ? `**[Hide Warnings]**` : `**[Show Warnings]**`}`);
             province_string.push("");
             province_string.push(config.localisation.divider);
+            province_string.push("");
+            province_string.push(`> Figures below represent whether we can fulfil Pop Needs from our current Inventory, not whether Pops can actually purchase those needs for fulfilment/variety.`);
+            province_string.push("");
 
             var reference_needs = JSON.parse(JSON.stringify(pop_needs));
             var total_needs = {};

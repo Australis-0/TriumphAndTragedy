@@ -125,6 +125,33 @@ module.exports = {
             pops_string.push(`- [Births]: ${parseNumber(birth_obj.total, { display_prefix: true })} (**${printPercentage(birth_obj.total/province_obj.pops.population)}**) | [Deaths]: ${parseNumber(death_obj.total, { display_pop: true })} (**${printPercentage(death_obj.total/province_obj.pops.population)}**)`);
             pops_string.push(`- [Immigration]: ${parseNumber(immigration_obj.total, { display_pop: true })} (**${printPercentage(immigration_obj.total/province_obj.pops.population)}**) | [Emigration]: ${parseNumber(emigration_obj.total, { display_pop: true })} (**${printPercentage(emigration_obj.total/province_obj.pops.population)}**)`);
             pops_string.push(`- [Promotion]: ${parseNumber(promotion_obj.total, { display_pop: true })} (**${printPercentage(promotion_obj.total/province_obj.pops.population)}**) | [Demotion]: ${parseNumber(demotion_obj.total, { display_pop: true })} (**${printPercentage(demotion_obj.total/province_obj.pops.population)}**)`);
+
+            //Population Pyramid - [REVISIT] - Only displays age for now
+            pops_string.push("");
+            pops_string.push(`**Age:**`);
+            pops_string.push("");
+            pops_string.push(`> - Age (b. [Birth Year]) - [Number]`)
+            pops_string.push("");
+
+            var age_strings = [];
+
+            for (var i = 0; i < all_pop_keys.length; i++)
+              if (all_pop_keys[i].startsWith("b_")) {
+                var local_birth_year = parseInt(all_pop_keys[i].replace("b_", ""));
+                var local_value = province_obj.pops[all_pop_keys[i]];
+
+                if (!isNaN(local_birth_year)) {
+                  var local_age = main.date.year - parseInt(local_birth_year);
+
+                  age_strings.push([local_age, `- ${local_age} (b. ${local_birth_year}) - ${parseNumber(local_value)}`]);
+                }
+              }
+
+            //Sort age
+            age_strings.sort((a, b) => a[0] - b[0]);
+
+            for (var i = 0; i < age_strings.length; i++)
+              pops_string.push(age_strings[i][1]);
           }
         }
 
@@ -201,11 +228,11 @@ module.exports = {
               var median_wage = getMedianWage(province_id, { pop_type: pops_to_display[i] });
 
               //Push to pops_string
-              pops_string.push(`- ${parsePop(pops_to_display[i])}: **${parseNumber(median_wage)}**`);
+              pops_string.push(`- ${parsePop(pops_to_display[i])}: ${parseNumber(median_wage)}`);
             }
 
             pops_string.push("");
-            pops_string.push(`- ${config.icons.taxes} Median Wage (Total): **${printPercentage(getTotalMedianWage(province_id))}**`);
+            pops_string.push(`- ${config.icons.taxes} Median Wage (Total, Unweighted Avg.): ${config.icons.money}${parseNumber(getTotalMedianWage(province_id), { display_float: true })}`);
             pops_string.push("");
 
             //Unemployment Rates per pop type
@@ -370,13 +397,26 @@ module.exports = {
           });
 
           if (birth_chance.localisation_string.length > 0) {
+            tooltip_string.push("");
             tooltip_string.push(`__**${parsePop(options.pop_types[i])} Birth Chance:**__`);
             tooltip_string.push("");
+
+            //Push OEFR first
+            var local_fertile_women = Math.floor(returnSafeNumber(getProvinceFertileWomen(province_obj.id)/province_obj.pops[options.pop_types[i]]));
+            var local_oefr = getPopOEFR(province_obj.id, options.pop_types[i]);
+
+            tooltip_string.push(`- Optimal Economic Fertility Rate: ${parseNumber(local_oefr, { display_float: true })}`);
+            tooltip_string.push(`- Women of Childbearing Age: ${parseNumber(local_fertile_women)}`)
+
             tooltip_string = appendArrays(tooltip_string, birth_chance.localisation_string);
           }
         }
       }
     } else if (options.mode == "deaths") {
+      tooltip_string.push(`- Base Life Expectancy: ${parseNumber(config.defines.economy.old_age_lower_upper_bound)}`);
+      tooltip_string.push(` - ${printPercentage(config.defines.economy.life_expectancy_deaths)} of people naturally die at the Life Expectancy, with the mortality function being x^2.`);
+      tooltip_string.push("");
+
       for (var i = 0; i < options.pop_types.length; i++) {
         var local_pop = config.pops[options.pop_types[i]];
 

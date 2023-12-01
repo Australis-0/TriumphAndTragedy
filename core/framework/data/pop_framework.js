@@ -70,7 +70,7 @@ module.exports = {
     var options = arg1_options;
 
     //Initialise default options values
-    options.type = (options.type) ? ["all"] : getList(options.type);
+    options.type = (!options.type) ? ["all"] : getList(options.type);
 
     //Declare local instance variables
     var all_pops = (options.type.includes("all")) ?
@@ -133,7 +133,7 @@ module.exports = {
               var local_percentage = 1/domain;
 
               for (var x = 0; x < max; x++)
-                modifyValue(province_obj.pops, `b_${Math.floor(current_year + 1)}`, Math.floor(population_change*local_percentage));
+                modifyValue(province_obj.pops, `b_${Math.floor(current_year)}`, Math.floor(population_change*local_percentage));
             } else {
               var age_distribution = pearsonVIIDistribution(domain, options.age.mean, min, max);
               var all_age_distribution_keys = Object.keys(age_distribution);
@@ -145,12 +145,16 @@ module.exports = {
               }
             }
           } else {
-            var turn_years = Math.floor(getTurnHours()/(365*24));
+            if (options.new_turn) {
+              var turn_years = parseInt(1/getTimeModifier());
 
-            for (var x = 0; x < turn_years; x++) {
-              var local_percentage = 1/turn_years;
+              for (var x = 0; x < turn_years; x++) {
+                var local_percentage = 1/turn_years;
 
-              modifyValue(province_obj.pops, `b_${main.date.year - turn_years + x}`, Math.floor(population_change*local_percentage));
+                modifyValue(province_obj.pops, `b_${main.date.year + x}`, Math.floor(population_change*local_percentage));
+              }
+            } else {
+              modifyValue(province_obj.pops, `b_${main.date.year}`, Math.floor(population_change));
             }
           }
 
