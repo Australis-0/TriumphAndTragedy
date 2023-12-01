@@ -273,7 +273,7 @@ module.exports = {
               local_vassal_display_players.push(`<@${all_mapped_users[i]}>`);
 
         try {
-          pc_string.push(`• **${local_vassal.name}** - ${(local_vassal_display_players.length > 0) ? parseList(local_vassal_display_players) : `_No Player_`}`);
+          pc_string.push(` - **${local_vassal.name}** - ${(local_vassal_display_players.length > 0) ? parseList(local_vassal_display_players) : `_No Player_`}`);
         } catch {}
       }
     }
@@ -285,7 +285,7 @@ module.exports = {
       for (var i = 0; i < volunteer_wars.length; i++) {
         var local_war = main.global.wars[volunteer_wars[i]];
 
-        war_display_list.push(`• **${local_war.name}** on the **${local_war[`${actual_id}_sent_volunteers`]}**' side.`);
+        war_display_list.push(`- **${local_war.name}** on the **${local_war[`${actual_id}_sent_volunteers`]}**' side.`);
       }
 
       //Push to pc_string
@@ -966,7 +966,7 @@ module.exports = {
                   wargoal_number++;
 
               //Push wargoal name and (wargoals demanded/wargoals limit) to string
-              peace_string.push(`• __${(wargoal_obj.name) ? wargoal_obj.name : wargoal_id} #${wargoal_number}__:`);
+              peace_string.push(`- __${(wargoal_obj.name) ? wargoal_obj.name : wargoal_id} #${wargoal_number}__:`);
               peace_string.push("");
               peace_string.push(`- Plenipotentiary: **${main.users[peace_obj.wargoals[x].owner].name}**`);
 
@@ -1192,7 +1192,7 @@ module.exports = {
               peace_string.push("");
             }
     } else {
-      peace_string.push(`• White Peace`);
+      peace_string.push(`- White Peace`);
     }
 
     //Return statement
@@ -1470,7 +1470,7 @@ module.exports = {
     var options = (arg1_options) ? arg1_options : {};
 
     //Declare local instance variables
-    var prefix = (!options.disable_prefix) ? "• " : "";
+    var prefix = (!options.disable_prefix) ? "- " : "";
     var wargoal_obj = (typeof wargoal_type != "object") ? config.wargoals[wargoal_type] : wargoal_type;
     var wargoal_string = [];
 

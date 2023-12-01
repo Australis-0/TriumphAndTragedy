@@ -1034,8 +1034,31 @@ module.exports = {
     var building_obj = arg0_building_obj;
 
     //Declare local instance variables
+    var split_key = building_obj.id.split("-");
+
+    var province_obj = main.provinces[split_key[0]];
+    var usr = main.users[province_obj.controller];
+
+    var building_consumption = getBuildingConsumption(usr.id, building_obj);
     var config_obj = lookup.all_buildings[building_obj.building_type];
     var current_expenditure = 0;
+
+    var all_building_consumption_keys = Object.keys(building_consumption);
+
+    //See how much money is being spent on input goods
+    for (var i = 0; i < all_building_consumption_keys.length; i++) {
+      var local_value = building_consumption[all_building_consumption_keys[i]];
+
+      if (local_value >= 0) {
+        var local_market_good = main.market[all_building_consumption_keys[i]];
+
+        if (local_market_good) {
+          current_expenditure += local_value*local_market_good.buy_price;
+        } else if (all_building_consumption_keys[i] == "money") {
+          current_expenditure += local_value;
+        }
+      }
+    }
 
     //See how much money are being spent on wages of each pop type
     if (config_obj.flattened_manpower_cost &&
@@ -1119,6 +1142,9 @@ module.exports = {
       }
     }
 
+    console.log(`Subsidised:`, building_obj.subsidised);
+    console.log(`Employment level:`, employment_level);
+
     //Cap open_positions to config_obj.upper_bound_manpower
     if (config_obj.upper_bound_manpower)
       open_positions = Math.min(open_positions, wage_obj.remaining_positions*config.defines.economy.max_hire_percentage);
@@ -1186,8 +1212,8 @@ module.exports = {
 
         //Initialise local_fulfilment
         var local_fulfilment = [
-          Math.min(1 - (local_shortfall[0]/local_maintenance_cost[0]), 1),
-          Math.min(1 - (local_shortfall[1]/local_maintenance_cost[1]), 1)
+          Math.min(1 - (local_shortfall[0]/unzero(local_maintenance_cost[0]), 1), 1),
+          Math.min(1 - (local_shortfall[1]/unzero(local_maintenance_cost[1]), 1), 1)
         ];
 
         input_fulfilments_low.push(local_fulfilment[0]*local_maintenance_cost[0]);
@@ -1198,8 +1224,8 @@ module.exports = {
 
       //Return statement; weighted averages
       return [
-        getSum(input_fulfilments_low)/input_low_sum,
-        getSum(input_fulfilments_high)/input_high_sum
+        getSum(input_fulfilments_low)/unzero(input_low_sum, 1),
+        getSum(input_fulfilments_high)/unzero(input_high_sum, 1)
       ];
     } else {
       //Return statement
@@ -1536,11 +1562,14 @@ module.exports = {
       var local_market_good = main.market[all_good_keys[i]];
       var local_value = goods_obj[all_good_keys[i]];
 
-      if (local_market_good) {
-        current_revenue += local_value*local_market_good.buy_price;
-      } else if (all_good_keys[i] == "actions") {
-        current_revenue += local_value*config.defines.economy.money_per_action;
-      }
+      if (local_value >= 0)
+        if (local_market_good) {
+          current_revenue += local_value*local_market_good.buy_price;
+        } else if (all_good_keys[i] == "actions") {
+          current_revenue += local_value*config.defines.economy.money_per_action;
+        } else if (all_good_keys[i] == "money") {
+          current_revenue += local_value;
+        }
     }
 
     //Return statement
