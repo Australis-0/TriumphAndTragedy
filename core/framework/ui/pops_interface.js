@@ -264,7 +264,6 @@ module.exports = {
           pops_string.push(`**Wealth Pools:** - ${(game_obj.minimise_wealth_pools) ? `**[Expand Wealth Pools]**` : `**[Minimise Wealth Pools]**`}`);
 
           //[WIP] - Special edge case handling for subsistence/RGO pops
-
           if (!game_obj.minimise_wealth_pools) {
             pops_string.push("");
             pops_string.push(`- ${(game_obj.hide_pop_details) ? `**[Show All Details]**` : `**[Hide All Details]**`} | ${(game_obj.hide_employers) ? `**[Show Employers]**` : `**[Hide Employers]**`} | ${(game_obj.hide_needs_categories) ? `**[Show Needs Categories]**` : `**[Hide Needs Categories]**`}`);

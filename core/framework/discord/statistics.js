@@ -97,6 +97,7 @@ module.exports = {
     return sum*width;
   },
 
+  //getLogarithmic() - Fetches a logarithmic number from (min, max) number arguments from a scale 0-100
   getLogarithmic: function (arg0_number, arg1_min, arg2_max, arg3_steepness) {
     //Convert from parameters
     var number = parseInt(arg0_number);
@@ -128,6 +129,7 @@ module.exports = {
     );
   },
 
+  //getLogarithmicScale() - Adjusts an absolute logarithmic number to (min, max)
   getLogarithmicScale: function (arg0_number, arg1_min, arg2_max, arg3_steepness) {
     //Convert from parameters
     var number = parseInt(arg0_number);

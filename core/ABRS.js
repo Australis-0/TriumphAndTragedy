@@ -165,9 +165,15 @@ module.exports = {
     return `${d.getDate()}.${d.getMonth()+1}.${d.getFullYear()} ${hour_prefix}${d.getHours()}.${minute_prefix}${d.getMinutes()}.${second_prefix}${d.getSeconds()}`;
   },
 
+  /*
+    writeSave() - Writes a save to backups/
+    options: {
+      file_limit: 15 - Optional. Gives the maximum numbers of backups to be kept in the backups folder
+    }
+  */
   writeSave: function (arg0_options) {
     //Convert from parameters
-    var options = arg0_options;
+    var options = (arg0_options) ? arg0_options : {};
     var file_limit = (options.file_limit) ? options.file_limit : 0;
 
     //Declare local instance variables
@@ -193,8 +199,25 @@ module.exports = {
 
       //Delete oldest file from backup_array if limit is exceeded
       if (total_backups.length > file_limit) try {
-        log.info(`Deleted ${total_backups[total_backups.length - 1]} as it exceeded the set limit of ${file_limit} simultaneous backups.`);
-        fs.unlinkSync(`./backups/${total_backups[total_backups.length - 1]}`);
+        var backups_deleted = 0;
+        var backups_to_delete = total_backups.length - file_limit;
+
+        //Loop over total_backups in reverse
+        for (var i = total_backups.length - 1; i >= 0; i--)
+          if (backups_deleted < backups_to_delete) {
+            log.info(`Deleted ${total_backups[i]} as it exceeded the set limit of ${file_limit} simultaneous backups.`);
+            fs.unlinkSync(`./backups/${total_backups[i]}`);
+
+            backups_deleted++;
+          } else {
+            //Check file size
+            var local_file_stats = fs.statSync(`./backups/${total_backups[i]}`);
+
+            if (local_file_stats.size == 0) {
+              log.info(`Deleted ${total_backups[i]} as it had nothing in it.`);
+              fs.unlinkSync(`./backups/${total_backups[i]}`);
+            }
+          }
       } catch (e) {
         log.error(`Could not delete excess backup file!`);
         console.log(e);
