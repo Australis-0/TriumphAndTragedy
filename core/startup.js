@@ -74,6 +74,27 @@ module.exports = {
     FileManager.import("./framework/map/map_renderer");
     FileManager.import("./framework/map/province_renderer");
 
+    //Page handler files
+    FileManager.import("./framework/ui/page_handler/alerts");
+    FileManager.import("./framework/ui/page_handler/budget");
+    FileManager.import("./framework/ui/page_handler/buildings_cities");
+    FileManager.import("./framework/ui/page_handler/colonisation");
+    FileManager.import("./framework/ui/page_handler/country_interface");
+    FileManager.import("./framework/ui/page_handler/diplomacy");
+    FileManager.import("./framework/ui/page_handler/economy");
+    FileManager.import("./framework/ui/page_handler/events");
+    FileManager.import("./framework/ui/page_handler/global_commands");
+    FileManager.import("./framework/ui/page_handler/government");
+    FileManager.import("./framework/ui/page_handler/main_menu");
+    FileManager.import("./framework/ui/page_handler/map");
+    FileManager.import("./framework/ui/page_handler/military");
+    FileManager.import("./framework/ui/page_handler/modifiers");
+    FileManager.import("./framework/ui/page_handler/politics");
+    FileManager.import("./framework/ui/page_handler/pops");
+    FileManager.import("./framework/ui/page_handler/province");
+    FileManager.import("./framework/ui/page_handler/technology");
+    FileManager.import("./framework/ui/page_handler/trade");
+
     //UI files
     FileManager.import("./framework/ui/alert_interface");
     FileManager.import("./framework/ui/army_interface");
