@@ -23,7 +23,9 @@ module.exports = {
 
     //Sort backup array in chronological order
     backup_array.sort(function(a, b) {
-    	return fs.statSync("./backups/" + a).mtime.getTime() - fs.statSync("./backups/" + b).mtime.getTime();
+      try {
+        return fs.statSync("./backups/" + a).mtime.getTime() - fs.statSync("./backups/" + b).mtime.getTime();
+      } catch {}
     });
 
     //Reverse backup array to sort by most recent first
