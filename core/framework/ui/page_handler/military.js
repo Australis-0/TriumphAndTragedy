@@ -28,6 +28,8 @@ module.exports = {
           page: current_page,
           user: game_obj.user
         });
+
+        return true;
       }
 
       //[Alphabetical]
@@ -38,12 +40,16 @@ module.exports = {
           page: current_page,
           user: game_obj.user
         });
+
+        return true;
       }
 
       //[Back]
       if (input == "back") {
         printMilitary(user_id);
         game_obj.page = "military";
+
+        return true;
       }
 
       //[Chronological]
@@ -54,10 +60,12 @@ module.exports = {
           page: current_page,
           user: game_obj.user
         });
+
+        return true;
       }
 
       //[Jump To Page]
-      if (input == "jump to page")
+      if (input == "jump to page") {
         visualPrompt(game_obj.alert_embed, user_id, {
           title: `Jump To Page:`,
           prompts: [
@@ -74,6 +82,9 @@ module.exports = {
           });
         });
 
+        return true;
+      }
+
       //[Numerical]
       if (["number", "numeric", "numerical", "sort by number", "sort by numeric", "sort by numerical"].includes(input)) {
         game_obj.armies_sorting_mode = "numerical";
@@ -82,6 +93,8 @@ module.exports = {
           page: current_page,
           user: game_obj.user
         });
+
+        return true;
       }
 
       //[Roman]
@@ -92,6 +105,8 @@ module.exports = {
           page: current_page,
           user: game_obj.user
         });
+
+        return true;
       }
 
       //[Size]
@@ -102,6 +117,8 @@ module.exports = {
           page: current_page,
           user: game_obj.user
         });
+
+        return true;
       }
 
       //[Speed]
@@ -112,6 +129,8 @@ module.exports = {
           page: current_page,
           user: game_obj.user
         });
+
+        return true;
       }
 
       //[Strength]
@@ -122,6 +141,8 @@ module.exports = {
           page: current_page,
           user: game_obj.user
         });
+
+        return true;
       }
 
       //[Type]
@@ -132,89 +153,144 @@ module.exports = {
           page: current_page,
           user: game_obj.user
         });
+
+        return true;
       }
     }
 
     if (game_obj.page == "army_list" || game_obj.page.startsWith("army_viewer_")) {
       //[Air Raid]
-      if (input == "air raid")
+      if (input == "air raid") {
         initialiseAirRaidCommand(user_id);
+
+        return true;
+      }
 
       //[Back]
       if (game_obj.page == "army_list" && input == "back") {
         printMilitary(user_id);
         game_obj.page = "military";
+
+        return true;
       }
 
       //[Blockade]
-      if (input == "blockade")
+      if (input == "blockade") {
         initialiseBlockade(user_id);
 
+        return true;
+      }
+
       //[Challenge Blockade]
-      if (input == "challenge blockade")
+      if (input == "challenge blockade") {
         initialiseChallengeBlockade(user_id);
+
+        return true;
+      }
 
       //[Change Home Port]
       if (!game_obj.page.startsWith("army_viewer_"))
-        if (input == "change home port")
+        if (input == "change home port") {
           initialiseChangeHomePort(user_id);
 
+          return true;
+        }
+
       //[Convoy Raid]
-      if (input == "convoy raid")
+      if (input == "convoy raid") {
         initialiseConvoyRaid(user_id);
 
+        return true;
+      }
+
       //[Delete Army]
-      if (input == "delete army")
+      if (input == "delete army") {
         initialiseDeleteArmy(user_id);
 
+        return true;
+      }
+
       //[Deploy Units]
-      if (input == "deploy units")
+      if (input == "deploy units") {
         initialiseDeployUnits(user_id);
 
+        return true;
+      }
+
       //[Harbour Raid]
-      if (input == "harbour raid")
+      if (input == "harbour raid") {
         initialiseHarbourRaid(user_id);
+
+        return true;
+      }
 
       //[Lift Blockade]
       if (!game_obj.page.startsWith("army_viewer_"))
-        if (input == "lift blockade")
+        if (input == "lift blockade") {
           initialiseLiftBlockade(user_id);
 
+          return true;
+        }
+
       //[Merge Army]
-      if (input == "merge army")
+      if (input == "merge army") {
         initialiseMergeArmy(user_id);
 
+        return true;
+      }
+
       //[Move]
-      if (input == "move")
+      if (input == "move") {
         initialiseMoveArmy(user_id);
 
+        return true;
+      }
+
       //[Relieve Units]
-      if (input == "relieve units")
+      if (input == "relieve units") {
         initialiseRelieveUnits(user_id);
 
+        return true;
+      }
+
       //[Rename Army]
-      if (input == "rename army")
+      if (input == "rename army") {
         initialiseRenameArmy(user_id);
 
+        return true;
+      }
+
       //[Split Army]
-      if (input == "split army")
+      if (input == "split army") {
         initialiseSplitArmy(user_id);
 
+        return true;
+      }
+
       //[Torpedo Fleet]
-      if (input == "torpedo fleet")
+      if (input == "torpedo fleet") {
         initialiseTorpedoFleet(user_id);
 
+        return true;
+      }
+
       //[Transfer Units]
-      if (input == "transfer units")
+      if (input == "transfer units") {
         initialiseTransferUnits(user_id);
+
+        return true;
+      }
     }
 
     if (game_obj.page.startsWith("army_viewer_", "")) {
       var viewed_army = game_obj.page.replace("army_viewer_", "");
 
       //[Air Raid]
-      if (input == "air raid")
+      if (input == "air raid") {
         initialiseAirRaidCommand(user_id, viewed_army);
+
+        return true;
+      }
 
       //[Back]
       if (input == "back") {
@@ -223,19 +299,30 @@ module.exports = {
           user: game_obj.user
         });
         game_obj.page = "army_list";
+
+        return true;
       }
 
       //[Blockade]
-      if (input == "blockade")
+      if (input == "blockade") {
         initialiseBlockade(user_id, viewed_army);
 
+        return true;
+      }
+
       //[Challenge Blockade]
-      if (input == "challenge blockade")
+      if (input == "challenge blockade") {
         initialiseChallengeBlockade(user_id, viewed_army);
 
+        return true;
+      }
+
       //[Change Home Port]
-      if (input == "change home port")
+      if (input == "change home port") {
         initialiseChangeHomePort(user_id, viewed_army);
+
+        return true;
+      }
 
       //[Close] - Closes pathing info
       if (input == "close") {
@@ -245,19 +332,30 @@ module.exports = {
           page: current_page,
           user: game_obj.user
         });
+
+        return true;
       }
 
       //[Convoy Raid]
-      if (input == "convoy raid")
+      if (input == "convoy raid") {
         initialiseConvoyRaid(user_id, viewed_army);
 
+        return true;
+      }
+
       //[Delete Army]
-      if (input == "delete army")
+      if (input == "delete army") {
         deleteArmyCommand(user_id, viewed_army);
 
+        return true;
+      }
+
       //[Deploy Units]
-      if (input == "deploy units")
+      if (input == "deploy units") {
         initialiseDeployUnits(user_id, viewed_army);
+
+        return true;
+      }
 
       //[Expand] - Expands pathing info
       if (input == "expand") {
@@ -267,14 +365,19 @@ module.exports = {
           page: current_page,
           user: game_obj.user
         });
+
+        return true;
       }
 
       //[Harbour Raid]
-      if (input == "harbour raid")
+      if (input == "harbour raid") {
         initialiseHarbourRaid(user_id, viewed_army);
 
+        return true;
+      }
+
       //[Jump To Page]
-      if (input == "jump to page")
+      if (input == "jump to page") {
         visualPrompt(game_obj.alert_embed, user_id, {
           title: `Jump To Page:`,
           prompts: [
@@ -289,55 +392,94 @@ module.exports = {
           });
         });
 
+        return true;
+      }
+
       //[Lift Blockade]
-      if (input == "lift blockade")
+      if (input == "lift blockade") {
         liftBlockade(user_id, viewed_army);
 
+        return true;
+      }
+
       //[Merge Army]
-      if (input == "merge army")
+      if (input == "merge army") {
         initialiseMergeArmy(user_id, viewed_army);
 
+        return true;
+      }
+
       //[Move]
-      if (input == "move")
+      if (input == "move") {
         initialiseMoveArmy(user_id, viewed_army);
 
+        return true;
+      }
+
       //[Recall Volunteers]
-      if (input == "recall volunteers")
+      if (input == "recall volunteers") {
         initialiseRecallVolunteers(user_id, undefined, viewed_army);
 
+        return true;
+      }
+
       //[Relieve Units]
-      if (input == "relieve units")
+      if (input == "relieve units") {
         initialiseRelieveUnits(user_id, viewed_army);
 
+        return true;
+      }
+
       //[Rename Army]
-      if (input == "rename army")
+      if (input == "rename army") {
         initialiseRenameArmy(user_id, viewed_army);
 
+        return true;
+      }
+
       //[Reorder Units]
-      if (input == "reorder units")
+      if (input == "reorder units") {
         initialiseReorderUnits(user_id, viewed_army);
 
+        return true;
+      }
+
       //[Send Volunteers]
-      if (input == "send as volunteers")
+      if (input == "send as volunteers") {
         initialiseSendVolunteerArmies(user_id, undefined, viewed_army);
 
+        return true;
+      }
+
       //[Split Army]
-      if (input == "split army")
+      if (input == "split army") {
         initialiseSplitArmy(user_id, viewed_army);
 
+        return true;
+      }
+
       //[Torpedo Fleet]
-      if (input == "torpedo fleet")
+      if (input == "torpedo fleet") {
         initialiseTorpedoFleet(user_id, viewed_army);
 
+        return true;
+      }
+
       //[Transfer Units]
-      if (input == "transfer units")
+      if (input == "transfer units") {
         initialiseTransferUnits(user_id, viewed_army);
+
+        return true;
+      }
     }
 
     if (military_pages.includes(game_obj.page)) {
       //[Attrition Avoidance]
-      if (input == "attrition avoidance")
+      if (input == "attrition avoidance") {
         initialiseAttritionAvoidance(user_id);
+
+        return true;
+      }
 
       //[Army List]
       if (game_obj.page != "army_list")
@@ -347,124 +489,213 @@ module.exports = {
             user: game_obj.user
           });
           game_obj.page = "army_list";
+
+          return true;
         }
 
       //[Carpet Siege]
-      if (input == "carpet siege")
+      if (input == "carpet siege") {
         initialiseCarpetSiege(user_id);
 
+        return true;
+      }
+
       //[Create Armies]
-      if (input == "create armies")
+      if (input == "create armies") {
         initialiseCreateArmies(user_id);
 
+        return true;
+      }
+
       //[Create Army]
-      if (input == "create army")
+      if (input == "create army") {
         initialiseCreateArmy(user_id);
 
+        return true;
+      }
+
       //[Delete All Armies]
-      if (input == "delete all armies")
+      if (input == "delete all armies") {
         deleteAllArmies(user_id);
 
+        return true;
+      }
+
       //[Delete Armies]
-      if (input == "delete armies")
+      if (input == "delete armies") {
         initialiseDeleteArmies(user_id);
 
+        return true;
+      }
+
       //[Delete Army]
-      if (input == "delete army")
+      if (input == "delete army") {
         initialiseDeleteArmy(user_id);
 
+        return true;
+      }
+
       //[Deploy Units]
-      if (input == "deploy units")
+      if (input == "deploy units") {
         initialiseDeployUnits(user_id);
 
+        return true;
+      }
+
       //[Garrison Cities]
-      if (input == "garrison cities")
+      if (input == "garrison cities") {
         initialiseGarrisonCities(user_id);
 
+        return true;
+      }
+
       //[Garrison Provinces]
-      if (input == "garrison provinces")
+      if (input == "garrison provinces") {
         initialiseGarrisonProvinces(user_id);
 
+        return true;
+      }
+
       //[Ignore Orders When Carpet Sieging]
-      if (input == "ignore orders when carpet sieging")
+      if (input == "ignore orders when carpet sieging") {
         initialiseIgnoreOrdersWhenCarpetSieging(user_id);
 
+        return true;
+      }
+
       //[Mass Deploy]
-      if (input == "mass deploy")
+      if (input == "mass deploy") {
         initialiseMassDeploy(user_id);
 
+        return true;
+      }
+
       //[Mass Relieve]
-      if (input == "mass relieve")
+      if (input == "mass relieve") {
         initialiseMassRelieve(user_id);
 
+        return true;
+      }
+
       //[Mass Reorder]
-      if (input == "mass reorder")
+      if (input == "mass reorder") {
         initialiseMassReorder(user_id);
 
+        return true;
+      }
+
       //[Merge Armies]
-      if (input == "merge armies")
+      if (input == "merge armies") {
         initialiseMergeArmies(user_id);
 
+        return true;
+      }
+
       //[Merge Army]
-      if (input == "merge army")
+      if (input == "merge army") {
         initialiseMergeArmy(user_id);
 
+        return true;
+      }
+
       //[Move All]
-      if (input == "move army")
+      if (input == "move army") {
         initialiseMoveArmy(user_id);
 
+        return true;
+      }
+
       //[Move Armies]
-      if (input == "move armies")
+      if (input == "move armies") {
         initialiseMoveArmies(user_id);
+
+        return true;
+      }
 
       //[Recall Volunteers]
       if (!game_obj.page.startsWith("army_viewer_"))
-        if (input == "recall volunteers")
+        if (input == "recall volunteers") {
           initialiseRecallVolunteers(user_id);
 
+          return true;
+        }
+
       //[Relieve Units]
-      if (input == "relieve units")
+      if (input == "relieve units") {
         initialiseRelieveUnits(user_id);
 
+        return true;
+      }
+
       //[Rename Armies]
-      if (input == "rename armies")
+      if (input == "rename armies") {
         initialiseRenameArmies(user_id);
 
+        return true;
+      }
+
       //[Rename Army]
-      if (input == "rename army")
+      if (input == "rename army") {
         initialiseRenameArmy(user_id);
 
+        return true;
+      }
+
       //[Reorder Units]
-      if (input == "reorder_units")
+      if (input == "reorder_units") {
         initialiseReorderUnits(user_id);
 
+        return true;
+      }
+
       //[Repatriate Volunteers]
-      if (input == "repatriate volunteers")
+      if (input == "repatriate volunteers") {
         initialiseRepatriateVolunteers(user_id);
 
+        return true;
+      }
+
       //[Send Volunteer Armies]
-      if (input == "send volunteer armies")
+      if (input == "send volunteer armies") {
         initialiseSendVolunteerArmies(user_id);
 
+        return true;
+      }
+
       //[Send Volunteers]
-      if (input == "send volunteers")
+      if (input == "send volunteers") {
         initialiseSendVolunteers(user_id);
 
+        return true;
+      }
+
       //[Split Army]
-      if (input == "split army")
+      if (input == "split army") {
         initialiseSplitArmy(user_id);
 
+        return true;
+      }
+
       //[Split Armies]
-      if (input == "split armies")
+      if (input == "split armies") {
         initialiseSplitArmies(user_id);
 
+        return true;
+      }
+
       //[Territorial Violation]
-      if (input == "territorial violation")
+      if (input == "territorial violation") {
         initialiseAvoidTerritorialViolation(user_id);
 
+        return true;
+      }
+
       //[Transfer Units]
-      if (input == "transfer units")
+      if (input == "transfer units") {
         initialiseTransferUnits(user_id);
+
+        return true;
+      }
 
       //[Unit Ledger]
       if (input == "unit ledger") {
@@ -474,6 +705,8 @@ module.exports = {
         });
 
         game_obj.page = "unit_ledger";
+
+        return true;
       }
 
       //[Unit List]
@@ -484,11 +717,16 @@ module.exports = {
         });
 
         game_obj.page = "unit_list";
+
+        return true;
       }
 
       //[View Army]
-      if (input == "view army")
+      if (input == "view army") {
         initialisePrintArmy(user_id);
+
+        return true;
+      }
 
       //[View (Army Name)]
       if (input.startsWith("view ") && !["view armies", "view army", "view reserves"].includes(input)) {
@@ -503,6 +741,8 @@ module.exports = {
           });
 
           game_obj.page = `army_viewer_${army_obj.name}`;
+
+          return true;
         }
       }
 
@@ -514,17 +754,25 @@ module.exports = {
         });
 
         game_obj.page = "reserves";
+
+        return true;
       }
     }
 
     if (game_obj.page == "military") {
       //[Demobilise]
-      if (input == "demobilise")
+      if (input == "demobilise") {
         demobilise(user_id);
 
+        return true;
+      }
+
       //[Mobilise]
-      if (input == "mobilise")
+      if (input == "mobilise") {
         mobilise(user_id);
+
+        return true;
+      }
     }
 
     if (game_obj.page == "unit_ledger") {
@@ -533,10 +781,12 @@ module.exports = {
       if (input == "back") {
         printMilitary(user_id);
         game_obj.page = "military";
+
+        return true;
       }
 
       //[Jump To Page]
-      if (input == "jump to page")
+      if (input == "jump to page") {
         visualPrompt(game_obj.alert_embed, user_id, {
           title: `Jump To Page:`,
           prompts: [
@@ -550,6 +800,9 @@ module.exports = {
             user: game_obj.user
           });
         });
+
+        return true;
+      }
     }
 
     if (game_obj.page == "unit_list") {
@@ -558,10 +811,12 @@ module.exports = {
       if (input == "back") {
         printMilitary(user_id);
         game_obj.page = "military";
+
+        return true;
       }
 
       //[Jump To Page]
-      if (input == "jump to page")
+      if (input == "jump to page") {
         visualPrompt(game_obj.alert_embed, user_id, {
           title: `Jump To Page:`,
           prompts: [
@@ -575,6 +830,9 @@ module.exports = {
             user: game_obj.user
           });
         });
+
+        return true;
+      }
     }
   }
 };

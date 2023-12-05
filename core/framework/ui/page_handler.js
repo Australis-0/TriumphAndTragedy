@@ -29,55 +29,72 @@ module.exports = {
       main.season_started
     ) {
       //Alerts page handler
-      pageHandlerAlerts(user_id, input);
+      var alerts = pageHandlerAlerts(user_id, input);
+      if (alerts) return alerts;
 
       //Budget handler
-      pageHandlerBudget(user_id, input);
+      var budget = pageHandlerBudget(user_id, input);
+      if (budget) return budget;
 
       //Buildings/Cities page handler
-      pageHandlerBuildingsCities(user_id, input);
+      var buildings_cities = pageHandlerBuildingsCities(user_id, input);
+      if (buildings_cities) return buildings_cities;
 
       //Colonisation interface page handler
-      pageHandlerColonisation(user_id, input);
+      var colonisation = pageHandlerColonisation(user_id, input);
+      if (colonisation) return colonisation;
 
       //Country interface page handler
-      pageHandlerCountryInterface(user_id, input);
+      var country_interface = pageHandlerCountryInterface(user_id, input);
+      if (country_interface) return country_interface;
 
       //Diplomacy page handler
-      pageHandlerDiplomacy(user_id, input);
+      var diplomacy = pageHandlerDiplomacy(user_id, input);
+      if (diplomacy) return diplomacy;
 
       //Economy page handler
-      pageHandlerEconomy(user_id, input);
+      var economy = pageHandlerEconomy(user_id, input);
+      if (economy) return economy;
 
       //Events page handler
-      pageHandlerEvents(user_id, input);
+      var events = pageHandlerEvents(user_id, input);
+      if (events) return events;
 
       //Government page handler
-      pageHandlerGovernment(user_id, input);
+      var government = pageHandlerGovernment(user_id, input);
+      if (government) return government;
 
       //Map page handler
-      pageHandlerMap(user_id, input);
+      var map = pageHandlerMap(user_id, input);
+      if (map) return map;
 
       //Military page handler
-      pageHandlerMilitary(user_id, input);
+      var military = pageHandlerMilitary(user_id, input);
+      if (military) return military;
 
       //Modifiers page handler
-      pageHandlerModifiers(user_id, input);
+      var modifiers = pageHandlerModifiers(user_id, input);
+      if (modifiers) return modifiers;
 
       //Politics page handler
-      pageHandlerPolitics(user_id, input);
+      var politics = pageHandlerPolitics(user_id, input);
+      if (politics) return politics;
 
       //Pops page handler
-      pageHandlerPops(user_id, input);
+      var pops = pageHandlerPops(user_id, input);
+      if (pops) return pops;
 
       //Province page handlers
-      pageHandlerPops(user_id, input);
+      var province = pageHandlerProvince(user_id, input);
+      if (province) return province;
 
       //Technology page handler
-      pageHandlerTechnology(user_id, input);
+      var technology = pageHandlerTechnology(user_id, input);
+      if (technology) return technology;
 
       //Trade page handler
-      pageHandlerTrade(user_id, input);
+      var trade = pageHandlerTrade(user_id, input);
+      if (trade) return trade;
     }
   }
 };

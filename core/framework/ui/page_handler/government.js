@@ -20,28 +20,31 @@ module.exports = {
 
     //Government page handler
     if (game_obj.page == "view_governments") {
-      switch (input) {
-        case "back":
-          printStats(user_id);
-          game_obj.page = "country_interface";
+      //[Back]
+      if (input == "back") {
+        printStats(user_id);
+        game_obj.page = "country_interface";
 
-          break;
-        case "jump to page":
-          visualPrompt(game_obj.alert_embed, user_id, {
-            title: `Jump To Page:`,
-            prompts: [
-              [`Which page would you like jump to?`, "number", { min: 1, max: printGovernmentList(game_obj.user).length }]
-            ]
-          },
-          function (arg) {
-            createPageMenu(game_obj.middle_embed, {
-              embed_pages: printGovernmentList(game_obj.user),
-              page: arg[0] - 1,
-              user: game_obj.user
-            })
-          });
+        return true;
+      }
 
-          break;
+      //[Jump To Page]
+      if (input == "jump to page") {
+        visualPrompt(game_obj.alert_embed, user_id, {
+          title: `Jump To Page:`,
+          prompts: [
+            [`Which page would you like jump to?`, "number", { min: 1, max: printGovernmentList(game_obj.user).length }]
+          ]
+        },
+        function (arg) {
+          createPageMenu(game_obj.middle_embed, {
+            embed_pages: printGovernmentList(game_obj.user),
+            page: arg[0] - 1,
+            user: game_obj.user
+          })
+        });
+
+        return true;
       }
     }
   }

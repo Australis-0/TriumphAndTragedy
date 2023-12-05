@@ -26,6 +26,8 @@ module.exports = {
       if (input == "back") {
         printTechnology(user_id);
         game_obj.page = "technology";
+
+        return true;
       }
 
       //[Cancel Research]
@@ -33,8 +35,12 @@ module.exports = {
         var slot_to_cancel = parseInt(input.replace("cancel research ", ""));
 
         cancelResearch(user_id, slot_to_cancel);
+
+        return true;
       } else if (input == "cancel research") {
         initialiseCancelResearch(user_id);
+
+        return true;
       }
 
       //[View Research Queue]
@@ -45,6 +51,8 @@ module.exports = {
           user: game_obj.user
         });
         game_obj.page = "research_queue";
+
+        return true;
       }
     }
 
@@ -53,10 +61,12 @@ module.exports = {
       if (input == "back") {
         printTechnology(user_id);
         game_obj.page = "technology";
+
+        return true;
       }
 
       //[Jump To Page]
-      if (input == "jump to page")
+      if (input == "jump to page") {
         visualPrompt(game_obj.alert_embed, user_id, {
           title: `Jump To Page:`,
           prompts: [
@@ -70,6 +80,9 @@ module.exports = {
             user: game_obj.user
           });
         });
+
+        return true;
+      }
     }
 
     if (game_obj.page == "research_queue") {
@@ -83,20 +96,28 @@ module.exports = {
           .replace("add ", "");
 
         addResearchQueue(user_id, tech_to_add);
+
+        return true;
       } else if (input == "add technology") {
         initialiseAddResearchQueue(user_id);
+
+        return true;
       }
 
       //[Back]
       if (input == "back") {
         printTechnology(user_id);
         game_obj.page = "technology";
+
+        return true;
       }
 
       //[Current Research]
       if (input == "current research") {
         printResearch(user_id);
         game_obj.page = "research";
+
+        return true;
       }
 
       //[Remove Technology]
@@ -108,8 +129,12 @@ module.exports = {
           .replace("remove ", "");
 
         removeResearchQueue(user_id, tech_to_add);
+
+        return true;
       } else if (input == "remove technology") {
         initialiseRemoveResearchQueue(user_id);
+
+        return true;
       }
     }
 
@@ -119,14 +144,20 @@ module.exports = {
         var slot_to_cancel = parseInt(input.replace("cancel research ", ""));
 
         cancelResearch(user_id, slot_to_cancel);
+
+        return true;
       } else if (input == "cancel research") {
         initialiseCancelResearch(user_id);
+
+        return true;
       }
 
       //[Current Research]
       if (input == "current research") {
         printResearch(user_id);
         game_obj.page = "research";
+
+        return true;
       }
 
       //[Research List]; [Research Possibilities]
@@ -136,11 +167,15 @@ module.exports = {
           user: game_obj.user
         });
         game_obj.page = "research_list";
+
+        return true;
       }
 
       //[Research]
       if (input == "research") {
         initialiseResearch(user_id);
+
+        return true;
       }
 
       //[Research (Tech)]
@@ -148,6 +183,8 @@ module.exports = {
         var tech_to_research = input.replace("research ", "");
 
         research(user_id, tech_to_research);
+
+        return true;
       }
 
       //[View Research Queue]
@@ -158,6 +195,8 @@ module.exports = {
           user: game_obj.user
         });
         game_obj.page = "research_queue";
+
+        return true;
       }
     }
   }

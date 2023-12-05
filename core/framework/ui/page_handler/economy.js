@@ -24,79 +24,92 @@ module.exports = {
       if (input == "hide available pops") {
         game_obj.hide_building_pops = true;
         printEconomy(user_id);
+
+        return true;
       }
 
       //[Show Available Pops]
       if (input == "show available pops") {
         delete game_obj.hide_building_pops;
         printEconomy(user_id);
+
+        return true;
       }
     }
 
     if (economy_pages.includes(game_obj.page)) {
-      switch (input) {
-        case "build":
-          visualPrompt(game_obj.alert_embed, user_id, {
-            title: `Building Construction Menu:`,
-            prompts: [
-              [`What type of building would you like to build in your city?\n\nType **[Build List]** for a list of valid buildings.`, "string"],
-              [`How many buildings of this type would you like to begin building?`, "number", { min: 0 }],
-              [`Which city would you like to build these new buildings in?\n\nType **[View Cities]** for a list of valid cities.`, "string"]
-            ]
-          },
-          function (arg) {
-            build(user_id, arg[2], arg[1], arg[0]);
-          },
-          function (arg) {
-            switch (arg) {
-              case "build list":
-                createPageMenu(game_obj.middle_embed, {
-                  embed_pages: printBuildList(user_id),
-                  user: game_obj.user
-                });
-                return true;
+      //[Build]
+      if (input == "build") {
+        visualPrompt(game_obj.alert_embed, user_id, {
+          title: `Building Construction Menu:`,
+          prompts: [
+            [`What type of building would you like to build in your city?\n\nType **[Build List]** for a list of valid buildings.`, "string"],
+            [`How many buildings of this type would you like to begin building?`, "number", { min: 0 }],
+            [`Which city would you like to build these new buildings in?\n\nType **[View Cities]** for a list of valid cities.`, "string"]
+          ]
+        },
+        function (arg) {
+          build(user_id, arg[2], arg[1], arg[0]);
+        },
+        function (arg) {
+          switch (arg) {
+            case "build list":
+              createPageMenu(game_obj.middle_embed, {
+                embed_pages: printBuildList(user_id),
+                user: game_obj.user
+              });
+              return true;
 
-                break;
-              case "view cities":
-                createPageMenu(game_obj.middle_embed, {
-                  embed_pages: printProvinces(game_obj.user),
-                  user: game_obj.user
-                });
-                return true;
+              break;
+            case "view cities":
+              createPageMenu(game_obj.middle_embed, {
+                embed_pages: printProvinces(game_obj.user),
+                user: game_obj.user
+              });
+              return true;
 
-                break;
-            }
-          })
+              break;
+          }
+        });
+      }
 
-          break;
-        case "building list":
-        case "build list":
-          createPageMenu(game_obj.middle_embed, {
-            embed_pages: printBuildList(user_id),
-            user: game_obj.user
-          });
+      //[Build List]/[Building List]
+      if (["build list", "building list"].includes(input)) {
+        createPageMenu(game_obj.middle_embed, {
+          embed_pages: printBuildList(user_id),
+          user: game_obj.user
+        });
 
-          break;
-        case "constructions":
-          createPageMenu(game_obj.middle_embed, {
-            embed_pages: printConstructions(user_id),
-            user: game_obj.user
-          });
-          game_obj.page = "view_constructions";
+        return true;
+      }
 
-          break;
-        case "found city":
-          //Make sure that user is actually able to found a city before authorising the command, otherwise print an error
-          (usr.city_cap-usr.city_count > 0) ?
-            initialiseFoundCity(user_id) :
-            printError(game_obj.id, `You don't have enough city slots remaining to found a new city!`);
+      //[Constructions]
+      if (input == "constructions") {
+        createPageMenu(game_obj.middle_embed, {
+          embed_pages: printConstructions(user_id),
+          user: game_obj.user
+        });
+        game_obj.page = "view_constructions";
 
-          break;
-        case "industry":
-          printIndustry(user_id);
-          game_obj.page = "view_industry";
+        return true;
+      }
 
-          break;
+      //[Found City]
+      if (input == "found city") {
+        //Make sure that user is actually able to found a city before authorising the command, otherwise print an error
+        (usr.city_cap-usr.city_count > 0) ?
+          initialiseFoundCity(user_id) :
+          printError(game_obj.id, `You don't have enough city slots remaining to found a new city!`);
+
+        return true;
+      }
+
+      //[Industry]
+      if (input == "industry") {
+        printIndustry(user_id);
+        game_obj.page = "view_industry";
+
+        return true;
       }
     }
 
@@ -107,11 +120,16 @@ module.exports = {
       if (input == "back") {
         printEconomy(user_id);
         game_obj.page = "economy";
+
+        return true;
       }
 
       //[Clear]
-      if (["clear", "clear search"].includes(input))
+      if (["clear", "clear search"].includes(input)) {
         printInventory(user_id, current_page);
+
+        return true;
+      }
 
       //[(Good Name)] - Tooltip
       goodTooltip(user_id, input);
@@ -120,10 +138,12 @@ module.exports = {
       if (["hide goods", "hide all goods"].includes(input)) {
         delete game_obj.inventory_show_all_goods;
         printInventory(user_id, current_page);
+
+        return true;
       }
 
       //[Jump To Page]
-      if (input == "jump to page")
+      if (input == "jump to page") {
         visualPrompt(game_obj.alert_embed, user_id, {
           title: `Jump To Page:`,
           prompts: [
@@ -134,8 +154,11 @@ module.exports = {
           printInventory(user_id, arg[0] - 1);
         });
 
+        return true;
+      }
+
       //[Search]
-      if (input == "search")
+      if (input == "search") {
         visualPrompt(game_obj.alert_embed, user_id, {
           title: `Search Inventory:`,
           prompts: [
@@ -146,36 +169,44 @@ module.exports = {
           printInventory(user_id, undefined, { search_query: arg[0] });
         });
 
+        return true;
+      }
+
       //[Show All Goods]
       if (input == "show all goods") {
         game_obj.inventory_show_all_goods = true;
         printInventory(user_id, current_page);
+
+        return true;
       }
     }
 
     if (game_obj.page == "view_constructions") {
-      switch (input) {
-        case "back":
-          game_obj.page = "economy";
-          printEconomy(user_id);
+      //[Back]
+      if (input == "back") {
+        game_obj.page = "economy";
+        printEconomy(user_id);
 
-          break;
-        case "jump to page":
-          visualPrompt(game_obj.alert_embed, user_id, {
-            title: `Jump To Page:`,
-            prompts: [
-              [`Which page would you like to jump to?`, "number", { min: 1, max: printConstructions(game_obj.user).length }]
-            ]
-          },
-          function (arg) {
-            createPageMenu(game_obj.middle_embed, {
-              embed_pages: printConstructions(game_obj.user),
-              page: arg[0] - 1,
-              user: game_obj.user
-            });
+        return true;
+      }
+
+      //[Jump To Page]
+      if (input == "jump to page") {
+        visualPrompt(game_obj.alert_embed, user_id, {
+          title: `Jump To Page:`,
+          prompts: [
+            [`Which page would you like to jump to?`, "number", { min: 1, max: printConstructions(game_obj.user).length }]
+          ]
+        },
+        function (arg) {
+          createPageMenu(game_obj.middle_embed, {
+            embed_pages: printConstructions(game_obj.user),
+            page: arg[0] - 1,
+            user: game_obj.user
           });
+        });
 
-          break;
+        return true;
       }
     }
 
@@ -184,6 +215,8 @@ module.exports = {
       if (input == "alphabetical") {
         game_obj.building_sort = "alphabetical";
         printIndustry(user_id, current_page);
+
+        return true;
       }
 
       //[Back]
@@ -191,40 +224,55 @@ module.exports = {
         game_obj.page = "economy";
         printEconomy(user_id);
         initialiseTopbar(user_id);
+
+        return true;
       }
 
       //[Cash Reserves]
       if (input == "cash reserves") {
         game_obj.building_sort = "cash_reserves";
         printIndustry(user_id, current_page);
+
+        return true;
       }
 
       //[Category]
       if (input == "category") {
         game_obj.building_sort = "category";
         printIndustry(user_id, current_page);
+
+        return true;
       }
 
       //[Chronology]
       if (input == "chronology") {
         game_obj.building_sort = "chronology";
         printIndustry(user_id, current_page);
+
+        return true;
       }
 
       //[Disable All Subsidies]
-      if (input == "disable all subsidies")
+      if (input == "disable all subsidies") {
         subsidiseAllBuildings(user_id, { desubsidise: true });
+
+        return true;
+      }
 
       //[Employment]
       if (input == "employment") {
         game_obj.building_sort = "employment";
         printIndustry(user_id, current_page);
+
+        return true;
       }
 
       //[Numeric]
       if (input == "numeric") {
         game_obj.building_sort = "numeric";
         printIndustry(user_id, current_page);
+
+        return true;
       }
 
       //[Jump To Page]
@@ -238,30 +286,48 @@ module.exports = {
         function (arg) {
           printIndustry(user_id, arg[0]);
         });
+
+        return true;
       }
 
       //[Mass Change Production Choice]
-      if (input == "mass change production choice")
+      if (input == "mass change production choice") {
         initialiseMassChangeProductionChoice(user_id);
 
+        return true;
+      }
+
       //[Rename Building]
-      if (input == "rename building")
+      if (input == "rename building") {
         initialiseRenameBuilding(user_id);
 
+        return true;
+      }
+
       //[Reopen]
-      if (input == "reopen")
+      if (input == "reopen") {
         initialiseReopenBuilding(user_id);
 
+        return true;
+      }
+
       //[Subsidise All Buildings]
-      if (["subsidise all buildings", "subsidize all buildings"].includes(input))
+      if (["subsidise all buildings", "subsidize all buildings"].includes(input)) {
         subsidiseAllBuildings(user_id);
+
+        return true;
+      }
 
       //[View Building]; [View (Building Name)]
       if (input == "view building") {
         initialiseViewBuilding(user_id);
+
+        return true;
       } else if (input.startsWith("view ")) {
         var building_name = input.replace("view ", "");
         var building_view = viewBuilding(user_id, building_name); //This automatically sets game_obj.page
+
+        return true;
       }
     }
 
@@ -270,10 +336,12 @@ module.exports = {
       if (input == "back") {
         game_obj.page = "economy";
         printEconomy(user_id);
+
+        return true;
       }
 
       //[Jump To Page]
-      if (input == "jump to page")
+      if (input == "jump to page") {
         visualPrompt(game_obj.alert_embed, user_id, {
           title: `Jump To Page:`,
           prompts: [
@@ -287,6 +355,9 @@ module.exports = {
             user: game_obj.user
           })
         });
+
+        return true;
+      }
     }
   }
 };

@@ -22,7 +22,7 @@ module.exports = {
     if (!["edit_peace_offer"].includes(game_obj.page)) {
       //[Build]
       if (!game_obj.page.startsWith("view_city")) {
-        if (input == "build")
+        if (input == "build") {
           visualPrompt(game_obj.alert_embed, user_id, {
             title: `Construct Buildings:`,
             prompts: [
@@ -60,6 +60,9 @@ module.exports = {
                 break;
             }
           });
+
+          return true;
+        }
       }
 
       //[Building List]
@@ -69,31 +72,46 @@ module.exports = {
           user: game_obj.user
         });
         game_obj.page = "building_list";
+
+        return true;
       }
 
       //[Craft]
-      if (["craft", "recruit", "train", "train units"].includes(input))
+      if (["craft", "recruit", "train", "train units"].includes(input)) {
         initialiseCraft(user_id);
 
+        return true;
+      }
+
       //[Demolish]
-      if (input == "demolish")
+      if (input == "demolish") {
         initialiseDemolish(user_id);
+
+        return true;
+      }
 
       //[Inventory]
       if (["inv", "inventory"].includes(input)) {
         game_obj.page = "inventory";
         printInventory(user_id);
+
+        return true;
       }
 
       //[Production]
       if (["production", "resource production"].includes(input)) {
         game_obj.page = "view_production";
         printProduction(user_id);
+
+        return true;
       }
 
       //[Settle]
-      if (input == "settle")
+      if (input == "settle") {
         initialiseSettle(user_id);
+
+        return true;
+      }
 
       //[Settle (Provinces)]
       if (input.startsWith("settle ")) {
@@ -104,11 +122,16 @@ module.exports = {
 
         //Settle provinces
         settle(user_id, provinces);
+
+        return true;
       }
 
       //[Set Tax]
-      if (input == "set tax")
+      if (input == "set tax") {
         initialiseSetTax(user_id);
+
+        return true;
+      }
 
       //[Unit List]
       if (input == "unit list") {
@@ -117,6 +140,8 @@ module.exports = {
           user: game_obj.user
         });
         game_obj.page = "unit_list";
+
+        return true;
       }
 
       //Topbar commands
@@ -132,6 +157,8 @@ module.exports = {
               clearGame(game_obj.id);
             })
           });
+
+          return true;
         }
 
         //[Budget]
@@ -140,6 +167,8 @@ module.exports = {
             game_obj.page = "budget";
             printBudget(user_id);
             initialiseTopbar(user_id);
+
+            return true;
           }
 
         //[Colonisation]
@@ -148,6 +177,8 @@ module.exports = {
             game_obj.page = "colonisation";
             printColonisation(user_id);
             initialiseTopbar(user_id);
+
+            return true;
           }
 
         //[Country/Stats/Statistics]
@@ -156,6 +187,8 @@ module.exports = {
             game_obj.page = "country_interface";
             printStats(user_id);
             initialiseTopbar(user_id);
+
+            return true;
           }
 
         //[Diplomacy]
@@ -164,6 +197,8 @@ module.exports = {
             game_obj.page = "diplomacy";
             printDiplomacy(user_id);
             initialiseTopbar(user_id);
+
+            return true;
           }
 
         //[Econ/Economy]
@@ -172,6 +207,8 @@ module.exports = {
             game_obj.page = "economy";
             printEconomy(user_id);
             initialiseTopbar(user_id);
+
+            return true;
           }
 
         //[Map]
@@ -180,6 +217,8 @@ module.exports = {
             game_obj.page = "map";
             initialiseMapViewer(getGame(user_id));
             initialiseTopbar(user_id);
+
+            return true;
           }
 
         //[Military]
@@ -188,6 +227,8 @@ module.exports = {
             game_obj.page = "military";
             printMilitary(user_id);
             initialiseTopbar(user_id);
+
+            return true;
           }
 
         //[Politics]
@@ -196,6 +237,8 @@ module.exports = {
             game_obj.page = "politics";
             printPolitics(user_id);
             initialiseTopbar(user_id);
+
+            return true;
           }
 
         //[Population]
@@ -204,6 +247,8 @@ module.exports = {
             game_obj.page = "population";
             printPops(user_id);
             initialiseTopbar(user_id);
+
+            return true;
           }
 
         //[Technology]
@@ -212,6 +257,8 @@ module.exports = {
             game_obj.page = "technology";
             printTechnology(user_id);
             initialiseTopbar(user_id);
+
+            return true;
           }
 
         //[Trade]
@@ -220,6 +267,8 @@ module.exports = {
             game_obj.page = "trade";
             printTrade(user_id);
             initialiseTopbar(user_id);
+
+            return true;
           }
 
       }
@@ -232,6 +281,8 @@ module.exports = {
           case "archived war":
             initialisePrintArchivedWar(user_id);
 
+            return true;
+
             break;
           case "armies":
             createPageMenu(game_obj.middle_embed, {
@@ -239,6 +290,8 @@ module.exports = {
               user: game_obj.user
             });
             game_obj.page = "army_list";
+
+            return true;
 
             break;
           case "building list":
@@ -249,6 +302,8 @@ module.exports = {
                 user: game_obj.user
               });
               game_obj.page = "building_list";
+
+              return true;
             }
 
             break;
@@ -262,6 +317,8 @@ module.exports = {
                 user: game_obj.user
               });
               game_obj.page = "cb_list";
+
+              return true;
             }
 
             break;
@@ -272,6 +329,8 @@ module.exports = {
             });
             game_obj.page = "cities_list";
 
+            return true;
+
             break;
           case "constructions":
             createPageMenu(game_obj.middle_embed, {
@@ -279,6 +338,8 @@ module.exports = {
               user: game_obj.user
             });
             game_obj.page = "view_constructions";
+
+            return true;
 
             break;
           case "client states":
@@ -289,6 +350,8 @@ module.exports = {
             });
             game_obj.page = "client_state_proposals";
 
+            return true;
+
             break;
           case "culture":
           case "cultures":
@@ -297,6 +360,8 @@ module.exports = {
               user: game_obj.user
             });
             game_obj.page = "culture";
+
+            return true;
 
             break;
           case "government":
@@ -307,20 +372,28 @@ module.exports = {
             });
             game_obj.page = "view_governments";
 
+            return true;
+
             break;
           case "industry":
             printIndustry(user_id);
             game_obj.page = "view_industry";
+
+            return true;
 
             break;
           case "ledger":
             printLedger(user_id);
             game_obj.page = "ledger";
 
+            return true;
+
             break;
           case "national modifiers":
             printNationalModifiers(user_id);
             game_obj.page = "national_modifiers";
+
+            return true;
 
             break;
           case "modifiers":
@@ -330,6 +403,8 @@ module.exports = {
             });
             game_obj.page = "modifiers_list";
 
+            return true;
+
             break;
           case "population":
             game_obj.page = "provinces_list";
@@ -338,10 +413,15 @@ module.exports = {
               user: game_obj.user
             });
 
+            return true;
+
             break;
           case "province":
-            if (game_obj.page != "map")
+            if (game_obj.page != "map") {
               initialiseViewProvince(user_id);
+
+              return true;
+            }
 
             break;
           case "provinces":
@@ -351,9 +431,13 @@ module.exports = {
             });
             game_obj.page = "provinces_list";
 
+            return true;
+
             break;
           case "relations":
             initialiseViewDiplomacy(user_id);
+
+            return true;
 
             break;
           case "temporary modifiers":
@@ -362,6 +446,8 @@ module.exports = {
               user: game_obj.user
             });
             game_obj.page = "temporary_modifiers_list";
+
+            return true;
 
             break;
           case "unit list":
@@ -372,9 +458,13 @@ module.exports = {
             });
             game_obj.page = "unit_list";
 
+            return true;
+
             break;
           case "war":
             initialisePrintWar(user_id);
+
+            return true;
 
             break;
           case "conflicts":
@@ -385,6 +475,8 @@ module.exports = {
             });
             game_obj.page = "war_list";
 
+            return true;
+
             break;
           case "world market":
             createPageMenu(game_obj.middle_embed, {
@@ -392,6 +484,8 @@ module.exports = {
               user: game_obj.user
             });
             game_obj.page = "world_market";
+
+            return true;
 
             break;
           default:
@@ -410,6 +504,8 @@ module.exports = {
                   embed_pages: printProvince(game_obj.user, province_name),
                   user: game_obj.user
                 });
+
+                return true;
               } else {
                 var army_name_exact_match = false;
                 var city_name_exact_match = false;
@@ -431,6 +527,8 @@ module.exports = {
 
                     if (game_obj.page != "map")
                       game_obj.page = `view_city_${city_obj.name}`;
+
+                    return true;
                   } else {
                     var viewed_army = printArmy(user_id, army_obj.name);
 
@@ -441,6 +539,8 @@ module.exports = {
 
                     if (game_obj.page != "map")
                       game_obj.page = `army_viewer_${army_obj.name}`;
+
+                    return true;
                   }
                 }
 
@@ -456,6 +556,8 @@ module.exports = {
 
                     if (game_obj.page != "map")
                       game_obj.page = `army_viewer_${army_obj.name}`;
+
+                    return true;
                   } else {
                     createPageMenu(edit_embed, {
                       embed_pages: printProvince(game_obj.user, city_obj.name),
@@ -464,22 +566,29 @@ module.exports = {
 
                     if (game_obj.page != "map")
                       game_obj.page = `view_city_${city_obj.name}`;
+
+                    return true;
                   }
 
                 //Province smart display
                 if (!city_obj)
                   if (main.provinces[province_name])
-                    if (main.provinces[province_name].owner == actual_id)
+                    if (main.provinces[province_name].owner == actual_id) {
                       createPageMenu(edit_embed, {
                         embed_pages: printProvince(game_obj.user, province_name),
                         user: game_obj.user
                       });
+
+                      return true;
+                    }
 
                 //If none of the above, try war/nation
                 if (!army_obj && !city_obj && game_obj.page != "map")
                   if (main.users[ot_user_id]) {
                     viewDiplomacy(user_id, ot_user_id);
                     game_obj.page = `diplomacy_view_${ot_user_id}`;
+
+                    return true;
                   } else {
                     //Keep wars as last in precedence
                     var war_report = printWar(user_id, view_obj, false, true);
@@ -487,12 +596,16 @@ module.exports = {
                     if (war_report) {
                       printWar(user_id, view_obj);
                       game_obj.page = `view_war_${view_obj}`;
+
+                      return true;
                     } else {
                       var archived_war_report = printWar(user_id, view_obj, true, true);
 
                       if (archived_war_report) {
                         printWar(user_id, view_obj, true);
                         game_obj.page = `view_war_archives_${view_obj}`;
+
+                        return true;
                       }
                     }
                   }

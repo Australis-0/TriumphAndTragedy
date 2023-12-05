@@ -25,10 +25,12 @@ module.exports = {
         game_obj.page = "country_interface";
         initialiseTopbar(user_id);
         printStats(user_id);
+
+        return true;
       }
 
       //[Jump to Page]
-      if (input == "jump to page")
+      if (input == "jump to page") {
         visualPrompt(game_obj.alert_embed, user_id, {
           title: `Jump To Page:`,
           prompts: [
@@ -43,26 +45,38 @@ module.exports = {
           });
         });
 
+        return true;
+      }
+
       //[Sort by Alphabetical]
-      if (["alphabetical", "sort by alphabetical"].includes(input))
+      if (["alphabetical", "sort by alphabetical"].includes(input)) {
         createPageMenu(game_obj.middle_embed, {
           embed_pages: printModifiers(game_obj.user, "alphabetical"),
           user: game_obj.user
         });
 
+        return true;
+      }
+
       //[Sort by Impact]
-      if (["impact", "sort by impact"].includes(input))
+      if (["impact", "sort by impact"].includes(input)) {
         createPageMenu(game_obj.middle_embed, {
           embed_pages: printModifiers(game_obj.user, "impact"),
           user: game_obj.user
         });
 
+        return true;
+      }
+
       //[Sort by Key]
-      if (["key", "sort by key"].includes(input))
+      if (["key", "sort by key"].includes(input)) {
         createPageMenu(game_obj.middle_embed, {
           embed_pages: printModifiers(game_obj.user, "key"),
           user: game_obj.user
         });
+
+        return true;
+      }
     }
 
     if (game_obj.page == "temporary_modifiers_list") {
@@ -71,10 +85,12 @@ module.exports = {
         game_obj.page = "country_interface";
         initialiseTopbar(user_id);
         printStats(user_id);
+
+        return true;
       }
 
       //[Jump to Page]
-      if (input == "jump to page")
+      if (input == "jump to page") {
         visualPrompt(game_obj.alert_embed, user_id, {
           title: `Jump To Page:`,
           prompts: [
@@ -89,33 +105,48 @@ module.exports = {
           });
         });
 
+        return true;
+      }
+
       //[Sort by Alphabetical]
-      if (["alphabetical", "sort by alphabetical"].includes(input))
+      if (["alphabetical", "sort by alphabetical"].includes(input)) {
         createPageMenu(game_obj.middle_embed, {
           embed_pages: printTemporaryModifiers(game_obj.user, "alphabetical"),
           user: game_obj.user
         });
 
+        return true;
+      }
+
       //[Sort by Chronological]
-      if (["chronological", "sort by chronological"].includes(input))
+      if (["chronological", "sort by chronological"].includes(input)) {
         createPageMenu(game_obj.middle_embed, {
           embed_pages: printTemporaryModifiers(game_obj.user, "chronological"),
           user: game_obj.user
         });
 
+        return true;
+      }
+
       //[Sort by Duration]
-      if (["duration", "sort by duration"].includes(input))
+      if (["duration", "sort by duration"].includes(input)) {
         createPageMenu(game_obj.middle_embed, {
           embed_pages: printTemporaryModifiers(game_obj.user, "duration"),
           user: game_obj.user
         });
 
+        return true;
+      }
+
       //[Sort by Impact]
-      if (["impact", "sort by impact"].includes(input))
+      if (["impact", "sort by impact"].includes(input)) {
         createPageMenu(game_obj.middle_embed, {
           embed_pages: printTemporaryModifiers(game_obj.user, "impact"),
           user: game_obj.user
         });
+
+        return true;
+      }
     }
   }
 };

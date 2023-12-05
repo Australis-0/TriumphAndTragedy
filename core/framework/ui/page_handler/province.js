@@ -20,6 +20,29 @@ module.exports = {
 
     //Province handler
     if (game_obj.page == "provinces_list") {
+      //[Assimilate]
+      if (input == "assimilate") {
+        initialiseAssimilate(user_id);
+
+        return true;
+      }
+
+      //[Back]
+      if (input == "back") {
+        game_obj.page = "population";
+        printPops(user_id);
+
+        return true;
+      }
+
+      //[Found City]
+      if (input == "found city") {
+        initialiseFoundCity(user_id);
+
+        return true;
+      }
+
+      //[View (Province Name)]
       if (input != "view provinces")
         if (arg[0] == "view") {
           if (arg.length > 1) {
@@ -33,11 +56,15 @@ module.exports = {
                   embed_pages: printProvince(game_obj.user, city_name),
                   user: game_obj.user
                 });
+
+                return true;
               } else if (getProvince(province_name)) {
                 createPageMenu(game_obj.middle_embed, {
                   embed_pages: printProvince(game_obj.user, city_name),
                   user: game_obj.user
                 });
+
+                return true;
               } else {
                 printError(game_obj.id, `**${city_name}** is not a valid city that you can view!`);
               }
@@ -46,92 +73,97 @@ module.exports = {
               var province_name = input.replace("view", "").trim()
                 .replace("province", "").trim();
 
-              (getProvince(province_name)) ?
+              if (getProvince(province_name)) {
                 createPageMenu(game_obj.middle_embed, {
                   embed_pages: printProvince(game_obj.user, province_name),
                   user: game_obj.user
-                }) :
+                });
+
+                return true;
+              } else {
                 printError(game_obj.id, `**${province_name}** is not a valid province that you can view!`);
+              }
             }
           } else {
             initialisePrintProvince(user_id, game_obj.id);
+
+            return true;
           }
         }
-
-      switch (input) {
-        case "assimilate":
-          initialiseAssimilate(user_id);
-
-          break;
-        case "back":
-          game_obj.page = "population";
-          printPops(user_id);
-
-          break;
-        case "found city":
-          initialiseFoundCity(user_id);
-
-          break;
-      }
     } else if (game_obj.page.startsWith("view_province_")) {
       var province_name = game_obj.page.replace("view_province_", "");
 
-      switch (input) {
-        case "assimilate":
-          initialiseAssimilate(user_id);
+      //[Assimilate]
+      if (input == "assimilate") {
+        initialiseAssimilate(user_id);
 
-          break;
-        case "back":
-          game_obj.page = "provinces_list";
-          createPageMenu(game_obj.middle_embed, {
-            embed_pages: printProvinces(game_obj.user),
-            user: game_obj.user
-          });
+        return true;
+      }
 
-          break;
-        case "display all pops":
-          game_obj.display_irrelevant_pops = true;
-          game_obj.display_no_pops = true;
+      //[Back]
+      if (input == "back") {
+        game_obj.page = "provinces_list";
+        createPageMenu(game_obj.middle_embed, {
+          embed_pages: printProvinces(game_obj.user),
+          user: game_obj.user
+        });
 
+        return true;
+      }
+
+      //[Display All Pops]
+      if (input == "display all pops") {
+        game_obj.display_irrelevant_pops = true;
+        game_obj.display_no_pops = true;
+
+        createPageMenu(game_obj.middle_embed, {
+          embed_pages: printProvince(game_obj.user, province_name),
+          page: current_page,
+          user: game_obj.user
+        });
+
+        return true;
+      }
+
+      //[Display Relevant Pops]
+      if (input == "display relevant pops") {
+        delete game_obj.display_irrelevant_pops;
+        delete game_obj.display_no_pops;
+
+        createPageMenu(game_obj.middle_embed, {
+          embed_pages: printProvince(game_obj.user, province_name),
+          page: current_page,
+          user: game_obj.user
+        });
+
+        return true;
+      }
+
+      //[Jump To Page]
+      if (input == "jump to page") {
+        visualPrompt(game_obj.alert_embed, user_id, {
+          title: `Jump To Page:`,
+          prompts: [
+            [`Which page would you like to jump to?`, "number", { min: 1, max: printProvince(game_obj.user, province_name).length }]
+          ]
+        },
+        function (arg) {
           createPageMenu(game_obj.middle_embed, {
             embed_pages: printProvince(game_obj.user, province_name),
-            page: current_page,
+            page: arg[0] - 1,
             user: game_obj.user
           });
+        });
 
-          break;
-        case "display relevant pops":
-          delete game_obj.display_irrelevant_pops;
-          delete game_obj.display_no_pops;
+        return true;
+      }
 
-          createPageMenu(game_obj.middle_embed, {
-            embed_pages: printProvince(game_obj.user, province_name),
-            page: current_page,
-            user: game_obj.user
-          });
+      //[View Demographics]
+      if (input == "view demographics") {
+        printDemographics(user_id, province_name);
+        game_obj.page = `view_demographics_${province_name}`;
 
-          break;
-        case "jump to page":
-          visualPrompt(game_obj.alert_embed, user_id, {
-            title: `Jump To Page:`,
-            prompts: [
-              [`Which page would you like to jump to?`, "number", { min: 1, max: printProvince(game_obj.user, province_name).length }]
-            ]
-          },
-          function (arg) {
-            createPageMenu(game_obj.middle_embed, {
-              embed_pages: printProvince(game_obj.user, province_name),
-              page: arg[0] - 1,
-              user: game_obj.user
-            });
-          });
-
-          break;
-        case "view demographics":
-          printDemographics(user_id, province_name);
-          game_obj.page = `view_demographics_${province_name}`;
-
-          break;
+        return true;
       }
     }
   }

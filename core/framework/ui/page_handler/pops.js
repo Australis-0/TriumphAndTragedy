@@ -24,36 +24,48 @@ module.exports = {
       if (input == "display all pops") {
         game_obj.display_no_pops = true;
         printPops(user_id);
+
+        return true;
       }
 
       //[Display Irrelevant Pops]
       if (input == "display irrelevant pops") {
         game_obj.display_irrelevant_pops = true;
         printPops(user_id);
+
+        return true;
       }
 
       //[Display Relevant Pops]
       if (input == "display relevant pops") {
         delete game_obj.display_irrelevant_pops;
         printPops(user_id);
+
+        return true;
       }
 
       //[Display Populated Pops]
       if (input == "display populated pops") {
         delete game_obj.display_no_pops;
         printPops(user_id);
+
+        return true;
       }
 
       //[Display Social Mobility]
       if (input == "display social mobility") {
         delete game_obj.hide_social_mobility;
         printPops(user_id);
+
+        return true;
       }
 
       //[Hide Social Mobility]
       if (input == "hide social mobility") {
         game_obj.hide_social_mobility = true;
         printPops(user_id);
+
+        return true;
       }
     }
 
@@ -65,55 +77,78 @@ module.exports = {
         province_id = province_obj.id;
 
       //[Back]
-      if (input == "back")
+      if (input == "back") {
         printProvince(user_id, province_id);
 
+        return true;
+      }
+
       //[Births]
-      if (input == "births")
+      if (input == "births") {
         printDemographicsLimitTooltip(user_id, province_id, {
           mode: "births"
         });
 
+        return true;
+      }
+
       //[Deaths]
-      if (input == "deaths")
+      if (input == "deaths") {
         printDemographicsLimitTooltip(user_id, province_id, {
           mode: "deaths"
         });
 
+        return true;
+      }
+
       //[Demotion]
-      if (input == "demotion")
+      if (input == "demotion") {
         printDemographicsLimitTooltip(user_id, province_id, {
           mode: "demotion"
         });
 
+        return true;
+      }
+
       //[Emigration]
-      if (input == "emigration")
+      if (input == "emigration") {
         printDemographicsLimitTooltip(user_id, province_id, {
           mode: "emigration"
         });
+
+        return true;
+      }
 
       //[Expand Economic Statistics]
       if (input == "expand economic statistics") {
         delete game_obj.minimise_economic_statistics;
         printDemographics(user_id, province_id, current_page);
+
+        return true;
       }
 
       //[Expand Pop Breakdown]
       if (input == "expand pop breakdown") {
         delete game_obj.minimise_pop_breakdown;
         printDemographics(user_id, province_id, current_page);
+
+        return true;
       }
 
       //[Expand Profession Breakdown]
       if (input == "expand profession breakdown") {
         delete game_obj.hide_profession_breakdown;
         printDemographics(user_id, province_id, current_page);
+
+        return true;
       }
 
       //[Expand Wealth Pools]
       if (input == "expand wealth pools") {
         delete game_obj.minimise_wealth_pools;
         printDemographics(user_id, province_id, current_page);
+
+        return true;
       }
 
       //[Hide All Details]
@@ -125,34 +160,45 @@ module.exports = {
         game_obj.minimise_wealth_pools = true;
 
         printDemographics(user_id, province_id, current_page);
+
+        return true;
       }
 
       //[Hide Employers]
       if (input == "hide employers") {
         game_obj.hide_employers = true;
         printDemographics(user_id, province_id, current_page);
+
+        return true;
       }
 
       //[Hide Needs Categories]
       if (input == "hide needs categories") {
         game_obj.hide_needs_categories = true;
         printDemographics(user_id, province_id, current_page);
+
+        return true;
       }
 
       //[Hide Profession Breakdown]
       if (input == "hide profession breakdown") {
         game_obj.hide_profession_breakdown = true;
         printDemographics(user_id, province_id, current_page);
+
+        return true;
       }
 
       //[Immigration]
-      if (input == "immigration")
+      if (input == "immigration") {
         printDemographicsLimitTooltip(user_id, province_id, {
           mode: "immigration"
         });
 
+        return true;
+      }
+
       //[Jump To Page]
-      if (input == "jump to page")
+      if (input == "jump to page") {
         visualPrompt(game_obj.alert_embed, user_id, {
           title: `Jump To Page:`,
           prompts: [
@@ -162,6 +208,9 @@ module.exports = {
         function (arg) {
           printDemographics(game_obj.user, province_id, arg[0] - 1);
         });
+
+        return true;
+      }
 
       //[Minimise Economic Statistics]
       if (["minimise economic statistics", "minimize economic statistics"].includes(input)) {
@@ -173,19 +222,26 @@ module.exports = {
       if (["minimise pop breakdown", "minimize pop breakdown", "minimise population breakdown", "minimize population breakdown"].includes(input)) {
         game_obj.minimise_pop_breakdown = true;
         printDemographics(user_id, province_id, current_page);
+
+        return true;
       }
 
       //[Minimise Wealth Pools]
       if (["minimise wealth pools", "minimize wealth pools", "minimise wealth pool", "minimize wealth pool"].includes(input)) {
         game_obj.minimise_wealth_pools = true;
         printDemographics(user_id, province_id, current_page);
+
+        return true;
       }
 
       //[Promotion]
-      if (input == "promotion")
+      if (input == "promotion") {
         printDemographicsLimitTooltip(user_id, province_id, {
           mode: "promotion"
         });
+
+        return true;
+      }
 
       //[Show All Details]
       if (input == "show all details") {
@@ -196,31 +252,37 @@ module.exports = {
         delete game_obj.minimise_wealth_pools;
 
         printDemographics(user_id, province_id, current_page);
+
+        return true;
       }
 
       //[Show Employers]
       if (input == "show employers") {
         delete game_obj.hide_employers;
         printDemographics(user_id, province_id, current_page);
+
+        return true;
       }
 
       //[Show Needs Categories]
       if (input == "show needs categories") {
         delete game_obj.hide_needs_categories;
         printDemographics(user_id, province_id, current_page);
+
+        return true;
       }
     }
 
     if (population_pages.includes(game_obj.page)) {
-      switch (input) {
-        case "culture":
-          createPageMenu(game_obj.middle_embed, {
-            embed_pages: printCultures(user_id),
-            user: game_obj.user
-          });
-          game_obj.page = "culture";
+      //[Culture]
+      if (input == "culture") {
+        createPageMenu(game_obj.middle_embed, {
+          embed_pages: printCultures(user_id),
+          user: game_obj.user
+        });
+        game_obj.page = "culture";
 
-          break;
+        return true;
       }
     }
   }

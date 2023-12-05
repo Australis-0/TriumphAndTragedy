@@ -23,15 +23,21 @@ module.exports = {
       //[(Province ID/Name)]
       var province_obj = getProvince(input);
 
-      if (province_obj)
+      if (province_obj) {
         createPageMenu(game_obj.alert_embed, {
           embed_pages: printProvince(user_id, arg[0]),
           user: game_obj.user
         });
 
+        return true;
+      }
+
       //[View Province]
-      if (input == "view province")
+      if (input == "view province") {
         initialiseViewProvince(user_id, true);
+
+        return true;
+      }
     }
   }
 };

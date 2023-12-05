@@ -27,8 +27,11 @@ module.exports = {
 
       if (game_obj.main_menu_embed) {
         //[Resume Game]
-        if (input == "resume game")
+        if (input == "resume game") {
           closeMainMenu(user_id);
+
+          return true;
+        }
 
         //[Manage Co-Op]
         if (input == "manage co-op") {
@@ -36,15 +39,23 @@ module.exports = {
           game_obj.page = "coop_menu";
 
           printCoopMenu(user_id);
+
+          return true;
         }
 
         //[Resign]
-        if (input == "resign")
+        if (input == "resign") {
           initialiseResign(user_id);
 
+          return true;
+        }
+
         //[Exit Game]
-        if (["exit game", "quit game"].includes(input))
+        if (["exit game", "quit game"].includes(input)) {
           clearGame(game_obj.id);
+
+          return true;
+        }
 
         if (game_obj.page == "coop_menu") {
           //[Back]
@@ -53,21 +64,31 @@ module.exports = {
             delete game_obj.old_page;
 
             printMainMenu(user_id);
+
+            return true;
           }
 
           //[Invite Player]
-          if (input == "invite player")
+          if (input == "invite player") {
             initialiseInvitePlayer(user_id);
 
+            return true;
+          }
+
           //[Kick Player]
-          if (input == "kick player")
+          if (input == "kick player") {
             initialiseKickPlayer(user_id);
+
+            return true;
+          }
 
           //[Kick (Player ID)]
           if (input.startsWith("kick ")) {
             var player_id = input.replace("kick ", "").trim();
 
             kickPlayer(user_id, parseMention(player_id));
+
+            return true;
           }
 
           //[Promote (Player ID)]
@@ -75,11 +96,16 @@ module.exports = {
             var player_id = input.replace("kick ", "").trim();
 
             promotePlayer(user_id, parseMention(player_id));
+
+            return true;
           }
 
           //[Transfer Leadership]
-          if (input == "transfer leadership")
+          if (input == "transfer leadership") {
             initialiseTransferLeadership(user_id);
+
+            return true;
+          }
         }
       }
     }

@@ -31,6 +31,8 @@ module.exports = {
           //Print alert and set page
           printUserAlert(user_id, alert_obj);
           game_obj.page = `alert_${local_alert_id - 1}`;
+
+          return true;
         }
       }
 
@@ -39,10 +41,12 @@ module.exports = {
         game_obj.page = "country_interface";
         initialiseTopbar(user_id);
         printStats(user_id);
+
+        return true;
       }
 
       //[Jump To Page]
-      if (input == "jump to page")
+      if (input == "jump to page") {
         visualPrompt(game_obj.alert_embed, user_id, {
           title: `Jump To Page:`,
           prompts: [
@@ -57,9 +61,15 @@ module.exports = {
           });
         });
 
+        return true;
+      }
+
       //[View Alert]
-      if (["view alert", "view_alerts"].includes(input))
+      if (["view alert", "view_alerts"].includes(input)) {
         initialisePrintAlert(user_id);
+
+        return true;
+      }
 
     } else if (game_obj.page.startsWith("alert_")) {
       var current_alert_id = parseInt(game_obj.page.replace("alert_", ""));
@@ -74,6 +84,8 @@ module.exports = {
           embed_pages: printAlerts(game_obj.user),
           user: game_obj.user
         });
+
+        return true;
       }
 
       //Default handler
@@ -102,6 +114,8 @@ module.exports = {
             embed_pages: printAlerts(game_obj.user),
             user: game_obj.user
           });
+
+          return true;
         }
       } else {
         if (input == "OK") {
@@ -117,6 +131,8 @@ module.exports = {
             embed_pages: printAlerts(game_obj.user),
             user: game_obj.user
           });
+
+          return true;
         }
       }
     }
