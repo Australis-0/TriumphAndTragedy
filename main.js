@@ -223,7 +223,7 @@ setInterval(function(){
     nextBattleTick();
 
   //Date processing
-  if (main.season_started) {
+  if (main.season_started && !main.freeze_time) {
     current_turn_time = getTimeModifier();
 
     //This is how much time has elapsed in years. The numerator 1000 represents milliseconds
@@ -289,7 +289,7 @@ setInterval(function(){
     main.last_turn = current_date;
 
     //Process nextGlobalTurn() for global processes and calculations
-    if (main.season_started) {
+    if (main.season_started && !main.freeze_turns) {
       clearBadInterfaces();
 
       nextBattleTick(true);

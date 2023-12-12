@@ -179,10 +179,11 @@ module.exports = {
   },
 
   //Used for instantly settling provinces when a new country is founded
-  settleStartingProvinces: function (arg0_user, arg1_provinces) {
+  settleStartingProvinces: function (arg0_user, arg1_provinces, arg2_do_not_display) {
     //Convert from parameters
     var user_id = arg0_user;
     var provinces = splitCommandLine(arg1_provinces);
+    var do_not_display = arg2_do_not_display;
 
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
@@ -224,7 +225,8 @@ module.exports = {
         if (missing_provinces.length > 0)
           error_msg.push(`- Our cartographers failed to find the province(s) of ${missing_provinces.join(", ")} anywhere on the map!`);
 
-        printError(game_obj.id, error_msg.join("\n"));
+        if (!do_not_display)
+          printError(game_obj.id, error_msg.join("\n"));
         reinitialise_command = true;
       } else {
         var display_provinces = [];
@@ -239,29 +241,33 @@ module.exports = {
         delete usr.settle_starting_provinces;
 
         //Output successful feedback
-        printAlert(game_obj.id, `Your peoples have successfully settled the lands of ${display_provinces.join(", ")} and have claimed it for the fledgling country of **${usr.name}**!`);
+        if (!do_not_display) {
+          printAlert(game_obj.id, `Your peoples have successfully settled the lands of ${display_provinces.join(", ")} and have claimed it for the fledgling country of **${usr.name}**!`);
 
-        //Reload all maps, initialise user topbar
-        reloadAllMaps("political");
-        game_obj.page = "country_interface";
+          //Reload all maps, initialise user topbar
+          reloadAllMaps("political");
+          game_obj.page = "country_interface";
 
-        if (main.season_started) {
-          initialiseTopbar(user_id);
-          printStats(user_id);
-        } else {
-          createPageMenu(game_obj.middle_embed, {
-            embed_pages: printQueue(user_id),
-            user: user_id
-          });
+          if (main.season_started) {
+            initialiseTopbar(user_id);
+            printStats(user_id);
+          } else {
+            createPageMenu(game_obj.middle_embed, {
+              embed_pages: printQueue(user_id),
+              user: user_id
+            });
+          }
         }
       }
     } else {
-      printError(game_obj.id, `You may only settle up to **${parseNumber(config.defines.common.starting_provinces)}** province(s) at once!`);
+      if (!do_not_display)
+        printError(game_obj.id, `You may only settle up to **${parseNumber(config.defines.common.starting_provinces)}** province(s) at once!`);
       reinitialise_command = true;
     }
 
-    if (reinitialise_command) setTimeout(function(){
-      module.exports.initialiseSettleStartingProvinces(user_id);
-    }, settings.visual_prompt_delay);
+    if (!do_not_display)
+      if (reinitialise_command) setTimeout(function(){
+        module.exports.initialiseSettleStartingProvinces(user_id);
+      }, settings.visual_prompt_delay);
   }
 };

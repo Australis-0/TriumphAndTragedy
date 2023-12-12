@@ -178,14 +178,20 @@ module.exports = {
       }
 
       //User processing
-      {
+      try {
         updateControl();
         updateOwnership();
+      } catch (e) {
+        log.error(`initOptimisation() - updateControl(), updateOwnership() ran into errors!`);
+        console.log(e);
       }
 
       //Post-user processing - KEEP AT BOTTOM!
-      {
+      try {
         updateMigrationAttraction();
+      } catch (e) {
+        log.error(`initOptimisation() - updateMigrationAttraction() ran into errors!`);
+        console.log(e);
       }
     }
 
