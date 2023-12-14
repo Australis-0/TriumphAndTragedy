@@ -1,4 +1,10 @@
 module.exports = {
+  /*
+    enactReform() - Enacts a reform with options.
+    options: {
+      force_reform: true/false - Forces a reform to occur, regardless of votes.
+    }
+  */
   enactReform: function (arg0_user, arg1_reform_name, arg2_options) {
     //Convert from parameters
     var user_id = arg0_user;
