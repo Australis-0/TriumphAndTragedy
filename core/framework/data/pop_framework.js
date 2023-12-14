@@ -3321,10 +3321,11 @@ module.exports = {
     }
 
     //Add to civilian/military casualties tracker
-    if (!options.migration) {
-      usr.recent_military_casualties[usr.recent_military_casualties.length - 1] += soldiers_killed;
-      usr.recent_civilian_casualties[usr.recent_civilian_casualties.length - 1] += Math.max(total_removed - soldiers_killed, 0);
-    }
+    if (!options.migration)
+      if (!usr) {
+        usr.recent_military_casualties[usr.recent_military_casualties.length - 1] += soldiers_killed;
+        usr.recent_civilian_casualties[usr.recent_civilian_casualties.length - 1] += Math.max(total_removed - soldiers_killed, 0);
+      }
 
     //Return statement
     return total_removed;

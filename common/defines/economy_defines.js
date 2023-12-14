@@ -51,6 +51,7 @@ config.defines.economy = {
   default_fulfilment: 0.25, //The default fulfilment for pops with no specified needs on automatic_priority categories
   default_variety: 0.15, //The default variety for pops with no specified needs on automatic_priority categories
   food_required_per_million: 1, //Note that food requirements in goods/goods.js should also be changed to reflect this number when modding
+  initial_urban_pop: [500000, 1000000], //What is the population range for a starting city?
   insolvency_amount: -1000, //At what fiscal liquidity level is a building considered unable to pay its obligations?
   insolvency_turns: 2, //How many turns must a building be insolvent for before closing? Type 0 to disable insolvency
   minimum_liquidity: 100, //The absolute lowest minimum liquidity a building should have, regardless of circumstance

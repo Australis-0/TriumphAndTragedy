@@ -280,10 +280,16 @@ module.exports = {
     var actual_id = main.global.user_map[user_id];
     var all_technologies = module.exports.getAllTechnologies();
     var all_technology_names = module.exports.getAllTechnologies({ return_names: true });
+    var researched_techs = 0;
     var usr = main.users[actual_id];
 
     for (var i = 0; i < all_technologies.length; i++)
-      if (returnSafeNumber(all_technologies[i].research_cost) <= technology_cost)
+      if (returnSafeNumber(all_technologies[i].research_cost) <= technology_cost) {
         module.exports.instantResearch(user_id, all_technology_names[i]);
+        researched_techs++;
+      }
+
+    //Return statement
+    return researched_techs;
   }
 };

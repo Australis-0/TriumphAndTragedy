@@ -10,6 +10,7 @@ config.defines.map = {
 	map_label_placement: [27, 27, 27, 27, 27, 27, 10000],
   map_terrain: "colourmap.jpg", //Terrain colourmap for atlas mapmode
   map_type: "earth",
+  map_types: ["atlas", "colonisation", "political", "population", "supply"],
 
   default_province_colour: [179, 179, 179],
 
