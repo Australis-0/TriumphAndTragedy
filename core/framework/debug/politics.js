@@ -1,5 +1,5 @@
 module.exports = {
-  addPartyPopularity: function (arg0_user, arg1_amount, arg2_ideology) {
+  debugAddPartyPopularity: function (arg0_user, arg1_amount, arg2_ideology) {
     //Convert from parameters
     var user_id = arg0_user;
     var amount = arg1_amount;
@@ -28,7 +28,7 @@ module.exports = {
     }
   },
 
-  passReform: function (arg0_user, arg1_reform_name) {
+  debugPassReform: function (arg0_user, arg1_reform_name) {
     //Convert from parameters
     var user_id = arg0_user;
     var reform_name = arg1_reform_name;
@@ -54,7 +54,7 @@ module.exports = {
     }
   },
 
-  setPartyPopularity: function (arg0_user, arg1_amount, arg2_ideology) {
+  debugSetPartyPopularity: function (arg0_user, arg1_amount, arg2_ideology) {
     //Convert from parameters
     var user_id = arg0_user;
     var amount = arg1_amount;

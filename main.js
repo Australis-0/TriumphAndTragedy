@@ -92,66 +92,68 @@ client.on("messageCreate", async (message) => {
 
   if (!message.author.bot && !ignore_channels.includes(message.channel.id)) {
     //Debug commands (these ones have a prefix)
-    {
+    if (message.member.roles.cache.find(role => settings.administrator_roles.includes(role.id))) {
       if (equalsIgnoreCase(arg[0], settings.prefix)) {
         //Used to eval
         if (equalsIgnoreCase(arg[1], "console")) {
-          if (message.member.roles.cache.find(role => settings.administrator_roles.includes(role.id))) {
-            var full_code = [];
-            for (var i = 2; i < arg.length; i++) full_code.push(arg[i]);
+          var full_code = [];
+          for (var i = 2; i < arg.length; i++) full_code.push(arg[i]);
 
-            eval(full_code.join(" "));
+          eval(full_code.join(" "));
 
-            //Send back prompt
-            message.channel.send("Console command executed. Warning! This command can be highly unstable if not used correctly.").then((msg) => {
-  						//Delete console command output after 10 seconds
-  						setTimeout(function() { msg.delete(); }, 10000);
-  					});
-          }
+          //Send back prompt
+          message.channel.send("Console command executed. Warning! This command can be highly unstable if not used correctly.").then((msg) => {
+						//Delete console command output after 10 seconds
+						setTimeout(function() { msg.delete(); }, 10000);
+					});
         }
 
         //console.log
         if (equalsIgnoreCase(arg[1], "console.log") || equalsIgnoreCase(arg[1], "log")) {
-          if (message.member.roles.cache.find(role => settings.administrator_roles.includes(role.id))) {
-            var full_code = [];
-            for (var i = 2; i < arg.length; i++) full_code.push(arg[i]);
+          var full_code = [];
+          for (var i = 2; i < arg.length; i++) full_code.push(arg[i]);
 
-            var actual_code = eval(full_code.join(" "));
-            var actual_string = actual_code.toString();
+          var actual_code = eval(full_code.join(" "));
+          var actual_string = actual_code.toString();
 
-            if (typeof actual_code == "object")
-              actual_string = JSON.stringify(actual_code);
+          if (typeof actual_code == "object")
+            actual_string = JSON.stringify(actual_code);
 
-            var log_array = splitString(actual_string, 200);
+          var log_array = splitString(actual_string, 200);
 
-            var log_embed_array = splitEmbed(log_array, {
-              title: truncateString(full_code.join(" "), 60),
-              title_pages: true,
-              fixed_width: true
-            });
+          var log_embed_array = splitEmbed(log_array, {
+            title: truncateString(full_code.join(" "), 60),
+            title_pages: true,
+            fixed_width: true
+          });
 
-            //Remove functionality for previous debug logs
-            var all_interfaces = Object.keys(interfaces);
+          //Remove functionality for previous debug logs
+          var all_interfaces = Object.keys(interfaces);
 
-            for (var i = 0; i < all_interfaces.length; i++) {
-              var local_ui = interfaces[all_interfaces[i]];
+          for (var i = 0; i < all_interfaces.length; i++) {
+            var local_ui = interfaces[all_interfaces[i]];
 
-              if (local_ui.debug) {
-                delete main.interfaces[all_interfaces[i]];
-                delete interfaces[all_interfaces[i]];
-              }
+            if (local_ui.debug) {
+              delete main.interfaces[all_interfaces[i]];
+              delete interfaces[all_interfaces[i]];
             }
-
-            message.channel.send(config.localisation.blank).then((msg) => {
-              createPageMenu(msg, {
-                embed_pages: log_embed_array,
-
-                debug: true,
-                user: message.author.id
-              });
-            });
           }
+
+          message.channel.send(config.localisation.blank).then((msg) => {
+            createPageMenu(msg, {
+              embed_pages: log_embed_array,
+
+              debug: true,
+              user: message.author.id
+            });
+          });
         }
+
+        //Debug handler
+        var debug_handler = pageHandlerDebug(arg);
+
+        if (debug_handler)
+          message.channel.send(debug_handler[1]);
       }
     }
 
