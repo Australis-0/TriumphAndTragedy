@@ -75,6 +75,8 @@ module.exports = {
     FileManager.import("./framework/map/province_renderer");
 
     //Page handler files
+    FileManager.import("./framework/ui/page_handler/debug_page_handler/debug");
+
     FileManager.import("./framework/ui/page_handler/alerts");
     FileManager.import("./framework/ui/page_handler/budget");
     FileManager.import("./framework/ui/page_handler/buildings_cities");
@@ -165,6 +167,22 @@ module.exports = {
       FileManager.import("./game/culture/remove_accepted_culture");
       FileManager.import("./game/culture/rename_culture_adjective");
       FileManager.import("./game/culture/rename_culture");
+
+      //Debug
+      FileManager.import("./core/framework/data/debug/buildings.js");
+      FileManager.import("./core/framework/data/debug/countries.js");
+      FileManager.import("./core/framework/data/debug/date.js");
+      FileManager.import("./core/framework/data/debug/diplomacy.js");
+      FileManager.import("./core/framework/data/debug/games.js");
+      FileManager.import("./core/framework/data/debug/goods.js");
+      FileManager.import("./core/framework/data/debug/governments.js");
+      FileManager.import("./core/framework/data/debug/map.js");
+      FileManager.import("./core/framework/data/debug/politics.js");
+      FileManager.import("./core/framework/data/debug/pops.js");
+      FileManager.import("./core/framework/data/debug/provinces.js");
+      FileManager.import("./core/framework/data/debug/research.js");
+      FileManager.import("./core/framework/data/debug/turns.js");
+      FileManager.import("./core/framework/data/debug/units.js");
 
       FileManager.import("./game/diplomacy/allow_cede");
       FileManager.import("./game/diplomacy/ally");

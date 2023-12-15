@@ -159,11 +159,9 @@ client.on("messageCreate", async (message) => {
 
     //Lobby commands (these also have a prefix, with the exception of visual prompts)
     {
-      if (equalsIgnoreCase(arg[0], settings.prefix)) {
-        if (equalsIgnoreCase(arg[1], "play")) {
+      if (equalsIgnoreCase(arg[0], settings.prefix))
+        if (equalsIgnoreCase(arg[1], "play"))
           createNewGame(user_id, message);
-        }
-      }
     }
 
     //Game input commands
