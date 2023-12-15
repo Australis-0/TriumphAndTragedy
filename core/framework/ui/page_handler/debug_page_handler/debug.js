@@ -17,63 +17,59 @@ module.exports = {
 
           return debugConstruct(user_id, arg[4], arg[2], arg[3]);
         } else {
-          return [false, `$construct <user> <amount> <building> <province>`];
+          return [false, `${settings.prefix}construct <user> <amount> <building> <province>`];
         }
 
       //instant-construct <user> <amount> <building> <province>
-      if (arg[0] == "instant-construct") {
+      if (arg[0] == "instant-construct")
         if (arg.length >= 5) {
           var user_id = returnMention(arg[1]);
 
           return debugInstantConstruct(user_id, arg[4], arg[2], arg[3]);
         } else {
-          return [false, `$instant-construct <user> <amount> <building> <province>`];
+          return [false, `${settings.prefix}instant-construct <user> <amount> <building> <province>`];
         }
-      }
 
       //process-building <user> <building>
-      if (arg[0] == "process-building") {
+      if (arg[0] == "process-building")
         if (arg.length >= 3) {
           var user_id = returnMention(arg[1]);
 
           return debugProcessBuilding(user_id, arg[2]);
         } else {
-          return [false, `$process-building <user> <building>`];
+          return [false, `${settings.prefix}process-building <user> <building>`];
         }
-      }
 
       //process-buildings <user> <provinces>
-      if (arg[0] == "process-buildings") {
+      if (arg[0] == "process-buildings")
         if (arg.length >= 3) {
           var user_id = returnMention(arg[1]);
 
           return debugProcessBuildings(user_id, arg[2]);
         } else {
-          return [false, `$process-buildings <user> <provinces>`];
+          return [false, `${settings.prefix}process-buildings <user> <provinces>`];
         }
-      }
     }
 
     //Countries
     {
       //control-country <user> <ot_user>
-      if (arg[0] == "control-country") {
+      if (arg[0] == "control-country")
         if (arg.length >= 3) {
           var user_id = returnMention(arg[1]);
           var ot_user_id = returnMention(arg[2]);
 
           return debugControlCountry(user_id, ot_user_id);
         } else {
-          return [false, `$control-country <user> <ot_user>`];
+          return [false, `${settings.prefix}control-country <user> <ot_user>`];
         }
-      }
 
       //create-country <id> <provinces> <name>
       if (arg[0] == "create-country")
         if (arg.length >= 4) {
           return debugCreateCountry(arg[1], arg[2], arg[3]);
         } else {
-          return [false, `$create-country <id> <provinces> <name>`];
+          return [false, `${settings.prefix}create-country <id> <provinces> <name>`];
         }
 
       //delete-country <user>
@@ -81,7 +77,7 @@ module.exports = {
         if (arg.length >= 2) {
           return debugDeleteCountry(arg[1]);
         } else {
-          return [false, `$delete-country <user>`];
+          return [false, `${settings.prefix}delete-country <user>`];
         }
     }
 
@@ -100,21 +96,21 @@ module.exports = {
         if (arg.length >= 4) {
           return debugSetDate(arg[1], arg[2], arg[3]);
         } else {
-          return [false, `$set-date <year> <month> <day>`];
+          return [false, `${settings.prefix}set-date <year> <month> <day>`];
         }
     }
 
     //Diplomacy
     {
       //ally <user> <ot_user>
-      if (arg[0] == "ally") {
-        if (arg.length >= 3)
+      if (arg[0] == "ally")
+        if (arg.length >= 3) {
           var user_id = returnMention(arg[1]);
           var ot_user_id = returnMention(arg[2]);
 
           return debugAlly(user_id, ot_user_id);
         } else {
-          return [false, `$ally <user> <ot_user>`];
+          return [false, `${settings.prefix}ally <user> <ot_user>`];
         }
 
       //dissolve-alliance <user> <ot_user>
@@ -125,7 +121,7 @@ module.exports = {
 
           return debugDissolveAlliance(user_id, ot_user_id);
         } else {
-          return [false, `$dissolve-alliance <user> <ot_user>`];
+          return [false, `${settings.prefix}dissolve-alliance <user> <ot_user>`];
         }
 
       //dissolve-non-aggression <user> <ot_user>
@@ -136,7 +132,7 @@ module.exports = {
 
           return debugDissolveNonAggression(user_id, ot_user_id);
         } else {
-          return [false, `$dissolve-non-aggression <user> <ot_user>`];
+          return [false, `${settings.prefix}dissolve-non-aggression <user> <ot_user>`];
         }
 
       //end-war <war_name>
@@ -146,7 +142,7 @@ module.exports = {
 
           return debugEndWar(war_name);
         } else {
-          return [false, `$end-war <war_name>`];
+          return [false, `${settings.prefix}end-war <war_name>`];
         }
 
       //give-cb <user> <ot_user> <cb_name> <turns>
@@ -157,7 +153,7 @@ module.exports = {
 
           return debugGiveCB(user_id, ot_user_id, arg[3], arg[4]);
         } else {
-          return [false, `$give-cb <user> <ot_user> <cb_name> <turns>`];
+          return [false, `${settings.prefix}give-cb <user> <ot_user> <cb_name> <turns>`];
         }
 
       //non-aggression <user> <ot_user> <turns>
@@ -168,7 +164,7 @@ module.exports = {
 
           return debugNonAggression(user_id, ot_user_id, arg[3]);
         } else {
-          return [false, `$non-aggression <user> <ot_user> <turns>`];
+          return [false, `${settings.prefix}non-aggression <user> <ot_user> <turns>`];
         }
 
       //set-mutual-relations <user> <ot_user> <value>
@@ -179,7 +175,7 @@ module.exports = {
 
           return debugSetMutualRelations(user_id, ot_user_id, arg[3]);
         } else {
-          return [false, `$set-mutual-relations <user> <ot_user> <value>`];
+          return [false, `${settings.prefix}set-mutual-relations <user> <ot_user> <value>`];
         }
 
       //set-relations <user> <ot_user> <value>
@@ -190,7 +186,7 @@ module.exports = {
 
           return debugSetRelations(user_id, ot_user_id, arg[3]);
         } else {
-          return [false, `$set-relations <user> <ot_user> <value>`];
+          return [false, `${settings.prefix}set-relations <user> <ot_user> <value>`];
         }
 
       //vassalise <user> <ot_user>
@@ -201,7 +197,7 @@ module.exports = {
 
           return debugVassalise(user_id, ot_user_id);
         } else {
-          return [false, `$vassalise <user> <ot_user>`];
+          return [false, `${settings.prefix}vassalise <user> <ot_user>`];
         }
 
       //war <user> <ot_user> <cb_name>
@@ -212,7 +208,7 @@ module.exports = {
 
           return debugWar(user_id, ot_user_id, arg[3]);
         } else {
-          return [false, `$war <user> <ot_user> <cb_name>`];
+          return [false, `${settings.prefix}war <user> <ot_user> <cb_name>`];
         }
     }
 
@@ -240,7 +236,7 @@ module.exports = {
 
           return debugDelete(user_id, arg[2], arg[3]);
         } else {
-          return [false, `$delete <user> <amount> <good>`];
+          return [false, `${settings.prefix}delete <user> <amount> <good>`];
         }
 
       //give <user> <amount> <good>
@@ -250,7 +246,7 @@ module.exports = {
 
           return debugGive(user_id, arg[2], arg[3]);
         } else {
-          return [false, `$give <user> <amount> <good>`];
+          return [false, `${settings.prefix}give <user> <amount> <good>`];
         }
     }
 
@@ -263,7 +259,7 @@ module.exports = {
 
           return debugChangeGovernment(user_id, arg[2]);
         } else {
-          return [false, `$change-government <user> <government>`];
+          return [false, `${settings.prefix}change-government <user> <government>`];
         }
 
       //give-pc <user> <amount>
@@ -273,7 +269,7 @@ module.exports = {
 
           return debugGivePC(user_id, arg[2], arg[3]);
         } else {
-          return [false, `$give-pc <user> <amount>`];
+          return [false, `${settings.prefix}give-pc <user> <amount>`];
         }
     }
 
@@ -288,7 +284,7 @@ module.exports = {
         if (arg.length >= 2) {
           return debugRenderMap(arg[1]);
         } else {
-          return [false, `$render-map <map>`];
+          return [false, `${settings.prefix}render-map <map>`];
         }
     }
 
@@ -301,7 +297,7 @@ module.exports = {
 
           return debugAddPartyPopularity(user_id, arg[2], arg[3]);
         } else {
-          return [false, `$add-party-popularity <user> <amount> <ideology>`];
+          return [false, `${settings.prefix}add-party-popularity <user> <amount> <ideology>`];
         }
 
       //pass-reform <user> <reform>
@@ -311,7 +307,7 @@ module.exports = {
 
           return debugPassReform(user_id, arg[2]);
         } else {
-          return [false, `$pass-reform <user> <reform>`];
+          return [false, `${settings.prefix}pass-reform <user> <reform>`];
         }
 
       //set-party-popularity <user> <amount> <ideology>
@@ -321,7 +317,7 @@ module.exports = {
 
           return debugSetPartyPopularity(user_id, arg[2], arg[3]);
         } else {
-          return [false, `$set-party-popularity <user> <amount> <ideology>`];
+          return [false, `${settings.prefix}set-party-popularity <user> <amount> <ideology>`];
         }
     }
 
@@ -332,7 +328,7 @@ module.exports = {
         if (arg.length >= 4) {
           return debugAddPops(arg[1], arg[2], arg[3]);
         } else {
-          return [false, `$add-pops <amount> <pop_types> <province>`];
+          return [false, `${settings.prefix}add-pops <amount> <pop_types> <province>`];
         }
 
       //move-pops <amount> <pop types> <from_province> <to_province>
@@ -340,7 +336,7 @@ module.exports = {
         if (arg.length >= 5) {
           return debugMovePops(arg[1], arg[2], arg[3], arg[4]);
         } else {
-          return [false, `$move-pops <amount> <pop_types> <from_province> <to_province>`];
+          return [false, `${settings.prefix}move-pops <amount> <pop_types> <from_province> <to_province>`];
         }
 
       //remove-pops <amount> <pop types> <province>
@@ -348,7 +344,7 @@ module.exports = {
         if (arg.length >= 4) {
           return debugRemovePops(arg[1], arg[2], arg[3]);
         } else {
-          return [false, `$remove-pops <amount> <pop_types> <province>`];
+          return [false, `${settings.prefix}remove-pops <amount> <pop_types> <province>`];
         }
 
       //reset-pops
@@ -362,7 +358,7 @@ module.exports = {
 
           return debugProcessPops(user_id);
         } else {
-          return [false, `$process-pops <user>`];
+          return [false, `${settings.prefix}process-pops <user>`];
         }
     }
 
@@ -375,7 +371,7 @@ module.exports = {
 
           return debugSettleProvince(user_id, arg[2]);
         } else {
-          return [false, `$settle-province <user> <provinces>`];
+          return [false, `${settings.prefix}settle-province <user> <provinces>`];
         }
 
       //transfer-provinces <user> <provinces> <ot_user>
@@ -386,7 +382,7 @@ module.exports = {
 
           return debugTransferProvinces(user_id, arg[2], ot_user_id);
         } else {
-          return [false, `$transfer-provinces <user> <provinces> <ot_user>`];
+          return [false, `${settings.prefix}transfer-provinces <user> <provinces> <ot_user>`];
         }
     }
 
@@ -399,7 +395,7 @@ module.exports = {
 
           return debugInstantResearch(user_id, arg[2]);
         } else {
-          return [false, `$instant-research <user> <technology>`];
+          return [false, `${settings.prefix}instant-research <user> <technology>`];
         }
 
       //research-up-to <user> <knowledge_cost>
@@ -409,7 +405,7 @@ module.exports = {
 
           return debugResearchUpTo(user_id, arg[2]);
         } else {
-          return [false, `$research-up-to <knowledge_cost>`];
+          return [false, `${settings.prefix}research-up-to <knowledge_cost>`];
         }
     }
 
@@ -426,7 +422,7 @@ module.exports = {
 
           return debugNextTurn(user_id);
         } else {
-          return [false, `$next-turn <user>`];
+          return [false, `${settings.prefix}next-turn <user>`];
         }
     }
 
@@ -439,7 +435,7 @@ module.exports = {
 
           return debugRemoveUnits(user_id, arg[2], arg[3]);
         } else {
-          return [false, `$remove-units <user> <amount> <unit>`];
+          return [false, `${settings.prefix}remove-units <user> <amount> <unit>`];
         }
 
       //spawn-units <user> <amount> <unit>
@@ -449,7 +445,7 @@ module.exports = {
 
           return debugSpawnUnits(user_id, arg[2], arg[3]);
         } else {
-          return [false, `$spawn-units <user> <amount> <unit>`];
+          return [false, `${settings.prefix}spawn-units <user> <amount> <unit>`];
         }
 
       //teleport-armies <user> <armies> <provinces>
@@ -459,7 +455,7 @@ module.exports = {
 
           return debugTeleportArmies(user_id, arg[2], arg[3]);
         } else {
-          return [false, `$teleport-armies <user> <armies> <provinces>`];
+          return [false, `${settings.prefix}teleport-armies <user> <armies> <provinces>`];
         }
 
       //teleport-army <user> <armies> <province>
@@ -469,7 +465,7 @@ module.exports = {
 
           return debugTeleportArmy(user_id, arg[2], arg[3]);
         } else {
-          return [false, `$teleport-army <user> <armies> <province>`];
+          return [false, `${settings.prefix}teleport-army <user> <armies> <province>`];
         }
     }
   }
