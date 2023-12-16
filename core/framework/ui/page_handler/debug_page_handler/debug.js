@@ -3,11 +3,6 @@ module.exports = {
     //Convert from parameters
     var arg = arg0_arg;
 
-    //Help command
-    {
-
-    }
-
     //Buildings
     {
       //construct <user> <amount> <building> <province>
@@ -468,5 +463,124 @@ module.exports = {
           return [false, `${settings.prefix}teleport-army <user> <armies> <province>`];
         }
     }
+  },
+
+  //printHelpMenu() - Prints a split embed page menu displaying all debug commands.
+  printHelpMenu: function (arg0_message) {
+    //Convert from parameters
+    var message = arg0_message;
+
+    //Declare local instance variables
+    var help_string = [];
+
+    //Format help_string
+    {
+      help_string.push(`**General Commands:**`);
+      help_string.push(`\`${settings.prefix}help\` - Brings up the help menu.`);
+      help_string.push("");
+      help_string.push(`**Countries:**`);
+      help_string.push(`\`${settings.prefix}construct <user> <amount> <building> <province>\` - Begins building construction in a city without material checks.`);
+      help_string.push(`\`${settings.prefix}instant-construct <user> <amount> <building> <province>\` - Instantly constructs a building.`);
+      help_string.push(`\`${settings.prefix}process-building <user> <building>\` - Processes a building.`);
+      help_string.push(`\`${settings.prefix}process-buildings <user> <provinces>\` - Processes buildings in a given province.`);
+      help_string.push("");
+
+      help_string.push(`**Countries:**`);
+      help_string.push(`\`${settings.prefix}control-country <user> <ot_user>\` - Gives a user control of another country.`);
+      help_string.push(`\`${settings.prefix}create-country <id> <provinces> <name>\` - Gives a user control of another country.`);
+      help_string.push(`\`${settings.prefix}delete-country <user>\` - Gives a user control of another country.`);
+      help_string.push("");
+
+      help_string.push(`**Date:**`);
+      help_string.push(`\`${settings.prefix}freeze-time\` - Freezes time.`);
+      help_string.push(`\`${settings.prefix}freeze-turns\` - Freezes turn processing.`);
+      help_string.push(`\`${settings.prefix}set-date <year> <month> <day>\` - Sets the date.`);
+      help_string.push("");
+
+      help_string.push(`**Diplomacy:**`);
+      help_string.push(`\`${settings.prefix}ally <user> <ot_user>\` - Sets an alliance between two countries.`);
+      help_string.push(`\`${settings.prefix}dissolve-alliance <user> <ot_user>\` - Reoves an alliance.`);
+      help_string.push(`\`${settings.prefix}dissolve-non-aggression <user> <ot_user>\` - Removes a non-aggression pact.`);
+      help_string.push(`\`${settings.prefix}end-war <war_name>\` - Ends a war in white peace.`);
+      help_string.push(`\`${settings.prefix}give-cb <user> <ot_user> <cb_name> <turns>\` - Gives a CB to a country on a target.`);
+      help_string.push(`\`${settings.prefix}non-aggression <user> <ot_user> <turns>\` - Sets a non-aggression pact between two countries for a given duration.`);
+      help_string.push(`\`${settings.prefix}set-mutual-relations <user> <ot_user> <value>\` - Sets mutual relations for both countries.`);
+      help_string.push(`\`${settings.prefix}set-relations <user> <ot_user> <value>\` - Sets the opinion of a country of another country.`);
+      help_string.push(`\`${settings.prefix}vassalise <user> <ot_user>\` - Vassalises <user> under <ot_user>.`);
+      help_string.push(`\`${settings.prefix}war <user> <ot_user> <cb_name>\` - Declares a war between two countries using a given CB. <user> is the attacker by default.`);
+      help_string.push("");
+
+      help_string.push(`**Games:**`);
+      help_string.push(`\`${settings.prefix}clean-games\` - Cleans up any abandoned games.`);
+      help_string.push(`\`${settings.prefix}reset-games\` - Resets all game instances.`);
+      help_string.push(`\`${settings.prefix}reset-interfaces\` - Renders current interfaces inert, kicks everyone back to the lobby.`);
+      help_string.push("");
+
+      help_string.push(`**Goods:**`);
+      help_string.push(`\`${settings.prefix}delete <user> <amount> <good>\` - Deletes goods/money from a user's inventory.`);
+      help_string.push(`\`${settings.prefix}give <user> <amount> <good>\` - Gives a user goods/money.`);
+      help_string.push("");
+
+      help_string.push(`**Governments:**`);
+      help_string.push(`\`${settings.prefix}change-government <user> <government>\` - Changes a country's government.`);
+      help_string.push(`\`${settings.prefix}give-pc <user> <amount>\` - Gives a user Political Capital.`);
+      help_string.push("");
+
+      help_string.push(`**Map:**`);
+      help_string.push(`\`${settings.prefix}render-all-maps\` - Renders all map SVGs to raster.`);
+      help_string.push(`\`${settings.prefix}render-map <map>\` - Caches a current SVG.`);
+      help_string.push("");
+
+      help_string.push(`**Politics:**`);
+      help_string.push(`\`${settings.prefix}add-party-popularity <user> <amount> <ideology>\` - Adds to a party's popularity by a proportional percentage.`);
+      help_string.push(`\`${settings.prefix}pass-reform <user> <reform>\` - Passes a legal reform.`);
+      help_string.push(`\`${settings.prefix}set-party-popularity <user> <amount> <ideology>\` - Sets a party's popularity proportionally.`);
+      help_string.push("");
+
+      help_string.push(`**Pops:**`);
+      help_string.push(`\`${settings.prefix}add-pops <amount> <pop_types> <province>\` - Adds pops to a province.`);
+      help_string.push(`\`${settings.prefix}move-pops <amount> <pop_types> <from_province> <to_province>\` - Moves pops between provinces.`);
+      help_string.push(`\`${settings.prefix}remove-pops <amount> <pop_types> <province>\` - Removes pops from a province.`);
+      help_string.push(`\`${settings.prefix}reset-pops\` - Resets the pops of all provinces back to their default generation scheme.`);
+      help_string.push(`\`${settings.prefix}process-pops <user>\` - Processes all pop behaviour in a given country.`);
+      help_string.push("");
+
+      help_string.push(`**Provinces:**`);
+      help_string.push(`\`${settings.prefix}settle-province <user> <provinces>\` - Settles uncolonised provinces for a given country.`);
+      help_string.push(`\`${settings.prefix}transfer-provinces <user> <provinces> <ot_user>\` - Transfers provinces between countries.`);
+      help_string.push("");
+
+      help_string.push(`**Research:**`);
+      help_string.push(`\`${settings.prefix}instant-research <user> <technology>\` - Instantly researches a technology for a country.`);
+      help_string.push(`\`${settings.prefix}research-up-to <user> <knowledge_cost>\` - Researches all techs up to a given tier as defined by knowledge cost.`);
+      help_string.push("");
+
+      help_string.push(`**Turns:**`);
+      help_string.push(`\`${settings.prefix}next-global-turn\` - Processes an entire game turn.`);
+      help_string.push(`\`${settings.prefix}next-turn <user>\` - Processes a turn for a single country.`);
+      help_string.push("");
+
+      help_string.push(`**Units:**`);
+      help_string.push(`\`${settings.prefix}remove-units <user> <amount> <unit>\` - Removes units from a country's reserves.`);
+      help_string.push(`\`${settings.prefix}spawn-units <user> <amount> <unit>\` - Spawns units in a country's reserves.`);
+      help_string.push(`\`${settings.prefix}teleport-armies <user> <armies> <provinces>\` - Teleports armies tgo a set of given provinces.`);
+      help_string.push(`\`${settings.prefix}teleport-army <user> <armies> <province>\` - Teleports a series of armies to a given province.`);
+    }
+
+    //Split embed and return page menu
+    var help_array = splitString(help_string, 2800);
+    var help_embed_array = splitEmbed(help_array, {
+      title: `Admin Commands:`,
+      title_pages: true,
+      fixed_width: true
+    });
+
+    //Send to message.channel
+    message.channel.send(config.localisation.blank).then((msg) => {
+      createPageMenu(msg, {
+        embed_pages: help_embed_array,
+        user: message.author.id
+      });
+    });
   }
 };

@@ -94,6 +94,9 @@ client.on("messageCreate", async (message) => {
     //Debug commands (these ones have a prefix)
     if (message.member.roles.cache.find(role => settings.administrator_roles.includes(role.id))) {
       if (equalsIgnoreCase(arg[0], settings.prefix)) {
+        if (equalsIgnoreCase(arg[1], "help"))
+          printHelpMenu(message);
+
         //Used to eval
         if (equalsIgnoreCase(arg[1], "console")) {
           var full_code = [];
@@ -152,8 +155,6 @@ client.on("messageCreate", async (message) => {
         //Debug handler
         var new_args = JSON.parse(JSON.stringify(arg));
         new_args.shift();
-
-        console.log(new_args);
 
         var debug_handler = pageHandlerDebug(new_args);
 
