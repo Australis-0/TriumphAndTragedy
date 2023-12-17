@@ -568,7 +568,7 @@ module.exports = {
     }
 
     //Split embed and return page menu
-    var help_array = splitString(help_string, 2800);
+    var help_array = splitString(help_string.join("\n"), 2800);
     var help_embed_array = splitEmbed(help_array, {
       title: `Admin Commands:`,
       title_pages: true,
