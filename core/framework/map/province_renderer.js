@@ -14,6 +14,8 @@ module.exports = {
     var actual_id = main.global.user_map[user_id];
     var usr = main.users[actual_id];
 
+    if (!usr.colour) usr.colour = generateRandomColour();
+
     var new_colour = usr.colour;
 
     //Check if occupied or not

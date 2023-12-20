@@ -1,7 +1,8 @@
 module.exports = {
-  pageHandlerDebug: function (arg0_arg) {
+  pageHandlerDebug: function (arg0_arg, arg1_message) {
     //Convert from parameters
     var arg = arg0_arg;
+    var message = arg1_message;
 
     //Buildings
     {
@@ -53,6 +54,12 @@ module.exports = {
         if (arg.length >= 3) {
           var user_id = returnMention(arg[1]);
           var ot_user_id = returnMention(arg[2]);
+
+          return debugControlCountry(user_id, ot_user_id);
+        } else if (arg.length == 2) {
+          var user_id = message.author.id;
+
+          var ot_user_id = returnMention(arg[1]);
 
           return debugControlCountry(user_id, ot_user_id);
         } else {

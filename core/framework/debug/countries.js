@@ -18,7 +18,7 @@ module.exports = {
       //Return statement
       return (current_usr) ?
         [true, `Switched <@${user_id}> from **${current_usr.name}** to controlling **${ot_user.name}**.`] :
-        [true, `Switched <@${user_id}> to controlling **${ot_user.name}`];
+        [true, `Switched <@${user_id}> to controlling **${ot_user.name}**.`];
     } else {
       return [false, `**${ot_user_id}** is not a valid User ID!`];
     }
@@ -44,7 +44,7 @@ module.exports = {
 
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
-    var usr = main.users[actual_id];
+    var usr = JSON.parse(JSON.stringify(main.users[actual_id]));
 
     deleteCountry(user_id);
 

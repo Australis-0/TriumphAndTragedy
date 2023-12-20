@@ -156,7 +156,7 @@ client.on("messageCreate", async (message) => {
         var new_args = JSON.parse(JSON.stringify(arg));
         new_args.shift();
 
-        var debug_handler = pageHandlerDebug(new_args);
+        var debug_handler = pageHandlerDebug(new_args, message);
 
         if (debug_handler)
           message.channel.send(debug_handler[1]);

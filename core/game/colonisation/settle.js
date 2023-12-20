@@ -233,6 +233,8 @@ module.exports = {
 
         //No errors were ran into, begin instantly settling provinces
         for (var i = 0; i < provinces.length; i++) {
+          provinces[i] = provinces[i].trim();
+
           settleProvince(user_id, provinces[i]);
           setAllProvinceColours(user_id, provinces[i]);
           display_provinces.push(`**${provinces[i]}**`);

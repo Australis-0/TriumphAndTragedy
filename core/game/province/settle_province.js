@@ -10,6 +10,9 @@ module.exports = {
     var province_obj = main.provinces[province_id];
     var usr = main.users[actual_id];
 
+    if (!usr.pops)
+      usr.pops = {};
+
     try {
       if (!province_obj.type) {
         var primary_culture = getPrimaryCultures(user_id)[0];
@@ -69,7 +72,7 @@ module.exports = {
         var total_population = 0;
         for (var i = 0; i < all_pop_types.length; i++) {
           total_population += returnSafeNumber(province_obj.pops[all_pop_types[i]]);
-          usr.pops[all_pop_types[i]] += returnSafeNumber(province_obj.pops[all_pop_types[i]]);
+          modifyValue(usr.pops, all_pop_types[i], returnSafeNumber(province_obj.pops[all_pop_types[i]]));
         }
 
         //Set culture and other modifiers/trackers
