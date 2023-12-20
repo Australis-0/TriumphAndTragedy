@@ -84,7 +84,6 @@ module.exports = {
         setAllProvinceColours(user_id, province_id);
       } else {
         log.warn(`settleProvince() - ran into an error whilst generating Province ID ${province_id}: Province already had a province type.`);
-        console.log(e);
       }
     } catch (e) {
       log.warn(`Could not generate Province ID ${province_id}: ${e}.`);

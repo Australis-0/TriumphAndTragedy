@@ -31,8 +31,10 @@ module.exports = {
     var country_name = arg2_name;
 
     //Init country and settle starting provinces
+    main.global.user_map[country_id] = country_id;
+
     initCountry(country_id, country_name);
-    settleStartingProvinces(user_id, provinces, true);
+    settleStartingProvinces(country_id, provinces, true);
 
     //Return statement
     return [true, `Founded **${country_name}** in **${parseProvinces(provinces)}**.`];

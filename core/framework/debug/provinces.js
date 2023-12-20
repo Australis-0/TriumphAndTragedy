@@ -2,7 +2,7 @@ module.exports = {
   debugSettleProvince: function (arg0_user, arg1_provinces) {
     //Convert from parameters
     var user_id = arg0_user;
-    var provinces = getList(arg1_provinces);
+    var provinces = getList(arg1_provinces.split(" "));
 
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
@@ -58,7 +58,7 @@ module.exports = {
         }
       }
 
-      return [true, `You have ceded **${parseNumber(ceded_provinces)}** province(s) from **${usr.name}** to **${ot_user}**.`];
+      return [true, `You have ceded **${parseNumber(ceded_provinces)}** province(s) from **${usr.name}** to **${ot_user.name}**.`];
     } else {
       return [false, `One of the users you have specified does not exist.`];
     }
