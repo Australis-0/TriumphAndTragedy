@@ -52,7 +52,7 @@ module.exports = {
       //control-country <user> <ot_user>
       if (arg[0] == "control-country")
         if (arg.length >= 3) {
-          var user_id = returnMention(arg[1]);
+          var user_id = parseMention(arg[1]);
           var ot_user_id = returnMention(arg[2]);
 
           return debugControlCountry(user_id, ot_user_id);
@@ -367,7 +367,7 @@ module.exports = {
     //Provinces
     {
       //settle-province <user> <provinces>
-      if (arg[0] == "settle-province")
+      if (["settle-province", "settle-provinces"].includes(arg[0]))
         if (arg.length >= 3) {
           var user_id = returnMention(arg[1]);
 
@@ -377,12 +377,12 @@ module.exports = {
         }
 
       //transfer-provinces <user> <provinces> <ot_user>
-      if (arg[0] == "transfer-provinces")
+      if (["transfer-province", "transfer-provinces"].includes(arg[0]))
         if (arg.length >= 4) {
           var user_id = returnMention(arg[1]);
           var ot_user_id = returnMention(arg[3]);
 
-          return debugTransferProvinces(user_id, arg[2], ot_user_id);
+          return debugTransferProvinces(user_id, arg[2].split(" "), ot_user_id);
         } else {
           return [false, `${settings.prefix}transfer-provinces <user> <provinces> <ot_user>`];
         }

@@ -31,13 +31,17 @@ module.exports = {
     var country_name = arg2_name;
 
     //Init country and settle starting provinces
-    main.global.user_map[country_id] = country_id;
+    if (!main.users[country_id]) {
+      main.global.user_map[country_id] = country_id;
 
-    initCountry(country_id, country_name);
-    settleStartingProvinces(country_id, provinces, true);
+      initCountry(country_id, country_name);
+      settleStartingProvinces(country_id, provinces, true);
 
-    //Return statement
-    return [true, `Founded **${country_name}** in **${parseProvinces(provinces)}**.`];
+      //Return statement
+      return [true, `Founded **${country_name}** in **${parseProvinces(provinces)}**.`];
+    } else {
+      return [false, `This country ID is already taken.`];
+    }
   },
 
   debugDeleteCountry: function (arg0_user) {

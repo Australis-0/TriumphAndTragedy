@@ -235,7 +235,7 @@ module.exports = {
         }
 
         if (main.global.user_map[local_id])
-          main.global.user_map[local_id];
+          return main.global.user_map[local_id];
       } else {
         return nation_found[1];
       }
