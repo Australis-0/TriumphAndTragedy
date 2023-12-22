@@ -15,19 +15,23 @@ module.exports = {
 
     if (usr) {
       if (province_obj) {
-        var base_construction_turns = (building_obj.construction_turns) ?
-          building_obj.construction_turns :
-          config.defines.economy.construction_turns;
-        var total_construction_time = Math.ceil(base_construction_turns*usr.modifiers.construction_time);
+        if (!isNaN(raw_amount)) {
+          var base_construction_turns = (building_obj.construction_turns) ?
+            building_obj.construction_turns :
+            config.defines.economy.construction_turns;
+          var total_construction_time = Math.ceil(base_construction_turns*usr.modifiers.construction_time);
 
-        usr.under_construction.push({
-          building_type: raw_building_name,
-          building_amount: raw_amount,
-          construction_turns: total_construction_time,
-          province_id: city_obj.id
-        });
+          usr.under_construction.push({
+            building_type: raw_building_name,
+            building_amount: raw_amount,
+            construction_turns: total_construction_time,
+            province_id: province_obj.id
+          });
 
-        return [true, `Began constructing **${parseNumber(building_amount)}** ${(building_amount == 1) ? (building_obj.singular) ? building_obj.singular : raw_building_name : (building_obj.name) ? building_obj.name : raw_building_name} in **${city_obj.name}**! Your advisors estimate that construction will complete in **${parseNumber(total_construction_time)}** turn(s).`];
+          return [true, `Began constructing **${parseNumber(raw_amount)}** ${(raw_amount == 1) ? (building_obj.singular) ? building_obj.singular : raw_building_name : (building_obj.name) ? building_obj.name : raw_building_name} in **${province_obj.name}**! Your advisors estimate that construction will complete in **${parseNumber(total_construction_time)}** turn(s).`];
+        } else {
+          return [false, `The number you have inputted must be an actual number.`];
+        }
       } else {
         return [false, `Could not find Province ${province_id}.`];
       }
@@ -104,7 +108,7 @@ module.exports = {
 
     if (usr) {
       for (var i = 0; i < provinces.length; i++) {
-        var local_province = main.provinces[provinces[i]];
+        var local_province = getProvince(provinces[i]);
 
         if (local_province)
           if (local_province.buildings)

@@ -448,7 +448,7 @@ module.exports = {
           local_field.push(`- Supply: ${config.icons.railways} (${parseNumber(supply_use)}/${parseNumber(supply_limit)})${(supply_use > supply_limit) ? ` :warning:` : ""}`);
 
           //Push field to list
-          fields_list.push({ name: `__**${parseProvince(provinces[i])}**:__`, value: local_field.join("\n"), inline: true });
+          fields_list.push({ name: `__**${parseProvince(provinces[i])}**:__`, value: truncateString(local_field.join("\n"), 1000), inline: true });
         } catch (e) {
           log.warn(`Could not print provinces for user ${usr.name}!`);
           console.log(e);
@@ -465,7 +465,7 @@ module.exports = {
       splitEmbed(province_string, {
         fields: fields_list,
         fixed_width: true,
-        maximum_fields: 12,
+        maximum_fields: 4,
         table_width: 2,
         title: "Province List:",
         title_pages: true

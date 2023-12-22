@@ -138,6 +138,9 @@ module.exports = {
     var modifiers_string = [];
     var resource_production_string = [];
 
+    //Fix tracker variables
+    usr.city_cap = getCitiesCap(user_id);
+
     //Format embed
     economy_string.push(`__**Population:**__`);
     economy_string.push(config.localisation.divider);

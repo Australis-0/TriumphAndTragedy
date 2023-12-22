@@ -37,6 +37,7 @@ module.exports = {
 
       //[Found City]
       if (input == "found city") {
+        usr.city_cap = getCitiesCap(user_id);
         initialiseFoundCity(user_id);
 
         return true;
