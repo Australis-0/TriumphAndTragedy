@@ -52,9 +52,13 @@ module.exports = {
 
     if (usr) {
       if (province_obj) {
-        constructBuilding(amount, building_obj.name, province_obj.id);
+        if (building_obj) {
+          constructBuilding(amount, building_obj.name, province_obj.id);
 
-        return [true, `Instantly constructed **${parseNumber(amount)}** ${(building_obj.name) ? building_obj.name : raw_building_name} in ${parseProvince(province_obj)}`];
+          return [true, `Instantly constructed **${parseNumber(amount)}** ${(building_obj.name) ? building_obj.name : raw_building_name} in ${parseProvince(province_obj)}.`];
+        } else {
+          return [false, `No building by that name could be found.`];
+        }
       } else {
         return [false, `Could not find Province ${province_id}.`];
       }

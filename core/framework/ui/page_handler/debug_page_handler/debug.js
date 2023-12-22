@@ -17,7 +17,7 @@ module.exports = {
         }
 
       //instant-construct <user> <amount> <building> <province>
-      if (arg[0] == "instant-construct")
+      if (["ic", "instant-construct"].includes(arg[0]))
         if (arg.length >= 5) {
           var user_id = returnMention(arg[1]);
 

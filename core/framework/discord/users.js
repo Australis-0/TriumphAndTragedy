@@ -234,8 +234,9 @@ module.exports = {
           }
         }
 
-        if (main.global.user_map[local_id])
-          return main.global.user_map[local_id];
+        if (local_id)
+          if (main.global.user_map[local_id])
+            return main.global.user_map[local_id];
       } else {
         return nation_found[1];
       }
@@ -259,8 +260,5 @@ module.exports = {
 
     if (user_exists)
       if (main.global.user_map[user_id]) return main.global.user_map[user_id];
-
-    //Else simply return user_id
-    return parseMention(user_id);
   },
 };
