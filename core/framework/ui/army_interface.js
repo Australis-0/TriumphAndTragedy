@@ -432,36 +432,42 @@ module.exports = {
     //Sort user armies
     var all_armies = sortArmies(user_id, game_obj.armies_sorting_mode);
     var armies_string = [];
+    var printed_armies = [];
 
     //Format armies_string
     for (var i = 0; i < all_armies.length; i++) {
       var local_army = usr.armies[all_armies[i]];
       var local_icon = "";
 
-      //Find icon
-      switch (local_army.type) {
-        case "army":
-          local_icon = config.icons.active_personnel + " ";
+      //Make sure army list doesn't duplicate
+      if (!printed_armies.includes(all_armies[i])) {
+        printed_armies.push(all_armies[i]);
 
-          break;
-        case "navy":
-          local_icon = config.icons.naval_units + " ";
+        //Find icon
+        switch (local_army.type) {
+          case "army":
+            local_icon = config.icons.active_personnel + " ";
 
-          break;
-        case "air":
-          local_icon = config.icons.aeroplanes + " ";
+            break;
+          case "navy":
+            local_icon = config.icons.naval_units + " ";
 
-          break;
-      }
+            break;
+          case "air":
+            local_icon = config.icons.aeroplanes + " ";
 
-      armies_string.push(`- ${local_icon}**${local_army.name}** (${local_army.status}, Province #**${local_army.province}**). **[View ${local_army.name}]**`);
+            break;
+        }
 
-      if (local_army.volunteering) {
-        var local_war = main.global.wars[local_army.volunteering[1]];
+        armies_string.push(`- ${local_icon}**${local_army.name}** (${local_army.status}, Province #**${local_army.province}**). **[View ${local_army.name}]**`);
 
-        var friendly_side = (local_war[`${actual_id}_sent_volunteers`] == "attackers") ? "attacking" : "defending";
+        if (local_army.volunteering) {
+          var local_war = main.global.wars[local_army.volunteering[1]];
 
-        armies_string.push(`• Volunteering in the **${local_war.name}** on the ${friendly_side} side!`);
+          var friendly_side = (local_war[`${actual_id}_sent_volunteers`] == "attackers") ? "attacking" : "defending";
+
+          armies_string.push(`• Volunteering in the **${local_war.name}** on the ${friendly_side} side!`);
+        }
       }
     }
 

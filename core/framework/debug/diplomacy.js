@@ -157,6 +157,7 @@ module.exports = {
     }
   },
 
+  //[WIP] - This debug command doesn't completely work. Only works for one party.
   debugSetMutualRelations: function (arg0_user, arg1_user, arg2_value) {
     //Convert from parameters
     var user_id = arg0_user;
@@ -184,7 +185,7 @@ module.exports = {
           relations_obj.value = value;
 
           //Return statement
-          return [true, `Mutual relations between **${usr.name}** and **${ot_user.name}** have been set to **${parseNumber(value, { display_prefix: true })}`];
+          return [true, `Mutual relations between **${usr.name}** and **${ot_user.name}** have been set to **${parseNumber(value, { display_prefix: true })}**.`];
         } else {
           return [false, `Value must be within the range [-100, 100].`];
         }
