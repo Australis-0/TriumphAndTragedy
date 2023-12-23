@@ -175,7 +175,7 @@ client.on("messageCreate", async (message) => {
       if (getGame(user_id)) {
         var game_obj = interfaces[getGame(user_id)];
 
-        if (game_obj.channel == message.channel.id) {
+        if (main.game_channels.includes(message.channel.id)) {
           setTimeout(function(){
             message.delete();
           }, 1000);
@@ -225,8 +225,9 @@ setInterval(function(){
 	}
 
   //Combat processing
-  if (battle_difference > (settings.turn_timer*1000)/10)
-    nextBattleTick();
+  if (!main.freeze_turns)
+    if (battle_difference > (settings.turn_timer*1000)/10)
+      nextBattleTick();
 
   //Date processing
   if (main.season_started && !main.freeze_time) {

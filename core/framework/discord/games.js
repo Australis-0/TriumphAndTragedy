@@ -72,6 +72,7 @@ module.exports = {
 
                 if (local_channel)
                   local_channel.delete();
+                main.game_channels = removeElement(main.game_channels);
 
                 //Delete game_obj as well
                 delete interfaces[game_id];
@@ -107,22 +108,8 @@ module.exports = {
     for (var i = 0; i < all_interfaces.length; i++) {
       var local_game_obj = interfaces[all_interfaces[i]];
 
-      if (local_game_obj.type == "game") {
-        //Error trapping just in case channel doesn't exist
-        try {
-          if (local_ui.channel != settings.alert_channel) {
-            var local_channel = returnChannel(local_game_obj.channel);
-
-            if (local_channel)
-              local_channel.delete();
-          }
-        } catch (e) {
-          log.warn(`Game channel for Game ID ${all_interfaces[i]} could not be found: ${e}.`);
-        }
-
-        //Remove game object
-        delete interfaces[all_interfaces[i]];
-      }
+      if (local_game_obj.type == "game")
+        clearGame(all_interfaces[i]);
     }
   },
 
@@ -130,20 +117,12 @@ module.exports = {
     //Declare local instance variables
     var all_interfaces = Object.keys(interfaces);
 
+    //Clear games
+    module.exports.clearGames();
+
     //Delete all interfaces
     for (var i = 0; i < all_interfaces.length; i++) {
       var local_ui = interfaces[all_interfaces[i]];
-
-      //Error trapping just in case
-      try {
-        if (local_ui.channel)
-          if (local_ui.channel != settings.alert_channel) {
-            var local_channel = returnChannel(local_ui.channel);
-
-            if (local_channel)
-              local_channel.delete();
-          }
-      } catch {}
 
       main.interfaces = {};
       interfaces = {};
@@ -201,6 +180,7 @@ module.exports = {
           }
         ]);
 
+        main.game_channels.push(channel.id);
         interfaces[game_id].channel = channel.id;
         interfaces[game_id].map = {};
         interfaces[game_id].page = (main.global.user_map[user_id]) ? "country_interface" : "founding_map";
@@ -447,51 +427,55 @@ module.exports = {
        //Reinitialise all game embeds
        for (var i = 0; i < all_interfaces.length; i++)
         if (main.interfaces[all_interfaces[i]].channel) {
-          var local_interface = all_interfaces[i];
-          var local_ui = main.interfaces[all_interfaces[i]];
+          var local_channel_id = main.interfaces[all_interfaces[i]].channel;
 
-          //Set cache
-          cache[local_ui.channel] = all_interfaces[i];
+          if (main.game_channels.includes(local_channel_id)) {
+            var local_interface = all_interfaces[i];
+            var local_ui = main.interfaces[all_interfaces[i]];
 
-          //Try to fetch existing messages first
-          var reinitialisation_loop = setInterval(function(local_ui, local_interface){
-            if (local_ui.type == "game")
-              if (returnChannel(local_ui.channel))
-                var local_messages = returnChannel(local_ui.channel).messages.fetch({ limit: 100 }).then((messages) => {
-                  var all_messages = [...messages];
-                  var fetched_game_embeds = [];
+            //Set cache
+            cache[local_ui.channel] = all_interfaces[i];
 
-                  for (var x = 0; x < all_messages.length; x++) {
-                    var is_game_embed = [false, ""];
+            //Try to fetch existing messages first
+            var reinitialisation_loop = setInterval(function(local_ui, local_interface){
+              if (local_ui.type == "game")
+                if (returnChannel(local_ui.channel))
+                  var local_messages = returnChannel(local_ui.channel).messages.fetch({ limit: 100 }).then((messages) => {
+                    var all_messages = [...messages];
+                    var fetched_game_embeds = [];
 
-                    try {
-                      for (var y = 0; y < game_embeds.length; y++)
-                        if (local_ui[game_embeds[y]].id == all_messages[x][0])
-                          is_game_embed = [true, game_embeds[y]];
+                    for (var x = 0; x < all_messages.length; x++) {
+                      var is_game_embed = [false, ""];
 
-                      if (is_game_embed[0]) {
-                        local_ui[is_game_embed[1]] = all_messages[x][1];
-                        fetched_game_embeds.push(all_messages[x][0]);
-                      }
-                    } catch {}
-                  }
-
-                  //Initialise game loop
-                  try {
-                    module.exports.initialiseGameLoop(local_interface);
-                  } catch {}
-
-                  clearInterval(reinitialisation_loop);
-
-                  for (var x = 0; x < all_messages.length; x++)
-                    if (!fetched_game_embeds.includes(all_messages[x][0]))
                       try {
-                        if (local_ui.channel != settings.alert_channel)
-                          if (!all_messages[x][1].author.bot)
-                            all_messages[x][1].delete();
+                        for (var y = 0; y < game_embeds.length; y++)
+                          if (local_ui[game_embeds[y]].id == all_messages[x][0])
+                            is_game_embed = [true, game_embeds[y]];
+
+                        if (is_game_embed[0]) {
+                          local_ui[is_game_embed[1]] = all_messages[x][1];
+                          fetched_game_embeds.push(all_messages[x][0]);
+                        }
                       } catch {}
-                });
-          }, 3000, local_ui, local_interface);
+                    }
+
+                    //Initialise game loop
+                    try {
+                      module.exports.initialiseGameLoop(local_interface);
+                    } catch {}
+
+                    clearInterval(reinitialisation_loop);
+
+                    for (var x = 0; x < all_messages.length; x++)
+                      if (!fetched_game_embeds.includes(all_messages[x][0]))
+                        try {
+                          if (local_ui.channel != settings.alert_channel)
+                            if (!all_messages[x][1].author.bot)
+                              all_messages[x][1].delete();
+                        } catch {}
+                  });
+            }, 3000, local_ui, local_interface);
+          }
         }
 
       //Clear all menus of type page_menu, visual_prompt, dead games

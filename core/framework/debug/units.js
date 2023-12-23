@@ -18,8 +18,11 @@ module.exports = {
           if (usr.reserves[unit_key] != undefined) {
             usr.reserves[unit_key] -= amount;
 
-            if (usr.reserves[unit_key] <= 0)
+            if (usr.reserves[unit_key] <= 0) {
               delete usr.reserves[unit_key];
+            } else {
+              return [true, `Deleted **${parseNumber(amount)}** ${(unit_obj.name) ? unit_obj.name : unit_key} from **${usr.name}**'s reserves.`];
+            }
 
             return [true, `Deleted all ${(unit_obj.name) ? unit_obj.name : unit_key} from **${usr.name}**'s reserves.`];
           }

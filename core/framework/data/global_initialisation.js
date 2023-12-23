@@ -7,6 +7,7 @@ module.exports = {
     var all_main_keys = Object.keys(main);
 
     //Stub objects
+    if (!main.game_channels) main.game_channels = [];
     if (!main.users) main.users = {};
 
     //Bugfixes
