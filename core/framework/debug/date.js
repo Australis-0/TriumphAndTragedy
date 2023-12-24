@@ -1,6 +1,6 @@
 module.exports = {
   debugFreezeTime: function () {
-    if (!main.global.freeze_time) {
+    if (!main.freeze_time) {
       main.freeze_time = true;
 
       return [true, `Froze time.`];
@@ -12,7 +12,7 @@ module.exports = {
   },
 
   debugFreezeTurns: function () {
-    if (!main.global.freeze_turns) {
+    if (!main.freeze_turns) {
       main.freeze_turns = true;
 
       return [true, `Froze turn processing.`];
