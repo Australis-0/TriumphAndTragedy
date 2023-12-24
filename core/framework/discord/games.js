@@ -67,7 +67,7 @@ module.exports = {
         if (game_obj)
           var delete_loop = setInterval(function(channel_id) {
             try {
-              if (game_obj.channel != settings.alert_channel) {
+              if (game_obj.channel != settings.alert_channel && main.game_channels.includes(game_obj.channel)) {
                 var local_channel = returnChannel(channel_id);
 
                 if (local_channel)
