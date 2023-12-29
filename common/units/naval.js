@@ -25,7 +25,7 @@ config.units.naval = {
       naval_units_cp: 5
     },
     maintenance: {
-      foods:2,
+      foods: 2,
       citrus: 1,
       iron: 1,
       lumber: 1,
@@ -1233,7 +1233,7 @@ config.units.naval = {
     cost: {
       regular_steel: 25,
       machine_parts: 25,
-      foods:15,
+      foods: 15,
       integrated_circuits: 15,
       stainless_steel: 14,
       computers: 12,
