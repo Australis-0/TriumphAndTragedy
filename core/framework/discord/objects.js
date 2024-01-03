@@ -264,11 +264,12 @@ module.exports = {
     return all_keys;
   },
 
-  mergeObjects: function (arg0_scope, arg1_scope, arg2_overwrite) {
-    //Convert from parameters
+  mergeObjects: function (arg0_scope, arg1_scope, arg2_overwrite, arg3_must_have_difference) {
+    //Convert from parameters - merge_obj overwrites onto merged_obj
     var merged_obj = JSON.parse(JSON.stringify(arg0_scope));
     var merge_obj = JSON.parse(JSON.stringify(arg1_scope));
     var overwrite = arg2_overwrite;
+    var must_have_difference = arg3_must_have_difference;
 
     //Declare local instance variables
     var all_merge_keys = Object.keys(merge_obj);
@@ -280,7 +281,10 @@ module.exports = {
 
       if (typeof local_value == "number") {
         if (merged_obj[all_merge_keys[i]]) {
-          merged_obj[all_merge_keys[i]] = (overwrite) ?
+          //Check if variable should be overwritten
+          var to_overwrite = (overwrite || (must_have_difference && current_value == local_value));
+
+          merged_obj[all_merge_keys[i]] = (to_overwrite) ?
             merged_obj[all_merge_keys[i]] + local_value :
             local_value; //Add numbers together
         } else {

@@ -1,22 +1,5 @@
 //ABRS - Automated Backup and Restoration System (ABRS)
 module.exports = {
-  hasAvailableWorker: function (arg0_type) {
-    //Convert from parameters
-    var type = arg0_type;
-
-    //Guard clause for master thread
-    if (type == 1)
-      return true;
-    if (type == 2)
-      if (global.thread_two_workers)
-        if (global.thread_two_workers.length > 0)
-          return true;
-    if (type == 3)
-      if (global.thread_three_workers)
-        if (global.thread_three_workers.length > 0)
-          return true;
-  },
-
   //internalWriteSave() is split as internal function for multicoring/multithreading
   internalWriteSave: function (arg0_options) {
     //Convert from parameters

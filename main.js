@@ -208,14 +208,19 @@ if (Cluster.isMaster) {
 
       //Combat processing
       if (!main.freeze_turns)
-        if (battle_difference > (settings.turn_timer*1000)/10)
+        if (battle_difference > (settings.turn_timer*1000)/10) {
+          syncWorkersToMaster();
+
+          main.global.battle_tick = current_date;
+
           if (hasAvailableWorker(3)) {
             thread_three_workers[0].send({
               command: "nextBattleTick"
             });
           } else {
-            nextBattleTick(true);
+            nextBattleTick();
           }
+        }
 
       //Date processing
       if (main.season_started && !main.freeze_time) {
@@ -280,6 +285,9 @@ if (Cluster.isMaster) {
 
       //Turn processing for all users
       if (turn_time_difference > settings.turn_timer*1000) {
+        syncWorkersToMaster();
+
+        main.global.battle_tick = current_date;
         main.last_backup = current_date;
         main.last_turn = current_date;
 
@@ -321,6 +329,7 @@ if (Cluster.isMaster) {
 
   //Fetch number of cores
   var core_amount = OS.cpus().length;
+  global.main_objects = []; //main_objects to clear and merge
   global.thread_two_workers = [];
   global.thread_three_workers = [];
 
@@ -334,12 +343,42 @@ if (Cluster.isMaster) {
 
     //Receive data from worker
     local_worker.on("message", (data) => {
-      if (data.lookup)
-        global.lookup = data.lookup;
-      if (data.main)
+      //Busy worker handling
+      if (data.busy_worker) {
+        for (var x = 0; x < thread_two_workers.length; x++)
+          if (thread_two_workers[x].id == data.busy_worker)
+            thread_two_workers[x].busy = true;
+        for (var x = 0; x < thread_three_workers.length; x++)
+          if (thread_three_workers[x].id == data.busy_worker)
+            thread_three_workers[x].busy = true;
+      } else if (data.free_worker) {
+        for (var x = 0; x < thread_two_workers.length; x++)
+          if (thread_two_workers[x].id == data.free_worker)
+            delete thread_two_workers[x].busy;
+        for (var x = 0; x < thread_three_workers.length; x++)
+          if (thread_three_workers[x].id == data.free_worker)
+            delete thread_three_workers[x].busy;
+      }
+
+      //Receive main_objects and store in queue
+      if (data.main_object)
+        main_objects.push(data.main_object);
+
+      //If all workers in thread_three are free, merge main and clear main_objects
+      if (main_objects.length > 0)
+        if (hasAllWorkersFree(3))
+          thread_three_workers[0].send({
+            command: "mergeMain",
+            main_objects: main_objects
+          });
+
+      //If main is received, sync
+      if (data.main) {
         global.main = data.main;
-      if (data.reserved)
-        global.reserved = data.reserved;
+        main_objects = [];
+      }
+
+      syncMasterToWorker(data);
     });
     local_worker.on("exit", (code) => {
       log.info(`Worker #${local_worker.id} stopped with exit code ${code}.`);
@@ -383,6 +422,8 @@ if (Cluster.isMaster) {
       global.backup_loaded = data.backup_loaded;
     if (data.config)
       global.config = data.config;
+    if (data.load_maps)
+      loadMaps();
     if (data.lookup)
       global.lookup = data.lookup;
     if (data.main)
