@@ -1,5 +1,80 @@
 //ABRS - Automated Backup and Restoration System (ABRS)
 module.exports = {
+  hasAvailableWorker: function (arg0_type) {
+    //Convert from parameters
+    var type = arg0_type;
+
+    //Guard clause for master thread
+    if (type == 1)
+      return true;
+    if (type == 2)
+      if (global.thread_two_workers)
+        if (global.thread_two_workers.length > 0)
+          return true;
+    if (type == 3)
+      if (global.thread_three_workers)
+        if (global.thread_three_workers.length > 0)
+          return true;
+  },
+
+  //internalWriteSave() is split as internal function for multicoring/multithreading
+  internalWriteSave: function (arg0_options) {
+    //Convert from parameters
+    var options = (arg0_options) ? arg0_options : {};
+    var file_limit = (options.file_limit) ? options.file_limit : 0;
+
+    //Declare local instance variables
+    var file_path = `./backups/${returnABRSDateString()}.txt`;
+
+    //Write to file if JSON is not undefined
+    if (JSON.stringify(main).length != 0) {
+      var compressed_json = JSONPack.pack(JSON.parse(JSON.stringify(main)));
+      var create_backup = fs.createWriteStream(`./backups/${returnABRSDateString()}.txt`);
+      create_backup.end();
+
+      fs.writeFile(file_path, JSON.stringify(compressed_json), function (err, data) {
+        if (err) return log.error(err);
+      });
+    } else {
+      loadMostRecentSave();
+    }
+
+    //Make sure amount of files in ./backups/ complies with current file limit
+    if (file_limit != 0) {
+      loadBackupArray();
+      var total_backups = backup_array;
+
+      //Delete oldest file from backup_array if limit is exceeded
+      if (total_backups.length > file_limit) try {
+        var backups_deleted = 0;
+        var backups_to_delete = total_backups.length - file_limit;
+
+        //Loop over total_backups in reverse
+        for (var i = total_backups.length - 1; i >= 0; i--)
+          if (backups_deleted < backups_to_delete) {
+            log.info(`Deleted ${total_backups[i]} as it exceeded the set limit of ${file_limit} simultaneous backups.`);
+            fs.unlinkSync(`./backups/${total_backups[i]}`);
+
+            backups_deleted++;
+          } else {
+            //Check file size
+            var local_file_stats = fs.statSync(`./backups/${total_backups[i]}`);
+
+            if (local_file_stats.size == 0) {
+              log.info(`Deleted ${total_backups[i]} as it had nothing in it.`);
+              fs.unlinkSync(`./backups/${total_backups[i]}`);
+            }
+          }
+      } catch (e) {
+        log.error(`Could not delete excess backup file!`);
+        console.log(e);
+      }
+    }
+
+    //Reload backup array
+    loadBackupArray();
+  },
+
   initialiseGraph: function () {
     //Initialise global graph
     global.graph = global.bn_graph();
@@ -42,7 +117,7 @@ module.exports = {
 
     //Load map or initialise file if it doesn't exist
     if (fs.existsSync("./map/" + map_file)) {
-      global[map_name] = (fs.readFileSync("./map/" + map_file, "utf8").toString().length > 0 && !backup_loaded) ?
+      global[map_name] = (fs.readFileSync("./map/" + map_file, "utf8").toString().length > 0 && !global.backup_loaded) ?
         fs.readFileSync("./map/" + map_file, "utf8") :
         fs.readFileSync("./map/" + config.defines.map.map_definition, "utf8");
 
@@ -58,6 +133,14 @@ module.exports = {
       fs.copyFileSync(`./map/${config.defines.map.map_definition}`, `./map/${map_file}`);
       loadMap(map_file, map_name);
     }
+  },
+
+  loadMaps: function () {
+    loadMap("atlas_map.svg", "atlas");
+  	loadMap("colonisation_map.svg", "colonisation");
+    loadMap("political_map.svg", "political");
+    loadMap("population_map.svg", "population");
+    loadMap("supply_map.svg", "supply");
   },
 
   loadMostRecentSave: function () {
@@ -145,11 +228,7 @@ module.exports = {
     }, 1100);
 
     //Load maps
-    loadMap("atlas_map.svg", "atlas");
-  	loadMap("colonisation_map.svg", "colonisation");
-    loadMap("political_map.svg", "political");
-    loadMap("population_map.svg", "population");
-    loadMap("supply_map.svg", "supply");
+    loadMaps();
 
     console.time(`Initialising graph ..`);
     setTimeout(module.exports.initialiseGraph, 500);
@@ -176,57 +255,14 @@ module.exports = {
   writeSave: function (arg0_options) {
     //Convert from parameters
     var options = (arg0_options) ? arg0_options : {};
-    var file_limit = (options.file_limit) ? options.file_limit : 0;
 
-    //Declare local instance variables
-		var file_path = `./backups/${returnABRSDateString()}.txt`;
-
-    //Write to file if JSON is not undefined
-		if (JSON.stringify(main).length != 0) {
-      var compressed_json = JSONPack.pack(JSON.parse(JSON.stringify(main)));
-			var create_backup = fs.createWriteStream(`./backups/${returnABRSDateString()}.txt`);
-			create_backup.end();
-
-			fs.writeFile(file_path, JSON.stringify(compressed_json), function (err, data) {
-				if (err) return log.error(err);
-			});
-		} else {
-			loadMostRecentSave();
-		}
-
-    //Make sure amount of files in ./backups/ complies with current file limit
-    if (file_limit != 0) {
-      loadBackupArray();
-      var total_backups = backup_array;
-
-      //Delete oldest file from backup_array if limit is exceeded
-      if (total_backups.length > file_limit) try {
-        var backups_deleted = 0;
-        var backups_to_delete = total_backups.length - file_limit;
-
-        //Loop over total_backups in reverse
-        for (var i = total_backups.length - 1; i >= 0; i--)
-          if (backups_deleted < backups_to_delete) {
-            log.info(`Deleted ${total_backups[i]} as it exceeded the set limit of ${file_limit} simultaneous backups.`);
-            fs.unlinkSync(`./backups/${total_backups[i]}`);
-
-            backups_deleted++;
-          } else {
-            //Check file size
-            var local_file_stats = fs.statSync(`./backups/${total_backups[i]}`);
-
-            if (local_file_stats.size == 0) {
-              log.info(`Deleted ${total_backups[i]} as it had nothing in it.`);
-              fs.unlinkSync(`./backups/${total_backups[i]}`);
-            }
-          }
-      } catch (e) {
-        log.error(`Could not delete excess backup file!`);
-        console.log(e);
+    //Write save on Thread #2
+    if (global.thread_type == 1)
+      if (thread_two_workers.length > 0) {
+        thread_two_workers[0].send({ command: "writeSave", options: options });
+      } else {
+        //No available Thread #2 workers found
+        module.exports.internalWriteSave(options);
       }
-    }
-
-    //Reload backup array
-    loadBackupArray();
-	}
+  }
 };

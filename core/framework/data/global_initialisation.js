@@ -10,27 +10,6 @@ module.exports = {
     if (!main.game_channels) main.game_channels = [];
     if (!main.users) main.users = {};
 
-    //Bugfixes
-    {
-      //Compressed data fix
-      {
-        //No clue why it does this
-        for (var i = 0; i < all_main_keys.length; i++)
-          if (all_main_keys[i].endsWith("users") && all_main_keys[i] != "users") {
-            main.users = main[all_main_keys[i]];
-            delete main[all_main_keys[i]];
-          }
-      }
-      //Undefined user fix
-      {
-        var all_users = Object.keys(main.users);
-
-        for (var i = 0; i < all_users.length; i++)
-          if (!main.global.user_map[all_users[i]])
-            main.global.user_map[all_users[i]] = all_users[i];
-      }
-    }
-
     //Force render all maps
     if (!main.global)
       for (var i = 0; i < mapmodes.length; i++)
@@ -86,6 +65,27 @@ module.exports = {
     if (!main.last_backup) main.last_backup = new Date().getTime();
     if (!main.last_queue_check) main.last_queue_check = new Date().getTime();
     if (!main.last_turn) main.last_turn = new Date().getTime();
+
+    //Bugfixes
+    {
+      //Compressed data fix
+      {
+        //No clue why it does this
+        for (var i = 0; i < all_main_keys.length; i++)
+          if (all_main_keys[i].endsWith("users") && all_main_keys[i] != "users") {
+            main.users = main[all_main_keys[i]];
+            delete main[all_main_keys[i]];
+          }
+      }
+      //Undefined user fix
+      {
+        var all_users = Object.keys(main.users);
+
+        for (var i = 0; i < all_users.length; i++)
+          if (!main.global.user_map[all_users[i]])
+            main.global.user_map[all_users[i]] = all_users[i];
+      }
+    }
 
     //Fix province adjacency_distances, ID's
     var all_provinces = Object.keys(main.provinces);

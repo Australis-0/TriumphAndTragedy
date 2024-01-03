@@ -285,7 +285,16 @@ module.exports = {
     //Iterate over all users and process their turns
     for (var i = 0; i < all_users.length; i++)
       try {
-        nextTurn(all_users[i]);
+        if (hasAvailableWorker(3)) {
+          var worker_index = i % thread_three_workers.length;
+
+          thread_three_workers[worker_index].send({
+            command: "nextTurn",
+            user_id: all_users[i]
+          });
+        } else {
+          nextTurn(all_users[i]);
+        }
       } catch (e) {
         console.log(e);
       }
@@ -402,8 +411,18 @@ module.exports = {
     {
       if (config.defines.common.force_render_on_turn) {
         console.time(`Force rendering all maps!`);
-        for (var i = 0; i < mapmodes.length; i++)
-          forceRender(mapmodes[i]);
+        for (var i = 0; i < mapmodes.length; i++) {
+          if (hasAvailableWorker(2)) {
+            var worker_index = i % thread_two_workers.length;
+
+            thread_two_workers[worker_index].send({
+              command: "forceRender",
+              map_name: mapmodes[i]
+            });
+          } else {
+            forceRender(mapmodes[i]);
+          }
+        }
         console.timeEnd(`Force rendering all maps!`);
       }
     }

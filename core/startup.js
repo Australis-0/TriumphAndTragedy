@@ -90,6 +90,10 @@ module.exports = {
     FileManager.import("./framework/map/map_renderer");
     FileManager.import("./framework/map/province_renderer");
 
+    //Multicore handling
+    FileManager.import("./multicore/thread_two_handler.js");
+    FileManager.import("./multicore/thread_three_handler.js");
+
     //Page handler files
     FileManager.import("./framework/ui/page_handler/debug_page_handler/debug");
 
