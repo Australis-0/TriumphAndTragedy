@@ -285,16 +285,7 @@ module.exports = {
     //Iterate over all users and process their turns
     for (var i = 0; i < all_users.length; i++)
       try {
-        if (hasAvailableWorker(3)) {
-          var worker_index = i % thread_three_workers.length;
-
-          thread_three_workers[worker_index].send({
-            command: "nextTurn",
-            user_id: all_users[i]
-          });
-        } else {
-          nextTurn(all_users[i]);
-        }
+        nextTurn(all_users[i]);
       } catch (e) {
         console.log(e);
       }
@@ -430,6 +421,9 @@ module.exports = {
     //Increment global round-count
     log.info(`Incrementing round_count from ${main.round_count} to ${main.round_count + 1}!`);
     main.round_count++;
+
+    //Return statement
+    return global.main;
   },
 
   nextTurn: function (arg0_user, arg1_options) { //[WIP] - Add newspaper section later
@@ -448,6 +442,8 @@ module.exports = {
       main.users[actual_id] = JSON.parse(JSON.stringify(main.users[main.global.user_map[user_id.replace("_simulation", "")]]));
     }
     var usr = main.users[actual_id];
+
+    log.debug(`Processing turn for ${usr.name} (ID: ${user_id}) on Worker #${Cluster.worker.id}`);
 
     //Declare local tracker variables
     var all_armies = (usr.armies) ? Object.keys(usr.armies) : [];
@@ -1812,5 +1808,8 @@ module.exports = {
       console.log(e);
     }
     console.timeEnd(`Simulation processing!`);
+
+    //Return statement
+    return main.users[actual_id];
   }
 }

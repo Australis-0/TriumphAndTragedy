@@ -209,8 +209,6 @@ if (Cluster.isMaster) {
       //Combat processing
       if (!main.freeze_turns)
         if (battle_difference > (settings.turn_timer*1000)/10) {
-          syncWorkersToMaster();
-
           main.global.battle_tick = current_date;
 
           if (hasAvailableWorker(3)) {
@@ -220,6 +218,8 @@ if (Cluster.isMaster) {
           } else {
             nextBattleTick();
           }
+
+          main.global.battle_tick = current_date;
         }
 
       //Date processing
@@ -296,16 +296,26 @@ if (Cluster.isMaster) {
           clearBadInterfaces();
 
           if (hasAvailableWorker(3)) {
+            var worker_index = (thread_three_workers[1]) ?
+              1 : 0;
+
             thread_three_workers[0].send({
               command: "nextBattleTick",
               new_turn: true
             });
+
+            thread_three_workers[worker_index].send({
+              command: "nextGlobalTurn"
+            });
           } else {
             nextBattleTick(true);
+            nextGlobalTurn();
           }
-
-          nextGlobalTurn();
         }
+
+        main.global.battle_tick = current_date;
+        main.last_backup = current_date;
+        main.last_turn = current_date;
       }
     }, 1000);
 
@@ -329,7 +339,6 @@ if (Cluster.isMaster) {
 
   //Fetch number of cores
   var core_amount = OS.cpus().length;
-  global.main_objects = []; //main_objects to clear and merge
   global.thread_two_workers = [];
   global.thread_three_workers = [];
 
@@ -360,22 +369,13 @@ if (Cluster.isMaster) {
             delete thread_three_workers[x].busy;
       }
 
-      //Receive main_objects and store in queue
-      if (data.main_object)
-        main_objects.push(data.main_object);
-
-      //If all workers in thread_three are free, merge main and clear main_objects
-      if (main_objects.length > 0)
-        if (hasAllWorkersFree(3))
-          thread_three_workers[0].send({
-            command: "mergeMain",
-            main_objects: main_objects
-          });
-
-      //If main is received, sync
-      if (data.main) {
-        global.main = data.main;
-        main_objects = [];
+      //If main_object is received, sync; but only for selected variables
+      if (data.main_object) {
+        global.main.round_count = data.main_object.round_count;
+        
+        global.main.global = data.main_object.global;
+        global.main.provinces = data.main_object.provinces;
+        global.main.users = data.main_object.users;
       }
 
       syncMasterToWorker(data);
@@ -388,6 +388,7 @@ if (Cluster.isMaster) {
     local_worker.send({
       backup_loaded: backup_loaded,
       config: config,
+      interfaces: interfaces,
       lookup: lookup,
       main: main,
       mapmodes: mapmodes,
@@ -422,6 +423,8 @@ if (Cluster.isMaster) {
       global.backup_loaded = data.backup_loaded;
     if (data.config)
       global.config = data.config;
+    if (data.interfaces)
+      global.interfaces = data.interfaces;
     if (data.load_maps)
       loadMaps();
     if (data.lookup)

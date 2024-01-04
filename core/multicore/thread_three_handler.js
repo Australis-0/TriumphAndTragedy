@@ -29,6 +29,20 @@ module.exports = {
       });
     }
 
+    //nextGlobalTurn()
+    if (data.command == "nextGlobalTurn") {
+      log.debug(`Thread #3 nextGlobalTurn() instruction on Worker #${Cluster.worker.id}`);
+
+      var main_object = nextGlobalTurn();
+
+      //Send data back to master for merging
+      log.debug(`Merging nextGlobalTurn() processing with master thread!`);
+      process.send({
+        load_maps: true,
+        main_object: main_object
+      });
+    }
+
     //nextTurn()
     if (data.command == "nextTurn") {
       log.debug(`Thread #3 nextTurn() instruction on Worker #${Cluster.worker.id}`);
