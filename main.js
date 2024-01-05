@@ -210,6 +210,7 @@ if (Cluster.isMaster) {
       if (!main.freeze_turns)
         if (battle_difference > (settings.turn_timer*1000)/10) {
           main.global.battle_tick = current_date;
+          syncWorkersToMaster();
 
           if (hasAvailableWorker(3)) {
             thread_three_workers[0].send({
@@ -339,15 +340,16 @@ if (Cluster.isMaster) {
 
   //Fetch number of cores
   var core_amount = OS.cpus().length;
+  var thread_amount = (settings.threads) ? settings.threads : core_amount;
   global.thread_two_workers = [];
   global.thread_three_workers = [];
 
   //Create thread; log to console and distribute 3 threads over available cores
   log.info(`Creating Master Core. (Command Handling/UI)`);
-  log.info(`${core_amount} core(s) are available. Will utilise them as necessary.\n-`);
+  log.info(`${core_amount} core(s) are available. ${thread_amount} Thread(s) have been specified in settings. Will utilise them as necessary.\n-`);
 
   //Reserve this core for main command processing; distribute the others for data processing; map/file
-  for (var i = 0; i < core_amount - 1; i++) {
+  for (var i = 0; i < thread_amount - 1; i++) {
     var local_worker = Cluster.fork();
 
     //Receive data from worker
@@ -372,7 +374,7 @@ if (Cluster.isMaster) {
       //If main_object is received, sync; but only for selected variables
       if (data.main_object) {
         global.main.round_count = data.main_object.round_count;
-        
+
         global.main.global = data.main_object.global;
         global.main.provinces = data.main_object.provinces;
         global.main.users = data.main_object.users;

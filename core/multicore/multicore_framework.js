@@ -101,7 +101,7 @@ module.exports = {
     if (data.load_maps)
       loadMaps();
   },
-
+  
   syncWorkersToMaster: function () {
     //Declare local instance variables
     var all_workers = [];
