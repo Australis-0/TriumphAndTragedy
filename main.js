@@ -296,7 +296,7 @@ if (Cluster.isMaster) {
         if (main.season_started && !main.freeze_turns) {
           clearBadInterfaces();
 
-          if (hasAvailableWorker(3)) {
+          if (thread_three_workers.length > 0) {
             var worker_index = (thread_three_workers[1]) ?
               1 : 0;
 
@@ -322,21 +322,7 @@ if (Cluster.isMaster) {
 
     //Logic loops, 30-second logic loop
     setInterval(function(){
-      //Write to database.js
-      if (hasAvailableWorker(2)) {
-        //Sync writeDB worker first
-        syncWorkerToMaster(thread_two_workers[0]);
-        thread_two_workers[0].send("writeDB");
-      } else {
-        try {
-        	fs.writeFile("database.js", JSON.stringify(main), function (err, data) {
-        		if (err) return log.info(err);
-        	});
-        } catch (e) {
-          log.error(`Ran into an error whilst attempting to save to database.js! ${e}.`);
-          console.log(e);
-        }
-      }
+      writeDB(); //Write to database.js
     }, 30000);
   }
 
@@ -389,7 +375,7 @@ if (Cluster.isMaster) {
     });
 
     //Add the worker to thread_two or thread_three depending on parity
-    syncWorkerToMaster(local_worker);
+    local_worker.send(getMasterObject());
 
     if (i % 2 == 0) {
       //Pass global down to local_worker

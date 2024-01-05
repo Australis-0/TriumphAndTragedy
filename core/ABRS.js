@@ -229,6 +229,24 @@ module.exports = {
     return `${d.getDate()}.${d.getMonth()+1}.${d.getFullYear()} ${hour_prefix}${d.getHours()}.${minute_prefix}${d.getMinutes()}.${second_prefix}${d.getSeconds()}`;
   },
 
+  writeDB: function () {
+    //Only accept writeDB() commands from master
+    if (Cluster.isMaster)
+      if (thread_two_workers.length > 0) {
+        thread_two_workers[0].send(getMasterObject());
+        thread_two_workers[0].send("writeDB");
+      } else {
+        try {
+        	fs.writeFile("database.js", JSON.stringify(main), function (err, data) {
+        		if (err) return log.info(err);
+        	});
+        } catch (e) {
+          log.error(`Ran into an error whilst attempting to save to database.js! ${e}.`);
+          console.log(e);
+        }
+      }
+  },
+
   /*
     writeSave() - Writes a save to backups/
     options: {
@@ -244,8 +262,8 @@ module.exports = {
       if (thread_two_workers.length > 0) {
         var random_index = randomNumber(0, thread_two_workers.length - 1);
         var random_worker = thread_two_workers[random_index];
-
-        syncWorkerToMaster(random_worker);
+        
+        random_worker.send(getMasterObject());
         random_worker.send({ command: "writeSave", options: options });
       } else {
         //No available Thread #2 workers found

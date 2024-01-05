@@ -415,6 +415,9 @@ module.exports = {
           }
         }
         console.timeEnd(`Force rendering all maps!`);
+
+        //Reload maps in master process
+        process.send({ load_maps: true });
       }
     }
 

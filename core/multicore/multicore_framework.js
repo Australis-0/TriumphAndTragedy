@@ -102,25 +102,24 @@ module.exports = {
       loadMaps();
   },
 
-  syncWorkerToMaster: function (arg0_worker) {
-    //Convert from parameters
-    var worker = arg0_worker;
+  getMasterObject: function () {
+    //Return statement
+    if (Cluster.isMaster) {
+      return {
+        backup_loaded: backup_loaded,
+        config: config,
+        interfaces: interfaces,
+        lookup: lookup,
+        main: main,
+        mapmodes: mapmodes,
+        reserved: reserved,
+        settings: settings,
 
-    //Make sure worker exists and this is the main cluster
-    if (Cluster.isMaster)
-      if (worker) {
-        worker.send({
-          backup_loaded: backup_loaded,
-          config: config,
-          lookup: lookup,
-          main: main,
-          mapmodes: mapmodes,
-          reserved: reserved,
-          settings: settings,
-
-          load_maps: true
-        });
-      }
+        load_maps: true
+      };
+    } else {
+      return undefined;
+    }
   },
 
   syncWorkersToMaster: function () {
@@ -132,7 +131,7 @@ module.exports = {
 
     //All threads reload maps
     for (var i = 0; i < all_workers.length; i++)
-      syncWorkerToMaster(all_workers[i]);
+      all_workers[i].send(module.exports.getMasterObject());
 
     log.debug(`Synced all ${all_workers.length} Worker(s) to Master!`);
   }
