@@ -420,12 +420,10 @@ if (Cluster.isMaster) {
       global.settings = data.settings;
 
     log.debug(`Worker #${Cluster.worker.id} received message from master!`);
+    //log.debug(`Mapmodes:`, mapmodes);
 
     //Set up worker type
     if (data.type) {
-      //Load maps on thread
-      loadMaps();
-
       if (data.type == 2) {
         global.thread_type = 2;
       } else if (data.type == 3) {

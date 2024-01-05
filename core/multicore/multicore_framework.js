@@ -134,5 +134,7 @@ module.exports = {
       all_workers[i].send(module.exports.getMasterObject());
 
     log.debug(`Synced all ${all_workers.length} Worker(s) to Master!`);
+    log.debug(`Master object mapmodes:`);
+    console.log(getMasterObject().mapmodes);
   }
 };

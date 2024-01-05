@@ -403,9 +403,10 @@ module.exports = {
       if (config.defines.common.force_render_on_turn) {
         console.time(`Force rendering all maps!`);
         for (var i = 0; i < mapmodes.length; i++) {
-          if (hasAvailableWorker(2)) {
+          if (thread_two_workers.length > 0) {
             var worker_index = i % thread_two_workers.length;
 
+            thread_two_workers[worker_index].send({ load_maps: true });
             thread_two_workers[worker_index].send({
               command: "forceRender",
               map_name: mapmodes[i]

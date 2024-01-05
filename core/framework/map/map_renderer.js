@@ -9,6 +9,7 @@ module.exports = {
       var random_index = randomNumber(0, thread_two_workers.length - 1);
 
       thread_two_workers[random_index].send({
+        command: "cacheSVG",
         map_name: map_name,
         hide_province_labels: hide_province_labels
       });

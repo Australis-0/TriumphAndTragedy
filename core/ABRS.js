@@ -108,7 +108,9 @@ module.exports = {
       try {
         global[`${map_name}_file`] = map_file;
         global[`${map_name}_parsed`] = HTML.parse(global[map_name].toString());
-        mapmodes.push(map_name);
+
+        if (!mapmodes.includes(map_name))
+          mapmodes.push(map_name);
       } catch (e) {
         log.error(`Could not parse map file ${map_file}: ${e}.`);
       }
@@ -262,7 +264,7 @@ module.exports = {
       if (thread_two_workers.length > 0) {
         var random_index = randomNumber(0, thread_two_workers.length - 1);
         var random_worker = thread_two_workers[random_index];
-        
+
         random_worker.send(getMasterObject());
         random_worker.send({ command: "writeSave", options: options });
       } else {
