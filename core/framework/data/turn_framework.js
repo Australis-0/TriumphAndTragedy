@@ -402,7 +402,7 @@ module.exports = {
     {
       var has_thread_two_workers = false;
 
-      if (thread_two_workers)
+      if (global.thread_two_workers)
         if (thread_two_workers.length > 0)
           has_thread_two_workers = true;
 
