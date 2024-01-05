@@ -101,7 +101,28 @@ module.exports = {
     if (data.load_maps)
       loadMaps();
   },
-  
+
+  syncWorkerToMaster: function (arg0_worker) {
+    //Convert from parameters
+    var worker = arg0_worker;
+
+    //Make sure worker exists and this is the main cluster
+    if (Cluster.isMaster)
+      if (worker) {
+        worker.send({
+          backup_loaded: backup_loaded,
+          config: config,
+          lookup: lookup,
+          main: main,
+          mapmodes: mapmodes,
+          reserved: reserved,
+          settings: settings,
+
+          load_maps: true
+        });
+      }
+  },
+
   syncWorkersToMaster: function () {
     //Declare local instance variables
     var all_workers = [];
@@ -111,17 +132,7 @@ module.exports = {
 
     //All threads reload maps
     for (var i = 0; i < all_workers.length; i++)
-      all_workers[i].send({
-        backup_loaded: backup_loaded,
-        config: config,
-        lookup: lookup,
-        main: main,
-        mapmodes: mapmodes,
-        reserved: reserved,
-        settings: settings,
-
-        load_maps: true
-      });
+      syncWorkerToMaster(all_workers[i]);
 
     log.debug(`Synced all ${all_workers.length} Worker(s) to Master!`);
   }

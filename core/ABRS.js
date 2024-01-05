@@ -242,7 +242,11 @@ module.exports = {
     //Write save on Thread #2
     if (global.thread_type == 1)
       if (thread_two_workers.length > 0) {
-        thread_two_workers[0].send({ command: "writeSave", options: options });
+        var random_index = randomNumber(0, thread_two_workers.length - 1);
+        var random_worker = thread_two_workers[random_index];
+
+        syncWorkerToMaster(random_worker);
+        random_worker.send({ command: "writeSave", options: options });
       } else {
         //No available Thread #2 workers found
         module.exports.internalWriteSave(options);

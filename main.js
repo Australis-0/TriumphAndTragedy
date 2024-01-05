@@ -324,6 +324,8 @@ if (Cluster.isMaster) {
     setInterval(function(){
       //Write to database.js
       if (hasAvailableWorker(2)) {
+        //Sync writeDB worker first
+        syncWorkerToMaster(thread_two_workers[0]);
         thread_two_workers[0].send("writeDB");
       } else {
         try {
@@ -387,16 +389,7 @@ if (Cluster.isMaster) {
     });
 
     //Add the worker to thread_two or thread_three depending on parity
-    local_worker.send({
-      backup_loaded: backup_loaded,
-      config: config,
-      interfaces: interfaces,
-      lookup: lookup,
-      main: main,
-      mapmodes: mapmodes,
-      reserved: reserved,
-      settings: settings,
-    });
+    syncWorkerToMaster(local_worker);
 
     if (i % 2 == 0) {
       //Pass global down to local_worker
