@@ -400,10 +400,16 @@ module.exports = {
 
     //Force render all maps
     {
+      var has_thread_two_workers = false;
+
+      if (thread_two_workers)
+        if (thread_two_workers.length > 0)
+          has_thread_two_workers = true;
+
       if (config.defines.common.force_render_on_turn) {
         console.time(`Force rendering all maps!`);
         for (var i = 0; i < mapmodes.length; i++) {
-          if (thread_two_workers.length > 0) {
+          if (has_thread_two_workers) {
             var worker_index = i % thread_two_workers.length;
 
             thread_two_workers[worker_index].send({ load_maps: true });

@@ -26,7 +26,7 @@ module.exports = {
     //writeDB()
     if (data.command == "writeDB")
       try {
-        fs.writeFile("database.js", JSON.stringify(main), function (err, data) {
+        fs.writeFile("database.js", JSON.stringify(global.main), function (err, data) {
           if (err) return log.info(err);
         });
       } catch (e) {
