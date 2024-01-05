@@ -236,7 +236,7 @@ module.exports = {
     if (Cluster.isMaster)
       if (thread_two_workers.length > 0) {
         thread_two_workers[0].send(getMasterObject());
-        thread_two_workers[0].send("writeDB");
+        thread_two_workers[0].send({ command: "writeDB" });
       } else {
         try {
         	fs.writeFile("database.js", JSON.stringify(main), function (err, data) {
