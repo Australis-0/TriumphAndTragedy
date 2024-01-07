@@ -525,5 +525,52 @@ module.exports = {
 
     //Return statement
     return (!options.return_all_cultures) ? matching_cultures[0] : matching_cultures;
+  },
+
+  fixUnknownCultures: function () {
+    //Declare local instance variables
+    var all_provinces = Object.keys(main.provinces);
+
+    for (var i = 0; i < all_provinces.length; i++) {
+      var local_province = main.provinces[all_provinces[i]];
+
+      if (local_province.pops) {
+        var all_pop_keys = Object.keys(local_province.pops);
+
+        for (var x = 0; x < all_pop_keys.length; x++)
+          if (all_pop_keys[x].startsWith("culture-")) {
+            var local_culture_id = all_pop_keys[x].replace("culture-", "");
+
+            if (!main.global.cultures[culture_id])
+              initCulture(local_province.owner, local_culture_id);
+          }
+      }
+    }
+
+    syncWorkersToMaster();
+  },
+
+  initCulture: function (arg0_user, arg1_culture) {
+    //Convert from parameters
+    var user_id = arg0_user;
+    var culture_id = (arg1_culture) ? arg1_culture : generateCultureID();
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var usr = main.users[actual_id];
+
+    if (!main.global.cultures[culture_id]) {
+      main.global.cultures[culture_id] = {
+        id: culture_id,
+        name: usr.name,
+        adjective: usr.name,
+
+        primary_culture: [actual_id],
+        accepted_culture: []
+      };
+
+      usr.pops.accepted_cultures.push(culture_id);
+      usr.pops.primary_culture = culture_id;
+    }
   }
 };

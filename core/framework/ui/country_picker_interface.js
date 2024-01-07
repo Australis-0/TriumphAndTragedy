@@ -106,6 +106,9 @@ module.exports = {
         reinitialiseGameEmbeds();
       }
 
+      //New country has been initialised, send this data to all workers
+      syncWorkersToMaster();
+
       return usr;
     } else {
       //Print out country name error
