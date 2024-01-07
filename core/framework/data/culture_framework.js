@@ -569,6 +569,7 @@ module.exports = {
         accepted_culture: []
       };
 
+      usr.culture = culture_id;
       usr.pops.accepted_cultures.push(culture_id);
       usr.pops.primary_culture = culture_id;
     }

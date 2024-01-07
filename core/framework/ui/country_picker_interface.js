@@ -84,20 +84,8 @@ module.exports = {
       //Add new culture object to main.global
       var culture_id = generateCultureID();
 
-      usr.culture = culture_id;
-
-      main.global.cultures[culture_id] = {
-        id: culture_id,
-        name: processed_country_name,
-        adjective: processed_country_name,
-
-        primary_culture: [actual_id],
-        accepted_culture: []
-      };
-
-      //Modify pops object
-      usr.pops.accepted_cultures.push(culture_id);
-      usr.pops.primary_culture = culture_id;
+      //Initialise culture
+      initCulture(user_id, culture_id);
 
       //Check if enough players are there to start the game
       if (Object.keys(main.users).length >= config.defines.common.starting_players) {
