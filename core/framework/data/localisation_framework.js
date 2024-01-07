@@ -600,10 +600,14 @@ module.exports = {
       var local_culture = main.global.cultures[all_cultures[i]];
       var local_value = culture_obj[all_cultures[i]];
 
-      if (local_value > 0.01) {
-        localisation_string.push(`${lf}${printPercentage(local_value)}${lf} ${(local_culture.name) ? local_culture.name : all_cultures[i]}`);
+      if (local_culture) {
+        if (local_value > 0.01) {
+          localisation_string.push(`${lf}${printPercentage(local_value)}${lf} ${(local_culture.name) ? local_culture.name : all_cultures[i]}`);
+        } else {
+          others_percentage += local_value;
+        }
       } else {
-        others_percentage += local_value;
+        localisation_string.push(`${lf}${printPercentage(local_value)}${lf}Unknown Culture ${all_cultures[i]}`);
       }
     }
 
