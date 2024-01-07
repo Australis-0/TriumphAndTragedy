@@ -92,6 +92,7 @@ module.exports = {
 
     //Multicore handling
     FileManager.import("./multicore/multicore_framework.js");
+    FileManager.import("./multicore/thread_one_handler.js");
     FileManager.import("./multicore/thread_two_handler.js");
     FileManager.import("./multicore/thread_three_handler.js");
 
