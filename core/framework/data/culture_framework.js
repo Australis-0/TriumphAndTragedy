@@ -541,7 +541,7 @@ module.exports = {
           if (all_pop_keys[x].startsWith("culture-")) {
             var local_culture_id = all_pop_keys[x].replace("culture-", "");
 
-            if (!main.global.cultures[culture_id])
+            if (!main.global.cultures[local_culture_id])
               initCulture(local_province.owner, local_culture_id);
           }
       }
