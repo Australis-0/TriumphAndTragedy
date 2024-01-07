@@ -107,6 +107,7 @@ module.exports = {
     if (Cluster.isMaster) {
       return {
         backup_loaded: backup_loaded,
+        client: client,
         config: config,
         interfaces: interfaces,
         lookup: lookup,

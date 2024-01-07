@@ -107,6 +107,9 @@ if (Cluster.isMaster) {
   //Other thread handling (Threads 2 and 3)
   process.on("message", function (data) {
     //Update global variables (lookup, main) to main thread
+    if (data.client)
+      global.client = data.client;
+      
     if (data.backup_loaded)
       global.backup_loaded = data.backup_loaded;
     if (data.config)
