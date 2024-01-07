@@ -1345,10 +1345,14 @@ module.exports = {
         var local_culture = main.global.cultures[all_cultures[i]];
         var local_value = culture_obj[all_cultures[i]];
 
-        if (local_value >= config.defines.economy.cultural_minority_display) {
-          culture_string.push(`${local_culture.name} (${printPercentage(local_value)})`);
+        if (local_culture) {
+          if (local_value >= config.defines.economy.cultural_minority_display) {
+            culture_string.push(`${local_culture.name} (${printPercentage(local_value)})`);
+          } else {
+            other_percentage += local_value;
+          }
         } else {
-          other_percentage += local_value;
+          culture_string.push(`Unknown Culture ${all_cultures[i]} (${printPercentage(local_value)})`);
         }
       }
 
