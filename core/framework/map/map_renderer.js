@@ -38,15 +38,22 @@ module.exports = {
     var map_name = arg0_map_name;
 
     //Declare local instance variables
-    if (thread_two_workers.length > 0) {
-      var random_index = randomNumber(0, thread_two_workers.length - 1);
+    var could_render = false;
 
-      thread_two_workers[random_index].send(getMasterObject());
-      thread_two_workers[random_index].send({
-        command: "forceRender",
-        map_name: map_name
-      });
-    }
+    if (thread_two_workers)
+      if (thread_two_workers.length > 0) {
+        could_render = true;
+        var random_index = randomNumber(0, thread_two_workers.length - 1);
+
+        thread_two_workers[random_index].send(getMasterObject());
+        thread_two_workers[random_index].send({
+          command: "forceRender",
+          map_name: map_name
+        });
+      }
+
+    if (!could_render)
+      internalForceRender(map_name);
   },
 
   internalCacheSVG: function (arg0_map_name, arg1_hide_province_labels) {
