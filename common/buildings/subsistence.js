@@ -22,6 +22,7 @@ config.buildings.subsistence = {
   rural_subsistence: {
     name: "Subsistence Agriculture",
     singular: "Subsistence Farm",
+    subsistence_building: true,
     type: "agriculture",
 
     allowed_classes: ["lower", "middle"],

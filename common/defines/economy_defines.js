@@ -86,6 +86,8 @@ config.defines.economy = {
 
   //Goods
   artisan_per_production: 10000, //How many artisans does it take to produce 1 good, assuming a simplicity of 1?
+  rgo_per_production: 1000, //How many people employed in an RGO (non-artisan) does it take to produce 1 good with a default price of £1?
+
   good_categories: {
     giffen: {
       importance: 2.5, //Income elasticity of demand (the total % of a pop's income they are willing to spend on this good)

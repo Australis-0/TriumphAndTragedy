@@ -2758,6 +2758,87 @@ module.exports = {
     return starting_money_stockpile;
   },
 
+  //getSubsistenceBuilding() - Returns subsistence building key for a given province
+  getSubsistenceBuilding: function (arg0_province) {
+    //Convert from parameters
+    var province_id = arg0_province;
+
+    //Declare local instance variables
+    var all_buildings = Object.keys(lookup.all_buildings);
+    var province_obj = (typeof province_id != "object") ? main.provinces[province_id] : province_obj;
+    var subsistence_building_key;
+
+    //Iterate over all_building_categories to fetch subsistence_building_key
+    for (var i = 0; i < all_buildings.length; i++) {
+      var local_building = lookup.all_buildings[all_buildings[i]];
+
+      if (local_building.subsistence_building) {
+        //Check if limit is fulfilled
+        var limit_fulfilled = true;
+
+        if (local_building.limit) {
+          var all_limit_keys = Object.keys(local_building.limit);
+
+          for (var x = 0; x < all_limit_keys.length; x++) {
+            var local_obj = local_building.limit[all_limit_keys[x]];
+
+            //Terrain handler
+            if (all_limit_keys[x] == "terrain_category" || all_limit_keys[x].startsWith("terrain_category_")) {
+              var value_list = getList(local_obj);
+
+              if (!value_list.includes(province_obj.type))
+                limit_fulfilled = false;
+            }
+          }
+
+          if (limit_fulfilled)
+            subsistence_building_key = all_buildings[i];
+        }
+      }
+    }
+
+    //Return statement
+    return subsistence_building_key;
+  },
+
+  getSubsistencePops: function (arg0_province, arg1_building_type) {
+    //Convert from parameters
+    var province_id = arg0_province;
+    var subsistence_building_key = (arg1_building_type) ? arg1_building_type : module.exports.getSubsistenceBuilding(province_id);
+
+    //Declare local instance variables
+    var qualified_pops = [];
+    var subsistence_building_obj = (typeof subsistence_building_key != "object") ? lookup.all_buildings[subsistence_building_key] : subsistence_building_key;
+
+    if (subsistence_building_obj) {
+      //Check for .allowed_pops
+      if (subsistence_building_obj.allowed_pops) {
+        var allowed_pops = getList(subsistence_building_obj.allowed_pops);
+
+        for (var i = 0; i < allowed_pops.length; i++)
+          if (!qualified_pops.includes(allowed_pops[i]))
+            qualified_pops.push(allowed_pops[i]);
+      }
+
+      //Check for .allowed_classes
+      if (subsistence_building_obj.allowed_classes) {
+        var allowed_classes = getList(subsistence_building_obj.allowed_classes);
+
+        for (var i = 0; i < allowed_classes.length; i++) {
+          var pop_class_array = lookup.all_pop_classes[allowed_classes[i]];
+
+          if (pop_class_array)
+            for (var x = 0; x < pop_class_array.length; x++)
+              if (!qualified_pops.includes(pop_class_array[x]))
+                qualified_pops.push(pop_class_array[x]);
+        }
+      }
+    }
+
+    //Return statement
+    return qualified_pops;
+  },
+
   getTotalBuildings: function (arg0_city_name, arg1_building_name) {
     //Convert from parameters
     var city_name = (typeof arg0_city_name != "object") ? arg0_city_name.toLowerCase().trim() : arg0_city_name;
@@ -3219,141 +3300,97 @@ module.exports = {
     //Declare local instance variables
     var all_buildings = Object.keys(lookup.all_buildings);
     var all_pops = Object.keys(config.pops);
+    var average_wage = 0;
     var province_obj = (province_id != "object") ? main.provinces[province_id] : province_id;
     var qualified_pops = [];
-    var local_subsistence_key;
-    var local_subsistence_obj;
+    var subsistence_building_key = module.exports.getSubsistenceBuilding(province_id);
+    var subsistence_building_obj = lookup.all_buildings[subsistence_building_key];
 
-    var average_wage = 0;
+    if (subsistence_building_obj) {
+      qualified_pops = module.exports.getSubsistencePops(province_obj.id, subsistence_building_key);
 
-    //Iterate over all_building_categories to initialise .subsistence object for
-    if (!province_obj.subsistence && !province_obj.no_subsistence) {
-      var has_subsistence = false;
+      //Set subsistence object
+      province_obj.subsistence = {
+        building_type: subsistence_building_key,
+        employment: {},
+        revenue: 0,
+        wage: 0,
 
-      if (!province_obj.subsistence) {
-        for (var i = 0; i < all_buildings.length; i++) {
-          var local_building = lookup.all_buildings[all_buildings[i]];
+        qualified_pops: qualified_pops
+      };
 
-          if (local_building.subsistence_building) {
-            //Check if limit is fulfiled
-            var limit_fulfilled = true;
+      var subsistence_obj = province_obj.subsistence;
 
-            if (local_building.limit) {
-              var all_limit_keys = Object.keys(local_building.limit);
-
-              for (var x = 0; x < all_limit_keys.length; x++) {
-                var local_obj = local_building.limit[all_limit_keys[x]];
-
-                //Terrain handler
-                if (all_limit_keys[x] == "terrain_category" || all_limit_keys[x].startsWith("terrain_category_")) {
-                  var value_list = getList(local_obj);
-
-                  if (province_obj.type == "urban") {
-                    if (!value_list.includes("urban"))
-                      limit_fulfilled = false;
-                  } else if (province_obj.type == "rural") {
-                    if (!value_list.includes("rural"))
-                      limit_fulfilled = false;
-                  }
-                }
-              }
-
-              if (limit_fulfilled) {
-                local_subsistence_key = all_buildings[i];
-                local_subsistence_obj = local_building;
-              }
-            }
-          }
-        }
-
-        if (local_subsistence_obj) {
-          if (local_subsistence_obj.allowed_pops)
-            for (var i = 0; i < local_subsistence_obj.allowed_pops.length; i++)
-              if (!qualified_pops.includes(local_subsistence_obj.allowed_pops[i]))
-                qualified_pops.push(local_subsistence_obj.allowed_pops[i]);
-          if (local_subsistence_obj.allowed_classes)
-            for (var i = 0; i < all_pops.length; i++) {
-              var local_pop = config.pops[all_pops[i]];
-
-              if (local_pop.class) {
-                var local_classes = getList(local_pop.class);
-
-                for (var x = 0; x < local_subsistence_obj.allowed_classes.length; x++) {
-                  var local_pop_key = local_subsistence_obj.allowed_classes[x];
-
-                  if (local_classes.includes(local_pop_key))
-                    if (!qualified_pops.includes(local_pop_key))
-                      qualified_pops.push(local_pop_key);
-                }
-              }
-            }
-        } else {
-          log.warn(`No subsistence building could be found in ${province_obj.id}!`);
-        }
-
-        //Set subsistence object
-        province_obj.subsistence = {
-          building_type: local_subsistence_key,
-          employment: {},
-          wage: 0,
-
-          qualified_pops: qualified_pops
-        };
-      }
-    }
-
-    //Initialise local_subsistence_key; local_subsistence_obj if possible
-    if (!local_subsistence_key)
-      if (province_obj.subsistence) {
-        local_subsistence_key = province_obj.subsistence.building_type;
-        local_subsistence_obj = lookup.all_buildings[local_subsistence_key];
-
-        qualified_pops = province_obj.subsistence.qualified_pops;
-      }
-
-    if (local_subsistence_obj) {
-      //Calculate average_wage by adding all applicable category needs
-      if (local_subsistence_obj.wages) {
-        var all_wage_keys = Object.keys(local_subsistence_obj.wages);
-
-        for (var i = 0; i < all_wage_keys.length; i++) {
-          var local_value = local_subsistence_obj.wages[all_wage_keys[i]];
-          var split_key = all_wage_keys[i].split("-"); //[good/category_name, statistic]
-
-          if (split_key.length >= 2)
-            if (split_key[1] == "mean") {
-              var category_price = (options.category_prices) ?
-                returnSafeNumber(getAverageNeedsPrice(split_key[0], "buy")) :
-                returnSafeNumber(options.category_prices[split_key[1]]);
-
-              //Add to average_wage
-              average_wage += category_price;
-            }
-        }
-      }
-
-      //Iterate over qualified_pops to establish wealth pools
+      //Set employment to all those unemployed
       for (var i = 0; i < qualified_pops.length; i++) {
-        var key_name = `wealth-${local_subsistence_key}-${qualified_pops[i]}`;
-        if (!province_obj.pops[key_name])
-          province_obj.pops[key_name] = {};
-        var local_building_pop = province_obj.pops[key_name];
-        var local_unemployed = getUnemployedPops(province_id, qualified_pops[i]);
+        var pop_amount = returnSafeNumber(province_obj.pops[qualified_pops[i]]);
+        var used_pops = returnSafeNumber(`used_${province_obj.pops[qualified_pops[i]]}`);
 
-        //Set .size, .income, .wealth - all unemployed pops are the size
-        local_building_pop.size = local_unemployed;
-        local_building_pop.income = average_wage;
-        modifyValue(local_building_pop, "wealth", average_wage);
+        var unemployed_pops = pop_amount - used_pops;
 
-        local_building_pop.subsistence = true;
-
-        //Set this to province_obj.subsistence fields
-        province_obj.subsistence.employment[qualified_pops[i]] = local_unemployed;
+        if (unemployed_pops > 0) {
+          subsistence_obj.employment[qualified_pops[i]] = unemployed_pops;
+        } else {
+          delete subsistence_obj.employment[qualified_pops[i]];
+        }
       }
-      province_obj.subsistence.wage = average_wage;
+
+      //Calculate total revenue
+      var employed_pops = getObjectSum(subsistence_obj.employment);
+      var total_revenue = 0;
+
+      //Fetch artisan production for province
+      var artisan_amount = 0;
+      var subsistence_production_obj = {};
+
+      //Iterate over all artisan_pops
+      for (var i = 0; i < lookup.artisan_pops.length; i++) {
+        subsistence_production_obj = mergeObjects(subsistence_production_obj,
+          getArtisanProduction(province_obj.id, lookup.artisan_pops[i]));
+        artisan_amount += returnSafeNumber(subsistence_obj.employment[lookup.artisan_pops[i]]);
+      }
+
+      //+ RGO production
+      if (province_obj.resource) {
+        var good_obj = lookup.all_goods[province_obj.resource];
+        var non_artisan_amount = employed_pops - artisan_amount;
+
+        //It takes good_obj.buy_price*config.defines.economy.rgo_per_production people to produce 1 good. (This is not the market price, but the base buy_price)
+        var rgo_per_production = returnSafeNumber(good_obj.buy_price, 1)*config.defines.economy.rgo_per_production;
+
+        modifyValue(subsistence_production_obj, province_obj.resource, Math.ceil(non_artisan_amount/rgo_per_production));
+      }
+
+      //Set subsistence_obj.production; get revenues from production
+      subsistence_obj.production = subsistence_production_obj;
+      subsistence_obj.revenue = module.exports.getBuildingRevenue(subsistence_building_obj, { goods: subsistence_obj.production });
+
+      for (var i = 0; i < qualified_pops.length; i++) {
+        var key_name = `wealth-subsistence_${subsistence_building_key}-${qualified_pops[i]}`;
+        var local_pop_amount = returnSafeNumber(subsistence_obj.employment[qualified_pops[i]]);
+
+        //Adjust wealth pool
+        if (local_pop_amount > 0) {
+          var pop_income = subsistence_obj.revenue*(local_pop_amount/employed_pops);
+
+          if (!province_obj.pops[key_name])
+            province_obj.pops[key_name] = {
+              size: local_pop_amount,
+              income: returnSafeNumber(pop_income)
+            };
+          var local_wealth_pool = province_obj.pops[key_name];
+
+          //Add .income to .wealth
+          modifyValue(local_wealth_pool, "wealth", returnSafeNumber(pop_income));
+        } else {
+          delete province_obj.pops[key_name];
+        }
+      }
+
+      //Return statement
+      return province_obj.subsistence;
     } else {
-      //Set .no_subsistence flag if applicable
-      province_obj.no_subsistence = true;
+      log.warn(`No subsistence building could be found that was applicable to ${province_obj.id}!`);
     }
   },
 

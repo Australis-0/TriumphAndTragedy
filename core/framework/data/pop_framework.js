@@ -493,6 +493,23 @@ module.exports = {
     return pop_categories;
   },
 
+  getArtisanPops: function () {
+    //Declare local instance variables
+    var all_pops = Object.keys(config.pops);
+    var artisan_pops = [];
+
+    //Iterate over all_pops
+    for (var i = 0; i < all_pops.length; i++) {
+      var local_pop = config.pops[all_pops[i]];
+
+      if (local_pop.artisan_pop)
+        artisan_pops.push(all_pops[i]);
+    }
+
+    //Return statement
+    return artisan_pops;
+  },
+
   getArtisanProduction: function (arg0_province, arg1_pop_type) {
     //Convert from parameters
     var province_id = arg0_province;
