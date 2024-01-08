@@ -776,7 +776,15 @@ module.exports = {
 
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
+    var goods_obj = (lookup.all_goods) ? lookup.all_goods : getGoods({ return_object: true });
     var usr = main.users[actual_id];
+
+    var good_obj = goods_obj[good_key];
+
+    //Guard clause if good is category
+    if (good_obj)
+      if (good_obj.type == "category")
+        return false;
 
     //Check to make sure all_production is defined
     if (lookup.all_production) {
@@ -797,11 +805,17 @@ module.exports = {
           for (var x = 0; x < all_local_buildings.length; x++)
             if (usr.available_buildings.includes(all_local_buildings[x]))
               has_unlocked_building = true;
+          if (all_local_buildings.length == 0)
+            has_unlocked_building = true;
 
           //Guard clause if no unlocked building for prerequisite good
           if (!has_unlocked_building)
             return false;
         }
+
+        //Guard clause if no production chain
+        if (all_production_chain_goods.length == 0)
+          return false;
 
         //Return statement if it passed all guard clauses
         return true;
