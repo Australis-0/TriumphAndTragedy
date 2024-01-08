@@ -376,6 +376,43 @@ module.exports = {
     }
   },
 
+  getAllPopCategoriesNeeds: function () {
+    //Declare local instance variables
+    var all_pops = Object.keys(config.pops);
+    var pop_needs_goods = {};
+
+    //Iterate over all_pops
+    for (var i = 0; i < all_pops.length; i++) {
+      var local_pop = config.pops[all_pops[i]];
+
+      if (local_pop.per_100k)
+        if (local_pop.per_100k.needs) {
+          var all_local_needs_categories = Object.keys(local_pop.per_100k.needs);
+
+          for (var x = 0; x < all_local_needs_categories.length; x++) {
+            var local_needs_category = local_pop.per_100k.needs[all_local_needs_categories[x]];
+
+            if (!pop_needs_goods[all_local_needs_categories[x]])
+              pop_needs_goods[all_local_needs_categories[x]] = [];
+
+            //Flatten local object
+            var local_array = pop_needs_goods[all_local_needs_categories[x]];
+            var local_needs = flattenObject(local_needs_category);
+
+            var all_local_needs = Object.keys(local_needs);
+
+            //Iterate over all_local_needs
+            for (var y = 0; y < all_local_needs.length; y++)
+              if (!local_array.includes(all_local_needs[y]))
+                local_array.push(all_local_needs[y]);
+          }
+        }
+    }
+
+    //Return statement
+    return pop_needs_goods;
+  },
+
   //getAllPopGoods() - Returns an array of all good keys demanded or produced by pop types w/ more than 0 people
   getAllPopGoods: function (arg0_user) { //[WIP] - Finish function body
     //Convert from parameters
@@ -454,6 +491,40 @@ module.exports = {
 
     //Return statement
     return pop_categories;
+  },
+
+  getArtisanProduction: function () {
+
+  },
+
+  getArtisanProductionPercentage: function () {
+    //Declare local instance variables
+    var all_pop_needs_categories = (lookup.all_pop_needs_categories) ? lookup.all_pop_needs_categories : getAllPopNeedCategories();
+    var production_complexity = lookup.all_production_complexity;
+    var production_complexity_obj = {};
+
+    if (production_complexity) {
+      //Iterate over all_pop_needs_categories
+      for (var i = 0; i < all_pop_needs_categories.length; i++) {
+        var local_needs_category = lookup.all_pop_needs_goods[all_pop_needs_categories[i]];
+
+        //Iterate over local_needs_category and add to production_complexity_obj
+        if (local_needs_category)
+          for (var x = 0; x < local_needs_category.length; x++) {
+            var local_production_complexity = production_complexity[local_needs_category[x]];
+
+            production_complexity_obj[local_needs_category[x]] = local_production_complexity;
+          }
+      }
+
+      //Standardise to fraction and invert
+      production_complexity_obj = invertFractionObject(standardiseFraction(production_complexity_obj));
+
+      //Return statement
+      return production_complexity_obj;
+    } else {
+      log.warn(`getArtisanProductionPercentage() - lookup.all_production_complexity is not defined!`);
+    }
   },
 
   getCityPopGrowth: function (arg0_name, arg1_options) {

@@ -403,6 +403,15 @@ module.exports = {
 
     //Declare local instance variables
     var city_obj = (typeof city_name != "object") ? getCity(city_name) : city_name;
+    var has_controller = false;
+
+    //Guard clause for no city object
+    if (city_obj.controller)
+      if (main)
+        if (main.users)
+          if (main.users[city_obj.controller]) has_controller = true;
+    if (!has_controller) return 1;
+
     var usr = main.users[city_obj.controller];
 
     return returnSafeNumber(

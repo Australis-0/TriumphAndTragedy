@@ -152,6 +152,27 @@ module.exports = {
     }
   },
 
+  getObjectMaximum: function (arg0_scope) {
+    //Convert from parameters
+    var scope = arg0_scope;
+
+    //Declare local instance variables
+    var all_scope_keys = Object.keys(scope);
+    var object_maximum = 0;
+
+    //Iterate over all_scope_keys
+    for (var i = 0; i < all_scope_keys.length; i++) {
+      var local_value = scope[all_scope_keys[i]];
+
+      if (typeof local_value == "number")
+        if (local_value > object_maximum)
+          object_maximum = local_value;
+    }
+
+    //Return statement
+    return object_maximum;
+  },
+
   getObjectSum: function (arg0_scope) {
     //Convert from parameters
     var scope = arg0_scope;
@@ -264,6 +285,24 @@ module.exports = {
     return all_keys;
   },
 
+  invertFractionObject: function (arg0_scope) {
+    //Convert from parameters
+    var scope = JSON.parse(JSON.stringify(arg0_scope));
+
+    //Declare local instance variables
+    var all_scope_keys = Object.keys(scope);
+
+    //Iterate over all_scope_keys
+    for (var i = 0; i < all_scope_keys.length; i++) {
+      var local_value = scope[all_scope_keys[i]];
+
+      scope[all_scope_keys[i]] = 1 - local_value;
+    }
+
+    //Return statement
+    return scope;
+  },
+
   mergeObjects: function (arg0_scope, arg1_scope, arg2_overwrite, arg3_must_have_difference) {
     //Convert from parameters - merge_obj overwrites onto merged_obj
     var merged_obj = JSON.parse(JSON.stringify(arg0_scope));
@@ -343,6 +382,29 @@ module.exports = {
           delete scope[all_scope_keys[i]];
       if (typeof local_subobj == "object")
         scope[all_scope_keys[i]] = module.exports.removeZeroes(local_subobj);
+    }
+
+    //Return statement
+    return scope;
+  },
+
+  standardiseFraction: function (arg0_scope) {
+    //Convert from parameters
+    var scope = JSON.parse(JSON.stringify(arg0_scope));
+
+    //Declare local instance variables
+    var all_scope_keys = Object.keys(scope);
+    var scope_maximum = module.exports.getObjectMaximum(scope);
+
+    //Iterate over all_scope_keys
+    for (var i = 0; i < all_scope_keys.length; i++) {
+      var local_value = scope[all_scope_keys[i]];
+
+      if (scope_maximum == 0) {
+        scope[all_scope_keys[i]] = 0;
+      } else {
+        scope[all_scope_keys[i]] = local_value/scope_maximum;
+      }
     }
 
     //Return statement

@@ -2180,19 +2180,21 @@ module.exports = {
       ..
     }
   */
-  getProductionChain: function (arg0_user, arg1_good, arg2_used_goods) { //[WIP] - Finish function body
+  getProductionChain: function (arg0_user, arg1_good, arg2_used_goods, arg3_depth) {
     //Convert from parameters
     var user_id = arg0_user;
     var good_key = arg1_good;
     var used_goods = (arg2_used_goods) ? arg2_used_goods : []; //Used for tracking which goods have already been appended to avoid infinite loops if they exist
+    var depth = (arg3_depth) ? arg3_depth : 1;
 
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
     var all_building_keys = Object.keys(lookup.all_buildings);
+    var capital_obj;
     var production_chain_obj = {};
-    var usr = main.users[actual_id];
 
-    var capital_obj = getCapital(user_id);
+    if (user_id != "") capital_obj = getCapital(user_id);
+    if (!capital_obj) capital_obj = main.provinces["1"];
 
     //Iterate over all buildings
     var dependent_goods = [];
@@ -2292,16 +2294,20 @@ module.exports = {
         lookup.all_goods[dependent_goods[i]] &&
         !used_goods.includes(dependent_goods[i])
       ) {
+        var new_depth = JSON.parse(JSON.stringify(depth)) + 1;
         var new_used_goods = JSON.parse(JSON.stringify(used_goods));
 
-        //Push current good to new_used_goods
-        //new_used_goods.push(good_key);
-        new_used_goods = appendArrays(new_used_goods, dependent_goods);
+        //Arbitrary depth braking at 10 recursions
+        if (new_depth < 10) {
+          //Push current good to new_used_goods
+          //new_used_goods.push(good_key);
+          new_used_goods = appendArrays(new_used_goods, dependent_goods);
 
-        var local_production_chain = module.exports.getProductionChain(user_id, dependent_goods[i], new_used_goods);
+          var local_production_chain = module.exports.getProductionChain(user_id, dependent_goods[i], new_used_goods, new_depth);
 
-        //Merge local_production_chain with production_chain_obj
-        production_chain_obj = mergeObjects(production_chain_obj, local_production_chain);
+          //Merge local_production_chain with production_chain_obj
+          production_chain_obj = mergeObjects(production_chain_obj, local_production_chain);
+        }
       }
 
     //Return statement
@@ -2523,11 +2529,15 @@ module.exports = {
       //Make sure province isn't currently occupied
       if (province_obj.controller)
         if (province_obj.controller == province_obj.owner) {
-          var usr = main.users[province_obj.controller];
+          var usr;
+
+          if (main)
+            if (main.users)
+              usr = main.users[province_obj.controller];
 
           var building_obj;
           var is_individual = (options.building_object);
-          var modifiers = JSON.parse(JSON.stringify(usr.modifiers));
+          var modifiers = (usr) ? JSON.parse(JSON.stringify(usr.modifiers)) : {};
 
           //Initialise modifiers
           {

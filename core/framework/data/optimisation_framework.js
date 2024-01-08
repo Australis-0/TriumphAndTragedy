@@ -29,6 +29,7 @@ module.exports = {
       all_pop_classes: getPopClasses(),
       all_pop_needs: getAllPopNeeds(),
       all_pop_needs_categories: getAllPopNeedCategories(),
+      all_pop_needs_goods: getAllPopCategoriesNeeds(),
       all_subgoods: getGoodsSubgoods(),
       all_units: getAllUnits({ return_object: true }),
       all_unit_names: getAllUnits({ return_names: true }),
@@ -104,6 +105,13 @@ module.exports = {
             local_good.hidden = true;
           }
         }
+
+        lookup.all_production = getAllProductionChains();
+        lookup.all_production_complexity = getAllProductionChainsComplexity();
+        lookup.all_production_fraction_complexity = standardiseFraction(lookup.all_production_complexity);
+        lookup.all_production_percent_complexity = standardisePercentage(lookup.all_production_complexity);
+
+        lookup.artisan_production_percent = getArtisanProductionPercentage();
       }
 
       //Market processing

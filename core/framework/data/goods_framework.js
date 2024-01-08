@@ -16,6 +16,50 @@ module.exports = {
     return good_names;
   },
 
+  getAllProductionChains: function () {
+    //Lookup guard clause
+    if (!global.lookup) global.lookup = {};
+
+    //Declare local instance variables
+    var all_goods = (lookup.all_goods) ? lookup.all_goods : getGoods({ return_object: true });
+    var return_object = {};
+
+    var all_good_keys = Object.keys(all_goods);
+
+    //Iterate over all_good_keys
+    for (var i = 0; i < all_good_keys.length; i++) {
+      log.debug(`(${i}/${all_good_keys.length}) Processing production chain for `, all_good_keys[i]);
+
+      var local_production_chain = getProductionChain("", all_good_keys[i]);
+
+      return_object[all_good_keys[i]] = local_production_chain;
+    }
+
+    //Return statement
+    return return_object;
+  },
+
+  getAllProductionChainsComplexity: function () {
+    //Lookup guard clause
+    if (!global.lookup) global.lookup = {};
+
+    //Declare local instance variables
+    var all_production_chains = (lookup.all_production) ? lookup.all_production : module.exports.getAllProductionChains();
+    var return_object = {};
+
+    var all_good_keys = Object.keys(all_production_chains);
+
+    //Iterate over all_good_keys
+    for (var i = 0; i < all_good_keys.length; i++) {
+      var local_production_chain = all_production_chains[all_good_keys[i]];
+
+      return_object[all_good_keys[i]] = JSON.stringify(local_production_chain).length;
+    }
+
+    //Return statement
+    return return_object;
+  },
+
   //getAllSubgoods() - Returns an array of subgood keys
   getAllSubgoods: function (arg0_object) {
     //Convert from parameters
