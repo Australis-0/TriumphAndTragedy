@@ -111,7 +111,7 @@ module.exports = {
         lookup.all_production_fraction_complexity = standardiseFraction(lookup.all_production_complexity);
         lookup.all_production_percent_complexity = standardisePercentage(lookup.all_production_complexity);
 
-        lookup.artisan_production_percent = getArtisanProductionPercentage();
+        lookup.artisan_production_fraction = getArtisanProductionPercentage();
       }
 
       //Market processing

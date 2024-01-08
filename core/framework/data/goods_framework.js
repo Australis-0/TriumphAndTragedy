@@ -656,6 +656,35 @@ module.exports = {
     return (!options.return_object) ? goods_array : goods_object;
   },
 
+  getUnlockedGoods: function (arg0_user) {
+    //Convert from parameters
+    var user_id = arg0_user;
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var goods_obj = (lookup.all_goods) ? lookup.all_goods : getGoods({ return_object: true });
+    var unlocked_goods = [];
+    var usr = main.users[actual_id];
+
+    var all_goods = Object.keys(goods_obj);
+
+    //Iterate over all_goods
+    if (lookup.all_production) {
+      for (var i = 0; i < all_goods.length; i++) {
+        //Check if good is unlocked
+        var is_good_unlocked = module.exports.isGoodUnlocked(user_id, all_goods[i]);
+
+        if (is_good_unlocked)
+          unlocked_goods.push(all_goods[i]);
+      }
+    } else {
+      log.warn(`getUnlockedGoods() - lookup.all_production is not defined!`);
+    }
+
+    //Return statement
+    return unlocked_goods;
+  },
+
   hasProductionChain: function (arg0_good) {
     //Convert from parameters
     var good_name = arg0_good;
@@ -738,6 +767,48 @@ module.exports = {
 
     //Return statement
     return has_subgood;
+  },
+
+  isGoodUnlocked: function (arg0_user, arg1_good_key) {
+    //Convert from parameters
+    var user_id = arg0_user;
+    var good_key = arg1_good_key;
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var usr = main.users[actual_id];
+
+    //Check to make sure all_production is defined
+    if (lookup.all_production) {
+      //Declare local instance variables
+      var production_chain_obj = lookup.all_production[good_key];
+
+      if (production_chain_obj) {
+        var all_production_chain_goods = Object.keys(production_chain_obj);
+
+        //Iterate over all_production_chain_goods
+        for (var i = 0; i < all_production_chain_goods.length; i++) {
+          var local_subobj = production_chain_obj[all_production_chain_goods[i]];
+
+          var all_local_buildings = Object.keys(local_subobj);
+          var has_unlocked_building = false;
+
+          //Iterate over all_local_buildings to determine if at least one is unlocked
+          for (var x = 0; x < all_local_buildings.length; x++)
+            if (usr.available_buildings.includes(all_local_buildings[x]))
+              has_unlocked_building = true;
+
+          //Guard clause if no unlocked building for prerequisite good
+          if (!has_unlocked_building)
+            return false;
+        }
+
+        //Return statement if it passed all guard clauses
+        return true;
+      }
+    } else {
+      log.warn(`isGoodUnlocked() - lookup.all_production is not defined!`);
+    }
   },
 
   modifyGoodAmount: function (arg0_user, arg1_good_name, arg2_value) {

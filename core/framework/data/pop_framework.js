@@ -493,8 +493,43 @@ module.exports = {
     return pop_categories;
   },
 
-  getArtisanProduction: function () {
+  getArtisanProduction: function (arg0_province, arg1_pop_type) {
+    //Convert from parameters
+    var province_id = arg0_province;
+    var pop_type = arg1_pop_type;
 
+    //Declare local instance variables
+    var province_obj = (typeof province_id != "object") ? main.provinces[province_id] : province_id;
+    var return_object = {};
+
+    //Check if province_obj has pops
+    if (province_obj)
+      if (province_obj.pops) {
+        var usr = main.users[province_obj.owner];
+
+        //Check artisan employment
+        var artisan_amount = returnSafeNumber(province_obj.pops[pop_type]);
+        var artisan_production_obj = (usr.artisan_production) ? usr.artisan_production : module.exports.getUserArtisanProduction(user_id);
+        var artisan_per_production = returnSafeNumber(config.defines.economy.artisan_per_production, 10000);
+        var used_artisans = returnSafeNumber(province_obj.pops[`used_${pop_type}`]);
+
+        var all_artisan_goods = Object.keys(artisan_production_obj);
+        var unemployed_artisans = artisan_amount - used_artisans;
+
+        if (unemployed_artisans > 0) {
+          var artisan_production_capacity = unemployed_artisans/artisan_per_production;
+
+          //Iterate over all_artisan_goods
+          for (var i = 0; i < all_artisan_goods.length; i++) {
+            var local_value = artisan_production_obj[all_artisan_goods[i]];
+
+            return_object[all_artisan_goods[i]] = Math.ceil(local_value*artisan_production_capacity);
+          }
+        }
+      }
+
+    //Return statement
+    return return_object;
   },
 
   getArtisanProductionPercentage: function () {
@@ -2238,6 +2273,38 @@ module.exports = {
 
     //Return statement
     return returnSafeNumber(province_obj.pops[pop_type] - employed_pops);
+  },
+
+  getUserArtisanProduction: function (arg0_user) {
+    //Convert from parameters
+    var user_id = arg0_user;
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var return_object = {};
+    var usr = main.users[actual_id];
+
+    if (usr) {
+      //Check for available goods
+      var available_goods = getUnlockedGoods(user_id);
+
+      if (lookup.artisan_production_fraction) {
+        //Iterate over available_goods
+        for (var i = 0; i < available_goods.length; i++)
+          if (lookup.artisan_production_fraction[available_goods[i]])
+            return_object[available_goods[i]] = lookup.artisan_production_fraction[available_goods[i]];
+
+        return_object = standardisePercentage(return_object);
+
+        //Return statement
+        return return_object;
+      } else {
+        log.warn(`getUserArtisanProduction() - lookup.artisan_production_fraction is not defined!`);
+      }
+    }
+
+    //Return statement
+    return return_object;
   },
 
   mergePopScopes: function (arg0_pop_scope, arg1_pop_scope) {

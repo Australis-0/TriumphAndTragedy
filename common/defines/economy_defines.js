@@ -85,6 +85,7 @@ config.defines.economy = {
   min_employment_wage: 0.20, //What % of a company's profit should be directed to employees at minimum if a profit is being earned?
 
   //Goods
+  artisan_per_production: 10000, //How many artisans does it take to produce 1 good, assuming a simplicity of 1?
   good_categories: {
     giffen: {
       importance: 2.5, //Income elasticity of demand (the total % of a pop's income they are willing to spend on this good)

@@ -494,6 +494,10 @@ module.exports = {
       usr.city_cap = getCitiesCap(user_id);
       usr.total_cities += getCities(user_id, { include_hostile_occupations: true }).length;
 
+      //Goods trackers
+      usr.artisan_production = getUserArtisanProduction(user_id);
+      usr.available_goods = getUnlockedGoods(user_id);
+
       //Cooldowns
       {
         for (var i = 0; i < all_cooldowns.length; i++) {
