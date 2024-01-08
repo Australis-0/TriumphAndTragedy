@@ -3349,7 +3349,7 @@ module.exports = {
 
   refreshBuildingNames: function (arg0_province_id) {
     //Convert from parameters
-    var province_id = arg0_province;
+    var province_id = arg0_province_id;
 
     //Declare local instance variables
     var building_count = {};
