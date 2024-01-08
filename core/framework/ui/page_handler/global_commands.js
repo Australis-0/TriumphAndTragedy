@@ -114,8 +114,8 @@ module.exports = {
       }
 
       //[Settle (Provinces)]
-      if (input.startsWith("settle ")) {
-        var provinces = input.replace("settle ", "").split(" ").split(",");
+      if (input.startsWith("settle ") && input != "settle starting provinces") {
+        var provinces = input.replace("settle ", "").split(" ");
 
         for (var i = 0; i < provinces.length; i++)
           provinces[i] = provinces[i].trim();

@@ -40,7 +40,7 @@ module.exports = {
     //Declare local instance variables
     var could_render = false;
 
-    if (thread_two_workers)
+    if (global.thread_two_workers)
       if (thread_two_workers.length > 0) {
         could_render = true;
         var random_index = randomNumber(0, thread_two_workers.length - 1);
