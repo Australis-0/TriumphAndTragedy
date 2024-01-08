@@ -83,6 +83,7 @@ if (Cluster.isMaster) {
 
     //Add the worker to thread_two or thread_three depending on parity
     local_worker.send(getMasterObject());
+    local_worker.send({ client: true });
 
     if (i % 2 == 0) {
       //Pass global down to local_worker
@@ -103,13 +104,20 @@ if (Cluster.isMaster) {
 
   log.info(`-\nAssigned ${thread_two_workers.length} core(s) to Thread #2.`);
   log.info(`Assigned ${thread_three_workers.length} core(s) to Thread #3.`);
+
+  syncWorkersToMaster(); //Sync at start up just in case
 } else {
   //Other thread handling (Threads 2 and 3)
   process.on("message", function (data) {
     //Update global variables (lookup, main) to main thread
     if (data.client)
-      global.client = data.client;
-      
+      if (!global.client) {
+        log.debug(`Start client called on Worker #${Cluster.worker.id}!`);
+        global.client = startClient();
+
+        console.log(`Client logged in as: `, global.client);
+      }
+
     if (data.backup_loaded)
       global.backup_loaded = data.backup_loaded;
     if (data.config)
@@ -128,6 +136,8 @@ if (Cluster.isMaster) {
       global.reserved = data.reserved;
     if (data.settings)
       global.settings = data.settings;
+    if (data.worker_eval)
+      eval(data.worker_eval);
 
     log.debug(`Worker #${Cluster.worker.id} received message from master!`);
     //log.debug(`Mapmodes:`, mapmodes);

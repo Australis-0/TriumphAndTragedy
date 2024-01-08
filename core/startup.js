@@ -334,10 +334,6 @@ module.exports = {
     log.info(`Mod files imported.`);
 
     //Initialise Discord.js client and related instance variables
-    if (!faux_restart)
-      global.client = new Discord.Client({ intents: [
-        1, 4, 8, 16, 32, 64, 128, 512, 1024, 2048, 4096, 8192, 16384, 32767
-      ] });
     global.backup_loaded = false;
     global.bot_clock = 0;
     global.cache = {};
@@ -348,8 +344,7 @@ module.exports = {
     global.visual_prompts = {};
 
     if (!faux_restart)
-      client.login(settings.bot_token);
-
+      module.exports.startClient();
     log.info(`Client logged in.`);
 
     //Load DB from JSON
@@ -370,5 +365,15 @@ module.exports = {
     }
 
     log.info(`Optimisation cache processed.`);
+  },
+
+  startClient: function () {
+    global.client = new Discord.Client({ intents: [
+      1, 4, 8, 16, 32, 64, 128, 512, 1024, 2048, 4096, 8192, 16384, 32767
+    ] });
+    client.login(settings.bot_token);
+
+    //Return statement
+    return client;
   }
 };

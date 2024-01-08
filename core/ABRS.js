@@ -106,6 +106,8 @@ module.exports = {
 
       //Try parsing map file
       try {
+        if (!global.mapmodes) global.mapmodes = [];
+
         global[`${map_name}_file`] = map_file;
         global[`${map_name}_parsed`] = HTML.parse(global[map_name].toString());
 

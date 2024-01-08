@@ -107,7 +107,6 @@ module.exports = {
     if (Cluster.isMaster) {
       return {
         backup_loaded: backup_loaded,
-        client: client,
         config: config,
         interfaces: interfaces,
         lookup: lookup,
@@ -127,13 +126,17 @@ module.exports = {
     //Declare local instance variables
     var all_workers = [];
 
-    all_workers = mergeArrays(all_workers, thread_two_workers);
-    all_workers = mergeArrays(all_workers, thread_three_workers);
+    if (Cluster.isMaster) {
+      all_workers = mergeArrays(all_workers, thread_two_workers);
+      all_workers = mergeArrays(all_workers, thread_three_workers);
 
-    //All threads reload maps
-    for (var i = 0; i < all_workers.length; i++)
-      all_workers[i].send(module.exports.getMasterObject());
+      //All threads reload maps
+      for (var i = 0; i < all_workers.length; i++) {
+        all_workers[i].send(module.exports.getMasterObject());
+        all_workers[i].send({ client: true });
+      }
 
-    log.debug(`Synced all ${all_workers.length} Worker(s) to Master!`);
+      log.debug(`Synced all ${all_workers.length} Worker(s) to Master!`);
+    }
   }
 };

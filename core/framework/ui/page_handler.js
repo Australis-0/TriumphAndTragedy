@@ -18,6 +18,10 @@ module.exports = {
     if (in_visual_prompt)
       in_visual_prompt = (in_visual_prompt.type == "visual_prompt");
 
+    //Strip starting and ending brackets from input
+    if (input.startsWith("[") && input.endsWith("]"))
+      input = input.slice(1, -1);
+
     //Main Menu handler
     pageHandlerMainMenu(user_id, input);
 

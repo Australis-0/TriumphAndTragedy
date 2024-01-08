@@ -20,7 +20,7 @@ module.exports = {
       log.debug(`Thread #2 forceRender() instruction on Worker #${Cluster.worker.id}`);
 
       if (data.map_name)
-        forceRender(data.map_name);
+        internalForceRender(data.map_name);
     }
 
     //writeDB()

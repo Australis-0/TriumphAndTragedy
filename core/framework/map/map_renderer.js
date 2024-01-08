@@ -38,182 +38,14 @@ module.exports = {
     var map_name = arg0_map_name;
 
     //Declare local instance variables
-    var all_provinces = Object.keys(main.provinces);
-    var all_users = Object.keys(main.users);
+    if (thread_two_workers.length > 0) {
+      var random_index = randomNumber(0, thread_two_workers.length - 1);
 
-    //Set all provinces to default first
-    try {
-      for (var i = 0; i < all_provinces.length; i++)
-        setProvinceColour(map_name, all_provinces[i], [
-          config.defines.map.default_province_colour[0],
-          config.defines.map.default_province_colour[1],
-          config.defines.map.default_province_colour[2],
-        ]);
-    } catch {}
-
-    //Map case handler
-    switch (map_name) {
-      case "atlas":
-        var provinces_file = fs.readFileSync("./map/provinces.svg");
-        atlas_parsed = HTML.parse(provinces_file.toString());
-
-        renderAtlas();
-
-        break;
-      case "colonisation":
-        //Loop over all provinces and shade them in normally!
-        for (var i = 0; i < all_provinces.length; i++) {
-          var local_province = main.provinces[all_provinces[i]];
-
-          try {
-            if (local_province.controller) {
-              var local_user = main.users[local_province.controller];
-
-              if (local_province.controller == local_province.owner)
-                setProvinceColour(map_name, all_provinces[i], local_user.colour);
-              else
-                setProvinceColour(map_name, all_provinces[i], [
-                  Math.min(local_user.colour[0] + 20, 255),
-                  Math.min(local_user.colour[1] + 20, 255),
-                  Math.min(local_user.colour[2] + 20, 255)
-                ]);
-            }
-          } catch (e) {
-            log.error(`Could not parse colonisation users!`);
-            console.log(e);
-            console.log(`Province ID: ${all_provinces[i]}`)
-          }
-        }
-
-        //Loop over all users and determine where they're colonising
-        for (var i = 0; i < all_users.length; i++) {
-          var local_user = main.users[all_users[i]];
-
-          var colour_cache = [];
-          var local_expeditions = Object.keys(local_user.expeditions);
-
-          for (var x = 0; x < local_expeditions.length; x++) {
-            var local_expedition = local_user.expeditions[local_expeditions[x]];
-
-            //Assign colour if not assigned
-            if (!local_expedition.colour)
-              local_expedition.colour = generateColonisationColour(all_users[i]);
-
-            //Assign colours to province map for charter
-            for (var y = 0; y < local_expedition.provinces.length; y++)
-              setProvinceColour(map_name, local_expedition.provinces[y], local_expedition.colour);
-          }
-        }
-
-        //Cache SVG
-        module.exports.cacheSVG("colonisation");
-
-        break;
-      case "political":
-        for (var i = 0; i < all_provinces.length; i++) {
-          var local_province = main.provinces[all_provinces[i]];
-
-          try {
-            if (local_province.controller) {
-              var local_user = main.users[local_province.controller];
-
-              if (local_province.controller == local_province.owner) {
-                setProvinceColour(map_name, all_provinces[i], local_user.colour);
-              } else {
-                setProvinceColour(map_name, all_provinces[i], [
-                  Math.min(local_user.colour[0] + 20, 255),
-                  Math.min(local_user.colour[1] + 20, 255),
-                  Math.min(local_user.colour[2] + 20, 255)
-                ]);
-
-                //Demilitarised shader
-                var outline_colour = [0, 0, 0];
-
-                if (local_province.demilitarised)
-                  outline_colour = [240, 60, 60];
-
-                if (local_province[`${map_name}_stroke`] != RGBToHex(outline_colour))
-                  setProvinceOutline(map_name, all_provinces[i], outline_colour);
-              }
-            }
-          } catch {}
-        }
-
-        //Cache SVG
-        module.exports.cacheSVG("political");
-
-        break;
-      case "population":
-        var maximum_population = 0;
-
-        for (var i = 0; i < all_provinces.length; i++) {
-          var local_province = main.provinces[all_provinces[i]];
-
-          if (local_province.pops)
-            maximum_population = Math.max(
-              maximum_population,
-              returnSafeNumber(local_province.pops.population)
-            );
-        }
-
-        //Shade in province population based on % from 0 to maximum_population
-        for (var i = 0; i < all_provinces.length; i++) {
-          var local_province = main.provinces[all_provinces[i]];
-          var local_population = (local_province.pops) ?
-            returnSafeNumber(local_province.pops.population) : 0;
-
-          var local_colour = (local_population > 0) ?
-            config.defines.map.scalar_gradient[
-              Math.max(
-                getLogarithmic(local_population, 1, maximum_population, 3) - 1,
-              0)
-            ] :
-            config.defines.map.scalar_gradient[0];
-
-          try {
-            setProvinceColour(map_name, all_provinces[i], local_colour);
-          } catch {
-            log.warn(`Could not read colour ${local_population} from index ${(local_population/maximum_population) - 1}`);
-          }
-        }
-
-        break;
-      case "supply":
-        var maximum_supply_limit = 0;
-
-        for (var i = 0; i < all_provinces.length; i++)
-          maximum_supply_limit = Math.max(
-            maximum_supply_limit, returnSafeNumber(main.provinces[all_provinces[i]].supply_limit)
-          );
-
-        //The maximum supply limit must be at least one
-        if (maximum_supply_limit == 0)
-          maximum_supply_limit = config.defines.combat.base_supply_limit;
-
-        //Shade in province supply limit based on % from 0 to maximum_supply_limit
-        for (var i = 0; i < all_provinces.length; i++) {
-          var local_province = main.provinces[all_provinces[i]];
-          var local_supply = Math.max(returnSafeNumber(local_province.supply_limit), config.defines.combat.base_supply_limit);
-
-          var local_colour = (local_supply > config.defines.combat.base_supply_limit) ?
-            config.defines.map.scalar_gradient[
-              Math.max(
-                Math.round((local_supply/maximum_supply_limit)*100) - 1,
-              0)
-            ] :
-            config.defines.map.scalar_gradient[0];
-
-          try {
-            setProvinceColour(map_name, all_provinces[i], local_colour);
-          } catch {
-            log.warn(`Could not read colour ${local_colour} from index ${(local_supply/maximum_supply_limit) - 1}`);
-          }
-        }
-
-        //Cache SVG
-        module.exports.cacheSVG("supply");
-
-        break;
+      thread_two_workers[random_index].send(getMasterObject());
+      thread_two_workers[random_index].send({
+        command: "forceRender",
+        map_name: map_name
+      });
     }
   },
 
@@ -229,7 +61,7 @@ module.exports = {
     var label_placement = config.defines.map.map_label_placement;
     var labels = [];
 
-    log.info(`cacheSVG() called for ${map_file}!`);
+    log.info(`internalCacheSVG() called for ${map_file}!`);
 
     var current_file_data = global[`${map_name}_parsed`].toString()
       .replace(/><\/path>/gm, " />")
@@ -524,12 +356,196 @@ module.exports = {
                 module.exports.reloadAllMapInterfaces(map_name);
               });
             } catch (e) {
-              log.error(`cacheSVG() encountered an error whilst parsing file ${map_file} of map name ${map_name}: ${e}.`);
+              log.error(`internalCacheSVG() encountered an error whilst parsing file ${map_file} of map name ${map_name}: ${e}.`);
               console.log(e);
             }
           }
         });
     });
+  },
+
+  internalForceRender: function (arg0_map_name) {
+    //Convert from parameters
+    var map_name = arg0_map_name;
+
+    //Declare local instance variables
+    var all_provinces = Object.keys(main.provinces);
+    var all_users = Object.keys(main.users);
+
+    //Set all provinces to default first
+    try {
+      for (var i = 0; i < all_provinces.length; i++)
+        setProvinceColour(map_name, all_provinces[i], [
+          config.defines.map.default_province_colour[0],
+          config.defines.map.default_province_colour[1],
+          config.defines.map.default_province_colour[2],
+        ]);
+    } catch {}
+
+    //Map case handler
+    switch (map_name) {
+      case "atlas":
+        var provinces_file = fs.readFileSync("./map/provinces.svg");
+        atlas_parsed = HTML.parse(provinces_file.toString());
+
+        renderAtlas();
+
+        break;
+      case "colonisation":
+        //Loop over all provinces and shade them in normally!
+        for (var i = 0; i < all_provinces.length; i++) {
+          var local_province = main.provinces[all_provinces[i]];
+
+          try {
+            if (local_province.controller) {
+              var local_user = main.users[local_province.controller];
+
+              if (local_province.controller == local_province.owner)
+                setProvinceColour(map_name, all_provinces[i], local_user.colour);
+              else
+                setProvinceColour(map_name, all_provinces[i], [
+                  Math.min(local_user.colour[0] + 20, 255),
+                  Math.min(local_user.colour[1] + 20, 255),
+                  Math.min(local_user.colour[2] + 20, 255)
+                ]);
+            }
+          } catch (e) {
+            log.error(`Could not parse colonisation users!`);
+            console.log(e);
+            console.log(`Province ID: ${all_provinces[i]}`)
+          }
+        }
+
+        //Loop over all users and determine where they're colonising
+        for (var i = 0; i < all_users.length; i++) {
+          var local_user = main.users[all_users[i]];
+
+          var colour_cache = [];
+          var local_expeditions = Object.keys(local_user.expeditions);
+
+          for (var x = 0; x < local_expeditions.length; x++) {
+            var local_expedition = local_user.expeditions[local_expeditions[x]];
+
+            //Assign colour if not assigned
+            if (!local_expedition.colour)
+              local_expedition.colour = generateColonisationColour(all_users[i]);
+
+            //Assign colours to province map for charter
+            for (var y = 0; y < local_expedition.provinces.length; y++)
+              setProvinceColour(map_name, local_expedition.provinces[y], local_expedition.colour);
+          }
+        }
+
+        //Cache SVG
+        module.exports.internalCacheSVG("colonisation");
+
+        break;
+      case "political":
+        for (var i = 0; i < all_provinces.length; i++) {
+          var local_province = main.provinces[all_provinces[i]];
+
+          try {
+            if (local_province.controller) {
+              var local_user = main.users[local_province.controller];
+
+              if (local_province.controller == local_province.owner) {
+                setProvinceColour(map_name, all_provinces[i], local_user.colour);
+              } else {
+                setProvinceColour(map_name, all_provinces[i], [
+                  Math.min(local_user.colour[0] + 20, 255),
+                  Math.min(local_user.colour[1] + 20, 255),
+                  Math.min(local_user.colour[2] + 20, 255)
+                ]);
+
+                //Demilitarised shader
+                var outline_colour = [0, 0, 0];
+
+                if (local_province.demilitarised)
+                  outline_colour = [240, 60, 60];
+
+                if (local_province[`${map_name}_stroke`] != RGBToHex(outline_colour))
+                  setProvinceOutline(map_name, all_provinces[i], outline_colour);
+              }
+            }
+          } catch {}
+        }
+
+        //Cache SVG
+        module.exports.internalCacheSVG("political");
+
+        break;
+      case "population":
+        var maximum_population = 0;
+
+        for (var i = 0; i < all_provinces.length; i++) {
+          var local_province = main.provinces[all_provinces[i]];
+
+          if (local_province.pops)
+            maximum_population = Math.max(
+              maximum_population,
+              returnSafeNumber(local_province.pops.population)
+            );
+        }
+
+        //Shade in province population based on % from 0 to maximum_population
+        for (var i = 0; i < all_provinces.length; i++) {
+          var local_province = main.provinces[all_provinces[i]];
+          var local_population = (local_province.pops) ?
+            returnSafeNumber(local_province.pops.population) : 0;
+
+          var local_colour = (local_population > 0) ?
+            config.defines.map.scalar_gradient[
+              Math.max(
+                getLogarithmic(local_population, 1, maximum_population, 3) - 1,
+              0)
+            ] :
+            config.defines.map.scalar_gradient[0];
+
+          try {
+            setProvinceColour(map_name, all_provinces[i], local_colour);
+          } catch {
+            log.warn(`Could not read colour ${local_population} from index ${(local_population/maximum_population) - 1}`);
+          }
+        }
+
+        break;
+      case "supply":
+        var maximum_supply_limit = 0;
+
+        for (var i = 0; i < all_provinces.length; i++)
+          maximum_supply_limit = Math.max(
+            maximum_supply_limit, returnSafeNumber(main.provinces[all_provinces[i]].supply_limit)
+          );
+
+        //The maximum supply limit must be at least one
+        if (maximum_supply_limit == 0)
+          maximum_supply_limit = config.defines.combat.base_supply_limit;
+
+        //Shade in province supply limit based on % from 0 to maximum_supply_limit
+        for (var i = 0; i < all_provinces.length; i++) {
+          var local_province = main.provinces[all_provinces[i]];
+          var local_supply = Math.max(returnSafeNumber(local_province.supply_limit), config.defines.combat.base_supply_limit);
+
+          var local_colour = (local_supply > config.defines.combat.base_supply_limit) ?
+            config.defines.map.scalar_gradient[
+              Math.max(
+                Math.round((local_supply/maximum_supply_limit)*100) - 1,
+              0)
+            ] :
+            config.defines.map.scalar_gradient[0];
+
+          try {
+            setProvinceColour(map_name, all_provinces[i], local_colour);
+          } catch {
+            log.warn(`Could not read colour ${local_colour} from index ${(local_supply/maximum_supply_limit) - 1}`);
+          }
+        }
+
+        //Cache SVG
+        module.exports.internalCacheSVG("supply");
+
+        break;
+    }
   },
 
   reloadAllMaps: function (arg0_map_name) {
@@ -541,7 +557,7 @@ module.exports = {
     var map_file = global[`${map_name}_file`];
 
     //Cache SVGs
-    cacheSVG(map_name);
+    internalCacheSVG(map_name);
   },
 
   reloadAllMapInterfaces: function (arg0_map_name) {
