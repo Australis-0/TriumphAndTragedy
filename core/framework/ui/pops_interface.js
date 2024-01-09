@@ -276,6 +276,8 @@ module.exports = {
             pops_string.push("");
 
             var all_wealth_keys = sortWealthPools(province_obj.id);
+            var finished_subsistence = false;
+            var subsistence_header = false;
 
             //Iterate over all wealth pools first
             for (var i = 0; i < all_wealth_keys.length; i++)
@@ -292,6 +294,13 @@ module.exports = {
                 //Non-subsistence handler (Regular buildings)
                 if (!all_wealth_keys[i].includes("_subsistence-")) {
                   if (local_building && local_pop) {
+                    //Apply formatting break if finished_subsistence
+                    if (!finished_subsistence) {
+                      pops_string.push("");
+                      pops_string.push(`### __Formal Employers:__`);
+                      finished_subsistence = true;
+                    }
+
                     var per_capita_income = local_wealth_pool.income/local_wealth_pool.size;
 
                     pops_string.push(`- ${(local_pop.icon) ? local_pop.icon + " " : ""}${parseNumber(local_wealth_pool.size)} ${(local_pop.name) ? local_pop.name : local_pop_type} | ${config.icons.money} ${parseNumber(local_wealth_pool.wealth)} - ${config.icons.coins} ${parseNumber(per_capita_income, { display_float: true })} | [${printPercentage(local_wealth_pool.fulfilment)}/${printPercentage(local_wealth_pool.variety)}]`);
@@ -323,6 +332,12 @@ module.exports = {
                   var subsistence_split_key = local_building_id.split("-");
 
                   var subsistence_building_obj = lookup.all_buildings[subsistence_split_key[1]];
+
+                  //subsistence_header
+                  if (!subsistence_header) {
+                    pops_string.push(`### __Subsistence:__`);
+                    subsistence_header = true;
+                  }
 
                   pops_string.push(`- ${(local_pop.icon) ? local_pop.icon + " " : ""}${parseNumber(local_wealth_pool.size)} ${(local_pop.name) ? local_pop.name : local_pop_type} | ${config.icons.money}${parseNumber(local_wealth_pool.wealth)} - ${config.icons.coins} ${parseNumber(per_capita_income, { display_float: true })} | [${printPercentage(local_wealth_pool.fulfilment)}/${printPercentage(local_wealth_pool.variety)}]`);
 
