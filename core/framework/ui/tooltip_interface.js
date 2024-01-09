@@ -78,7 +78,7 @@ module.exports = {
 
       tooltip_string.push(`- Artisan pop(s): ${(lookup.artisan_pops.length > 0) ? artisan_pops.join(", ") : `_No artisan pops._`}`);
       tooltip_string.push("");
-      tooltip_string.push(`- Artisans produce 1 Good per ${parseNumber(config.defines.economy.artisan_per_production)} Artisans, factoring in good Complexity.`);
+      tooltip_string.push(`- Artisans produce **1** Good per **${parseNumber(config.defines.economy.artisan_per_production)}** Artisans, factoring in good Complexity.`);
       tooltip_string.push(` - Artisans can only produce the goods you can.`);
       tooltip_string.push(` - Artisans not employed in Subsistence will not produce Subsistence resources.`);
       tooltip_string.push(` - Complexity is calculated using the length of a production chain. The longest is set to 100%, and all other good Complexities are fractionally scaled to it.`);
@@ -107,7 +107,7 @@ module.exports = {
       tooltip_string.push(`- Non-Artisan pop(s): ${(non_artisan_pops.length > 0) ? non_artisan_pops.join(", ") : `No non-artisan pops._`}`);
       tooltip_string.push(`- Current RGO Throughput Modifier: **${printPercentage(usr.modifiers.rgo_throughput, { base_one: true })}**`);
       tooltip_string.push("");
-      tooltip_string.push(`- Non-Artisans produce 1 Good per ${parseNumber(config.defines.rgo_per_production)} Non-Artisans, factoring in RGO Rarity and RGO Throughput.`);
+      tooltip_string.push(`- Non-Artisans produce **1** Good per **${parseNumber(config.defines.rgo_per_production)}** Non-Artisans, factoring in RGO Rarity and RGO Throughput.`);
       tooltip_string.push(` - Rarity is determined by the initial buy price of a good.`);
       tooltip_string.push(` - RGOs are defined by the natural Resource of a given Province.`);
 

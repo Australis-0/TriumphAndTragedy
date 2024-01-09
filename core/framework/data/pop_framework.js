@@ -3216,16 +3216,16 @@ module.exports = {
     if (province_obj)
       if (province_obj.pops) {
         var all_good_categories = Object.keys(config.defines.economy.good_categories);
-        var all_pop_keys = Object.keys(province_obj.pops);
+        var all_wealth_keys = module.exports.sortWealthPools(province_obj.id, { mode: "wealth" });
 
         //Iterate through all_pop_keys for wealth- starting keys
-        for (var i = 0; i < all_pop_keys.length; i++)
-          if (all_pop_keys[i].startsWith("wealth-")) {
+        for (var i = 0; i < all_wealth_keys.length; i++)
+          if (all_wealth_keys[i].startsWith("wealth-")) {
             var current_allowance;
             var current_allowance_percentage;
-            var local_wealth_pool = province_obj.pops[all_pop_keys[i]];
+            var local_wealth_pool = province_obj.pops[all_wealth_keys[i]];
             var spent_wealth = 0;
-            var split_key = all_pop_keys[i].split("-");
+            var split_key = all_wealth_keys[i].split("-");
             var pop_type = split_key[3];
 
             var local_percentage = returnSafeNumber(local_wealth_pool.size)/100000;
