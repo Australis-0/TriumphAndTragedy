@@ -408,7 +408,7 @@ module.exports = {
 
       var all_rgo_production_keys = Object.keys(rgo_production);
 
-      if (rgo_production.length > 0) {
+      if (all_rgo_production_keys.length > 0) {
         //Print header
         production_localisation.push(`### [RGO Production]:`);
         production_localisation.push(`> **RGOs** are naturally-occuring raw resources in certain Province(s). Subsistence labourers not working a trade (Non-Artisan pops) harvest these resources to earn a living.`);

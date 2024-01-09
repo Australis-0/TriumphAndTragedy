@@ -99,7 +99,7 @@ module.exports = {
       }
 
       //[Production]
-      if (["production", "resource production"].includes(input)) {
+      if (["production", "resource production", "view production"].includes(input)) {
         game_obj.page = "view_production";
         printProduction(user_id);
 

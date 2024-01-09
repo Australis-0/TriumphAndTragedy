@@ -360,6 +360,9 @@ module.exports = {
 
         return true;
       }
+
+      //[(Tooltip)]
+      viewProductionTooltip(user_id, input);
     }
   }
 };
