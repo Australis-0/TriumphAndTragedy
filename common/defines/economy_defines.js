@@ -85,8 +85,8 @@ config.defines.economy = {
   min_employment_wage: 0.20, //What % of a company's profit should be directed to employees at minimum if a profit is being earned?
 
   //Goods
-  artisan_per_production: 10000, //How many artisans does it take to produce 1 good, assuming a simplicity of 1?
-  rgo_per_production: 1000, //How many people employed in an RGO (non-artisan) does it take to produce 1 good with a default price of £1?
+  artisan_per_production: 1000, //How many artisans does it take to produce 1 good, assuming a simplicity of 1?
+  rgo_per_production: 250, //How many people employed in an RGO (non-artisan) does it take to produce 1 good with a default price of £1?
 
   good_categories: {
     giffen: {

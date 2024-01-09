@@ -3417,6 +3417,10 @@ module.exports = {
             };
           var local_wealth_pool = province_obj.pops[key_name];
 
+          //Update .size and .income
+          local_wealth_pool.size = local_pop_amount;
+          local_wealth_pool.income = pop_income;
+
           //Add .income to .wealth
           modifyValue(local_wealth_pool, "wealth", returnSafeNumber(pop_income));
         } else {

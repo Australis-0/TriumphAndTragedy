@@ -553,7 +553,8 @@ module.exports = {
             //Urban/rural rounding handler
             var local_rounded_amount = (province_obj.type == "urban") ? Math.ceil(local_production_amount) : Math.floor(local_production_amount);
 
-            modifyValue(return_object, all_artisan_goods, (!options.return_float) ? local_rounded_amount : local_production_amount);
+            return_object[all_artisan_goods[i]] = (!options.return_float) ?
+              local_rounded_amount : local_production_amount;
           }
         }
       }
@@ -583,7 +584,7 @@ module.exports = {
       }
 
       //Standardise to fraction and invert
-      production_complexity_obj = invertFractionObject(standardiseFraction(production_complexity_obj));
+      production_complexity_obj = standardisePercentage(standardiseFraction(production_complexity_obj));
 
       //Return statement
       return production_complexity_obj;

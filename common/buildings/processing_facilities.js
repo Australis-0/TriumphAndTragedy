@@ -36,7 +36,7 @@ config.buildings.processing_facilities = { //[WIP] - Add Synthetic Ruby Factory
       tyres: 2,
       leather: 1
     },
-    production: {
+    produces: {
       aeroplanes: 4
     }
   },
