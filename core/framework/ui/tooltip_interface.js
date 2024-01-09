@@ -84,7 +84,7 @@ module.exports = {
       tooltip_string.push(` - Complexity is calculated using the length of a production chain. The longest is set to 100%, and all other good Complexities are fractionally scaled to it.`);
       tooltip_string.push(`- Urban artisan production is rounded up, whereas rural artisan production is rounded down.`);
 
-      printAlert(game_obj.id, tooltip_string);
+      printAlert(game_obj.id, tooltip_string.join("\n"));
     }
 
     //[RGO Production]
@@ -111,7 +111,7 @@ module.exports = {
       tooltip_string.push(` - Rarity is determined by the initial buy price of a good.`);
       tooltip_string.push(` - RGOs are defined by the natural Resource of a given Province.`);
 
-      printAlert(game_obj.id, tooltip_string);
+      printAlert(game_obj.id, tooltip_string.join("\n"));
     }
   },
 };
