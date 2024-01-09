@@ -139,6 +139,36 @@ config.buildings.refineries = {
       beryllium: 1
     }
   },
+  brass_factories: {
+    name: "Brass Factories",
+    singular: "Brass Factory",
+    type: "manufacturing",
+
+    construction_turns: 4,
+    cost: {
+      stone: 12,
+      cement: 6,
+      copper: 5,
+      iron: 5,
+      lamps: 3,
+      glass: 3,
+      tools: 2,
+      money: 5500
+    },
+    maintenance: {
+      copper: 10,
+      zinc: 5
+    },
+    manpower_cost: {
+      any_pop: {
+        peasants: 5000,
+        labourers: 5000
+      }
+    },
+    produces: {
+      brass: 5
+    }
+  },
   bronze_factories: {
     name: "Bronze Factories",
     singular: "Bronze Factory",

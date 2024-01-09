@@ -52,6 +52,7 @@ config.defines.common = {
       "nut_farms",
       "pastures",
       "tropical_plantations",
+      "rice_paddies",
       "vegetable_fields",
       "woad_harvesters",
 
@@ -114,6 +115,7 @@ config.defines.common = {
       "apothecaries",
       "bakeries",
       "breweries",
+      "brass_factories",
       "brick_kilns",
       "candleworks",
       "cheesemakers",

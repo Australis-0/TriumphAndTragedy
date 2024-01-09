@@ -1419,7 +1419,7 @@ config.goods = { //[WIP] - Redo mine chances, buy/sell prices
         type: "normal",
         buy_price: 3500
       },
-      TNT: {
+      tnt: {
         name: "TNT",
         icon: "tnt",
         type: "normal",

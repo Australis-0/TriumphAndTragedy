@@ -521,7 +521,7 @@ config.technology.economic_technology = {
     research_cost: 1000,
     year: 1770,
     unlocks: {
-      unlock_building: ["arms_factories", "factories", "hydrogen_plants", "nitric_acid_plants", "tenements"],
+      unlock_building: ["arms_factories", "battery_factories", "factories", "electric_gear_factories", "hydrogen_plants", "nitric_acid_plants", "typewriter_factories", "tenements"],
       unlock_reform: "wage"
     }
   },
@@ -533,6 +533,7 @@ config.technology.economic_technology = {
     research_cost: 1000,
     year: 1779,
     unlocks: {
+      unlock_building: ["chassis_factories"],
       processing_facilities: 1,
       building_cost: -0.03,
       construction_speed: -0.05

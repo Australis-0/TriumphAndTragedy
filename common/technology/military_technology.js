@@ -1128,7 +1128,7 @@ config.technology.military_technology = {
     research_cost: 4000,
     year: 1913,
     unlocks: {
-      unlock_building: "airstrips",
+      unlock_building: ["aircraft_factories", "airstrips"],
       unlock_unit: "biplanes",
       aeroplanes_dp: 0.05
     }
@@ -1558,7 +1558,7 @@ config.technology.military_technology = {
       obsolete_unit: "landship"
     }
   },
-  
+
   fighters: {
     name: "Fighters",
     icon: "aeroplanes",

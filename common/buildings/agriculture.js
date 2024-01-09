@@ -655,6 +655,27 @@ config.buildings.agriculture = {
       }
     }
   },
+  rice_paddies: {
+    name: "Rice Paddies",
+    singular: "Rice Paddy",
+    type: "agriculture",
+
+    construction_turns: 3,
+    cost: {
+      wood: 5,
+      money: 800
+    },
+    manpower_cost: {
+      any_pop: {
+        peasants: 10000,
+        farmers: 10000,
+        serfs: 10000
+      }
+    },
+    produces: {
+      rice: 10
+    }
+  },
   rubber_plantations: {
     name: "Rubber Plantations",
     singular: "Rubber Plantation",

@@ -3,6 +3,43 @@ config.buildings.processing_facilities = { //[WIP] - Add Synthetic Ruby Factory
   order: 14,
   taxable: true,
 
+  aircraft_factories: {
+    name: "Aircraft Factories",
+    singular: "Aircraft Factory",
+    type: "manufacturing",
+
+    construction_turns: 6,
+    cost: {
+      bricks: 20,
+      glass: 16,
+      ceramics: 16,
+      steel_beams: 14,
+      machine_parts: 12,
+      electric_gear: 10,
+      copper_wire: 10,
+      reinforced_concrete: 10,
+      lightbulbs: 8,
+      rubber: 6,
+      glass: 5,
+      cement: 5,
+      wood: 4,
+      money: 20000
+    },
+    maintenance: {
+      aluminium: 8,
+      machine_parts: 6,
+      regular_steel: 4,
+      turbines: 4,
+      electric_gear: 2,
+      plastics: 2,
+      glass: 2,
+      tyres: 2,
+      leather: 1
+    },
+    production: {
+      aeroplanes: 4
+    }
+  },
   apothecaries: {
     name: "Apothecaries",
     singular: "Apothecary",
@@ -313,6 +350,34 @@ config.buildings.processing_facilities = { //[WIP] - Add Synthetic Ruby Factory
       bread: 5
     }
   },
+  battery_factories: {
+    name: "Battery Factories",
+    singular: "Battery Factory",
+    type: "manufacturing",
+
+    construction_turns: 6,
+    cost: {
+      bricks: 14,
+      steel_beams: 10,
+      cement: 8,
+      lumber: 6,
+      copper: 5,
+      regular_steel: 4,
+      rubber: 4,
+      money: 5500
+    },
+    maintenance: {
+      copper_wire: 4,
+      zinc: 2
+    },
+    manpower_cost: {
+      engineers: 15000,
+      labourers: 10000
+    },
+    produces: {
+      batteries: 6
+    }
+  },
   bicycle_factories: {
     name: "Bicycle Factories",
     singular: "Bicycle Factory",
@@ -357,12 +422,19 @@ config.buildings.processing_facilities = { //[WIP] - Add Synthetic Ruby Factory
       oak_wood: 6,
       money: 3500
     },
+    maintenance: {
+      processed_hops: 2,
+      malt: 2
+    },
     manpower_cost: {
       any_pop: {
         peasants: 2000,
         labourers: 2000
       },
       artisans: 500
+    },
+    produces: {
+      beer: 5
     }
   },
   brick_kilns: {
@@ -446,7 +518,7 @@ config.buildings.processing_facilities = { //[WIP] - Add Synthetic Ruby Factory
       }
     },
     produces: {
-      cameras: 6
+      candles: 6
     }
   },
   canneries: {
@@ -593,6 +665,43 @@ config.buildings.processing_facilities = { //[WIP] - Add Synthetic Ruby Factory
     },
     produces: {
       cement: 5
+    }
+  },
+  chassis_factories: {
+    name: "Chassis Factories",
+    singular: "Chassis Factory",
+    type: "manufacturing",
+
+    construction_turns: 5,
+    cost: {
+      iron: 12,
+      bricks: 12,
+      cement: 10,
+      lumber: 8,
+      copper: 6,
+      oak_wood: 6,
+      money: 4500
+    },
+    maintenance: {
+      brass: 3,
+      lumber: 2,
+      machine_parts: 1,
+      electric_gear: 1,
+      regular_steel: 1,
+      rubber: 1
+    },
+    manpower_cost: {
+      any_pop_peasants_labourers: {
+        peasants: 2000,
+        labourers: 2000
+      },
+      any_pop_engineers_artisans: {
+        engineers: 500,
+        artisans: 500
+      }
+    },
+    produces: {
+      chassis: 5
     }
   },
   cheesemakers: {
@@ -1874,6 +1983,40 @@ config.buildings.processing_facilities = { //[WIP] - Add Synthetic Ruby Factory
       }
     }
   },
+  heavy_weapons_factories: {
+    name: "Heavy Weapons Factory",
+    singular: "Heavy Weapons Factory",
+    type: "manufacturing",
+
+    construction_turns: 5,
+    cost: {
+      bricks: 8,
+      cement: 6,
+      regular_steel: 6,
+      lumber: 5,
+      copper: 4,
+      tools: 4
+    },
+    maintenance: {
+      steel: 7,
+      machine_parts: 5,
+      dynamite: 3,
+      glass: 3
+    },
+    manpower_cost: {
+      any_pop_peasants_labourers: {
+        peasants: 2000,
+        labourers: 2000
+      },
+      any_pop_engineers_artisans: {
+        engineers: 500,
+        artisans: 500
+      }
+    },
+    produces: {
+      heavy_weaponry: 3
+    }
+  },
   incense_works: {
     name: "Incense Works",
     singular: "Incense Works",
@@ -3048,7 +3191,7 @@ config.buildings.processing_facilities = { //[WIP] - Add Synthetic Ruby Factory
       },
       production_choice_gwahaju: {
         name: "Gwaha-ju",
-        gwahaju: 2
+        gwaha_ju: 2
       },
       production_choice_huangjiu: {
         name: "Huangjiu",
@@ -3064,7 +3207,7 @@ config.buildings.processing_facilities = { //[WIP] - Add Synthetic Ruby Factory
       },
       production_choice_shaoxing: {
         name: "Shaoxing",
-        production_choice_shaoxing: 6
+        shaoxing: 6
       },
       production_choice_tapuy: {
         name: "Tapuy",
@@ -3471,11 +3614,17 @@ config.buildings.processing_facilities = { //[WIP] - Add Synthetic Ruby Factory
       wood: 2,
       money: 2000
     },
+    maintenance: {
+      tallow: 5
+    },
     manpower_cost: {
       any_pop: {
         peasants: 2000,
         labourers: 2000
       }
+    },
+    produces: {
+      soap: 4
     }
   },
   souvenir_factories: {
@@ -3495,7 +3644,9 @@ config.buildings.processing_facilities = { //[WIP] - Add Synthetic Ruby Factory
       money: 5000
     },
     maintenance: {
-      tallow: 5
+      glass: 3,
+      cotton: 2,
+      camphor: 1
     },
     manpower_cost: {
       any_pop: {
@@ -3505,7 +3656,7 @@ config.buildings.processing_facilities = { //[WIP] - Add Synthetic Ruby Factory
       artisans: 1200
     },
     produces: {
-      soap: 4
+      souvenirs: 5
     }
   },
   sugar_refineries: {
@@ -3791,6 +3942,12 @@ config.buildings.processing_facilities = { //[WIP] - Add Synthetic Ruby Factory
       production_choice_cloth_two: {
         wool: 5
       },
+      production_choice_felt_one: {
+        cloth: 2
+      },
+      production_choice_felt_two: {
+        wool: 2
+      },
       production_choice_linen: {
         linseed: 6
       },
@@ -3814,6 +3971,14 @@ config.buildings.processing_facilities = { //[WIP] - Add Synthetic Ruby Factory
       production_choice_cloth_two: {
         name: "Woolen Cloth",
         cloth: 5
+      },
+      production_choice_felt_one: {
+        name: "Cloth Felt",
+        felt: 2
+      },
+      production_choice_felt_two: {
+        name: "Fur Felt",
+        felt: 3
       },
       production_choice_linen: {
         name: "Linen",
@@ -4050,6 +4215,36 @@ config.buildings.processing_facilities = { //[WIP] - Add Synthetic Ruby Factory
     },
     produces: {
       tyres: 4
+    }
+  },
+  typewriter_factories: {
+    name: "Typewriter Factories",
+    singular: "Typewriter Factory",
+    type: "manufacturing",
+
+    construction_turns: 6,
+    cost: {
+      bricks: 14,
+      cement: 8,
+      machine_parts: 6,
+      regular_steel: 4,
+      lumber: 6,
+      common_furniture: 4,
+      coals: 4,
+      copper_wire: 4,
+      money: 8500
+    },
+    maintenance: {
+      machine_parts: 5,
+      ink: 3,
+      regular_steel: 2
+    },
+    manpower_cost: {
+      labourers: 3500,
+      engineers: 1000
+    },
+    produces: {
+      typewriters: 5
     }
   },
   uniforms_factories: {
