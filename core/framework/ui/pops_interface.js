@@ -317,6 +317,31 @@ module.exports = {
                   //If local_building doesn't exist, delete wealth pool
                   if (!local_building)
                     delete province_obj.pops[all_wealth_keys[i]];
+                } else {
+                  //Subsistence handler
+                  var per_capita_income = local_wealth_pool.income/local_wealth_pool.size;
+                  var subsistence_split_key = local_building_id.split("-");
+
+                  var subsistence_building_obj = lookup.all_buildings[subsistence_split_key[1]];
+
+                  pops_string.push(`- ${(local_pop.icon) ? local_pop.icon + " " : ""}${parseNumber(local_wealth_pool.size)} ${(local_pop.name) ? local_pop.name : local_pop_type} | ${config.icons.money}${parseNumber(local_wealth_pool.wealth)} - ${config.icons.coins} ${parseNumber(per_capita_income, { display_float: true })} | [${printPercentage(local_wealth_pool.fulfilment)}/${printPercentage(local_wealth_pool.variety)}]`);
+
+                  if (!game_obj.hide_employers)
+                    pops_string.push(` - Employer (Subsistence): ${(subsistence_building_obj.name) ? subsistence_building_obj.name : subsistence_split_key[1]}`);
+
+                  if (local_pop.per_100k)
+                    if (local_pop.per_100k.needs) {
+                      var all_needs_categories = Object.keys(local_pop.per_100k.needs);
+
+                      if (!game_obj.hide_needs_categories)
+                        for (var x = 0; x < all_needs_categories.length; x++) {
+                          var category_name = config.localisation[all_needs_categories[x]];
+                          var local_fulfilment = local_wealth_pool[`${all_needs_categories[x]}-fulfilment`];
+                          var local_variety = local_wealth_pool[`${all_needs_categories[x]}-variety`];
+
+                          pops_string.push(` - ${(category_name) ? category_name : all_needs_categories[x]} - ${printPercentage(local_fulfilment)}/${printPercentage(local_variety)}`);
+                        }
+                    }
                 }
               }
           }
