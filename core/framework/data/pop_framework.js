@@ -522,6 +522,7 @@ module.exports = {
     //Check if province_obj has pops
     if (province_obj)
       if (province_obj.pops) {
+        var user_id = province_obj.owner;
         var usr = main.users[province_obj.owner];
 
         //Check artisan employment

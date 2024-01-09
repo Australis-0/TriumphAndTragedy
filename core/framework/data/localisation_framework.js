@@ -629,30 +629,32 @@ module.exports = {
     var formatter = "";
     var good_icon = "";
 
-    var good_obj = (typeof good_name == "object") ? good_name : getGood(good_name);
-    var good_string = "";
+    if (good_name) {
+      var good_obj = (typeof good_name == "object") ? good_name : getGood(good_name);
+      var good_string = "";
 
-    var good_key = (typeof good_name == "object") ?
-      getGood(good_obj.name, { return_key: true }) :
-      getGood(good_name, { return_key: true });
+      var good_key = (typeof good_name == "object") ?
+        getGood(good_obj.name, { return_key: true }) :
+        getGood(good_name, { return_key: true });
 
-    if (good_obj) {
-      if (good_obj.icon)
-        good_icon = (config.icons[good_obj.icon] && !exclude_icon) ? `${config.icons[good_obj.icon]} ` : "";
-      if (good_obj.name)
-        good_string = good_obj.name;
+      if (good_obj) {
+        if (good_obj.icon)
+          good_icon = (config.icons[good_obj.icon] && !exclude_icon) ? `${config.icons[good_obj.icon]} ` : "";
+        if (good_obj.name)
+          good_string = good_obj.name;
+      }
+
+      //Set formatter
+      if (formatting == "bold")
+        formatter = "**";
+      if (formatting == "italic")
+        formatter = "_";
+      if (formatting == "underline")
+        formatter = "__";
+
+      //Return statement
+      return `${good_icon}${string}${formatter}${(good_string) ? good_string : good_key}${formatter}`;
     }
-
-    //Set formatter
-    if (formatting == "bold")
-      formatter = "**";
-    if (formatting == "italic")
-      formatter = "_";
-    if (formatting == "underline")
-      formatter = "__";
-
-    //Return statement
-    return `${good_icon}${string}${formatter}${(good_string) ? good_string : good_key}${formatter}`;
   },
 
   /*

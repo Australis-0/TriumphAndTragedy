@@ -2155,10 +2155,10 @@ module.exports = {
                 for (var x = 0; x < all_subsistence_keys.length; x++) {
                   var local_value = local_subsistence_production[all_subsistence_keys[x]];
 
-                  if (!production_obj[local_key])
-                    production_obj[local_key] = [0, 0];
-                  production_obj[local_key][0] += local_value;
-                  production_obj[local_key][1] += local_value;
+                  if (!production_obj[all_subsistence_keys[x]])
+                    production_obj[all_subsistence_keys[x]] = [0, 0];
+                  production_obj[all_subsistence_keys[x]][0] += local_value;
+                  production_obj[all_subsistence_keys[x]][1] += local_value;
                 }
               }
             }
