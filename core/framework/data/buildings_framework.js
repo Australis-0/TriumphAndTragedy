@@ -2148,16 +2148,18 @@ module.exports = {
               var local_subsistence_obj = all_provinces[i].subsistence;
               var local_subsistence_production = module.exports.getSubsistenceProduction(all_provinces[i].id, local_subsistence_obj);
 
-              var all_subsistence_keys = Object.keys(local_subsistence_production);
+              if (local_subsistence_production) {
+                var all_subsistence_keys = Object.keys(local_subsistence_production);
 
-              //Iterate over all_subsistence_keys
-              for (var x = 0; x < all_subsistence_keys.length; x++) {
-                var local_value = local_subsistence_production[all_subsistence_keys[x]];
+                //Iterate over all_subsistence_keys
+                for (var x = 0; x < all_subsistence_keys.length; x++) {
+                  var local_value = local_subsistence_production[all_subsistence_keys[x]];
 
-                if (!production_obj[local_key])
-                  production_obj[local_key] = [0, 0];
-                production_obj[local_key][0] += local_value;
-                production_obj[local_key][1] += local_value;
+                  if (!production_obj[local_key])
+                    production_obj[local_key] = [0, 0];
+                  production_obj[local_key][0] += local_value;
+                  production_obj[local_key][1] += local_value;
+                }
               }
             }
           }
@@ -2888,6 +2890,9 @@ module.exports = {
 
       modifyValue(subsistence_production_obj, province_obj.resource, Math.ceil(non_artisan_amount/rgo_per_production));
     }
+
+    //Return statement
+    return subsistence_production_obj;
   },
 
   getTotalBuildings: function (arg0_city_name, arg1_building_name) {
