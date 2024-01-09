@@ -3372,6 +3372,7 @@ module.exports = {
         revenue: 0,
         wage: 0,
 
+        subsistence: true,
         qualified_pops: qualified_pops
       };
 

@@ -2285,7 +2285,7 @@ module.exports = {
 
     //Iterate over all_pop_keeps for wealth_ pools
     for (var i = 0; i < all_pop_keys.length; i++)
-      if (all_pop_keys[i].startsWith("wealth-")) {
+      if (all_pop_keys[i].startsWith("wealth-") && !all_pop_keys[i].includes("-subsistence-")) {
         var split_wealth_key = all_pop_keys[i].split("-");
 
         var local_pop_type = split_wealth_key[3];
@@ -4151,7 +4151,7 @@ module.exports = {
 
           if (all_pop_keys[i].includes("subsistence")) {
             local_value.key = all_pop_keys[i];
-            subsistence_obj = local_value;
+            subsistence_obj[all_pop_keys[i]] = local_value;
           } else {
             //Non-subsistence handling
             var split_key = all_pop_keys[i].split("-");
