@@ -2095,7 +2095,7 @@ module.exports = {
         //Process production_obj from all buildings next
         for (var i = 0; i < all_provinces.length; i++)
           //Iterate over all_buildings in a province
-          if (all_provinces[i].buildings)
+          if (all_provinces[i].buildings) {
             for (var x = 0; x < all_provinces[i].buildings.length; x++) {
               var local_building = all_provinces[i].buildings[x];
               var local_employment = building_cache.employment[local_building.id]; //[WIP] - FIX this
@@ -2142,6 +2142,25 @@ module.exports = {
               if (options.is_real)
                 module.exports.processBuilding(local_building, local_production);
             }
+
+            //Fetch subsistence production
+            if (all_provinces[i].subsistence) {
+              var local_subsistence_obj = all_provinces[i].subsistence;
+              var local_subsistence_production = module.exports.getSubsistenceProduction(all_provinces[i].id, local_subsistence_obj);
+
+              var all_subsistence_keys = Object.keys(local_subsistence_production);
+
+              //Iterate over all_subsistence_keys
+              for (var x = 0; x < all_subsistence_keys.length; x++) {
+                var local_value = local_subsistence_production[all_subsistence_keys[x]];
+
+                if (!production_obj[local_key])
+                  production_obj[local_key] = [0, 0];
+                production_obj[local_key][0] += local_value;
+                production_obj[local_key][1] += local_value;
+              }
+            }
+          }
 
         //Merge maintenance_obj into production_obj; sort so that it really is [min, max]
         production_obj = mergeObjects(production_obj, maintenance_obj);
@@ -2839,6 +2858,38 @@ module.exports = {
     return qualified_pops;
   },
 
+  getSubsistenceProduction: function (arg0_province_id, arg1_subsistence_obj) {
+    //Convert from parameters
+    var province_id = arg0_province_id;
+    var subsistence_obj = arg1_subsistence_obj;
+
+    //Declare local instance variables
+    var employed_pops = getObjectSum(subsistence_obj.employment);
+    var province_obj = (typeof province_id != "object") ? main.provinces[province_id] : province_id;
+
+    //Fetch artisan production for province
+    var artisan_amount = 0;
+    var subsistence_production_obj = {};
+
+    //Iterate over all artisan_pops
+    for (var i = 0; i < lookup.artisan_pops.length; i++) {
+      subsistence_production_obj = mergeObjects(subsistence_production_obj,
+        getArtisanProduction(province_obj.id, lookup.artisan_pops[i]));
+      artisan_amount += returnSafeNumber(subsistence_obj.employment[lookup.artisan_pops[i]]);
+    }
+
+    //+RGO Production
+    if (province_obj.resource) {
+      var good_obj = lookup.all_goods[province_obj.resource];
+      var non_artisan_amount = employed_pops - artisan_amount;
+
+      //It takes good_obj.buy_price*config.defines.economy.rgo_per_production people to produce 1 good. (This is not the market price, but the base buy_price)
+      var rgo_per_production = returnSafeNumber(good_obj.buy_price, 1)*config.defines.economy.rgo_per_production;
+
+      modifyValue(subsistence_production_obj, province_obj.resource, Math.ceil(non_artisan_amount/rgo_per_production));
+    }
+  },
+
   getTotalBuildings: function (arg0_city_name, arg1_building_name) {
     //Convert from parameters
     var city_name = (typeof arg0_city_name != "object") ? arg0_city_name.toLowerCase().trim() : arg0_city_name;
@@ -3340,33 +3391,14 @@ module.exports = {
       var total_revenue = 0;
 
       //Fetch artisan production for province
-      var artisan_amount = 0;
-      var subsistence_production_obj = {};
-
-      //Iterate over all artisan_pops
-      for (var i = 0; i < lookup.artisan_pops.length; i++) {
-        subsistence_production_obj = mergeObjects(subsistence_production_obj,
-          getArtisanProduction(province_obj.id, lookup.artisan_pops[i]));
-        artisan_amount += returnSafeNumber(subsistence_obj.employment[lookup.artisan_pops[i]]);
-      }
-
-      //+ RGO production
-      if (province_obj.resource) {
-        var good_obj = lookup.all_goods[province_obj.resource];
-        var non_artisan_amount = employed_pops - artisan_amount;
-
-        //It takes good_obj.buy_price*config.defines.economy.rgo_per_production people to produce 1 good. (This is not the market price, but the base buy_price)
-        var rgo_per_production = returnSafeNumber(good_obj.buy_price, 1)*config.defines.economy.rgo_per_production;
-
-        modifyValue(subsistence_production_obj, province_obj.resource, Math.ceil(non_artisan_amount/rgo_per_production));
-      }
+      var subsistence_production_obj = module.exports.getSubsistenceProduction(province_obj.id, subsistence_obj);
 
       //Set subsistence_obj.production; get revenues from production
       subsistence_obj.production = subsistence_production_obj;
       subsistence_obj.revenue = module.exports.getBuildingRevenue(subsistence_building_obj, { goods: subsistence_obj.production });
 
       for (var i = 0; i < qualified_pops.length; i++) {
-        var key_name = `wealth-subsistence_${subsistence_building_key}-${qualified_pops[i]}`;
+        var key_name = `wealth-subsistence-${subsistence_building_key}-${qualified_pops[i]}`;
         var local_pop_amount = returnSafeNumber(subsistence_obj.employment[qualified_pops[i]]);
 
         //Adjust wealth pool
