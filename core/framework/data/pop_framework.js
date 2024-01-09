@@ -541,7 +541,7 @@ module.exports = {
           for (var i = 0; i < all_artisan_goods.length; i++) {
             var local_value = artisan_production_obj[all_artisan_goods[i]];
 
-            return_object[all_artisan_goods[i]] = Math.ceil(local_value*artisan_production_capacity);
+            return_object[all_artisan_goods[i]] = Math.floor(local_value*artisan_production_capacity);
           }
         }
       }
