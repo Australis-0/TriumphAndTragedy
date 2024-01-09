@@ -2881,15 +2881,7 @@ module.exports = {
     }
 
     //+RGO Production
-    if (province_obj.resource) {
-      var good_obj = lookup.all_goods[province_obj.resource];
-      var non_artisan_amount = employed_pops - artisan_amount;
-
-      //It takes good_obj.buy_price*config.defines.economy.rgo_per_production people to produce 1 good. (This is not the market price, but the base buy_price)
-      var rgo_per_production = returnSafeNumber(good_obj.buy_price, 1)*config.defines.economy.rgo_per_production;
-
-      modifyValue(subsistence_production_obj, province_obj.resource, Math.ceil(non_artisan_amount/rgo_per_production));
-    }
+    subsistence_production_obj = mergeObjects(subsistence_production_obj, getProvinceRGOThroughput(province_obj.id));
 
     //Return statement
     return subsistence_production_obj;

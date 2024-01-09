@@ -386,8 +386,42 @@ module.exports = {
     var production_localisation = getProductionLocalisation(user_id, { display_icons: true });
     var usr = main.users[actual_id];
 
-    if (production_localisation.length == 0)
+    //Make sure user has actual production
+    if (production_localisation.length > 0) {
+      //Print artisan_production
+      var artisan_production = getTotalArtisanProduction(user_id);
+
+      var all_artisan_production_keys = Object.keys(artisan_production);
+
+      if (all_artisan_production_keys.length > 0) {
+        //Print header
+        production_localisation.push(`### [Artisan Production]:`);
+        production_localisation.push(`> Artisan production is produced by **Artisan Pops** working in **Subsistence** industries when not formally employed.`);
+        production_localisation.push("");
+
+        //List Artisan production
+        production_localisation = appendArrays(production_localisation, parseGoods(artisan_production));
+      }
+
+      //Print rgo_production
+      var rgo_production = getTotalRGOProduction(user_id);
+
+      var all_rgo_production_keys = Object.keys(rgo_production);
+
+      if (rgo_production.length > 0) {
+        //Print header
+        production_localisation.push(`### [RGO Production]:`);
+        production_localisation.push(`> **RGOs** are naturally-occuring raw resources in certain Province(s). Subsistence labourers not working a trade (Non-Artisan pops) harvest these resources to earn a living.`);
+        production_localisation.push(`> `);
+        production_localisation.push(`> Total production is modified by initial resource Scarcity and your **RGO Throughput** modifier.`);
+        production_localisation.push("");
+
+        //List rgo_production
+        production_localisation = appendArrays(production_localisation, parseGoods(rgo_production));
+      }
+    } else {
       production_localisation.push(`_Our country is currently not producing anything, nor does it have a regular import/export balance. Consider trading with other countries, building industry by typing_ **[Build]**_, or fix employment!_`);
+    }
 
     //Create embed and edit to message
     var production_embeds = splitEmbed(production_localisation, {

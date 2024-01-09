@@ -1998,6 +1998,43 @@ module.exports = {
     return immigration_obj;
   },
 
+  getProvinceRGOThroughput: function (arg0_province_id) {
+    //Convert from parameters
+    var province_id = arg0_province_id;
+
+    //Declare local instance variables
+    var artisan_amount = 0;
+    var province_obj = (typeof province_id != "object") ? main.provinces[province_id] : province_id;
+    var rgo_production = {};
+
+    //Iterate over lookup.artisan_pops to determine artisan_amount
+    if (province_obj.subsistence) {
+      var subsistence_obj = province_obj.subsistence;
+
+      var employed_pops = getObjectSum(subsistence_obj.employment);
+
+      for (var i = 0; i < lookup.artisan_pops.length; i++)
+        artisan_amount += returnSafeNumber(subsistence_obj.employment[lookup.artisan_pops[i]]);
+
+      //Fetch RGO Production
+      if (province_obj.resource) {
+        var good_obj = lookup.all_goods[province_obj.resource];
+        var non_artisan_amount = employed_pops - artisan_amount;
+        var usr = main.users[province_obj.owner];
+
+        //It takes good_obj.buy_price*config.defines.economy.rgo_per_production people to produce 1 good. (This is not the market price, but the base buy_price)
+        var rgo_per_production = returnSafeNumber(good_obj.buy_price, 1)*config.defines.economy.rgo_per_production;
+
+        var rgo_amount = (non_artisan_amount/rgo_per_production)*returnSafeNumber(usr.modifiers.rgo_throughput, 1);
+
+        modifyValue(rgo_production, province_obj.resource, Math.ceil(rgo_amount));
+      }
+    }
+
+    //Return statement
+    return rgo_production;
+  },
+
   getProvinceSOL: function (arg0_province_id, arg1_pop_types) {
     //Convert from parameters
     var province_id = arg0_province_id;
@@ -2201,6 +2238,27 @@ module.exports = {
     return total_active_duty;
   },
 
+  getTotalArtisanProduction: function (arg0_user) {
+    //Convert from parameters
+    var user_id = arg0_user;
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var artisan_production_obj = {};
+    var user_provinces = getProvinces(user_id, { include_occupations: true });
+    var usr = main.users[actual_id];
+
+    //Iterate over lookup.artisan_pops
+    for (var i = 0; i < user_provinces.length; i++)
+      for (var x = 0; x < lookup.artisan_pops.length; x++)
+        artisan_production_obj = mergeObjects(artisan_production_obj,
+          getArtisanProduction(user_provinces[i].id, lookup.artisan_pops[x])
+        );
+
+    //Return statement
+    return artisan_production_obj;
+  },
+
   getTotalPopConsumption: function (arg0_user, arg1_mode) {
     //Convert from parameters
     var user_id = arg0_user;
@@ -2268,6 +2326,24 @@ module.exports = {
 
     //Return statement
     return return_obj;
+  },
+
+  getTotalRGOProduction: function (arg0_user) {
+    //Convert from parameters
+    var user_id = arg0_user;
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var rgo_production_obj = {};
+    var user_provinces = getProvinces(user_id, { include_occupations: true });
+    var usr = main.users[actual_id];
+
+    //Iterate over all user_provinces
+    for (var i = 0; i < user_provinces.length; i++)
+      rgo_production_obj = mergeObjects(rgo_production_obj, module.exports.getProvinceRGOThroughput(user_provinces[i].id));
+
+    //Return statement
+    return rgo_production_obj;
   },
 
   //getUnemployedPops() - Returns the total unemployed pops of a given type in a province
