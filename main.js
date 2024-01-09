@@ -109,6 +109,15 @@ if (Cluster.isMaster) {
 } else {
   //Other thread handling (Threads 2 and 3)
   process.on("message", function (data) {
+    //Global error handling
+    process.on("unhandledRejection", (error) => {
+      //Log enabled only with debug mode
+      if (settings.debug_mode) {
+        log.error(`Unhandled promise rejection. ${error.toString()}`);
+        console.log(error);
+      }
+    });
+
     //Update global variables (lookup, main) to main thread
     if (data.client)
       if (!global.client) {

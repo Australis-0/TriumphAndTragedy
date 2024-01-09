@@ -510,10 +510,17 @@ module.exports = {
     return artisan_pops;
   },
 
-  getArtisanProduction: function (arg0_province, arg1_pop_type) {
+  /*
+    getArtisanProduction() - Fetches artisan production for a given province and pop type.
+    options: {
+      return_float: true/false - Optional. Whether to disable rounding. False by default.
+    }
+  */
+  getArtisanProduction: function (arg0_province, arg1_pop_type, arg2_options) {
     //Convert from parameters
     var province_id = arg0_province;
     var pop_type = arg1_pop_type;
+    var options = (arg2_options) ? arg2_options : {};
 
     //Declare local instance variables
     var province_obj = (typeof province_id != "object") ? main.provinces[province_id] : province_id;
@@ -541,7 +548,12 @@ module.exports = {
           for (var i = 0; i < all_artisan_goods.length; i++) {
             var local_value = artisan_production_obj[all_artisan_goods[i]];
 
-            return_object[all_artisan_goods[i]] = Math.floor(local_value*artisan_production_capacity);
+            var local_production_amount = local_value*artisan_production_capacity;
+
+            //Urban/rural rounding handler
+            var local_rounded_amount = (province_obj.type == "urban") ? Math.ceil(local_production_amount) : Math.floor(local_production_amount);
+
+            modifyValue(return_object, all_artisan_goods, (!options.return_float) ? local_rounded_amount : local_production_amount);
           }
         }
       }
