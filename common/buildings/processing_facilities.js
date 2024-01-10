@@ -485,9 +485,19 @@ config.buildings.processing_facilities = { //[WIP] - Add Synthetic Ruby Factory
       electric_gear: 4,
       money: 10000
     },
+    maintenance: {
+      machine_parts: 3,
+      glass: 3,
+      leather: 2,
+      regular_steel: 1,
+      aluminium: 1
+    },
     manpower_cost: {
       labourers: 5000,
       engineers: 200
+    },
+    produces: {
+      cameras: 6
     }
   },
   candleworks: {
