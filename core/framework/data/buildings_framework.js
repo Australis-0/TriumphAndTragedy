@@ -1928,7 +1928,7 @@ module.exports = {
     var building_wages = {};
     var province_obj = main.provinces[province_id];
 
-    if (province_obj)
+    if (province_obj) {
       if (province_obj.buildings)
         //Iterate over all buildings
         for (var i = 0; i < province_obj.buildings.length; i++) {
@@ -1937,6 +1937,15 @@ module.exports = {
           if (local_building[`${pop_type}_wage`])
             building_wages[local_building.id] = local_building[`${pop_type}_wage`];
         }
+
+      //Subsistence handling
+      if (province_obj.subsistence) {
+        var subsistence_obj = province_obj.subsistence;
+
+        if (subsistence_obj.qualified_pops.includes(pop_type))
+          building_wages[subsistence_obj.building_type] = subsistence_obj.wage;
+      }
+    }
 
     building_wages = sortObject(building_wages);
 
@@ -3394,6 +3403,7 @@ module.exports = {
       //Set subsistence_obj.production; get revenues from production
       subsistence_obj.production = subsistence_production_obj;
       subsistence_obj.revenue = module.exports.getBuildingRevenue(subsistence_building_obj, { goods: subsistence_obj.production });
+      subsistence_obj.wage = subsistence_obj.revenue/employed_pops;
 
       for (var i = 0; i < qualified_pops.length; i++) {
         var key_name = `wealth-subsistence-${subsistence_building_key}-${qualified_pops[i]}`;
