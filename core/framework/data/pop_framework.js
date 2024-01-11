@@ -1179,7 +1179,7 @@ module.exports = {
     var province_obj = (typeof province_id != "object") ? getProvince(province_id) : province_id;
 
     //Iterate over all province buildings
-    if (province_obj)
+    if (province_obj) {
       if (province_obj.buildings)
         for (var i = 0; i < province_obj.buildings.length; i++) {
           var local_building = province_obj.buildings[i];
@@ -1193,6 +1193,22 @@ module.exports = {
                 modifyValue(job_breakdown_obj, local_config.type, local_value);
             }
         }
+
+      //Subsistence handler
+      if (province_obj.subsistence) {
+        var subsistence_obj = province_obj.subsistence;
+
+        var subsistence_building_obj = lookup.all_buildings[subsistence_obj.building_type];
+
+        if (subsistence_building_obj) {
+          var local_value = returnSafeNumber(subsistence_obj.employment[pop_type]);
+
+          if (subsistence_building_obj.type)
+            modifyValue(job_breakdown_obj, subsistence_building_obj.type, local_value);
+        }
+      }
+    }
+
 
     //Return statement
     return standardisePercentage(job_breakdown_obj);
@@ -4144,7 +4160,7 @@ module.exports = {
                 if (config.pops[all_pop_keys[i]])
                   is_hard_specified = true;
             }
-            
+
             if (!is_hard_specified)
               modifyValue(soft_specified_tags, all_pop_keys[i], Math.floor(local_value*pop_scalar));
           } else if (typeof local_value == "object") {
