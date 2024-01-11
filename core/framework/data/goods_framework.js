@@ -412,7 +412,7 @@ module.exports = {
 
         subgoods_obj[all_goods[i]] = subgood_array;
       } else {
-        subgoods_obj[all_goods[i]] = all_goods[i];
+        subgoods_obj[all_goods[i]] = getList(all_goods[i]);
       }
     }
 

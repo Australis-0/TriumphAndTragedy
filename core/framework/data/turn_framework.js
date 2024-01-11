@@ -353,39 +353,9 @@ module.exports = {
       }
     }
 
-    //World Market Down-Logic - This must happen after users process their turns
+    //World Market logic - This must happen after users process their turns
     {
-      for (var i = 0; i < all_market_goods.length; i++) {
-        var local_good = getGood(all_market_goods[i]);
-        var local_market_good = main.market[all_market_goods[i]];
-
-        if (local_market_good && local_good) {
-          var local_price = local_good.buy_price*(local_market_good.demand/local_market_good.stock);
-
-          //Supply must at least be 1
-          if (local_market_good.stock <= 1)
-            local_market_good.stock = 1;
-
-          //No demand? Just hold at buy_price
-          if (local_market_good.demand <= 0)
-            local_price = local_good.buy_price;
-
-          //Set buy/sell prices
-          local_market_good.buy_price = local_price;
-          local_market_good.sell_price = local_price*(1/(config.defines.economy.resource_markup + 1));
-
-          //Institute minimum good price caps
-          local_market_good.buy_price =
-            Math.max(local_market_good.buy_price, config.defines.economy.resource_min_buy_price);
-
-          local_market_good.sell_price =
-            Math.max(local_market_good.sell_price, config.defines.economy.resource_min_sell_price);
-        }
-      }
-
-      //Set lookup tables for category_buy_prices and category_sell_prices
-      lookup.category_buy_prices = getCategoryPrices("buy");
-      lookup.category_sell_prices = getCategoryPrices("sell");
+      processMarket();
     }
 
     //Optimisation processing (Down-Logic)
