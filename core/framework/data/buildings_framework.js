@@ -1937,14 +1937,6 @@ module.exports = {
           if (local_building[`${pop_type}_wage`])
             building_wages[local_building.id] = local_building[`${pop_type}_wage`];
         }
-
-      //Subsistence handling
-      if (province_obj.subsistence) {
-        var subsistence_obj = province_obj.subsistence;
-
-        if (subsistence_obj.qualified_pops.includes(pop_type))
-          building_wages[subsistence_obj.building_type] = subsistence_obj.wage;
-      }
     }
 
     building_wages = sortObject(building_wages);

@@ -262,7 +262,7 @@ module.exports = {
 
                       //Push to local_pops_string
                       if (local_value != 0)
-                        local_pops_string.push(`${(local_pop.icon) ? local_pop.icon + " " : ""}${parseNumber(local_value)} - ${printPercentage(local_good_fulfilment.fulfilment)}/${printPercentage(local_good_fulfilment.variety)}`);
+                        local_pops_string.push(`${(local_pop.icon) ? local_pop.icon + " " : ""}${parseNumber(local_value)} - ${printPercentage(local_good_fulfilment.fulfilment, { ceiling: true })}/${printPercentage(local_good_fulfilment.variety, { ceiling: true })}`);
                     }
 
                     //Push to province_string

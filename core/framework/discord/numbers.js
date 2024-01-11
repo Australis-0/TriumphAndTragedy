@@ -114,6 +114,7 @@ module.exports = {
     printPercentage() - Formats a string to fit a certain percentage (e.g. 23%), instead of a default decimal number.
     options: {
       base_zero: true/false, - Whether to start at a base zero instead of one
+      ceiling: true/false, - Whether to round down or not. False by default
       display_prefix: true/false, - Whether or not to display a starting prefix
       is_modifier: true/false, - Used for parsing negative modifiers
       precision: 4 - The number of decimal places to display. 2 by default
@@ -138,7 +139,7 @@ module.exports = {
     if (options.display_prefix && number > 0)
       prefix_string = `+`;
 
-    var percentage_string = `${prefix_string}${(!options.display_float) ? Math.round(number*100) : Math.round(number*100*100*100)/100/100}`;
+    var percentage_string = `${prefix_string}${(!options.display_float) ? Math[(options.ceiling) ? "ceil" : "round"](number*100) : Math.round(number*100*100*100)/100/100}`;
     var processed_string = "";
 
     for (var i = 0; i < percentage_string.length; i++) {
