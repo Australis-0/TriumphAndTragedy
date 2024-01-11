@@ -3714,41 +3714,37 @@ module.exports = {
               //has_<goods_category>
               if (all_options[x].startsWith("has_")) {
                 var local_goods_category = all_options[x].replace("has_", "");
+                has_wealth_hard_specified = true;
 
-                if (local_value[`${local_goods_category}-fulfilment`] < options[all_options[x]]) {
+                if (returnSafeNumber(local_value[`${local_goods_category}-fulfilment`]) < options[all_options[x]])
                   all_conditions_met = false;
-                  has_wealth_hard_specified = true;
-                }
               }
 
               //has_<goods_category>_less_than
               if (all_options[x].startsWith("has_") && all_options[x].endsWith("_less_than")) {
                 var local_goods_category = all_options[x].replace("has_", "").replace("_less_than", "");
+                has_wealth_hard_specified = true;
 
-                if (local_value[`${local_goods_category}-fulfilment`] >= options[all_options[x]]) {
+                if (returnSafeNumber(local_value[`${local_goods_category}-fulfilment`]) >= options[all_options[x]])
                   all_conditions_met = false;
-                  has_wealth_hard_specified = true;
-                }
               }
 
               //has_<goods_category>_variety
               if (all_options[x].startsWith("has_") && all_options[x].endsWith("_variety")) {
                 var local_goods_category = all_options[x].replace("has_", "").replace("_variety", "");
+                has_wealth_hard_specified = true;
 
-                if (local_value[`${local_goods_category}-variety`] < options[all_options[x]]) {
+                if (returnSafeNumber(local_value[`${local_goods_category}-variety`]) < options[all_options[x]])
                   all_conditions_met = false;
-                  has_wealth_hard_specified = true;
-                }
               }
 
               //has_<goods_category>_variety_less_than
               if (all_options[x].startsWith("has_") && all_options[x].endsWith("_variety_less_than")) {
                 var local_goods_category = all_options[x].replace("has_", "").replace("_variety_less_than", "");
+                has_wealth_hard_specified = true;
 
-                if (local_value[`${local_goods_category}-variety`] >= options[all_options[x]]) {
+                if (returnSafeNumber(local_value[`${local_goods_category}-variety`]) >= options[all_options[x]])
                   all_conditions_met = false;
-                  has_wealth_hard_specified = true;
-                }
               }
             }
 
@@ -3988,7 +3984,7 @@ module.exports = {
           var local_scalar = getObjectSum(age_tags)/province_obj.pops.population;
 
           category_scalars.age = local_scalar;
-          pop_scalar = pop_scalar*local_scalar;
+          pop_scalar = pop_scalar*returnSafeNumber(local_scalar);
 
           hard_specified_categories.push("age");
         }
@@ -3999,7 +3995,7 @@ module.exports = {
           var local_scalar = getObjectSum(culture_tags)/province_obj.pops.population;
 
           category_scalars.culture = local_scalar;
-          pop_scalar = pop_scalar*local_scalar;
+          pop_scalar = pop_scalar*returnSafeNumber(local_scalar);
 
           hard_specified_categories.push("culture");
         }
@@ -4010,7 +4006,7 @@ module.exports = {
           var local_scalar = getObjectSum(education_level_tags)/province_obj.pops.population;
 
           category_scalars.education = local_scalar;
-          pop_scalar = pop_scalar*local_scalar;
+          pop_scalar = pop_scalar*returnSafeNumber(local_scalar);
 
           hard_specified_categories.push("education");
         }
@@ -4026,7 +4022,7 @@ module.exports = {
             var local_scalar = total_employed/province_obj.pops.population;
 
             category_scalars.is_employed = local_scalar;
-            pop_scalar = pop_scalar*local_scalar;
+            pop_scalar = pop_scalar*returnSafeNumber(local_scalar);
           }
 
           hard_specified_categories.push("is_employed");
@@ -4038,12 +4034,12 @@ module.exports = {
             var local_scalar = homeless_amount/province_obj.pops.population;
 
             category_scalars.homeless = local_scalar;
-            pop_scalar = pop_scalar*local_scalar;
+            pop_scalar = pop_scalar*returnSafeNumber(local_scalar);
           } else if (options.homeless == false) {
             var local_scalar = housed_amount/province_obj.pops.population;
 
             category_scalars.homeless = local_scalar;
-            pop_scalar = pop_scalar*local_scalar;
+            pop_scalar = pop_scalar*returnSafeNumber(local_scalar);
           }
 
           hard_specified_categories.push("homeless");
@@ -4055,7 +4051,7 @@ module.exports = {
           var local_scalar = getObjectSum(pop_type_tags)/province_obj.pops.population;
 
           category_scalars.pop_types = local_scalar;
-          pop_scalar = pop_scalar*local_scalar;
+          pop_scalar = pop_scalar*returnSafeNumber(local_scalar);
 
           hard_specified_categories.push("pop_types");
         }
@@ -4065,7 +4061,8 @@ module.exports = {
           hard_specified_tags = mergeObjects(wealth_pool_tags, hard_specified_tags);
           var local_scalar = getObjectSum(wealth_pool_tags)/province_obj.pops.population;
 
-          pop_scalar = pop_scalar*local_scalar;
+          category_scalars.wealth = local_scalar;
+          pop_scalar = pop_scalar*returnSafeNumber(local_scalar);
           hard_specified_categories.push("wealth");
         }
 
@@ -4147,7 +4144,7 @@ module.exports = {
                 if (config.pops[all_pop_keys[i]])
                   is_hard_specified = true;
             }
-
+            
             if (!is_hard_specified)
               modifyValue(soft_specified_tags, all_pop_keys[i], Math.floor(local_value*pop_scalar));
           } else if (typeof local_value == "object") {

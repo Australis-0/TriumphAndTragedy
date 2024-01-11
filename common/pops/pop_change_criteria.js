@@ -1,10 +1,15 @@
 config.births = { //+/-% change from Province Pop OEFR
   limit: {
     occupied: false,
-    has_staple_goods: 0.10 //Needs at least 10% staple goods fulfilment to not starve
   },
   per_education_level: {
     value: -0.007783
+  },
+  add_chance_staple_goods: {
+    limit: {
+      has_staple_goods: 0.10 //Needs at least 10% staple goods fulfilment to not starve
+    },
+    value: -10 //They aren't being born now
   },
   add_chance_homelessness: {
     limit: {
