@@ -351,7 +351,12 @@ module.exports = {
     loadBackupArray();
     loadMostRecentSave();
 
-    initOptimisation();
+    try {
+      initOptimisation();
+    } catch (e) {
+      console.log(e);
+      global.lookup = {};
+    }
 
     //Debug warnings for missing icons
     if (settings.debug_mode) {

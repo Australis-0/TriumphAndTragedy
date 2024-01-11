@@ -326,7 +326,7 @@ module.exports = {
                   //If local_building doesn't exist, delete wealth pool
                   if (!local_building)
                     delete province_obj.pops[all_wealth_keys[i]];
-                } else {
+                } else if (split_wealth_key.length >= 4) {
                   //Subsistence handler
                   var per_capita_income = local_wealth_pool.income/local_wealth_pool.size;
                   var subsistence_split_key = local_building_id.split("-");
