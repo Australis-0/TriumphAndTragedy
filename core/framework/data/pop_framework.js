@@ -3231,6 +3231,7 @@ module.exports = {
     var province_id = arg0_province_id;
 
     //Declare local instance variables
+    var debt_goods_chance = config.defines.economy.debt_goods_chance;
     var province_obj = (typeof province_obj != "object") ? main.provinces[province_id] : province_id;
 
     if (province_obj)
@@ -3292,15 +3293,28 @@ module.exports = {
                           var actual_consumption = returnSafeNumber(Math.ceil(Math.min(getGoodAmount(user_id, local_buy_order.good_type), local_need)));
                           var local_worth = actual_consumption*(local_market_good.buy_price/2);
                           var local_tax = local_worth*returnSafeNumber(usr[`${pop_obj.class}-duties_tax`]);
-                          var market_consumption = Math.floor(actual_consumption*config.defines.economy.resource_production_scalar);
+
+                          //If in debt, modify actual_consumption
+                          if (local_wealth_pool.wealth < 0) {
+                            if (actual_consumption == 1) {
+                              var has_good = randomNumber(1, debt_goods_chance);
+
+                              if (has_good != 1)
+                                actual_consumption = 0;
+                            } else if (actual_consumption > 1) {
+                              actual_consumption = Math.floor(actual_consumption*(debt_goods_chance[0]/debt_goods_chance[1]));
+                            }
+
+                            spent_wealth += (local_worth + local_tax);
+                          }
 
                           //Buy from market
+                          var market_consumption = Math.floor(actual_consumption*config.defines.economy.resource_production_scalar);
+
                           buyMarketGood(local_buy_order.good_type, market_consumption);
 
                           if (local_market_good.stock < 1)
                             local_market_good.stock = 1;
-
-                          spent_wealth += (local_worth + local_tax);
 
                           modifyValue(local_received_goods, local_buy_order.good_type, returnSafeNumber(actual_consumption));
                           modifyValue(usr.trackers.tax, `${pop_obj.class}-duties_tax`, local_tax);
@@ -3310,8 +3324,9 @@ module.exports = {
                         }
                       }
 
-                    //Subtract spent_wealth from wealth pool
-                    local_wealth_pool.wealth -= spent_wealth;
+                    //Subtract spent_wealth from wealth pool if not in debt
+                    if (local_wealth_pool.wealth > 0)
+                      local_wealth_pool.wealth -= spent_wealth;
                     local_wealth_pool.spending = spent_wealth;
 
                     //Update _fulfilment and _variety for each category
