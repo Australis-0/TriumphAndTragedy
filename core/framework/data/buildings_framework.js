@@ -1135,7 +1135,10 @@ module.exports = {
       if (returnSafeNumber(employment_level) < 1)
         open_positions = wage_obj.remaining_positions; //Continue hiring workers if employment_level isn't 100% if subsidised
     } else {
-      if (has_liquidity && has_deficit && has_full_employment_profit) {
+      if (
+        (has_liquidity && has_deficit && has_full_employment_profit) ||
+        (has_liquidity && employment_level < 0.05)
+      ) {
         open_positions = minimum_hiring_liquidity/unzero(wage_obj.wage, 1);
       } else if (has_liquidity && !has_deficit) {
         open_positions = wage_obj.profit_obj.profit/unzero(wage_obj.wage, 1);
