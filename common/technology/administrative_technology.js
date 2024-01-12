@@ -67,7 +67,7 @@ config.technology.administrative_technology = {
     research_cost: 100,
     year: 1600,
     unlocks: {
-      unlock_building: ["city_halls", "post_offices"],
+      unlock_building: ["city_halls", "police_stations", "post_offices"],
       building_cost: -0.05,
       unlock_reform: "bureaucracy"
     }
@@ -374,7 +374,7 @@ config.technology.administrative_technology = {
     research_cost: 1000,
     year: 1789,
     unlocks: {
-      unlock_building: "trade_unions",
+      unlock_building: ["police_departments", "trade_unions"],
       political_capital_gain: 2
     }
   },
@@ -469,6 +469,7 @@ config.technology.administrative_technology = {
     research_cost: 1600,
     year: 1850,
     unlocks: {
+      unlock_building: ["clipper_shipyards"],
       unlock_unit: "magnates",
       obsolete_unit: "colonists",
       colonial_power_gain: 0.05,
@@ -561,6 +562,7 @@ config.technology.administrative_technology = {
     research_cost: 2000,
     year: 1851,
     unlocks: {
+      unlock_building: ["cargo_ports"],
       research_buildings: 1,
       administrative_efficiency: 0.03
     }

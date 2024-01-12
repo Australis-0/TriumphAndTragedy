@@ -7,7 +7,7 @@ config.technology.economic_technology = {
     research_cost: 20,
     year: 1500,
     unlocks: {
-      unlock_building: "silica_sand_quarries",
+      unlock_building: ["jerky_dehydrators", "silica_sand_quarries"],
       production_efficiency: 0.05
     }
   },
@@ -20,7 +20,7 @@ config.technology.economic_technology = {
     research_cost: 50,
     year: 1510,
     unlocks: {
-      unlock_building: "workshops",
+      unlock_building: ["marquetry_workshops", "workshops"],
       processing_facilities: 1
     }
   },
@@ -263,7 +263,7 @@ config.technology.economic_technology = {
     research_cost: 250,
     year: 1602,
     unlocks: {
-      unlock_building: ["chocolatiers", "uniforms_factories"],
+      unlock_building: ["chocolatiers", "sugar_plantations", "uniforms_factories"],
       production_efficiency: 0.05,
       shipment_time: -0.05
     }
@@ -898,7 +898,7 @@ config.technology.economic_technology = {
     research_cost: 3500,
     year: 1860,
     unlocks: {
-      unlock_building: ["benzene_plants", "sodium_carbonate_works"],
+      unlock_building: ["benzene_plants", "commuter_piers", "shale_mines", "sodium_carbonate_works"],
       mines: 3,
       railways: 1
     }
@@ -923,7 +923,7 @@ config.technology.economic_technology = {
     research_cost: 4000,
     year: 1890,
     unlocks: {
-      unlock_building: ["amusement_parks", "bicycle_factories", "fluorine_plants", "gas_plants", "oxygen_chemical_factories", "steam_crackers"],
+      unlock_building: ["amusement_parks", "bicycle_factories", "fluorine_plants", "gas_plants", "oxygen_chemical_factories", "steam_crackers", "repair_cranes", "rubber_plantations"],
       pop_growth_modifier: 0.01,
       national_manpower: 0.05
     }
@@ -1085,7 +1085,7 @@ config.technology.economic_technology = {
     research_cost: 5500,
     year: 1920,
     unlocks: {
-      unlock_building: ["civilian_industries", "department_stores", "tantalum_factories", "turbine_manufactories"],
+      unlock_building: ["bus_depots", "bus_stops", "civilian_industries", "department_stores", "sewing_machine_factories", "shampoo_factories", "tantalum_factories", "turbine_manufactories"],
       processing_facilities: 1,
       construction_speed: -0.10
     }
@@ -1646,6 +1646,7 @@ config.technology.economic_technology = {
     research_cost: 11000,
     year: 2050,
     unlocks: {
+      unlock_building: ["ai_hubs"],
       industry: 3
     }
   },

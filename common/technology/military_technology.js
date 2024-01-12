@@ -53,8 +53,8 @@ config.technology.military_technology = {
     research_cost: 50,
     year: 1385,
     unlocks: {
+      unlock_building: "artillery_encampments",
       unlock_unit: "bombard",
-      unlock_building: "the_bombard",
       unit_cost: 0.03
     }
   },
@@ -547,6 +547,7 @@ config.technology.military_technology = {
     research_cost: 750,
     year: 1775,
     unlocks: {
+      unlock_building: "heavy_weapons_factories",
       unlock_unit: "siege_artillery"
     }
   },

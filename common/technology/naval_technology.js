@@ -18,7 +18,7 @@ config.technology.naval_technology = {
     research_cost: 20,
     year: 1451,
     unlocks: {
-      unlock_building: "dockyards",
+      unlock_building: ["docks", "dockyards"],
       unlock_unit: "caravels",
       colonist_travel_speed: 0.25
     }
@@ -47,7 +47,7 @@ config.technology.naval_technology = {
       colonist_travel_speed: 0.50,
       naval_dp: 0.05,
       shipment_time: -0.05,
-      unlock_building: "trade_depots"
+      unlock_building: ["drydocks", "trade_depots"]
     }
   },
 
@@ -70,6 +70,7 @@ config.technology.naval_technology = {
     research_cost: 75,
     year: 1534,
     unlocks: {
+      unlock_building: "shipyards",
       unlock_unit: "galleons",
       shipment_time: -0.05
     }
@@ -84,7 +85,7 @@ config.technology.naval_technology = {
     year: 1505,
     unlocks: {
       tax_efficiency: 0.05,
-      unlock_building: ["clove_plantations", "palm_oil_plantations", "spice_plantations", "trade_offices", "warehouses"]
+      unlock_building: ["clove_plantations", "palm_oil_plantations", "spice_plantations", "trade_offices", "seawalls", "warehouses"]
     }
   },
   circumnavigation: {
@@ -198,7 +199,9 @@ config.technology.naval_technology = {
     description: "Standardising the different weights and sizes of ordnance to be brought into cannons could have a huge impact on the battlefield as our cannons can now fire more reliably and safely than before. In addition, logistical burdens will be decreased as ironsmiths will have a more concrete idea of what types of projectiles to make.",
     prerequisite_techs: ["naval_administration"],
     research_cost: 500,
+    year: 1600,
     unlocks: {
+      unlock_building: "piers",
       naval_ap: 0.10,
       unit_cost: -0.05
     }
@@ -249,6 +252,7 @@ config.technology.naval_technology = {
     research_cost: 750,
     year: 1701,
     unlocks: {
+      unlock_building: ["loading_wharfs", "ports"],
       dockyards: 1,
       colonist_travel_speed: 0.50
     }
@@ -449,6 +453,7 @@ config.technology.naval_technology = {
     year: 1803,
     unlocks: {
       colonist_travel_speed: 1.00,
+      unlock_building: "steam_shipyards",
       unlock_unit: "steamboats"
     }
   },
@@ -615,7 +620,7 @@ config.technology.naval_technology = {
       unlock_unit: "destroyers"
     }
   },
-  
+
   torpedo: {
     name: "Torpedo",
     icon: "coal",

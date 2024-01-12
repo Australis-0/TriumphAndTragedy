@@ -426,7 +426,7 @@ config.technology.cultural_technology = {
     year: 1800,
     research_cost: 1200,
     unlocks: {
-      unlock_building: ["esplanades", "sanatoriums"],
+      unlock_building: ["esplanades", "public_moorings", "sanatoriums"],
       permanent_prestige: 20,
       prestige_gain: 0.01
     }
