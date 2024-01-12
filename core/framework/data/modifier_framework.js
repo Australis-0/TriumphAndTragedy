@@ -1380,6 +1380,7 @@ module.exports = {
 
     //Declare local instance variables
     var all_keys = Object.keys(scope);
+    var empty_scope = false;
     var ignore_pop_size = (options.debug || options.ignore_pop_size);
     var local_pop_obj = {};
     var localisation_string = [];
@@ -1571,6 +1572,7 @@ module.exports = {
             //Merge selectors from per scope
             modifyValue(selectors, JSON.stringify(pop_scope), returnSafeNumber(local_pop_scope.value));
           } else if (all_keys[i] == "limit") {
+            //Something here is causing the function to break
             var new_options = JSON.parse(JSON.stringify(options));
             var new_pop_scope = JSON.parse(JSON.stringify(pop_scope));
 
@@ -1585,7 +1587,7 @@ module.exports = {
             localisation_string.push(`${bulletPoint(options.nesting)}${numberCheck(local_pop_scope.pop_scope.size, true)} Fulfills limit:`);
             localisation_string = appendArrays(localisation_string, local_pop_scope.localisation_string);
 
-            if (local_pop_scope.pop_scope.size <= 0)
+            if (!local_pop_scope.boolean)
               if (!ignore_pop_size)
                 empty_scope = true;
           } else if (all_keys[i] == "per" || all_keys[i].startsWith("per_")) {
@@ -2988,13 +2990,11 @@ module.exports = {
         if (selectors[i][0].size <= 0 || selectors[i][1] == 0 || isNaN(selectors[i][1]))
           selectors.splice(i, 1);
 
-    var empty_scope = (selectors.length == 0);
-
     //Return statement
     return {
       localisation_string: localisation_string,
 
-      boolean: empty_scope,
+      boolean: (!empty_scope),
       selectors: selectors,
       value: value,
 

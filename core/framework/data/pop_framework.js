@@ -3795,10 +3795,8 @@ module.exports = {
               }
 
             //Pop type handler
-            if (!options.pop_types.includes(local_pop_type)) {
+            if (!options.pop_types.includes(local_pop_type))
               all_conditions_met = false;
-              has_wealth_hard_specified = true;
-            }
 
             //Wealth handler
             var actual_wealth = local_value.wealth/local_value.size;
@@ -4221,7 +4219,20 @@ module.exports = {
     current_scope.fulfilment = returnSafeNumber(total_general_fulfilment/total_wealth_pools);
     current_scope.variety = returnSafeNumber(total_general_variety/total_wealth_pools);
 
+    //Round current_scope.tags
+    var all_current_tags = Object.keys(current_scope.tags);
+
+    for (var i = 0; i < all_current_tags.length; i++) {
+      var local_value = current_scope.tags[all_current_tags[i]];
+
+      current_scope.tags[all_current_tags[i]] = Math.floor(local_value);
+    }
+
     //Tracker tags
+    //current_scope.hard_specified_categories = hard_specified_categories;
+    //current_scope.hard_specified_tags = hard_specified_tags;
+    //current_scope.soft_specified_tags = soft_specified_tags;
+    //current_scope.relative_scalars = relative_scalars;
     current_scope.province_id = province_id;
 
     //Return statement
