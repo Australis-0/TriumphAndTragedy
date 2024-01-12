@@ -4093,7 +4093,7 @@ module.exports = {
             for (var x = 0; x < all_category_scalars.length; x++)
               if (all_category_scalars[x] != key_to_exclude) {
                 var local_value = category_scalars[all_category_scalars[x]];
-                relative_scalar = relative_scalar*local_value;
+                relative_scalar = Math.min(relative_scalar*local_value, 1);
               }
 
           //Set relative_scalar
