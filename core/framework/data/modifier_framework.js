@@ -1475,26 +1475,7 @@ module.exports = {
       var local_value = scope[all_keys[i]];
 
       //Scope conditions
-      if (parent == "add_chance" && all_keys[i] == "limit") { //add_chance scope handler
-        var new_options = JSON.parse(JSON.stringify(options));
-        var new_pop_scope = JSON.parse(JSON.stringify(pop_scope));
-
-        new_options.nesting++;
-        new_options.parent_obj = scope;
-        new_options.pop_scope = pop_scope;
-        new_options.parents.push("add_chance_limit");
-
-        var limit_pop_scope = module.exports.parsePopLimit(local_value, new_options);
-        var local_pop_scope = limit_pop_scope.pop_scope;
-
-        var local_percentage = local_pop_scope.size/province_obj.pops[options.pop_type];
-
-        if (limit_pop_scope.boolean)
-          value += scope.value;
-
-        localisation_string.push(`${bulletPoint(options.nesting)}Limit:`);
-        localisation_string = appendArrays(localisation_string, limit_pop_scope.localisation_string);
-      } else { //Hard limit handler. This defines the pop subscope that meets these conditions for which value is processed
+      {
         //Group scopes, any/or, not. AND is the default joiner
         //Reset parents when passing to group subscopes since this is a hard limit
         {
@@ -1555,13 +1536,24 @@ module.exports = {
             new_options.parents.push("add_chance");
             new_options.pop_scope = pop_scope;
 
-            var local_pop_scope = module.exports.parsePopLimit(local_value, new_options);
-            localisation_string.push(`${bulletPoint(options.nesting)}${numberCheck(local_pop_scope.pop_scope.size, true)}${printPercentage(local_value.value, { display_float: true, display_prefix: true })} chance for ${parseNumber(local_pop_scope.pop_scope.size)} people from:`);
-            localisation_string = appendArrays(localisation_string, local_pop_scope.localisation_string);
+            var limit_fulfilled = false;
 
-            if (local_pop_scope.pop_scope.size > 0 || ignore_pop_size) {
-              modifyValue(selectors, JSON.stringify(pop_scope), returnSafeNumber(local_value.value));
-              value += returnSafeNumber(local_value.value);
+            if (local_value.limit) {
+              var local_pop_scope = module.exports.parsePopLimit(local_value.limit, new_options);
+              var local_pop_size = returnSafeNumber(local_pop_scope.pop_scope.size);
+
+              if (local_pop_size > 0)
+                limit_fulfilled = true;
+
+              localisation_string.push(`${bulletPoint(options.nesting)}${numberCheck(local_pop_scope.pop_scope.size, true)}${printPercentage(local_value.value, { display_float: true, display_prefix: true })} chance for ${parseNumber(local_pop_scope.pop_scope.size)} people from:`);
+              localisation_string = appendArrays(localisation_string, local_pop_scope.localisation_string);
+
+              if (limit_fulfilled || ignore_pop_size) {
+                modifyValue(selectors, JSON.stringify(local_pop_scope.pop_scope), returnSafeNumber(local_value.value));
+                value += returnSafeNumber(local_value.value);
+              }
+            } else {
+              localisation_string.push(`${bulletPoint(options.nesting)}${config.icons.cancel} No limit specified.`);
             }
           } else if (all_keys[i].startsWith("building_category_") && typeof local_value == "object") {
             var new_options = JSON.parse(JSON.stringify(options));
