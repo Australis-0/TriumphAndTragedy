@@ -4175,9 +4175,16 @@ module.exports = {
                   is_hard_specified = true; //This is already handled in wealth_pool_tags
 
               //Pop type handler
-              if (hard_specified_categories.includes("pop_types"))
+              if (hard_specified_categories.includes("pop_types")) {
                 if (config.pops[all_pop_keys[i]])
                   is_hard_specified = true;
+                if (all_pop_keys[i].startsWith("used_")) {
+                  var local_pop_key = all_pop_keys[i].replace("used_", "");
+
+                  if (config.pops[local_pop_key])
+                    is_hard_specified = true;
+                }
+              }
             }
 
             if (!is_hard_specified)
@@ -4233,14 +4240,6 @@ module.exports = {
         var local_value = current_scope.tags[all_current_tags[i]];
 
         current_scope.tags[all_current_tags[i]] = Math.floor(local_value);
-
-        if (all_current_tags[i].startsWith("used_")) {
-          var local_pop_key = all_current_tags[i].replace("used_", "");
-
-          if (options.pop_types)
-            if (!options.pop_types.includes(local_pop_key))
-              current_scope.tags[all_current_tags[i]] = 0;
-        }
       }
     }
 
