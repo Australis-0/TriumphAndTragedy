@@ -3955,6 +3955,12 @@ module.exports = {
           if (config.pops[all_pop_keys[i]])
             if (options.pop_types.includes(all_pop_keys[i]))
               modifyValue(pop_type_tags, all_pop_keys[i], local_value);
+          if (all_pop_keys[i] == `used_${all_pop_keys[i]}`) {
+            var local_pop_key = all_pop_keys[i].replace("used_", "");
+
+            if (config.pops[local_pop_key])
+              modifyValue(pop_type_tags, local_pop_key, local_value);
+          }
         }
       }
 
@@ -4219,20 +4225,26 @@ module.exports = {
     current_scope.fulfilment = returnSafeNumber(total_general_fulfilment/total_wealth_pools);
     current_scope.variety = returnSafeNumber(total_general_variety/total_wealth_pools);
 
-    //Round current_scope.tags
-    var all_current_tags = Object.keys(current_scope.tags);
+    //POST-PROCESSING - current_scope.tags
+    {
+      var all_current_tags = Object.keys(current_scope.tags);
 
-    for (var i = 0; i < all_current_tags.length; i++) {
-      var local_value = current_scope.tags[all_current_tags[i]];
+      for (var i = 0; i < all_current_tags.length; i++) {
+        var local_value = current_scope.tags[all_current_tags[i]];
 
-      current_scope.tags[all_current_tags[i]] = Math.floor(local_value);
+        current_scope.tags[all_current_tags[i]] = Math.floor(local_value);
+
+        if (all_current_tags[i].startsWith("used_")) {
+          var local_pop_key = all_current_tags[i].replace("used_", "");
+
+          if (options.pop_types)
+            if (!options.pop_types.includes(local_pop_key))
+              current_scope.tags[all_current_tags[i]] = 0;
+        }
+      }
     }
 
     //Tracker tags
-    //current_scope.hard_specified_categories = hard_specified_categories;
-    //current_scope.hard_specified_tags = hard_specified_tags;
-    //current_scope.soft_specified_tags = soft_specified_tags;
-    //current_scope.relative_scalars = relative_scalars;
     current_scope.province_id = province_id;
 
     //Return statement
