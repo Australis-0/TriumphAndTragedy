@@ -104,9 +104,13 @@ module.exports = {
         }
 
         if (provinces[x].type == "rural") {
-          createPops(provinces[x].id, config.defines.economy.rural_pop_cap);
+          createPops(provinces[x].id,
+            randomNumber(rural_pop_range[0], rural_pop_range[1])
+          );
         } else {
-          createPops(provinces[x].id, config.defines.economy.urban_pop_growth_cap);
+          createPops(provinces[x].id,
+            randomNumber(urban_pop_range[0], urban_pop_range[1])
+          );
         }
       }
     }
