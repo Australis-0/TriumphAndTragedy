@@ -2622,12 +2622,8 @@ module.exports = {
       for (var i = 0; i < all_tags.length; i++) {
         var local_value = pop_scope.tags[all_tags[i]];
 
-        //Move pop attributes
-        modifyValue(from_province.pops, all_tags[i], local_value*-1, true);
-        modifyValue(to_province.pops, all_tags[i], local_value);
-
-        //Layoff pops
-        if (all_tags[i].startsWith("wealth-"))
+        //Wealth pool handler
+        if (all_tags[i].startsWith("wealth-")) {
           if (!options.do_not_layoff) {
             var split_wealth_key = all_tags[i].split("-");
 
@@ -2639,6 +2635,11 @@ module.exports = {
               if (local_building_obj.id)
                 layoffWorkers(local_building_obj, split_wealth_key[3], local_value);
           }
+        } else {
+          //Move non-wealth pop attributes
+          modifyValue(from_province.pops, all_tags[i], local_value*-1, true);
+          modifyValue(to_province.pops, all_tags[i], local_value);
+        }
       }
 
       //Subtract from from_province.pops.population
