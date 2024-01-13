@@ -2144,7 +2144,11 @@ module.exports = {
 
               //Process building handler if this is real
               if (options.is_real)
-                module.exports.processBuilding(local_building, local_production);
+                try {
+                  all_provinces[i].buildings[x] = module.exports.processBuilding(local_building, local_production);
+                } catch (e) {
+                  console.log(e);
+                }
             }
 
             //Fetch subsistence production
@@ -3141,6 +3145,10 @@ module.exports = {
     //Convert from parameters
     var building_obj = arg0_building_obj;
     var goods_obj = (arg1_goods) ? arg1_goods : {}; //The goods produced from this building
+
+    //Make sure .stockpile exists
+    if (!building_obj.stockpile)
+      building_obj.stockpile = {};
 
     //Declare local instance variables
     var all_good_keys = Object.keys(goods_obj);
