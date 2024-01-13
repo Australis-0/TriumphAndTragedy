@@ -130,9 +130,12 @@ module.exports = {
     loadMap("supply_map.svg", "supply");
   },
 
-  loadMostRecentSave: function () {
+  loadMostRecentSave: function (arg0_load_backup) {
+    //Convert from parameters
+    var load_backup = arg0_load_backup;
+
   	//Declare local instance variables
-    var invalid_save = false;
+    var invalid_save = (!load_backup) ? false : true;
     var rawdata = fs.readFileSync("database.js");
 
     //Check if current DB is valid

@@ -1214,6 +1214,26 @@ module.exports = {
     return standardisePercentage(job_breakdown_obj);
   },
 
+  getPopMigration: function (arg0_province_id, arg1_pop_type) {
+    //Convert from parameters
+    var province_id = arg0_province_id;
+    var pop_type = arg1_pop_type;
+
+    //Declare local instance variables
+    var province_obj = (typeof province_id != "object") ? main.provinces[province_id] : province_id;
+
+    var external_migration_table = lookup[`${province_obj.controller}-external_migration_attraction`];
+    var internal_migration_table = lookup[`${province_obj.controller}-migration_attraction`];
+
+    var all_external_provinces = Object.keys(external_migration_table);
+    var all_internal_provinces = Object.keys(internal_migration_table);
+
+    console.log(internal_migration_table);
+    console.log(external_migration_table);
+
+    //Return statement
+  },
+
   /*
     getPopMobility() - Returns statistical last turn pop mobility for a province.
     Returns: {
@@ -3629,6 +3649,7 @@ module.exports = {
   /*
     selectPops() - Merges pops based on a pop's characteristics and given frequency distributions according to proportionality.
     options: {
+      amount: 50000, - The number of pops to select
       province_id: "4707", - The province ID to merge pops from. Optional with pop_scope as an additional option
       pop_scope: {}, - The pop scope to provide to get a subset of
 
@@ -4255,6 +4276,25 @@ module.exports = {
         var local_value = current_scope.tags[all_current_tags[i]];
 
         current_scope.tags[all_current_tags[i]] = Math.floor(local_value);
+        if (local_value > current_scope.size)
+          current_scope.tags[all_current_tags[i]] = current_scope.size;
+      }
+
+      //If amount is specified, scale to amount
+      if (options.amount) {
+        var amount_scalar = options.amount/current_scope.size;
+
+        for (var i = 0; i < all_current_tags.length; i++) {
+          var local_value = current_scope.tags[all_current_tags[i]];
+          
+          current_scope.tags[all_current_tags[i]] = Math.floor(local_value*amount_scalar);
+        }
+
+        //Adjust main characteristics
+        if (current_scope.size > options.amount)
+          current_scope.size = options.amount;
+        current_scope.income = current_scope.income*amount_scalar;
+        current_scope.wealth = current_scope.wealth*amount_scalar;
       }
     }
 

@@ -348,27 +348,23 @@ module.exports = {
       module.exports.startClient();
     log.info(`Client logged in.`);
 
-    //Load DB from JSON
-    loadBackupArray();
-    loadMostRecentSave();
-
     try {
       initOptimisation();
     } catch (e) {
       console.log(e);
-      global.lookup = {};
     }
 
     //Debug warnings for missing icons
-    if (settings.debug_mode) {
-      for (var i = 0; i < lookup.all_good_names.length; i++) {
-        var local_good = lookup.all_goods[lookup.all_good_names[i]];
+    if (settings.debug_mode)
+      if (global.lookup)
+        if (global.lookup.all_good_names)
+          for (var i = 0; i < lookup.all_good_names.length; i++) {
+            var local_good = lookup.all_goods[lookup.all_good_names[i]];
 
-        if (local_good.icon)
-          if (!config.icons[local_good.icon])
-            log.warn(`${(local_good.name) ? local_good.name : lookup.all_good_names[i]} has no icon ${local_good.icon}!`);
-      }
-    }
+            if (local_good.icon)
+              if (!config.icons[local_good.icon])
+                log.warn(`${(local_good.name) ? local_good.name : lookup.all_good_names[i]} has no icon ${local_good.icon}!`);
+          }
 
     log.info(`Optimisation cache processed.`);
   },
