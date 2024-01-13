@@ -104,13 +104,13 @@ module.exports = {
         }
 
         if (provinces[x].type == "rural") {
-          createPops(provinces[x].id,
-            randomNumber(rural_pop_range[0], rural_pop_range[1])
-          );
+          createPops(provinces[x].id, {
+            amount: randomNumber(rural_pop_range[0], rural_pop_range[1])
+          });
         } else {
-          createPops(provinces[x].id,
-            randomNumber(urban_pop_range[0], urban_pop_range[1])
-          );
+          createPops(provinces[x].id, {
+            amount: randomNumber(urban_pop_range[0], urban_pop_range[1])
+          });
         }
       }
     }

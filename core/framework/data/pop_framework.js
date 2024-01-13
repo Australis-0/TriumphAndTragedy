@@ -67,7 +67,7 @@ module.exports = {
   createPops: function (arg0_province, arg1_options) {
     //Convert from parameters
     var province_obj = getProvince(arg0_province);
-    var options = arg1_options;
+    var options = (arg1_options) ? arg1_options : {};
 
     //Initialise default options values
     options.type = (!options.type) ? ["all"] : getList(options.type);
@@ -2612,8 +2612,10 @@ module.exports = {
       pop_scope = module.exports.selectPops(pop_scope);
     }
 
+    var pop_scope_size = returnSafeNumber(pop_scope.size);
+
     //Move pops if pop_scope returned something
-    if (pop_scope.size > 0) {
+    if (pop_scope_size > 0) {
       //Handle tags
       var all_tags = Object.keys(pop_scope.tags);
 
@@ -2629,9 +2631,13 @@ module.exports = {
           if (!options.do_not_layoff) {
             var split_wealth_key = all_tags[i].split("-");
 
-            var local_building = building_map[`${split_wealth_key[1]}-${split_wealth_key[2]}`];
+            var local_building_index = from_building_map[`${split_wealth_key[1]}-${split_wealth_key[2]}`];
+            var local_building_obj = from_province.buildings[local_building_index];
 
-            layoffWorkers(local_building, split_wealth_key[3], local_value);
+            //Guard clause for subsistence handling
+            if (local_building_obj)
+              if (local_building_obj.id)
+                layoffWorkers(local_building_obj, split_wealth_key[3], local_value);
           }
       }
 
@@ -2834,7 +2840,9 @@ module.exports = {
       var fertile_scalar = 1/(config.defines.economy.fertility_age_upper_bound - config.defines.economy.fertility_age_lower_bound);
       var pop_fertile_women = module.exports.getProvinceFertileWomen(province_id)*pop_percentage;
       var pop_oefr = module.exports.getPopOEFR(province_id, pop_type);
-      var pop_turn_fertility = Math.ceil(pop_fertile_women*pop_oefr*fertile_scalar);
+      var province_births = Math.ceil(pop_fertile_women*pop_oefr*fertile_scalar);
+
+      var pop_turn_fertility = province_births/unzero(returnSafeNumber(province_obj.pops[pop_type]));
 
       if (province_obj.pop_cap)
         if (pop_scope.size >= province_obj.pop_cap)
@@ -2854,7 +2862,9 @@ module.exports = {
           var local_value = birth_chance.selectors[i][1]*birth_scalar;
 
           var local_pop_scope = module.exports.multiplyPops(initial_pop_scope, birth_scalar*local_value, true); //Using this instead of createPops() for more standardisation
-          var population_change = Math.ceil(local_pop_scope.size*birth_scalar*local_value);
+
+          var local_size = returnSafeNumber(local_pop_scope.size);
+          var population_change = Math.ceil(local_size*birth_scalar*local_value);
 
           //Add to b_ tag; replace local_pop_scope
           modifyValue(province_obj.pops, `b_${current_year}`, population_change);
@@ -3026,7 +3036,7 @@ module.exports = {
               if (local_value > 0) {
                 modifyValue(province_obj.trackers, `emigration-${all_internal_provinces[i]}`, move_out_scope.size);
                 modifyValue(ot_province.trackers, `immigration-${province_obj.id}`, move_out_scope.size);
-                module.exports.movePops(province_obj.id, move_out_scope, all_internal_provinces[i]);
+                //module.exports.movePops(province_obj.id, move_out_scope, all_internal_provinces[i]);
               }
             }
         }
@@ -3071,7 +3081,7 @@ module.exports = {
               if (local_value > 0) {
                 modifyValue(province_obj.trackers, `emigration-${all_external_provinces[i]}`, move_out_scope.size);
                 modifyValue(province_obj.trackers, `immigration-${province_obj.id}`, move_out_scope.size);
-                module.exports.movePops(province_obj.id, move_out_scope, all_external_provinces[i]);
+                //module.exports.movePops(province_obj.id, move_out_scope, all_external_provinces[i]);
               }
             }
         }
@@ -3079,7 +3089,7 @@ module.exports = {
     }
 
     //Pop Promotion/Demotion - [WIP] - Make it so that promotion/demotion can occur between classes if promotion/demotion is otherwise unspecified.
-    if (pop_scope.size > 0) {
+    /*if (pop_scope.size > 0) {
       //Pop demotion
       var pop_demotion_selectors = parsePopLimit(config.pop_mobility.demotion, {
         province_id: province_id,
@@ -3223,7 +3233,7 @@ module.exports = {
           }
         }
       }
-    }
+    }*/
   },
 
   processPurchases: function (arg0_province_id) { //[WIP] - Please revisit to add subsistence purchase handling
@@ -3293,6 +3303,10 @@ module.exports = {
                           var actual_consumption = returnSafeNumber(Math.ceil(Math.min(getGoodAmount(user_id, local_buy_order.good_type), local_need)));
                           var local_worth = actual_consumption*(local_market_good.buy_price/2);
                           var local_tax = local_worth*returnSafeNumber(usr[`${pop_obj.class}-duties_tax`]);
+
+                          //Make sure actual_consumption is >=0
+                          if (actual_consumption < 0)
+                            actual_consumption = 0;
 
                           //If in debt, modify actual_consumption
                           if (local_wealth_pool.wealth < 0) {
@@ -4209,7 +4223,7 @@ module.exports = {
     //Set .income, .wealth
     current_scope.income = returnSafeNumber(Math.ceil(total_income/total_wealth_pools));
     current_scope.wealth = returnSafeNumber(Math.ceil(total_wealth/total_wealth_pools));
-    current_scope.size = Math.ceil(province_obj.pops.population*pop_scalar);
+    current_scope.size = returnSafeNumber(Math.ceil(province_obj.pops.population*pop_scalar));
 
     //Set fulfilment, variety tags
     var all_fulfilment_keys = Object.keys(total_fulfilment);
