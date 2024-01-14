@@ -2837,6 +2837,9 @@ module.exports = {
     var user_id = province_obj.controller;
     var usr = main.users[user_id];
 
+    var owner_id = province_obj.owner;
+    var owner_usr = main.users[owner_id];
+
     var current_median = returnSafeNumber(province_obj[`${pop_type}_median_wage`]);
 
     var external_migration_table = lookup[`${province_obj.controller}-external_migration_attraction`];
@@ -2860,11 +2863,12 @@ module.exports = {
         var birth_scalar = returnSafeNumber(province_obj.births[pop_type], 1); //[REVISIT] - Fix this to .trackers.birth_modifiers
         var exceeds_pop_cap = false;
         var pop_percentage = pop_scope.size/province_obj.pops.population;
+        var pop_growth_modifier = owner_usr.modifiers.pop_growth_modifier;
 
         var fertile_scalar = 1/(config.defines.economy.fertility_age_upper_bound - config.defines.economy.fertility_age_lower_bound);
         var pop_fertile_women = module.exports.getProvinceFertileWomen(province_id)*pop_percentage;
         var pop_oefr = module.exports.getPopOEFR(province_id, pop_type);
-        var province_births = Math.ceil(pop_fertile_women*pop_oefr*fertile_scalar);
+        var province_births = Math.ceil(pop_fertile_women*pop_oefr*fertile_scalar*returnSafeNumber(pop_growth_modifier, 1));
 
         var pop_turn_fertility = returnSafeNumber(
           province_births/unzero(returnSafeNumber(province_obj.pops[pop_type]))
