@@ -1212,8 +1212,8 @@ module.exports = {
 
         //Initialise local_fulfilment
         var local_fulfilment = [
-          Math.min(1 - (local_shortfall[0]/unzero(local_maintenance_cost[0]), 1), 1),
-          Math.min(1 - (local_shortfall[1]/unzero(local_maintenance_cost[1]), 1), 1)
+          Math.min(1 - local_shortfall[0]/unzero(local_maintenance_cost[0], 1), 1),
+          Math.min(1 - local_shortfall[1]/unzero(local_maintenance_cost[1], 1), 1)
         ];
 
         input_fulfilments_low.push(local_fulfilment[0]*local_maintenance_cost[0]);
