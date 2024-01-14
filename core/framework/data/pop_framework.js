@@ -2874,9 +2874,10 @@ module.exports = {
           province_births/unzero(returnSafeNumber(province_obj.pops[pop_type]))
         );
 
-        if (province_obj.pop_cap)
-          if (pop_scope.size >= province_obj.pop_cap)
-            exceeds_pop_cap = true;
+        if (province_obj.type == "rural")
+          if (province_obj.pop_cap)
+            if (pop_scope.size >= province_obj.pop_cap)
+              exceeds_pop_cap = true;
 
         if (!usr.has_famine && !exceeds_pop_cap) {
           var birth_chance = selectorsToPercentage(parsePopLimit(config.births, {
