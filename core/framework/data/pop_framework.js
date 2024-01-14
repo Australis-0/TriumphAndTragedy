@@ -2856,7 +2856,6 @@ module.exports = {
 
     //Pop Births and Deaths
     {
-      console.log(`Processing pops for ${pop_type}`);
       //Birth handling
       {
         //Get province growth scalar
