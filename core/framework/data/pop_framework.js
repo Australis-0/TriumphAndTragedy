@@ -1601,7 +1601,7 @@ module.exports = {
     }
 
     //Return statement
-    return oefr;
+    return returnSafeNumber(oefr);
   },
 
   getPopWealth: function (arg0_province_id, arg1_pop_type) {
@@ -1999,7 +1999,7 @@ module.exports = {
             var age = main.date.year - parseInt(all_pop_keys[i].replace("b_", ""));
 
             if (age >= config.defines.economy.fertility_age_lower_bound && age <= config.defines.economy.fertility_age_upper_bound)
-              fertile_women += Math.floor(local_value/2); //Only half this population is usually female [REVISIT] - In future adjust this to gender
+              fertile_women += returnSafeNumber(Math.floor(local_value/2)); //Only half this population is usually female [REVISIT] - In future adjust this to gender
           }
         }
       }
@@ -2712,7 +2712,7 @@ module.exports = {
 
       //Birth handling
       if (is_birth)
-        modifyValue(pop_scope, `b_${main.date.year}`, pop_scope.size);
+        modifyValue(pop_scope.tags, `b_${main.date.year}`, pop_scope.size);
     }
 
     //Return statement
@@ -2853,50 +2853,55 @@ module.exports = {
 
     //Pop Births and Deaths
     {
-      //Get province growth scalar
-      var birth_scalar = returnSafeNumber(province_obj.births[pop_type], 1); //[REVISIT] - Fix this to .trackers.birth_modifiers
-      var exceeds_pop_cap = false;
-      var pop_percentage = pop_scope.size/province_obj.pops.population;
-
-      var fertile_scalar = 1/(config.defines.economy.fertility_age_upper_bound - config.defines.economy.fertility_age_lower_bound);
-      var pop_fertile_women = module.exports.getProvinceFertileWomen(province_id)*pop_percentage;
-      var pop_oefr = module.exports.getPopOEFR(province_id, pop_type);
-      var province_births = Math.ceil(pop_fertile_women*pop_oefr*fertile_scalar);
-
-      var pop_turn_fertility = province_births/unzero(returnSafeNumber(province_obj.pops[pop_type]));
-
-      if (province_obj.pop_cap)
-        if (pop_scope.size >= province_obj.pop_cap)
-          exceeds_pop_cap = true;
-
+      console.log(`Processing pops for ${pop_type}`);
       //Birth handling
-      if (!usr.has_famine && !exceeds_pop_cap) {
-        var birth_chance = parsePopLimit(config.births, {
-          pop_scope: pop_scope,
-          province_id: province_id
-        });
-        birth_scalar = pop_turn_fertility;
+      {
+        //Get province growth scalar
+        var birth_scalar = returnSafeNumber(province_obj.births[pop_type], 1); //[REVISIT] - Fix this to .trackers.birth_modifiers
+        var exceeds_pop_cap = false;
+        var pop_percentage = pop_scope.size/province_obj.pops.population;
 
-        //Iterate over birth_chance.selectors - [pop_scope, value]
-        for (var i = 0; i < birth_chance.selectors.length; i++) {
-          var initial_pop_scope = birth_chance.selectors[i][0];
-          var local_value = birth_chance.selectors[i][1]*birth_scalar;
+        var fertile_scalar = 1/(config.defines.economy.fertility_age_upper_bound - config.defines.economy.fertility_age_lower_bound);
+        var pop_fertile_women = module.exports.getProvinceFertileWomen(province_id)*pop_percentage;
+        var pop_oefr = module.exports.getPopOEFR(province_id, pop_type);
+        var province_births = Math.ceil(pop_fertile_women*pop_oefr*fertile_scalar);
 
-          var local_pop_scope = module.exports.multiplyPops(initial_pop_scope, birth_scalar*local_value, true); //Using this instead of createPops() for more standardisation
+        var pop_turn_fertility = returnSafeNumber(
+          province_births/unzero(returnSafeNumber(province_obj.pops[pop_type]))
+        );
 
-          var local_size = returnSafeNumber(local_pop_scope.size);
-          var population_change = Math.ceil(local_size*birth_scalar*local_value);
+        if (province_obj.pop_cap)
+          if (pop_scope.size >= province_obj.pop_cap)
+            exceeds_pop_cap = true;
 
-          //Add to b_ tag; replace local_pop_scope
-          modifyValue(province_obj.pops, `b_${current_year}`, population_change);
-          modifyValue(province_obj.trackers, `birth-${pop_type}`, population_change);
+        if (!usr.has_famine && !exceeds_pop_cap) {
+          var birth_chance = selectorsToPercentage(parsePopLimit(config.births, {
+            pop_scope: pop_scope,
+            province_id: province_id
+          })); //Standardise selectors
 
-          //[REVISIT] - Statistical compounding on iterative variable subset theory ops is probably an inevitability unless you can work out the completeness of some NP-HARD maths theorem, Aust. Doing this for now - Vis
-          var all_local_tags = Object.keys(local_pop_scope.tags);
+          //Iterate over birth_chance.selectors - [pop_scope, value]
+          for (var i = 0; i < birth_chance.selectors.length; i++) {
+            var initial_pop_scope = birth_chance.selectors[i][0];
+            var local_value = birth_chance.selectors[i][1];
 
-          //Override tags
-          for (var x = 0; x < all_local_tags.length; x++)
-            modifyValue(province_obj.pops, all_local_tags[x], local_pop_scope.tags[all_local_tags[x]]);
+            if (initial_pop_scope.size > 0) {
+              var local_scalar = ((province_births*local_value)/returnSafeNumber(initial_pop_scope.size));
+              var population_change = Math.ceil(initial_pop_scope.size*local_scalar);
+
+              var local_pop_scope = module.exports.multiplyPops(initial_pop_scope, local_scalar, true);
+
+              //Add to province_obj.trackers
+              modifyValue(province_obj.trackers, `birth-${pop_type}`, population_change);
+
+              //[REVISIT] - Statistical compounding on iterative variable subset theory ops is probably an inevitability unless you can work out the completeness of some NP-HARD maths theorem, Aust. Doing this for now - Vis
+              var all_local_tags = Object.keys(local_pop_scope.tags);
+
+              //Override tags - [WIP] THIS IS PROBABLY CAUSING ALL OTHER POPS TO ZERO OUT
+              for (var x = 0; x < all_local_tags.length; x++)
+                modifyValue(province_obj.pops, all_local_tags[x], local_pop_scope.tags[all_local_tags[x]]);
+            }
+          }
         }
       }
 
@@ -3017,7 +3022,7 @@ module.exports = {
     }
 
     //Pop Migration
-    {
+    /*{
       if (all_internal_provinces.length > 0) {
         //Get internal migration chance
         var internal_migration_chance = parsePopLimit(config.pop_migration.internal_emigration, {
@@ -3107,7 +3112,7 @@ module.exports = {
             }
         }
       }
-    }
+    }*/
 
     //Pop Promotion/Demotion - [WIP] - Make it so that promotion/demotion can occur between classes if promotion/demotion is otherwise unspecified.
     /*if (pop_scope.size > 0) {
@@ -4286,7 +4291,7 @@ module.exports = {
 
         for (var i = 0; i < all_current_tags.length; i++) {
           var local_value = current_scope.tags[all_current_tags[i]];
-          
+
           current_scope.tags[all_current_tags[i]] = Math.floor(local_value*amount_scalar);
         }
 
@@ -4296,6 +4301,14 @@ module.exports = {
         current_scope.income = current_scope.income*amount_scalar;
         current_scope.wealth = current_scope.wealth*amount_scalar;
       }
+
+      //Iterate over all_current_tags and delete 0's
+      for (var i = 0; i < all_current_tags.length; i++) {
+        var local_value = current_scope.tags[all_current_tags[i]];
+
+        if (returnSafeNumber(local_value) == 0)
+          delete current_scope.tags[all_current_tags[i]];
+      }
     }
 
     //Tracker tags
@@ -4303,6 +4316,50 @@ module.exports = {
 
     //Return statement
     return current_scope;
+  },
+
+  /*
+    selectorsToPercentage() - Standardises a set of .selectors to a percentage
+    options: {
+      do_not_standardise: true/false - Optional. Whether to not standardise percentage. False by default
+    }
+  */
+  selectorsToPercentage: function (arg0_pop_scope, arg1_options) {
+    //Convert from parameters
+    var pop_scope = arg0_pop_scope;
+    var options = (arg1_options) ? arg1_options : {};
+
+    //Declare local instance variables
+    var new_pop_scope = JSON.parse(JSON.stringify(pop_scope));
+    var selector_percentages = {};
+
+    //Check if pop_scope has selectors
+    if (new_pop_scope.selectors)
+      for (var i = 0; i < new_pop_scope.selectors.length; i++) {
+        var local_value = new_pop_scope.selectors[i];
+
+        local_value[1] = 1 + local_value[1];
+
+        if (local_value[1] < 0)
+          local_value[1] = 0;
+
+        //Set local_value
+        selector_percentages[i] = local_value[1];
+      }
+
+    //Standardise selectors if do_not_standardise is false
+    if (!options.do_not_standardise) {
+      selector_percentages = standardisePercentage(selector_percentages);
+
+      //Iterate over selector_percentages
+      var all_selector_percentages = Object.keys(selector_percentages);
+
+      for (var i = 0; i < all_selector_percentages.length; i++)
+        new_pop_scope.selectors[all_selector_percentages[i]][1] = selector_percentages[all_selector_percentages[i]];
+    }
+
+    //Return statement
+    return new_pop_scope;
   },
 
   /*
