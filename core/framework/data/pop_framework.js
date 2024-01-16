@@ -2975,7 +2975,7 @@ module.exports = {
 
             //Remove pops
             module.exports.removePop(user_id, {
-              amount: remove_pop_scope.size,
+              amount: returnSafeNumber(emove_pop_scope.size),
               pop_scope: remove_pop_scope
             });
             modifyValue(province_obj.trackers, `death-${pop_type}`, returnSafeNumber(remove_pop_scope.size));
@@ -3520,14 +3520,31 @@ module.exports = {
           var local_value = Math.floor(pop_scope.tags[all_tags[i]]*scalar);
 
           if (all_tags[i].startsWith("wealth-")) {
+            var local_wealth_pool = province_obj.pops[all_tags[i]];
             var split_wealth_key = all_tags[i].split("-");
 
             var building_id = `${split_wealth_key[1]}-${split_wealth_key[2]}`;
-            var local_building = province_obj.buildings[building_key_map[building_id]];
             var local_pop_type = split_wealth_key[3];
 
-            if (local_building)
-              layoffWorkers(local_building, local_pop_type, local_value);
+            if (!all_tags[i].includes("-subsistence-")) {
+              var local_building = province_obj.buildings[building_key_map[building_id]];
+
+              if (local_building)
+                layoffWorkers(local_building, local_pop_type, local_value);
+            } else {
+              //Subsistence handler
+              var subsistence_obj = province_obj.subsistence;
+
+              if (subsistence_obj) {
+                local_wealth_pool.income -= returnSafeNumber(local_wealth_pool.wealth*scalar);
+                local_wealth_pool.wealth -= returnSafeNumber(local_wealth_pool.wealth*scalar);
+
+                modifyValue(subsistence_obj.employment, local_pop_type, local_value*-1, true);
+
+                if (!subsistence_obj.employment[local_pop_type])
+                  delete province_obj.pops[all_tags[i]];
+              }
+            }
           } else {
             modifyValue(province_obj.pops, all_tags[i], local_value*-1, true);
           }

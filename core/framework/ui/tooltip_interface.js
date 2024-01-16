@@ -79,6 +79,7 @@ module.exports = {
       tooltip_string.push(`- Artisan pop(s): ${(lookup.artisan_pops.length > 0) ? artisan_pops.join(", ") : `_No artisan pops._`}`);
       tooltip_string.push("");
       tooltip_string.push(`- Artisans produce **1** Good per **${parseNumber(config.defines.economy.artisan_per_production)}** Artisans, factoring in good Complexity.`);
+      tooltip_string.push(` - This number scales with the Artisan population. It takes an extra **${parseNumber(config.defines.economy.artisan_per_production_scale)}** Artisans to produce **1** Good per **${parseNumber(1000)}** Subsistence Artisans.`);
       tooltip_string.push(` - Artisans can only produce the goods you can.`);
       tooltip_string.push(` - Artisans not employed in Subsistence will not produce Subsistence resources.`);
       tooltip_string.push(` - Complexity is calculated using the length of a production chain. The longest is set to 100%, and all other good Complexities are fractionally scaled to it.`);

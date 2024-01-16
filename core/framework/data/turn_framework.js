@@ -423,7 +423,8 @@ module.exports = {
     }
     var usr = main.users[actual_id];
 
-    log.debug(`Processing turn for ${usr.name} (ID: ${user_id}) on Worker #${Cluster.worker.id}`);
+    if (!Cluster.isMaster)
+      log.debug(`Processing turn for ${usr.name} (ID: ${user_id}) on Worker #${Cluster.worker.id}`);
 
     //Declare local tracker variables
     var all_armies = (usr.armies) ? Object.keys(usr.armies) : [];
