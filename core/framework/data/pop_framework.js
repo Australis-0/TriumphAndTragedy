@@ -2975,7 +2975,7 @@ module.exports = {
 
             //Remove pops
             module.exports.removePop(user_id, {
-              amount: returnSafeNumber(emove_pop_scope.size),
+              amount: returnSafeNumber(remove_pop_scope.size),
               pop_scope: remove_pop_scope
             });
             modifyValue(province_obj.trackers, `death-${pop_type}`, returnSafeNumber(remove_pop_scope.size));
