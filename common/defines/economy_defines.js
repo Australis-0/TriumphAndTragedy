@@ -86,9 +86,10 @@ config.defines.economy = {
 
   //Goods
   artisan_per_production: 1000, //How many artisans does it take to produce 1 good, assuming a simplicity of 1?
+  artisan_per_production_scale: 750, //How much does artisan_per_production increase per 1000 people?
   rgo_per_production: 250, //How many people employed in an RGO (non-artisan) does it take to produce 1 good with a default price of £1?
 
-  debt_goods_chance: [1, 3], //The chance for indebted pops to receive goods free-of-charge
+  debt_goods_chance: [1, 10], //The chance for indebted pops to receive goods free-of-charge
   good_categories: {
     giffen: {
       importance: 2.5, //Income elasticity of demand (the total % of a pop's income they are willing to spend on this good)
@@ -129,7 +130,7 @@ config.defines.economy = {
   strict_job_seeking: false, //Whether pops will refuse to seek jobs lower than a specific % of comparable wages in a province
 
     //Pop Births - Strict Gaussian
-    fertility_age_lower_bound: 0, //When does fertility begin as a lower bound?
+    fertility_age_lower_bound: 15, //When does fertility begin as a lower bound?
     fertility_age_upper_bound: 45, //When does most fertility stop as an upper bound?
 
     //Pop Deaths
@@ -150,7 +151,7 @@ config.defines.economy = {
 
   //Trade and World Market
   resource_init_max_percentile: 0.80, //Maximum percentage of shipment capacity that new countries (for the first 10 turns) can use on buying/selling goods from the World Market
-  resource_markup: 0.20, //The default markup between buy/sell prices
+  resource_markup: 0.10, //The default markup between buy/sell prices
   resource_max_percentile: 0.20, //Maximum percentage of shipment capacity that you can use per turn on buying/selling goods from the World Market
   resource_min_buy_price: 150, //Minimum purchasing price for a resource
   resource_min_sell_price: 100, //Minimum sell price for a resource

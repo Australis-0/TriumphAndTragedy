@@ -536,12 +536,17 @@ module.exports = {
         var artisan_amount = returnSafeNumber(province_obj.pops[pop_type]);
         var artisan_production_obj = (usr.artisan_production) ? usr.artisan_production : module.exports.getUserArtisanProduction(user_id);
         var artisan_per_production = returnSafeNumber(config.defines.economy.artisan_per_production, 10000);
+        var artisan_per_production_scale = returnSafeNumber(config.defines.economy.artisan_per_production_scale, 750);
         var used_artisans = returnSafeNumber(province_obj.pops[`used_${pop_type}`]);
 
         var all_artisan_goods = Object.keys(artisan_production_obj);
         var unemployed_artisans = artisan_amount - used_artisans;
 
         if (unemployed_artisans > 0) {
+          //Linear scaling inefficiency for artisans
+          if (unemployed_artisans >= 1000)
+            artisan_per_production = artisan_per_production + Math.ceil((unemployed_artisans/1000)*artisan_per_production_scale);
+
           var artisan_production_capacity = unemployed_artisans/artisan_per_production;
 
           //Iterate over all_artisan_goods
@@ -2873,10 +2878,14 @@ module.exports = {
           province_births/unzero(returnSafeNumber(province_obj.pops[pop_type]))
         );
 
-        if (province_obj.type == "rural")
+        if (province_obj.type == "rural") {
           if (province_obj.pop_cap)
             if (pop_scope.size >= province_obj.pop_cap)
               exceeds_pop_cap = true;
+        } else {
+          if (pop_scope.size >= returnSafeNumber(province_obj.housing))
+            exceeds_pop_cap = true;
+        }
 
         if (!usr.has_famine && !exceeds_pop_cap) {
           var birth_chance = selectorsToPercentage(parsePopLimit(config.births, {
