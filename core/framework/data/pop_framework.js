@@ -2932,7 +2932,7 @@ module.exports = {
           var local_value = life_expectancy.selectors[i][1];
 
           var local_life_expectancy = Math.floor(config.defines.economy.old_age_lower_upper_bound + local_value);
-          var local_mortality = parabola(local_life_expectancy, local_life_expectancy, config.defines.economy.life_expectancy_deaths);
+          var local_mortality = parabola(0, local_life_expectancy*2, config.defines.economy.life_expectancy_deaths);
 
           var all_mortality_keys = Object.keys(local_mortality);
 

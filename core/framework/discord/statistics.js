@@ -201,19 +201,77 @@ module.exports = {
     return 0; //Symmetric distribution
   },
 
-  parabola: function (arg0_x, arg1_y, arg2_intervals) {
+  //leslieMatrixSimple() - Generates a simple population pyramid (Stage 1)
+  leslieMatrixSimple: function (arg0_fertility_rate, arg1_amount, arg2_years) {
     //Convert from parameters
-    var x = parseInt(arg0_x);
-    var y = parseInt(arg1_y);
-    var intervals = parseInt(arg2_intervals);
+    var fertility_rate = arg0_fertility_rate; //TFR
+    var amount = parseInt(arg1_amount);
+    var years = parseInt(arg2_years);
+
+    //Adjust ferility_rate
+    fertility_rate = 20*Math.exp(-fertility_rate); //Magic number approximation. Fix in future
+
+    //Declare local instance variables
+    var economy_obj = config.defines.economy;
+    var fertility_max_age = economy_obj.fertility_age_upper_bound;
+    var fertility_min_age = economy_obj.fertility_age_lower_bound;
+    var fertility_years = fertility_max_age - fertility_min_age;
+    var leslie_matrix = {
+      cohorts: [],
+      fertility: []
+    };
+    var life_expectancy = economy_obj.old_age_lower_upper_bound;
+
+    var general_mortality = parabola(0, life_expectancy*2, config.defines.economy.life_expectancy_deaths);
+
+    //Assign fertility to matrix
+    for (var i = 0; i < years; i++)
+      //Check if this is a fertile year
+      if (i >= fertility_min_age && i <= fertility_max_age) {
+        leslie_matrix.fertility.push(fertility_rate/fertility_years);
+      } else {
+        leslie_matrix.fertility.push(0);
+      }
+
+    //Age up pops from base amount, applying mortality as we go
+    for (var i = 0; i < years; i++) {
+      //Fetch local_mortality
+      var local_fertility = returnSafeNumber(leslie_matrix.fertility[i]);
+      var local_mortality = returnSafeNumber(general_mortality[i.toString()]);
+
+      //Initialise year 0 cohorts
+      if (i == 0) {
+        leslie_matrix.cohorts.push(amount);
+      } else {
+        //Kill off some of the initial pops, but add the relevant fertility of this year
+        leslie_matrix.cohorts.push(leslie_matrix.cohorts[i - 1]*(1 - local_mortality));
+        leslie_matrix.cohorts[i] += Math.floor(leslie_matrix.cohorts[i]*local_fertility);
+      }
+    }
+
+    leslie_matrix.cohorts = standardisePercentage(leslie_matrix.cohorts, 10000);
+
+    for (var i = 0; i < leslie_matrix.cohorts.length; i++)
+      leslie_matrix.cohorts[i] = Math.floor(leslie_matrix.cohorts[i]);
+
+    //Return statement
+    return leslie_matrix;
+  },
+
+  parabola: function (arg0_x_1, arg1_x_2, arg2_height) {
+    //Convert from parameters
+    var a = arg0_x_1;
+    var b = arg1_x_2;
+    var c = arg2_height;
 
     //Declare local instance variables
     var return_obj = {};
 
-    for (var i = 0; i < intervals.length; i++) {
-      var local_value = -(Math.pow(i - x, 2)) + y;
+    //Iterate over domain [a, b]
+    for (var i = a; i < b; i++) {
+      var local_value = c - (c/Math.pow((a + b)/2 - a, 2))*Math.pow(i - (a + b)/2, 2);
 
-      modifyValue(return_obj, i.toString(), local_value);
+      return_obj[i] = local_value;
     }
 
     //Return statement
