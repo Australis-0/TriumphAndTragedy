@@ -2096,6 +2096,25 @@ module.exports = {
     return sol;
   },
 
+  getProvincePopulation: function (arg0_province_id) {
+    //Convert from parameters
+    var province_id = arg0_province_id;
+
+    //Declare local instance variables
+    var all_pops = Object.keys(config.pops);
+    var province_obj = (typeof province_id != "object") ? main.provinces[province_id] : province_id;
+    var province_population = 0;
+
+    //Iterate over all_pops
+    if (province_obj)
+      if (province_obj.pops)
+        for (var i = 0; i < all_pops.length; i++)
+          province_population += returnSafeNumber(province_obj.pops[all_pops[i]]);
+
+    //Return statement
+    return province_population;
+  },
+
   getProvincePromotion: function (arg0_province_id) {
     //Convert from parameters
     var province_id = arg0_province_id;
@@ -2923,6 +2942,7 @@ module.exports = {
         var pop_fertile_women = module.exports.getProvinceFertileWomen(province_id)*pop_percentage;
         var pop_oefr = module.exports.getPopOEFR(province_id, pop_type);
         var province_births = Math.ceil(pop_fertile_women*pop_oefr*fertile_scalar*returnSafeNumber(pop_growth_modifier, 1));
+        var province_population = module.exports.getProvincePopulation(province_id);
 
         var pop_turn_fertility = returnSafeNumber(
           province_births/unzero(returnSafeNumber(province_obj.pops[pop_type]))
@@ -2930,10 +2950,10 @@ module.exports = {
 
         if (province_obj.type == "rural") {
           if (province_obj.pop_cap)
-            if (pop_scope.size >= province_obj.pop_cap)
+            if (province_population >= province_obj.pop_cap)
               exceeds_pop_cap = true;
         } else {
-          if (pop_scope.size >= returnSafeNumber(province_obj.housing))
+          if (province_population >= returnSafeNumber(province_obj.housing))
             exceeds_pop_cap = true;
         }
 
