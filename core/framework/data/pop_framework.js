@@ -2459,6 +2459,56 @@ module.exports = {
     return return_object;
   },
 
+  getUserPopConsumption: function (arg0_user) {
+    //Convert from parameters
+    var user_id = arg0_user;
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var consumption_obj = {};
+    var usr = main.users[actual_id];
+
+    if (usr) {
+      var user_provinces = getProvinces(user_id, { include_occupations: true });
+
+      //Iterate over user_provinces
+      for (var i = 0; i < user_provinces.length; i++) {
+        var local_province = user_provinces[i];
+
+        if (local_province.pops) {
+          var all_pop_keys = Object.keys(local_province.pops);
+
+          //Iterate over all_pop_keys for wealth pools
+          for (var x = 0; x < all_pop_keys.length; x++) {
+            var local_value = local_province.pops[all_pop_keys[x]];
+
+            if (all_pop_keys[x].includes("wealth-")) {
+              if (local_value.received_goods) {
+                var all_received_goods_categories = Object.keys(local_value.received_goods);
+
+                //Iterate over all_received_goods_categories
+                for (var y = 0; y < all_received_goods_categories.length; y++)
+                  consumption_obj = mergeObjects(consumption_obj, local_value.received_goods[all_received_goods_categories[y]]);
+              }
+            }
+          }
+        }
+      }
+    }
+
+    //Iterate over consumption_obj for rounding
+    var all_consumption_keys = Object.keys(consumption_obj);
+
+    for (var i = 0; i < all_consumption_keys.length; i++) {
+      var local_value = consumption_obj[all_consumption_keys[i]];
+
+      consumption_obj[all_consumption_keys[i]] = Math.ceil(local_value);
+    }
+
+    //Return statement
+    return consumption_obj;
+  },
+
   mergePopScopes: function (arg0_pop_scope, arg1_pop_scope) {
     //Convert from parameters
     var pop_scope = arg0_pop_scope;

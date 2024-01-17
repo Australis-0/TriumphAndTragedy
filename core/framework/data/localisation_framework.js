@@ -432,6 +432,9 @@ module.exports = {
       exclude_bullets: true/false, - Whether to exclude bullets or not
       display_icons: true/false, - Whether good icons should be displayed or not
       formatter: "**", - The markdown formatter to use for good numbers
+      exclude_artisan_production: true/false, - Optional. Whether to exclude Artisan production. False by default
+      exclude_rgo_production: true/false, - Optional. Whether to exclude RGO production. False by default
+      include_pop_consumption: true/false, - Optional. Whether to include pop consumption. False by default
       no_formatting: true/false - Whether formatting should be disabled or not
     }
   */
@@ -442,8 +445,9 @@ module.exports = {
 
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
+    var consumption_obj = getUserPopConsumption(user_id);
     var formatter = "";
-    var production_obj = sortObject(getProductionObject(user_id));
+    var production_obj = sortObject(getProductionObject(user_id, options));
     var resource_production_string = [];
     var usr = main.users[actual_id];
 
@@ -456,17 +460,24 @@ module.exports = {
     //Iterate over all_produced_goods to push to resource_production_string
     for (var i = 0; i < all_production_keys.length; i++) {
       var local_good = lookup.all_goods[all_production_keys[i]];
+      var local_pop_consumption = consumption_obj[all_production_keys[i]];
       var local_value = production_obj[all_production_keys[i]];
 
       var has_change = (!(local_value[0] == 0 && local_value[1] == 0));
       var local_change_string = `**${(local_value[0] == local_value[1]) ? parseNumber(local_value[0]) : parseNumber(local_value[0]) + " - " + parseNumber(local_value[1])}** `;
+      var local_pop_consumption_string = "";
+
+      //Format local_pop_consumption_string
+      if (!options.include_pop_consumption)
+        if (local_pop_consumption)
+          local_pop_consumption_string = ` | _${parseNumber(local_pop_consumption*-1)} bought by Pops_`;
 
       if (has_change)
         if (!all_production_keys[i].includes("_upkeep"))
           if (!["actions", "money"].includes(all_production_keys[i])) {
-            resource_production_string.push(`${(!options.exclude_bullets) ? "- " : ""} ${module.exports.parseGood(local_good, undefined, !options.display_icons, local_change_string)}`);
+            resource_production_string.push(`${(!options.exclude_bullets) ? "- " : ""} ${module.exports.parseGood(local_good, undefined, !options.display_icons, local_change_string)}${local_pop_consumption_string}`);
           } else {
-            resource_production_string.push(`${(!options.exclude_bullets) ? "- " : ""}${local_change_string} ${parseString(all_production_keys[i])}`);
+            resource_production_string.push(`${(!options.exclude_bullets) ? "- " : ""}${local_change_string} ${parseString(all_production_keys[i])}${local_pop_consumption_string}`);
           }
     }
 

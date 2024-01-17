@@ -2011,6 +2011,9 @@ module.exports = {
     getProduction() - Returns the production value of a specific good or all goods for a user. Note that "all" for arg1_good returns an object of all goods with their minimum and maximum production values being stored in a 2-element array.
 
     options: {
+      exclude_artisan_production: true/false, - Optional. Whether to exclude artisan production. False by default
+      exclude_rgo_production: true/false, - Optional. Whether to exclude Subsistence RGO production. False by default
+      include_pop_consumption: true/false, - Optional. Whether to include pop consumption. False by default
       is_real: true/false - Whether building effects should actually be applied to the user or not. False by default
     }
   */
@@ -2154,7 +2157,10 @@ module.exports = {
             //Fetch subsistence production
             if (all_provinces[i].subsistence) {
               var local_subsistence_obj = all_provinces[i].subsistence;
-              var local_subsistence_production = module.exports.getSubsistenceProduction(all_provinces[i].id, local_subsistence_obj);
+              var local_subsistence_production = module.exports.getSubsistenceProduction(all_provinces[i].id, local_subsistence_obj, {
+                exclude_artisan_production: options.exclude_artisan_production,
+                exclude_rgo_production: options.exclude_rgo_production
+              });
 
               if (local_subsistence_production) {
                 var all_subsistence_keys = Object.keys(local_subsistence_production);
@@ -2180,6 +2186,26 @@ module.exports = {
         for (var i = 0; i < all_production_keys.length; i++)
           if (Array.isArray(production_obj[all_production_keys[i]]))
             production_obj[all_production_keys[i]].sort();
+
+        //Fetch pop consumption (last turn)
+        if (options.include_pop_consumption) {
+          var pop_consumption_obj = getUserPopConsumption(user_id);
+
+          var all_pop_consumption_keys = Object.keys(pop_consumption_obj);
+
+          //Iterate over all_pop_consumption_keys
+          for (var i = 0; i < all_pop_consumption_keys.length; i++) {
+            var local_key = `${all_pop_consumption_keys[i]}_upkeep`;
+            var local_value = pop_consumption_obj[all_pop_consumption_keys[i]];
+
+            if (!production_obj[local_key])
+              production_obj[local_key] = [0, 0];
+            var local_production_value = production_obj[local_key];
+
+            local_production_value[0] += local_value;
+            local_production_value[1] += local_value;
+          }
+        }
       } catch (e) {
         log.error(`getProduction() - ran into an error whilst trying to parse production for User ID: ${e}.`);
         console.error(e);
@@ -2621,14 +2647,19 @@ module.exports = {
     return produces_obj;
   },
 
-  getProductionObject: function (arg0_user) {
+  /*
+    getProductionObject() - Fetches good production as an object.
+    options: {} - Same options as getProduction()
+  */
+  getProductionObject: function (arg0_user, arg1_options) {
     //Convert from parameters
     var user_id = arg0_user;
+    var options = (arg1_options) ? arg1_options : {};
 
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
     var all_produced_goods = [];
-    var all_production = module.exports.getProduction(user_id);
+    var all_production = module.exports.getProduction(user_id, "all", options);
     var all_unprocessed_goods = Object.keys(all_production);
     var sorted_goods_cache = [];
     var usr = main.users[actual_id];
@@ -2868,28 +2899,39 @@ module.exports = {
     return qualified_pops;
   },
 
-  getSubsistenceProduction: function (arg0_province_id, arg1_subsistence_obj) {
+  /*
+    getSubsistenceProduction() - Fetches total subsistence production
+    options: {
+      exclude_artisan_production: true/false, - Optional. Whether to exclude artisan production. False by default
+      exclude_rgo_production: true/false - Optional. Whether to exclude RGO production. False by default
+    }
+  */
+  getSubsistenceProduction: function (arg0_province_id, arg1_subsistence_obj, arg2_options) {
     //Convert from parameters
     var province_id = arg0_province_id;
     var subsistence_obj = arg1_subsistence_obj;
+    var options = (arg2_options) ? arg2_options : {};
 
     //Declare local instance variables
     var employed_pops = getObjectSum(subsistence_obj.employment);
     var province_obj = (typeof province_id != "object") ? main.provinces[province_id] : province_id;
-
-    //Fetch artisan production for province
-    var artisan_amount = 0;
     var subsistence_production_obj = {};
 
-    //Iterate over all artisan_pops
-    for (var i = 0; i < lookup.artisan_pops.length; i++) {
-      subsistence_production_obj = mergeObjects(subsistence_production_obj,
-        getArtisanProduction(province_obj.id, lookup.artisan_pops[i]));
-      artisan_amount += returnSafeNumber(subsistence_obj.employment[lookup.artisan_pops[i]]);
+    //Fetch artisan production for province
+    if (!options.exclude_artisan_production) {
+      var artisan_amount = 0;
+
+      //Iterate over all artisan_pops
+      for (var i = 0; i < lookup.artisan_pops.length; i++) {
+        subsistence_production_obj = mergeObjects(subsistence_production_obj,
+          getArtisanProduction(province_obj.id, lookup.artisan_pops[i]));
+        artisan_amount += returnSafeNumber(subsistence_obj.employment[lookup.artisan_pops[i]]);
+      }
     }
 
     //+RGO Production
-    subsistence_production_obj = mergeObjects(subsistence_production_obj, getProvinceRGOThroughput(province_obj.id));
+    if (!options.exclude_rgo_production)
+      subsistence_production_obj = mergeObjects(subsistence_production_obj, getProvinceRGOThroughput(province_obj.id));
 
     //Return statement
     return subsistence_production_obj;

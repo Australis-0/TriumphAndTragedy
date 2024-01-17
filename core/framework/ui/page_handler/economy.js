@@ -11,6 +11,11 @@ module.exports = {
     var user_id = arg0_user;
     var usr = main.users[actual_id];
 
+    //current_page
+    try {
+      current_page = returnSafeNumber(main.interfaces[game_obj.middle_embed.id].page)
+    } catch {}
+
     //Make sure user isn't in a visual prompt
     var in_founding_map = (game_obj.page == "founding_map");
     var in_visual_prompt = interfaces[user_id];
@@ -342,6 +347,24 @@ module.exports = {
         return true;
       }
 
+      //[Hide Artisan Production]
+      if (input == "hide artisan production") {
+        game_obj.hide_artisan_production = true;
+        printProduction(game_obj.user, current_page);
+      }
+
+      //[Hide Pop Consumption]
+      if (input == "hide pop consumption") {
+        game_obj.hide_pop_consumption = true;
+        printProduction(game_obj.user, current_page);
+      }
+
+      //[Hide RGO Production]
+      if (input == "hide rgo production") {
+        game_obj.hide_rgo_production = true;
+        printProduction(game_obj.user, current_page);
+      }
+
       //[Jump To Page]
       if (input == "jump to page") {
         visualPrompt(game_obj.alert_embed, user_id, {
@@ -359,6 +382,24 @@ module.exports = {
         });
 
         return true;
+      }
+
+      //[Show Artisan Production]
+      if (input == "show artisan production") {
+        delete game_obj.hide_artisan_production;
+        printProduction(game_obj.user, current_page);
+      }
+
+      //[Show Pop Consumption]
+      if (input == "show pop consumption") {
+        delete game_obj.hide_pop_consumption;
+        printProduction(game_obj.user, current_page);
+      }
+
+      //[Show RGO Production]
+      if (input == "show rgo production") {
+        delete game_obj.hide_rgo_production;
+        printProduction(game_obj.user, current_page);
       }
 
       //[(Tooltip)]

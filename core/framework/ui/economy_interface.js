@@ -383,41 +383,63 @@ module.exports = {
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
     var game_obj = getGameObject(user_id);
-    var production_localisation = getProductionLocalisation(user_id, { display_icons: true });
+    var production_localisation = getProductionLocalisation(user_id, {
+      display_icons: true,
+      exclude_artisan_production: (game_obj.hide_artisan_production),
+      exclude_rgo_production: (game_obj.hide_rgo_production),
+      include_pop_consumption: (!game_obj.hide_pop_consumption)
+    });
     var usr = main.users[actual_id];
+
+    //Format header_string
+    var header_string = [];
+
+    header_string.push(`**[${(game_obj.hide_pop_consumption) ? `Show Pop Consumption` : `Hide Pop Consumption`}]** | **[${(game_obj.hide_artisan_production) ? `Show Artisan Production` : `Hide Artisan Production`}]** | **[${(game_obj.hide_rgo_production) ? `Show RGO Production` : `Hide RGO Production`}]**`);
+    header_string.push("");
+    header_string.push(`> **Note:** Pop Consumption is taken from figures tracked last turn in terms of absolute purchase quantities by Wealth Pools.`);
+    header_string.push("");
+    header_string.push(config.localisation.divider);
+    header_string.push("");
+
+    //Merge header_string
+    production_localisation = appendArrays(header_string, production_localisation);
 
     //Make sure user has actual production
     if (production_localisation.length > 0) {
       //Print artisan_production
-      var artisan_production = getTotalArtisanProduction(user_id);
+      if (!game_obj.hide_artisan_production) {
+        var artisan_production = getTotalArtisanProduction(user_id);
 
-      var all_artisan_production_keys = Object.keys(artisan_production);
+        var all_artisan_production_keys = Object.keys(artisan_production);
 
-      if (all_artisan_production_keys.length > 0) {
-        //Print header
-        production_localisation.push(`### [Artisan Production]:`);
-        production_localisation.push(`> Artisan production is produced by **Artisan Pops** working in **Subsistence** industries when not formally employed.`);
-        production_localisation.push("");
+        if (all_artisan_production_keys.length > 0) {
+          //Print header
+          production_localisation.push(`### [Artisan Production]:`);
+          production_localisation.push(`> Artisan production is produced by **Artisan Pops** working in **Subsistence** industries when not formally employed.`);
+          production_localisation.push("");
 
-        //List Artisan production
-        production_localisation = appendArrays(production_localisation, parseGoods(artisan_production));
+          //List Artisan production
+          production_localisation = appendArrays(production_localisation, parseGoods(artisan_production));
+        }
       }
 
       //Print rgo_production
-      var rgo_production = getTotalRGOProduction(user_id);
+      if (!game_obj.hide_rgo_production) {
+        var rgo_production = getTotalRGOProduction(user_id);
 
-      var all_rgo_production_keys = Object.keys(rgo_production);
+        var all_rgo_production_keys = Object.keys(rgo_production);
 
-      if (all_rgo_production_keys.length > 0) {
-        //Print header
-        production_localisation.push(`### [RGO Production]:`);
-        production_localisation.push(`> **RGOs** are naturally-occuring raw resources in certain Province(s). Subsistence labourers not working a trade (Non-Artisan pops) harvest these resources to earn a living.`);
-        production_localisation.push(`> `);
-        production_localisation.push(`> Total production is modified by initial resource Scarcity and your **RGO Throughput** modifier.`);
-        production_localisation.push("");
+        if (all_rgo_production_keys.length > 0) {
+          //Print header
+          production_localisation.push(`### [RGO Production]:`);
+          production_localisation.push(`> **RGOs** are naturally-occuring raw resources in certain Province(s). Subsistence labourers not working a trade (Non-Artisan pops) harvest these resources to earn a living.`);
+          production_localisation.push(`> `);
+          production_localisation.push(`> Total production is modified by initial resource Scarcity and your **RGO Throughput** modifier.`);
+          production_localisation.push("");
 
-        //List rgo_production
-        production_localisation = appendArrays(production_localisation, parseGoods(rgo_production));
+          //List rgo_production
+          production_localisation = appendArrays(production_localisation, parseGoods(rgo_production));
+        }
       }
     } else {
       production_localisation.push(`_Our country is currently not producing anything, nor does it have a regular import/export balance. Consider trading with other countries, building industry by typing_ **[Build]**_, or fix employment!_`);
