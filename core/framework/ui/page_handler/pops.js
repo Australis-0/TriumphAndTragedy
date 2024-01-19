@@ -151,6 +151,14 @@ module.exports = {
         return true;
       }
 
+      //[Hide Age Composition]
+      if (["hide age breakdown", "hide age composition", "hide age distribution"].includes(input)) {
+        delete game_obj.show_age_composition;
+        printDemographics(user_id, province_id, current_page);
+
+        return true;
+      }
+
       //[Hide All Details]
       if (input == "hide all details") {
         game_obj.hide_employers = true;
@@ -239,6 +247,14 @@ module.exports = {
         printDemographicsLimitTooltip(user_id, province_id, {
           mode: "promotion"
         });
+
+        return true;
+      }
+
+      //[Show Age Composition]
+      if (["show age breakdown", "show age composition", "show age distribution"].includes(input)) {
+        game_obj.show_age_composition = true;
+        printDemographics(user_id, province_id, current_page);
 
         return true;
       }

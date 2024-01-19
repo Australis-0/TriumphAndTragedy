@@ -130,29 +130,34 @@ module.exports = {
             pops_string.push("");
             pops_string.push(`**Age:**`);
             pops_string.push("");
-            pops_string.push(`> - Age (b. [Birth Year]) - [Number]`)
-            pops_string.push("");
+            pops_string.push(`**[${(game_obj.show_age_composition) ? `Hide Age Composition` : `Show Age Composition`}]**`);
 
-            var age_strings = [];
+            if (!game_obj.show_age_composition) {
+              pops_string.push("");
+              pops_string.push(`> - Age (b. [Birth Year]) - [Number]`)
+              pops_string.push("");
 
-            for (var i = 0; i < all_pop_keys.length; i++)
-              if (all_pop_keys[i].startsWith("b_")) {
-                var local_birth_year = parseInt(all_pop_keys[i].replace("b_", ""));
-                var local_value = province_obj.pops[all_pop_keys[i]];
+              var age_strings = [];
 
-                if (!isNaN(local_birth_year)) {
-                  var local_age = main.date.year - parseInt(local_birth_year);
+              for (var i = 0; i < all_pop_keys.length; i++)
+                if (all_pop_keys[i].startsWith("b_")) {
+                  var local_birth_year = parseInt(all_pop_keys[i].replace("b_", ""));
+                  var local_value = province_obj.pops[all_pop_keys[i]];
 
-                  if (returnSafeNumber(local_value) > 0)
-                    age_strings.push([local_age, `- ${local_age} (b. ${local_birth_year}) - ${parseNumber(local_value)}`]);
+                  if (!isNaN(local_birth_year)) {
+                    var local_age = main.date.year - parseInt(local_birth_year);
+
+                    if (returnSafeNumber(local_value) > 0)
+                      age_strings.push([local_age, `- ${local_age} (b. ${local_birth_year}) - ${parseNumber(local_value)}`]);
+                  }
                 }
-              }
 
-            //Sort age
-            age_strings.sort((a, b) => a[0] - b[0]);
+              //Sort age
+              age_strings.sort((a, b) => a[0] - b[0]);
 
-            for (var i = 0; i < age_strings.length; i++)
-              pops_string.push(age_strings[i][1]);
+              for (var i = 0; i < age_strings.length; i++)
+                pops_string.push(age_strings[i][1]);
+            }
           }
         }
 

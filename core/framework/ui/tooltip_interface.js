@@ -36,50 +36,66 @@ module.exports = {
     if (all_good_names.includes(input.trim().toLowerCase())) {
       var good_key = getGood(input.trim().toLowerCase(), { return_key: true });
       var local_good = lookup.all_goods[good_key];
+      var production_chain_localisation = getProductionChainLocalisation(user_id, good_key, { display_icons: true });
 
       if (!local_good.hidden && !config.defines.economy.view_special_goods) {
-        if (module.exports.hasGoodTooltip(good_key)) {
-          var config_obj = lookup.all_goods[good_key];
-          var localisation_string = [];
+        var config_obj = lookup.all_goods[good_key];
+        var localisation_string = [];
 
-          //Push general good statistics
-          if (config_obj) {
-            if (config_obj.icon)
-              localisation_string.push(`# ${config.icons[config_obj.icon]}`);
-            localisation_string.push(`### Good Info:`);
-            localisation_string.push(`- Name: ${(config_obj.name) ? config_obj.name : config_obj.id} (ID: ${config_obj.id})`);
-            if (config_obj.type)
-              localisation_string.push(`- Good Type: ${parseString(config_obj.type)}`);
-            if (config_obj.doesnt_stack)
-              localisation_string.push(`- Good does not stack.`);
-            if (config_obj.research_good)
-              localisation_string.push(`- Research Good.`);
+        //Push general good statistics
+        if (config_obj) {
+          if (config_obj.icon)
+            localisation_string.push(`# ${config.icons[config_obj.icon]}`);
+          localisation_string.push(`### Good Info:`);
+          localisation_string.push(`- Name: ${(config_obj.name) ? config_obj.name : config_obj.id} (ID: ${config_obj.id})`);
+          if (config_obj.type)
+            localisation_string.push(`- Good Type: ${parseString(config_obj.type)}`);
 
-            localisation_string.push("");
-            localisation_string.push(config.localisation.divider);
+          if (config_obj.type == "category") {
+            var all_subgoods = lookup.all_subgoods[good_key];
+
+            if (all_subgoods) {
+              localisation_string.push(`- Subgoods:`);
+
+              for (var i = 0; i < all_subgoods.length; i++) {
+                var local_good = lookup.all_goods[all_subgoods[i]];
+
+                localisation_string.push(` - ${(local_good.icon) ? config.icons[local_good.icon] + " " : ""}${(local_good.name) ? local_good.name : local_good.id}`);
+              }
+            }
           }
 
-          //Push market price if it exists
-          var local_market_good = main.market[good_key];
-
-          if (!local_market_good)
-            localisation_string.push("");
-          if (local_market_good) {
-            localisation_string.push(`### Market:`);
-            localisation_string.push(`${config.icons.trade} Stock: ${parseNumber(local_market_good.stock)} | ${config.icons.taxes} Demand: ${parseNumber(local_market_good.demand)}`);
-            localisation_string.push(`- Buy Price: £${parseNumber(local_market_good.buy_price)} | Sell Price: **£${parseNumber(local_market_good.sell_price)}**`);
-            localisation_string.push("");
-            localisation_string.push(config.localisation.divider);
-            localisation_string.push("");
-          }
-
-          localisation_string = appendArrays(localisation_string, getProductionChainLocalisation(user_id, good_key, { display_icons: true }).join("\n"));
-          localisation_string = localisation_string.join("\n");
-
-          printAlert(game_obj.id, localisation_string);
-        } else {
-          printError(game_obj.id, `No production chain(s) for ${parseGood(good_key)} could be found!`);
+          if (config_obj.is_cp)
+            localisation_string.push(`- Crafting Point.`);
+          if (config_obj.doesnt_stack)
+            localisation_string.push(`- Good does not stack.`);
+          if (config_obj.research_good)
+            localisation_string.push(`- Research Good.`);
         }
+
+        //Push market price if it exists
+        var local_market_good = main.market[good_key];
+
+        if (!local_market_good)
+          localisation_string.push("");
+        if (local_market_good) {
+          localisation_string.push("");
+          localisation_string.push(config.localisation.divider);
+          localisation_string.push(`### Market:`);
+          localisation_string.push(`${config.icons.trade} Stock: ${parseNumber(local_market_good.stock)} | ${config.icons.taxes} Demand: ${parseNumber(local_market_good.demand)}`);
+          localisation_string.push(`- Buy Price: £${parseNumber(local_market_good.buy_price)} | Sell Price: **£${parseNumber(local_market_good.sell_price)}**`);
+        }
+        if (module.exports.hasGoodTooltip(good_key)) {
+          localisation_string.push("");
+          localisation_string.push(config.localisation.divider);
+          localisation_string.push("");
+          localisation_string.push(production_chain_localisation.join("\n"));
+        }
+
+        //Join localisation_string
+        localisation_string = localisation_string.join("\n");
+
+        printAlert(game_obj.id, localisation_string);
       } else {
         printError(game_obj.id, `You cannot view the production chains of special goods.`);
       }

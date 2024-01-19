@@ -3446,9 +3446,9 @@ module.exports = {
 
                         //Spend money on good
                         if (local_market_good) {
-                          var local_need = Math.ceil(local_value*local_percentage);
+                          var local_need = local_value*local_percentage;
 
-                          var actual_consumption = returnSafeNumber(Math.ceil(Math.min(getGoodAmount(user_id, local_buy_order.good_type), local_need)));
+                          var actual_consumption = returnSafeNumber(Math.min(getGoodAmount(user_id, local_buy_order.good_type), local_need));
                           var local_worth = actual_consumption*(local_market_good.buy_price/2);
                           var local_tax = local_worth*returnSafeNumber(usr[`${pop_obj.class}-duties_tax`]);
 
@@ -3464,14 +3464,14 @@ module.exports = {
                               if (has_good != 1)
                                 actual_consumption = 0;
                             } else if (actual_consumption > 1) {
-                              actual_consumption = Math.floor(actual_consumption*(debt_goods_chance[0]/debt_goods_chance[1]));
+                              actual_consumption = actual_consumption*(debt_goods_chance[0]/debt_goods_chance[1]);
                             }
 
                             spent_wealth += (local_worth + local_tax);
                           }
 
                           //Buy from market
-                          var market_consumption = Math.floor(actual_consumption*config.defines.economy.resource_production_scalar);
+                          var market_consumption = Math.ceil(actual_consumption*config.defines.economy.resource_production_scalar);
 
                           buyMarketGood(local_buy_order.good_type, market_consumption);
 
