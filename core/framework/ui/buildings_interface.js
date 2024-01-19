@@ -277,7 +277,7 @@ module.exports = {
         if (config_obj.produces) {
           var all_production_keys = Object.keys(config_obj.produces);
           var effective_production = getBuildingEffectiveProduction(local_building);
-          var effective_production_string = ` | Effective Production: ${(effective_production[0] == effective_production[1]) ? `${printPercentage(effective_productiono[0])}` : `${printPercentage(effective_production[0])} - ${printPercentage(effective_production[1])}`}`;
+          var effective_production_string = ` | Effective Production: ${(effective_production[0] == effective_production[1]) ? `${printPercentage(effective_production[0])}` : `${printPercentage(effective_production[0])} - ${printPercentage(effective_production[1])}`}`;
 
           building_string.push("");
           building_string.push(config.localisation.divider);
