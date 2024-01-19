@@ -143,7 +143,8 @@ module.exports = {
                 if (!isNaN(local_birth_year)) {
                   var local_age = main.date.year - parseInt(local_birth_year);
 
-                  age_strings.push([local_age, `- ${local_age} (b. ${local_birth_year}) - ${parseNumber(local_value)}`]);
+                  if (returnSafeNumber(local_value) > 0)
+                    age_strings.push([local_age, `- ${local_age} (b. ${local_birth_year}) - ${parseNumber(local_value)}`]);
                 }
               }
 

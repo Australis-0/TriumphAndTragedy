@@ -249,7 +249,7 @@ module.exports = {
       }
     }
 
-    leslie_matrix.cohorts = standardisePercentage(leslie_matrix.cohorts, 10000);
+    leslie_matrix.cohorts = standardisePercentage(leslie_matrix.cohorts, amount);
 
     for (var i = 0; i < leslie_matrix.cohorts.length; i++)
       leslie_matrix.cohorts[i] = Math.floor(leslie_matrix.cohorts[i]);

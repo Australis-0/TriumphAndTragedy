@@ -131,7 +131,8 @@ module.exports = {
                 //Generate city pop object
                 createPops(province_id, {
                   type: "all",
-                  amount: population_amount
+                  amount: population_amount,
+                  initialise: true
                 });
 
                 //Set city RGO

@@ -45,6 +45,7 @@ module.exports = {
             var population_change = Math.ceil(population_cache*(random_percentage/100));
 
             createPops(province_id, {
+              initialise: true,
               type: all_pop_types[i],
               amount: population_change
             });

@@ -119,8 +119,6 @@ module.exports = {
 
       //This is a category; weighted average each price
       if (local_subgood.length > 1) {
-        console.log(all_subgoods[i], `is a category`);
-
         var total_buy_price = 0;
         var total_demand = 0;
         var total_sell_price = 0;

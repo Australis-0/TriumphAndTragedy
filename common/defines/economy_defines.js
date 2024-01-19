@@ -125,6 +125,7 @@ config.defines.economy = {
   view_special_goods: false, //Whether special goods like knowledge can be viewed in inventory
 
   //Pops
+  base_oefr: 6.6, //What should the base OEFR assumption be if a Province is unsettled?
   cultural_minority_display: 0.20, //The percentage a minority should comprise before being displayed in mainline headers
   job_seeking_range: [0.75, 1], //The range of wages pops seek, where 1 is the building with the highest wage in a province
   strict_job_seeking: false, //Whether pops will refuse to seek jobs lower than a specific % of comparable wages in a province
