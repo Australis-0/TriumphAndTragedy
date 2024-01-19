@@ -48,9 +48,12 @@ module.exports = {
               localisation_string.push(`# ${config.icons[config_obj.icon]}`);
             localisation_string.push(`### Good Info:`);
             localisation_string.push(`- Name: ${(config_obj.name) ? config_obj.name : config_obj.id} (ID: ${config_obj.id})`);
-
             if (config_obj.type)
               localisation_string.push(`- Good Type: ${parseString(config_obj.type)}`);
+            if (config_obj.doesnt_stack)
+              localisation_string.push(`- Good does not stack.`);
+            if (config_obj.research_good)
+              localisation_string.push(`- Research Good.`);
 
             localisation_string.push("");
             localisation_string.push(config.localisation.divider);
