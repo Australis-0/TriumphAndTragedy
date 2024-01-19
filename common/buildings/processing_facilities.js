@@ -2485,7 +2485,7 @@ config.buildings.processing_facilities = { //[WIP] - Add Synthetic Ruby Factory
     cost: {
       lumber: 15,
       stone: 10,
-      textiles: 6,
+      fabric: 6,
       tools: 5,
       silk: 4,
       lamps: 4,
@@ -2644,7 +2644,7 @@ config.buildings.processing_facilities = { //[WIP] - Add Synthetic Ruby Factory
       lumber: 10,
       wood: 8,
       glass: 5,
-      textiles: 3,
+      fabric: 3,
       tools: 2,
       money: 6500
     },
@@ -2793,7 +2793,7 @@ config.buildings.processing_facilities = { //[WIP] - Add Synthetic Ruby Factory
     cost: {
       lumber: 10,
       tar_coal: 8,
-      textiles: 6,
+      fabric: 6,
       stone: 6,
       tools: 4,
       tin: 3,
@@ -3650,7 +3650,7 @@ config.buildings.processing_facilities = { //[WIP] - Add Synthetic Ruby Factory
       mahogany_wood: 5,
       lamps: 4,
       tools: 3,
-      textiles: 2,
+      fabric: 2,
       money: 5000
     },
     maintenance: {
@@ -3703,7 +3703,7 @@ config.buildings.processing_facilities = { //[WIP] - Add Synthetic Ruby Factory
     construction_turns: 4,
     cost: {
       lumber: 8,
-      textiles: 5,
+      fabric: 5,
       tools: 2,
       money: 5000
     },
@@ -3758,7 +3758,7 @@ config.buildings.processing_facilities = { //[WIP] - Add Synthetic Ruby Factory
       lumber: 6,
       wood: 5,
       tools: 3,
-      textiles: 2,
+      fabric: 2,
       money: 4000
     },
     maintenance: {
@@ -4072,7 +4072,7 @@ config.buildings.processing_facilities = { //[WIP] - Add Synthetic Ruby Factory
       bricks: 10,
       cement: 8,
       lumber: 8,
-      textiles: 6,
+      fabric: 6,
       common_furniture: 5,
       coals: 5,
       copper_wire: 4,

@@ -149,6 +149,14 @@ module.exports = {
         return true;
       }
 
+      //[Hide Market Prices]
+      if (["hide market price", "hide market prices"].includes(input)) {
+        delete game_obj.show_market_price;;
+        printInventory(user_id, current_page);
+
+        return true;
+      }
+
       //[Jump To Page]
       if (input == "jump to page") {
         visualPrompt(game_obj.alert_embed, user_id, {
@@ -182,6 +190,14 @@ module.exports = {
       //[Show All Goods]
       if (input == "show all goods") {
         game_obj.inventory_show_all_goods = true;
+        printInventory(user_id, current_page);
+
+        return true;
+      }
+
+      //[Show Market Prices]
+      if (["show market price", "show market prices"].includes(input)) {
+        game_obj.show_market_price = true;
         printInventory(user_id, current_page);
 
         return true;

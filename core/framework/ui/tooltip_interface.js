@@ -39,7 +39,39 @@ module.exports = {
 
       if (!local_good.hidden && !config.defines.economy.view_special_goods) {
         if (module.exports.hasGoodTooltip(good_key)) {
-          var localisation_string = getProductionChainLocalisation(user_id, good_key, { display_icons: true }).join("\n");
+          var config_obj = lookup.all_goods[good_key];
+          var localisation_string = [];
+
+          //Push general good statistics
+          if (config_obj) {
+            if (config_obj.icon)
+              localisation_string.push(`# ${config.icons[config_obj.icon]}`);
+            localisation_string.push(`### Good Info:`);
+            localisation_string.push(`- Name: ${(config_obj.name) ? config_obj.name : config_obj.id} (ID: ${config_obj.id})`);
+
+            if (config_obj.type)
+              localisation_string.push(`- Good Type: ${parseString(config_obj.type)}`);
+
+            localisation_string.push("");
+            localisation_string.push(config.localisation.divider);
+          }
+
+          //Push market price if it exists
+          var local_market_good = main.market[good_key];
+
+          if (!local_market_good)
+            localisation_string.push("");
+          if (local_market_good) {
+            localisation_string.push(`### Market:`);
+            localisation_string.push(`${config.icons.trade} Stock: ${parseNumber(local_market_good.stock)} | ${config.icons.taxes} Demand: ${parseNumber(local_market_good.demand)}`);
+            localisation_string.push(`- Buy Price: £${parseNumber(local_market_good.buy_price)} | Sell Price: **£${parseNumber(local_market_good.sell_price)}**`);
+            localisation_string.push("");
+            localisation_string.push(config.localisation.divider);
+            localisation_string.push("");
+          }
+
+          localisation_string = appendArrays(localisation_string, getProductionChainLocalisation(user_id, good_key, { display_icons: true }).join("\n"));
+          localisation_string = localisation_string.join("\n");
 
           printAlert(game_obj.id, localisation_string);
         } else {

@@ -141,7 +141,7 @@ module.exports = {
             var pop_fertility = oefr*pop_growth_modifier;
 
             //Generate simple Leslie Matrix
-            var leslie_matrix = leslieMatrixSimple(pop_fertility, options.amount, config.defines.economy.old_age_hard_upper_bound);
+            var leslie_matrix = leslieMatrixSimple(pop_fertility, population_change, config.defines.economy.old_age_hard_upper_bound);
 
             var all_leslie_matrix_keys = Object.keys(leslie_matrix.cohorts);
 
@@ -157,8 +157,7 @@ module.exports = {
           } else {
             options.age = 0; //It needs to be something
           }
-        }
-        if (options.age != undefined)
+        } else {
           if (typeof options.age == "object") {
             var current_year = main.date.year;
             var max = returnSafeNumber(options.age.max, config.defines.economy.old_age_hard_upper_bound);
@@ -195,6 +194,7 @@ module.exports = {
               modifyValue(province_obj.pops, `b_${main.date.year}`, Math.floor(population_change));
             }
           }
+        }
 
         //Distribute cultures proportionally
         if (!options.culture) {

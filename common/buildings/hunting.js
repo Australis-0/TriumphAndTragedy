@@ -34,7 +34,7 @@ config.buildings.hunting = {
     construction_turns: 2,
     cost: {
       lumber: 5,
-      textiles: 4,
+      fabric: 4,
       naval_supplies: 4,
       wood: 3,
       money: 1500

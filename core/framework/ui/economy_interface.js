@@ -17,6 +17,7 @@ module.exports = {
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
     var all_good_keys = Object.keys(goods_obj);
+    var game_obj = getGameObject(user_id);
     var inventory_string = [];
     var usr = main.users[actual_id];
 
@@ -107,6 +108,16 @@ module.exports = {
               good_string = `${bulletPoint(nesting)}${significance_string}${(local_obj.icon) ? config.icons[local_obj.icon] + " " : ""}${good_string}`;
 
               inventory_string.push(good_string);
+
+              //Check if user wishes to show market price
+              if (game_obj)
+                if (game_obj.show_market_price) {
+                  var local_market_good = main.market[all_good_keys[i]];
+
+                  if (local_market_good) {
+                    inventory_string.push(`${bulletPoint(nesting + 1)}Buy Price: £${parseNumber(local_market_good.buy_price)} | Sell Price: £${parseNumber(local_market_good.sell_price)}`);
+                  }
+                }
             }
           }
     }
@@ -301,7 +312,7 @@ module.exports = {
     var all_material_categories = Object.keys(config.goods);
 
     //Format embed
-    inventory_string.push(`**[Back]** | **[Jump To Page]** | **[Search]** | ${(!game_obj.inventory_show_all_goods) ? `**[Show All Goods]**` : `**[Hide All Goods]**`}`);
+    inventory_string.push(`**[Back]** | **[Jump To Page]** | **[Search]** | ${(!game_obj.inventory_show_all_goods) ? `**[Show All Goods]**` : `**[Hide All Goods]**`} | ${(!game_obj.show_market_price) ? `**[Show Market Prices]**` : `**[Hide Market Prices]**`}`);
 
     if (options.search_query)
       inventory_string.push(`Search Query: :mag_right: __${options.search_query}__ | **[Clear]**`);

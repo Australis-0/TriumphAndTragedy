@@ -105,7 +105,7 @@ config.buildings.education = { //[WIP] - Add special_effect
       stone: 8,
       glass: 5,
       common_furniture: 5,
-      textiles: 3,
+      fabric: 3,
       money: 3500
     },
     maintenance: {

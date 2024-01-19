@@ -426,7 +426,7 @@ config.buildings.infrastructure = {
       naval_supplies: 5,
       regular_steel: 3,
       copper: 2,
-      textiles: 1,
+      fabric: 1,
       money: 6500
     },
     maintenance: {

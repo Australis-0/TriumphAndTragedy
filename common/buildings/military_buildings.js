@@ -731,7 +731,7 @@ config.buildings.military_buildings = { //[WIP] - Add £ maintenance
       bricks: 8,
       glass: 5,
       cement: 4,
-      textiles: 3,
+      fabric: 3,
       small_arms: 2,
       ammunition: 2,
       brass: 2,

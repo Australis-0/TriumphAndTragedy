@@ -143,7 +143,7 @@ config.buildings.amenities = {
       iron: 10,
       brass: 8,
       lamps: 8,
-      textiles: 5,
+      fabric: 5,
       lead: 4,
       gold: 2,
       money: 40000
