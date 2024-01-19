@@ -597,8 +597,8 @@ module.exports = {
     var building_obj = arg0_building_obj;
 
     //Declare local instance variables
-    var building_employment_level = module.exports.getBuildingEmploymentLevel(local_building);
-    var building_input_fulfilment = module.exports.getBuildingInputFulfilment(local_building);
+    var building_employment_level = module.exports.getBuildingEmploymentLevel(building_obj);
+    var building_input_fulfilment = module.exports.getBuildingInputFulfilment(building_obj);
 
     //Return statement
     return [
