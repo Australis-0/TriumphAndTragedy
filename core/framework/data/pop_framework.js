@@ -3056,7 +3056,11 @@ module.exports = {
             });
 
             if (local_pop_scope.size > 0) {
+              console.log(`Local pop scope size for ${all_mortality_keys[x]}:`, local_pop_scope.size);
+
               var remove_pop_scope = module.exports.multiplyPops(local_pop_scope, local_mortality_chance);
+
+              console.log(`- Removing pops:`, remove_pop_scope.size);
 
               //Remove pops
               module.exports.removePop(user_id, {
