@@ -127,7 +127,7 @@ config.defines.economy = {
   //Pops
   base_oefr: 6.6, //What should the base OEFR assumption be if a Province is unsettled?
   cultural_minority_display: 0.20, //The percentage a minority should comprise before being displayed in mainline headers
-  job_seeking_range: [0.75, 1], //The range of wages pops seek, where 1 is the building with the highest wage in a province
+  job_seeking_range: [0, 1], //The range of wages pops seek, where 1 is the building with the highest wage in a province. This is still sorted
   strict_job_seeking: false, //Whether pops will refuse to seek jobs lower than a specific % of comparable wages in a province
 
     //Pop Births - Strict Gaussian

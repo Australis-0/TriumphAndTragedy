@@ -3063,7 +3063,7 @@ module.exports = {
                 amount: remove_pop_scope.size,
                 pop_scope: remove_pop_scope
               });
-              modifyValue(province_obj.trackers, `death-${pop_type}`, returnSafeNumber(emove_pop_scope.size));
+              modifyValue(province_obj.trackers, `death-${pop_type}`, returnSafeNumber(remove_pop_scope.size));
             }
           }
         }
