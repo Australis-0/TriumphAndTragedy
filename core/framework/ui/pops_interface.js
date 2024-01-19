@@ -41,6 +41,9 @@ module.exports = {
 
     //Format pops_string
     if (province_obj) {
+      //Fix provinces
+      fixProvinces(province_obj.controller, province_obj.id);
+
       if (province_obj.pops) {
         var all_pop_keys = Object.keys(province_obj.pops);
         var birth_obj = getProvinceBirths(province_id);
@@ -49,6 +52,7 @@ module.exports = {
         var emigration_obj = getProvinceEmigration(province_id);
         var immigration_obj = getProvinceImmigration(province_id);
         var promotion_obj = getProvincePromotion(province_id);
+        var last_turn_population = getProvincePopulation(province_id) + death_obj.total + emigration_obj.total;
 
         var pop_change_options = {
           birth_obj: birth_obj,
@@ -122,9 +126,9 @@ module.exports = {
               pops_string.push("");
             }
 
-            pops_string.push(`- [Births]: ${parseNumber(birth_obj.total, { display_prefix: true })} (**${printPercentage(birth_obj.total/province_obj.pops.population)}**) | [Deaths]: ${parseNumber(death_obj.total, { display_pop: true })} (**${printPercentage(death_obj.total/province_obj.pops.population)}**)`);
-            pops_string.push(`- [Immigration]: ${parseNumber(immigration_obj.total, { display_pop: true })} (**${printPercentage(immigration_obj.total/province_obj.pops.population)}**) | [Emigration]: ${parseNumber(emigration_obj.total, { display_pop: true })} (**${printPercentage(emigration_obj.total/province_obj.pops.population)}**)`);
-            pops_string.push(`- [Promotion]: ${parseNumber(promotion_obj.total, { display_pop: true })} (**${printPercentage(promotion_obj.total/province_obj.pops.population)}**) | [Demotion]: ${parseNumber(demotion_obj.total, { display_pop: true })} (**${printPercentage(demotion_obj.total/province_obj.pops.population)}**)`);
+            pops_string.push(`- [Births]: ${parseNumber(birth_obj.total, { display_prefix: true })} (**${printPercentage(birth_obj.total/last_turn_population)}**) | [Deaths]: ${parseNumber(death_obj.total, { display_pop: true })} (**${printPercentage(death_obj.total/last_turn_population)}**)`);
+            pops_string.push(`- [Immigration]: ${parseNumber(immigration_obj.total, { display_pop: true })} (**${printPercentage(immigration_obj.total/last_turn_population)}**) | [Emigration]: ${parseNumber(emigration_obj.total, { display_pop: true })} (**${printPercentage(emigration_obj.total/last_turn_population)}**)`);
+            pops_string.push(`- [Promotion]: ${parseNumber(promotion_obj.total, { display_pop: true })} (**${printPercentage(promotion_obj.total/last_turn_population)}**) | [Demotion]: ${parseNumber(demotion_obj.total, { display_pop: true })} (**${printPercentage(demotion_obj.total/last_turn_population)}**)`);
 
             //Population Pyramid - [REVISIT] - Only displays age for now
             pops_string.push("");
@@ -132,7 +136,7 @@ module.exports = {
             pops_string.push("");
             pops_string.push(`**[${(game_obj.show_age_composition) ? `Hide Age Composition` : `Show Age Composition`}]**`);
 
-            if (!game_obj.show_age_composition) {
+            if (game_obj.show_age_composition) {
               pops_string.push("");
               pops_string.push(`> - Age (b. [Birth Year]) - [Number]`)
               pops_string.push("");

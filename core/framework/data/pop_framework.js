@@ -287,6 +287,7 @@ module.exports = {
     //Iterate over all provinces
     for (var i = 0; i < provinces.length; i++) {
       var local_province = getProvince(provinces[i]);
+        local_province = main.provinces[local_province.id];
 
       //Standardise atttributes
       standardiseAttributes(local_province, "age");
@@ -4590,7 +4591,7 @@ module.exports = {
     var mode = arg1_mode.toString().trim();
 
     //Declare local instance variables
-    var province_obj = main.provinces[province_id];
+    var province_obj = (typeof province_id != "object") ? main.provinces[province_id] : province_id;
     var tag_obj = {};
 
     //Standardise to mode
@@ -4606,6 +4607,10 @@ module.exports = {
 
               tag_obj[all_pop_keys[i]] = local_value;
             }
+          for (var i = 0; i < all_pop_keys.length; i++)
+            if (all_pop_keys[i].startsWith("b_"))
+              delete province_obj.pops[all_pop_keys[i]];
+
           tag_obj = standardisePercentage(tag_obj, province_population, true);
         } if (mode == "culture") {
           for (var i = 0; i < all_pop_keys.length; i++)
@@ -4614,6 +4619,10 @@ module.exports = {
 
               tag_obj[all_pop_keys[i]] = local_value;
             }
+          for (var i = 0; i < all_pop_keys.length; i++)
+            if (all_pop_keys[i].startsWith("culture-"))
+              delete province_obj.pops[all_pop_keys[i]];
+
           tag_obj = standardisePercentage(tag_obj, province_population, true);
         }
 
