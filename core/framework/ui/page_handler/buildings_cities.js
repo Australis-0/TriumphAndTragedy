@@ -246,9 +246,11 @@ module.exports = {
         var building_name = input.replace("view ", "");
         var building_view = viewBuilding(user_id, building_name);
 
-        game_obj.page = `view_building_${building_view.id}`;
+        if (building_view) {
+          game_obj.page = `view_building_${building_view.id}`;
 
-        return true;
+          return true;
+        }
       }
     }
 
