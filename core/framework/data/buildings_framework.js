@@ -592,6 +592,21 @@ module.exports = {
     return (building_exists[0]) ? building_exists[1] : undefined;
   },
 
+  getBuildingEffectiveProduction: function (arg0_building_obj) {
+    //Convert from parameters
+    var building_obj = arg0_building_obj;
+
+    //Declare local instance variables
+    var building_employment_level = module.exports.getBuildingEmploymentLevel(local_building);
+    var building_input_fulfilment = module.exports.getBuildingInputFulfilment(local_building);
+
+    //Return statement
+    return [
+      building_input_fulfilment[0]*building_employment_level,
+      building_input_fulfilment[1]*building_employment_level
+    ];
+  },
+
   /*
     getBuildingByID() - Returns a building by its given ID
     options: {
@@ -1179,12 +1194,11 @@ module.exports = {
     var options = (arg1_options) ? arg1_options : {};
 
     //Declare local instance variables
-    var input_high_sum = 0;
-    var input_fulfilment = [];
-    var input_fulfilments_high = [];
-    var input_fulfilments_low = [];
-    var input_low_sum = 0;
-    var maintenance_obj = (options.maintenance) ? options.maintenance : module.exports.getBuildingConsumption(user_id, building_obj);
+    var input_fulfilments_high = 0;
+    var input_fulfilments_low = 0;
+    var maintenance_obj = (options.maintenance) ? options.maintenance : module.exports.getBuildingConsumption(user_id, building_obj, {
+      employment_level: 1 //Assume full employment
+    });
     var split_key = building_obj.id.split("-");
 
     var province_obj = main.provinces[split_key[0]];
@@ -1192,10 +1206,11 @@ module.exports = {
 
     //Iterate over all_maintenance_keys
     var all_maintenance_keys = Object.keys(maintenance_obj);
+    var input_fulfilments = {};
 
     if (all_maintenance_keys.length > 0) {
       for (var i = 0; i < all_maintenance_keys.length; i++) {
-        var local_good_amount = getGoodAmount(province_obj.controller, all_maintenance_keys[i]);
+        var local_good_amount = returnSafeNumber(getGoodAmount(province_obj.controller, all_maintenance_keys[i]));
         var local_shortfall = [0, 0];
         var local_value = maintenance_obj[all_maintenance_keys[i]];
 
@@ -1216,16 +1231,34 @@ module.exports = {
           Math.min(1 - local_shortfall[1]/unzero(local_maintenance_cost[1], 1), 1)
         ];
 
-        input_fulfilments_low.push(local_fulfilment[0]*local_maintenance_cost[0]);
-        input_fulfilments_high.push(local_fulfilment[1]*local_maintenance_cost[1]);
-        input_low_sum += local_maintenance_cost[0];
-        input_high_sum += local_maintenance_cost[1];
+        input_fulfilments[all_maintenance_keys[i]] = {
+          good_type: all_maintenance_keys[i],
+          maintenance: local_maintenance_cost, //[low_cost, high_cost]
+          fulfilment: local_fulfilment //[low_fulfilment, high_fulfilment]
+        };
+      }
+
+      var all_input_fulfilment_keys = Object.keys(input_fulfilments);
+      var total_importance = 0;
+
+      for (var i = 0; i < all_input_fulfilment_keys.length; i++) {
+        var local_importance = 1/all_input_fulfilment_keys.length;
+        var local_value = input_fulfilments[all_input_fulfilment_keys[i]];
+
+        //Apply 50% maintenance cost to money
+        if (all_input_fulfilment_keys[i] == "money")
+          local_importance = all_input_fulfilment_keys.length*0.50;
+
+        input_fulfilments_low += local_value.fulfilment[0]*local_importance;
+        input_fulfilments_high += local_value.fulfilment[1]*local_importance;
+
+        total_importance += local_importance;
       }
 
       //Return statement; weighted averages
       return [
-        getSum(input_fulfilments_low)/unzero(input_low_sum, 1),
-        getSum(input_fulfilments_high)/unzero(input_high_sum, 1)
+        input_fulfilments_low/total_importance,
+        input_fulfilments_high/total_importance
       ];
     } else {
       //Return statement

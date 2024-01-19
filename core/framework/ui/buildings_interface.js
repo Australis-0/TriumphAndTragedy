@@ -276,6 +276,8 @@ module.exports = {
         //Display building Production Choices; Input Fulfilment, and Base Production Choice - even if the building only has a base Production Choice, this information must be displayed to the user.
         if (config_obj.produces) {
           var all_production_keys = Object.keys(config_obj.produces);
+          var effective_production = getBuildingEffectiveProduction(local_building);
+          var effective_production_string = ` | Effective Production: ${(effective_production[0] == effective_production[1]) ? `${printPercentage(effective_productiono[0])}` : `${printPercentage(effective_production[0])} - ${printPercentage(effective_production[1])}`}`;
 
           building_string.push("");
           building_string.push(config.localisation.divider);
@@ -283,7 +285,7 @@ module.exports = {
           building_string.push(`${(!game_obj.hide_production_choices) ? `**[Hide Production Choices]**` : `**[Show Production Choices]**`} | **[Change Production Choice]**`);
           building_string.push("");
 
-          building_string.push(`Input Fulfilment: ${(building_input_fulfilment[0] == building_input_fulfilment[1]) ? `**${printPercentage(building_input_fulfilment[0])}**` : `**${printPercentage(building_input_fulfilment[0])}** - ${printPercentage(building_input_fulfilment[1])}`}`);
+          building_string.push(`Input Fulfilment: ${(building_input_fulfilment[0] == building_input_fulfilment[1]) ? `**${printPercentage(building_input_fulfilment[0])}**` : `**${printPercentage(building_input_fulfilment[0])}** - ${printPercentage(building_input_fulfilment[1])}`}${effective_production_string}`);
             building_string.push(`- Production Choice: ${parseProductionChoice(local_building.building_type, local_building.production_choice)}`);
 
           //Print building_production

@@ -245,14 +245,13 @@ module.exports = {
 
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
-    var good_amount = undefined;
+    var good_amount = 0;
     var good_obj = (typeof name == "object") ? name : module.exports.getGood(name);
     var usr = main.users[actual_id];
 
     //Recursively iterate over subgoods if category
     if (good_obj) {
       var all_good_keys = Object.keys(good_obj);
-      good_amount = 0;
 
       if (good_obj.type == "category") {
         if (!options.exclude_categories)
@@ -274,8 +273,8 @@ module.exports = {
         good_amount += returnSafeNumber(usr.inventory[good_obj.id]);
       }
     } else {
-      if (name == "money")
-        good_amount += returnSafeNumber(usr.money);
+      if (usr[name])
+        good_amount += returnSafeNumber(usr[name]);
     }
 
     //Return statement
