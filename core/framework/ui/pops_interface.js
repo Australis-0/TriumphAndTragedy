@@ -52,7 +52,9 @@ module.exports = {
         var emigration_obj = getProvinceEmigration(province_id);
         var immigration_obj = getProvinceImmigration(province_id);
         var promotion_obj = getProvincePromotion(province_id);
-        var last_turn_population = getProvincePopulation(province_id) + death_obj.total + emigration_obj.total;
+        var province_population = getProvincePopulation(province_id);
+
+        var last_turn_population = province_population + returnSafeNumber(death_obj.total) + returnSafeNumber(emigration_obj.total);
 
         var pop_change_options = {
           birth_obj: birth_obj,
@@ -75,7 +77,7 @@ module.exports = {
             pops_string.push("");
             pops_string.push(`${(game_obj.hide_profession_breakdown) ? `**[Expand Profession Breakdown]**` : `**[Hide Profession Breakdown]**`}`);
             pops_string.push("");
-            pops_string.push(`${config.icons.population} Population: **${parseNumber(province_obj.pops.population)}**`);
+            pops_string.push(`${config.icons.population} Population: **${parseNumber(province_population)}**`);
 
             if (!game_obj.hide_profession_breakdown)
               for (var i = 0; i < pops_to_display.length; i++) {
@@ -84,7 +86,7 @@ module.exports = {
                 var pop_change = getPopChange(province_id, pops_to_display[i], pop_change_options);
                 var pop_obj = config.pops[pops_to_display[i]];
 
-                var local_percentage = local_value/returnSafeNumber(province_obj.pops.population);
+                var local_percentage = local_value/province_population;
 
                 //Print to pops_string
                 pops_string.push(`- ${(pop_obj.icon) ? pop_obj.icon + " " : ""}${(pop_obj.name) ? pop_obj.name : pops_to_display[i]}: ${parseNumber(local_value)} (**${printPercentage(local_percentage, { display_float: true })}**)${(pop_change != 0) ? ` | ${parseNumber(pop_change, { display_prefix: true })}` : ""}`);
@@ -168,8 +170,8 @@ module.exports = {
         //Economic pop stats (GDP per capita, Median wage per pop, median wage for province; Unemployment)
         {
           var province_gdp = getProvinceGDP(province_id);
-          var province_gdp_per_capita = province_gdp/returnSafeNumber(province_obj.pops.population);
-          var province_homeless = returnSafeNumber(province_obj.pops.population) - returnSafeNumber(province_obj.housing);
+          var province_gdp_per_capita = province_gdp/returnSafeNumber(province_population);
+          var province_homeless = returnSafeNumber(province_population) - returnSafeNumber(province_obj.housing);
 
           pops_string.push("");
           pops_string.push(`**Economic Statistics:** - ${(game_obj.minimise_economic_statistics) ? `**[Expand Economic Statistics]**` : `**[Minimise Economic Statistics]**`}`);
@@ -227,7 +229,7 @@ module.exports = {
 
             //Housing/Homelessness
             pops_string.push(`- ${config.icons.neighbourhoods} Housing: ${parseNumber(province_obj.housing)}`);
-            pops_string.push(` - ${(province_homeless >= 0) ? `Homelessness` : `Housing Surplus`}: ${parseNumber(Math.abs(province_homeless))} (**${printPercentage(Math.abs(province_homeless)/province_obj.pops.population)}**)`);
+            pops_string.push(` - ${(province_homeless >= 0) ? `Homelessness` : `Housing Surplus`}: ${parseNumber(Math.abs(province_homeless))} (**${printPercentage(Math.abs(province_homeless)/province_population)}**)`);
 
             //Median Wage per pop type
             pops_string.push("");
@@ -264,7 +266,7 @@ module.exports = {
             }
 
             pops_string.push("");
-            pops_string.push(`- ${config.icons.labourers} Total Unemployment Rate: **${printPercentage(total_unemployed_pops/province_obj.pops.population)}**`);
+            pops_string.push(`- ${config.icons.labourers} Total Unemployment Rate: **${printPercentage(total_unemployed_pops/province_population)}**`);
           }
         }
 

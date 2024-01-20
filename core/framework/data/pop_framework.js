@@ -88,7 +88,13 @@ module.exports = {
 
       //Generate pops similar to settle_province.js
       var population_cache = options.amount;
-      if (!province_obj.pops) province_obj.pops = {};
+      if (!province_obj.pops) {
+        province_obj.pops = {};
+      } else {
+        //Temporary fix
+        standardiseAttributes(province_obj.id, "age");
+        standardiseAttributes(province_obj.id, "culture");
+      }
 
       //Generate all pops through chance
       var pop_chances = {}; //Standardise sum to 1
@@ -306,6 +312,8 @@ module.exports = {
                 delete local_province.pops[all_pop_keys[x]];
         }
       }
+
+      local_province.pops.population = module.exports.getProvincePopulation(local_province.id);
     }
   },
 
@@ -3057,11 +3065,7 @@ module.exports = {
             });
 
             if (local_pop_scope.size > 0) {
-              console.log(`Local pop scope size for ${all_mortality_keys[x]}:`, local_pop_scope.size);
-
               var remove_pop_scope = module.exports.multiplyPops(local_pop_scope, local_mortality_chance);
-
-              console.log(`- Removing pops:`, remove_pop_scope.size);
 
               //Remove pops
               module.exports.removePop(user_id, {
@@ -3623,6 +3627,10 @@ module.exports = {
       var building_key_map = (options.building_key_map) ? options.building_key_map : getBuildingMap(options.province_id);
 
       if (pop_scope.size > 0) {
+        //Temporary fix on age/culture tags
+        standardiseAttributes(province_obj.id, "age");
+        standardiseAttributes(province_obj.id, "culture");
+
         var all_tags = Object.keys(pop_scope.tags);
         var scalar = 1;
 
