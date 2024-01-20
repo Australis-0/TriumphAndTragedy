@@ -161,7 +161,7 @@ module.exports = {
       budget_string.push("");
       budget_string.push(`> Estimated tax revenues are based on last turn. This is also how the total income figure is calculated.`);
       budget_string.push("");
-      
+
       var corporate_tax_cost = getTaxCost(user_id, `corporate_tax`);
 
       var corporate_suffix_string = (usr.corporate_tax != 0) ?
@@ -175,10 +175,11 @@ module.exports = {
       //Income Taxes
       for (var i = 0; i < lookup.all_classes.length; i++) {
         var local_class = lookup.all_classes[i];
-        var tax_key = `${local_class}_income_tax`;
+        var tax_capacity = `${local_class}_income_tax`;
+        var tax_key = `${local_class}-income_tax`;
 
-        var local_tax = usr[tax_key];
-        var local_tax_cost = getTaxCost(user_id, tax_key);
+        var local_tax = usr[tax_capacity];
+        var local_tax_cost = getTaxCost(user_id, tax_capacity);
         var suffix_string = (local_tax != 0) ? ` - ${config.icons.political_capital} ${parseNumber(local_tax_cost.political_capital*-1)}PC - ${config.icons.money} ${parseNumber(returnSafeNumber(usr.trackers.tax[tax_key]), { display_prefix: true })}` : "";
 
         budget_string.push(`- ${parseString(local_class)} Class Income Tax: **${printPercentage(local_tax)}**/${printPercentage(returnSafeNumber(usr.modifiers[`${local_class}_income_max_tax`]))}${suffix_string}`);
@@ -191,10 +192,11 @@ module.exports = {
 
       for (var i = 0; i < lookup.all_classes.length; i++) {
         var local_class = lookup.all_classes[i];
-        var tax_key = `${local_class}_duties_tax`;
+        var tax_capacity = `${local_class}_duties_tax`;
+        var tax_key = `${local_class}-duties_tax`;
 
-        var local_tax = usr[tax_key];
-        var local_tax_cost = getTaxCost(user_id, tax_key);
+        var local_tax = usr[tax_capacity];
+        var local_tax_cost = getTaxCost(user_id, tax_capacity);
         var suffix_string = (local_tax != 0) ? ` - ${config.icons.political_capital} ${parseNumber(local_tax_cost.political_capital*-1)}PC - ${config.icons.money} ${parseNumber(returnSafeNumber(usr.trackers.tax[tax_key]), { display_prefix: true })}` : "";
 
         budget_string.push(`- ${parseString(local_class)} Duties: **${printPercentage(local_tax)}**/${printPercentage(returnSafeNumber(usr.modifiers[`${local_class}_duties_max_tax`]))}${suffix_string}`);

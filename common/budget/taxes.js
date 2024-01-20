@@ -32,7 +32,7 @@ config.budget.taxes = {
     name: "Upper Income Tax",
     aliases: ["upper class income tax"],
 
-    capacity_id: "upepr_income_max_tax"
+    capacity_id: "upper_income_max_tax"
   },
   middle_income_tax: {
     name: "Middle Income Tax",

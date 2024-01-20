@@ -2813,7 +2813,7 @@ module.exports = {
         if (all_pop_keys[i].startsWith("wealth-")) {
           var local_wealth_pool = province_obj.pops[all_pop_keys[i]];
 
-          gdp_e += returnSafeNumber(local_wealth_pool.spending);
+          gdp_e += Math.abs(returnSafeNumber(local_wealth_pool.spending));
           gdp_i += returnSafeNumber(local_wealth_pool.income);
         }
     }
@@ -3286,7 +3286,7 @@ module.exports = {
 
             //Process income taxes
             var income_tax_amount = returnSafeNumber(usr[`${config_obj.class}_income_tax`])*local_building_pop.income;
-            modifyValue(usr.trackers.tax, `${config_obj.class}_income_tax`, income_tax_amount);
+            modifyValue(usr.trackers.tax, `${config_obj.class}-income_tax`, income_tax_amount);
 
             //Add wealth after taxes
             local_building_pop.income -= income_tax_amount;

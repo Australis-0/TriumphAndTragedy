@@ -59,6 +59,10 @@ module.exports = {
             if (!options.is_simulation) {
               local_market_good.demand += actual_consumption;
               local_market_good.stock -= actual_consumption;
+
+              //Make sure .stock is at least 1
+              if (local_market_good.stock < 1)
+                local_market_good.stock = 1;
             }
           }
         }

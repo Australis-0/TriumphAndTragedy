@@ -284,6 +284,7 @@ module.exports = {
             //Display demographics key
             pops_string.push(`>  - [Pop Icon] Size | Wealth (Net) - Income (Per Capita) | [Fulfilment %/Variety %]`);
             pops_string.push(`>    - Employer: Building Name`);
+            pops_string.push(`>    - Spending: (Net)`);
             pops_string.push(`>    - Goods Category - Fulfilment %/Variety %`);
             pops_string.push("");
 
@@ -319,6 +320,8 @@ module.exports = {
 
                     if (!game_obj.hide_employers)
                       pops_string.push(` - Employer: ${(local_building.name) ? local_building.name : local_building_id}`);
+                    if (local_wealth_pool.spending != 0)
+                      pops_string.push(` - Spending: -£${parseNumber(Math.abs(local_wealth_pool.spending))}`);
 
                     if (local_pop.per_100k)
                       if (local_pop.per_100k.needs) {
@@ -355,6 +358,8 @@ module.exports = {
 
                   if (!game_obj.hide_employers)
                     pops_string.push(` - Employer (Subsistence): ${(subsistence_building_obj.name) ? subsistence_building_obj.name : subsistence_split_key[1]}`);
+                  if (local_wealth_pool.spending != 0)
+                    pops_string.push(` - Spending: -£${parseNumber(Math.abs(local_wealth_pool.spending))}`);
 
                   if (local_pop.per_100k)
                     if (local_pop.per_100k.needs) {
