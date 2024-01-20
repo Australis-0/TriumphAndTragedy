@@ -1409,10 +1409,7 @@ module.exports = {
               )
                   delete controlled_provinces[i].trackers[all_province_trackers[x]];
           }
-
-          processSubsistence(controlled_provinces[i].id, {
-            category_prices: lookup.category_buy_prices
-          });
+          
           processPops(controlled_provinces[i].id);
           processPurchases(controlled_provinces[i].id);
 

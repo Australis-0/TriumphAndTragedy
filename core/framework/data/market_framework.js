@@ -21,6 +21,7 @@ module.exports = {
 
     //Declare local instance variables
     var buy_amount = 0; //The total that was actually bought
+    var goods = {}; //Trackers for the total amount of goods bought
     var spending = 0;
 
     //Buy from relevant .all_subgoods
@@ -53,6 +54,7 @@ module.exports = {
             //Buy up goods from here
             buy_amount += actual_consumption;
             spending += local_market_good.buy_price*actual_consumption;
+            modifyValue(goods, relevant_market_goods[i].good_type, actual_consumption);
 
             if (!options.is_simulation) {
               local_market_good.demand += actual_consumption;
@@ -66,6 +68,8 @@ module.exports = {
     //Return statement
     return {
       amount: buy_amount,
+      goods: goods,
+
       cost: spending
     };
   },

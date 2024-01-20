@@ -476,9 +476,8 @@ module.exports = {
       var local_pop_consumption_string = "";
 
       //Format local_pop_consumption_string
-      if (!options.include_pop_consumption)
-        if (local_pop_consumption)
-          local_pop_consumption_string = ` | _${parseNumber(local_pop_consumption*-1)} bought by Pops_`;
+      if (local_pop_consumption)
+        local_pop_consumption_string = ` | _${parseNumber(local_pop_consumption*-1)} bought by Pops_`;
 
       if (has_change)
         if (!all_production_keys[i].includes("_upkeep"))

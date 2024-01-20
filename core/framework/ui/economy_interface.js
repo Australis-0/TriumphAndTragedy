@@ -341,12 +341,8 @@ module.exports = {
           search_significance: searched_goods_significance
         });
 
-        log.debug(`local_string: `, local_string);
-
         //Used for processing more than one string at a time
         var local_split_string = splitText(local_string, { maximum_characters: 1000 });
-
-        log.debug(`local_split_string: `, local_split_string);
 
         //Push formatted fields to inventory
         for (var x = 0; x < local_split_string.length; x++)

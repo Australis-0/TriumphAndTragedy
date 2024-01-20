@@ -828,7 +828,7 @@ module.exports = {
     //Convert from parameters
     var user_id = arg0_user;
     var good_name = arg1_good_name;
-    var value = parseInt(arg2_value);
+    var value = parseFloat(arg2_value);
 
     //Declare local instance variables
     var actual_id = (typeof user_id != "object") ? main.global.user_map[user_id] : user_id;
@@ -952,7 +952,7 @@ module.exports = {
     //Convert from parameters
     var user_id = arg0_user;
     var good_name = arg1_good_name;
-    var value = parseInt(arg2_value);
+    var value = parseFloat(arg2_value);
 
     //Set value
     module.exports.modifyGoodAmount(user_id, good_name,

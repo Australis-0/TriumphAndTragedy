@@ -2371,38 +2371,6 @@ module.exports = {
     return artisan_production_obj;
   },
 
-  getTotalPopConsumption: function (arg0_user, arg1_mode) {
-    //Convert from parameters
-    var user_id = arg0_user;
-    var mode = arg1_mode; //"staple_goods", "luxury_goods"
-
-    //Declare local instance variables
-    var actual_id = main.global.user_map[user_id];
-    var all_pops = Object.keys(config.pops);
-    var consumption_obj = {};
-    var usr = main.users[actual_id];
-
-    //Iterate over all_pops for user and merge with consumption_obj
-    for (var i = 0; i < all_pops.length; i++)
-      try {
-        var local_pop = config.pops[all_pops[i]];
-
-        if (local_pop.per_100k)
-          if (local_pop.per_100k.needs) {
-            var total_pop_amount = returnSafeNumber(usr.pops[all_pops[i]]);
-            var total_pop_needs = getPopNeeds(all_pops[i], total_pop_amount, mode);
-
-            consumption_obj = mergeObjects(consumption_obj, total_pop_needs);
-          }
-      } catch (e) {
-        log.warn(`${all_pops[i]} ran into an error whilst trying to fetch consumption_obj!`);
-        console.log(e);
-      }
-
-    //Return statement
-    return flattenObject(consumption_obj);
-  },
-
   getTotalPopManpower: function (arg0_user, arg1_type, arg2_raw_modifier) {
     //Convert from parameters
     var user_id = arg0_user;
@@ -2524,56 +2492,6 @@ module.exports = {
 
     //Return statement
     return return_object;
-  },
-
-  getUserPopConsumption: function (arg0_user) {
-    //Convert from parameters
-    var user_id = arg0_user;
-
-    //Declare local instance variables
-    var actual_id = main.global.user_map[user_id];
-    var consumption_obj = {};
-    var usr = main.users[actual_id];
-
-    if (usr) {
-      var user_provinces = getProvinces(user_id, { include_occupations: true });
-
-      //Iterate over user_provinces
-      for (var i = 0; i < user_provinces.length; i++) {
-        var local_province = user_provinces[i];
-
-        if (local_province.pops) {
-          var all_pop_keys = Object.keys(local_province.pops);
-
-          //Iterate over all_pop_keys for wealth pools
-          for (var x = 0; x < all_pop_keys.length; x++) {
-            var local_value = local_province.pops[all_pop_keys[x]];
-
-            if (all_pop_keys[x].includes("wealth-")) {
-              if (local_value.received_goods) {
-                var all_received_goods_categories = Object.keys(local_value.received_goods);
-
-                //Iterate over all_received_goods_categories
-                for (var y = 0; y < all_received_goods_categories.length; y++)
-                  consumption_obj = mergeObjects(consumption_obj, local_value.received_goods[all_received_goods_categories[y]]);
-              }
-            }
-          }
-        }
-      }
-    }
-
-    //Iterate over consumption_obj for rounding
-    var all_consumption_keys = Object.keys(consumption_obj);
-
-    for (var i = 0; i < all_consumption_keys.length; i++) {
-      var local_value = consumption_obj[all_consumption_keys[i]];
-
-      consumption_obj[all_consumption_keys[i]] = Math.ceil(local_value);
-    }
-
-    //Return statement
-    return consumption_obj;
   },
 
   mergePopScopes: function (arg0_pop_scope, arg1_pop_scope) {
@@ -3393,154 +3311,6 @@ module.exports = {
     }*/
   },
 
-  processPurchases: function (arg0_province_id) { //[WIP] - Please revisit to add subsistence purchase handling
-    //Convert from parameters
-    var province_id = arg0_province_id;
-
-    //Declare local instance variables
-    var debt_goods_chance = config.defines.economy.debt_goods_chance;
-    var province_obj = (typeof province_obj != "object") ? main.provinces[province_id] : province_id;
-
-    if (province_obj)
-      if (province_obj.pops) {
-        var all_good_categories = Object.keys(config.defines.economy.good_categories);
-        var all_wealth_keys = module.exports.sortWealthPools(province_obj.id, { mode: "wealth" });
-
-        //Iterate through all_pop_keys for wealth- starting keys
-        for (var i = 0; i < all_wealth_keys.length; i++)
-          if (all_wealth_keys[i].startsWith("wealth-")) {
-            var current_allowance;
-            var current_allowance_percentage;
-            var local_wealth_pool = province_obj.pops[all_wealth_keys[i]];
-            var spent_wealth = 0;
-            var split_key = all_wealth_keys[i].split("-");
-            var pop_type = split_key[3];
-
-            var local_percentage = returnSafeNumber(local_wealth_pool.size)/100000;
-            var pop_obj = config.pops[pop_type];
-            var user_id = province_obj.controller;
-            var usr = main.users[user_id];
-
-            //Initialise received_goods scope
-            local_wealth_pool.received_goods = {};
-
-            //Make sure .income, .wealth is safe number
-            local_wealth_pool.income = returnSafeNumber(local_wealth_pool.income);
-            local_wealth_pool.wealth = returnSafeNumber(local_wealth_pool.wealth);
-
-            //Check pop_obj.per_100k.needs
-            if (pop_obj)
-              if (
-                local_wealth_pool.income > 0 && local_wealth_pool.size > 0 &&
-                pop_obj
-              )
-                if (pop_obj.per_100k)
-                  if (pop_obj.per_100k.needs) {
-                    var category_buy_order = pop_obj.buy_order;
-                    var total_fulfilment = 0;
-                    var total_variety = 0;
-
-                    for (var x = 0; x < category_buy_order.length; x++)
-                      local_wealth_pool.received_goods[category_buy_order[x]] = {};
-
-                    //Iterate over pop_obj.goods_buy_order
-                    if (pop_obj.goods_buy_order)
-                      for (var x = 0; x < pop_obj.goods_buy_order.length; x++) {
-                        var local_buy_order = pop_obj.goods_buy_order[x];
-
-                        var current_allowance = local_wealth_pool.income*local_buy_order.allowance;
-                        var local_market_good = main.market[local_buy_order.good_type];
-                        var local_received_goods = local_wealth_pool.received_goods[local_buy_order.category];
-                        var local_value = local_buy_order.amount;
-
-                        //Spend money on good
-                        if (local_market_good) {
-                          var local_need = local_value*local_percentage;
-
-                          var actual_consumption = returnSafeNumber(Math.min(getGoodAmount(user_id, local_buy_order.good_type), local_need));
-                          var local_worth = actual_consumption*(local_market_good.buy_price/2);
-                          var local_tax = local_worth*returnSafeNumber(usr[`${pop_obj.class}-duties_tax`]);
-
-                          //Make sure actual_consumption is >=0
-                          if (actual_consumption < 0)
-                            actual_consumption = 0;
-
-                          //If in debt, modify actual_consumption
-                          if (local_wealth_pool.wealth < 0) {
-                            if (actual_consumption == 1) {
-                              var has_good = randomNumber(1, debt_goods_chance);
-
-                              if (has_good != 1)
-                                actual_consumption = 0;
-                            } else if (actual_consumption > 1) {
-                              actual_consumption = actual_consumption*(debt_goods_chance[0]/debt_goods_chance[1]);
-                            }
-
-                            spent_wealth += (local_worth + local_tax);
-                          }
-
-                          //Buy from market
-                          var market_consumption = Math.ceil(actual_consumption*config.defines.economy.resource_production_scalar);
-
-                          buyMarketGood(local_buy_order.good_type, market_consumption);
-
-                          if (local_market_good.stock < 1)
-                            local_market_good.stock = 1;
-
-                          modifyValue(local_received_goods, local_buy_order.good_type, returnSafeNumber(actual_consumption));
-                          modifyValue(usr.trackers.tax, `${pop_obj.class}-duties_tax`, local_tax);
-
-                          //Subtract actual_consumption from usr.inventory
-                          modifyGoodAmount(usr, local_buy_order.good_type, returnSafeNumber(actual_consumption)*-1);
-                        }
-                      }
-
-                    //Subtract spent_wealth from wealth pool if not in debt
-                    if (local_wealth_pool.wealth > 0)
-                      local_wealth_pool.wealth -= spent_wealth;
-                    local_wealth_pool.spending = spent_wealth;
-
-                    //Update _fulfilment and _variety for each category
-                    for (var x = 0; x < category_buy_order.length; x++) {
-                      var local_received_goods = local_wealth_pool.received_goods[category_buy_order[x]];
-
-                      var local_fulfilment_obj = module.exports.getPopNeedsFulfilment(local_received_goods, pop_type, local_wealth_pool.size, {
-                        needs_category: category_buy_order[x],
-                        return_object: true
-                      });
-                      total_fulfilment += local_fulfilment_obj.fulfilment;
-                      total_variety += local_fulfilment_obj.variety;
-
-                      //Set local fulfilment and variety
-                      local_wealth_pool[`${category_buy_order[x]}-fulfilment`] = local_fulfilment_obj.fulfilment;
-                      local_wealth_pool[`${category_buy_order[x]}-variety`] = local_fulfilment_obj.variety;
-                    }
-
-                    //Clean up received_goods for local_wealth_pool
-                    if (local_wealth_pool.received_goods) {
-                      var all_received_goods_categories = Object.keys(local_wealth_pool.received_goods);
-
-                      for (var x = 0; x < all_received_goods_categories.length; x++) {
-                        var local_category = local_wealth_pool.received_goods[all_received_goods_categories[x]];
-
-                        var all_local_received = Object.keys(local_category);
-
-                        for (var y = 0; y < all_local_received.length; y++) {
-                          var local_value = local_category[all_local_received[y]];
-
-                          local_category[all_local_received[y]] = returnSafeNumber(local_value);
-                        }
-                      }
-                    }
-
-                    //Set general fulfilment and variety
-                    local_wealth_pool.fulfilment = total_fulfilment/category_buy_order.length;
-                    local_wealth_pool.variety = total_variety/category_buy_order.length;
-                  }
-          }
-      }
-  },
-
   //processPops() - Processes all pops in a given province
   processPops: function (arg0_province_id) {
     //Convert from parameters
@@ -3569,6 +3339,9 @@ module.exports = {
       getProvinceEmployees(province_obj.id, all_pops[i]);
 
       //Pop processing
+      processSubsistence(province_id, {
+        category_prices: lookup.category_buy_prices
+      });
       processPop(province_id, all_pops[i], {
         sorted_wage_obj: local_sorted_wages
       });

@@ -345,7 +345,7 @@ module.exports = {
     var scope = JSON.parse(JSON.stringify(arg0_scope));
     var amount = arg1_amount;
     var not_recursive = arg2_not_recursive;
-    var round = (arg3_round) ? arg3_round : "ceil";
+    var round = (arg3_round != undefined) ? arg3_round : "ceil";
 
     //Declare local instance variables
     var all_scope_keys = Object.keys(scope);
