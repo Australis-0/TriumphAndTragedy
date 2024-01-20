@@ -3083,6 +3083,37 @@ module.exports = {
     }
   },
 
+  isBuildingHiring: function (arg0_building_obj) {
+    //Convert from parameters
+    var building_obj = arg0_building_obj;
+
+    //Declare local instance variables
+    var all_building_keys = Object.keys(building_obj);
+    var all_pops = Object.keys(config.pops);
+    var building_employment_level = getBuildingEmploymentLevel(building_obj);
+    var is_hiring = false;
+    var split_building_key = building_obj.id.split("-");
+
+    var province_obj = main.provinces[split_building_key[0]];
+
+    //Iterate over all_building_keys
+    for (var i = 0; i < all_building_keys.length; i++)
+      if (
+        all_building_keys[i].endsWith("_positions") &&
+        building_employment_level < 1
+      ) {
+        var local_pop_type = all_building_keys[i].replace("_positions", "");
+        var local_value = building_obj[all_building_keys[i]];
+
+        if (returnSafeNumber(province_obj.pops[local_pop_type]) > 0)
+          if (local_value > 0)
+            is_hiring = true;
+      }
+
+    //Return statement
+    return is_hiring;
+  },
+
   layoffWorkers: function (arg0_building, arg1_pop_type, arg2_amount) {
     //Convert from parameters
     var building_obj = arg0_building;

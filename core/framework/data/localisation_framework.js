@@ -43,7 +43,7 @@ module.exports = {
           production_choice_string = ` - ${module.exports.parseProductionChoice(local_building.building_type, local_building.production_choice)}`;
 
         //Print string
-        building_string.push(`${bulletPoint(nesting)}${f}${(local_building.name) ? local_building.name : building_obj.name}${f}${money_stockpile_string}${employment_string}${production_choice_string} ${(local_building.subsidised) ? config.icons.taxes : ""}`);
+        building_string.push(`${bulletPoint(nesting)}${f}${(local_building.name) ? local_building.name : building_obj.name}${f}${money_stockpile_string}${employment_string}${production_choice_string} ${(local_building.subsidised) ? config.icons.taxes : ""}${(isBuildingHiring(local_building)) ? config.icons.population : ""}`);
         building_string.push(`${bulletPoint(nesting + 1)}**[View ${(local_building.name) ? local_building.name : local_building.id}]**`);
       }
     }
