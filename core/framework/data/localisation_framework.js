@@ -464,6 +464,14 @@ module.exports = {
       var local_value = production_obj[all_production_keys[i]];
 
       var has_change = (!(local_value[0] == 0 && local_value[1] == 0));
+
+      //Check if has_change is true
+      if (!has_change && local_pop_consumption) {
+        has_change = true;
+        local_value = [local_pop_consumption, local_pop_consumption];
+      }
+
+      //Format strings
       var local_change_string = `**${(local_value[0] == local_value[1]) ? parseNumber(local_value[0]) : parseNumber(local_value[0]) + " - " + parseNumber(local_value[1])}** `;
       var local_pop_consumption_string = "";
 

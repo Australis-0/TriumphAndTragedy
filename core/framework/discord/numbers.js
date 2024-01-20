@@ -96,7 +96,7 @@ module.exports = {
     //Convert from parameters
     var object = arg0_object;
     var key = arg1_key;
-    var number = parseInt(arg2_number);
+    var number = parseFloat(arg2_number);
     var delete_negative = arg3_delete_negative;
 
     //Set value

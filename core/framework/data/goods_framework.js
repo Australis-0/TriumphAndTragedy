@@ -833,6 +833,7 @@ module.exports = {
     //Declare local instance variables
     var actual_id = (typeof user_id != "object") ? main.global.user_map[user_id] : user_id;
     var raw_good_name;
+    var return_obj = {};
     var usr = (typeof actual_id != "object") ? main.users[actual_id] : actual_id;
 
     //Set good_obj
@@ -854,7 +855,7 @@ module.exports = {
 
       if (typeof good_obj == "object") {
         if (good_obj.type == "category") {
-          var subgoods = getSubobjectKeys(good_obj, { exclude_keys: reserved.goods });
+          var subgoods = lookup.all_subgoods[raw_good_name];
 
           if (value != 0) {
             //Distribute goods equally across subgood keys
@@ -863,20 +864,31 @@ module.exports = {
 
             for (var i = 0; i < subgoods.length; i++) {
               modifyValue(usr.inventory, subgoods[i], returnSafeNumber(amount));
+              modifyValue(return_obj, subgoods[i], returnSafeNumber(amount));
 
               if (remainder > 0) {
                 usr.inventory[subgoods[i]]++;
+                modifyValue(return_obj, subgoods[i], 1);
                 remainder--;
+              } else if (remainder < 0) {
+                usr.inventory[subgoods[i]]--;
+                modifyValue(return_obj, subgoods[i], -1);
+                remainder++;
               }
             }
           }
         } else {
           modifyValue(usr.inventory, raw_good_name, value);
+          modifyValue(return_obj, raw_good_name, value);
         }
       } else {
+        modifyValue(return_obj, subgoods[i], returnSafeNumber(amount));
         modifyValue(usr, raw_good_name, value);
       }
     }
+
+    //Return statement
+    return return_obj;
   },
 
   recalculateInventory: function (arg0_user) {
