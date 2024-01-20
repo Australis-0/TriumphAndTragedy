@@ -1,5 +1,17 @@
 //ABRS - Automated Backup and Restoration System (ABRS)
 module.exports = {
+  cleanMain: function () {
+    //Declare local instance variables
+    var reserved_keys = ["interfaces", "provinces", "date", "round_count", "tick_count", "market", "season_started", "last_backup", "last_queue_check", "last_turn", "users", "game_channels", "global"];
+
+    var all_main_keys = Object.keys(main);
+
+    //Iterate over all_main_keys to delete them
+    for (var i = 0; i < all_main_keys.length; i++)
+      if (all_main_keys[i].length > 40)
+        delete global.main[all_main_keys[i]];
+  },
+
   //internalWriteSave() is split as internal function for multicoring/multithreading
   internalWriteSave: function (arg0_options) {
     //Convert from parameters
@@ -238,7 +250,9 @@ module.exports = {
 
   writeDB: function () {
     //Only accept writeDB() commands from master
-    if (Cluster.isMaster)
+    if (Cluster.isMaster) {
+      cleanMain();
+
       if (thread_two_workers.length > 0) {
         thread_two_workers[0].send(getMasterObject());
         thread_two_workers[0].send({ command: "writeDB" });
@@ -252,6 +266,7 @@ module.exports = {
           console.log(e);
         }
       }
+    }
   },
 
   /*
@@ -263,6 +278,9 @@ module.exports = {
   writeSave: function (arg0_options) {
     //Convert from parameters
     var options = (arg0_options) ? arg0_options : {};
+
+    //Clean main first
+    cleanMain();
 
     //Write save on Thread #2
     if (global.thread_type == 1)
