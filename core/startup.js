@@ -54,6 +54,7 @@ module.exports = {
     //Framework files - these contain all the main game functions, and parsers for common/
     FileManager.import("./framework/data/pops/pop_econ_framework");
     FileManager.import("./framework/data/pops/pop_framework");
+    FileManager.import("./framework/data/pops/pop_statistics_framework");
 
     FileManager.import("./framework/data/alert_framework");
     FileManager.import("./framework/data/army_framework");
