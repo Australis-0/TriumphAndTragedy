@@ -835,7 +835,7 @@ module.exports = {
       }
 
       //Death handling
-      {n
+      {
         var life_expectancy = parsePopLimit(config.deaths.upper_bound_life_expectancy, {
           pop_scope: pop_scope,
           province_id: province_id
