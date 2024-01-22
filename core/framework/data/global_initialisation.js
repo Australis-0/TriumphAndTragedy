@@ -23,6 +23,11 @@ module.exports = {
       if (!main.global.user_map) main.global.user_map = {};
       if (!main.global.wars) main.global.wars = {};
     if (!main.interfaces) main.interfaces = {};
+    if (!main.provinces) {
+      log.error(`main.provinces missing!`);
+      console.log(Object.keys(main));
+      console.log(main.provinces);
+    }
     if (!main.provinces) main.provinces = JSON.parse(fs.readFileSync(`./map/provinces.js`, "utf8").toString());
 
     //Date trackers

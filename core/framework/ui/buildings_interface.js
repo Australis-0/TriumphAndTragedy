@@ -505,7 +505,7 @@ module.exports = {
     {
       //City by city view
       buildings_string.push(`> **City Name:**`);
-      buildings_string.push(`> - __Building Name:__ | Cash Reserves - Employment - Prod. Choice - Subsidised (${config.icons.taxes}) - Hiring (${config.icons.population})`);
+      buildings_string.push(`> - __Building Name:__ | Cash Reserves - Employment - Prod. Choice - Subsidised (${config.icons.taxes}) - Hiring (${config.icons.population}) - Effective Production`);
       buildings_string.push("");
 
       //Iterate over provinces and the buildings inside them
@@ -589,7 +589,7 @@ module.exports = {
       buildings_string.push(`_Displaying local_ **Buildings** _in_ **${config.localisation[`sort_${game_obj.building_sort}`]}**:`);
       buildings_string.push("");
       buildings_string.push(`> **Key:**`);
-      buildings_string.push(`> __Building Name:__ | Cash Reserves - Employment`);
+      buildings_string.push(`> __Building Name:__ | Cash Reserves - Employment - Effective Production`);
       buildings_string.push("");
 
       if (province_obj.buildings) {

@@ -88,14 +88,16 @@ if (Cluster.isMaster) {
     if (i % 2 == 0) {
       //Pass global down to local_worker
       local_worker.send({
-        type: 2
+        type: 2,
+        ram_size: 1024 //1GB max RAM
       });
 
       thread_two_workers.push(local_worker);
     } else {
       //Pass global down to local_worker
       local_worker.send({
-        type: 3
+        type: 3,
+        ram_size: 1024 //1GB max RAM
       });
 
       thread_three_workers.push(local_worker);

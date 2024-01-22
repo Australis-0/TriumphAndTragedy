@@ -57,6 +57,10 @@ module.exports = {
       });
     }
 
+    //RAM specifications
+    if (data.ram_size)
+      process.env.NODE_OPTIONS = `--max-old-space-size=${data.ram_size}`;
+
     //Mark worker as free
     process.send({ free_worker: worker_id });
   }

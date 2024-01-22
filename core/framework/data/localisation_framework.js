@@ -7,10 +7,17 @@ module.exports = {
     return (boolean) ? `${config.icons.checkmark} ` : `${config.icons.cancel} `;
   },
 
-  getBuildingLocalisation: function (arg0_building_id, arg1_nesting) {
+  /*
+    getBuildingLocalisation() - Provides a building localisation entry within the context of a list.
+    options: {
+      exclude_effective_production: true/false - Whether to exclude effective production. False by default
+    }
+  */
+  getBuildingLocalisation: function (arg0_building_id, arg1_nesting, arg2_options) {
     //Convert from parameters
     var building_id = arg0_building_id;
     var nesting = returnSafeNumber(arg1_nesting);
+    var options = (arg2_options) ? arg2_options : {};
 
     //Declare local instance variables
     var building_string = [];
@@ -26,10 +33,12 @@ module.exports = {
         var usr = main.users[actual_id];
 
         //Push building name and display ID; current national owner
+        var building_effective_production;
         var employment_string = "";
         var f = "__";
         var money_stockpile_string = "";
         var production_choice_string = "";
+        var effective_production_string = "";
 
         //Set formatter
         if (building_obj.insolvent) f = `~~`;
@@ -42,8 +51,17 @@ module.exports = {
         if (building_obj.produces)
           production_choice_string = ` - ${module.exports.parseProductionChoice(local_building.building_type, local_building.production_choice)}`;
 
+        //Building effective production
+        try {
+          building_effective_production = getBuildingInputFulfilment(local_building);
+        } catch {}
+
+        if (!options.exclude_effective_production)
+          if (building_effective_production)
+            effective_production_string = ` - **${printRange(building_effective_production, { print_percentage: true })}**`;
+
         //Print string
-        building_string.push(`${bulletPoint(nesting)}${f}${(local_building.name) ? local_building.name : building_obj.name}${f}${money_stockpile_string}${employment_string}${production_choice_string} ${(local_building.subsidised) ? config.icons.taxes : ""}${(isBuildingHiring(local_building)) ? config.icons.population : ""}`);
+        building_string.push(`${bulletPoint(nesting)}${f}${(local_building.name) ? local_building.name : building_obj.name}${f}${money_stockpile_string}${employment_string}${production_choice_string} ${(local_building.subsidised) ? config.icons.taxes : ""}${(isBuildingHiring(local_building)) ? config.icons.population : ""}${effective_production_string}`);
         building_string.push(`${bulletPoint(nesting + 1)}**[View ${(local_building.name) ? local_building.name : local_building.id}]**`);
       }
     }

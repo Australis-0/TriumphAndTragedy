@@ -160,6 +160,8 @@ module.exports = {
               if (local_value > 0)
                 modifyValue(province_obj.pops, `b_${birth_year}`, Math.floor(local_value));
             }
+
+            //log.debug(`- Generating Leslie matrix with parameters ${pop_fertility}, ${population_change}, ${config.defines.economy.old_age_hard_upper_bound}!`);
           } else {
             options.age = 0; //It needs to be something
           }
@@ -2038,10 +2040,17 @@ module.exports = {
             if (Object.keys(wealth_pool_tags).length == 0)
               //Check if local_value is wealth pool
               if (all_pop_keys[i].startsWith("wealth-")) {
+                var is_wealth_pool_specified = true;
                 var split_key = all_pop_keys[i].split("-");
 
+                if (hard_specified_categories.includes("age"))
+                  if (split_key.length == 4)
+                    if (split_key[3] == options.pop_types)
+                      is_wealth_pool_specified = false;
+
                 //Push to soft_specified_tags
-                modifyValue(soft_specified_tags, all_pop_keys[i], Math.floor(local_value.size*pop_scalar));
+                if (is_wealth_pool_specified)
+                  modifyValue(soft_specified_tags, all_pop_keys[i], Math.floor(local_value.size*pop_scalar));
               }
           }
         }
@@ -2090,7 +2099,7 @@ module.exports = {
 
       //If amount is specified, scale to amount
       if (options.amount) {
-        var amount_scalar = options.amount/current_scope.size;
+        var amount_scalar = Math.min(options.amount/current_scope.size, 1);
 
         for (var i = 0; i < all_current_tags.length; i++) {
           var local_value = current_scope.tags[all_current_tags[i]];

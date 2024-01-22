@@ -162,11 +162,18 @@ module.exports = {
     array: [
       number_1,
       number_2
-    ]
+    ],
+    options: {
+      print_percentage: true/false - Optional. Whether to print percentage instead of number. False by default.
+    }
   */
-  printRange: function (arg0_array) {
+  printRange: function (arg0_array, arg1_options) {
     //Convert from parameters
     var array = arg0_array;
+    var options = (arg1_options) ? arg1_options : {};
+
+    //Declare local instance variables
+    var local_function = (!options.print_percentage) ? global["parseNumber"] : global["printPercentage"];
 
     if (!Array.isArray(array))
       array = getList(array);
@@ -174,10 +181,10 @@ module.exports = {
     //Return statement
     if (array.length > 1)
       return (array[0] == array[1]) ?
-        parseNumber(array[0]) :
-        `${parseNumber(Math.min(array[0], array[1]))} - ${parseNumber(Math.max(array[0], array[1]))}`;
+        local_function(array[0]) :
+        `${local_function(Math.min(array[0], array[1]))} - ${local_function(Math.max(array[0], array[1]))}`;
     if (array.length == 1)
-      return parseNumber(array[0]);
+      return local_function(array[0]);
   },
 
   randomNumber: function (min, max, do_not_round) {
