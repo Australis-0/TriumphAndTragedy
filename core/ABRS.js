@@ -2,14 +2,46 @@
 module.exports = {
   cleanMain: function () {
     //Declare local instance variables
-    var reserved_keys = ["interfaces", "provinces", "date", "round_count", "tick_count", "market", "season_started", "last_backup", "last_queue_check", "last_turn", "users", "game_channels", "global"];
+    var reserved_keys = {
+      date: "date",
+      game_channels: "game_channels",
+      global: "global",
+      interfaces: "interfaces",
+      last_backup: "last_backup",
+      last_queue_check: "last_queue_check",
+      last_turn: "last_turn",
+      market: "market",
+      provinces: "provinces",
+      round_count: "round_count",
+      season_started: "season_started",
+      tick_count: "tick_count",
+      users: "users"
+    };
 
     var all_main_keys = Object.keys(main);
+    var all_reserved_keys = Object.keys(reserved_keys);
+    var max_key_length = 0;
 
-    //Iterate over all_main_keys to delete them
+    //Set max_key_length
+    for (var i = 0; i < all_reserved_keys.length; i++)
+      if (all_reserved_keys[i].length > max_key_length)
+        max_key_length = all_reserved_keys[i].length;
+
+    //Iterate over all_main_keys to restore broken keys
+    for (var i = 0; i < all_main_keys.length; i++) {
+      var includes_reserved_key = false;
+
+      for (var x = 0; x < all_reserved_keys.length; x++)
+        if (all_main_keys[i].includes(all_reserved_keys[x]) && all_main_keys[i] != all_reserved_keys[x]) {
+          main[all_reserved_keys[x]] = main[all_main_keys[i]];
+          delete main[all_main_keys[i]];
+        }
+    }
+
+    //Delete any broken keys
     for (var i = 0; i < all_main_keys.length; i++)
-      if (all_main_keys[i].length > 40)
-        delete global.main[all_main_keys[i]];
+      if (all_main_keys[i].length > max_key_length)
+        delete main[all_main_keys[i]];
   },
 
   //internalWriteSave() is split as internal function for multicoring/multithreading

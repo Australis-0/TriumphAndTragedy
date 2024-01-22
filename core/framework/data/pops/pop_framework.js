@@ -835,8 +835,7 @@ module.exports = {
       }
 
       //Death handling
-      {
-        //[REVISIT] - Fetch death pop scope arguments for accurate age distribution
+      {n
         var life_expectancy = parsePopLimit(config.deaths.upper_bound_life_expectancy, {
           pop_scope: pop_scope,
           province_id: province_id
@@ -856,10 +855,7 @@ module.exports = {
             var local_mortality_chance = local_mortality[all_mortality_keys[x]];
             var local_pop_scope = selectPops({
               pop_scope: initial_pop_scope,
-              age: {
-                min: parseInt(all_mortality_keys[x]),
-                max: parseInt(all_mortality_keys[x]) + 1
-              }
+              age: parseInt(all_mortality_keys[x])
             });
 
             if (local_pop_scope.size > 0) {
@@ -1688,6 +1684,13 @@ module.exports = {
 
       //Parse Pearson objects next
       {
+        //Age number handler
+        if (typeof options.age == "number")
+          options.age = {
+            min: options.age,
+            max: options.age
+          };
+
         //Age handler
         if (typeof options.age == "object") {
           var max = returnSafeNumber(options.age.max, config.defines.economy.old_age_hard_upper_bound);
@@ -1717,22 +1720,6 @@ module.exports = {
               var local_value = Math.floor(returnSafeNumber(province_obj.pops[`b_${local_birth_year}`])*local_percentage);
 
               modifyValue(age_tags, `b_${local_birth_year}`, local_value);
-            }
-          }
-        } else {
-          //Age number handler - Block select
-          var max = config.defines.economy.old_age_hard_upper_bound;
-          var min = returnSafeNumber(options.age, 0);
-
-          for (var i = 0; i < all_pop_keys.length; i++) {
-            var local_value = province_obj.pops[all_pop_keys[i]];
-
-            if (all_pop_keys[i].startsWith("b_")) {
-              var birth_year = parseInt(all_pop_keys[i].replace("b_", ""));
-              var current_age = Math.floor(main.date.year - birth_year);
-
-              if (current_age >= min && current_age <= max)
-                modifyValue(age_tags, all_pop_keys[i], local_value);
             }
           }
         }
