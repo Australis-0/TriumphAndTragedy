@@ -803,6 +803,8 @@ module.exports = {
             exceeds_pop_cap = true;
         }
 
+        //console.log(`${province_obj.id} exceeds cap:`, exceeds_pop_cap);
+
         if (!usr.has_famine && !exceeds_pop_cap) {
           var birth_chance = selectorsToPercentage(parsePopLimit(config.births, {
             pop_scope: pop_scope,
@@ -884,6 +886,8 @@ module.exports = {
 
           if (initial_pop_scope.size) {
             var remove_pop_scope = multiplyPops(initial_pop_scope, local_value);
+
+            console.log(`Killing ${remove_pop_scope.size} people!`);
 
             //Remove pops
             removePop(user_id, {
@@ -1558,7 +1562,17 @@ module.exports = {
 
     //Check if province even has pops
     if (province_obj.pops) {
-      var all_pop_keys = Object.keys(province_obj.pops);
+      var all_pop_keys;
+
+      if (options.pop_scope) {
+        all_pop_keys = Object.keys(options.pop_scope.tags);
+        var safe_pop_scope_size = returnSafeNumber(options.pop_scope.size);
+
+        if (!options.amount || returnSafeNumber(options.amount) > safe_pop_scope_size)
+          options.amount = safe_pop_scope_size;
+      } else {
+        all_pop_keys = Object.keys(province_obj.pops);
+      }
 
       //Parse superobjects first, such as wealth pools
       for (var i = 0; i < all_pop_keys.length; i++) {

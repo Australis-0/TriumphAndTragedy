@@ -458,7 +458,11 @@ module.exports = {
             tooltip_string.push("");
 
             //Push OEFR first
-            var local_fertile_women = Math.floor(returnSafeNumber(getProvinceFertileWomen(province_obj.id)/province_obj.pops[options.pop_types[i]]));
+            var local_population = getProvincePopulation(province_obj.id);
+            var local_pop_percentage = returnSafeNumber(province_obj.pops[options.pop_types[i]])/local_population;
+
+            var local_fertile_women = Math.floor(returnSafeNumber(getProvinceFertileWomen(province_obj.id)/local_pop_percentage));
+
             var local_oefr = getPopOEFR(province_obj.id, options.pop_types[i]);
 
             tooltip_string.push(`- Optimal Economic Fertility Rate: ${parseNumber(local_oefr, { display_float: true })}`);
