@@ -2,6 +2,7 @@ module.exports = {
   /*
     changeProductionChoice() - Changes the production choice of an individual building.
     options: {
+      do_not_refresh: true/false, - Optional. Whether to refresh the UI. False by default
       has_base_production_choice: true/false, - Whether the building has a base production choice. Optimisation parameter.
       production_choice_key: "one" - The raw production choice key to specify. Optimisation parameter.
     }
@@ -45,12 +46,14 @@ module.exports = {
         }
 
         //Refresh UI
-        if (game_obj.page.startsWith("view_building_"))
-          printBuilding(user_id, building_obj, main.interfaces[game_obj.middle_embed.id].page);
-        if (game_obj.page.startsWith("view_buildings_"))
-          printProvinceBuildings(user_id, building_obj, main.interfaces[game_obj.middle_embed.id].page);
-        if (game_obj.page == "view_industry")
-          printIndustry(user_id, main.interfaces[game_obj.middle_embed.id].page);
+        if (!options.do_not_refresh) {
+          if (game_obj.page.startsWith("view_building_"))
+            printBuilding(user_id, building_obj, main.interfaces[game_obj.middle_embed.id].page);
+          if (game_obj.page.startsWith("view_buildings_"))
+            printProvinceBuildings(user_id, building_obj, main.interfaces[game_obj.middle_embed.id].page);
+          if (game_obj.page == "view_industry")
+            printIndustry(user_id, main.interfaces[game_obj.middle_embed.id].page);
+        }
       } else {
         return_message = [false, `The production choice **${production_choice_name}** doesn't exist for **${(config_obj.name) ? config_obj.name : building_obj.building_type}!**!`];
       }
@@ -246,6 +249,7 @@ module.exports = {
               if (remaining_amount > 0)
                 if (local_building.building_type == options.building_type) {
                   var switched_building = module.exports.changeProductionChoice(user_id, local_building, production_choice_key, {
+                    do_not_refresh: true,
                     has_base_production_choice: has_base_production_choice,
                     production_choice_key: production_choice_key
                   });
