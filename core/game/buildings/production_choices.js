@@ -225,6 +225,7 @@ module.exports = {
 
       if (!config_obj)
         return [false, `There is no building of the type **${options.building_type}**!`];
+      options.building_type = config_obj.id; //Fix options.building_type to raw key
 
       var has_base_production_choice = hasBaseProductionChoice(options.building_type);
       var production_choice_key = getBuildingProductionChoice(options.building_type, production_choice_name);
@@ -235,7 +236,7 @@ module.exports = {
         var unnamed_provinces = 0;
 
         for (var i = 0; i < province_ids.length; i++) {
-          var local_province = main.province[province_ids];
+          var local_province = main.provinces[province_ids[i]];
 
           //Iterate over all buildings in local_province to try and change them
           if (local_province.buildings)

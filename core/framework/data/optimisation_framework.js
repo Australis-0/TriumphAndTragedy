@@ -1,5 +1,7 @@
 module.exports = {
   initOptimisation: function () {
+    cleanMain();
+
     global.reserved = {
       buildings: ["aliases", "ideal_climate", "name", "singular", "unlimited_slots"],
       building_category_keys: ["icon", "name", "order", "taxable"],
@@ -193,6 +195,7 @@ module.exports = {
       } catch (e) {
         log.error(`initOptimisation() - updateControl(), updateOwnership() ran into errors!`);
         console.log(e);
+        console.log(`Main object keys:`, Object.keys(main));
       }
 
       //Post-user processing - KEEP AT BOTTOM!
