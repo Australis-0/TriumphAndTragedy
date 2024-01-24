@@ -42,7 +42,7 @@ module.exports = {
       //Fix province beforehand
       fixProvinces(user_id, province_obj.id);
 
-      province_string.push(`**[Back]** | **[Jump To Page]** | **[View Demographics]**`);
+      province_string.push(`**[Back]** | **[Jump To Page]**`);
       province_string.push("");
 
       if (province_obj.controller) {
@@ -150,7 +150,7 @@ module.exports = {
         {
           province_string.push(`**Population:**`);
           province_string.push(config.localisation.divider);
-          province_string.push(`${(game_obj.display_irrelevant_pops) ? `**[Display Relevant Pops]**` : `**[Display All Pops]**`}`);
+          province_string.push(`${(game_obj.display_irrelevant_pops) ? `**[Display Relevant Pops]**` : `**[Display All Pops]**`} | **[View Demographics]**`);
           province_string.push("");
 
           if (province_obj.pops) {
