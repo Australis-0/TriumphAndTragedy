@@ -109,6 +109,96 @@ module.exports = {
       })
   },
 
+  initialiseMassChangeProductionChoice: function (arg0_user, arg1_province_id) {
+    //Convert from parameters
+    var user_id = arg0_user;
+    var province_id = arg1_province_id;
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var game_obj = getGameObject(user_id);
+    var usr = main.users[actual_id];
+
+    //Initialise visual prompt
+    if (province_id) {
+      var province_obj = main.provinces[province_id];
+
+      visualPrompt(game_obj.alert_embed, user_id, {
+        title: `Mass Change Production Choice(s) in ${(province_obj.name) ? province_obj.name : `Province ${province_obj.id}`}:`,
+        prompts: [
+          [`How many buildings should have their Production Choice changed?`, "number", { min: 1 }],
+          [`What is the name of the target building type?`, "string"],
+          [`Which production choice should they be geared towards? Type 'base' to use the default production choice where applicable.`, "string"]
+        ]
+      },
+      function (arg) {
+        var config_obj = getBuilding(arg[1]);
+
+        if (config_obj) {
+          var mass_change_production_choice = module.exports.massChangeProductionChoice(user_id, arg[2], {
+            amount: arg[0],
+            building_type: config_obj.id,
+            province_ids: [province_obj.id]
+          });
+
+          (mass_change_production_choice[0]) ?
+            printAlert(game_obj.id, mass_change_production_choice[1]) :
+            printError(game_obj.id, mass_change_production_choice[1]);
+        } else {
+          printError(game_obj.id, `The building type you have specified, **${arg[1]}** doesn't exist!`);
+        }
+      });
+    } else {
+      visualPrompt(game_obj.alert_embed, user_id, {
+        title: `Mass Change Building Production Choice(s):`,
+        prompts: [
+          [`How many buildings should have their Production Choice changed?`, "number", { min: 1 }],
+          [`What is the name of the target building type?`, "string"],
+          [`Which province(s) would you like this mass change to target? Please list them by name or Province ID, separated by spaces. Type 'none' to target your entire country instead.`, "string"],
+          [`Which production choice should they be geared towards? Type 'base' to use the default production choice where applicable.`, "string"]
+        ]
+      },
+      function (arg) {
+        var config_obj = getBuilding(arg[1]);
+        var province_ids = [];
+
+        //Parse province_ids from arg[2]
+        if (arg[2].toLowerCase() != "none") {
+          var provinces = arg[2].split(" ");
+
+          for (var i = 0; i < provinces.length; i++) {
+            var local_province = getProvince(provinces[i]);
+
+            if (local_province) province_ids.push(local_province.id);
+          }
+
+          if (province_ids.length > 0) {
+            var mass_change_production_choice = module.exports.massChangeProductionChoice(user_id, arg[3], {
+              amount: arg[0],
+              building_type: config_obj.id,
+              province_ids: province_ids
+            });
+
+            (mass_change_production_choice[0]) ?
+              printAlert(game_obj.id, mass_change_production_choice[1]) :
+              printError(game_obj.id, mass_change_production_choice[1]);
+          } else {
+            printError(game_obj.id, `None of the province(s) you have specified could be found! Please use valid province name(s) or ID's.`);
+          }
+        } else {
+          var mass_change_production_choice = module.exports.massChangeProductionChoice(user_id, arg[3], {
+            amount: arg[0],
+            building_type: arg[1],
+          });
+
+          (mass_change_production_choice[0]) ?
+            printAlert(game_obj.id, mass_change_production_choice[1]) :
+            printError(game_obj.id, mass_change_production_choice[1]);
+        }
+      });
+    }
+  },
+
   /*
     massChangeProductionChoice() - Switches all buildings of a given type and amount to a specified production method in either a province or country scope. Returns amount of buildings whose production methods have been successfully changed.
 
@@ -118,7 +208,7 @@ module.exports = {
       province_ids: ["4707", "4708"], - The province IDs in which to target changes. If not specified, default to country scope
     }
   */
-  massChangeProductionChoice: function (arg0_user, arg1_production_choice_name, arg2_options) { //[WIP] - Finish function body
+  massChangeProductionChoice: function (arg0_user, arg1_production_choice_name, arg2_options) {
     //Convert from parameters
     var user_id = arg0_user;
     var production_choice_name = arg1_production_choice_name.trim().toLowerCase();
@@ -132,6 +222,10 @@ module.exports = {
     //Iterate over all province_ids
     if (remaining_amount > 0) {
       var config_obj = getBuilding(options.building_type);
+
+      if (!config_obj)
+        return [false, `There is no building of the type **${options.building_type}**!`];
+
       var has_base_production_choice = hasBaseProductionChoice(options.building_type);
       var production_choice_key = getBuildingProductionChoice(options.building_type, production_choice_name);
       var switched_buildings = 0; //How many total buildings have been switched to this production choice
@@ -197,95 +291,6 @@ module.exports = {
       return [false, `You cannot switch the production methods of zero buildings!`];
     } else {
       return [false, `You cannot switch the production methods of neagtive buildings!`];
-    }
-  },
-
-  initialiseMassChangeProductionChoice: function (arg0_user, arg1_province_id) {
-    //Convert from parameters
-    var user_id = arg0_user;
-    var province_id = arg1_province_id;
-
-    //Declare local instance variables
-    var actual_id = main.global.user_map[user_id];
-    var game_obj = getGameObject(user_id);
-    var usr = main.users[actual_id];
-
-    //Initialise visual prompt
-    if (province_id) {
-      var province_obj = main.provinces[province_id];
-
-      visualPrompt(game_obj.alert_embed, user_id, {
-        title: `Mass Change Production Choice(s) in ${(province_obj.name) ? province_obj.name : `Province ${province_obj.id}`}:`,
-        prompts: [
-          [`How many buildings should have their Production Choice changed?`, "number", { min: 1 }],
-          [`What is the name of the target building type?`, "string"],
-          [`Which production choice should they be geared towards? Type 'base' to use the default production choice where applicable.`, "string"]
-        ]
-      },
-      function (arg) {
-        var config_obj = getBuilding(arg[1]);
-
-        if (config_obj) {
-          var mass_change_production_choice = module.exports.massChangeProductionChoice(user_id, arg[2], {
-            amount: arg[0],
-            building_type: arg[1],
-            province_ids: [province_obj.id]
-          });
-
-          (mass_change_production_choice[0]) ?
-            printAlert(game_obj.id, mass_change_production_choice[1]) :
-            printError(game_obj.id, mass_change_production_choice[1]);
-        } else {
-          printError(game_obj.id, `The building type you have specified, **${arg[1]}** doesn't exist!`);
-        }
-      });
-    } else {
-      visualPrompt(game_obj.alert_embed, user_id, {
-        title: `Mass Change Building Production Choice(s):`,
-        prompts: [
-          [`How many buildings should have their Production Choice changed?`, "number", { min: 1 }],
-          [`What is the name of the target building type?`, "string"],
-          [`Which province(s) would you like this mass change to target? Please list them by name or Province ID, separated by spaces. Type 'none' to target your entire country instead.`, "string"],
-          [`Which production choice should they be geared towards? Type 'base' to use the default production choice where applicable.`, "string"]
-        ]
-      },
-      function (arg) {
-        var province_ids = [];
-
-        //Parse province_ids from arg[2]
-        if (arg[2].toLowerCase() != "none") {
-          var provinces = arg[2].split(" ");
-
-          for (var i = 0; i < provinces.length; i++) {
-            var local_province = getProvince(provinces[i]);
-
-            if (local_province) province_ids.push(local_province.id);
-          }
-
-          if (province_ids.length > 0) {
-            var mass_change_production_choice = module.exports.massChangeProductionChoice(user_id, arg[3], {
-              amount: arg[0],
-              building_type: arg[1],
-              province_ids: province_ids
-            });
-
-            (mass_change_production_choice[0]) ?
-              printAlert(game_obj.id, mass_change_production_choice[1]) :
-              printError(game_obj.id, mass_change_production_choice[1]);
-          } else {
-            printError(game_obj.id, `None of the province(s) you have specified could be found! Please use valid province name(s) or ID's.`);
-          }
-        } else {
-          var mass_change_production_choice = module.exports.massChangeProductionChoice(user_id, arg[3], {
-            amount: arg[0],
-            building_type: arg[1],
-          });
-
-          (mass_change_production_choice[0]) ?
-            printAlert(game_obj.id, mass_change_production_choice[1]) :
-            printError(game_obj.id, mass_change_production_choice[1]);
-        }
-      });
     }
   }
 };

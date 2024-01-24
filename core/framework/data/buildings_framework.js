@@ -3063,17 +3063,19 @@ module.exports = {
     var building_obj = lookup.all_buildings[building_name];
 
     //Check both produces and maintenance fields
-    if (building_obj.produces) {
-      var all_production_keys = Object.keys(building_obj.produces);
+    if (building_obj) {
+      if (building_obj.produces) {
+        var all_production_keys = Object.keys(building_obj.produces);
 
-      for (var i = 0; i < all_production_keys.length; i++)
-        if (!all_production_keys[i].startsWith("production_choice_")) return true;
-    }
-    if (building_obj.maintenance) {
-      var all_maintenance_costs = Object.keys(building_obj.maintenance);
+        for (var i = 0; i < all_production_keys.length; i++)
+          if (!all_production_keys[i].startsWith("production_choice_")) return true;
+      }
+      if (building_obj.maintenance) {
+        var all_maintenance_costs = Object.keys(building_obj.maintenance);
 
-      for (var i = 0; i < all_maintenance_costs.length; i++)
-        if (!all_maintenance_costs[i].startsWith("production_choice_")) return true;
+        for (var i = 0; i < all_maintenance_costs.length; i++)
+          if (!all_maintenance_costs[i].startsWith("production_choice_")) return true;
+      }
     }
   },
 

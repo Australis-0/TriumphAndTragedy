@@ -859,7 +859,6 @@ module.exports = {
                           inventory_consumption = multiplyObject(inventory_consumption, -1, false, false);
 
                           local_wealth_pool.inventory_consumption[local_buy_order.category] = mergeObjects(local_inventory_consumption, inventory_consumption);
-
                           modifyValue(local_received_goods, local_buy_order.good_type, returnSafeNumber(actual_consumption));
 
                           //Tax handling
