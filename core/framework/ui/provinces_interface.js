@@ -49,23 +49,18 @@ module.exports = {
         recalculateInventory(user_id); //Recalculate inventory to display pop needs
 
         //Format string
-        province_string.push(`${config.icons.globe} Owning Country: **${main.users[province_obj.owner].name}**`);
-        province_string.push(`Type **[View Provinces]** to view a full list of all your provinces.`);
-        province_string.push("");
+        province_string.push(`${config.icons.globe} Owner: **${main.users[province_obj.owner].name}**`);
+        province_string.push(`- Type **[View Provinces]** to view a full list of all your provinces.`);
         province_string.push(config.localisation.divider);
-        province_string.push("");
 
         if (province_obj.type == "urban") {
           province_string.push(`City Options: ${(province_obj.city_type != "capital") ? "**[Move Capital]** | " : ""}**[Rename City]**`);
           province_string.push(`Manage Buildings: **[Build]** | **[Demolish]**`);
           province_string.push(`Promote Urbanisation: **[Develop]** - Gain an extra building slot in this city for **${parseNumber(getDevelopmentCost(user_id, province_obj.id))}** ${config.icons.political_capital} Political Capital.`);
-          province_string.push(config.localisation.divider);
+          province_string.push("");
         }
 
-        //Print city information
-        province_string.push(`**${(province_obj.name) ? province_obj.name : `Province ${province_obj.id}`}:**`);
-        province_string.push("");
-
+        //Print province information
         if (province_obj.owner != province_obj.controller)
           province_string.push(`- Currently occupied by **${main.users[province_obj.controller].name}** in a war! This province will not be able to produce anything of value until it is either liberated, or the war is over.`);
         if (province_obj.demilitarised) {
@@ -73,19 +68,18 @@ module.exports = {
           province_string.push("");
         }
 
-        province_string.push(`**Province:** ${config.icons.provinces} ${province_obj.id}`);
+        province_string.push(`**Province:** ${config.icons.provinces} ${province_obj.id}${(province_obj.name) ? ` (${province_obj.name})` : ""}`);
         province_string.push(`**Population:** ${config.icons.population} ${parseNumber(province_obj.pops.population)} (**${printPercentage(getCityPopGrowthRate(province_obj), { base_zero: true, display_prefix: true })}** per turn)`);
+        province_string.push(`- **Culture:** ${config.icons.culture} ${parseProvinceCulture(province_obj.id)}`);
 
         if (province_obj.development)
           province_string.push(`**Development:** ${config.icons.development} ${parseNumber(province_obj.development)}`);
-
         if (province_obj.resource) {
           province_string.push(`**Resource:** ${parseGood(province_obj.resource)}`);
           province_string.push(`- **${(usr.modifiers.rgo_throughput - 1 >= 0) ? "+" : ""}${printPercentage(usr.modifiers.rgo_throughput)}** modifier to ${parseGood(province_obj.resource)} production in this province.`);
         }
 
         province_string.push("");
-        province_string.push(`**Culture:** ${config.icons.culture} ${parseProvinceCulture(province_obj.id)}`);
         province_string.push(`**Supply Limit:** ${config.icons.railways} ${parseNumber((province_obj.supply_limit) ? province_obj.supply_limit : config.defines.combat.base_supply_limit)}`);
 
         province_string.push("");
@@ -94,7 +88,6 @@ module.exports = {
         if (province_obj.buildings) {
           province_string.push(`**Buildings:**`);
           province_string.push(config.localisation.divider);
-          province_string.push("");
           province_string.push(`**[View Buildings]** - View a detailed list of all buildings in this Province.`);
           province_string.push("");
 
@@ -147,8 +140,6 @@ module.exports = {
                     if (all_buildings > 0 || local_slots.total_buildings_under_construction > 0)
                       province_string.push(` - ${(local_building.icon) ? config.icons[local_building.icon] + " " : ""}${local_building_name}: ${parseNumber(all_buildings)}${(local_building.separate_building_slots) ? " (" + parseNumber(all_buildings) + "/" + parseNumber(local_slots.total_slots) + ")" : ""} ${(local_slots.total_buildings_under_construction > 0) ? `(+${parseNumber(local_slots.total_buildings_under_construction)} under construction)` : ""}`);
                   }
-
-                province_string.push("");
               }
           }
 
@@ -159,8 +150,7 @@ module.exports = {
         {
           province_string.push(`**Population:**`);
           province_string.push(config.localisation.divider);
-          province_string.push("");
-          province_string.push(`- ${(game_obj.display_irrelevant_pops) ? `**[Display Relevant Pops]**` : `**[Display All Pops]**`}`);
+          province_string.push(`${(game_obj.display_irrelevant_pops) ? `**[Display Relevant Pops]**` : `**[Display All Pops]**`}`);
           province_string.push("");
 
           if (province_obj.pops) {
@@ -192,8 +182,6 @@ module.exports = {
             province_string.push("");
             province_string.push(`**Pop Needs:**`);
             province_string.push(config.localisation.divider);
-            province_string.push("");
-
             province_string.push(`_Displaying current_ **Pop Needs**.`);
             province_string.push("");
             province_string.push(`> **Needs Category:**`);

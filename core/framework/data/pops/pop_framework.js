@@ -887,8 +887,6 @@ module.exports = {
           if (initial_pop_scope.size) {
             var remove_pop_scope = multiplyPops(initial_pop_scope, local_value);
 
-            console.log(`Killing ${remove_pop_scope.size} people!`);
-
             //Remove pops
             removePop(user_id, {
               amount: returnSafeNumber(remove_pop_scope.size),
