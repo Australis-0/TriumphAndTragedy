@@ -441,7 +441,6 @@ module.exports = {
     var all_modifier_names = lookup.all_modifier_names;
     var all_non_aggression_pacts = Object.keys(usr.diplomacy.non_aggression_pacts);
     var all_pops = Object.keys(config.pops);
-    var all_production = getProduction(user_id, undefined, { is_real: (!options.is_simulation) });
     var all_relations = Object.keys(usr.diplomacy.relations);
     var all_temporary_modifiers = Object.keys(usr.temporary_modifiers);
     var all_users = Object.keys(main.users);
@@ -450,6 +449,9 @@ module.exports = {
     var controlled_provinces = getProvinces(user_id, { include_occupations: true });
     var is_being_justified_on = isBeingJustifiedOn(user_id);
     var owned_provinces = getProvinces(user_id, { include_hostile_occupations: true });
+
+    //Track money before tax trackers reset for this turn
+    var user_income = getIncome(user_id);
 
     //Modifier and tracker variable processing
     console.time(`Modifier and tracker variable processing!`);
@@ -647,6 +649,9 @@ module.exports = {
     }
     console.timeEnd(`Modifier and tracker variable processing!`);
 
+    //Make sure all_production is after trackers are reset
+    var all_production = getProduction(user_id, undefined, { is_real: (!options.is_simulation) });
+
     console.time(`Alert processing!`);
     //Alert processing
     try {
@@ -782,10 +787,8 @@ module.exports = {
     console.time(`Budget processing!`);
     //Budget processing
     try {
-      //Add money based on calculated user income
-      var user_income = getIncome(user_id, all_production);
-
       var total_income = randomNumber(user_income[0], user_income[1]);
+
       usr.money += total_income;
 
       //Check cooldowns for war_reparations
@@ -1409,7 +1412,7 @@ module.exports = {
               )
                   delete controlled_provinces[i].trackers[all_province_trackers[x]];
           }
-          
+
           processPops(controlled_provinces[i].id);
           processPurchases(controlled_provinces[i].id);
 
@@ -1605,14 +1608,15 @@ module.exports = {
 
         //Initiate local shipment to user per turn
         if (trade_whitelist.includes(local_auto_trade.target)) {
-          give(
-            local_auto_trade.exporter,
-            local_auto_trade.target,
+          if (local_auto_trade.good_type)
+            give(
+              local_auto_trade.exporter,
+              local_auto_trade.target,
 
-            local_auto_trade.amount,
-            local_auto_trade.good_type,
-            { hide_display: true }
-          );
+              local_auto_trade.amount,
+              local_auto_trade.good_type,
+              { hide_display: true }
+            );
         } else {
           //Delete shipment because trade is being steered
           delete usr.auto_trades[all_auto_trades[i]];

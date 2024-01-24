@@ -21,7 +21,9 @@ module.exports = {
     var total_production = getProduction(user_id);
     var total_tax_pc_cost = 0;
     var total_tax_revenue = 0;
-    var user_income = getIncome(user_id, total_production);
+    var user_income = getIncome(user_id, total_production, {
+      include_subsidies: true
+    });
     var war_reparations = getWarReparations(user_id, user_income);
 
     var total_actions_gained_per_turn = [
@@ -176,7 +178,7 @@ module.exports = {
       for (var i = 0; i < lookup.all_classes.length; i++) {
         var local_class = lookup.all_classes[i];
         var tax_capacity = `${local_class}_income_tax`;
-        var tax_key = `${local_class}-income_tax`;
+        var tax_key = `${local_class}_income_tax`;
 
         var local_tax = usr[tax_capacity];
         var local_tax_cost = getTaxCost(user_id, tax_capacity);
@@ -193,7 +195,7 @@ module.exports = {
       for (var i = 0; i < lookup.all_classes.length; i++) {
         var local_class = lookup.all_classes[i];
         var tax_capacity = `${local_class}_duties_tax`;
-        var tax_key = `${local_class}-duties_tax`;
+        var tax_key = `${local_class}_duties_tax`;
 
         var local_tax = usr[tax_capacity];
         var local_tax_cost = getTaxCost(user_id, tax_capacity);

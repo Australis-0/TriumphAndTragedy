@@ -253,10 +253,12 @@ module.exports = {
       } else {
         //Infuse as much money as needed and take it from the player's inventory
         var subsidy_infusion = config.defines.economy.subsidy_infusion;
+        var money_lost = building_obj.stockpile.money*-1 + subsidy_infusion;
         var usr = main.users[province_obj.controller];
 
-        usr.money -= building_obj.stockpile.money*-1;
-        usr.money -= subsidy_infusion;
+        usr.money -= money_lost;
+
+        modifyValue(building_obj, "subsidies", money_lost);
 
         if (building_obj.stockpile)
           building_obj.stockpile.money = subsidy_infusion;
@@ -3026,6 +3028,33 @@ module.exports = {
     return open_positions;
   },
 
+  getTotalSubsidies: function (arg0_user) {
+    //Convert from parameters
+    var user_id = arg0_user;
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var total_subsidies = 0;
+    var usr = main.users[actual_id];
+
+    var user_provinces = getProvinces(user_id, { include_occupations: true });
+
+    //Iterate over user_provinces
+    for (var i = 0; i < user_provinces.length; i++) {
+      var local_province = user_provinces[i];
+
+      if (local_province.buildings)
+        for (var x = 0; x < local_province.buildings.length; x++) {
+          var local_building = local_province.buildings[x];
+
+          total_subsidies += returnSafeNumber(local_building.subsidies);
+        }
+    }
+
+    //Return statement
+    return total_subsidies;
+  },
+
   hasBaseProductionChoice: function (arg0_building) {
     //Convert from parameters
     var building_name = arg0_building;
@@ -3252,9 +3281,10 @@ module.exports = {
     var building_obj = arg0_building_obj;
     var goods_obj = (arg1_goods) ? arg1_goods : {}; //The goods produced from this building
 
-    //Make sure .stockpile exists
+    //Make sure .stockpile exists; reset trackers
     if (!building_obj.stockpile)
       building_obj.stockpile = {};
+    delete building_obj.subsidies;
 
     //Declare local instance variables
     var all_good_keys = Object.keys(goods_obj);
@@ -3287,7 +3317,8 @@ module.exports = {
 
       //Iterate over pop_types and set wages for each pop type as well as offer sizes
       if (!building_obj.insolvent)
-        for (var i = 0; i < pop_types.length; i++) {
+        if (pop_types)
+          for (var i = 0; i < pop_types.length; i++) {
           var config_obj = config.pops[pop_types[i]];
           var local_employment_stats = module.exports.getBuildingHiringPositions(building_obj, {
             pop_type: pop_types[i],
@@ -3317,7 +3348,7 @@ module.exports = {
 
             //Process income taxes
             var income_tax_amount = returnSafeNumber(usr[`${config_obj.class}_income_tax`])*local_building_pop.income;
-            modifyValue(usr.trackers.tax, `${config_obj.class}-income_tax`, income_tax_amount);
+            modifyValue(usr.trackers.tax, `${config_obj.class}_income_tax`, income_tax_amount);
 
             //Add wealth after taxes
             local_building_pop.income -= income_tax_amount;
@@ -3438,7 +3469,7 @@ module.exports = {
             if (current_loss > 0) {
               usr.money -= returnSafeNumber(current_loss);
               building_obj.stockpile.money += current_loss;
-              building_obj.subsidies = current_loss;
+              modifyValue(building_obj, "subsidies", current_loss);
             } else {
               delete building_obj.subsidies;
             }

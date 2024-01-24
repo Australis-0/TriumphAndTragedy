@@ -762,11 +762,14 @@ module.exports = {
 
     var current_median = returnSafeNumber(province_obj[`${pop_type}_median_wage`]);
 
+    //Make sure external_migration_table and internal_migration_table are defined first before accessing them in future
+    /*
     var external_migration_table = lookup[`${province_obj.controller}-external_migration_attraction`];
     var internal_migration_table = lookup[`${province_obj.controller}-migration_attraction`];
 
     var all_external_provinces = Object.keys(external_migration_table);
     var all_internal_provinces = Object.keys(internal_migration_table);
+    */
 
     //Initialise variables
     {

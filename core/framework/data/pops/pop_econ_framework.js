@@ -864,7 +864,7 @@ module.exports = {
 
                           //Tax handling
                           if (local_tax > 0)
-                            modifyValue(usr.trackers.tax, `${pop_obj.class}-duties_tax`, local_tax);
+                            modifyValue(usr.trackers.tax, `${pop_obj.class}_duties_tax`, local_tax);
                         }
                       }
                   }

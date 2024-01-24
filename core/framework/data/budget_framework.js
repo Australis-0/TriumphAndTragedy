@@ -1,10 +1,17 @@
 module.exports = {
   //Fetches user income before production costs
-  getIncome: function (arg0_user, arg1_production, arg2_exclude_war_reparations) {
+  /*
+    getIncome() - Fetches user income before production costs
+    options: {
+      include_subsidies: true/false, - Optional. Whether to include building subsidies. False by default
+      exclude_war_reparations: true/false - Optional. Whether to exclude war reparations. False by default
+    }
+  */
+  getIncome: function (arg0_user, arg1_production, arg2_options) {
     //Convert from parameters
     var user_id = arg0_user;
     var raw_production = arg1_production;
-    var exclude_war_reparations = arg2_exclude_war_reparations;
+    var options = (arg2_options) ? arg2_options : {};
 
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
@@ -42,7 +49,7 @@ module.exports = {
 
       //War Reparations
       {
-        if (!exclude_war_reparations) {
+        if (!options.exclude_war_reparations) {
           var war_reparations = getWarReparations(user_id, [
             calculated_income - total_maintenance[0],
             calculated_income - total_maintenance[1]
@@ -57,6 +64,16 @@ module.exports = {
 
           total_maintenance[0] += local_amount;
           total_maintenance[1] += local_amount;
+        }
+      }
+
+      //Subsidies
+      {
+        if (options.include_subsidies) {
+          var user_subsidies = getTotalSubsidies(user_id);
+
+          calculated_income[0] += returnSafeNumber(user_subsidies);
+          calculated_income[1] += returnSafeNumber(user_subsidies);
         }
       }
 

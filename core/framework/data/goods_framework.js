@@ -246,8 +246,12 @@ module.exports = {
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
     var good_amount = 0;
-    var good_obj = (typeof name == "object") ? name : module.exports.getGood(name);
     var usr = main.users[actual_id];
+
+    //Guard clause if no good is specified
+    if (!name) return 0;
+
+    var good_obj = (typeof name == "object") ? name : module.exports.getGood(name);
 
     //Recursively iterate over subgoods if category
     if (good_obj) {

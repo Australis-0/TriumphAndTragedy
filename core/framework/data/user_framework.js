@@ -824,7 +824,7 @@ module.exports = {
 
     //Define income
     if (!income)
-      var income = getIncome(user_id, undefined, true);
+      var income = getIncome(user_id, undefined, { exclude_war_reparations: true });
 
     //Iterate through all cooldowns, check for war reparations, minimum case
     for (var i = 0; i < all_cooldowns.length; i++) {

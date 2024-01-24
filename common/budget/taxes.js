@@ -38,12 +38,12 @@ config.budget.taxes = {
     name: "Middle Income Tax",
     aliases: ["middle class income tax"],
 
-    capacity_id: "middle_duties_max_tax"
+    capacity_id: "middle_income_max_tax"
   },
   lower_income_tax: {
     name: "Lower Income Tax",
     aliases: ["lower class income tax"],
 
-    capacity_id: "lower_duties_max_tax"
+    capacity_id: "lower_income_max_tax"
   }
 };
