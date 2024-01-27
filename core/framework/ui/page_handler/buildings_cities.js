@@ -183,6 +183,14 @@ module.exports = {
         return true;
       }
 
+      //[Hide All Details]
+      if (input == "hide all details") {
+        game_obj.hide_build_list_details = true;
+        printProvinceBuildings(user_id, province_id, current_page);
+
+        return true;
+      }
+
       //[Jump To Page]
       if (input == "jump to page") {
         visualPrompt(game_obj.alert_embed, user_id, {
@@ -223,6 +231,14 @@ module.exports = {
       //[Reopen]
       if (input == "reopen") {
         initialiseReopenBuilding(user_id);
+
+        return true;
+      }
+
+      //[Show All Details]
+      if (input == "show all details") {
+        delete game_obj.hide_build_list_details;
+        printProvinceBuildings(user_id, province_id, current_page);
 
         return true;
       }

@@ -44,6 +44,33 @@ module.exports = {
         delete main[all_main_keys[i]];
   },
 
+  cleanUsers: function () {
+    //Declare local instance variables
+    var all_users = Object.keys(main.users);
+
+    //Iterate over all_users and their keys
+    for (var i = 0; i < all_users.length; i++) {
+      var local_user = main.users[all_users[i]];
+      var local_user_keys = Object.keys(local_user);
+
+      for (var x = 0; x < local_user_keys.length; x++) {
+        var local_value = local_user[local_user_keys[x]];
+        var split_key = local_user_keys[x].split('"');
+
+        if (split_key.length > 1) {
+          local_user[split_key[1]] = local_value;
+          delete local_user[local_user_keys[x]];
+        } else {
+          //Check if this contains only \
+          var pure_split_key = local_user_keys[x].split("\\");
+
+          if (pure_split_key.join("").length == 0)
+            delete local_user[local_user_keys[x]];
+        }
+      }
+    }
+  },
+
   //internalWriteSave() is split as internal function for multicoring/multithreading
   internalWriteSave: function (arg0_options) {
     //Convert from parameters

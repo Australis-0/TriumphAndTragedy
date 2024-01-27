@@ -1,4 +1,27 @@
 module.exports = {
+  //getForeignAidObject() - Fetches foreign aid by returning a map of User IDs to amount being sent
+  getForeignAidObject: function (arg0_user) {
+    //Convert from parameters
+    var user_id = arg0_user;
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var foreign_aid_obj = {};
+    var usr = main.users[actual_id];
+
+    var all_auto_trades = Object.keys(usr.auto_trades);
+
+    for (var i = 0; i < all_auto_trades.length; i++) {
+      var local_auto_trade = usr.auto_trades[all_auto_trades[i]];
+
+      if (local_auto_trade.good_type == "money")
+        modifyValue(foreign_aid_obj, local_auto_trade.target, local_auto_trade.amount);
+    }
+
+    //Return statement
+    return foreign_aid_obj;
+  },
+
   //Fetches user income before production costs
   /*
     getIncome() - Fetches user income before production costs
@@ -56,14 +79,14 @@ module.exports = {
           ]);
 
           var all_war_reparations = Object.keys(war_reparations);
-        }
 
-        for (var i = 0; i < all_war_reparations.length; i++) {
-          var local_amount = war_reparations[all_war_reparations[i]];
-          var local_recipient = main.users[all_war_reparations[i]];
+          for (var i = 0; i < all_war_reparations.length; i++) {
+            var local_amount = war_reparations[all_war_reparations[i]];
+            var local_recipient = main.users[all_war_reparations[i]];
 
-          total_maintenance[0] += local_amount;
-          total_maintenance[1] += local_amount;
+            total_maintenance[0] += local_amount;
+            total_maintenance[1] += local_amount;
+          }
         }
       }
 
@@ -254,6 +277,145 @@ module.exports = {
 
     //Return statement
     return tax_cost;
+  },
+
+  /*
+    getTotalExpenditure() - Fetches the total expenditures of a certain user.
+    options: {
+      production_obj: production_obj, - Optional. Optimisation parameter
+      return_object: true/false - Optional. Whether to return an object or not. False by default
+    }
+  */
+  getTotalExpenditure: function (arg0_user, arg1_options) {
+    //Convert from parameters
+    var user_id = arg0_user;
+    var options = (arg1_options) ? arg1_options : {};
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var all_users = Object.keys(main.users);
+    var user_production = (!options.production_obj) ? getProductionObject(user_id) : options.production_obj;
+    var usr = main.users[actual_id];
+
+    //Auto-Trades
+    var all_auto_trades = Object.keys(usr.auto_trades);
+    var auto_trade_expenses = 0;
+
+    for (var i = 0; i < all_auto_trades.length; i++) {
+      var local_auto_trade = usr.auto_trades[all_auto_trades[i]];
+
+      if (local_auto_trade.good_type == "money")
+        auto_trade_expenses += local_auto_trade.amount;
+    }
+
+    auto_trade_expenses = [auto_trade_expenses, auto_trade_expenses];
+
+    //Building Maintenance
+    var building_expenses = 0;
+
+    if (user_production.money_upkeep)
+      building_expenses = user_production.money_upkeep;
+
+    //Building Reopen Costs/Subsidies
+    var total_subsidies = getTotalSubsidies(user_id);
+    total_subsidies = [total_subsidies, total_subsidies];
+
+    //Unit Maintenance
+    var unit_upkeep = getUnitUpkeep(user_id);
+    unit_upkeep = [unit_upkeep, unit_upkeep];
+
+    //War Reparations
+    var war_reparations = getWarReparations(user_id);
+    var war_reparations_total = [0, 0];
+
+    var all_war_reparations = Object.keys(war_reparations);
+
+    for (var i = 0; i < all_war_reparations.length; i++) {
+      var local_war_reparation = war_reparations[all_war_reparations[i]];
+
+      war_reparations_total = modifyRange(war_reparations_total, [local_war_reparation[0], local_war_reparation[1]]);
+    }
+
+    war_reparations = war_reparations_total;
+
+    //Calculate expenditures
+    var expenditures = [0, 0];
+
+    expenditures = modifyRange(expenditures, auto_trade_expenses);
+    expenditures = modifyRange(expenditures, building_expenses);
+    expenditures = modifyRange(expenditures, total_subsidies);
+    expenditures = modifyRange(expenditures, unit_upkeep);
+    expenditures = modifyRange(expenditures, war_reparations);
+
+    //Return statement
+    return (!options.return_object) ? expenditures : {
+      expenditures: expenditures,
+
+      auto_trade_expenses: auto_trade_expenses,
+      building_expenses: building_expenses,
+      subsidies: total_subsidies,
+      war_reparations: war_reparations
+    };
+  },
+
+  /*
+    getTotalRevenue() - Fetches the total revenue of a certain user.
+    options: {
+      production_obj: production_obj, - Optional. Optimisation parameter
+      return_object: true/false - Optional. Whether to return an object or not. False by default
+    }
+  */
+  getTotalRevenue: function (arg0_user, arg1_options) {
+    //Convert from parameters
+    var user_id = arg0_user;
+    var options = (arg1_options) ? arg1_options : {};
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var all_users = Object.keys(main.users);
+    var user_production = (!options.production_obj) ? getProductionObject(user_id) : options.production_obj;
+    var usr = main.users[actual_id];
+
+    var building_production = [0, 0];
+    var import_revenue = [0, 0];
+    var revenue = [0, 0];
+
+    //Building production
+    if (user_production.money)
+      building_production = modifyRange(building_production, user_production.money);
+
+    //Imports
+    for (var i = 0; i < all_users.length; i++) {
+      var local_user = main.users[all_users[i]];
+
+      var all_exports = Object.keys(local_user.trades);
+
+      for (var x = 0; x < all_exports.length; x++) {
+        var local_export = usr.trades[all_exports[x]];
+
+        if (local_export.good_type == "money")
+          if (local_export.target == actual_id && local_export.duration <= 1)
+            import_revenue = modifyRange(import_revenue, local_export.amount);
+      }
+    }
+
+    //Tax Income
+    var tax_revenue = getObjectSum(usr.trackers.tax);
+    tax_revenue = [tax_revenue, tax_revenue];
+
+    //Calculate revenue
+    revenue = modifyRange(revenue, building_production);
+    revenue = modifyRange(revenue, import_revenue);
+    revenue = modifyRange(revenue, tax_revenue);
+
+    //Return statement
+    return (!options.return_object) ? revenue : {
+      revenue: revenue,
+
+      building_revenue: building_production,
+      import_revenue: import_revenue,
+      tax_revenue: tax_revenue
+    };
   },
 
   /*

@@ -462,8 +462,7 @@ module.exports = {
     var buildings_string = [];
 
     buildings_string.push(`**[Build]** | **[Demolish]** | **[Mass Change Production Choice]** | **[Rename Building]** | **[Reopen]** - ${(usr.all_subsidies) ? `${config.icons.money}${config.icons.checkmark} **[Disable All Subsidies]**` : `${config.icons.money}${config.icons.cross} **[Subsidise All Buildings]**`}`);
-    buildings_string.push("");
-    buildings_string.push(`Sort by: **[Alphabetical]** | **[Category]** | **[Chronology]** | **[Numeric]** | **[Cash Reserves]** | **[Employment]**`);
+    buildings_string.push(`- ${(game_obj.hide_build_list_details) ? `**[Show All Details]**` : `**[Hide All Details]**`} Sort by: **[Alphabetical]** | **[Category]** | **[Chronology]** | **[Numeric]** | **[Cash Reserves]** | **[Employment]**`);
     buildings_string.push("");
     buildings_string.push(`_Displaying all_ **Buildings** _in_ **${config.localisation[`sort_${game_obj.building_sort}`]}**:`);
     buildings_string.push("");
@@ -519,7 +518,7 @@ module.exports = {
           buildings_string.push(`**${(provinces[i].name) ? provinces[i].name : `Province ${provinces[i].id}`}:** ${config.icons.population} ${parseNumber(provinces[i].pops.population)}`);
 
           for (var x = 0; x < new_buildings.length; x++) {
-            var local_building_string = getBuildingLocalisation(new_buildings[x]);
+            var local_building_string = getBuildingLocalisation(new_buildings[x], { exclude_details: game_obj.hide_build_list_details });
 
             if (local_building_string)
               for (var y = 0; y < local_building_string.length; y++)
@@ -581,10 +580,8 @@ module.exports = {
 
     //Iterate over all buildings in province
     if (province_obj) {
-      buildings_string.push(`**[Build]** | **[Demolish]** | **[Mass Change Production Choice]** | **[Rename Building]** | **[Reopen]**]`);
-      buildings_string.push(`- **[Defund All Buildings]** | **[Subsidise All Buildings]**`);
-      buildings_string.push("");
-      buildings_string.push(`Sort by: **[Alphabetical]** | **[Category]** | **[Chronology]** | **[Numeric]** | **[Cash Reserves]** | **[Employment]**`);
+      buildings_string.push(`**[Build]** | **[Demolish]** | **[Mass Change Production Choice]** | **[Rename Building]** | **[Reopen]** - **[Defund All Buildings]** | **[Subsidise All Buildings]**`);
+      buildings_string.push(`- ${(game_obj.hide_build_list_details) ? `**[Show All Details]**` : `**[Hide All Details]**`} Sort by: **[Alphabetical]** | **[Category]** | **[Chronology]** | **[Numeric]** | **[Cash Reserves]** | **[Employment]**`);
       buildings_string.push("");
       buildings_string.push(`_Displaying local_ **Buildings** _in_ **${config.localisation[`sort_${game_obj.building_sort}`]}**:`);
       buildings_string.push("");

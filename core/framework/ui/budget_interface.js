@@ -42,6 +42,7 @@ module.exports = {
 
     //Push to budget_string
     budget_string.push(`__**Economic Statistics:**__`);
+    budget_string.push(`- **[View Detailed Budget]**`);
     budget_string.push("");
 
     budget_string.push(`${config.icons.government} Tax Efficiency: **${printPercentage(usr.modifiers.tax_efficiency)}**`);
@@ -234,6 +235,44 @@ module.exports = {
     }
 
     //Return statement
+    return all_embeds;
+  },
+
+  printDetailedBudget: function (arg0_user, arg1_page, arg2_do_not_display) {
+    //Convert from parameters
+    var user_id = arg0_user;
+    var page = parseInt(arg1_page);
+    var do_not_display = arg2_do_not_display;
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var budget_localisation = getBudgetLocalisation(user_id);
+    var game_obj = getGameObject(user_id);
+    var usr = main.users[actual_id];
+
+    //Display detailed budget
+    var budget_string = [];
+
+    budget_string = appendArrays(budget_string, budget_localisation);
+
+    //Edit main embed display
+    var all_embeds = splitEmbed(budget_string, {
+      title: `[Back] | [Jump To Page] | National Budget:`,
+      title_pages: true,
+      fixed_width: true
+    });
+
+    if (!do_not_display) {
+      //Remove control panel if one exists
+      removeControlPanel(game_obj.id);
+
+      createPageMenu(game_obj.middle_embed, {
+        embed_pages: all_embeds,
+        page: page,
+        user: game_obj.user
+      });
+    }
+
     return all_embeds;
   },
 

@@ -7,10 +7,115 @@ module.exports = {
     return (boolean) ? `${config.icons.checkmark} ` : `${config.icons.cancel} `;
   },
 
+  getBudgetLocalisation: function (arg0_user) {
+    //Convert from parameters
+    var user_id = arg0_user;
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var user_production = getProductionObject(user_id);
+    var usr = main.users[actual_id];
+
+    var expenditure_obj = sortObject(getTotalExpenditure(user_id, {
+      production_obj: user_production, return_object: true
+    }));
+    var revenue_obj = sortObject(getTotalRevenue(user_id, {
+      production_obj: user_production, return_object: true
+    }));
+
+    //Format budget_string
+    var budget_string = [];
+
+    //Format revenue
+    var all_revenue_keys = Object.keys(revenue_obj);
+
+    //Print total revenue
+    budget_string.push(`Revenue: ${config.icons.money} **${printRange(revenue_obj.revenue)}**`);
+
+    for (var i = 0; i < all_revenue_keys.length; i++) {
+      var local_value = revenue_obj[all_revenue_keys[i]];
+
+      if ((local_value[0] + local_value[1]) > 0)
+        if (all_revenue_keys[i] == "building_revenue") {
+          budget_string.push(`- ${config.icons.money} ${printRange(local_value, { display_prefix: true })} from direct building revenue.`);
+        } else if (all_revenue_keys[i] == "import_revenue") {
+          budget_string.push(`- ${config.icons.money} ${printRange(local_value, { display_prefix: true })} from trade imports.`);
+        } else if (all_revenue_keys[i] == "tax_revenue") {
+          budget_string.push(`- ${config.icons.money} ${printRange(local_value, { display_prefix: true })} from taxes.`);
+
+          //Tax breakdown
+          var all_taxes = Object.keys(usr.trackers.tax);
+
+          for (var x = 0; x < all_taxes.length; x++) {
+            var local_revenue = usr.trackers.tax[all_taxes[x]];
+
+            if (local_revenue > 0) {
+              var local_tax = getTax(all_taxes[x]);
+
+              budget_string.push(` - ${config.icons.money} ${printRange(local_revenue, { display_prefix: true })} from ${(local_tax.name) ? local_tax.name : all_taxes[x]}`);
+            }
+          }
+        }
+    }
+
+    //Format expenditures
+    var all_expenditure_keys = Object.keys(expenditure_obj);
+
+    //Print total expenditures
+    expenditure_obj.expenditures = [expenditure_obj.expenditures[0]*-1, expenditure_obj.expenditures[1]*-1];
+
+    budget_string.push(`Expenditures: ${config.icons.money} **${printRange(expenditure_obj.expenditures)}**`);
+
+    for (var i = 0; i < all_expenditure_keys.length; i++) {
+      var local_value = expenditure_obj[all_expenditure_keys[i]];
+
+      local_value = [local_value[0]*-1, local_value[1]*-1];
+
+      if ((local_value[0] + local_value[1]) < 0)
+        if (all_expenditure_keys[i] == "auto_trade_expenses") {
+          budget_string.push(`- ${config.icons.money} ${printRange(local_value, { display_prefix: true })} from sending foreign aid (Auto-Trades).`);
+
+          //Show how much is being sent to who
+          var foreign_aid_obj = getForeignAidObject(user_id);
+
+          var all_foreign_aid_keys = Object.keys(foreign_aid_obj);
+
+          for (var x = 0; x < all_foreign_aid_keys.length; x++) {
+            var local_aid = foreign_aid_obj[all_foreign_aid_keys[x]];
+            var local_user = main.users[all_foreign_aid_keys[x]];
+
+            local_aid = local_aid*-1;
+
+            if (local_user)
+              budget_string.push(` - ${config.icons.money} ${printRange(local_aid, { display_prefix: true })} to ${local_user.name}`);
+          }
+        } else if (all_expenditure_keys[i] == "building_expenses") {
+          budget_string.push(`- ${config.icons.money} ${printRange(local_value, { display_prefix: true })} from building expenses.`);
+        } else if (all_expenditure_keys[i] == "subsidies") {
+          budget_string.push(`- ${config.icons.money} ${printRange(local_value, { display_prefix: true })} from building subsidies.`);
+        } else if (all_expenditure_keys[i] == "war_reparations") {
+          budget_string.push(`- ${config.icons.money} ${printRange(local_value, { display_prefix: true })} from war reparations.`);
+        }
+    }
+
+    //Print total
+    budget_string.push("");
+
+    var total_balance = 0;
+    total_balance = modifyRange(total_balance, revenue_obj.revenue);
+    total_balance = modifyRange(total_balance, expenditure_obj.expenditures);
+
+    budget_string.push(`__**Total:**__ ${config.icons.money} ${printRange(total_balance)}`);
+
+    //Return statement
+    return budget_string;
+  },
+
   /*
     getBuildingLocalisation() - Provides a building localisation entry within the context of a list.
     options: {
-      exclude_effective_production: true/false - Whether to exclude effective production. False by default
+      exclude_details: true/false, - Whether to show details or not
+      exclude_effective_production: true/false, - Whether to exclude effective production. False by default
     }
   */
   getBuildingLocalisation: function (arg0_building_id, arg1_nesting, arg2_options) {
@@ -22,6 +127,10 @@ module.exports = {
     //Declare local instance variables
     var building_string = [];
     var local_building = (typeof building_id != "object") ? getBuildingByID(building_id) : building_id;
+
+    //options.exclude_details
+    if (options.exclude_details)
+      options.exclude_effective_production = true;
 
     if (local_building) {
       var province_id = local_building.id.split("-")[0];
@@ -62,7 +171,9 @@ module.exports = {
 
         //Print string
         building_string.push(`${bulletPoint(nesting)}${f}${(local_building.name) ? local_building.name : building_obj.name}${f}${money_stockpile_string}${employment_string}${production_choice_string} ${(local_building.subsidised) ? config.icons.taxes : ""}${(isBuildingHiring(local_building)) ? config.icons.population : ""}${effective_production_string}`);
-        building_string.push(`${bulletPoint(nesting + 1)}**[View ${(local_building.name) ? local_building.name : local_building.id}]**`);
+
+        if (!options.exclude_details)
+          building_string.push(`${bulletPoint(nesting + 1)}**[View ${(local_building.name) ? local_building.name : local_building.id}]**`);
       }
     }
 

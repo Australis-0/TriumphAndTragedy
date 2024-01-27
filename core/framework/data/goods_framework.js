@@ -2,7 +2,7 @@ module.exports = {
   disperseToSubgoods: function (arg0_good, arg1_amount) {
     //Convert from parameters
     var good_name = arg0_good;
-    var amount = arg1_amount;
+    var value = arg1_amount;
 
     //Declare local instance variables
     var good_key = (typeof good_name != "object") ? getGood(good_name, { return_key: true }) : good_name;
@@ -896,7 +896,7 @@ module.exports = {
       var good_obj = lookup.all_goods[raw_good_name];
 
       if (typeof good_obj == "object") {
-        var dispersed_obj = module.exports.disperseToSubgoods(raw_good_name, returnSafeNumber(amount));
+        var dispersed_obj = module.exports.disperseToSubgoods(raw_good_name, returnSafeNumber(value));
 
         var all_dispersed_goods = Object.keys(dispersed_obj);
 
@@ -906,7 +906,7 @@ module.exports = {
 
         return_obj = mergeObjects(return_obj, dispersed_obj);
       } else {
-        modifyValue(return_obj, subgoods[i], returnSafeNumber(amount));
+        modifyValue(return_obj, subgoods[i], returnSafeNumber(value));
         modifyValue(usr, raw_good_name, value);
       }
     }

@@ -290,6 +290,14 @@ module.exports = {
         return true;
       }
 
+      //[Hide All Details]
+      if (input == "hide all details") {
+        game_obj.hide_build_list_details = true;
+        printIndustry(user_id, province_id, current_page);
+
+        return true;
+      }
+
       //[Numeric]
       if (input == "numeric") {
         game_obj.building_sort = "numeric";
@@ -330,6 +338,14 @@ module.exports = {
       //[Reopen]
       if (input == "reopen") {
         initialiseReopenBuilding(user_id);
+
+        return true;
+      }
+
+      //[Show All Details]
+      if (input == "show all details") {
+        delete game_obj.hide_build_list_details;
+        printIndustry(user_id, province_id, current_page);
 
         return true;
       }

@@ -402,6 +402,9 @@ module.exports = {
     log.info(`Incrementing round_count from ${main.round_count} to ${main.round_count + 1}!`);
     main.round_count++;
 
+    //Clean users
+    cleanUsers();
+
     //Return statement
     return global.main;
   },

@@ -49,6 +49,14 @@ module.exports = {
 
         return true;
       }
+
+      //[View Detailed Budget]
+      if (input == "view detailed budget") {
+        game_obj.page = "national_budget";
+        printDetailedBudget(user_id, 0);
+
+        return true;
+      }
     }
 
     if (game_obj.page == "custom_taxes") {
@@ -92,6 +100,30 @@ module.exports = {
       //[Remove Tax]
       if (input == "remove tax") {
         initialiseRemoveTax(user_id);
+
+        return true;
+      }
+    }
+
+    if (game_obj.page == "national_budget") {
+      //[Back]
+      if (input == "back") {
+        printBudget(user_id);
+
+        return true;
+      }
+
+      //[Jump To Page]
+      if (input == "jump to page") {
+        visualPrompt(game_obj.alert_embed, user_id, {
+          title: `Jump To Page:`,
+          prompts: [
+            [`Which page would you like to jump to?`, "number", { min: 1, max: printDetailedBudget(user_id, 0, true).length }]
+          ]
+        },
+        function (arg) {
+          printDetailedBudget(user_id, arg[0] - 1);
+        });
 
         return true;
       }

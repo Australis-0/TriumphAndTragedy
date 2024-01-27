@@ -92,6 +92,23 @@ module.exports = {
     return total_sum;
   },
 
+  modifyRange: function (arg0_array, arg1_number) {
+    //Convert from parameters
+    var array = arg0_array;
+    var number = arg1_number;
+
+    //Initialise array; number
+    if (!Array.isArray(array)) array = [array, array];
+    if (!Array.isArray(number)) number = [number, number];
+
+    //Add number to array
+    array[0] += number[0];
+    array[1] += number[1];
+
+    //Return statement
+    return array;
+  },
+
   modifyValue: function (arg0_object, arg1_key, arg2_number, arg3_delete_negative) {
     //Convert from parameters
     var object = arg0_object;
@@ -164,6 +181,7 @@ module.exports = {
       number_2
     ],
     options: {
+      display_prefix: true/false, - Optional. Whether to display a prefix or not. False by default
       print_percentage: true/false - Optional. Whether to print percentage instead of number. False by default.
     }
   */
@@ -181,10 +199,10 @@ module.exports = {
     //Return statement
     if (array.length > 1)
       return (array[0] == array[1]) ?
-        local_function(array[0]) :
-        `${local_function(Math.min(array[0], array[1]))} - ${local_function(Math.max(array[0], array[1]))}`;
+        local_function(array[0], options) :
+        `${local_function(Math.min(array[0], array[1]), options)} - ${local_function(Math.max(array[0], array[1]), options)}`;
     if (array.length == 1)
-      return local_function(array[0]);
+      return local_function(array[0], options);
   },
 
   randomNumber: function (min, max, do_not_round) {
