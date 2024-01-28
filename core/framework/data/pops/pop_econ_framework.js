@@ -1,111 +1,4 @@
 module.exports = {
-  /*
-    getActualPopFulfilment() - Gets actual pop fulfilment for the stated scope as a weighted average by wealth pool.
-    options: {
-      province_id: "4709", - The province ID which to target
-      pop_type: "soldiers", - The pop type for which to fetch fulfilment/variety for
-
-      good_scope: "staple_goods"/"chocolate" - Optional. Defaults to all. Individual goods are calculated with received_goods per category per wealth pool.
-    }
-  */
-  getActualPopFulfilment: function (arg0_options) { //[WIP] - Add subsidy and subsistence calculations later
-    //Convert from parameters
-    var options = (arg0_options) ? arg0_options : {};
-
-    //Declare local instance variables
-    var fulfilment = 0;
-    var province_id = options.province_id;
-    var province_obj = main.provinces[province_id];
-    var total_fulfilment = 0;
-    var total_variety = 0;
-    var variety = 0;
-
-    if (province_obj.pops) {
-      var all_pop_keys = Object.keys(province_obj.pops);
-      var is_good = (lookup.all_goods[options.good_scope]);
-      var local_population = 0;
-
-      for (var i = 0; i < all_pop_keys.length; i++)
-        if (all_pop_keys[i].startsWith("wealth-")) {
-          var local_wealth_pool = province_obj.pops[all_pop_keys[i]];
-          var split_wealth_key = all_pop_keys[i].split("-");
-
-          var pop_type = split_wealth_key[3];
-
-          if (pop_type == options.pop_type) {
-            local_population += returnSafeNumber(local_wealth_pool.size);
-
-            var has_needs = false;
-            var pop_obj = config.pops[pop_type];
-            var total_goods = 0;
-            var total_subgoods_fulfilled = 0;
-
-            if (pop_obj.per_100k)
-              if (pop_obj.per_100k.needs) has_needs = true;
-
-            if (local_wealth_pool)
-              if (has_needs) {
-                //Make sure .size is being calculated correctly
-                local_wealth_pool.size = returnSafeNumber(local_wealth_pool.size);
-
-                if (is_good) {
-                  var local_subgoods = lookup.all_subgoods[options.good_scope];
-                  var per_100k_need = 0;
-
-                  if (local_wealth_pool.received_goods)
-                    for (var x = 0; x < pop_obj.buy_order.length; x++) {
-                      var local_needs_category = pop_obj.per_100k.needs[pop_obj.buy_order[x]];
-                      var local_received_goods = local_wealth_pool.received_goods[pop_obj.buy_order[x]];
-
-                      if (local_received_goods)
-                        for (var y = 0; y < local_subgoods.length; y++)
-                          if (local_received_goods[local_subgoods[y]]) {
-                            var local_value = local_received_goods[local_subgoods[y]];
-
-                            total_goods += returnSafeNumber(local_value);
-                            if (local_value > 0) total_subgoods_fulfilled++;
-
-                            per_100k_need += returnSafeNumber(local_needs_category[local_subgoods[y]]);
-                          }
-                    }
-
-                  //Set total_goods for individual goods scope
-                  if (total_goods == 0 && lookup.all_goods[options.good_scope])
-                    total_goods = 1;
-
-                  var actual_need = returnSafeNumber(per_100k_need*(local_wealth_pool.size/100000));
-
-                  //Set total_fulfilment; total_variety
-                  total_fulfilment += returnSafeNumber(Math.min(local_wealth_pool.size*(total_goods/actual_need), 1));
-
-                  total_variety += returnSafeNumber(Math.min(local_wealth_pool.size*(total_subgoods_fulfilled/local_subgoods.length), 1));
-                } else if (pop_obj.buy_order.includes(options.good_scope)) {
-                  total_fulfilment += local_wealth_pool.size*returnSafeNumber(local_wealth_pool[`${options.good_scope}-fulfilment`]);
-                  total_variety += local_wealth_pool.size*returnSafeNumber(local_wealth_pool[`${options.good_scope}-variety`]);
-                } else {
-                  //All handler
-                  total_fulfilment += local_wealth_pool.size*returnSafeNumber(local_wealth_pool.fulfilment);
-                  total_variety += local_wealth_pool.size*returnSafeNumber(local_wealth_pool.variety);
-                }
-              } else {
-                total_fulfilment += local_wealth_pool.size*config.defines.economy.default_fulfilment;
-                total_variety += local_wealth_pool.size*config.defines.economy.default_variety;
-              }
-          }
-        }
-
-      //Set fulfilment; variety
-      fulfilment = total_fulfilment/local_population;
-      variety = total_variety/local_population;
-
-      //Return statement
-      return {
-        fulfilment: returnSafeNumber(fulfilment),
-        variety: returnSafeNumber(variety)
-      };
-    }
-  },
-
   getAllPopCategoriesNeeds: function () {
     //Declare local instance variables
     var all_pops = Object.keys(config.pops);
@@ -356,8 +249,9 @@ module.exports = {
                     }
                 }
             }
-          } catch {
+          } catch (e) {
             needs_obj = {};
+            console.log(pop_type, e);
           }
 
     //Multiply everything in needs_obj by a given amount

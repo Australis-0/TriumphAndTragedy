@@ -934,5 +934,123 @@ module.exports = {
       page: page
     });
     game_obj.main_change = true;
+  },
+
+  printWealthPool: function (arg0_user, arg1_province_id, arg2_wealth_pool_key) {
+    //Convert from parameters
+    var user_id = arg0_user;
+    var province_id = arg1_province_id;
+    var wealth_pool_key = arg2_wealth_pool_key;
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var game_obj = getGameObject(user_id);
+    var province_obj = (typeof province_id != "object") ? main.provinces[province_id] : province_id;
+    var usr = main.users[actual_id];
+    var wealth_pool_string = [];
+
+    if (province_obj) {
+      if (province_obj.pops) {
+        var artisan_pops = getArtisanPops();
+        var split_key = wealth_pool_key.split("-");
+        var wealth_pool = province_obj.pops[wealth_pool_key];
+
+        //Print wealth pool
+        if (wealth_pool) {
+          var building_id = `${split_key[1]}-${split_key[2]}`;
+          var building_obj = getBuildingByID(building_id);
+          var pop_type = split_key[3];
+
+          var pop_needs = getPopNeeds(pop_type, wealth_pool.size);
+          var pop_obj = config.pops[pop_type];
+
+          //Print size, income, wealth, spending
+          wealth_pool_string.push(`Size: ${(pop_obj.icon) ? pop_obj.icon + " " : ""}**${parseNumber(wealth_pool.size)}** ${(pop_obj.name) ? pop_obj.name : pop_type}`);
+          wealth_pool_string.push(`Wealth: ${config.icons.money} ${parseNumber(wealth_pool.wealth)} (${config.icons.money} ${parseNumber(wealth_pool.income, { display_prefix: true })} last turn)`);
+          wealth_pool_string.push(`- Spending: ${config.icons.coins} ${parseNumber(wealth_pool.spending)}`);
+
+          //Per capita wealth
+          wealth_pool_string.push(`Per Capita Assets:`);
+          wealth_pool_string.push(`- Wealth: ${config.icons.money} ${parseNumber(wealth_pool.wealth/wealth_pool.size, { display_float: true })}`);
+          wealth_pool_string.push(` - Income/Spending: ${config.icons.money} ${parseNumber(wealth_pool.income/wealth_pool.size, { display_float: true })}/${parseNumber(wealth_pool.spending/wealth_pool.size, { display_float: true })}`);
+
+          //Employer
+          if (building_obj) {
+            wealth_pool_string.push(`Employer: ${(building_obj.name) ? building_obj.name : building_id}`);
+          } else {
+            if (artisan_pops.includes(pop_type)) {
+              wealth_pool_string.push(`Employer: Subsistence Artisans`);
+            } else {
+              wealth_pool_string.push(`Employer: Subsistence`);
+            }
+          }
+
+          //General fulfilment/variety
+          wealth_pool_string.push(`Fulfilment/Variety: [${printPercentage(wealth_pool.fulfilment)}/${printPercentage(wealth_pool.variety)}]`);
+
+          for (var i = 0; i < lookup.all_pop_needs_categories.length; i++) {
+            var local_key = lookup.all_pop_needs_categories[i];
+
+            var local_fulfilment = wealth_pool[`${local_key}-fulfilment`];
+            var local_received_goods = wealth_pool.received_goods[local_key];
+            var local_value = pop_needs[local_key];
+            var local_variety = wealth_pool[`${local_key}-variety`];
+
+            //Print local_fulfilment/local_variety
+            if (local_fulfilment != undefined || local_variety != undefined) {
+              var all_needs_groups = Object.keys(local_value);
+
+              wealth_pool_string.push(`- ${(config.localisation[local_key]) ? config.localisation[local_key] : local_key} - ${printPercentage(local_fulfilment)}/${printPercentage(local_variety)}`);
+
+              //Iterate over all_needs_groups
+              for (var x = 0; x < all_needs_groups.length; x++) {
+                var local_group = local_value[all_needs_groups[x]];
+                var local_group_key = `${lookup.all_pop_needs_categories[i]}.${all_needs_groups[x]}`;
+
+                var local_group_fulfilment = getActualPopFulfilment({
+                  province_id: province_id,
+                  pop_type: pop_type,
+                  wealth_pool_key: wealth_pool_key,
+
+                  good_scope: local_group_key
+                });
+                var local_needs = Object.keys(local_group);
+
+                wealth_pool_string.push(` - ${(config.localisation[all_needs_groups[x]]) ? config.localisation[all_needs_groups[x]] : parseString(all_needs_groups[x])} - ${printPercentage(local_group_fulfilment.fulfilment)}/${printPercentage(local_group_fulfilment.variety)}`);
+
+                for (var y = 0; y < local_needs.length; y++) {
+                  var local_amount = local_received_goods[local_needs[y]];
+                  var local_need = pop_needs[local_key][all_needs_groups[x]][local_needs[y]];
+                  var local_need_key = `${local_group_key}.${local_needs[y]}`;
+
+                  var local_good = lookup.all_goods[local_needs[y]];
+
+                  if (local_good) {
+                    var local_good_fulfilment = getActualPopFulfilment({
+                      province_id: province_id,
+                      pop_type: pop_type,
+                      wealth_pool_key: wealth_pool_key,
+
+                      good_scope: local_need_key
+                    });
+
+                    wealth_pool_string.push(`   - ${(local_good.icon) ? config.icons[local_good.icon] + " " : ""}${(local_good.name) ? local_good.name : local_needs[y]} - ${parseNumber(local_amount, { display_float: true })}/${parseNumber(local_need, { display_float: true })} [${printPercentage(local_good_fulfilment.fulfilment)}/${printPercentage(local_good_fulfilment.variety)}]`);
+                  }
+                }
+              }
+            }
+          }
+
+          //Return statement
+          return wealth_pool_string;
+        } else {
+          printError(game_obj.id, `This wealth pool no longer exists.`);
+        }
+      } else {
+        printError(game_obj.id, `**${(province_obj.name) ? province_obj.name : `Province ${province_obj.id}`}** has no inhabitants in it.`);
+      }
+    } else {
+      printError(game_obj.id, `The province specified, **${province_id}** doesn't exist!`);
+    }
   }
 };
