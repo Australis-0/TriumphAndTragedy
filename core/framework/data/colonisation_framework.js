@@ -1,4 +1,23 @@
 module.exports = {
+  cleanBadExpeditions: function (arg0_user) {
+    //Convert from parameters
+    var user_id = arg0_user;
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var usr = main.users[actual_id];
+
+    var all_expeditions = Object.keys(usr.expeditions);
+
+    //Iterate over all_expeditions
+    for (var i = 0; i < all_expeditions.length; i++) {
+      var local_expedition = usr.expeditions[all_expeditions[i]];
+
+      if (local_expedition.duration < 0)
+        delete usr.expeditions[all_expeditions[i]];
+    }
+  },
+
   getProvinceExpeditions: function (arg0_province_id) {
     //Convert from parameters
     var province_id = arg0_province_id;

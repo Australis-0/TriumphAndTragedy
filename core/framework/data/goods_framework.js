@@ -204,8 +204,9 @@ module.exports = {
 
     var local_goods = Object.keys(all_goods);
 
-    //Guard clause for object
+    //Guard clause for object, money
     if (typeof good_name == "object") return good_name;
+    if (good_name == "money") return "money";
 
     //Check if argument provided is a raw name
     if (all_goods[good_name])

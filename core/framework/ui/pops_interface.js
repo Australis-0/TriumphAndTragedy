@@ -1041,6 +1041,27 @@ module.exports = {
             }
           }
 
+          //Print inventory consumption
+          if (wealth_pool.inventory_consumption) {
+            var flattened_inventory_consumption = flattenObject(wealth_pool.inventory_consumption);
+
+            var all_inventory_consumption = Object.keys(flattened_inventory_consumption);
+
+            wealth_pool_string.push("");
+            wealth_pool_string.push(`**__Inventory Consumption:__**`);
+            wealth_pool_string.push("");
+
+            for (var i = 0; i < all_inventory_consumption.length; i++) {
+              var local_value = flattened_inventory_consumption[all_inventory_consumption[i]];
+
+              if (local_value > 0) {
+                var local_good = lookup.all_goods[all_inventory_consumption[i]];
+
+                wealth_pool_string.push(`- ${(local_good.icon) ? config.icons[local_good.icon] + " " : ""}${parseNumber(local_value, { display_float: true })} ${(local_good.name) ? local_good.name : all_inventory_consumption[i]}`);
+              }
+            }
+          }
+
           //Return statement
           return wealth_pool_string;
         } else {

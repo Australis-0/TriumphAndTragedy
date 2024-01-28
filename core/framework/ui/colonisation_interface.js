@@ -8,6 +8,9 @@ module.exports = {
     var all_unit_names = getAllUnits({ return_names: true });
     var usr = main.users[actual_id];
 
+    //Clean bad expeditions just in case - these are those with a duration < 0. This should not be a problem in the future if JSON compression algorithms are solved
+    cleanBadExpeditions(user_id);
+
     //Declare local tracker variables
     var all_expeditions = Object.keys(usr.expeditions);
     var capital_id = getCapital(user_id);
