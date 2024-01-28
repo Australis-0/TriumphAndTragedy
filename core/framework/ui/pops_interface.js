@@ -273,7 +273,7 @@ module.exports = {
         //Wealth Pools
         {
           pops_string.push("");
-          pops_string.push(`**Wealth Pools:** - ${(game_obj.minimise_wealth_pools) ? `**[Expand Wealth Pools]**` : `**[Minimise Wealth Pools]**`}`);
+          pops_string.push(`**Wealth Pools:** - ${(game_obj.minimise_wealth_pools) ? `**[Expand Wealth Pools]**` : `**[Minimise Wealth Pools]**`} | **[View Wealth Pool]**`);
 
           //[WIP] - Special edge case handling for subsistence/RGO pops
           if (!game_obj.minimise_wealth_pools) {
@@ -286,7 +286,6 @@ module.exports = {
             pops_string.push(`>    - Employer: Building Name`);
             pops_string.push(`>    - Spending: (Net)`);
             pops_string.push(`>    - Goods Category - Fulfilment %/Variety %`);
-            pops_string.push("");
 
             var all_wealth_keys = sortWealthPools(province_obj.id);
             var finished_subsistence = false;
@@ -309,7 +308,6 @@ module.exports = {
                   if (local_building && local_pop) {
                     //Apply formatting break if finished_subsistence
                     if (!finished_subsistence) {
-                      pops_string.push("");
                       pops_string.push(`### __Formal Employers:__`);
                       finished_subsistence = true;
                     }
@@ -318,8 +316,10 @@ module.exports = {
 
                     pops_string.push(`- ${(local_pop.icon) ? local_pop.icon + " " : ""}${parseNumber(local_wealth_pool.size)} ${(local_pop.name) ? local_pop.name : local_pop_type} | ${config.icons.money} ${parseNumber(local_wealth_pool.wealth)} - ${config.icons.coins} ${parseNumber(per_capita_income, { display_float: true })} | [${printPercentage(local_wealth_pool.fulfilment)}/${printPercentage(local_wealth_pool.variety)}]`);
 
-                    if (!game_obj.hide_employers)
+                    if (!game_obj.hide_employers) {
+                      pops_string.push(` - ID: ${all_wealth_keys[i]}`);
                       pops_string.push(` - Employer: ${(local_building.name) ? local_building.name : local_building_id}`);
+                    }
                     if (local_wealth_pool.spending != 0)
                       pops_string.push(` - Spending: -£${parseNumber(Math.abs(local_wealth_pool.spending))}`);
 
@@ -356,8 +356,10 @@ module.exports = {
 
                   pops_string.push(`- ${(local_pop.icon) ? local_pop.icon + " " : ""}${parseNumber(local_wealth_pool.size)} ${(local_pop.name) ? local_pop.name : local_pop_type} | ${config.icons.money}${parseNumber(local_wealth_pool.wealth)} - ${config.icons.coins} ${parseNumber(per_capita_income, { display_float: true })} | [${printPercentage(local_wealth_pool.fulfilment)}/${printPercentage(local_wealth_pool.variety)}]`);
 
-                  if (!game_obj.hide_employers)
+                  if (!game_obj.hide_employers) {
+                    pops_string.push(` - ID: ${all_wealth_keys[i]}`);
                     pops_string.push(` - Employer (Subsistence): ${(subsistence_building_obj.name) ? subsistence_building_obj.name : subsistence_split_key[1]}`);
+                  }
                   if (local_wealth_pool.spending != 0)
                     pops_string.push(` - Spending: -£${parseNumber(Math.abs(local_wealth_pool.spending))}`);
 
@@ -568,6 +570,17 @@ module.exports = {
 
     //Return statement
     return tooltip_string;
+  },
+
+  printJobMarket: function (arg0_user, arg1_province_id) {
+    //Convert from parameters
+    var user_id = arg0_user;
+    var province_id = arg1_province_id;
+
+    //Declare local instance variables
+    var actual_id = main.global.user_map[user_id];
+    var game_obj = getGameObject(user_id);
+    var usr = main.users[actual_id];
   },
 
   /*
@@ -936,11 +949,13 @@ module.exports = {
     game_obj.main_change = true;
   },
 
-  printWealthPool: function (arg0_user, arg1_province_id, arg2_wealth_pool_key) {
+  printWealthPool: function (arg0_user, arg1_province_id, arg2_wealth_pool_key, arg3_page, arg4_do_not_display) {
     //Convert from parameters
     var user_id = arg0_user;
     var province_id = arg1_province_id;
     var wealth_pool_key = arg2_wealth_pool_key;
+    var page = (arg3_page) ? parseInt(arg3_page) : 0;
+    var do_not_display = arg4_do_not_display;
 
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
@@ -965,7 +980,9 @@ module.exports = {
           var pop_obj = config.pops[pop_type];
 
           //Print size, income, wealth, spending
+          wealth_pool_string.push(`ID: ${wealth_pool_key}`);
           wealth_pool_string.push(`Size: ${(pop_obj.icon) ? pop_obj.icon + " " : ""}**${parseNumber(wealth_pool.size)}** ${(pop_obj.name) ? pop_obj.name : pop_type}`);
+          wealth_pool_string.push("");
           wealth_pool_string.push(`Wealth: ${config.icons.money} ${parseNumber(wealth_pool.wealth)} (${config.icons.money} ${parseNumber(wealth_pool.income, { display_prefix: true })} last turn)`);
           wealth_pool_string.push(`- Spending: ${config.icons.coins} ${parseNumber(wealth_pool.spending)}`);
 
@@ -973,6 +990,7 @@ module.exports = {
           wealth_pool_string.push(`Per Capita Assets:`);
           wealth_pool_string.push(`- Wealth: ${config.icons.money} ${parseNumber(wealth_pool.wealth/wealth_pool.size, { display_float: true })}`);
           wealth_pool_string.push(` - Income/Spending: ${config.icons.money} ${parseNumber(wealth_pool.income/wealth_pool.size, { display_float: true })}/${parseNumber(wealth_pool.spending/wealth_pool.size, { display_float: true })}`);
+          wealth_pool_string.push("");
 
           //Employer
           if (building_obj) {
@@ -1000,7 +1018,7 @@ module.exports = {
             if (local_fulfilment != undefined || local_variety != undefined) {
               var all_needs_groups = Object.keys(local_value);
 
-              wealth_pool_string.push(`- ${(config.localisation[local_key]) ? config.localisation[local_key] : local_key} - ${printPercentage(local_fulfilment)}/${printPercentage(local_variety)}`);
+              wealth_pool_string.push(`- **${(config.localisation[local_key]) ? config.localisation[local_key] : local_key}** - ${printPercentage(local_fulfilment)}/${printPercentage(local_variety)}`);
 
               //Iterate over all_needs_groups
               for (var x = 0; x < all_needs_groups.length; x++) {
@@ -1016,7 +1034,7 @@ module.exports = {
                 });
                 var local_needs = Object.keys(local_group);
 
-                wealth_pool_string.push(` - ${(config.localisation[all_needs_groups[x]]) ? config.localisation[all_needs_groups[x]] : parseString(all_needs_groups[x])} - ${printPercentage(local_group_fulfilment.fulfilment)}/${printPercentage(local_group_fulfilment.variety)}`);
+                wealth_pool_string.push(` - __${(config.localisation[all_needs_groups[x]]) ? config.localisation[all_needs_groups[x]] : parseString(all_needs_groups[x])}__ - ${printPercentage(local_group_fulfilment.fulfilment)}/${printPercentage(local_group_fulfilment.variety)}`);
 
                 for (var y = 0; y < local_needs.length; y++) {
                   var local_amount = local_received_goods[local_needs[y]];
@@ -1049,7 +1067,6 @@ module.exports = {
 
             wealth_pool_string.push("");
             wealth_pool_string.push(`**__Inventory Consumption:__**`);
-            wealth_pool_string.push("");
 
             for (var i = 0; i < all_inventory_consumption.length; i++) {
               var local_value = flattened_inventory_consumption[all_inventory_consumption[i]];
@@ -1062,8 +1079,24 @@ module.exports = {
             }
           }
 
+          //Push to main embed
+          var all_embeds = splitEmbed(wealth_pool_string, {
+            title: `[Back] | [Jump To Page] | Wealth Pool:`,
+            title_pages: true,
+            fixed_width: true
+          });
+
+          if (!do_not_display) {
+            game_obj.main_embed = createPageMenu(game_obj.middle_embed, {
+              embed_pages: all_embeds,
+              user: game_obj.user,
+              page: page
+            });
+            game_obj.main_change = true;
+          }
+
           //Return statement
-          return wealth_pool_string;
+          return all_embeds;
         } else {
           printError(game_obj.id, `This wealth pool no longer exists.`);
         }

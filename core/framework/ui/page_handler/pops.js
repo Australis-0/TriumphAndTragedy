@@ -287,6 +287,24 @@ module.exports = {
 
         return true;
       }
+
+      //[View Wealth Pool]
+      if (input == "view wealth pool") {
+        visualPrompt(game_obj.alert_embed, user_id, {
+          title: `View Wealth Pool:`,
+          prompts: [
+            [`What is the ID of the wealth pool you wish to view?`, "string"]
+          ]
+        },
+        function (arg) {
+          var wealth_pool_string = printWealthPool(user_id, province_id, arg[0]);
+
+          if (wealth_pool_string)
+            game_obj.page = `view_wealth_pool-${arg[0]}`;
+        });
+
+        return true;
+      }
     }
 
     if (population_pages.includes(game_obj.page)) {
@@ -297,6 +315,35 @@ module.exports = {
           user: game_obj.user
         });
         game_obj.page = "culture";
+
+        return true;
+      }
+    }
+
+    if (game_obj.page.startsWith("view_wealth_pool")) {
+      var split_key = game_obj.page.split("-");
+      var wealth_pool_key = split_key.replace("view_wealth_pool-", "");
+
+      var province_id = split_key[1];
+
+      //[Back]
+      if (input == "back") {
+        printDemographics(user_id, province_id);
+
+        return true;
+      }
+
+      //[Jump To Page]
+      if (input == "jump to page") {
+        visualPrompt(game_obj.alert_embed, user_id, {
+          title: `Jump To Page:`,
+          prompts: [
+            [`Which page would you like to jump to?`, "number", { min: 1, max: printWealthPool(user_id, province_id, wealth_pool_key, undefined, true).length }]
+          ]
+        },
+        function (arg) {
+          printWealthPool(game_obj.user, province_id, wealth_pool_key, arg[0] - 1);
+        });
 
         return true;
       }
