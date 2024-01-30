@@ -52,6 +52,9 @@ module.exports = {
     FileManager.import("./framework/discord/users");
 
     //Framework files - these contain all the main game functions, and parsers for common/
+    FileManager.import("./framework/data/buildings/building_framework");
+    FileManager.import("./framework/data/buildings/building_statistics_framework");
+
     FileManager.import("./framework/data/pops/pop_econ_framework");
     FileManager.import("./framework/data/pops/pop_framework");
     FileManager.import("./framework/data/pops/pop_needs_framework");
@@ -62,7 +65,6 @@ module.exports = {
     FileManager.import("./framework/data/base_user_initialisation");
     FileManager.import("./framework/data/blockade_framework");
     FileManager.import("./framework/data/budget_framework");
-    FileManager.import("./framework/data/buildings_framework");
     FileManager.import("./framework/data/casus_belli_framework");
     FileManager.import("./framework/data/client_state_framework");
     FileManager.import("./framework/data/colonisation_framework");

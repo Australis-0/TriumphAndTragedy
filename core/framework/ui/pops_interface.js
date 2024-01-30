@@ -572,7 +572,14 @@ module.exports = {
     return tooltip_string;
   },
 
-  printJobMarket: function (arg0_user, arg1_province_id) {
+  /*
+    printJobMarket() - Prints the job market in a province.
+    options: {
+      do_not_display: true/false, - Optional. Whether to display the UI or not. False by defualt
+      sort: "wage"/"positions" - Optional. What to sort by. "positions" by default
+    }
+  */
+  printJobMarket: function (arg0_user, arg1_province_id, arg2_options) {
     //Convert from parameters
     var user_id = arg0_user;
     var province_id = arg1_province_id;
@@ -580,7 +587,91 @@ module.exports = {
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
     var game_obj = getGameObject(user_id);
+    var province_obj = (typeof province_id != "object") ? main.provinces[province_id] : province_id;
     var usr = main.users[actual_id];
+
+    //Format job_market_string
+    var job_market_string = [];
+
+    if (province_obj) {
+      if (province_obj.pops) {
+        var all_pops = Object.keys(config.pops);
+        var building_job_listings = getBuildingHiringMap(province_obj.id, { return_job_postings: true });
+        var pop_job_listings = getBuildingHiringMap(province_obj.id);
+
+        //Print job listings by pop type first
+        var all_pop_job_listings = Object.keys(pop_job_listings);
+
+        job_market_string.push(`### Job Listings by Pop Type:`);
+        job_market_string.push(`> [Pop Icon] (Positions) [Pop Name] - (Median Wage per turn)`);
+        job_market_string.push("");
+
+        if (all_pop_job_listings.length > 0) {
+          for (var i = 0; i < all_pop_job_listings.length; i++) {
+            var local_listing = pop_job_listings[all_pop_job_listings[i]];
+            var local_pop = config.pops[all_pop_job_listings[i]];
+
+            job_market_string.push(`- ${(local_pop.icon) ? local_pop.icon + " " : ""}${parseNumber(local_listing.positions)}${(local_pop.singular) ? local_pop.singular : all_pop_job_listings[i]} Positions - ${config.icons.money}${parseNumber(local_listing.wage, { display_float: true })}`);
+          }
+        }
+
+        job_market_string.push(`### Net Total Unemployment By Profession:`);
+
+        //Print unemployed
+        var total_unemployed = 0;
+
+        for (var i = 0; i < all_pops.length; i++) {
+          var local_pop = config.pops[all_pops[i]];
+          var unemployed_pops = getUnemployedPops(province_id, all_pops[i], true);
+
+          job_market_string.push(`- ${parsePop(pops_to_display[i])}: ${parseNumber(unemployed_pops)}`);
+
+          total_unemployed += unemployed_pops;
+        }
+        job_market_string.push(`- Total Unemployed: **${parseNumber(total_unemployed)}**`);
+
+        //Print all job listings sorted by position/wage
+        var all_building_job_listings = Object.keys(building_job_listings);
+
+        job_market_string.push(`### All Job Listings:`);
+        job_market_string.push(`> [Pop Icon] (Positions) [Pop Name] - Employer - Wage per turn`);
+
+        for (var i = 0; i < all_building_job_listings.length; i++) {
+          var local_listing = building_job_listings[all_building_job_listings[i]];
+          var split_key = all_building_job_listings.split("-");
+
+          var building_id = `${split_key[0]}-${split_key[1]}`;
+          var local_building = getBuildingByID(building_id);
+          var local_pop = config.pops[split_key[2]];
+
+          //Print listing
+          job_market_string.push(`- ${(local_pop.icon) ? local_pop.icon + " " : ""}${parseNumber(local_listing.positions)} ${(local_pop.name) ? local_pop.name : split_key[2]} - ${(local_building) ? local_building.name : building_id} - £${parseNumber(local_listing.wage, { display_float: true })}`);
+        }
+
+        //Create embed and edit to message
+        var job_market_embeds = splitEmbed(job_market_string, {
+          title: `[Back] | [Jump To Page] | Job Market in ${parseProvince(province_obj)}:`,
+          title_pages: true,
+          fixed_width: true
+        });
+
+        if (!options.do_not_display) {
+          game_obj.main_embed = createPageMenu(game_obj.middle_embed, {
+            embed_pages: job_market_embeds,
+            user: game_obj.user,
+            page: page
+          });
+          game_obj.main_change = true;
+        }
+
+        //Return statement
+        return building_embeds;
+      } else {
+        printError(game_obj.id, `No pops currently live in this province.`);
+      }
+    } else {
+      printError(game_obj.id, `The province you have specified, **${province_id}**, doesn't exist!`);
+    }
   },
 
   /*
