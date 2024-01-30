@@ -583,6 +583,9 @@ module.exports = {
     //Convert from parameters
     var user_id = arg0_user;
     var province_id = arg1_province_id;
+    var options = (arg2_options) ? arg2_options : {};
+
+    if (!options.sort) options.sort = "positions";
 
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
@@ -596,8 +599,12 @@ module.exports = {
     if (province_obj) {
       if (province_obj.pops) {
         var all_pops = Object.keys(config.pops);
-        var building_job_listings = getBuildingHiringMap(province_obj.id, { return_job_postings: true });
-        var pop_job_listings = getBuildingHiringMap(province_obj.id);
+        var building_job_listings = getBuildingHiringMap(province_obj.id, {
+          return_job_postings: true, sort: options.sort 
+        });
+        var pop_job_listings = getBuildingHiringMap(province_obj.id, {
+          sort: options.sort
+        });
 
         //Print job listings by pop type first
         var all_pop_job_listings = Object.keys(pop_job_listings);
@@ -611,7 +618,7 @@ module.exports = {
             var local_listing = pop_job_listings[all_pop_job_listings[i]];
             var local_pop = config.pops[all_pop_job_listings[i]];
 
-            job_market_string.push(`- ${(local_pop.icon) ? local_pop.icon + " " : ""}${parseNumber(local_listing.positions)}${(local_pop.singular) ? local_pop.singular : all_pop_job_listings[i]} Positions - ${config.icons.money}${parseNumber(local_listing.wage, { display_float: true })}`);
+            job_market_string.push(`- ${(local_pop.icon) ? local_pop.icon + " " : ""}${parseNumber(local_listing.positions)} ${(local_pop.singular) ? local_pop.singular : all_pop_job_listings[i]} Positions - ${config.icons.money}${parseNumber(local_listing.wage, { display_float: true })}`);
           }
         }
 
@@ -624,7 +631,7 @@ module.exports = {
           var local_pop = config.pops[all_pops[i]];
           var unemployed_pops = getUnemployedPops(province_id, all_pops[i], true);
 
-          job_market_string.push(`- ${parsePop(pops_to_display[i])}: ${parseNumber(unemployed_pops)}`);
+          job_market_string.push(`- ${parsePop(all_pops[i])}: ${parseNumber(unemployed_pops)}`);
 
           total_unemployed += unemployed_pops;
         }
@@ -638,7 +645,7 @@ module.exports = {
 
         for (var i = 0; i < all_building_job_listings.length; i++) {
           var local_listing = building_job_listings[all_building_job_listings[i]];
-          var split_key = all_building_job_listings.split("-");
+          var split_key = all_building_job_listings[i].split("-");
 
           var building_id = `${split_key[0]}-${split_key[1]}`;
           var local_building = getBuildingByID(building_id);
@@ -665,7 +672,7 @@ module.exports = {
         }
 
         //Return statement
-        return building_embeds;
+        return job_market_embeds;
       } else {
         printError(game_obj.id, `No pops currently live in this province.`);
       }

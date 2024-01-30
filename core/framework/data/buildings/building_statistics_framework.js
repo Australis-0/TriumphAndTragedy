@@ -70,10 +70,16 @@ module.exports = {
     }
 
     //Sort object by .positions
-    var sorted_entries = Object.entries(return_object).sort(([, a], [, b]) => b[options.sort] - a[options.sort]);
-    return_object = Object.fromEntries(sorted_entries);
+    var sorted_keys = Object.keys(return_object).sort((a, b) => {
+      return return_object[b][sort_key] - return_object[a][sort_key];
+    });
+    var sorted_obj = {};
+
+    sorted_keys.forEach(key => {
+      sorted_obj[key] = return_object[key];
+    });
 
     //Return statement
-    return return_object;
+    return sorted_obj;
   }
 };
