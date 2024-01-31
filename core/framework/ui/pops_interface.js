@@ -618,7 +618,6 @@ module.exports = {
 
         job_market_string.push(`### Job Listings by Pop Type:`);
         job_market_string.push(`> [Pop Icon] (Positions) [Pop Name] - (Median Wage per turn)`);
-        job_market_string.push("");
 
         if (all_pop_job_listings.length > 0) {
           for (var i = 0; i < all_pop_job_listings.length; i++) {
@@ -627,6 +626,8 @@ module.exports = {
 
             job_market_string.push(`- ${(local_pop.icon) ? local_pop.icon + " " : ""}${parseNumber(local_listing.positions)} ${(local_pop.singular) ? local_pop.singular : all_pop_job_listings[i]} Positions - ${config.icons.money}${parseNumber(local_listing.wage, { display_float: true })}`);
           }
+        } else {
+          job_market_string.push(`_No current job listings apart from subsistence._`);
         }
 
         job_market_string.push(`### Net Total Unemployment By Profession:`);
@@ -650,16 +651,20 @@ module.exports = {
         job_market_string.push(`### All Job Listings:`);
         job_market_string.push(`> [Pop Icon] (Positions) [Pop Name] - Employer - Wage per turn`);
 
-        for (var i = 0; i < all_building_job_listings.length; i++) {
-          var local_listing = building_job_listings[all_building_job_listings[i]];
-          var split_key = all_building_job_listings[i].split("-");
+        if (all_building_job_listings.length > 0) {
+          for (var i = 0; i < all_building_job_listings.length; i++) {
+            var local_listing = building_job_listings[all_building_job_listings[i]];
+            var split_key = all_building_job_listings[i].split("-");
 
-          var building_id = `${split_key[0]}-${split_key[1]}`;
-          var local_building = getBuildingByID(building_id);
-          var local_pop = config.pops[split_key[2]];
+            var building_id = `${split_key[0]}-${split_key[1]}`;
+            var local_building = getBuildingByID(building_id);
+            var local_pop = config.pops[split_key[2]];
 
-          //Print listing
-          job_market_string.push(`- ${(local_pop.icon) ? local_pop.icon + " " : ""}${parseNumber(local_listing.positions)} ${(local_pop.name) ? local_pop.name : split_key[2]} - ${(local_building) ? local_building.name : building_id} - £${parseNumber(local_listing.wage, { display_float: true })}`);
+            //Print listing
+            job_market_string.push(`- ${(local_pop.icon) ? local_pop.icon + " " : ""}${parseNumber(local_listing.positions)} ${(local_pop.name) ? local_pop.name : split_key[2]} - ${(local_building) ? local_building.name : building_id} - £${parseNumber(local_listing.wage, { display_float: true })}`);
+          }
+        } else {
+          job_market_string.push(`_No itemised job listings._`);
         }
 
         //Create embed and edit to message
