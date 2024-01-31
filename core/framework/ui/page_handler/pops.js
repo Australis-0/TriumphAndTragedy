@@ -11,6 +11,10 @@ module.exports = {
     var user_id = arg0_user;
     var usr = main.users[actual_id];
 
+    try {
+      current_page = main.interfaces[game_obj.middle_embed.id].page;
+    } catch {}
+
     //Make sure user isn't in a visual prompt
     var in_founding_map = (game_obj.page == "founding_map");
     var in_visual_prompt = interfaces[user_id];
@@ -315,6 +319,51 @@ module.exports = {
           user: game_obj.user
         });
         game_obj.page = "culture";
+
+        return true;
+      }
+    }
+
+    if (game_obj.page.startsWith("view_job_market_")) {
+      var province_id = game_obj.page.replace("view_job_market_", "");
+      var province_obj = getProvince(province_id);
+
+      province_id = province_obj.id;
+
+      //[Back]
+      if (input == "back") {
+        printProvince(user_id, province_id);
+
+        return true;
+      }
+
+      //[Jump To Page]
+      if (input == "jump to page") {
+        visualPrompt(game_obj.alert_embed, user_id, {
+          title: `Jump To Page:`,
+          prompts: [
+            [`Which page would you like to jump to?`, "number", { min: 1, max: printJobMarket(user_id, province_id, undefined, true).length }]
+          ]
+        },
+        function (arg) {
+          printJobMarket(game_obj.user, province_id, arg[0] - 1);
+        });
+
+        return true;
+      }
+
+      //[Positions]
+      if (input == "positions") {
+        game_obj.job_market_sort = "positions";
+        printJobMarket(game_obj.user, province_id, { page: current_page });
+
+        return true;
+      }
+
+      //[Wage]
+      if (input == "wage") {
+        game_obj.job_market_sort = "wage";
+        printJobMarket(game_obj.user, province_id, { page: current_page });
 
         return true;
       }

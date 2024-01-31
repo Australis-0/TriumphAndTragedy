@@ -166,6 +166,14 @@ module.exports = {
 
         return true;
       }
+
+      //[View Job Market]
+      if (input == "view job market") {
+        printJobMarket(user_id, province_name);
+        game_obj.page = `view_job_market_${province_name}`;
+
+        return true;
+      }
     }
   }
 };

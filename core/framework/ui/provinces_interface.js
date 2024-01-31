@@ -150,7 +150,7 @@ module.exports = {
         {
           province_string.push(`**Population:**`);
           province_string.push(config.localisation.divider);
-          province_string.push(`${(game_obj.display_irrelevant_pops) ? `**[Display Relevant Pops]**` : `**[Display All Pops]**`} | **[View Demographics]**`);
+          province_string.push(`${(game_obj.display_irrelevant_pops) ? `**[Display Relevant Pops]**` : `**[Display All Pops]**`} | **[View Demographics]** | **[View Job Market]**`);
           province_string.push("");
 
           if (province_obj.pops) {

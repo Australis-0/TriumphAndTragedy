@@ -576,7 +576,7 @@ module.exports = {
     printJobMarket() - Prints the job market in a province.
     options: {
       do_not_display: true/false, - Optional. Whether to display the UI or not. False by defualt
-      sort: "wage"/"positions" - Optional. What to sort by. "positions" by default
+      page: 0 - Optional. The starting page. 0 by default
     }
   */
   printJobMarket: function (arg0_user, arg1_province_id, arg2_options) {
@@ -590,6 +590,7 @@ module.exports = {
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
     var game_obj = getGameObject(user_id);
+    var page = (options.page) ? options.page : 0;
     var province_obj = (typeof province_id != "object") ? main.provinces[province_id] : province_id;
     var usr = main.users[actual_id];
 
@@ -598,13 +599,19 @@ module.exports = {
 
     if (province_obj) {
       if (province_obj.pops) {
+        //Initialise job_market_sort
+        if (!game_obj.job_market_sort)
+          game_obj.job_market_sort = "positions";
+
         var all_pops = Object.keys(config.pops);
         var building_job_listings = getBuildingHiringMap(province_obj.id, {
-          return_job_postings: true, sort: options.sort 
+          return_job_postings: true, sort: game_obj.job_market_sort
         });
         var pop_job_listings = getBuildingHiringMap(province_obj.id, {
-          sort: options.sort
+          sort: game_obj.job_market_sort
         });
+
+        job_market_string.push(`Sort by: **[Positions]** | **[Wage]**`);
 
         //Print job listings by pop type first
         var all_pop_job_listings = Object.keys(pop_job_listings);

@@ -422,6 +422,14 @@ module.exports = {
 
         return true;
       }
+
+      //[View Job Market]
+      if (input == "view job market") {
+        printJobMarket(user_id, city_obj.id);
+        game_obj.page = `view_job_market_${city_obj.id}`;
+
+        return true;
+      }
     }
   }
 };
