@@ -337,6 +337,22 @@ module.exports = {
         return true;
       }
 
+      //[Display All Pops]
+      if (input == "display all pops") {
+        game_obj.display_irrelevant_pops = true;
+        printJobMarket(game_obj.user, province_id, { page: current_page });
+
+        return true;
+      }
+
+      //[Hide Irrelevant Pops]
+      if (input == "hide irrelevant pops") {
+        delete game_obj.display_irrelevant_pops;
+        printJobMarket(game_obj.user, province_id, { page: current_page });
+
+        return true;
+      }
+
       //[Jump To Page]
       if (input == "jump to page") {
         visualPrompt(game_obj.alert_embed, user_id, {

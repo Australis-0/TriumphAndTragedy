@@ -71,6 +71,16 @@ module.exports = {
     }
   },
 
+  clearEscapesInString: function (arg0_string) {
+    //Convert from parameters
+    var string = arg0_string;
+
+    //Declare local instance variables
+    var pattern = /\\+"?/g;
+
+    return string.replace(pattern, "");
+  },
+
   //internalWriteSave() is split as internal function for multicoring/multithreading
   internalWriteSave: function (arg0_options) {
     //Convert from parameters
@@ -85,8 +95,11 @@ module.exports = {
       var compressed_json = JSONPack.pack(JSON.parse(JSON.stringify(main)));
       var create_backup = fs.createWriteStream(`./backups/${returnABRSDateString()}.txt`);
       create_backup.end();
+      var string_json = JSON.stringify(compressed_json);
 
-      fs.writeFile(file_path, JSON.stringify(compressed_json), function (err, data) {
+      string_json = module.exports.clearEscapesInString(string_json);
+
+      fs.writeFile(file_path, string_json, function (err, data) {
         if (err) return log.error(err);
       });
     } else {

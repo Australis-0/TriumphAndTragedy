@@ -367,6 +367,25 @@ module.exports = {
     }
   },
 
+  printBuildingHiring: function (arg0_user, arg1_building_id) {
+    //Convert from parameters
+    var user_id = arg0_user;
+    var building_id = arg1_building_id;
+
+    //Declare local instance variables
+    var building_obj = getBuildingByID(building_id);
+    var has_error = false;
+    var hiring_string = [];
+
+    //Format hiring_string
+    if (building_obj) {
+      
+    } else {
+      has_error = true;
+      hiring_string.push(`The building you have specified could not be found.`);
+    }
+  },
+
   printConstructions: function (arg0_user) {
     //Convert from parameters
     var user_id = arg0_user;

@@ -592,6 +592,7 @@ module.exports = {
     var game_obj = getGameObject(user_id);
     var page = (options.page) ? options.page : 0;
     var province_obj = (typeof province_id != "object") ? main.provinces[province_id] : province_id;
+    var relevant_pops = (game_obj.display_irrelevant_pops) ? Object.keys(config.pops) : getRelevantPops(user_id);
     var usr = main.users[actual_id];
 
     //Format job_market_string
@@ -611,7 +612,7 @@ module.exports = {
           sort: game_obj.job_market_sort
         });
 
-        job_market_string.push(`Sort by: **[Positions]** | **[Wage]**`);
+        job_market_string.push(`Display: ${(game_obj.display_irrelevant_pops) ? `**[Display All Pops]**` : `**[Hide Irrelevant Pops]**`} | Sort by: **[Positions]** | **[Wage]**`);
 
         //Print job listings by pop type first
         var all_pop_job_listings = Object.keys(pop_job_listings);
@@ -620,12 +621,13 @@ module.exports = {
         job_market_string.push(`> [Pop Icon] (Positions) [Pop Name] - (Median Wage per turn)`);
 
         if (all_pop_job_listings.length > 0) {
-          for (var i = 0; i < all_pop_job_listings.length; i++) {
-            var local_listing = pop_job_listings[all_pop_job_listings[i]];
-            var local_pop = config.pops[all_pop_job_listings[i]];
+          for (var i = 0; i < all_pop_job_listings.length; i++)
+            if (relevant_pops.includes(all_pop_job_listings[i])) {
+              var local_listing = pop_job_listings[all_pop_job_listings[i]];
+              var local_pop = config.pops[all_pop_job_listings[i]];
 
-            job_market_string.push(`- ${(local_pop.icon) ? local_pop.icon + " " : ""}${parseNumber(local_listing.positions)} ${(local_pop.singular) ? local_pop.singular : all_pop_job_listings[i]} Positions - ${config.icons.money}${parseNumber(local_listing.wage, { display_float: true })}`);
-          }
+              job_market_string.push(`- ${(local_pop.icon) ? local_pop.icon + " " : ""}${parseNumber(local_listing.positions)} ${(local_pop.singular) ? local_pop.singular : all_pop_job_listings[i]} Positions - ${config.icons.money}${parseNumber(local_listing.wage, { display_float: true })}`);
+            }
         } else {
           job_market_string.push(`_No current job listings apart from subsistence._`);
         }
@@ -635,11 +637,11 @@ module.exports = {
         //Print unemployed
         var total_unemployed = 0;
 
-        for (var i = 0; i < all_pops.length; i++) {
-          var local_pop = config.pops[all_pops[i]];
-          var unemployed_pops = getUnemployedPops(province_id, all_pops[i], true);
+        for (var i = 0; i < relevant_pops.length; i++) {
+          var local_pop = config.pops[relevant_pops[i]];
+          var unemployed_pops = getUnemployedPops(province_id, relevant_pops[i], true);
 
-          job_market_string.push(`- ${parsePop(all_pops[i])}: ${parseNumber(unemployed_pops)}`);
+          job_market_string.push(`- ${parsePop(relevant_pops[i])}: ${parseNumber(unemployed_pops)}`);
 
           total_unemployed += unemployed_pops;
         }
@@ -661,7 +663,9 @@ module.exports = {
             var local_pop = config.pops[split_key[2]];
 
             //Print listing
-            job_market_string.push(`- ${(local_pop.icon) ? local_pop.icon + " " : ""}${parseNumber(local_listing.positions)} ${(local_pop.name) ? local_pop.name : split_key[2]} - ${(local_building) ? local_building.name : building_id} - £${parseNumber(local_listing.wage, { display_float: true })}`);
+            if (relevant_pops.includes(split_key[2])) {
+              job_market_string.push(`- ${(local_pop.icon) ? local_pop.icon + " " : ""}${parseNumber(local_listing.positions)} ${(local_pop.name) ? local_pop.name : split_key[2]} - ${(local_building) ? local_building.name : building_id} - £${parseNumber(local_listing.wage, { display_float: true })}`);
+            }
           }
         } else {
           job_market_string.push(`_No itemised job listings._`);
