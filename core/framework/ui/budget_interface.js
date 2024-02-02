@@ -22,7 +22,7 @@ module.exports = {
     var total_tax_pc_cost = 0;
     var total_tax_revenue = 0;
     var user_income = getIncome(user_id, total_production, {
-      include_subsidies: true
+      return_actual_income: true
     });
     var war_reparations = getWarReparations(user_id, user_income);
 

@@ -600,6 +600,8 @@ module.exports = {
 
     if (province_obj) {
       if (province_obj.pops) {
+        var population = getProvincePopulation(province_obj.id);
+
         //Initialise job_market_sort
         if (!game_obj.job_market_sort)
           game_obj.job_market_sort = "positions";
@@ -645,7 +647,7 @@ module.exports = {
 
           total_unemployed += unemployed_pops;
         }
-        job_market_string.push(`- Total Unemployed: **${parseNumber(total_unemployed)}**`);
+        job_market_string.push(`- Total Unemployed: **${parseNumber(total_unemployed)}** (${printPercentage(total_unemployed/population)})`);
 
         //Print all job listings sorted by position/wage
         var all_building_job_listings = Object.keys(building_job_listings);

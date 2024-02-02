@@ -75,7 +75,7 @@ module.exports = {
     var has_no_provinces = (getProvinces(user_id, { include_hostile_occupations: true, include_occupations: true }).length == 0);
     var political_capital_gain = getPoliticalCapitalGain(user_id);
     var user_income = getIncome(user_id, undefined, {
-      include_subsidies: true
+      return_actual_income: true
     });
 
     //Fix negative pops

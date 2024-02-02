@@ -26,6 +26,8 @@ module.exports = {
   /*
     getIncome() - Fetches user income before production costs
     options: {
+      return_actual_income: true/false, - Optional. Whether to return the actual income. False by default
+
       include_subsidies: true/false, - Optional. Whether to include building subsidies. False by default
       exclude_war_reparations: true/false - Optional. Whether to exclude war reparations. False by default
     }
@@ -41,6 +43,18 @@ module.exports = {
     var calculated_income = 0;
     var tax_obj = getTotalTaxObject(user_id);
     var usr = (typeof user_id != "object") ? main.users[actual_id] : user_id;
+
+    //options.return_actual_income guard clause
+    if (options.return_actual_income) {
+      var user_expenditures = getTotalExpenditure(user_id);
+      var user_revenue = getTotalRevenue(user_id);
+
+      //Return statement
+      return [
+        user_revenue[0] - user_expenditures[0],
+        user_revenue[1] - user_expenditures[1]
+      ];
+    }
 
     //Safeguard virtual_user arguments
     if (typeof user_id == "object")
