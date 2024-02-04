@@ -1595,6 +1595,7 @@ module.exports = {
     var all_good_keys = Object.keys(goods_obj);
 
     for (var i = 0; i < all_good_keys.length; i++) {
+      var local_good = lookup.all_goods[all_good_keys[i]];
       var local_market_good = main.market[all_good_keys[i]];
       var local_value = goods_obj[all_good_keys[i]];
 
@@ -1605,6 +1606,10 @@ module.exports = {
           current_revenue += local_value*config.defines.economy.money_per_action;
         } else if (all_good_keys[i] == "money") {
           current_revenue += local_value;
+        } else {
+          if (local_good)
+            if (local_good.worth)
+              current_revenue += local_value*returnSafeNumber(local_good.worth);
         }
     }
 

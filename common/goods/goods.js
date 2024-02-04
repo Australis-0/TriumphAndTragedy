@@ -6,7 +6,8 @@ config.goods = { //[WIP] - Redo mine chances, buy/sell prices
       icon: "knowledge",
 
       doesnt_stack: true,
-      research_good: true
+      research_good: true,
+      worth: 500
     }
   },
 
@@ -21,35 +22,40 @@ config.goods = { //[WIP] - Redo mine chances, buy/sell prices
       icon: "active_personnel",
 
       is_cp: true,
-      doesnt_stack: true
+      doesnt_stack: true,
+      worth: 200
     },
     ground_artillery_cp: {
       name: "Artillery CP",
       icon: "artillery",
 
       is_cp: true,
-      doesnt_stack: true
+      doesnt_stack: true,
+      worth: 250
     },
     ground_vehicles_cp: {
       name: "Armour CP",
       icon: "land_vehicles",
 
       is_cp: true,
-      doesnt_stack: true
+      doesnt_stack: true,
+      worth: 350
     },
     aeroplanes_cp: {
       name: "Air CP",
       icon: "aeroplanes",
 
       is_cp: true,
-      doesnt_stack: true
+      doesnt_stack: true,
+      worth: 500
     },
     naval_units_cp: {
       name: "Naval CP",
       icon: "naval_units",
 
       is_cp: true,
-      doesnt_stack: true
+      doesnt_stack: true,
+      worth: 250
     }
   },
 
