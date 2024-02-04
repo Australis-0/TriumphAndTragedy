@@ -432,12 +432,11 @@ module.exports = {
           }
 
           //Push pop hiring positions
-          if (local_hiring_obj.hiring_positions > 0) {
-            hiring_string.push(`- Will hire ${(local_pop.icon) ? local_pop.icon + " " : ""}${parseNumber(local_hiring_obj.hiring_positions)} ${(local_pop.name) ? local_pop.name : all_pop_types[i]} (${config.icons.money} ${config.icons.money} ${parseNumber(local_hiring_obj.wage, { display_float: true })} per turn)`);
-            hiring_string.push("");
-          }
+          if (local_hiring_obj.hiring_positions > 0)
+            hiring_string.push(`- Will hire ${(local_pop.icon) ? local_pop.icon + " " : ""}${parseNumber(local_hiring_obj.hiring_positions)} ${(local_pop.name) ? local_pop.name : all_pop_types[i]} (${config.icons.money}${parseNumber(local_hiring_obj.wage, { display_float: true })} per turn)`);
         }
 
+        hiring_string.push("");
         hiring_string.push(`> **Note:** Pops will not be hired if Full Employment Profit is £0, or if there are no available labourers in the Province to take ub open job positions. Pops will seek out the highest-paying jobs available to them on the individual level.`);
       } else {
         hiring_string.push(`__${(building_obj.name) ? building_obj.name : building_id}__ _does not require manpower to function._`);
