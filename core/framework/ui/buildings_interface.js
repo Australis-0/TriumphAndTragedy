@@ -266,7 +266,7 @@ module.exports = {
 
           //Push to building_string
           building_string.push("");
-          building_string.push(`**Employment:** ${(building_employment_level == 0) ? `:warning: ` : ""}${printPercentage(building_employment_level)}`);
+          building_string.push(`**Employment:** ${(building_employment_level == 0) ? `:warning: ` : ""}${printPercentage(building_employment_level)} [View Hiring]`);
           building_string.push("");
 
           for (var i = 0; i < employment_string.length; i++)
@@ -367,23 +367,94 @@ module.exports = {
     }
   },
 
-  printBuildingHiring: function (arg0_user, arg1_building_id) {
+  printBuildingHiringTooltip: function (arg0_user, arg1_building_id) {
     //Convert from parameters
     var user_id = arg0_user;
     var building_id = arg1_building_id;
 
     //Declare local instance variables
     var building_obj = getBuildingByID(building_id);
+    var game_obj = getGameObject(user_id);
     var has_error = false;
     var hiring_string = [];
 
     //Format hiring_string
     if (building_obj) {
-      
+      var config_obj = lookup.all_buildings[building_obj.building_type];
+      var manpower_obj = {};
+
+      if (config_obj.manpower_cost)
+        manpower_obj = flattenObject(config_obj.manpower_cost);
+      var all_pop_types = Object.keys(manpower_obj);
+
+      //Check if building requires manpower
+      if (all_pop_types.length > 0) {
+        var profit_obj = getBuildingProfit(building_obj, { return_object: true });
+
+        //Display minimum hiring liquidity
+        var full_employment_production = getBuildingFullEmploymentProduction(building_obj);
+        var full_employment_profit = getBuildingRevenue(building_obj, { goods: full_employment_production });
+        var minimum_hiring_liquidity = getBuildingMinHiringLiquidity(building_obj, {
+          expenditure: profit_obj.expenditure
+        });
+
+        hiring_string.push(`Full Employment Profit: ${config.icons.money} **${parseNumber(full_employment_profit)}**`);
+        hiring_string.push(`Hiring Liquidity: ${config.icons.money} ${parseNumber(minimum_hiring_liquidity)}`);
+        hiring_string.push("");
+
+        //Iterate over all_pop_types to fetch the hiring position for each one
+        for (var i = 0; i < all_pop_types.length; i++) {
+          var local_hiring_obj = getBuildingHiringPositions(building_obj, {
+            pop_type: all_pop_types[i],
+            profit_obj: profit_obj,
+            return_object: true
+          });
+          var local_pop = config.pops[all_pop_types[i]];
+
+          //First pop type; display whether building has_deficit/has_full_employment_profit/has_liquidity
+          if (i == 0) {
+            hiring_string.push(`${numberCheck(local_hiring_obj.hiring_positions)} Will Hire:`);
+
+            hiring_string.push(`- ${booleanCheck((local_hiring_obj.employment_level < 1))} Is not fully staffed AND:`)
+
+            hiring_string.push(`- Any of the following are true:`);
+            hiring_string.push(` - Condition 1:`);
+            hiring_string.push(`   - ${booleanCheck(building_obj.subsidised)} Building is subsidised AND ${booleanCheck((local_hiring_obj.employment_level < 1))} Employment Level is <100%`);
+
+            hiring_string.push(` - Condition 2:`);
+            hiring_string.push(`   - ${booleanCheck(local_hiring_obj.has_liquidity)} Has Liquidity AND ${booleanCheck(local_hiring_obj.has_deficit)} Has Deficit AND ${booleanCheck(local_hiring_obj.has_full_employment_profit)} Has Full Employment Profit OR:`);
+            hiring_string.push(`   - ${booleanCheck(local_hiring_obj.has_liquidity)} Has Liquidity AND ${booleanCheck((local_hiring_obj.employment_level < config.defines.economy.min_hire_threshold))} ${printPercentage(local_hiring_obj.employment_level)} Employment Level is < ${printPercentage(config.defines.economy.min_hire_threshold)} Min. Hiring Threshold`);
+
+            hiring_string.push(` - Condition 3:`);
+            hiring_string.push(`   - ${booleanCheck(local_hiring_obj.has_liquidity)} Has Liquidity AND ${booleanCheck(!local_hiring_obj.has_deficit)} No Deficit`);
+
+            hiring_string.push("");
+          }
+
+          //Push pop hiring positions
+          if (local_hiring_obj.hiring_positions > 0) {
+            hiring_string.push(`- Will hire ${(local_pop.icon) ? local_pop.icon + " " : ""}${parseNumber(local_hiring_obj.hiring_positions)} ${(local_pop.name) ? local_pop.name : all_pop_types[i]} (${config.icons.money} ${config.icons.money} ${parseNumber(local_hiring_obj.wage, { display_float: true })} per turn)`);
+            hiring_string.push("");
+          }
+        }
+
+        hiring_string.push(`> **Note:** Pops will not be hired if Full Employment Profit is £0, or if there are no available labourers in the Province to take ub open job positions. Pops will seek out the highest-paying jobs available to them on the individual level.`);
+      } else {
+        hiring_string.push(`__${(building_obj.name) ? building_obj.name : building_id}__ _does not require manpower to function._`);
+      }
     } else {
       has_error = true;
       hiring_string.push(`The building you have specified could not be found.`);
     }
+
+    //Print alert/error
+    if (hiring_string.length > 0)
+      (!has_error) ?
+        printAlert(game_obj.id, hiring_string.join("\n")) :
+        printError(game_obj.id, hiring_string.join("\n"));
+
+    //Return statement
+    return hiring_string;
   },
 
   printConstructions: function (arg0_user) {

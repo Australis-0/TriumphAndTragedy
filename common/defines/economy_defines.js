@@ -81,6 +81,7 @@ config.defines.economy = {
   urban_pop_growth_penalty_per_million: 0.03, //-3% growth per million
 
   //Employment
+  min_hire_threshold: 0.05, //What % of employment level should buildings always attempt to hire at?
   max_hire_percentage: 1, //What max % of the upper bound manpower cost should companies attempt to hire at once? Set to 1 to disable
   min_employment_wage: 0.20, //What % of a company's profit should be directed to employees at minimum if a profit is being earned?
 

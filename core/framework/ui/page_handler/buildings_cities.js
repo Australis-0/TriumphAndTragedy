@@ -102,13 +102,6 @@ module.exports = {
         return true;
       }
 
-      //[Turn Off Subsidies]
-      if (input == "turn off subsidies") {
-        subsidiseBuilding(user_id, local_building, { desubsidise: true });
-
-        return true;
-      }
-
       //[Switch to (Production Choice)]
       if (input.startsWith("switch to ")) {
         var production_choice_name = input.replace("switch to ", "");
@@ -117,6 +110,20 @@ module.exports = {
         (change_production_choice[0]) ?
           printAlert(game_obj.id, change_production_choice[1]) :
           printError(game_obj.id, change_production_choice[1]);
+
+        return true;
+      }
+
+      //[Turn Off Subsidies]
+      if (input == "turn off subsidies") {
+        subsidiseBuilding(user_id, local_building, { desubsidise: true });
+
+        return true;
+      }
+
+      //[View Hiring]
+      if (input == "view hiring") {
+        printBuildingHiringTooltip(user_id, local_building.id);
 
         return true;
       }

@@ -1154,7 +1154,7 @@ module.exports = {
     } else {
       if (
         (has_liquidity && has_deficit && has_full_employment_profit) ||
-        (has_liquidity && employment_level < 0.05)
+        (has_liquidity && employment_level < config.defines.economy.min_hire_threshold)
       ) {
         open_positions = minimum_hiring_liquidity/unzero(wage_obj.wage, 1);
       } else if (has_liquidity && !has_deficit) {
@@ -1170,9 +1170,10 @@ module.exports = {
     return (!options.return_object) ? open_positions : {
       hiring_positions: open_positions,
 
+      employment_level: employment_level,
       has_deficit: has_deficit,
-      has_liquidity: has_liquidity,
       has_full_employment_profit: has_full_employment_profit,
+      has_liquidity: has_liquidity,
       minimum_hiring_liquidity: minimum_hiring_liquidity,
 
       full_employment_profit: wage_obj.full_employment_profit,

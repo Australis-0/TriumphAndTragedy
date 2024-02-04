@@ -387,7 +387,7 @@ module.exports = {
                         if (local_market_good) {
                           var local_need = local_value*consumption_scalar;
 
-                          var actual_consumption = returnSafeNumber(Math.min(getGoodAmount(user_id, local_buy_order.good_type), local_need));
+                          var actual_consumption = returnSafeNumber(Math.min(getGoodAmount(actual_id, local_buy_order.good_type), local_need));
                           var local_worth = actual_consumption*local_market_good.buy_price;
                           var local_tax = Math.max(local_worth*returnSafeNumber(usr[`${pop_obj.class}_duties_tax`]), 0);
 
