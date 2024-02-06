@@ -151,7 +151,7 @@ module.exports = {
 
     //Fix tracker variables
     usr.city_cap = getCitiesCap(user_id);
-    
+
     //Push the availability of dynamically displayed non-military pops to screen
     economy_string.push((game_obj.hide_building_pops) ? `**[Show Available Pops]**` : `**[Hide Available Pops]**`);
     economy_string.push("");
@@ -223,13 +223,9 @@ module.exports = {
     for (var i = 0; i < production_localisation.length; i++)
       resource_production_string.push(production_localisation[i]);
 
-    if (Object.keys(production_localisation).length == 0) {
-      footer_string.push(`:warning: _Our economy is not currently producing any goods! Consider constructing some new buildings in order to jumpstart our economy._`);
-      footer_string.push("");
-    } else {
-      footer_string.push(`Note: Buildings that lack requisite goods, employees, or maintenance will not produce anything. Infrastructure can improve your RGO Throughput.`);
-      footer_string.push("");
-    }
+    (Object.keys(production_localisation).length == 0) ?
+      footer_string.push(`:warning: _Our economy is not currently producing any goods! Consider constructing some new buildings in order to jumpstart our economy._`) :
+      footer_string.push(`**Note:** Buildings that lack requisite goods, employees, or maintenance will not produce anything. Infrastructure can improve your RGO Throughput.`);
 
     footer_string.push(`- **[Constructions]** View a complete list of current constructions.`);
     footer_string.push(`- **[Industry]** View a roster of all domestic buildings.`);
