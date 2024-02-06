@@ -153,11 +153,7 @@ module.exports = {
     stats_string.push("");
     stats_string.push(`${config.icons.prestige} Prestige: **${parseNumber(usr.prestige)}** (${(usr.modifiers.prestige_gain > 0) ? "+" : ""}${usr.modifiers.prestige_gain} per turn)`);
     stats_string.push(`${config.icons.provinces} Provinces: **${parseNumber(usr.provinces)}**`);
-    stats_string.push("");
-    stats_string.push(`- **[Global Commands]**`);
-    stats_string.push("");
-    stats_string.push(`- **[View Customisation]**`);
-    stats_string.push(`- **[View Modifiers]**`);
+    stats_string.push(`- **[Global Commands]** | **[View Customisation]** | **[View Modifiers]**`);
     if (all_national_modifiers.length > 0) {
       stats_string.push("");
       stats_string.push(`You currently have **${parseNumber(all_national_modifiers.length)}** National Modifier(s) active.`);
@@ -166,11 +162,8 @@ module.exports = {
     if (Object.keys(usr.temporary_modifiers).length > 0)
       stats_string.push(`- **[View Temporary Modifiers]**`);
     stats_string.push("");
-    stats_string.push(config.localisation.divider);
-    stats_string.push("");
     stats_string.push(`__**Population:**__`);
     stats_string.push(config.localisation.divider);
-    stats_string.push("");
     stats_string.push(`${config.icons.development} Cities: (**${parseInt(getCities(user_id).length)}**/**${parseInt(getCitiesCap(user_id))}**): ${name_string}${ending_string}`);
     stats_string.push(`${config.icons.population} Population: **${parseNumber(getPopulation(user_id))}** (Requires ${config.icons.food} **${Math.ceil((usr.population/1000000)*config.defines.economy.food_required_per_million)}** food per turn)`);
 
@@ -192,7 +185,6 @@ module.exports = {
       parseNumber(user_income[0]);
 
     economy_string.push(`${config.icons.money} Money: **${parseNumber(usr.money)}** (${config.icons.money} **${money_string}** per turn).`);
-    economy_string.push("");
     economy_string.push(`- **[Build]** | **[Inventory]** | **[Train Units]** `);
     economy_string.push("");
 

@@ -29,12 +29,8 @@ module.exports = {
     total_reform_desire_gain = Math.min(total_reform_desire_gain, 0.15);
 
     //Format politics_string
-    politics_string.push(`__**Ruling Government:**__`);
-    politics_string.push(config.localisation.divider);
-    politics_string.push("");
     politics_string.push(`${config.icons.government} Government Type: **${ruling_government_obj.name}**`);
     politics_string.push(`${config.icons.political_capital} Political Capital: **${parseNumber(usr.modifiers.political_capital)}** (${parseNumber(political_capital_gain, { display_prefix: true })} per turn)`);
-    politics_string.push("");
     politics_string.push(`- **[Coup ${config.icons.political_capital} ${parseNumber(config.defines.politics.coup_cost)}]** | **[Support Party ${config.icons.political_capital} ${parseNumber(config.defines.politics.support_cost)}]**`);
     politics_string.push(`- **[View Cultures]**${(usr.available_reforms.length > 0) ? ` | **[View Reforms]**` : ""}`);
     politics_string.push("");
@@ -66,16 +62,12 @@ module.exports = {
       }
 
     //Print stability
+    stability_string.push(parseStabilityModifier(user_id));
     stability_string.push(`- **[Raise Stability]** by **${printPercentage(config.defines.politics.stability_boost)}** for **${parseNumber(config.defines.politics.stability_cost)}** ${config.icons.political_capital} Political Capital.`);
     stability_string.push(`- **[Set Tax]**`);
-    stability_string.push("");
-
-    stability_string.push(parseStabilityModifier(user_id));
 
     //Print calculated stability
-    stability_string.push("");
     stability_string.push(config.localisation.divider);
-    stability_string.push("");
     stability_string.push(`__**Calculated Stability:**__`);
     stability_string.push("");
     stability_string.push(`${config.icons.stability} Calculated Stability: **${printPercentage(simulation.modifiers.stability)}**`);
@@ -88,10 +80,8 @@ module.exports = {
         if (usr.politics[all_governments[i]].popularity >= 0.30)
           low_party_popularity = true;
 
-      if (low_party_popularity) {
-        stability_string.push(config.localisation.divider);
+      if (low_party_popularity)
         stability_string.push(`You have a ${config.icons.revolt} **revolt risk** of **${printPercentage(config.defines.politics.revolt_threshold - simulation.modifiers.stability)}**!`);
-      }
     }
 
     //Remove control panel if one exists

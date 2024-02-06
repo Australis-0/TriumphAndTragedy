@@ -757,7 +757,6 @@ module.exports = {
         pops_string.push("");
         pops_string.push(`__**Population Modifiers:**__`);
         pops_string.push(config.localisation.divider);
-        pops_string.push("");
 
         //Print dynamic population modifiers
         var dynamic_modifiers = {};
@@ -803,10 +802,8 @@ module.exports = {
         pops_string.push("");
 
         pops_string.push(`**__Total Population:__**`);
-        pops_string.push(`---`);
-        pops_string.push("");
+        pops_string.push(config.localisation.divider);
         pops_string.push(`**[${(!game_obj.hide_social_mobility) ? `Hide Social Mobility` : `Display Social Mobility`}]**`);
-        pops_string.push("");
 
         //Total pops
         //Print dynamic total pops - Total

@@ -363,9 +363,8 @@ module.exports = {
     var tech_string = [];
 
     //Format tech_string
-    tech_string.push(`**Technological Advancement:**`);
-    tech_string.push("");
     tech_string.push(`${config.icons.government} Current Tech Count: (**${parseNumber(usr.researched_technologies.length)}**/${parseNumber(all_technologies.length)})`);
+    tech_string.push(`${config.icons.technology} Knowledge Gain Per Turn: ${(Math.min(knowledge_gain[0], knowledge_gain[1]) > 0) ? "+" : ""}**${printRange(knowledge_gain)}**`);
     tech_string.push("");
 
     //Iterate over all categories and print how many techs in each have been researched
@@ -389,14 +388,9 @@ module.exports = {
       //Print to tech_string
       tech_string.push(` - ${local_tech_category_icon}${local_tech_category_name} Research Progress: (**${parseNumber(researched_technologies_in_category)}**/${parseNumber(total_technologies_in_category)})`);
     }
-
-    tech_string.push("");
-    tech_string.push(`${config.icons.technology} Knowledge Gain Per Turn: ${(Math.min(knowledge_gain[0], knowledge_gain[1]) > 0) ? "+" : ""}**${printRange(knowledge_gain)}**`);
-    tech_string.push("");
-
-    tech_string.push(`**[Research Possibilities]**:`);
+    
     tech_string.push(config.localisation.divider);
-    tech_string.push("");
+    tech_string.push(`**[Current Research]** | **[Research Possibilities]** | **[View Research Queue]**:`);
 
     //Print tech research options
     var printed_techs = 0;
@@ -420,9 +414,8 @@ module.exports = {
       tech_string.push(`_No available techs for research could be found._`);
 
     //Format research status
-    tech_string.push("");
-    tech_string.push(`- **[Current Research]** | **[View Research Queue]**:`);
     tech_string.push(config.localisation.divider);
+    tech_string.push("");
 
     if (usr.researching.length > 0) {
       for (var i = 0; i < usr.researching.length; i++) {
@@ -431,8 +424,8 @@ module.exports = {
         var local_tech_icon = (local_tech_obj.icon) ? config.icons[local_tech_obj.icon] + " " : "";
         var local_tech_name = (local_tech_obj.name) ? local_tech_obj.name : usr.researching[i].technology;
 
-        tech_string.push(`**[Cancel Research]**`);
         tech_string.push(`**${i + 1}.** Currently researching ${local_tech_icon}**${local_tech_name}**.`);
+        tech_string.push(`- **[Cancel Research]**`);
         tech_string.push(`- Research Progress: **${parseNumber(usr.researching[i].current_investment)}/${parseNumber(usr.researching[i].total_research_cost)}**`);
         tech_string.push("");
       }

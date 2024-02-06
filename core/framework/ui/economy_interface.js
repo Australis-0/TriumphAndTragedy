@@ -151,12 +151,7 @@ module.exports = {
 
     //Fix tracker variables
     usr.city_cap = getCitiesCap(user_id);
-
-    //Format embed
-    economy_string.push(`__**Population:**__`);
-    economy_string.push(config.localisation.divider);
-    economy_string.push("");
-
+    
     //Push the availability of dynamically displayed non-military pops to screen
     economy_string.push((game_obj.hide_building_pops) ? `**[Show Available Pops]**` : `**[Hide Available Pops]**`);
     economy_string.push("");
@@ -169,7 +164,7 @@ module.exports = {
           var pop_icon = (local_pop.icon) ? local_pop.icon + " " : "";
           var pop_name = (local_pop.name) ? local_pop.name : relevant_building_pops[i];
 
-          economy_string.push(`${pop_icon}Available ${pop_name}: **${parseNumber(usr.pops[relevant_building_pops[i]] - usr.pops["used_" + relevant_building_pops[i]])}**`);
+          economy_string.push(`- ${pop_icon}Available ${pop_name}: **${parseNumber(usr.pops[relevant_building_pops[i]] - usr.pops["used_" + relevant_building_pops[i]])}**`);
         }
       }
 
@@ -177,7 +172,6 @@ module.exports = {
     economy_string.push("");
     economy_string.push(`You have **${parseNumber(getCities(user_id, { include_hostile_occupations: true, include_occupations: true }).length)}** cities in total throughout your country.`);
     economy_string.push(`- **[View Cities]**${(usr.city_cap - usr.city_count > 0) ? " | **[Found City]** (" + parseNumber(usr.city_cap - usr.city_count) + ")" : ""}`);
-    economy_string.push("");
     economy_string.push(config.localisation.divider);
     economy_string.push("");
 
@@ -254,7 +248,7 @@ module.exports = {
         .setImage("https://cdn.discordapp.com/attachments/722997700391338046/736141424315203634/margin.png")
         .setDescription(economy_string.join("\n"))
         .addFields(
-          { name: "__Production Modifiers:__\n━━", value: truncateString(modifiers_string.join("\n"), 1000), inline: true },
+          { name: "__Production Modifiers:__\n-", value: truncateString(modifiers_string.join("\n"), 1000), inline: true },
           { name: "__[Resource Production]:__ (per turn)\n-", value: truncateString(resource_production_string.join("\n"), 1000), inline: true },
           { name: config.localisation.blank, value: footer_string.join("\n") }
         );

@@ -57,8 +57,6 @@ module.exports = {
     colonisation_string.push("");
 
     //Print out ongoing expeditions tab
-    colonisation_string.push(config.localisation.divider);
-    colonisation_string.push("");
     colonisation_string.push(`__**Expeditions:**__`);
     colonisation_string.push("");
 

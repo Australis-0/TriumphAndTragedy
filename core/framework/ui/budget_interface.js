@@ -41,8 +41,8 @@ module.exports = {
     total_maintenance[1] -= unit_upkeep;
 
     //Push to budget_string
-    budget_string.push(`__**Economic Statistics:**__`);
-    budget_string.push(`- **[View Detailed Budget]**`);
+    budget_string.push(`## **Economic Statistics:**`);
+    budget_string.push(`- **[View Detailed Budget]** - View an itemised listing of all expenses and revenues.`);
     budget_string.push("");
 
     budget_string.push(`${config.icons.government} Tax Efficiency: **${printPercentage(usr.modifiers.tax_efficiency)}**`);
@@ -57,7 +57,6 @@ module.exports = {
     }
 
     //Display actions
-    budget_string.push("");
     (total_actions_gained_per_turn[0] == total_actions_gained_per_turn[1]) ?
       budget_string.push(`${config.icons.actions} Actions (**${parseNumber(total_actions_gained_per_turn[0], { display_prefix: true })}** per turn)`) :
       budget_string.push(`${config.icons.actions} Actions (**${parseNumber(total_actions_gained_per_turn[0], { display_prefix: true })}**-**${parseNumber(total_actions_gained_per_turn[1])}** per turn)`);
@@ -79,61 +78,23 @@ module.exports = {
     }
 
     budget_string.push(`- **${printPercentage(usr.modifiers.civilian_actions)}** of your actions will be used up as ${config.icons.trade} **Civilian Goods** next turn.`);
+    budget_string.push(`- Actions are worth ${config.icons.money}${parseNumber(config.defines.economy.money_per_action)} at **100%** tax.`);
+    budget_string.push(`- ${config.icons.blockade} Blockade status: ${(isBlockaded(user_id)) ? "you are currently blockaded!" : "you are currently not blockaded."}`);
 
     budget_string.push("");
-    budget_string.push(`Note: Buildings that lack requisite goods or maintenance will not produce anything.`);
-    budget_string.push("");
+    budget_string.push(`> Note: Buildings that lack requisite goods or maintenance will not produce anything.`);
 
     budget_string.push("");
 
-    //Expenditures
+    //Revenues
     {
-      budget_string.push(`__**Expenditures:**__`);
-      budget_string.push("");
-
-      if (unit_upkeep > 0)
-        expenditures_string.push(`- ${(unit_upkeep > 0) ? "-" : "+"}**£${parseNumber(unit_upkeep)}** from unit maintenance.`);
-      if (total_maintenance[0] + total_maintenance[1] > 0)
-        if (total_maintenance[0] == total_maintenance[1]) {
-          expenditures_string.push(`- ${(total_maintenance[0] > 0) ? "-" : "+"}**£${parseNumber(total_maintenance[0])}** from building maintenance.`);
-        } else {
-          expenditures_string.push(`- ${(total_maintenance[0] > 0) ? "-" : "+"}**£${parseNumber(total_maintenance[0])}** - ${(total_maintenance[1] < 0) ? "-" : "+"}**£${parseNumber(total_maintenance[1])}** from building maintenance.`);
-        }
-
-      //War reparations
-      if (Object.keys(war_reparations).length > 0) {
-        var all_war_reparations = Object.keys(war_reparations);
-
-        for (var i = 0; i < all_war_reparations.length; i++) {
-          var local_amount = war_reparations[all_war_reparations[i]];
-          var local_recipient = main.users[all_war_reparations[i]];
-
-          (local_amount[0] != local_amount[1]) ?
-            expenditures_string.push(`- -**£${parseNumber(local_amount[0])}** - -**£${parseNumber(local_amount[1])}** will be paid to **${local_recipient.name}** as war reparations for the next **${parseNumber(local_amount[2])}** turn(s).`) :
-            expenditures_string.push(`- -**£${parseNumber(local_amount[0])}** will be paid to **${local_recipient.name}** as war reparations for the next **${parseNumber(local_amount[2])}** turn(s).`);
-        }
-      }
-
       var money_string = (user_income[0] != user_income[1]) ?
         `${parseNumber(user_income[0])} - ${parseNumber(user_income[1])}` :
         parseNumber(user_income[0]);
 
-      if (expenditures_string.length > 0) {
-        budget_string.push(expenditures_string.join("\n"));
-        budget_string.push("");
-      } else {
-        budget_string.push(`_We currently have no expenditures to speak of._`);
-        budget_string.push("");
-      }
-    }
-
-    //Revenues
-    {
-      budget_string.push(`__**Revenues:**__`);
+      budget_string.push(`__**National Balance:**__`);
       budget_string.push("");
       budget_string.push(`Your economic advisor estimates that you will gain ${config.icons.money} **${money_string}** in total income next turn.`);
-      budget_string.push("");
-      budget_string.push(config.localisation.divider);
       budget_string.push("");
 
       //Display total bureaucratic tax cost
@@ -148,20 +109,15 @@ module.exports = {
       } else {
         budget_string.push(`Our current Tax Code costs us nothing and earns us nothing. We should probably start taxing our population to give ourselves a budget.`);
       }
-
-      budget_string.push("");
     }
 
     //Revenues - Format tax code
     {
-      budget_string.push(`__**Tax Code:**__`);
+      budget_string.push(`## **Tax Code:**`);
 
-      if (getIncome(user_id)[0] < 0) {
-        budget_string.push("");
+      if (getIncome(user_id)[0] < 0)
         budget_string.push(`:warning: Consider adjusting your tax rate to gain additional income.`);
-      }
 
-      budget_string.push("");
       budget_string.push(`> Estimated tax revenues are based on last turn. This is also how the total income figure is calculated.`);
       budget_string.push("");
 
@@ -170,9 +126,10 @@ module.exports = {
       var corporate_suffix_string = (usr.corporate_tax != 0) ?
         ` - ${config.icons.political_capital} ${parseNumber(corporate_tax_cost.political_capital*-1)}PC - ${config.icons.money} ${parseNumber(returnSafeNumber(usr.trackers.tax.corporate_tax), { display_prefix: true })}` : "";
 
-      budget_string.push(`Corporate Income Tax: **${printPercentage(usr.corporate_tax)}**/**${printPercentage(usr.modifiers.corporate_max_tax)}**${corporate_suffix_string}`);
+      budget_string.push(`- Corporate Income Tax: **${printPercentage(usr.corporate_tax)}**/**${printPercentage(usr.modifiers.corporate_max_tax)}**${corporate_suffix_string}`);
       budget_string.push("");
       budget_string.push(`**Class Taxes:**`);
+      budget_string.push(`> Duties are taxes levied on pop purchases of consumption goods, similar to sales taxes.`);
       budget_string.push("");
 
       //Income Taxes
@@ -188,11 +145,9 @@ module.exports = {
         budget_string.push(`- ${parseString(local_class)} Class Income Tax: **${printPercentage(local_tax)}**/${printPercentage(returnSafeNumber(usr.modifiers[`${local_class}_income_max_tax`]))}${suffix_string}`);
       }
 
-      //Duties
-      budget_string.push("");
-      budget_string.push(`> Duties are taxes levied on pop purchases of consumption goods, similar to sales taxes.`);
       budget_string.push("");
 
+      //Duties
       for (var i = 0; i < lookup.all_classes.length; i++) {
         var local_class = lookup.all_classes[i];
         var tax_capacity = `${local_class}_duties_tax`;
@@ -207,13 +162,8 @@ module.exports = {
 
       budget_string.push("");
       budget_string.push(`We currently have **${(all_taxes.length == 0) ? `no` : parseNumber(all_taxes.length)}** individual taxes levied on our industries.`);
-      budget_string.push(`- **[Edit Tax Code]**`);
-      budget_string.push("");
-      budget_string.push(`- **[Set Tax]**`);
+      budget_string.push(`- **[Edit Tax Code]** | **[Set Tax]**`);
     }
-
-    budget_string.push("");
-    budget_string.push(`${config.icons.blockade} Blockade status: ${(isBlockaded(user_id)) ? "you are currently blockaded!" : "you are currently not blockaded."}`);
 
     //Create embed and edit to message
     var all_embeds = splitEmbed(budget_string, {

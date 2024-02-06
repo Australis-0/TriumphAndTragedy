@@ -94,22 +94,17 @@ module.exports = {
         diplomacy_string.push(pc_string[i]);
     }
 
-    diplomacy_string.push("");
     diplomacy_string.push(`- **[View CB List]** | **[War List]**`);
-    diplomacy_string.push("");
     diplomacy_string.push(config.localisation.divider);
-    diplomacy_string.push("");
     diplomacy_string.push(`- **[View Client State Proposals]** ${(all_client_states.length > 0) ? `(__${parseNumber(all_client_states.length)}__)` : ""}`);
     diplomacy_string.push(`- **[View Ledger]** | **[View Relations]** | **[View Province]**`);
     diplomacy_string.push("");
     diplomacy_string.push(`- **[Cede Province]** | **[Allow Ceding]** | **[Deny Ceding]**`);
 
-    if (all_vassals.length > 0) {
-      diplomacy_string.push("");
+    if (all_vassals.length > 0)
       (!usr.options.vassal_customisation_locked) ?
         diplomacy_string.push(`- **[Lock Vassal Customisation]** | **[Vassal Customisation]**`) :
         diplomacy_string.push(`- **[Unlock Vassal Customisation]** | **[Vassal Customisation]**`);
-    }
 
     diplomacy_string.push("");
 

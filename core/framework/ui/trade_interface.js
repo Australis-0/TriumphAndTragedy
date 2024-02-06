@@ -270,11 +270,9 @@ module.exports = {
     if (all_exports.length > 5)
       export_string.push(`+${parseNumber(all_exports.length-10)} more ...`);
 
-    //World Market
+    //World Market; enter entries
     market_string.push(config.localisation.divider);
-    market_string.push("");
 
-    //Enter entries
     for (var i = 0; i < all_market_goods.length; i++)
       if (i <= 5) {
         var local_good = getGood(all_market_goods[i]);

@@ -458,14 +458,18 @@ module.exports = {
     var usr = main.users[actual_id];
 
     //Return statement
-    return (
-      (usr.population/100000) + //Population
-      Math.max( //Technology
-        (usr.researched_technologies.length - getAverageTechCount())*5, 0
-      ) +
-      getTotalActiveDuty(user_id)/50000 + //Military
-      usr.provinces //Provinces
-    );
+    try {
+      return (
+        (usr.population/100000) + //Population
+        Math.max( //Technology
+          (usr.researched_technologies.length - getAverageTechCount())*5, 0
+        ) +
+        getTotalActiveDuty(user_id)/50000 + //Military
+        usr.provinces //Provinces
+      );
+    } catch {
+      return 0;
+    }
   },
 
   getSortedUsers: function () {
