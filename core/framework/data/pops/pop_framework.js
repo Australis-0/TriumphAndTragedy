@@ -1203,6 +1203,8 @@ module.exports = {
     var user_id = province_obj.controller;
     var usr = main.users[user_id];
 
+    var all_pop_keys = Object.keys(province_obj.pops);
+
     //Iterate over all pops and process them
     for (var i = 0; i < all_pops.length; i++) {
       //Initialise local tracker variables
@@ -1244,6 +1246,22 @@ module.exports = {
 
         //Iterate over all pops in over_upper_bound to track deaths
         modifyValue(province_obj.trackers, `death-${all_pops[i]}`, over_upper_bound.size);
+
+        //Iterate over all tags to make sure they're removed for sure
+        for (var x = 0; x < all_pop_keys.length; x++) {
+          var local_value = province_obj.pops[all_pop_keys[x]];
+
+          if (all_pop_keys[x].startsWith("b_")) {
+            var birth_year = parseInt(all_pop_keys[x].replace("b_", ""));
+
+            if (!isNaN(birth_year)) {
+              var current_age = main.date.year - birth_year;
+
+              if (current_age > config.defines.economy.old_age_hard_upper_bound)
+                delete province_obj.pops[all_pop_keys[x]];
+            }
+          }
+        }
       }
     }
 
