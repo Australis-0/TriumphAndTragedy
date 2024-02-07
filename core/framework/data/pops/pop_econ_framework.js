@@ -326,8 +326,8 @@ module.exports = {
               }
 
             //Add to chosen profession
-            modifyValue(province_obj.pops, pop_type, local_demote_amount*-1);
-            modifyValue(province_obj.pops, pop_type, `used_${pop_type}`, local_used_demote*-1);
+            modifyValue(province_obj.pops, pop_type, local_demote_amount*-1, true);
+            modifyValue(province_obj.pops, `used_${pop_type}`, local_used_demote*-1, true);
             modifyValue(province_obj.pops, all_demote_chances[x], local_demote_amount);
 
             //Set province tracker
@@ -501,9 +501,9 @@ module.exports = {
               }
 
             //Add to chosen profession
-            modifyValue(province_obj.pops, pop_type, local_promote_amount*-1);
-            modifyValue(province_obj.pops, `used_${pop_type}`, local_used_promote*-1);
-            modifyValue(province_obj.pops, all_promote_chances[x], local_promote_amount);
+            modifyValue(province_obj.pops, pop_type, local_promote_amount*-1, true);
+            modifyValue(province_obj.pops, `used_${pop_type}`, local_used_promote*-1, true);
+            modifyValue(province_obj.pops, all_promote_chances[x], local_promote_amount, true);
 
             //Set province trackers
             province_obj.trackers[`promote-${pop_type}-${all_promote_chances[x]}`] = local_promote_amount;
