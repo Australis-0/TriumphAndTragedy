@@ -1545,8 +1545,10 @@ module.exports = {
 
               if (local_pop_size > 0)
                 limit_fulfilled = true;
+              if (!local_pop_scope.boolean)
+                limit_fulfilled = false;
 
-              localisation_string.push(`${bulletPoint(options.nesting)}${numberCheck(local_pop_scope.pop_scope.size, true)}${printPercentage(local_value.value, { display_float: true, display_prefix: true })} chance for ${parseNumber(local_pop_scope.pop_scope.size)} people from:`);
+              localisation_string.push(`${bulletPoint(options.nesting)}${booleanCheck(limit_fulfilled)}${printPercentage(local_value.value, { display_float: true, display_prefix: true })} chance for ${parseNumber(local_pop_scope.pop_scope.size)} people from:`);
               localisation_string = appendArrays(localisation_string, local_pop_scope.localisation_string);
 
               if (limit_fulfilled || ignore_pop_size) {
@@ -2206,6 +2208,7 @@ module.exports = {
                 }));
                 localisation_string.push(`${bulletPoint(options.nesting)}${booleanCheck(true)} Province is occupied`);
               } else {
+                empty_scope = true;
                 localisation_string.push(`${bulletPoint(options.nesting)}${booleanCheck(false)} Province is occupied`);
               }
             if (local_value == false)
@@ -2216,6 +2219,7 @@ module.exports = {
                 }));
                 localisation_string.push(`${bulletPoint(options.nesting)}${booleanCheck(true)} Province is not occupied`);
               } else {
+                empty_scope = true;
                 localisation_string.push(`${bulletPoint(options.nesting)}${booleanCheck(false)} Province is not occupied`);
               }
           } if (all_keys[i].includes("_percentage")) { //<pop>_percentage
@@ -2323,16 +2327,22 @@ module.exports = {
               if (local_value == true) {
                 if (!province_has_building) {
                   pop_scope_empty = true;
-                  localisation_string.push(`${bulletPoint(options.nesting)}${booleanCheck(false)}Province has ${(local_building_obj.name) ? local_building_obj.name : local_building_name}`);
+
+                  if (local_building_obj)
+                    localisation_string.push(`${bulletPoint(options.nesting)}${booleanCheck(false)}Province has ${(local_building_obj.name) ? local_building_obj.name : local_building_name}`);
                 } else {
-                  localisation_string.push(`${bulletPoint(options.nesting)}${booleanCheck(true)}Province has ${(local_building_obj.name) ? local_building_obj.name : local_building_name}`);
+                  if (local_building_obj)
+                    localisation_string.push(`${bulletPoint(options.nesting)}${booleanCheck(true)}Province has ${(local_building_obj.name) ? local_building_obj.name : local_building_name}`);
                 }
               } else if (local_value == false) {
                 if (province_has_building) {
                   pop_scope_empty = true;
-                  localisation_string.push(`${bulletPoint(options.nesting)}${booleanCheck(false)}Province has no ${(local_building_obj.name) ? local_building_obj.name : local_building_name}`);
+
+                  if (local_building_obj)
+                    localisation_string.push(`${bulletPoint(options.nesting)}${booleanCheck(false)}Province has no ${(local_building_obj.name) ? local_building_obj.name : local_building_name}`);
                 } else {
-                  localisation_string.push(`${bulletPoint(options.nesting)}${booleanCheck(true)}Province has no ${(local_building_obj.name) ? local_building_obj.name : local_building_name}`);
+                  if (local_building_obj)
+                    localisation_string.push(`${bulletPoint(options.nesting)}${booleanCheck(true)}Province has no ${(local_building_obj.name) ? local_building_obj.name : local_building_name}`);
                 }
               }
 

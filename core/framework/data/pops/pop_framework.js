@@ -1046,6 +1046,12 @@ module.exports = {
     }*/
 
     //Pop Promotion/Demotion - [WIP] - Make it so that promotion/demotion can occur between classes if promotion/demotion is otherwise unspecified.
+
+    if (pop_scope.size > 0) {
+      processDemotion(province_id, pop_type, pop_scope, { building_map: building_map });
+      processPromotion(province_id, pop_type, pop_scope, { building_map: building_map });
+    }
+
     /*if (pop_scope.size > 0) {
       //Pop demotion
       var pop_demotion_selectors = parsePopLimit(config.pop_mobility.demotion, {

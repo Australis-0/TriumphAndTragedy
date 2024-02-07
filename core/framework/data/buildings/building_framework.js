@@ -3182,7 +3182,7 @@ module.exports = {
 
       //Set layoffs and reduce size
       layoffs = (employed_workers >= amount) ? amount : employed_workers;
-
+      
       //Remove from wealth pool size
       local_wealth_pool.size -= layoffs;
 
