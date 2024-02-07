@@ -72,9 +72,7 @@ module.exports = {
           pops_string.push(`**Population Breakdown:** - ${(game_obj.minimise_pop_breakdown) ? `**[Expand Pop Breakdown]**` : `**[Minimise Pop Breakdown]**`}`);
 
           if (!game_obj.minimise_pop_breakdown) {
-            pops_string.push("");
             pops_string.push(`${config.localisation.divider}`);
-            pops_string.push("");
             pops_string.push(`${(game_obj.hide_profession_breakdown) ? `**[Expand Profession Breakdown]**` : `**[Hide Profession Breakdown]**`}`);
             pops_string.push("");
             pops_string.push(`${config.icons.population} Population: **${parseNumber(province_population)}**`);
@@ -119,9 +117,7 @@ module.exports = {
             //General pop stats (Birth rate, mortality, immigration, emigration) [WIP] - Add mortality/immigration/emigration
             pops_string.push("");
             pops_string.push(`**General Statistics:**`);
-            pops_string.push("");
             pops_string.push(`${config.localisation.divider}`);
-            pops_string.push("");
 
             if (province_obj.owner != province_obj.controller) {
               pops_string.push(`> This province is currently occupied! Population growth is paused until it is liberated or transferred.`);
@@ -134,9 +130,7 @@ module.exports = {
 
             //Population Pyramid - [REVISIT] - Only displays age for now
             pops_string.push("");
-            pops_string.push(`**Age:**`);
-            pops_string.push("");
-            pops_string.push(`**[${(game_obj.show_age_composition) ? `Hide Age Composition` : `Show Age Composition`}]**`);
+            pops_string.push(`**Age:** **[${(game_obj.show_age_composition) ? `Hide Age Composition` : `Show Age Composition`}]**`);
 
             if (game_obj.show_age_composition) {
               pops_string.push("");
@@ -182,7 +176,6 @@ module.exports = {
             pops_string.push("");
 
             pops_string.push(`**Average Needs Fulfilment By Category:**`);
-            pops_string.push("");
             pops_string.push(`>  - Goods Category - [Pop Icon - Fulfilment %/Variety %]`);
             pops_string.push("");
 
@@ -234,7 +227,6 @@ module.exports = {
             //Median Wage per pop type
             pops_string.push("");
             pops_string.push(`**Median Wage by Profession:**`);
-            pops_string.push("");
 
             for (var i = 0; i < pops_to_display.length; i++) {
               var median_wage = getMedianWage(province_id, { pop_type: pops_to_display[i] });
@@ -249,7 +241,6 @@ module.exports = {
 
             //Unemployment Rates per pop type
             pops_string.push(`**Unemployment Rates by Profession:**`);
-            pops_string.push("");
 
             var total_unemployed_pops = 0;
             for (var i = 0; i < pops_to_display.length; i++) {

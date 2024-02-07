@@ -78,8 +78,7 @@ module.exports = {
           province_string.push(`**Resource:** ${parseGood(province_obj.resource)}`);
           province_string.push(`- **${(usr.modifiers.rgo_throughput - 1 >= 0) ? "+" : ""}${printPercentage(usr.modifiers.rgo_throughput)}** modifier to ${parseGood(province_obj.resource)} production in this province.`);
         }
-
-        province_string.push("");
+        
         province_string.push(`**Supply Limit:** ${config.icons.railways} ${parseNumber((province_obj.supply_limit) ? province_obj.supply_limit : config.defines.combat.base_supply_limit)}`);
 
         province_string.push("");
@@ -111,8 +110,8 @@ module.exports = {
             var local_building_slots = getBuildingSlots(user_id, province_obj.id, all_building_categories[i]);
             var special_string = (local_building_category.is_housing || local_building_category.description) ?
               (local_building_category.is_housing) ?
-                `\n • **Current Limit:** ${parseNumber(people_housed)}. Cities cannot grow once they surpass their housing limit. Build more **housing** to increase this limit.` :
-                `\n • ${local_building_category.description}`
+                `\n   - **Current Limit:** ${parseNumber(people_housed)}. Cities cannot grow once they surpass their housing limit. Build more **housing** to increase this limit.` :
+                `\n   - ${local_building_category.description}`
             : "";
 
             //Display category and all buildings inside only if the local building category should either always be displayed or buildings are present inside of the building category
@@ -186,7 +185,6 @@ module.exports = {
             province_string.push("");
             province_string.push(`> **Needs Category:**`);
             province_string.push(`>  - Total Good Amount - Good Name - [Pop Icon - Pop Consumption - Fulfilment %/Variety %]`);
-            province_string.push("");
 
             var pop_needs = {};
 

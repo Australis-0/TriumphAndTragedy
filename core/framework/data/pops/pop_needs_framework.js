@@ -89,6 +89,9 @@ module.exports = {
         }
     }
 
+    console.log(`Total fulfilment:`, total_fulfilment);
+    console.log(`Total population:`, total_population);
+
     //Return statement
     return {
       fulfilment: (total_population > 0) ? total_fulfilment/total_population : 0,

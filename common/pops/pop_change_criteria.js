@@ -43,6 +43,7 @@ config.births_oefr = {
 
 config.deaths = { //[WIP] - Add age qualifiers to this somewhere
   //Upper bound life expectancy. 15% of people die at this age, with an exponential parabola reaching its apoapsis here
+  life_expectancy_factor: 0.25, //What is the death scalar for natural death parabolas?
   upper_bound_life_expectancy: {
     per_percent_staple_goods_variety: {
       has_staple_goods: 0.01,
@@ -66,5 +67,11 @@ config.deaths = { //[WIP] - Add age qualifiers to this somewhere
       },
       value: 0.05 //Arbitrary figure, should be usr.modifiers.famine_penalty
     },
+    add_chance_occupied: {
+      limit: {
+        occupied: true
+      },
+      value: 0.05
+    }
   }
 };

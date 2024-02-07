@@ -853,11 +853,12 @@ module.exports = {
 
           var local_life_expectancy = Math.floor(config.defines.economy.old_age_lower_upper_bound + local_value);
           var local_mortality = parabola(0, local_life_expectancy*2, config.defines.economy.life_expectancy_deaths);
+          var natural_death_scalar = returnSafeNumber(config.deaths.life_expectancy_factor, 1);
 
           var all_mortality_keys = Object.keys(local_mortality);
 
           for (var x = 0; x < all_mortality_keys.length; x++) {
-            var local_mortality_chance = local_mortality[all_mortality_keys[x]];
+            var local_mortality_chance = local_mortality[all_mortality_keys[x]]*natural_death_scalar;
             var local_pop_scope = selectPops({
               pop_scope: initial_pop_scope,
               age: parseInt(all_mortality_keys[x])

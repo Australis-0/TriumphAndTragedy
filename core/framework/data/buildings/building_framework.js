@@ -2963,21 +2963,23 @@ module.exports = {
     var province_obj = (typeof province_id != "object") ? main.provinces[province_id] : province_id;
     var subsistence_production_obj = {};
 
-    //Fetch artisan production for province
-    if (!options.exclude_artisan_production) {
-      var artisan_amount = 0;
+    //Fetch artisan production for province; province will only produce subsistence goods if unoccupied
+    if (province_obj.controller == province_obj.owner) {
+      if (!options.exclude_artisan_production) {
+        var artisan_amount = 0;
 
-      //Iterate over all artisan_pops
-      for (var i = 0; i < lookup.artisan_pops.length; i++) {
-        subsistence_production_obj = mergeObjects(subsistence_production_obj,
-          getArtisanProduction(province_obj.id, lookup.artisan_pops[i]));
-        artisan_amount += returnSafeNumber(subsistence_obj.employment[lookup.artisan_pops[i]]);
+        //Iterate over all artisan_pops
+        for (var i = 0; i < lookup.artisan_pops.length; i++) {
+          subsistence_production_obj = mergeObjects(subsistence_production_obj,
+            getArtisanProduction(province_obj.id, lookup.artisan_pops[i]));
+          artisan_amount += returnSafeNumber(subsistence_obj.employment[lookup.artisan_pops[i]]);
+        }
       }
-    }
 
-    //+RGO Production
-    if (!options.exclude_rgo_production)
-      subsistence_production_obj = mergeObjects(subsistence_production_obj, getProvinceRGOThroughput(province_obj.id));
+      //+RGO Production
+      if (!options.exclude_rgo_production)
+        subsistence_production_obj = mergeObjects(subsistence_production_obj, getProvinceRGOThroughput(province_obj.id));
+    }
 
     //Return statement
     return subsistence_production_obj;
