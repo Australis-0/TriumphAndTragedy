@@ -2,9 +2,9 @@ module.exports = {
   threadOneHandler: function () {
     //Load DB from JSON
     loadBackupArray();
-    loadMostRecentSave();
 
     //Start bot
+    loadMostRecentSave();
     startBot();
 
     setTimeout(function(){

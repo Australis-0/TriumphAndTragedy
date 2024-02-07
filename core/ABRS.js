@@ -207,11 +207,16 @@ module.exports = {
   },
 
   loadMaps: function () {
-    loadMap("atlas_map.svg", "atlas");
-  	loadMap("colonisation_map.svg", "colonisation");
-    loadMap("political_map.svg", "political");
-    loadMap("population_map.svg", "population");
-    loadMap("supply_map.svg", "supply");
+    try {
+      loadMap("atlas_map.svg", "atlas");
+    	loadMap("colonisation_map.svg", "colonisation");
+      loadMap("political_map.svg", "political");
+      loadMap("population_map.svg", "population");
+      loadMap("supply_map.svg", "supply");
+    } catch (e) {
+      log.error(`loadMaps() failed:`);
+      console.log(e);
+    }
   },
 
   loadMostRecentSave: function (arg0_load_backup) {
