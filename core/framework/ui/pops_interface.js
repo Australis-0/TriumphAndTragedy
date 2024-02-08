@@ -534,7 +534,49 @@ module.exports = {
         }
       }
     } else if (options.mode == "immigration") { //[WIP] - Finish function body
+      var province_trackers = province_obj.trackers;
 
+      if (province_trackers) {
+        province_trackers = sortObject(province_trackers);
+
+        var all_trackers = Object.keys(province_trackers);
+        var emigration_obj = getProvinceEmigration(province_obj.id);
+        var immigration_obj = getProvinceImmigration(province_obj.id);
+
+        //Print immigration-
+        if (immigration_obj.total > 0) {
+          tooltip_string.push(`${config.icons.consciousness} __**Province Immigration:**__`);
+          tooltip_string.push("");
+          tooltip_string.push(`Total: **${parseNumber(immigration_obj.total, { display_prefix: true })}**`);
+          tooltip_string.push("");
+
+          for (var i = 0; i < all_trackers.length; i++) {
+            var local_split_key = all_trackers[i].split("-");
+            var local_value = province_trackers[all_trackers[i]];
+
+            if (local_split_key[0] == "immigration")
+              tooltip_string.push(`- ${parseNumber(local_value, { display_prefix: true })} from ${parseProvince(local_split_key[1])}`);
+          }
+
+          tooltip_string.push("");
+        }
+
+        //Print emigration-
+        if (emigration_obj.total > 0) {
+          tooltip_string.push(`${config.icons.taxes} __**Province Emigration:**__`);
+          tooltip_string.push("");
+          tooltip_string.push(`Total: **${parseNumber(emigration_obj.total*-1, { display_prefix: true })}**`);
+          tooltip_string.push("");
+
+          for (var i = 0; i < all_trackers.length; i++) {
+            var local_split_key = all_trackers[i].split("-");
+            var local_value = province_trackers[all_trackers[i]];
+
+            if (local_split_key[0] == "emigration")
+              tooltip_string.push(`- ${parseNumber(local_value*-1, { display_prefix: true })} to ${parseProvince(local_split_key[1])}`);
+          }
+        }
+      }
     } else if (options.mode == "promotion") {
       for (var i = 0; i < options.pop_types.length; i++) {
         var local_pop = config.pops[options.pop_types[i]];

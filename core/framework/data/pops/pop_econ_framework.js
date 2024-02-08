@@ -420,6 +420,138 @@ module.exports = {
       }
   },
 
+  processMigration: function (arg0_province_id, arg1_pop_type, arg2_pop_scope) {
+    //Convert from parameters
+    var province_id = arg0_province_id;
+    var pop_type = arg1_pop_type;
+    var pop_scope = (arg2_pop_scope) ? arg2_pop_scope : undefined;
+
+    //Declare local instance variables
+    var pop_obj = config.pops[pop_type];
+    var province_obj = (typeof province_id != "object") ? main.provinces[province_id] : province_id;
+
+    //Initialise pop_scope
+    if (!pop_scope)
+      pop_scope = selectPops({
+        province_id: province_id,
+        pop_types: [pop_type]
+      });
+
+    //Make sure external_migration_table and internal_migration_table are defined first before accessing them
+    //Both maps have the format: { <province_id>: <migration_attraction_score> }
+    var external_migration_table = lookup[`${province_obj.controller}-external_migration_attraction`];
+    var internal_migration_table = lookup[`${province_obj.controller}-migration_attraction`];
+
+    var all_external_provinces = Object.keys(external_migration_table);
+    var all_internal_provinces = Object.keys(internal_migration_table);
+
+    //Process internal migration
+    if (all_internal_provinces.length > 0) {
+      //Get internal migration chance
+      var internal_migration_chance = parsePopLimit(config.pop_migration.internal_emigration, {
+        pop_scope: pop_scope,
+        province_id: province_id
+      });
+
+      //Apply internal migration to various pop scopes
+      var internal_migration_scope = {};
+      var internal_migration_scopes = [];
+      var internal_percentage_taken = 0;
+
+      for (var i = 0; i < internal_migration_chance.selectors.length; i++) {
+        var local_value = internal_migration_chance.selectors[i];
+
+        if (local_value[1] > 0) {
+          var local_chance = local_value[1];
+          var local_pop_scope = multiplyPops(local_value[0], local_chance);
+
+          internal_migration_scopes.push(local_pop_scope);
+        }
+      }
+
+      //Iterate over internal_migration_scopes and move them all out
+      if (internal_migration_scopes.length > 0) {
+        internal_migration_scope = internal_migration_scopes[0];
+
+        if (internal_migration_scopes.length > 1)
+          for (var i = 1; i < internal_migration_scopes.length; i++)
+            internal_migration_scope = addPopScopes(internal_migration_scope, internal_migration_scopes[i]);
+
+        //internal_migration_scope is now the total amount of people that want to move out, transfer pops proportionally to internal provinces
+        if (internal_migration_scope.size > 0)
+          for (var i = 0; i < all_internal_provinces.length; i++) {
+            var local_value = internal_migration_table[all_internal_provinces[i]];
+            var ot_province = main.provinces[all_internal_provinces[i]];
+
+            //Make sure that local migration attraction for this internal province is greater than 0
+            if (local_value > 0 && (internal_percentage_taken + local_value) <= 1) {
+              var move_out_scope = multiplyPops(internal_migration_scope, local_value);
+
+              internal_percentage_taken += local_value;
+              modifyValue(province_obj.trackers, `emigration-${all_internal_provinces[i]}`, move_out_scope.size);
+              modifyValue(ot_province.trackers, `immigration-${province_obj.id}`, move_out_scope.size);
+
+              //Call movePops()
+              movePops(province_obj.id, move_out_scope, all_internal_provinces[i]);
+            }
+          }
+      }
+    }
+
+    //Process external migration
+    if (all_external_provinces.length > 0) {
+      //Get external migration chance
+      var external_migration_chance = parsePopLimit(config.pop_migration.external_emigration, {
+        pop_scope: pop_scope,
+        province_id: province_id
+      });
+
+      //Apply external migration to various pop scopes - [WIP] REVISIT LOGIC TO ACCOUNT FOR NATION SELECTION
+      var external_migration_scope = {};
+      var external_migration_scopes = [];
+      var external_percentage_taken = 0;
+
+      for (var i = 0; i < external_migration_chance.selectors.length; i++) {
+        var local_value = external_migration_chance.selectors[i];
+
+        if (local_value[1] > 0) {
+          var local_chance = local_value[1];
+          var local_pop_scope = multiplyPops(local_value[0], local_chance);
+
+          external_migration_scopes.push(local_pop_scope);
+        }
+      }
+
+      //Iterate over external_migration_scopes and move them all out
+      if (external_migration_scopes.length > 0) {
+        external_migration_scope = external_migration_scopes[0];
+
+        if (external_migration_scopes.length > 1)
+          for (var i = 1; i < external_migration_scopes.length; i++)
+            external_migration_scope = addPopScopes(external_migration_scope, external_migration_scopes[i]);
+
+        //external_migration_scope is now the total amount of people that want to move out, transfer pops proportionally to external provinces
+        if (external_migration_scope.size > 0)
+          for (var i = 0; i < all_external_provinces.length; i++) {
+            var local_value = external_migration_table[all_external_provinces[i]];
+            var ot_province = main.provinces[all_external_provinces[i]];
+
+            //Make sure that local migration attraction for this external province is greater than 0
+            if (local_value > 0 && (external_percentage_taken + local_value) <= 1) {
+              var move_out_scope = multiplyPops(external_migration_scope, local_value);
+
+              external_percentage_taken += local_value;
+              modifyValue(province_obj.trackers, `emigration-${all_external_provinces[i]}`, move_out_scope.size);
+              modifyValue(ot_province.trackers, `immigration-${province_obj.id}`, move_out_scope.size);
+
+              //Call movePops()
+              movePops(province_obj.id, move_out_scope, all_external_provinces[i]);
+            }
+          }
+      }
+    }
+  },
+
   /*
     processPromotion() - Processes promotion for a certain pop type.
     options: {
