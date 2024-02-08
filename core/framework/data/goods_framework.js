@@ -879,6 +879,9 @@ module.exports = {
     var return_obj = {};
     var usr = (typeof actual_id != "object") ? main.users[actual_id] : actual_id;
 
+    //Guard clause for no good change
+    if (value == 0) return return_obj;
+
     //Set good_obj
     if (typeof good_name != "object") {
       raw_good_name = (lookup.all_goods[good_name]) ?

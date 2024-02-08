@@ -543,9 +543,16 @@ module.exports = {
     return flattenObject(consumption_obj);
   },
 
-  getUserPopConsumption: function (arg0_user) {
+  /*
+    getUserPopConsumption() - Fetches pop consumption.
+    options: {
+      do_not_round: true/false - Whether to not round. False by default
+    }
+  */
+  getUserPopConsumption: function (arg0_user, arg1_options) {
     //Convert from parameters
     var user_id = arg0_user;
+    var options = (arg1_options) ? arg1_options : {};
 
     //Declare local instance variables
     var actual_id = main.global.user_map[user_id];
@@ -581,14 +588,16 @@ module.exports = {
     }
 
     //Iterate over consumption_obj for rounding
-    var all_consumption_keys = Object.keys(consumption_obj);
+    if (!options.do_not_round) {
+      var all_consumption_keys = Object.keys(consumption_obj);
 
-    for (var i = 0; i < all_consumption_keys.length; i++) {
-      var local_value = consumption_obj[all_consumption_keys[i]];
+      for (var i = 0; i < all_consumption_keys.length; i++) {
+        var local_value = consumption_obj[all_consumption_keys[i]];
 
-      consumption_obj[all_consumption_keys[i]] = Math.ceil(local_value);
-      if (local_value <= 0)
-        delete consumption_obj[all_consumption_keys[i]];
+        consumption_obj[all_consumption_keys[i]] = Math.ceil(local_value);
+        if (local_value <= 0)
+          delete consumption_obj[all_consumption_keys[i]];
+      }
     }
 
     //Return statement

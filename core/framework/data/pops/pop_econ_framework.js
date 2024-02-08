@@ -319,10 +319,13 @@ module.exports = {
                 var split_wealth_key = all_local_tags[y].split("-");
 
                 var local_building = building_map[`${split_wealth_key[1]}-${split_wealth_key[2]}`];
-                var local_building_obj = province_obj.buildings[local_building];
 
-                if (local_building)
-                  layoffWorkers(local_building_obj, split_wealth_key[3], local_layoff_amount);
+                if (local_building) {
+                  var local_building_obj = province_obj.buildings[local_building];
+
+                  if (local_building)
+                    layoffWorkers(local_building_obj, split_wealth_key[3], local_layoff_amount);
+                }
               }
 
             //Add to chosen profession
@@ -493,11 +496,14 @@ module.exports = {
                 var split_wealth_key = all_local_tags[y].split("-");
 
                 var local_building = building_map[`${split_wealth_key[1]}-${split_wealth_key[2]}`];
-                var local_building_obj = province_obj.buildings[local_building];
 
-                //This is returning a numeric map
-                if (local_building_obj)
-                  layoffWorkers(local_building_obj, split_wealth_key[3], local_layoff_amount);
+                if (local_building) {
+                  var local_building_obj = province_obj.buildings[local_building];
+
+                  //This is returning a numeric map
+                  if (local_building_obj)
+                    layoffWorkers(local_building_obj, split_wealth_key[3], local_layoff_amount);
+                }
               }
 
             //Add to chosen profession
@@ -608,7 +614,7 @@ module.exports = {
                           buyMarketGood(local_buy_order.good_type, market_consumption);
 
                           //Tracker handling; set inventory_consumption; received_goods
-                          var inventory_consumption = modifyGoodAmount(usr, local_buy_order.good_type, returnSafeNumber(actual_consumption)*-1);
+                          var inventory_consumption = modifyGoodAmount(usr, local_buy_order.good_type, returnSafeNumber(inventory_consumption)*-1);
                           inventory_consumption = multiplyObject(inventory_consumption, -1, false, false);
 
                           local_wealth_pool.inventory_consumption[local_buy_order.category] = mergeObjects(local_inventory_consumption, inventory_consumption);

@@ -1762,10 +1762,12 @@ module.exports = {
 
       //Economic modifiers
       //Make sure good amount can't go lower than 0
-      for (var i = 0; i < lookup.all_good_names.length; i++)
-        setGoodAmount(user_id, lookup.all_good_names[i], Math.max(
-          getGoodAmount(user_id, lookup.all_good_names[i]), 0
-        ));
+      for (var i = 0; i < lookup.all_good_names.length; i++) {
+        var local_amount = usr.inventory[lookup.all_good_names[i]];
+
+        if (local_amount < 0 || local_amount == -0)
+          usr.inventory[lookup.all_good_names[i]] = 0;
+      }
 
       //Political modifiers
       balanceParties(user_id);

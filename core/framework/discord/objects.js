@@ -323,7 +323,7 @@ module.exports = {
           //Check if variable should be overwritten
           var to_overwrite = (overwrite || (must_have_difference && current_value == local_value));
 
-          merged_obj[all_merge_keys[i]] = (to_overwrite) ?
+          merged_obj[all_merge_keys[i]] = (!to_overwrite) ?
             merged_obj[all_merge_keys[i]] + local_value :
             local_value; //Add numbers together
         } else {
