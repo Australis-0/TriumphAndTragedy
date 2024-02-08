@@ -65,7 +65,7 @@ config.pop_mobility = {
   },
   promotion: {
     limit: {
-      has_staple_goods: true,
+      has_staple_goods: 0.50,
       has_staple_goods_variety: 0.40,
       wealth: 0,
       enslaved: false,
