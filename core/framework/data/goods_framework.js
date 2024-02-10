@@ -293,7 +293,7 @@ module.exports = {
     var good_obj = (typeof name == "object") ? name : module.exports.getGood(name);
 
     //Recursively iterate over subgoods if category
-    if (good_obj) {
+    if (typeof good_obj == "object") {
       var all_good_keys = Object.keys(good_obj);
 
       if (good_obj.type == "category") {
