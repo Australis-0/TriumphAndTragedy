@@ -2106,7 +2106,7 @@ module.exports = {
               }
             }
           } if (all_keys[i] == "is_mobilised") {
-            var is_mobilised = (usr.mobilisation.is_mobilised);
+            var is_mobilised = (ot_user.mobilisation.is_mobilised);
 
             if (local_value == true) {
               if (!is_mobilised) {

@@ -386,9 +386,9 @@ module.exports = {
         }
 
       //Print to tech_string
-      tech_string.push(` - ${local_tech_category_icon}${local_tech_category_name} Research Progress: (**${parseNumber(researched_technologies_in_category)}**/${parseNumber(total_technologies_in_category)})`);
+      tech_string.push(`- ${local_tech_category_icon}${local_tech_category_name} Research Progress: (**${parseNumber(researched_technologies_in_category)}**/${parseNumber(total_technologies_in_category)})`);
     }
-    
+
     tech_string.push(config.localisation.divider);
     tech_string.push(`**[Current Research]** | **[Research Possibilities]** | **[View Research Queue]**:`);
 
