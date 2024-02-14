@@ -147,6 +147,32 @@ config.buildings.infrastructure = {
     separate_building_slots: true,
     supply_limit: 5
   },
+  canals: {
+    name: "Canals",
+    singular: "Canal",
+    type: "manufacturing",
+
+    construction_turns: 6,
+    cost: {
+      stone: 15,
+      lumber: 5,
+      regular_steel: 3,
+      money: 5000
+    },
+    manpower_cost: {
+      any_pop_peasants_labourers: {
+        peasants: 1000,
+        labourers: 1000
+      }
+    },
+    maximum: 10,
+    modifiers: {
+      rgo_throughput: 0.01,
+      shipment_capacity: 5
+    },
+    separate_building_slots: true,
+    supply_limit: 10
+  },
   cargo_ports: {
     name: "Cargo Ports",
     singular: "Cargo Port",

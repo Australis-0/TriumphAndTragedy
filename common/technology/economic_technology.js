@@ -91,7 +91,7 @@ config.technology.economic_technology = {
     research_cost: 100,
     year: 1550,
     unlocks: {
-      unlock_building: "sugar_refineries",
+      unlock_building: ["canals", "sugar_refineries"],
       agriculture: 1,
       canals: 1
     }
@@ -1034,8 +1034,9 @@ config.technology.economic_technology = {
     research_cost: 5000,
     year: 1920,
     unlocks: {
-      unlock_building: ["ferrochromite_refineries", "neighbourhoods", "resistor_factories"],
+      unlock_building: ["ferrochromite_refineries", "neighbourhoods", "regional_aeroports", "resistor_factories"],
       industry: 1,
+      regional_aeroports: 1,
       processing_facilities: 2,
       production_efficiency: 0.02,
       construction_speed: -0.05
@@ -1087,6 +1088,7 @@ config.technology.economic_technology = {
     unlocks: {
       unlock_building: ["bus_depots", "bus_stops", "civilian_industries", "department_stores", "sewing_machine_factories", "shampoo_factories", "tantalum_factories", "turbine_manufactories"],
       processing_facilities: 1,
+      regional_aeroports: 2,
       construction_speed: -0.10
     }
   },
@@ -1147,6 +1149,7 @@ config.technology.economic_technology = {
     year: 1937,
     unlocks: {
       railways: 3,
+      regional_aeroports: 1,
       rgo_throughput: 0.05,
       army_travel_speed: 0.025
     }
@@ -1184,7 +1187,7 @@ config.technology.economic_technology = {
     year: 1939,
     unlocks: {
       unlock_building: "wartime_industries",
-      aeroports: 1
+      international_aeroports: 1
     }
   },
   deep_mining: {
@@ -1231,6 +1234,7 @@ config.technology.economic_technology = {
     unlocks: {
       unlock_building: ["motorways", "shopping_centres"],
       motorways: 1,
+      regional_aeroports: 1,
       army_travel_speed: 0.035
     }
   },
@@ -1383,7 +1387,7 @@ config.technology.economic_technology = {
     year: 1964,
     unlocks: {
       unlock_building: "high_speed_rail",
-      aeroports: 1,
+      international_aeroports: 1,
       railways: 2,
       army_travel_speed: 0.04
     }
@@ -1435,7 +1439,7 @@ config.technology.economic_technology = {
     research_cost: 9000,
     year: 1980,
     unlocks: {
-      aeroports: 2,
+      international_aeroports: 2,
       motorways: 3,
       shipment_time: -0.03
     }
