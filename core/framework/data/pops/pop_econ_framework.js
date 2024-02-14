@@ -678,7 +678,7 @@ module.exports = {
             var split_key = all_wealth_keys[i].split("-");
             var pop_type = split_key[3];
 
-            var consumption_scalar = returnSafeNumber(local_wealth_pool.size)/1000;
+            var consumption_scalar = returnSafeNumber(local_wealth_pool.size)/100000;
             var pop_obj = config.pops[pop_type];
 
             //Make sure .income, .wealth are safe numbers

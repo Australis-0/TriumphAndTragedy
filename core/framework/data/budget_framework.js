@@ -405,11 +405,12 @@ module.exports = {
       var all_exports = Object.keys(local_user.trades);
 
       for (var x = 0; x < all_exports.length; x++) {
-        var local_export = usr.trades[all_exports[x]];
+        var local_export = local_user.trades[all_exports[x]];
 
-        if (local_export.good_type == "money")
-          if (local_export.target == actual_id && local_export.duration <= 1)
-            import_revenue = modifyRange(import_revenue, local_export.amount);
+        if (local_export.good_type)
+          if (local_export.good_type == "money")
+            if (local_export.target == actual_id && local_export.duration <= 1)
+              import_revenue = modifyRange(import_revenue, local_export.amount);
       }
     }
 
