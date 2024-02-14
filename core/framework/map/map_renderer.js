@@ -438,8 +438,11 @@ module.exports = {
               local_expedition.colour = generateColonisationColour(all_users[i]);
 
             //Assign colours to province map for charter
-            for (var y = 0; y < local_expedition.provinces.length; y++)
-              setProvinceColour(map_name, local_expedition.provinces[y], local_expedition.colour);
+            if (local_expedition)
+              if (local_expedition.provinces)
+                if (Array.isArray(local_expedition.provinces))
+                  for (var y = 0; y < local_expedition.provinces.length; y++)
+                    setProvinceColour(map_name, local_expedition.provinces[y], local_expedition.colour);
           }
         }
 
