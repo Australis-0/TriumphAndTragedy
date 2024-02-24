@@ -11,96 +11,101 @@ module.exports = {
     var starting_kit = config.defines.common.starting_kit;
 
     //Loop over all keys in starting kit and parse them
-    for (var i = 0; i < all_starting_keys.length; i++) {
-      var local_name = all_starting_keys[i];
-      var local_value = starting_kit[all_starting_keys[i]];
+    for (var i = 0; i < all_starting_keys.length; i++)
+      try {
+        var local_name = all_starting_keys[i];
+        var local_value = starting_kit[all_starting_keys[i]];
 
-      var local_good = getGood(local_name);
-      var local_list = getList(local_value);
-      var local_unit = getUnit(local_name);
-      var local_unit_name = getUnit(local_name, { return_key: true });
+        var local_good = getGood(local_name);
+        var local_list = getList(local_value);
+        var local_unit = getUnit(local_name);
+        var local_unit_name = getUnit(local_name, { return_key: true });
 
-      //Effects handler
-      {
-        switch (local_name) {
-          case "actions":
-            usr.actions += (local_list.length >= 2) ?
+        //Effects handler
+        {
+          switch (local_name) {
+            case "actions":
+              usr.actions += (local_list.length >= 2) ?
+                randomNumber(local_list[0], local_list[1]) :
+                local_list[0];
+
+              break;
+            case "money":
+              usr.money = (local_list.length == 1) ?
+                local_list[0] :
+                randomNumber(local_list[0], local_list[1]);
+
+              break;
+            case "research_to":
+              researchUpTo(user_id, local_value);
+
+              break;
+            case "unlock_building":
+              for (var x = 0; x < local_list.length; x++)
+                usr.available_buildings.push(local_list[x]);
+
+              break;
+            case "unlock_government":
+              for (var x = 0; x < local_list.length; x++)
+                usr.available_governments.push(local_list[x]);
+
+              break;
+            case "unlock_unit":
+              for (var x = 0; x < local_list.length; x++)
+                usr.available_units.push(local_list[x]);
+
+              break;
+            case "set_government":
+              usr.government = randomElement(local_list);
+
+              break;
+            case "set_mobilisation_unit":
+              usr.mobilisation.unit_type = local_value;
+
+              break;
+            case "set_party_popularity":
+              try {
+                var government_types = getList(local_value.type);
+                var government_popularities = getList(local_value.value);
+
+                for (var x = 0; x < government_types.length; x++)
+                  usr.politics[government_types[x]].popularity = government_popularities[x];
+              } catch {}
+
+              break;
+          }
+        }
+
+        //Goods handler
+        {
+          //Check if local_name is of type good or "money"
+          if (local_good)
+            //Check to see if good has random range or not
+            modifyGoodAmount(user_id, local_good.id, (local_list.length >= 2) ?
+              randomNumber(local_list[0], local_list[1]) :
+              local_list[0]);
+
+          if (local_name.money)
+            usr.money += (local_list.length) ?
               randomNumber(local_list[0], local_list[1]) :
               local_list[0];
-
-            break;
-          case "money":
-            usr.money = (local_list.length == 1) ?
-              local_list[0] :
-              randomNumber(local_list[0], local_list[1]);
-
-            break;
-          case "research_to":
-            researchUpTo(user_id, local_value);
-
-            break;
-          case "unlock_building":
-            for (var x = 0; x < local_list.length; x++)
-              usr.available_buildings.push(local_list[x]);
-
-            break;
-          case "unlock_government":
-            for (var x = 0; x < local_list.length; x++)
-              usr.available_governments.push(local_list[x]);
-
-            break;
-          case "unlock_unit":
-            for (var x = 0; x < local_list.length; x++)
-              usr.available_units.push(local_list[x]);
-
-            break;
-          case "set_government":
-            usr.government = randomElement(local_list);
-
-            break;
-          case "set_mobilisation_unit":
-            usr.mobilisation.unit_type = local_value;
-
-            break;
-          case "set_party_popularity":
-            try {
-              var government_types = getList(local_value.type);
-              var government_popularities = getList(local_value.value);
-
-              for (var x = 0; x < government_types.length; x++)
-                usr.politics[government_types[x]].popularity = government_popularities[x];
-            } catch {}
-
-            break;
         }
-      }
 
-      //Goods handler
-      {
-        //Check if local_name is of type good or "money"
-        if (local_good)
-          //Check to see if good has random range or not
-          modifyGoodAmount(user_id, local_good.id, (local_list.length >= 2) ?
-            randomNumber(local_list[0], local_list[1]) :
-            local_list[0]);
-
-        if (local_name.money)
-          usr.money += (local_list.length) ?
-            randomNumber(local_list[0], local_list[1]) :
-            local_list[0];
+        //Units handler
+        {
+          //Check if local_name is of type unit
+          if (local_unit)
+            if (local_name == local_unit_name)
+              modifyValue(usr.reserves, local_unit_name, (local_list.length >= 2) ?
+                randomNumber(local_list[0], local_list[1]) :
+                local_list[0]
+              );
+        }
+      } catch (e) {
+        log.error(`Error when initialising a new user when encountering the following instruction:`);
+        console.log(all_starting_keys[i], local_value);
+        console.log(e);
       }
-
-      //Units handler
-      {
-        //Check if local_name is of type unit
-        if (local_unit)
-          if (local_name == local_unit_name)
-            modifyValue(usr.reserves, local_unit_name, (local_list.length >= 2) ?
-              randomNumber(local_list[0], local_list[1]) :
-              local_list[0]
-            );
-      }
-    }
 
     //Auto-catchup
     {
