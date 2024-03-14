@@ -82,14 +82,14 @@ module.exports = {
             delete main[all_main_keys[i]];
           }
       }
-      //Undefined user fix
-      {
+      //Undefined user fix - Interferes with resign feature
+      /*{
         var all_users = Object.keys(main.users);
 
         for (var i = 0; i < all_users.length; i++)
           if (!main.global.user_map[all_users[i]])
             main.global.user_map[all_users[i]] = all_users[i];
-      }
+      }*/
     }
 
     //Fix province adjacency_distances, ID's

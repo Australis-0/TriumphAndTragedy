@@ -414,6 +414,15 @@ module.exports = {
     var user_id = arg0_user;
     var options = (arg1_options) ? arg1_options : {};
 
+    //Make sure actual_id exists for user
+    var is_resigned_user = false;
+
+    if (!main.global.user_map[`${user_id}_last_quit`])
+      is_resigned_user = true;
+
+    if (is_resigned_user)
+      main.global.user_map[user_id] = user_id;
+
     //Declare local instance variables; make sure to account for user simulations
     var actual_id = (options.is_simulation) ?
       main.global.user_map[user_id] + "_simulation" :
@@ -1799,6 +1808,10 @@ module.exports = {
       console.log(e);
     }
     console.timeEnd(`Simulation processing!`);
+
+    //Re-delete key if user is resigned
+    if (is_resigned_user)
+      delete main.global.user_map[user_id];
 
     //Return statement
     return main.users[actual_id];

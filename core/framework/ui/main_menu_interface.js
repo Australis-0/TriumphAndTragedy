@@ -131,12 +131,12 @@ module.exports = {
       }, function () {
         //Check if user has quit their previous country too recently for this to happen
         if (main.round_count - config.defines.common.resign_cooldown >= returnSafeNumber(main.global[`${user_id}_last_quit`])) {
+          //Quit game
+          clearGame(game_obj.id);
+
           //Quit country and put marker on global
           main.global[`${user_id}_last_quit`] = main.round_count;
           delete main.global.user_map[user_id];
-
-          //Quit game
-          clearGame(game_obj.id);
         } else {
           printError(game_obj.id, `You have started a new country too recently to be able to resign again! Wait another **${parseNumber(config.defines.common.resign_cooldown - (main.round_count - main.global[`${user_id}_last_quit`]))}** turn(s) to abdicate from ruling your nation.`);
         }
