@@ -1165,6 +1165,7 @@ module.exports = {
     //Cap open_positions to config_obj.upper_bound_manpower
     if (config_obj.upper_bound_manpower)
       open_positions = Math.min(open_positions, wage_obj.remaining_positions*config.defines.economy.max_hire_percentage);
+    open_positions = Math.max(open_positions, 0); //open_positions should at least be 0
 
     //Return statement
     return (!options.return_object) ? open_positions : {
@@ -3182,7 +3183,7 @@ module.exports = {
 
       //Set layoffs and reduce size
       layoffs = (employed_workers >= amount) ? amount : employed_workers;
-      
+
       //Remove from wealth pool size
       local_wealth_pool.size -= layoffs;
 
