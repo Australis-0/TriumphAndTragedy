@@ -51,7 +51,7 @@ module.exports = {
         }
 
         //[Exit Game]
-        if (["exit game", "quit game"].includes(input)) {
+        if (["exit game", "quit game"].includes(input) && game_obj.page != "founding_map" && main.season_started) {
           clearGame(game_obj.id);
 
           return true;

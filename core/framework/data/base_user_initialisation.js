@@ -79,7 +79,7 @@ module.exports = {
         //Goods handler
         {
           //Check if local_name is of type good or "money"
-          if (local_good)
+          if (local_good && typeof local_good != "string") //"money" is returned if local_name == "money"
             //Check to see if good has random range or not
             modifyGoodAmount(user_id, local_good.id, (local_list.length >= 2) ?
               randomNumber(local_list[0], local_list[1]) :

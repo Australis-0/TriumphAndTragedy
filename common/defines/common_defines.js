@@ -11,7 +11,7 @@ config.defines.common = {
   resign_cooldown: 4, //How often should players be able to switch nations? (in turns)
   starting_players: 0, //How many players should the game require before it can start? Set to 0 to disable starting queue
   starting_provinces: 1,
-  starting_year: 1939, //Should start in 1500 by default
+  starting_year: 1500, //Should start in 1500 by default
 
   //Modifies how fast time elapses during a time period. (e.g. [0, 1750, 2] means that time elapses twice as fast between year(s) 0 and 1750)
   time_modifier: [
