@@ -1,9 +1,8 @@
 # Triumph & Tragedy
 
-![](https://media.discordapp.net/attachments/829862963485474827/936005762600296458/civilization_mobile_banner_2.png)
+![](https://i.postimg.cc/KY7XcRpG/civilization-mobile-banner-2.png)
 
-![](https://media.discordapp.net/attachments/829862963485474827/962095713225957407/unknown.png)
-
+![](https://i.postimg.cc/DZfN25b6/triumph-and-tragedy-secondary-banner.png)
 
 [![Join our community!](https://img.shields.io/discord/548994743925997570?label=Discord&style=for-the-badge)](https://discord.gg/89kQY2KFQz) ![](https://img.shields.io/github/languages/code-size/Australis-0/TriumphAndTragedy?style=for-the-badge) ![](https://img.shields.io/github/downloads/Australis-0/TriumphAndTragedy/total?style=for-the-badge)
 
