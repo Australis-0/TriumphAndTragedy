@@ -71,6 +71,8 @@ Feel free to dig right in!
 Make sure to set up a bot client under Discord Developer Portal if you want the bot to run properly!
 
 This bot now comes with an installation script! Simply run `installer.bat` to begin the installation process and follow each prompt thoroughly.
+- `/interface/icons.js` will need to be replaced with Emoji IDs to icons in `gfx/interface/` for smooth functioning. Ensure your bot is in private servers where it has access to these emojis.
+- `.settings_template.js` is a template file that should be renamed to `settings.js`. It is used to manage your bot credentials and channels.
 
 You can then launch the bot at anytime by running `autorun.bat`.
 
