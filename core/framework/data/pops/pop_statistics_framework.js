@@ -1291,6 +1291,8 @@ module.exports = {
     var all_pops = Object.keys(config.pops);
     var total_active_duty = 0;
     var usr = main.users[actual_id];
+    
+    if (!usr) return 0; //Internal guard clause
 
     //Fetch total active duty
     for (var i = 0; i < all_pops.length; i++)
